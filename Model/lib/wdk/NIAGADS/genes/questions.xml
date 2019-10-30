@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+  <questionSet name="GeneQuestions"
+               displayName="Queries to find genes">
+
+    <description>
+      Gene Searches
+    </description>
+
+    <!-- =============================================================== -->
+    <!-- By Identifier -->
+    <!-- =============================================================== -->
+    <question name="gene_id" 
+              displayName="Identifier"
+              shortDisplayName="ID"
+	            noSummaryOnSingleRecord="true"
+              urlName="id"
+              queryRef="GeneIds.Identifier"
+              recordClassRef="GeneRecordClasses.GeneRecordClass">
+      <description>
+          <![CDATA[
+            View details and annotations for a specific gene by entering a Gene ID (from NCBI Entrez Gene, Vega, Ensembl) or its official symbol. 
+          ]]>
+      </description>
+      
+      <summary>
+          View details and  annotations for a specific gene.  
+      </summary>
+    </question>
+    
+    <question name="gene_upload" 
+              displayName="Upload a list of genes"
+              shortDisplayName="genes"
+	            noSummaryOnSingleRecord="true"
+              queryRef="GeneIds.Upload"
+              recordClassRef="GeneRecordClasses.GeneRecordClass">
+      <description>
+            <![CDATA[
+              <p>Upload a list of genes to compare against
+              GenomicsDB resources, integrate with other search
+              strategies, or to perform functional or pathway
+              enrichment analyses.</p>
+              
+              <p>Specify genes by entering gene ids (from NCBI
+              Entrez Gene, Vega, Ensembl) or official symbols as a
+              new-line or comma separated list.</p>
+
+              <p>Alternatively, upload a file containing new-line
+              separated ids.</p>
+            ]]>
+      </description>
+      
+      <summary>
+          Upload a list of genes.
+      </summary>     
+    </question>
+
+    
+    <!-- =============================================================== -->
+    <!-- Annotations -->
+    <!-- =============================================================== -->
+    <!-- <question name="GenesByGoTerm" 
+              displayName="GO Term or ID"
+              shortDisplayName="GO"
+              queryRef="GeneIds.GenesByGoTerm"
+	      noSummaryOnSingleRecord="true"
+              recordClassRef="GeneRecordClasses.GeneRecordClass">
+      <description>
+        <![CDATA[
+		 Retrieve a list of one or more genes annotated by the
+		 selected Gene Ontology (GO) terms.
+		 <p class="param-summary">Start typing to view and select from a list of suggestions or enter an asterisk (*) to perform a keyword search (e.g., transcription factor*).</p>
+	]]>
+      </description>
+      <summary>
+        Get genes annotated by a specific GO term.
+      </summary>
+
+      <attributesList summary="ad_evidence_flag,go_terms,gene_name,gene_type"
+                      sorting="gene_symbol asc"/>
+
+      <dynamicAttributes>
+        <columnAttribute name="go_terms" displayName="Matched Terms" align="left" sortable="false" truncateTo="1000"/>
+      </dynamicAttributes>
+    </question> -->
+
+    <!-- <question name="GenesByPathway"
+              displayName="Pathway"
+              shortDisplayName="Pathway"
+              queryRef="GeneIds.GenesByPathway"
+	      noSummaryOnSingleRecord="false"
+
+              recordClassRef="GeneRecordClasses.GeneRecordClass">
+      <description>
+	<![CDATA[
+		 Retrieve a list of genes that are members of the
+		 selected <a href="@KEGG_URL@">KEGG</a> pathway.
+	]]>
+      </description>
+
+      <summary>
+	Get genes that are members of a specific KEGG pathway.
+      </summary>
+      
+      <attributesList summary="ad_evidence_flag,pathways,gene_name,gene_type"
+                      sorting="gene_symbol asc"/>
+      <dynamicAttributes>
+        <columnAttribute name="pathways" 
+			 displayName="Matched Pathways" 
+			 align="left" 
+			 sortable="true" 
+			 truncateTo="1000"/>
+      </dynamicAttributes>
+    </question> -->
+    
+    <!-- =============================================================== -->
+    <!-- Location -->
+    <!-- =============================================================== -->
+
+    <!-- <question name="GenesByRegion" 
+              displayName="Region Coordinates"
+              shortDisplayName="Region"
+              queryRef="GeneIds.GenesByRegion"
+	      noSummaryOnSingleRecord="true"
+              recordClassRef="GeneRecordClasses.GeneRecordClass">
+
+      <description>
+	<![CDATA[
+		 Retrieve a list of genes within a specific region.
+	]]>
+      </description>
+
+      <summary>
+	Get genes within a specific genomic region.
+      </summary>
+    </question> -->
+
+    <!-- =============================================================== -->
+    <!-- ADSP -->
+    <!-- =============================================================== -->
+    
+     <!-- <question name="GeneRisk"
+              displayName="Alzheimer's Disease Association"
+              shortDisplayName="Evid AD"
+              queryRef="GeneIds.GeneRisk"
+    	      noSummaryOnSingleRecord="false"
+              recordClassRef="GeneRecordClasses.GeneRecordClass">
+      <description>
+    	<![CDATA[
+		 <p>Retrieve lists of genes based on genetic evidence from gene-level variant-aggregate association tests for Alzheimer's disease using rare, predicted functional, and loss of function variants.</p>
+		 <br/>
+		 <p class="param-summary">Search returns the smallest adjusted p-value across all experiments that meet the selected p-value cut-off.</p>
+    	]]>
+      </description>
+
+      <summary>
+    	<![CDATA[Get genes based on genetic evidence for Alzheimer's disease]]>
+      </summary>
+
+      <attributesList summary="source_id,gene_name,num_snps,cumulative_maf_display,p_value_display,rho,population,filter_function,covariates,caveat_display"/>
+      
+      <dynamicAttributes>
+    
+    	<columnAttribute name="population" displayName="Population" help="one of Hispanic, European, or Meta (combined Hispanic and European)"/>
+    	<columnAttribute name="covariates" displayName="Covariates" help="covariate adjustment model"/>
+	<columnAttribute name="filter_function" displayName="Variant Filter" help="one of: predicted effect impact (VEP), SnpEff Loss of Function variants, minimum CADD score"/>
+    	<columnAttribute name="p_value" displayName="Adj p-value" internal="true"/>
+    	<columnAttribute name="p_value_display" displayName="Adj p-value" help="Bonferroni adjusted p-value" inReportMaker="false"/>
+    	<columnAttribute name="rho" displayName="rho" help="rho parameter from SKAT-O indicating optimal between SKAT (rho=0) and burden test (rho=1)"/>
+    	<columnAttribute name="cumulative_maf" displayName="CMAF" help="description coming soon" internal="true"/>
+    	<columnAttribute name="cumulative_maf_display" displayName="CMAF" help="cumulative minor allele frequency" inReportMaker="false"/>
+    	<columnAttribute name="num_snps" displayName="N SNPs" help="number of rare variants in the gene meeting filter criteria"/>
+    	<columnAttribute name="caveat" displayName="Caveats" internal="true" inReportMaker="false" help="seqMeta errors or other warnings" truncateTo="5000"/>
+	<columnAttribute name="caveat_display" displayName="Caveats" internal="true" inReportMaker="false" help="seqMeta errors or other warnings indicating less confidence in the computed p-value" truncateTo="5000"/>
+
+      </dynamicAttributes>
+      
+    </question> -->
+    <!-- =============================================================== -->
+    <!-- Transforms -->
+    <!-- =============================================================== -->
+    <!-- <question name="GenesFromSnps" -->
+    <!--           displayName="SNPs to Genes" -->
+    <!--           shortDisplayName="Genes" -->
+    <!--           queryRef="GeneIds.SnpToGeneTransform" -->
+    <!--           recordClassRef="GeneRecordClasses.GeneRecordClass"> -->
+    <!--   <description> -->
+    <!--     <![CDATA[ -->
+    <!-- 		 <p>Get a list of genes co-located with or proximal to these SNPs on the genome.</p> -->
+    <!-- 		 <p>After this <strong>SNP to Gene transformation</strong>, the -->
+    <!-- 		 strategy can be exteneded further by adding new steps -->
+    <!-- 		 from the available <em>gene</em> searches.</p> -->
+    <!-- 	]]> -->
+    <!--   </description> -->
+
+    <!--   <attributesList summary="gene_name,mapped_snps,entrez_gene_link"/> -->
+      
+    <!--   <dynamicAttributes> -->
+    <!--     <columnAttribute name="mapped_snps"  -->
+    <!-- 			 displayName="Mapped SNPs"  -->
+    <!-- 			 align="left"  -->
+    <!-- 			 sortable="false"  -->
+    <!-- 			 truncateTo="5000"/> -->
+    <!--   </dynamicAttributes> -->
+    <!-- </question> -->
+
+  </questionSet>
+</wdkModel>
+
+

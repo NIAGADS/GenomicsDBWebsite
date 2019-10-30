@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<modelConfig modelName="ADSP"
+             webServiceUrl="local"
+             smtpServer="127.0.0.1"
+             supportEmail=""
+             secretKeyFile=""
+	     wdkTempDir=""
+             >
+
+  <queryMonitor
+      baseline=".1"
+      slow="2"
+      />
+
+  <appDb  login=""
+          password=""
+          connectionUrl="jdbc:postgresql://server:port/database"
+          platform="PostgreSQL"
+          maxActive="20"
+          maxIdle="10"
+          minIdle="1"
+          maxWait="50"
+          showConnections="false"
+          showConnectionsInterval="10"
+          showConnectionsDuration="600"
+	  acctDbLink=""
+	  userDbLink=""
+          />
+
+  <userDb login=""
+          password=""
+	  connectionUrl="jdbc:postgresql://server:port/database"
+	  platform="PostgreSQL"
+          maxActive="20"
+          maxIdle="1"
+          minIdle="1"
+          maxWait="50"
+          showConnections="false"
+          showConnectionsInterval="10"
+          showConnectionsDuration="600"
+          userSchema="userlogins5."
+          />
+
+  <accountDb login=""
+             password=""
+	     connectionUrl="jdbc:postgresql://server:port/database"
+	     platform="PostgreSQL"
+             maxActive="20"
+             maxIdle="1"
+             minIdle="1"
+             maxWait="50"
+             showConnections="false"
+             showConnectionsInterval="10"
+             showConnectionsDuration="600"
+             accountSchema="useraccounts.">
+
+    <userProperty name="firstName" displayName="First Name" dbKey="first_name" required="true"/>
+    <userProperty name="lastName" displayName="Last Name" dbKey="last_name" required="true"/>
+    <userProperty name="middleName" displayName="Middle Name" dbKey="middle_name"/>
+    <userProperty name="organization" displayName="Organization" dbKey="organization" required="true"/>
+  </accountDb>
+  
+ 
+</modelConfig>

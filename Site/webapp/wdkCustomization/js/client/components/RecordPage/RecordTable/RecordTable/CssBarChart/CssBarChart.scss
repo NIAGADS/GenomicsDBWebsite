@@ -1,0 +1,21 @@
+.css-bar-chart {
+    display: flex;
+    .chart-container {
+        display: flex;
+        max-width: 150px;
+        border-radius: 3px;
+        max-height: 1.4em;
+        flex-grow: 1;
+        .filled {
+            background-color: $yellow;
+            border: 1px $accent-lighter solid;
+        }
+        .empty {
+            flex-grow: 1;
+            background-color: $accent-lighter;
+        }
+    }
+    .pct-text {
+        width: 60px;
+    }
+}

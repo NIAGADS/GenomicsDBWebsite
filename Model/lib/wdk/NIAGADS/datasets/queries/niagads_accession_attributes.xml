@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+    <querySet name="NIAGADSDatasetAttributes" queryType="attribute" isCacheable="false">
+
+        <defaultTestParamValues>
+            <paramValue name="accession">NG00027</paramValue>
+        </defaultTestParamValues>
+
+        <testRowCountSql>
+      select count(*) from NIAGADS.ResourceAttributes
+        </testRowCountSql>
+
+
+        <!-- =============================================================== -->
+        <!-- Basic Attributes -->
+        <!-- =============================================================== -->
+
+        <sqlQuery name="BasicAttributes">
+            <column name="accession"/>
+            <column name="project_id"/>
+            <column name="external_link"/>
+            <column name="name"/>
+            <column name="description"/>
+            <column name="is_adsp"/>
+            <sql>
+                <![CDATA[
+                  SELECT accession,
+                    '@PROJECT_ID@'::text AS project_id,
+                    CASE WHEN attribution IS NULL THEN name ELSE name || ' (' || attribution || ')' END AS name,
+                    description,
+                    accession_link || '{"tooltip":"view accession details (incl. publication), find related accessions, or download the summary statistics"}' AS external_link,
+                    CASE WHEN name LIKE '%ADSP%' THEN build_icon_attribute('ADSP', 'fa-check-square-o', 'red', NULL, true::text)::text ELSE NULL END AS is_adsp
+                    FROM NIAGADS.DatasetAttributes
+                    WHERE accession LIKE 'NG%' AND accession != '@NON_GWAS_SS_NIAGADS@'
+                    ]]>
+            </sql>
+        </sqlQuery>
+    </querySet>
+
+
+  
+    <querySet name="NIAGADSDatasetTables" queryType="table" isCacheable="false">
+
+        <defaultTestParamValues>
+            <paramValue name="accession">NG00027</paramValue>
+        </defaultTestParamValues>
+
+        <testRowCountSql>
+      select count(*) from NIAGADS.ResourceAttributes
+        </testRowCountSql>
+
+
+        <!-- =============================================================== -->
+        <!-- Basic Attributes -->
+        <!-- =============================================================== -->
+
+        <sqlQuery name="SummaryStatistics">
+            <column name="accession"/>
+            <column name="project_id"/>
+            <column name="track"/>
+            <column name="name"/>
+            <sql>
+                <![CDATA[
+                    SELECT dataset_accession AS accession, '@PROJECT_ID@'::text AS project_id,
+                    build_link_attribute(track, '../gwas_summary/', NULL, 'view detailed report or mine these data') AS track,
+                    name, description
+                    FROM NIAGADS.TrackAttributes
+                    ORDER BY name
+       ]]>
+            </sql>
+        </sqlQuery>
+    </querySet>
+</wdkModel>

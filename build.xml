@@ -1,0 +1,203 @@
+<project name="NiagadsSite" default="Installation" basedir=".">
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo  Dependencies  oooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <import file="${projectsDir}/EbrcModelCommon/build.xml" />
+  <import file="${projectsDir}/EbrcWebSvcCommon/build.xml" />
+  <import file="${projectsDir}/WDK/build.xml" />
+  
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo  Installation  oooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="NiagadsSite-Installation" 
+    depends="EbrcModelCommon-Installation,
+             EbrcWebSvcCommon-Installation,
+						 NiagadsSite-MavenInstallation,
+						 NiagadsSite/Model-Installation,
+             NiagadsSite/Service-Installation,
+						 NiagadsSite/View-Installation,
+						NiagadsSite/Site-Installation">
+    <ant target="defaultProjectInstall">
+      <property name="project" value="NiagadsSite"/>
+    </ant>
+  </target>
+  
+  <target name="NiagadsSite-MavenInstallation">
+    <ant target="mavenBuildProject">
+      <property name="project" value="NiagadsSite"/>
+    </ant>
+    <property name="alreadyBuilt" value="true"/>
+  </target>
+
+  <!-- Added START-->
+  <!-- ooooooooooooooooooooooo  Install Components  ooooooooooooooooooooooo -->
+
+   <target name="NiagadsSite-WDKModel-Patch">
+    <echo message="Patching: WDK/Model"/>
+    <property name="patch-full-path-wdkmodel" 
+      location="${projectsDir}/${project}/patches/patch_WDKModel.bash"/>
+    <exec executable="${patch-full-path-wdkmodel}"/>
+  </target>
+  
+  <target name="NiagadsSite/Model-Installation" depends="NiagadsSite-WDKModel-Patch,
+                                                           WDK/Model-Installation">
+    <ant target="defaultComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="Model"/>
+    </ant>
+
+    <!-- the following four commands generate the website ontology -->
+    <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename individuals.txt -outputFilename individuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/individuals.owl'"/>
+      <classpath>
+        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
+        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
+        <pathelement location="${targetDir}/config/"/>
+      </classpath>
+    </java>
+
+    <java failonerror="true" classname="org.eupathdb.common.model.ontology.EuPathAnnotPropAdder">
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename annotation.txt -outputFilename annotation.owl  -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/annotation.owl'"/>
+      <classpath>
+        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
+        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
+        <pathelement location="${targetDir}/config/"/>
+      </classpath>
+    </java>
+
+
+    <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename commonIndividuals.txt -outputFilename commonIndividuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/commonIndividuals.owl'"/>
+      <classpath>
+        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
+        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
+        <pathelement location="${targetDir}/config/"/>
+      </classpath>
+    </java>
+    
+    <java failonerror="true" classname="org.eupathdb.common.model.ontology.OntologyMerger">
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename categories_full.owl -outputFilename categories_merged.owl"/>
+      <classpath>
+        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
+        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
+        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
+        <pathelement location="${targetDir}/config/"/>
+      </classpath>
+    </java>
+
+  </target>
+
+  <target name="NiagadsSite/Service-Installation">
+    <ant target="defaultComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="Service"/>
+    </ant>
+  </target>
+  
+  <target name="NiagadsSite/Site-Installation">
+    <ant target="defaultComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="Site"/>
+    </ant>
+  </target>
+
+  <target name="NiagadsSite/View-Installation">
+    <ant target="defaultComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="View"/>
+    </ant>
+  </target>
+
+  <!-- <target name="NiagadsSite/WSFPlugin-Installation"> -->
+  <!--   <ant target="defaultComponentInstall"> -->
+  <!--     <property name="project" value="NiagadsSite"/> -->
+  <!--     <property name="component" value="WSFPlugin"/> -->
+  <!--   </ant> -->
+  <!-- </target> -->
+
+  <!-- Added  END-->
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooo  Web Installation  oooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <target name="NiagadsSite-WebInstallation" depends="EbrcWebSvcCommon-WebInstallation,
+                                                      NiagadsSite-Installation,
+                                                      NiagadsSite/View-WebInstallation,
+                                                      NiagadsSite/Site-WebInstallation">
+  </target>
+
+  <target name="NiagadsSite-Website-Patch">
+    <echo message="Applying patches from ${projectsDir}/${project}/patches"/>
+    <echo message="Patching: EbrcWebsiteCommon"/>
+    <property name="patch-full-path-ebrc" 
+      location="${projectsDir}/${project}/patches/patch_EbrcWebsiteCommon.bash"/>
+    <exec executable="${patch-full-path-ebrc}"/>
+    <echo message="Patching: WDKClient"/>
+    <property name="patch-full-path-wdkclient" 
+      location="${projectsDir}/${project}/patches/patch_WDKClient.bash"/>
+    <exec executable="${patch-full-path-wdkclient}"/>
+  </target>
+
+  <target name="NiagadsSite/Site-WebInstallation"
+         depends="NiagadsSite-Website-Patch,
+                  WDKWebsite/View-WebInstallation">
+    <ant target="eupathWebComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="Site"/>
+    </ant>
+    <echo message="Copying ${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp to ${webappTargetDir}/WEB-INF/includes/client/index.jsp"/>
+    <copy file="${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp" 
+          tofile="${webappTargetDir}/WEB-INF/includes/client/index.jsp"
+          overwrite="true"/>
+  </target>
+
+  <target name="NiagadsSite/View-WebInstallation">
+
+    <ant target="defaultComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="View"/>
+    </ant>
+    
+    <ant target="defaultWebComponentInstall">
+      <property name="project" value="NiagadsSite"/>
+      <property name="component" value="View"/>
+    </ant>
+    
+  </target>
+
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooo  Release  ooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="NiagadsSite-Release">
+    <ant target="defaultProjectRelease">
+      <property name="cvsroot" value=":ext:cvs.sanger.ac.uk:/cvsroot/GUS"/>
+    </ant>
+  </target>
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo  Distributable  ooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="NiagadsSite-Distributable">
+
+    <copy todir="${targetDir}">
+      <fileset dir="${projectsDir}" >
+        <exclude name="**/CVS/*" />
+      </fileset>
+    </copy>
+  </target>
+
+</project>
+

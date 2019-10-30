@@ -1,0 +1,128 @@
+# Properties defined here can be referenced in model XML files.
+# For example, this line: NAME=value
+# will cause the WDK to replace  all occurrences of "@NAME@" in the model XML with "value".
+# Properties can also be accessed via jsp pages through the wdkModel bean as follows:
+# ${applicationScope.wdkModel.properties['NAME']}
+
+#----------------------------------------------------------
+# Project Identifiers & Configuration
+#----------------------------------------------------------
+
+PROJECT_ID=GRCh37
+#PROJECT_ID=GRCh38
+DONT_EMAIL_NEW_USER=true
+WDK_VERSION=API_BLD_42
+JBROWSE_VERSION=1.11.6
+
+SITE_ADMIN_EMAIL=
+
+STEP_ANALYSIS_JOB_DIR=/www/common/temp
+
+# uncomment to display banner at top of every page warning users that site is under active development
+IS_DEV_SITE=true
+IGNORE_LOGIN_RESTRICTIONS=true
+
+# Base URL: uncomment https://dev.niagads.org for development
+# only one should be uncommented
+# NIAGADS_BASE_URL=https://www.niagads.org 
+NIAGADS_BASE_URL=https://beta.niagads.org
+WEBAPP=genomics
+
+# bypass reporter selection since we only have one type; remove to reinstate normal WDK behavior
+# also will have to uncomment drop-down select in reporter.tag (site)
+DEFAULT_REPORTER=tabular
+
+#----------------------------------------------------------
+# Constants
+#----------------------------------------------------------
+
+DEFAULT_JBROWSE_TRACKS=ENSEMBL_GENE,ADSP_WES,ADSP_WGS,dbSNP_COMMON
+DEFAULT_JBROWSE_LOCATION=chr19:45342451..45430750
+
+FLANKING_REGION=10000
+
+#----------------------------------------------------------
+# External Database Release Ids (as referenced in appDb)
+#----------------------------------------------------------
+
+
+#----------------------------------------------------------
+# DATA INCLUSION/EXCLUSION LISTS
+#----------------------------------------------------------
+
+NON_GWAS_SS_NIAGADS=NG00061
+INFERNO_PUBMED_ID=30113658
+#----------------------------------------------------------
+# Internal Urls
+#----------------------------------------------------------
+
+DOCUMENTATION_URL=/showXmlDataContent.do?name=XmlQuestions.Documentation
+GENE_RECORD=/app/record/gene/
+RESOURCE_RECORD=/app/record/dataset/
+VARIANT_RECORD=/app/record/variant/
+SPAN_RECORD=/showRecord.do?name=DynSpanRecordClasses.DynSpanRecordClass&primary_key=
+VARIANTS_BY_FEATURE_SEARCH=/processQuestion.do?questionFullName=VariantQuestions.VariantsByGeneOrTranscript&checkbox_include_synonyms=false&flanking=0kb&feature_identifier=
+GENE_IN_REGION_SEARCH=/processQuestion.do?questionFullName=GeneQuestions.GenesByRegion&span=
+GWAS_SEARCH=processQuestion.do?questionFullName=VariantQuestions.gwas_stats
+SHOW_GWAS_SEARCH=showQuestion.do?questionFullName=VariantQuestions.gwas_stats
+REGION_COLOCATED_VARIANT_SEARCH=/processQuestion.do?questionFullName=VariantQuestions.VariantsByRegion&span=
+
+#----------------------------------------------------------
+# External URLS
+#----------------------------------------------------------
+
+INFERNO_URL=http://inferno.lisanwanglab.org/
+
+ENSEMBL_URL=http://www.ensembl.org/
+GENE_ONTOLOGY_URL=http://www.geneontology.org/
+NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
+ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
+DBSNP_BASE_URL=http://www.ncbi.nlm.nih.gov/SNP
+KEGG_BASE_URL=http://www.kegg.jp/
+SNP_EFF_URL=http://snpeff.sourceforge.net/
+SNP_EFF_VERSION=4.2
+EXAC_URL=http://exac.broadinstitute.org/
+HUGO_URL=https://www.genenames.org
+
+NCBI_ENTREZ_GENE_URL=http://www.ncbi.nlm.nih.gov/gene/
+NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
+NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
+
+ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
+ENSEMBL_TRANSCRIPT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
+ENSEMBL_VARIANT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
+
+VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
+OMIM_URL=http://omim.org/entry/
+
+STRINGDB_URL=http://string-db.org/newstring_cgi/show_network_section.pl?all_channels_on=1&interactive=yes&network_flavor=evidence&targetmode=proteins&species=9606&identifier=
+
+PUBMED_URL=http://www.ncbi.nlm.nih.gov/pubmed/
+PUBMED_GENE_SEARCH_URL=http://www.ncbi.nlm.nih.gov/pubmed?LinkName=gene_pubmed&from_uid=
+
+UNIPROT_URL=https://www.uniprot.org/uniprot/
+
+DOI_URL=https://www.doi.org/
+
+DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
+
+AMIGO_URL=http://amigo.geneontology.org/amigo/term/
+
+KEGG_PATHWAY_IMG_URL=http://www.kegg.jp/kegg-bin/show_pathway?
+KEGG_PATHWAY_LINK_URL=http://www.kegg.jp/dbget-bin/www_bget?pathway+
+
+REACTOME_PATHWAY_URL=https://reactome.org/content/detail/
+
+GTEX_GENE_URL=http://www.gtexportal.org/home/gene/
+GTEX_VARIANT_URL=http://www.gtexportal.org/home/snp/
+
+EXAC_VARIANT_URL=http://exac.broadinstitute.org/variant/
+EXAC_GENE_URL=http://exac.broadinstitute.org/gene/
+
+HUMAN_PROTEIN_ATLAS_URL=http://www.proteinatlas.org/
+
+EMBL_EXPRESSION_ATLAS_URL=https://www.ebi.ac.uk/gxa/search?exactMatch=true&_exactMatch=on&organism=Homo+sapiens&geneQuery=
+
+UCSC_BROWSER_URL_GRCh37=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=
+
+HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/

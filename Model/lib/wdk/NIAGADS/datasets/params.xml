@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+	<paramSet name="datasetParams">
+
+		<!-- =============================================================== -->
+		<!-- ID Search Params -->
+		<!-- =============================================================== -->
+
+        <filterParam name="phenotype" 
+                      metadataQueryRef="GWASDatasetVocab.DatasetPhenotypeFilterMetadata"
+                      backgroundQueryRef="GWASDatasetVocab.DatasetPhenotypeFilterMetadata"
+                      ontologyQueryRef="GWASDatasetVocab.DatasetPhenotypeFilterOntology"
+                      prompt="Phenotype"
+                      trimMetadataTerms="false">
+         <help>
+              Filter based on phenotype data
+         </help>
+       </filterParam>
+
+       <filterParam name="project" 
+                      metadataQueryRef="GWASDatasetVocab.DatasetProjectFilterMetadata"
+                      backgroundQueryRef="GWASDatasetVocab.DatasetProjectFilterMetadata"
+                      ontologyQueryRef="GWASDatasetVocab.DatasetProjectFilterOntology"
+                      prompt="Project"
+                      trimMetadataTerms="false">
+         <help>
+              Filter based on phenotype data
+         </help>
+       </filterParam>
+		
+		<!-- =============================================================== -->
+		<!-- Spans -->
+		<!-- =============================================================== -->
+
+	
+	</paramSet>
+</wdkModel>

@@ -1,0 +1,42 @@
+.carousel {
+    display: flex;
+    .content-section {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .carousel-toggle {
+            cursor: pointer;
+            -webkit-text-stroke: 2px white;
+            &:hover {
+                color: $gray;
+            }
+        }
+    }
+    .icon-section {
+        width: 50%;
+        display: flex;
+        justify-content: flex-end;
+        color: $gray;
+        .fa {
+            font-size: 200px;
+            color: rgba($gray, .5);
+        }
+        .carousel-example-image {
+            width: 300px
+        }
+    }
+  
+    .search-buttons {
+        @include media-breakpoint-down(md) {
+            display: flex;
+            flex-direction: column;
+        }
+        .carousel-example-button {
+            background-color: $yellow;
+            color: $white;
+            padding: 12px;
+            border-radius: 4px;
+        }
+    }
+}

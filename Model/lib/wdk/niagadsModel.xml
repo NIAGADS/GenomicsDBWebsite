@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <constant name="releaseDate" includeProjects="GRCh37,GRCh38">9 September 2018 00:00</constant>
+  <constant name="releaseVersion37"
+	    includeProjects="GRCh37">3.5</constant>
+  <constant name="releaseVersion38" includeProjects="GRCh38">1.0</constant>
+  <constant name="buildNumber37" includeProjects="GRCh37">GRCh37.p13/hg19</constant>
+  <constant name="buildNumber38" includeProjects="GRCh38">GRCh38.p10</constant>
+  
+  <constant name="fullReporterDisplayName">Text: choose from columns and/or tables</constant>
+  <constant name="attributesReporterDisplayName">Search Result Table</constant>
+  <constant name="tableReporterDisplayName">Additional Tabular Data</constant>
+  
+  <constant name="attributesReporterDescription">Choose columns from search result to download as a tab-delimited text or EXCEL file.</constant>
+  <constant name="tableReporterDescription">Choose tabular data not displayed in search results (e.g., proteomics, transcriptomics, functional annotation) to download as a tab-delimited text or EXCEL file.</constant>
+  
+  <constant name="defaultGene">ABCA7</constant>
+  <constant name="defaultTextExpression">*beta-amyloid*</constant>
+    
+  <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB" 
+	     version="%%releaseVersion37%%"
+	     releaseDate="%%releaseDate%%"
+	     buildNumber="%%buildNumber37%%" />
+
+  <modelName includeProjects="GRCh38" displayName="NIAGADS Alzheimer's GenomicsDB" 
+	     version="%%releaseVersion38%%"
+	     releaseDate="%%releaseDate%%"
+	     buildNumber="%%buildNumber38%%" />
+
+ 
+
+    <!-- order is the order in strategies/favorites tables -->
+   
+    <!-- VARIANTS -->
+    <import file="NIAGADS/variants/record.xml" /> 
+    <import file="NIAGADS/variants/queries/attributes.xml" />
+    <import file="NIAGADS/variants/queries/tables.xml" />
+    <!-- <import file="NIAGADS/variants/queries/filters.xml" /> -->
+    <import file="NIAGADS/variants/questions.xml" />
+    <import file="NIAGADS/variants/queries/questions.xml" />
+    <import file="NIAGADS/variants/params.xml" /> 
+    <!-- <import file="NIAGADS/variants/queries/vocab.xml"/> -->
+   
+    <!-- GENES  -->
+    <import file="NIAGADS/genes/record.xml" />
+    <import file="NIAGADS/genes/queries/attributes.xml" />
+    <import file="NIAGADS/genes/queries/tables.xml" />
+    <!-- <import file="NIAGADS/genes/queries/filters.xml" /> -->
+    <import file="NIAGADS/genes/questions.xml" /> 
+    <import file="NIAGADS/genes/queries/questions.xml" /> 
+    <import file="NIAGADS/genes/params.xml" /> 
+    <import file="NIAGADS/genes/queries/vocab.xml"/>
+
+    <!-- SPANS -->
+    <!-- <import file="NIAGADS/spans/record.xml" /> -->
+    <!-- <import file="NIAGADS/spans/queries/attributes.xml" /> -->
+    <!-- <import file="NIAGADS/spans/queries/tables.xml" /> -->
+    <!-- <!-\- <import file="NIAGADS/spans/queries/recordFilters.xml" /> -\-> -->
+    <!-- <import file="NIAGADS/spans/questions.xml" /> -->
+    <!-- <import file="NIAGADS/spans/queries/questions.xml" /> -->
+    <!-- <import file="NIAGADS/spans/params.xml" /> -->
+    <!-- <import file="NIAGADS/spans/queries/vocab.xml"/> -->
+
+    <!-- RESOURCE/DATASETS -->
+    <import file="NIAGADS/datasets/record.xml" /> 
+    <import file="NIAGADS/datasets/queries/resource_attributes.xml" /> 
+    <import file="NIAGADS/datasets/queries/niagads_accession_attributes.xml" /> 
+    <import file="NIAGADS/datasets/queries/gwas_summary_attributes.xml" /> 
+    <import file="NIAGADS/datasets/queries/gwas_summary_tables.xml" /> 
+    <import file="NIAGADS/datasets/queries/inferno_attributes.xml" /> 
+    <!-- <import file="NIAGADS/resources/queries/recordFilters.xml" /> -->
+    <import file="NIAGADS/datasets/questions.xml" /> 
+    <import file="NIAGADS/datasets/queries/questions.xml" /> 
+    <import file="NIAGADS/datasets/params.xml" />
+    <import file="NIAGADS/datasets/queries/vocab.xml"/>
+    
+    <!-- SHARED/COMMON -->
+    <import file="NIAGADS/shared/params.xml"/> 
+    <import file="NIAGADS/shared/queries/vocab.xml" />
+
+    <!-- XML Records -->
+    <!-- <import file="NIAGADS/xml/records.xml" /> -->
+    <!-- <import file="NIAGADS/xml/questions.xml" /> -->
+
+    <!-- SPAN LOGIC -->
+    <!-- <import file="CBIL/span_logic/questions.xml" /> -->
+    <!-- <import file="CBIL/span_logic/queries/queries.xml" /> -->
+    <!-- <import file="CBIL/span_logic/params.xml" /> -->
+
+
+     <!-- Step Analysis Plugins -->
+    <import file="NIAGADS/step_analysis/stepAnalysisPlugins.xml"/> 
+    <import file="NIAGADS/step_analysis/stepAnalysisParams.xml"/> 
+    <import file="NIAGADS/step_analysis/stepAnalysisVocabQueries.xml"/> 
+
+    <stepAnalysisPlugins>
+      <executionConfig fileStoreDirectory="@STEP_ANALYSIS_JOB_DIR@"/>
+    </stepAnalysisPlugins>
+
+    <!-- import common pieces -->
+    <import file="NIAGADS/categories.xml"/>
+    <import file="NIAGADS/shared/parameterGroups.xml"/>
+  
+    <!-- UTILITIES for heartbeat/etc -->
+    <!-- <import file="NIAGADS/utility/record.xml"/>  -->
+    <!-- <import file="NIAGADS/utility/queries/attributes.xml"/> -->
+
+
+</wdkModel>

@@ -1,0 +1,74 @@
+@import './Header/ClassicSiteHeader';
+@import './Footer/Footer';
+//globals
+text {
+    stroke: none;
+    fill: $black;
+}
+.main-stack {
+    #header {
+        height: auto;
+        background-color: $white-smoke;
+    }
+}
+.main-content {
+    margin: 0 auto;
+}
+.top-content {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+.purple {
+    color: $primary;
+}
+.red {
+    color: red;
+}
+.limegreen {
+    color: $lime-green;
+}
+.green {
+    color: green
+}
+.wdk-tooltip {
+    border-bottom: 1px dashed #069;
+    cursor: pointer;
+    white-space: nowrap;
+}
+ul {
+    list-style-type: none;
+}
+a {
+    &:hover {
+        cursor: pointer;
+    }
+    &.action-element {
+        //override bootstrap resets without unnecessary specifity...
+        color: $marine;
+    }
+}
+.badge, a.badge, .badge:link {
+    color: $white;
+    background-color: $accent-light;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    +.badge {
+        margin-left: 5px;
+    }
+    i {
+        //override bootstrap resets without unnecessary specifity...
+        color: $white;
+    }
+    &:hover {
+        text-decoration: none;
+        background-color: $accent-lightest;
+    }
+    &.red {
+        color: $white;
+        background-color: red;
+    }
+    &.small {
+        padding: 5px;
+    }
+}

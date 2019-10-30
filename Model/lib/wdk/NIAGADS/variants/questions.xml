@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <questionSet name="VariantQuestions" displayName="Queries to find Variants">
+
+    <description>
+      Variant Searches
+    </description>
+
+    <!-- =============================================================== -->
+    <!-- By Identifier -->
+    <!-- =============================================================== -->
+    <question name="variant_id" displayName="Identifier" shortDisplayName="ID" queryRef="VariantIds.Identifier" 
+        noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
+      <description>
+        <![CDATA[
+    		 View details and curated annotations for a specific
+    		 variant.
+		    <p class="param-summary">Enter a dbSNP ref SNP id or a variant id (chr:pos:ref:alt)</p>
+    	]]>
+      </description>
+      <summary>
+    	Get a Variant
+      </summary>
+    </question>
+
+    <question name="variant_upload" displayName="Upload a list of Variants" shortDisplayName="Upload" queryRef="VariantIds.Upload" noSummaryOnSingleRecord="true" urlName="upload" recordClassRef="VariantRecordClasses.VariantRecordClass">
+      <description>
+        <![CDATA[
+    	      <p>Upload a list of variants to compare against curated GenomicsDB resources or integrate with existing search strategies.</p>
+<p class="param-summary">Specify variants by dbSNP rs identifiers or positional-based identifiers (chr:pos:ref:alt) in a comma or new-line separated list or upload a file containing new-line separated identifiers.</p>
+    	]]>
+      </description>
+      <summary>
+    	Upload a list of variants
+      </summary>
+    </question>
+
+    <!-- =============================================================== -->
+    <!-- Annotation -->
+    <!-- =============================================================== -->
+
+
+
+    <!-- =============================================================== -->
+    <!-- Location -->
+    <!-- =============================================================== -->
+
+  <!--   <question name="Gene" 
+              displayName="Gene" 
+              shortDisplayName="Gene" 
+              urlName="gene"
+              queryRef="VariantIds.Gene" 
+              noSummaryOnSingleRecord="true" 
+              recordClassRef="VariantRecordClasses.VariantRecordClass">
+     <description>
+        <![CDATA[
+          <p>Retrieve a list of variants located within the genomic span of a gene.</p>
+          <p>Enter a gene ID (NCBI Entrez Gene, Ensembl) or symbol. Note that searches on gene symbol may map to multiple regions.</p>
+          ]]>
+      </description>
+      <summary>
+    	  Get variants co-located with a gene.
+      </summary>
+
+      <dynamicAttributes>
+        <columnAttribute name="relative_position" displayName="Relative Position"/>
+      </dynamicAttributes>
+    </question>
+
+    <question name="Transcript" 
+              displayName="Transcript" 
+              shortDisplayName="Transcript" 
+              urlName="transcript"
+              queryRef="VariantIds.Transcript" 
+              noSummaryOnSingleRecord="true" 
+              recordClassRef="VariantRecordClasses.VariantRecordClass">
+      <description>
+          Retrieve a list of variants located within the genomic span of a specific transcript, specified using the Ensembl transcript ID.
+      </description>
+      <summary>
+        	Get variants co-located with a gene or transcript
+      </summary>
+    </question>
+
+
+    <question name="Region" 
+              displayName="Genomic Region" 
+              shortDisplayName="Region" 
+              urlName="region"
+              queryRef="VariantIds.Region" 
+              noSummaryOnSingleRecord="true" 
+              recordClassRef="VariantRecordClasses.VariantRecordClass">
+      <description>
+        <![CDATA[<p>Retrieve a list of variants located within a specifc genomic region</p>
+                  <p>Specify the genomic region in the format chr:start-end (e.g.,19:45409011-45412650))</p>
+                  ]]>
+      </description>
+      <summary>
+      	Get all variants within the specified span.
+      </summary>
+    
+      <dynamicAttributes>
+        <columnAttribute name="relative_position" displayName="Relative Position"/>
+      </dynamicAttributes>
+    </question> -->
+
+    <!-- =============================================================== -->
+    <!-- Dataset -->
+    <!-- =============================================================== -->
+    <question name="gwas_stats" 
+              displayName="NIAGADS GWAS" 
+              shortDisplayName="GWAS" 
+              queryRef="VariantIds.GWAS" 
+              noSummaryOnSingleRecord="true" 
+              urlName="gwas_stats" 
+              recordClassRef="VariantRecordClasses.VariantRecordClass">
+
+      <attributesList summary="pvalue,is_adsp_variant,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding" />
+
+      <description>
+        <![CDATA[
+              <p>Identify variants associated with Alzheimer's disease or a related neuropathology in a NIAGADS GWAS summary statistics dataset.</p>
+<p>Select an accession to view a listing of searchable datasets.  Use the default cut-off of <em>p</em>-value &le; 5 x 10<sup>-8</sup> 
+              or specify your own threshold for genome-wide significance.  For exome-array studies, we recommend a cut-off of <em>p</em>-value &le; 1 x 10<sup>-3</sup>.</p>
+	      ]]>
+      </description>
+
+      <summary>
+        	Get variants associated with Alzheimer's disease or a related neuropathology in a NIAGADS GWAS summary statistics dataset.
+      </summary>
+
+      <dynamicAttributes>
+        <columnAttribute name="log10_pvalue" internal="true" inReportMaker="false" type="numeric"/>
+        <columnAttribute name="pvalue" displayName="p-value" sortable="true" type="numeric"/>
+        <columnAttribute name="test_allele" displayName="GWAS Test Allele" help="allele associated with p-value" type="string"/>
+      </dynamicAttributes>
+    </question>
+
+    <!--===========================================================================-->
+    <!-- Transforms -->
+    <!--===========================================================================-->
+
+    <!-- <question name="Variants.FromGenes" 
+              displayName="Transform -> Variants" 
+              shortDisplayName="From Genes" 
+              queryRef="VariantIds.FromGenes" 
+              urlName="genes2variants" 
+              recordClassRef="VariantRecordClasses.VariantRecordClass">
+
+      <description>
+        <![CDATA[From the gene result, get a list of variants (colocated based on genomic coordinates). After this gene to region transformation, the strategy can be exteneded further by adding new steps from the available variant searches]]>.
+      </description>
+      <summary>
+	        Retrieve the list of variants colocated with the genes in the result.
+      </summary>
+
+      <dynamicAttributes>
+        <columnAttribute name="matched_gene" displayName="Matched Gene" align="left" internal="true" inReportMaker="true" type="json_link"/>
+        <columnAttribute name="relative_position" displayName="Relative Position" align="left" internal="true" inReportMaker="true" type="json_text"/>
+      </dynamicAttributes>
+    </question> -->
+
+  </questionSet>
+
+</wdkModel>

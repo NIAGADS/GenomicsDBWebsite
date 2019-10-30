@@ -1,0 +1,9 @@
+Create the user, account, and announce schemas by running the SQL in the following files (in order as listed):
+
+1. $PROJECT_HOME/WDK/Model/data/create_schema_userlogins5_postgres.sql
+2. $PROJECT_HOME/PennTurboWebsite/Model/lib/sql/createWDKRole.sql
+3. $PROJECT_HOME/PennTurboWebsite/Model/lib/sql/createAnnounceSchema.sql
+4. $PROJECT_HOME/PennTurboWebsite/Model/lib/sql/createUserAccountsSchema.sql
+5. $PROJECT_HOME/PennTurboWebsite/Model/lib/sql/initializeWDKRoles.sql
+
+

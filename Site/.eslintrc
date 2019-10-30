@@ -1,0 +1,3 @@
+{
+  "extends": "../../WDKWebsite/View/.eslintrc"
+}

@@ -1,0 +1,68 @@
+@import 'HomePageCard/HomePageCard';
+@import 'DatasetHighlightRow/DatasetHighlightRow';
+@import 'DatasetHighlightSummary/DatasetHighlightSummary';
+
+.home-page {
+    .site-title {
+        font-family: Oswald;
+        font-size: 3em;
+        line-height: 1.2;
+        color: $gray;
+    }
+    .highlight-title{
+        color: $lime-green;
+    }
+    .quick-search-multi-box {
+        box-shadow: 0 0 3px #ccc, 0 10px 15px #ebebeb inset;
+    }
+    .quick-search-container-main {
+        .input-group {
+            border: 1px solid $accent-light;
+            border-radius: 5px;
+            input {
+                height: 60px;
+                line-height: normal;
+                font-size: 18px;
+                color: $accent-light;
+                background: $white;
+            }
+        }
+    }
+    .dataset-highlight-summary-container {
+        font-family: 'Open Sans';
+        background-color: $primary;
+        .dataset-highlight-inner-container {
+            margin: 0 auto;
+            max-width: 1080px;
+            color: $white;
+            display: flex; 
+        }
+    }
+    .cards-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        .row {
+            max-width: 1080px;
+            .card-column {
+                display: flex; 
+            }
+            @include media-breakpoint-down(sm) {
+                >.card-column {
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+    .highlights-container {
+        .highlights-inner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: $white-smoke;
+        }
+        >.highlights-inner-container {
+            margin-bottom: 20px;
+        }
+    }
+}

@@ -1,0 +1,12 @@
+.consequence-summary-container {
+    .consequence-details {
+        display: flex;
+        flex-wrap: wrap;
+        .consequence-section {
+            padding: 5px 20px;
+            +.consequence-section {
+                border-left: thin solid rgba($gray, .5);
+            }
+        }
+    }
+}

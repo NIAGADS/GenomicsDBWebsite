@@ -1,0 +1,71 @@
+		en	en
+		EUPATH_0000052	EUPATH_0000274
+Gene Structure	http://edamontology.org/topic_0114	Gene models	2
+Identity and mapping	http://edamontology.org/topic_3345	Link outs	4
+Annotation and curation	http://edamontology.org/topic_0219	Annotation, curation and identifiers	3
+Function analysis	http://edamontology.org/topic_1775	Function prediction	18
+Taxonomy	http://edamontology.org/topic_0637	Taxonomy	8
+Evolutionary biology	http://edamontology.org/topic_3299	Orthology and synteny	9
+Literature 	http://edamontology.org/topic_3068	Literature	7
+Immunology	http://edamontology.org/topic_0804	Immunology	21
+Molecular interactions	http://edamontology.org/topic_0602	Pathways and interactions	19
+Genetic Variation	http://edamontology.org/topic_0199	Genetic variation	10
+Phenomics	http://edamontology.org/topic_3298	Trait associations	11
+Epigenomics	http://edamontology.org/topic_3173	Epigenomics	12
+Transcriptomics	http://edamontology.org/topic_3308	Transcriptomics	13
+Sequence Analysis	http://edamontology.org/topic_0080	Sequence analysis	14
+Sequence	http://edamontology.org/data_2044	Sequences	14
+Protein properties	http://edamontology.org/topic_0123	Protein features and properties	16
+Protein targeting and localization	http://edamontology.org/topic_0140	Protein targeting and localization	17
+Proteomics	http://edamontology.org/topic_0121	Proteomics	20
+Structure Analysis	http://edamontology.org/topic_0081	Structure analysis	15
+Metabolomics	http://edamontology.org/topic_3172	Metabolomics	22
+Metagenomics	http://edamontology.org/topic_3174	Metagenomics	23
+Systems biology	http://edamontology.org/topic_2259	Systems biology	24
+Ontology and terminology	http://edamontology.org/topic_0089	Ontology and terminology	25
+Laboratory resources	http://edamontology.org/topic_0607	Laboratory resources	26
+Gene Report	http://edamontology.org/data_0916	Gene report	27
+Genome Report	http://edamontology.org/data_2711	Genome Report	28
+Transcripts	http://edamontology.org/topic_3512	Transcripts	102
+Poly A	http://edamontology.org/topic_1302	Poly A	103
+Introns	http://edamontology.org/topic_2754	Introns	104
+Splice sites	http://edamontology.org/topic_1307	Splice sites	105
+Metabolic pathways	http://edamontology.org/topic_0753	Metabolic pathways	106
+Protein interactions	http://edamontology.org/topic_0128	Protein interactions	107
+Signaling pathways	http://edamontology.org/topic_0754	Signaling pathways	108
+Protein expression	http://edamontology.org/topic_0108	Protein expression	109
+Protein modifications	http://edamontology.org/topic_0601	Protein modifications	110
+Mapping	http://edamontology.org/topic_0102	Mapping	112
+Sequence Assembly	http://edamontology.org/topic_0196	Sequence assembly	113
+Sequence comparison	http://edamontology.org/topic_0159	Sequence comparison	114
+Sequence composition, complexity and repeats	http://edamontology.org/topic_0157	Sequence composition, complexity and repeats	115
+Probe Design	http://edamontology.org/topic_0632	Array Probes	116
+Sequence search	http://edamontology.org/topic_3346	Sequence search	117
+NA Sequence	http://edamontology.org/data_2977	Nucleic acid sequence	118
+Protein Sequence	http://edamontology.org/data_2976	Protein sequence	119
+Sequence sites, features and motifs	http://edamontology.org/topic_0160	Sequence sites, features and motifs	120
+DNA Microarray	http://purl.obolibrary.org/obo/OBI_0400148	DNA Microarray	121
+RNASeq	http://purl.obolibrary.org/obo/OBI_0001271	RNASeq	122
+RT PCR	http://purl.obolibrary.org/obo/OBI_0001361	RT PCR	123
+CHIP Seq	http://purl.obolibrary.org/obo/OBI_0000716	CHIP Seq	124
+chip chip	http://purl.obolibrary.org/obo/OBI_0001248	ChIP chip	125
+SAGE	http://purl.obolibrary.org/obo/OBI_0002029	SAGE	126
+DNA polymorphism	http://edamontology.org/topic_2885	Allele overview	200
+Structural variation	http://edamontology.org/topic_3175	Structural variation	201
+DNA Binding sites	http://edamontology.org/topic_3125	DNA binding	202
+Mobile Genetic Elements	http://edamontology.org/topic_0798	Transposons	203
+DNA replication and recombination	http://edamontology.org/topic_3127	DNA replication and recombination	204
+Transcription Factors and regulatory sites	http://edamontology.org/topic_0749	Transcription factors and regulatory sites	205
+NGS SNP	http://purl.obolibrary.org/obo/OBI_0001247	SNP	300
+SNP Microarray	http://purl.obolibrary.org/obo/OBI_0001204	SNP Microarray	301
+CGH Array	http://purl.obolibrary.org/obo/OBI_0001393	CGH Microarray	302
+CNV	http://purl.obolibrary.org/obo/OBI_0000537	Copy number variation	303
+Biodiversity	http://edamontology.org/topic_3050	Biodiversity	30
+Public health and epidemiology	http://edamontology.org/topic_3305	Public health and epidemiology	35
+NIAGADS GWAS	http://www.niagadsontology.org/no_01	NIAGADS GWAS	405
+GWAS Catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	406
+INFERNO Report	http://www.niagadsontology.org/no_06	INFERNO Report	407
+Genetic mapping	http://edamontology.org/operation_0282	Genetic mapping	409
+Functional mapping	http://www.niagadsontology.org/no_03	Functional mapping	410
+Linkage mapping	http://www.niagadsontology.org/no_04	Linkage	408
+LD	http://www.niagadsontology.org/no_08	Linkage	408

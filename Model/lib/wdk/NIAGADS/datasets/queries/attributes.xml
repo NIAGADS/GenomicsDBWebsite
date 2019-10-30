@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+    <querySet name="ResourceAttributes" queryType="attribute" isCacheable="false">
+
+        <defaultTestParamValues>
+            <paramValue name="dataset_id">NG00027</paramValue>
+        </defaultTestParamValues>
+
+        <testRowCountSql>
+      select count(*) from NIAGADS.ResourceAttributes
+        </testRowCountSql>
+
+
+        <!-- =============================================================== -->
+        <!-- Basic Attributes -->
+        <!-- =============================================================== -->
+
+        <sqlQuery name="BasicAttributes">
+            <column name="source_id"/>
+            <column name="project_id"/>
+            <column name="accession_link"/>
+            <column name="name"/>
+            <column name="description"/>
+            <column name="attribution"/>
+            <column name="version"/>
+            <column name="category"/>
+            <column name="caveats"/>
+            <column name="is_adsp"/>
+                <sql>
+                    <![CDATA[
+                        SELECT dataset_id AS resource_id,
+                        '@PROJECT_ID@'::text AS project_id,
+                        name,
+                        description,
+                        accession,
+                        category,
+                        approaches AS caveats,
+                        attribution, 
+                        version,
+                        accession_link,
+                        CASE WHEN accession LIKE '%ADSP%' THEN TRUE ELSE FALSE END AS is_adsp
+                        FROM NIAGADS.DatasetAttributes
+                    ]]>
+                </sql>
+            </sqlQuery>
+
+
+        </querySet>
+    </wdkModel>

@@ -1,0 +1,17 @@
+.dataset-highlight-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    .highlight-name {
+        color: $white-smoke;
+        font-weight: bold;
+    }
+    .summary-text {
+        margin: 10px 0;
+    }
+    .highlight-title {
+        color: $lime-green;
+    }
+}

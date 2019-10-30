@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+	<querySet name="GWASDatasetIds" queryType="id" isCacheable="true">
+
+		<!-- =============================================================== -->
+		<!-- By Identifier -->
+		<!-- =============================================================== -->
+		<sqlQuery name="Browse">
+			<paramRef ref="datasetParams.phenotype"/>
+			<paramRef ref="datasetParams.project"/>
+			
+			<column name="track"/>
+			<column name="project_id"/>
+			<sql>
+				<![CDATA[
+					SELECT track, '@PROJECT_ID'::text AS project_id FROM NIAGADS.TrackAttributes 
+					WHERE track IN ($$phenotype$$) AND track IN ($$project$$)
+				]]>
+			</sql>
+		</sqlQuery>
+
+
+	</querySet>
+</wdkModel>

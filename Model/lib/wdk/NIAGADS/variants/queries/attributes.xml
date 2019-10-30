@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="VariantAttributes" queryType="attribute" isCacheable="false">
+
+    <!-- =================================================================== -->
+    <!-- Alias -->
+    <!-- allow search by refsnp, but only return first hit -->
+    <!-- =================================================================== -->
+    <sqlQuery name="VariantAlias" doNotTest="true">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="old_source_id"/>
+      <sql>
+	<![CDATA[
+			WITH ids AS (##WDK_ID_SQL##)
+			SELECT find_variant_primary_key(ids.old_source_id) AS source_id,
+			ids.old_source_id AS old_source_id,
+			'@PROJECT_ID@'::text AS project_id
+			FROM ids
+		]]>
+      </sql>
+    </sqlQuery>
+
+
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="SortingAttributes">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="display_metaseq_id"/>
+      <sql>
+	<![CDATA[
+		 SELECT '@PROJECT_ID@'::text AS project_id, 
+		 ids.source_id AS source_id,
+		 CASE WHEN length(split_part(ids.source_id, '_', 1)) > 30 THEN substr(split_part(ids.source_id, '_', 1), 0, 27) ELSE split_part(ids.source_id, '_', 1) END AS display_metaseq_id
+		 FROM (##WDK_ID_SQL##) ids			
+	]]>	
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="BasicAttributes">
+      <column name="project_id"/>
+      <column name="source_id"/>
+	  <column name="is_annotated"/>
+      <column name="metaseq_id"/>
+      <column name="ref_snp_id"/>
+      <column name="adsp_id"/>
+      <column name="variant_source"/>
+
+      <column name="chromosome"/>
+      <column name="position"/>
+      <column name="location"/>
+
+      <column name="full_jbrowse_link"/>
+      <column name="jbrowse_source_url"/>
+
+      <column name="ref_allele"/>
+      <column name="alt_allele"/>
+      <column name="display_allele"/>
+
+      <column name="variant_class_abbrev"/>
+
+      <column name="sequence_allele"/>
+
+      <column name="is_reversed"/>
+
+      <column name="is_adsp_variant"/>
+      <column name="is_adsp_wes"/>
+      <column name="is_adsp_wgs"/>
+
+      <column name="is_multi_allelic"/>
+
+      <column name="most_severe_consequence"/>
+      <column name="msc_impacted_gene"/>
+      <column name="msc_impacted_gene_link"/>
+      <column name="msc_impacted_gene_symbol"/>
+      <column name="msc_impact"/>
+      <column name="msc_amino_acid_change"/>
+      <column name="msc_codon_change"/>
+      <column name="msc_impacted_transcript"/>
+      <column name="msc_is_coding"/>
+
+      <sql>
+	<![CDATA[
+			WITH ids AS (##WDK_ID_SQL##),
+			
+			inDB AS (
+ 				SELECT '@PROJECT_ID@'::text AS project_id, 
+		 		record_pk AS source_id,
+		 		CASE WHEN length(metaseq_id) > 30 THEN substr(metaseq_id, 0, 27) ELSE metaseq_id END AS display_metaseq_id,
+		 		metaseq_id,
+				source AS variant_source,
+				v.has_annotation AS is_annotated,
+				CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id ELSE NULL END AS ref_snp_id,
+				CASE WHEN is_adsp_variant THEN metaseq_id || '_b37' ELSE NULL END AS adsp_id,
+				ref_allele,
+				alt_allele,
+				chromosome,
+				position,
+				CASE WHEN location_start = location_end THEN NULL ELSE location_start::text || ' - ' || location_end::text END AS location,
+				display_allele,
+				'full jbrowse url'                           AS full_jbrowse_link, -- virtual column
+                'jbrowse_source_url_w_highlight'                          AS jbrowse_source_url, -- virtual column
+                v.sequence_allele_display AS sequence_allele, -- virtual column
+                v.adsp_variant_display_flag AS is_adsp_variant, -- virtual column
+                v.adsp_wes_display_flag AS is_adsp_wes, -- virtual column
+                v.adsp_wgs_display_flag AS is_adsp_wgs, -- virtual column
+                is_multi_allelic,
+                is_reversed,
+                variant_class_abbrev,
+                annotation->'VEP_MS_CONSEQUENCE'->>'impact' AS msc_impact, -- virtual column
+                v.most_severe_consequence,
+                annotation->'VEP_MS_CONSEQUENCE'->>'gene_symbol' AS msc_impacted_gene_symbol, 
+                annotation->'VEP_MS_CONSEQUENCE'->>'gene_id'     AS msc_impacted_gene,
+                v.msc_impacted_gene_link, -- virtual column
+                replace(replace(v.msc_impacted_transcript, '+ENSEMBL_TRANSCRIPT_URL_GRCh38+', '@ENSEMBL_TRANSCRIPT_URL_GRCh38@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh37+', '@ENSEMBL_TRANSCRIPT_URL_GRCh37@') AS msc_impacted_transcript,     -- virtual column             
+                annotation->'VEP_MS_CONSEQUENCE'->>'codons'      AS msc_codon_change, 
+                annotation->'VEP_MS_CONSEQUENCE'->>'amino_acids' AS msc_amino_acid_change,
+                v.msc_is_coding -- virtual column
+		 		FROM NIAGADS.Variant v, ids WHERE v.record_pk = ids.source_id
+			) 
+		 
+			SELECT * FROM inDB
+
+			UNION 
+
+			SELECT '@PROJECT_ID@'::text AS project_id, 
+			ids.source_id,
+			NULL AS display_metase_id,
+			NULL AS metaseq_id,
+			'dbSNP' AS variant_source,
+			FALSE AS is_annotated,
+			ids.source_id AS ref_snp_id,
+			NULL AS adsp_id,
+			NULL AS ref_allele,
+			NULL AS alt_allele,
+			NULL AS chromosome,
+			NULL AS position,
+			NULL AS location,
+			NULL AS display_allele,
+			NULL AS full_jbrowse_link,
+			NULL AS jbrowse_source_url,
+			NULL AS sequence_allele,
+			NULL AS is_adsp_variant,
+			NULL AS is_adsp_wes,
+			NULL AS is_adsp_wgs,
+			NULL AS is_multi_allelic,
+			NULL AS is_reversed,
+			NULL AS variant_class_abbrev,
+			NULL AS msc_impat,
+			NULL AS most_severe_consequence,
+			NULL AS msc_impacted_gene_symbol,
+			NULL AS msc_impacted_gene,
+			NULL AS msc_impacted_gene_link,
+			NULL AS msc_impacted_transcript,
+			NULL AS msc_codon_change,
+			NULL AS msc_amino_acid_change,
+			NULL AS msc_is_coding
+			FROM ids
+			WHERE NOT EXISTS (SELECT * FROM inDB WHERE ids.source_id = inDB.source_id)
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="Sequence">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="upstream_sequence"/>
+      <column name="downstream_sequence"/>
+      <column name="flanking_sequence"/>
+      <sql>
+			<![CDATA[
+				SELECT source_id, 
+				'@PROJECT_ID@'::text AS project_id,
+				upstream_sequence, downstream_sequence,
+				upstream_sequence || '[' || sequence_allele || ']' || downstream_sequence AS flanking_sequence
+				FROM (
+						WITH id AS (##WDK_ID_SQL##),
+
+						Variant AS (
+							SELECT id.source_id, v.position, v.chromosome, v.sequence_allele
+							FROM NIAGADS.Variant v, id
+							WHERE id.source_id = v.record_pk
+						)
+
+						SELECT id.source_id, NULL AS sequence_allele, NULL AS downstream_sequence, NULL AS upstream_sequence 
+						FROM id WHERE NOT EXISTS (SELECT * FROM Variant)
+
+						UNION
+
+						SELECT v.source_id, 
+						v.sequence_allele,
+						substring(s.sequence from v.position + 1 for 25) AS downstream_sequence,
+						substring(s.sequence from v.position - 25 for 25) AS upstream_sequence
+						FROM Variant v,
+						DoTS.ExternalNASequence s
+						WHERE v.chromosome = s.source_id	 
+				) s
+			]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="RefSnpStatus">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="has_merge_history"/>
+      <sql>
+	<![CDATA[
+		 SELECT id.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 CASE WHEN find_current_ref_snp(split_part(id.source_id, '_', 2)) IS NOT NULL THEN true ELSE NULL END AS has_merge_history
+		 FROM (##WDK_ID_SQL##) id
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="VariantClass">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="variant_class"/>
+      <sql>
+			<![CDATA[		 
+				WITH ids AS (##WDK_ID_SQL##),
+
+				Result AS (
+				SELECT v.record_pk AS source_id,
+						'@PROJECT_ID'::text AS project_id,
+						CASE WHEN ot.name = 'SNV' THEN 'single-nucleotide variant' WHEN ot.name = 'MNV' 
+						THEN 'mutli-nucleotide variant' ELSE ot.name END AS variant_class
+						FROM Niagads.Variant v, ids,
+						SRes.OntologyTerm ot
+						WHERE ot.ontology_term_id = variant_class_id
+						AND ids.source_id = v.record_pk)
+
+				SELECT * FROM result
+				UNION
+				SELECT ids.source_id, '@PROJECT_ID@'::text AS project_id, NULL AS variant_class 
+				FROM ids 
+				WHERE NOT EXISTS (SELECT * from result)
+			]]>
+      </sql>
+    </sqlQuery>
+
+
+
+    <!-- =============================================================== -->
+    <!-- QC -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="WGSQCFilter">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="adsp_wgs_qc_filter_status_display"/>
+      <column name="adsp_wgs_qc_filter_status"/>
+      <sql>
+	<![CDATA[
+		 	WITH id AS (##WDK_ID_SQL##),
+		result AS (
+		SELECT v.record_pk AS source_id,
+				'@PROJECT_ID@'::text AS project_id,
+				replace(replace(ot.definition, 'Baylor', 'ATLAS'), 'Broad', 'GATK') AS adsp_wgs_qc_filter_status,
+				CASE WHEN split_part(ot.definition, ':', 1) = 'PASS' THEN build_text_attribute('PASS', split_part(replace(replace(ot.definition, 'Baylor', 'ATLAS'), 'Broad', 'GATK'), ': ', 2), 'blue') 
+				WHEN split_part(ot.definition, ':', 1) = 'FAIL' 
+				THEN build_text_attribute('FAIL', split_part(replace(replace(ot.definition, 'Baylor', 'ATLAS'), 'Broad', 'GATK'), ': ', 2), 'red') 
+				END AS adsp_wgs_qc_filter_status_display
+				FROM id, Niagads.Variant v  LEFT OUTER JOIN
+				SRES.OntologyTerm ot
+				ON v.annotation->>'ADSP_WGS_FILTER' = ot.name
+				WHERE id.source_id = v.record_pk
+		)
+		SELECT * FROM result	 
+		UNION 
+		SELECT id.source_id, '@PROJECT_ID@'::text AS project_id, NULL AS adsp_wgs_filter_status, NULL AS adsp_wgs_qc_filter_status_display
+		FROM id WHERE NOT EXISTS (SELECT * FROM result)
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="WESQCFilter">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="adsp_wes_qc_filter_status_display"/>
+      <column name="adsp_wes_qc_filter_status"/>
+      <sql>
+	<![CDATA[
+		WITH id AS (##WDK_ID_SQL##),
+		result AS (
+		SELECT v.record_pk AS source_id,
+				'@PROJECT_ID@'::text AS project_id,
+				replace(replace(ot.definition, 'Baylor', 'ATLAS'), 'Broad', 'GATK') AS adsp_wes_qc_filter_status,
+				CASE WHEN split_part(ot.definition, ':', 1) = 'PASS' THEN build_text_attribute('PASS', split_part(replace(replace(ot.definition, 'Baylor', 'ATLAS'), 'Broad', 'GATK'), ': ', 2), 'blue') 
+				WHEN split_part(ot.definition, ':', 1) = 'FAIL' 
+				THEN build_text_attribute('FAIL', split_part(replace(replace(ot.definition, 'Baylor', 'ATLAS'), 'Broad', 'GATK'), ': ', 2), 'red') 
+				END AS adsp_wes_qc_filter_status_display
+				FROM id, Niagads.Variant v  LEFT OUTER JOIN
+				SRES.OntologyTerm ot
+				ON v.annotation->>'ADSP_WES_FILTER' = ot.name
+				WHERE id.source_id = v.record_pk
+		)
+		SELECT * FROM result	 
+		UNION 
+		SELECT id.source_id, '@PROJECT_ID@'::text AS project_id, NULL AS adsp_wes_filter_status, NULL AS adsp_wes_qc_filter_status_display
+		FROM id WHERE NOT EXISTS (SELECT * FROM result)
+	]]>
+      </sql>
+    </sqlQuery>
+
+
+    <!-- =============================================================== -->
+    <!-- Genomic Location -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="ColocatedVariants">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="num_colocated_variants"/>
+      <column name="colocated_variants"/>
+      <sql>
+	<![CDATA[
+		 WITH record AS (
+		 SELECT source_id,
+		 CASE WHEN source_id LIKE 'rs%' THEN NULL ELSE 'chr' || split_part(source_id, ':', 1) END  AS chromosome,
+		 CASE WHEN source_id LIKE 'rs%' THEN NULL ELSE split_part(source_id, ':',2)::numeric END AS position,
+		 CASE WHEN source_id LIKE 'rs%' THEN source_id ELSE split_part(source_id, '_', 2) END ref_snp_id
+		 FROM 
+		 (##WDK_ID_SQL##) id
+		 ),
+		 flanking_bin AS (
+		 SELECT source_id, 
+		 ref_snp_id, position, 
+		 find_bin_index(record.chromosome, record.position - 10, record.position + 10) AS bin_index
+		 FROM record
+		 ),
+		 colocatedV AS (
+		 SELECT fb.source_id,
+		 COUNT(v.record_pk) AS num_colocated_variants,
+		 jsonb_agg(
+		 build_link_attribute(
+		 CASE WHEN length(v.metaseq_id) > 20 THEN substr(v.metaseq_id, 0, 17) ||  '...' ELSE v.metaseq_id END || ' (' || v.source_id || ')',
+		 '', v.record_pk, CASE WHEN length(v.metaseq_id) > 20 THEN v.metaseq_id ELSE NULL END)) AS colocated_variants
+		 FROM 
+		 flanking_bin fb LEFT OUTER JOIN
+		 NIAGADS.Variant v
+		 ON fb.bin_index @> v.bin_index
+		 AND numrange(v.position, v.location_end, '[]') @> fb.position
+		 AND fb.source_id <> v.record_pk
+		 AND fb.ref_snp_id <> v.source_id
+		 GROUP BY fb.source_id
+		 ) 
+		 SELECT source_id, 
+		 '@PROJECT_ID@'::text AS project_id, 
+		 num_colocated_variants, 
+		 CASE WHEN num_colocated_variants < 1 
+		 THEN colocated_variants->>0 
+		 ELSE colocated_variants::text END AS colocated_variants 
+		 FROM colocatedV	
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="AlternativeVariants">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="num_alternative_variants"/>
+      <column name="alternative_variants"/>
+      <sql>
+			<![CDATA[
+				WITH record AS (
+				SELECT source_id,
+				CASE WHEN source_id LIKE 'rs%' THEN source_id ELSE split_part(source_id, '_', 2)  END AS ref_snp_id
+				FROM 
+				(##WDK_ID_SQL##) id
+				),
+
+				altV AS ( 
+				SELECT 
+				r.source_id,
+				v.minor_allele_count - 1 AS num_alternative_variants,
+				jsonb_agg(
+				build_link_attribute(
+				CASE WHEN length(v.metaseq_id) > 20 THEN substr(v.metaseq_id, 0, 17) ||  '...' ELSE v.metaseq_id END || ' (' || v.source_id || ')',
+				'', v.record_pk, CASE WHEN length(v.metaseq_id) > 20 THEN v.metaseq_id ELSE NULL END)) AS alternative_variants
+				FROM record r,
+				NIAGADS.Variant v
+				WHERE v.source_id = r.ref_snp_id
+				AND v.record_pk <> r.source_id
+				GROUP BY r.source_id, v.minor_allele_count
+				)
+
+				SELECT r.source_id,
+				'@PROJECT_ID@'::text AS project_id,
+				altV.num_alternative_variants, 
+				altV.alternative_variants
+				FROM record r LEFT OUTER JOIN
+				altV ON altV.source_id = r.source_id
+
+			]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="ColocatedGenes">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="colocated_genes"/>
+      <column name="num_colocated_genes"/>
+
+      <sql>
+	<![CDATA[
+		 WITH genes AS (
+		 SELECT v.record_pk AS source_id, 
+		 jsonb_agg(build_link_attribute(ga.source_id, '../gene/', ga.gene_symbol, 'view gene details')) AS colocated_genes 
+		 FROM
+		 NIAGADS.Variant v,
+		 CBIL.GeneAttributes ga
+		 WHERE ga.bin_index @> v.bin_index
+		 AND numrange(ga.location_start, ga.location_end, '[]') @> v.location_start::numeric
+		 AND v.record_pk = (##WDK_ID_SQL##)
+		 GROUP BY v.record_pk
+		 )
+
+SELECT id.source_id, 
+'@PROJECT_ID@'::text AS project_id,
+jsonb_array_length(colocated_genes) AS num_colocated_genes,
+CASE WHEN jsonb_array_length(colocated_genes) > 1 THEN colocated_genes
+ELSE colocated_genes->0 END AS colocated_genes
+FROM (##WDK_ID_SQL##) id LEFT OUTER JOIN genes
+ON genes.source_id = id.source_id
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <!-- =============================================================== -->
+    <!-- Genetic Variation -->
+    <!-- =============================================================== -->
+
+
+    <!-- =============================================================== -->
+    <!-- Function analysis -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="ImpactedFeatureCount">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="num_impacted_genes"/>
+      <column name="num_impacted_transcripts"/>
+      <sql>
+	<![CDATA[
+		 WITH vEffect AS (
+		 SELECT id.source_id, jsonb_array_elements(ve.transcript_consequences) AS conseq
+		 FROM (##WDK_ID_SQL##) id 
+		 LEFT OUTER JOIN
+		 NIAGADS.Variant v ON id.source_id = v.record_pk LEFT OUTER JOIN Results.VariantEffect ve
+		 ON  ve.variant_id = v.variant_id
+		 ),
+
+tConseq AS (
+SELECT DISTINCT source_id,
+conseq->>'gene_id' AS gene,
+conseq->>'transcript_id' AS transcript
+FROM vEffect
+)
+
+SELECT id.source_id,
+'@PROJECT_ID@'::text AS project_id,
+COUNT (DISTINCT gene) AS num_impacted_genes,
+COUNT (DISTINCT transcript) AS num_impacted_transcripts
+FROM (##WDK_ID_SQL##) id LEFT OUTER JOIN tConseq
+ON tConseq.source_id = id.source_id
+GROUP BY id.source_id
+	]]>
+      </sql>
+    </sqlQuery>
+
+
+    <sqlQuery name="TranscriptConsequenceSummary">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="transcript_consequence_summary"/>
+      <sql>
+	<![CDATA[ 
+		 WITH vEffect AS (
+		 SELECT id.source_id, jsonb_array_elements(ve.transcript_consequences) AS conseq
+		 FROM (##WDK_ID_SQL##) id 
+		 LEFT OUTER JOIN
+		 NIAGADS.Variant v ON id.source_id = v.record_pk LEFT OUTER JOIN Results.VariantEffect ve
+		 ON  ve.variant_id = v.variant_id
+		 ),
+		 tConseq AS (
+		 SELECT DISTINCT source_id, 
+		 multi_replace(conseq->>'consequence_terms', ARRAY[']', '[', '_', ', ', '"'], ARRAY['', '', ' ', ' & ', '']) AS consequence,
+		 conseq->>'gene_id' AS gene_source_id,
+		 build_link_attribute(conseq->>'gene_symbol', '../gene/', conseq->>'gene_id', 'view gene details') AS gene_link,
+		 build_link_attribute(conseq->>'transcript_id', CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_TRANSCRIPT_URL_GRCh37@' ELSE '@ENSEMBL_TRANSCRIPT_URL_GRCh38@' END, 
+		 NULL, 'view transcript details from Ensembl' || CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN ' @PROJECT_ID@ Archive' ELSE '' END) AS transcript_link
+		 FROM vEffect
+		 ),
+		 aggTranscript AS (
+		 SELECT source_id,
+		 consequence,
+		 gene_source_id,
+		 gene_link,
+		 jsonb_agg(transcript_link) AS transcript_link
+		 FROM tConseq
+		 GROUP BY source_id, consequence, gene_source_id, gene_link),
+		 geneJSON AS (
+		 SELECT source_id,
+		 consequence,
+		 jsonb_build_object('gene_link', gene_link) || jsonb_build_object('transcript_links', transcript_link) AS feature_json
+		 FROM aggTranscript
+		 ),
+
+result AS (
+SELECT source_id, 
+jsonb_build_object(consequence, jsonb_agg(feature_json)) AS transcript_consequences
+FROM geneJSON 
+GROUP BY source_id, consequence
+)
+
+SELECT source_id, '@PROJECT_ID@'::text AS project_id,
+jsonb_agg(transcript_consequences) AS transcript_consequence_summary
+FROM result 
+GROUP BY source_id
+UNION SELECT id.source_id, '@PROJECT_ID@'::text,
+NULL AS transcript_consequences 
+FROM (##WDK_ID_SQL##) id
+WHERE NOT EXISTS (SELECT * FROM Result) -- keeps jsonb operators from being performed on NULLs
+	]]>
+      </sql>
+    </sqlQuery>
+
+
+    <sqlQuery name="CADD">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="cadd_phred_score"/>
+      <column name="cadd_raw_score"/>
+
+      <sql>
+	<![CDATA[
+		 WITH variant AS (
+		 SELECT id.source_id::text,
+		 sf.na_feature_id
+		 FROM DoTS.SnpFeature sf,
+		 (##WDK_ID_SQL##) id
+		 WHERE id.source_id::text = sf.primary_key)
+                 SELECT variant.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 (sv.evidence->>'CADD_phred')::numeric AS cadd_phred_score,
+		 (sv.evidence->>'CADD_raw_score')::numeric AS cadd_raw_score
+		 FROM variant LEFT OUTER JOIN		 
+		 Study.ProtocolAppNode pan INNER JOIN Results.SeqVariation sv
+		 ON  pan.source_id = 'CADD'
+		 AND pan.protocol_app_node_id = sv.protocol_app_node_id
+		 ON  variant.na_feature_id = sv.snp_na_feature_id
+	]]>
+      </sql>
+    </sqlQuery>
+
+
+
+    <sqlQuery name="CATO">
+      <column name="project_id"/>
+      <column name="source_id"/>
+      <column name="cato_motif_affected"/>
+      <column name="cato_score_percentile"/>
+      <column name="cato_cell_types_affected"/>
+
+      <sql>
+	<![CDATA[
+		 WITH variant AS (
+		 SELECT id.source_id::text, sf.na_feature_id
+		 FROM DoTS.SnpFeature sf,
+		 (##WDK_ID_SQL##) id
+		 WHERE id.source_id::text = sf.primary_key)
+		 
+		 SELECT variant.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 (sv.evidence->>'cato_motif_affected')::text AS cato_motif_affected,
+		 score AS cato_score_percentile,
+		 (sv.evidence->>'cato_cell_types_affected')::text AS cato_cell_types_affected
+		 FROM 
+		 variant LEFT OUTER JOIN 
+		 Study.ProtocolAppNode pan INNER JOIN Results.SeqVariation sv
+		 ON  pan.source_id = 'CATO'
+		 AND pan.protocol_app_node_id = sv.protocol_app_node_id
+		 ON variant.na_feature_id = sv.snp_na_feature_id
+	]]>
+      </sql>
+    </sqlQuery>
+
+  </querySet>
+</wdkModel>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="GWASDatasetVocab" queryType="vocab" isCacheable="true">
+    <sqlQuery name="DatasetPhenotypeFilterMetadata">
+      <column name="internal"/>
+      <column name="ontology_term_name"/>
+      <column name="number_value"/>
+      <column name="string_value"/>
+      <column name="date_value"/>
+      <sql>
+        <![CDATA[
+            SELECT track AS internal,
+            q.name AS ontology_term_name,
+            cast(NULL AS numeric(10)) AS number_value,
+            ot.name AS string_value,
+            cast(NULL AS numeric(10)) AS date_value
+            FROM
+            NIAGADS.TrackAttributes ta,
+            Study.Characteristic c,
+            SRes.OntologyTerm q,
+            SRes.OntologyTerm ot
+            WHERE c.protocol_app_node_id = ta.protocol_app_node_id
+            AND c.qualifier_id = q.ontology_term_id
+            AND ot.ontology_term_id = c.ontology_term_id
+            AND (ta.track LIKE 'NG%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
+
+            UNION
+
+            SELECT track AS internal,
+            q.name AS ontology_term_name,
+            cast(NULL AS numeric(10)) AS number_value,
+            c.value AS string_value,
+            cast(NULL AS numeric(10)) AS date_value
+            FROM
+            NIAGADS.TrackAttributes ta,
+            Study.Characteristic c,
+            SRes.OntologyTerm q
+            WHERE c.protocol_app_node_id = ta.protocol_app_node_id
+            AND c.qualifier_id = q.ontology_term_id
+            AND c.value IS NOT NULL
+            AND (ta.track LIKE 'NG%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
+
+         ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="DatasetProjectFilterMetadata">
+      <column name="internal"/>
+      <column name="ontology_term_name"/>
+      <column name="number_value"/>
+      <column name="string_value"/>
+      <column name="date_value"/>
+      <sql>
+        <![CDATA[
+            SELECT track AS internal,
+            'Project' AS ontology_term_name,
+            cast(NULL AS numeric(10)) AS number_value,
+            CASE WHEN name LIKE '%ADGC%' THEN 'ADGC' 
+            WHEN name LIKE '%IGAP%' THEN  'IGAP'
+            WHEN name LIKE '%ADSP%' THEN 'ADSP' ELSE 'OTHER' END AS string_value,
+            cast(NULL AS numeric(10)) AS date_value
+            FROM NIAGADS.TrackAttributes ta
+            WHERE name SIMILAR TO'%(IGAP|ADGC|ADSP)%'
+            AND (ta.track LIKE 'NG%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
+         ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="DatasetFilterOntology">
+      <column name="ontology_term_name"/>
+      <column name="parent_ontology_term_name"/>
+      <column name="display_name"/>
+      <column name="description"/>
+      <column name="type"/>
+      <column name="units"/>
+      <column name="precision"/>
+      <column name="is_range"/>
+      <sql>
+        <![CDATA[
+             SELECT DISTINCT filter_category AS ontology_term_name,
+              filter_category AS display_name,
+              'string' AS type,
+              CAST(0 AS NUMERIC(10)) AS is_range,
+              CASE WHEN filter_category_parent IS NULL THEN CAST(NULL AS CHARACTER VARYING(10))
+              ELSE filter_category_parent END AS parent_ontology_term_name,
+              CAST(NULL AS CHARACTER VARYING(10)) AS description,
+              CAST(NULL AS CHARACTER VARYING(10)) AS units,
+              CAST(NULL AS NUMERIC(10)) AS precision
+              FROM NIAGADS.ProtocolAppNodeCharacteristic 
+              WHERE track LIKE 'NG%' AND track NOT SIMILAR TO '%' || '(NG00061)' || '%'
+           ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="DatasetPhenotypeFilterOntology">
+      <column name="ontology_term_name"/>
+      <column name="parent_ontology_term_name"/>
+      <column name="display_name"/>
+      <column name="description"/>
+      <column name="type"/>
+      <column name="units"/>
+      <column name="precision"/>
+      <column name="is_range"/>
+      <sql>
+        <![CDATA[
+              SELECT DISTINCT q.name AS ontology_term_name,
+              q.name AS display_name,
+              'string' AS type,
+              CAST(0 AS NUMERIC(10)) AS is_range,
+              CAST(NULL AS CHARACTER VARYING(10)) AS parent_ontology_term_name,
+              CAST(NULL AS CHARACTER VARYING(10)) AS description,
+              CAST(NULL AS CHARACTER VARYING(10)) AS units,
+              CAST(NULL AS NUMERIC(10)) AS precision
+              FROM NIAGADS.TrackAttributes ta,
+              Study.Characteristic c,
+              SRes.OntologyTerm q
+              WHERE ta.protocol_app_node_id = c.protocol_app_node_id
+              AND c.qualifier_id = q.ontology_term_id
+              AND (ta.track LIKE 'NG%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
+           ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="DatasetProjectFilterOntology" 
+      doNotTest="1">
+      <column name="ontology_term_name"/>
+      <column name="parent_ontology_term_name"/>
+      <column name="display_name"/>
+      <column name="description"/>
+      <column name="type"/>
+      <column name="units"/>
+      <column name="precision"/>
+      <column name="is_range"/>
+      <sql>
+        <![CDATA[
+
+              SELECT 'Project' AS ontology_term_name,
+              'Project' AS display_name,
+              'string' AS type,
+              CAST(0 AS NUMERIC(10)) AS is_range,
+              CAST(NULL AS CHARACTER VARYING(10)) AS parent_ontology_term_name,
+              'sequencing project' AS description,
+              CAST(NULL AS CHARACTER VARYING(10)) AS units,
+              CAST(NULL AS NUMERIC(10)) AS precision
+           ]]>
+      </sql>
+    </sqlQuery>
+
+
+  </querySet>
+
+</wdkModel>

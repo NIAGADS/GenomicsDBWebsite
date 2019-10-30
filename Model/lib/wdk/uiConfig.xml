@@ -1,0 +1,11 @@
+<wdkModel>
+  <uiConfig showStratPanelByDefault="false">
+    <!-- The following cookies will be set to expire immediately following user-initiated logout -->
+    <!-- <extraLogoutCookies>
+      <cookie name="gbrowse2_sess" path="/cgi-bin/"/>
+      <cookie name="gbrowse2_sess" path="/cgi-bin/gbrowse_img"/>
+      <cookie name="authority" path="/cgi-bin/"/>
+    </extraLogoutCookies> -->
+
+  </uiConfig>
+</wdkModel>

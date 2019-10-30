@@ -1,0 +1,82 @@
+@import './Menu/ResponsiveMenu';
+.menu-container {
+    display: flex;
+    flex-direction: row; //    background: $primary;
+    color: $gray;
+    font-family: 'Open Sans';
+    justify-content: flex-end;
+    .menu-inner-container {
+        //      max-width: 1080px;
+        display: flex; //        flex-grow: 1;
+        justify-content: flex-end;
+        align-items: center;
+        a.hamburger {
+            color: $white;
+        }
+        input {
+            font-size: 14px;
+        }
+        @include media-breakpoint-down(sm) {
+            flex-wrap: wrap;
+            padding: 10px;
+            align-items: flex-start;
+            .brand {
+                display: flex;
+                flex-basis: 50%;
+            }
+            a.hamburger {
+                flex-basis: 50%;
+                display: flex;
+                justify-content: flex-end;
+                color: $gray;
+            }
+        }
+    }
+}
+.header2 {
+    height: auto;
+    margin: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .header_rt {
+        float: right;
+        display: flex;
+        align-items: baseline;
+        div {
+            //margin: 0px 10px; //font-size: 1.2em;
+            //font-weight: 700;
+            &.user-action-section {
+                >div {
+                    padding: 5px; //font-family: 'Open Sans';
+                    //font-variant: small-caps;
+                    display: flex;
+                    align-items: center;
+                    font-size: 1em;
+                    span {
+                        +span {
+                            margin-left: 10px;
+                        }
+                    }
+                    .btn {
+                        &.btn-blue {
+                            background-color: $button-blue;
+                            color: white;
+                            margin-left: 10px;
+                        }
+                    }
+                }
+            }
+            &.login-section {
+                // color: $marine;
+                display: flex;
+                align-items: flex-end;
+                color: $gray;
+            }
+        }
+    }
+    .header_lt {
+        float: left;
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="GeneAttributes" queryType="attribute" isCacheable="false">
+
+    <defaultTestParamValues>
+      <paramValue name="source_id">PVRL2</paramValue>
+    </defaultTestParamValues>
+
+    <testRowCountSql>
+      select count(*) from CBIL.GeneAttributes
+    </testRowCountSql>
+
+
+    <!-- =================================================================== -->
+    <!-- Alias -->
+    <!-- for now just for current gene symbol  -->
+    <!-- =================================================================== -->
+    <sqlQuery name="GeneAlias" doNotTest="true">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="old_source_id"/>
+      <sql>
+        <![CDATA[
+                WITH gs AS (
+                  SELECT ga.source_id,
+                  '@PROJECT_ID@'::text AS project_id,
+                  ga.gene_symbol AS old_source_id
+                  FROM CBIL.GeneAttributes ga,
+                  (##WDK_ID_SQL##) ids
+                  WHERE ga.gene_symbol = ids.old_source_id
+                  ORDER BY annotation LIMIT 1)
+		       SELECT * FROM gs
+		       UNION
+		       SELECT ga.source_id,
+		       '@PROJECT_ID@'::text AS project_id,
+		       ga.source_id AS old_source_id
+		       FROM CBIL.GeneAttributes ga
+	      ]]>
+      </sql>
+    </sqlQuery>
+
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="BasicAttributes">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="gene_symbol"/>
+      <column name="gene_type"/>
+      <column name="chromosome"/>
+      <column name="location_start"/>
+      <column name="location_end"/>
+      <column name="span"/>
+      <column name="location"/>
+      <column name="gene_name"/>
+      <column name="hgnc_id"/>
+      <column name="omim_id"/>
+      <column name="ucsc_id"/>
+      <column name="vega_id"/>
+      <column name="entrez_id"/>
+      <column name="ensembl_id"/>
+      <column name="uniprot_id"/>
+      <column name="synonyms"/>
+      <column name="strand"/>
+      <column name="is_reversed"/>
+      <column name="full_jbrowse_link"/>
+      <column name="jbrowse_source_url"/>
+      <column name="dynspan_link"/>
+
+      <sql>
+        <![CDATA[
+            SELECT source_id, 
+            '@PROJECT_ID@'::text AS project_id,
+            gene_symbol,
+            gene_symbol AS display_id,
+            gene_type,
+            chromosome,
+            location_start,
+            location_end,
+            build_link_attribute(replace(chromosome,'chr','') || ':' || (location_start - 1000)::text || '..' || (location_end + 1000)::text,
+            '/genomics/jbrowse.jsp?loc=', NULL, NULL) AS full_jbrowse_link,
+            '/genomics/rjbrowse/?loc=' || replace(chromosome,'chr','') || ':' || (location_start - 1000)::text || '..' || (location_end + 1000)::text || '&' || 'tracks=@GENE_DEFAULT_TRACKS@' AS jbrowse_source_url,
+            annotation->>'location' AS location,
+            annotation->>'name' AS gene_name,
+            annotation->>'hgnc_id' AS hgnc_id,
+            annotation->>'omim_id' AS omim_id,
+            annotation->>'ucsc_id' AS ucsc_id,
+            annotation->>'vega_id' AS vega_id,
+            annotation->>'entrez_id' AS entrez_id,
+            /* annotation->>'ccds_id' AS ccds_id,
+            annotation->>'cosmic_id' AS cosmic_id,
+            annotation->>'orphanet' AS orphanet_id,
+            annotation->>'ena' AS ena_id, */
+            chromosome || ':' || location_start::text || '-' || location_end::text || ':' 
+              || CASE WHEN is_reversed THEN '-' ELSE '+' END  AS span,
+            build_link_attribute(chromosome || ':' || location_start::text || '-' || location_end::text || ':' 
+              || CASE WHEN is_reversed THEN '-' ELSE '+' END, '@DYNSPAN_RECORD@', NULL, NULL) AS dynspan_link,
+            replace(annotation->>'uniprot_ids', '|', '//') AS uniprot_id,
+            source_id AS ensembl_id,
+            replace(annotation->>'alias_symbol', '|' ,', ') AS synonyms,
+            CASE WHEN is_reversed THEN '-' ELSE '+' END AS strand,
+            is_reversed
+            FROM CBIL.GeneAttributes
+        ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="InformationLinks">
+      <column name="source_id"/>
+      <column name="third_party_data_links"/>
+      <sql>
+        <![CDATA[
+		          SELECT source_id, 
+                 jsonb_build_array_check_nulls(
+                 build_badge_attribute('PubMed', '@PUBMED_GENE_SEARCH_URL@' ,annotation->>'entrez_id'),
+                 build_badge_attribute('STRINGdb','@STRINGDB_URL@', source_id),
+                 build_badge_attribute('ExAC', '@EXAC_GENE_URL@', source_id),
+                 build_badge_attribute('UCSC', 
+		             CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@UCSC_BROWSER_URL_GRCh37@' 
+                 ELSE '@UCSC_BROWSER_URL_GRCh38@' END, annotation->>'ucsc_id','view against @PROJECT_ID@ assembly'))
+                 AS third_party_data_links
+		          FROM CBIL.GeneAttributes
+	          ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="RecordLinks" doNotTest="true">
+      <column name="source_id"/>
+      <column name="record_link_outs"/>
+      <sql>
+        <![CDATA[
+                  WITH UniProtIds AS (
+                    SELECT source_id, unnest(string_to_array(annotation->>'uniprot_ids', '|')) AS uniprot_id FROM
+                    CBIL.GeneAttributes 
+                  ),
+                  UniProtLinks AS (
+                    SELECT source_id, jsonb_agg(build_link_attribute(uniprot_id, '@UNIPROT_URL@')) as link_attribute
+                    FROM UniProtIds
+                    GROUP BY source_id)
+                  SELECT ga.source_id, jsonb_build_object('type', 'dictionary', 'style', 'description_list', 'data',
+                  jsonb_build_array_check_nulls (
+                  build_dictionary_element('HUGO', build_link_attribute(annotation->>'hgnc_id', '@HGNC_URL@')),
+                  build_dictionary_element('OMIM', build_link_attribute(annotation->>'omim_id', '@OMIM_URL@')),
+                  build_dictionary_element('VEGA', build_link_attribute(annotation->>'vega_id', '@VEGA_URL@', NULL, CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@PROJECT_ID@ Archive' ELSE NULL END)),
+                  build_dictionary_element('NCBI Gene', build_link_attribute(annotation->>'entrez_id', '@NCBI_ENTREZ_GENE_URL@')),
+                  build_dictionary_element('Ensembl', build_link_attribute(ga.source_id, CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_GENE_URL_GRCh37@' ELSE '@ENSEMBL_GENE_URL_GRCh38@' END, NULL,
+                  CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@PROJECT_ID@ Archive' ELSE NULL END)),
+                  build_dictionary_element('UniProt', CASE WHEN jsonb_array_length(u.link_attribute) = 1 THEN u.link_attribute->0 ELSE u.link_attribute END) -- don't return array if 1 value
+                  )) AS record_link_outs
+                  FROM CBIL.GeneAttributes ga LEFT OUTER JOIN UniProtLinks u
+                  ON ga.source_id = u.source_id
+          ]]>
+      </sql>
+    </sqlQuery>
+
+    <!-- =============================================================== -->
+    <!-- Genomic Location -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="ColocatedVariantCount">
+      <column name="source_id"/>
+      <column name="num_colocated_variants"/>
+      <column name="num_unique_colocated_variants"/>
+      <sql>
+        <![CDATA[
+                  SELECT ga.source_id, build_badge_attribute(count(v.record_pk)::text, '@VARIANTS_BY_FEATURE_SEARCH@', ga.source_id, 'run a search to retrieve the full list') AS num_colocated_variants,
+                  count(DISTINCT split_part(v.record_pk, ':', 2)) AS num_unique_colocated_variants
+                  FROM CBIL.GeneAttributes ga,
+                  NIAGADS.Variant v
+                  WHERE  ga.bin_index @> v.bin_index
+                  AND numrange(ga.location_start, ga.location_end, '[]') @> v.location_start::numeric
+                  GROUP BY ga.source_id
+                ]]>
+      </sql>
+    </sqlQuery>
+
+
+    <!-- =============================================================== -->
+    <!-- AD Risk -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="ADEvidenceFlag">
+      <column name="source_id"/>
+      <column name="has_ad_evidence"/>
+      <column name="ad_evidence_flag"/>
+
+      <sql>
+        <![CDATA[    
+                      SELECT source_id, 
+                      CASE WHEN gene_id % 2 = 0 THEN 'Y' ELSE NULL END AS has_ad_evidence,
+                      CASE WHEN gene_id % 2 = 0 THEN jsonb_build_object('type', 'icon', 'icon', 'fa-check', 'color', 'red', 'value', 'Y') ELSE NULL END AS ad_evidence_flag
+                      FROM CBIL.GeneAttributes  
+                  ]]>
+      </sql>
+    </sqlQuery>
+  </querySet>
+</wdkModel>

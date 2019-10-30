@@ -1,0 +1,38 @@
+@import './Components/components';
+.variant-record-summary-container {
+    hr {
+        +hr {
+            display: none;
+        }
+    }
+    .present {
+        background-color: red;
+        padding: 0 4px;
+        border-radius: 4px;
+        color: $white;
+        font-weight: bold;
+        font-size: 1.3em;
+    }
+    .flag {
+        +.flag {
+            margin-left: 5px;
+        }
+    }
+    .record-subtitle-container {
+        p {
+            margin-bottom: 3px;
+        }
+    }
+    ul.link-list {
+        list-style: disc;
+        li {
+            margin-left: 5px;
+        }
+    }
+    ul.horizontal-links {
+        align-items: center;
+        li + li {
+            margin-left: 5px;
+        }
+    }
+}

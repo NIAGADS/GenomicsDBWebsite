@@ -1,0 +1,33 @@
+.record-table-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+//    border: solid thin $primary;
+    border-radius: 7px;
+    h4 {
+        font-weight: bold;
+    }
+    .record-table-inner-container {
+        display: flex;
+        flex-direction: column;
+        input {
+            margin: 10px;
+            border-radius: 3px;
+        }
+        .record-table-controls-container {
+            .action-link {
+                border-color: $primary;
+                color: $primary;
+                &:hover {
+                    color: $white;
+                    background-color: $primary;
+                }
+            }
+            .main-controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+        }
+    }
+}

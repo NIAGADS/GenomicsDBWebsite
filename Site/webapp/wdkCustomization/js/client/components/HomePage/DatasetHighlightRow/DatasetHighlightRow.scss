@@ -1,0 +1,22 @@
+.row.dataset-highlight-row {
+    max-width: 1080px;
+    h2 {
+        color: $accent-light;
+        font-weight: bold;
+    }
+    img {
+        max-width: 100%;
+        background-color: white;
+    }
+    ul {
+        li {
+            display: flex;
+        }
+        >li {
+            margin-bottom: 5px;
+        }
+    }
+    .highlight-title {
+        color: $lime-green;
+    }
+}

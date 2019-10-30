@@ -1,0 +1,19 @@
+.news-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .date {
+        margin: 0px;
+    }
+    .title {
+        color: $dark-blue;
+    }
+    .read-more {
+        padding: 8px;
+        border: $dark-blue thin solid;
+        &:hover {
+            color: $white !important;
+            background-color: $dark-blue;
+        }
+    }
+}

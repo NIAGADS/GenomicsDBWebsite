@@ -1,0 +1,29 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab|Open+Sans:400italic,700italic,400,700|Oswald|Libre+Franklin);
+@import './variables';
+@import '~bootstrap/scss/bootstrap';
+@import './marginPaddingLoop';
+//Allsites overrides
+body {
+    min-width: 0px;
+}
+fieldset {
+    border: none;
+}
+#fixed-footer {
+    margin-top: 40px;
+}
+
+//mansion overrides
+.row {
+    width: auto;
+}
+//typography
+body, h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+@import '../js/client/components/GlobalLayout/GlobalLayout';
+@import '../js/client/components/HomePage/HomePage';
+@import '../js/client/components/HomePage2/HomePage';
+@import '../js/client/components/RecordPage/RecordPage';

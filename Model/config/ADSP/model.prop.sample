@@ -1,0 +1,7 @@
+# This file contains macros used in the model file and jsp
+
+PROJECT_ID=ADSP
+
+SITE_ADMIN_EMAIL=
+
+STEP_ANALYSIS_JOB_DIR=/www/common/temp
