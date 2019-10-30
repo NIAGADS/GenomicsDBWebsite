@@ -1,4 +1,4 @@
-<project name="NiagadsSite" default="Installation" basedir=".">
+<project name="GenomicsDBWebsite" default="Installation" basedir=".">
 
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooo  Dependencies  oooooooooooooooooooooooooo -->
@@ -12,22 +12,22 @@
   <!-- oooooooooooooooooooooooooo  Installation  oooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
 
-  <target name="NiagadsSite-Installation" 
+  <target name="GenomicsDBWebsite-Installation" 
     depends="EbrcModelCommon-Installation,
              EbrcWebSvcCommon-Installation,
-						 NiagadsSite-MavenInstallation,
-						 NiagadsSite/Model-Installation,
-             NiagadsSite/Service-Installation,
-						 NiagadsSite/View-Installation,
-						NiagadsSite/Site-Installation">
+						 GenomicsDBWebsite-MavenInstallation,
+						 GenomicsDBWebsite/Model-Installation,
+             GenomicsDBWebsite/Service-Installation,
+						 GenomicsDBWebsite/View-Installation,
+						GenomicsDBWebsite/Site-Installation">
     <ant target="defaultProjectInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
     </ant>
   </target>
   
-  <target name="NiagadsSite-MavenInstallation">
+  <target name="GenomicsDBWebsite-MavenInstallation">
     <ant target="mavenBuildProject">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
     </ant>
     <property name="alreadyBuilt" value="true"/>
   </target>
@@ -35,17 +35,17 @@
   <!-- Added START-->
   <!-- ooooooooooooooooooooooo  Install Components  ooooooooooooooooooooooo -->
 
-   <target name="NiagadsSite-WDKModel-Patch">
+   <target name="GenomicsDBWebsite-WDKModel-Patch">
     <echo message="Patching: WDK/Model"/>
     <property name="patch-full-path-wdkmodel" 
       location="${projectsDir}/${project}/patches/patch_WDKModel.bash"/>
     <exec executable="${patch-full-path-wdkmodel}"/>
   </target>
   
-  <target name="NiagadsSite/Model-Installation" depends="NiagadsSite-WDKModel-Patch,
+  <target name="GenomicsDBWebsite/Model-Installation" depends="GenomicsDBWebsite-WDKModel-Patch,
                                                            WDK/Model-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Model"/>
     </ant>
 
@@ -97,30 +97,30 @@
 
   </target>
 
-  <target name="NiagadsSite/Service-Installation">
+  <target name="GenomicsDBWebsite/Service-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Service"/>
     </ant>
   </target>
   
-  <target name="NiagadsSite/Site-Installation">
+  <target name="GenomicsDBWebsite/Site-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
     </ant>
   </target>
 
-  <target name="NiagadsSite/View-Installation">
+  <target name="GenomicsDBWebsite/View-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="View"/>
     </ant>
   </target>
 
-  <!-- <target name="NiagadsSite/WSFPlugin-Installation"> -->
+  <!-- <target name="GenomicsDBWebsite/WSFPlugin-Installation"> -->
   <!--   <ant target="defaultComponentInstall"> -->
-  <!--     <property name="project" value="NiagadsSite"/> -->
+  <!--     <property name="project" value="GenomicsDBWebsite"/> -->
   <!--     <property name="component" value="WSFPlugin"/> -->
   <!--   </ant> -->
   <!-- </target> -->
@@ -130,13 +130,13 @@
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooo  Web Installation  oooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
-  <target name="NiagadsSite-WebInstallation" depends="EbrcWebSvcCommon-WebInstallation,
-                                                      NiagadsSite-Installation,
-                                                      NiagadsSite/View-WebInstallation,
-                                                      NiagadsSite/Site-WebInstallation">
+  <target name="GenomicsDBWebsite-WebInstallation" depends="EbrcWebSvcCommon-WebInstallation,
+                                                      GenomicsDBWebsite-Installation,
+                                                      GenomicsDBWebsite/View-WebInstallation,
+                                                      GenomicsDBWebsite/Site-WebInstallation">
   </target>
 
-  <target name="NiagadsSite-Website-Patch">
+  <target name="GenomicsDBWebsite-Website-Patch">
     <echo message="Applying patches from ${projectsDir}/${project}/patches"/>
     <echo message="Patching: EbrcWebsiteCommon"/>
     <property name="patch-full-path-ebrc" 
@@ -148,11 +148,11 @@
     <exec executable="${patch-full-path-wdkclient}"/>
   </target>
 
-  <target name="NiagadsSite/Site-WebInstallation"
-         depends="NiagadsSite-Website-Patch,
+  <target name="GenomicsDBWebsite/Site-WebInstallation"
+         depends="GenomicsDBWebsite-Website-Patch,
                   WDKWebsite/View-WebInstallation">
     <ant target="eupathWebComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
     </ant>
     <echo message="Copying ${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp to ${webappTargetDir}/WEB-INF/includes/client/index.jsp"/>
@@ -161,15 +161,15 @@
           overwrite="true"/>
   </target>
 
-  <target name="NiagadsSite/View-WebInstallation">
+  <target name="GenomicsDBWebsite/View-WebInstallation">
 
     <ant target="defaultComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="View"/>
     </ant>
     
     <ant target="defaultWebComponentInstall">
-      <property name="project" value="NiagadsSite"/>
+      <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="View"/>
     </ant>
     
@@ -180,7 +180,7 @@
   <!-- oooooooooooooooooooooooooooo  Release  ooooooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
 
-  <target name="NiagadsSite-Release">
+  <target name="GenomicsDBWebsite-Release">
     <ant target="defaultProjectRelease">
       <property name="cvsroot" value=":ext:cvs.sanger.ac.uk:/cvsroot/GUS"/>
     </ant>
@@ -190,7 +190,7 @@
   <!-- oooooooooooooooooooooooooo  Distributable  ooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
 
-  <target name="NiagadsSite-Distributable">
+  <target name="GenomicsDBWebsite-Distributable">
 
     <copy todir="${targetDir}">
       <fileset dir="${projectsDir}" >
