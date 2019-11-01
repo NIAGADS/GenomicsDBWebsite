@@ -65,3 +65,4 @@ flycheck_*.el
 .settings/*
 .project
 target/*
+node_modules/*
