@@ -1,8 +1,5 @@
 package org.niagads.genomics.model.stepanalysis.enrichment;
 
-import static org.gusdb.fgputil.FormatUtil.NL;
-import static org.gusdb.fgputil.FormatUtil.TAB;
-
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,27 +21,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import javax.sql.DataSource;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+
 import org.apache.log4j.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import static org.gusdb.fgputil.FormatUtil.NL;
+import static org.gusdb.fgputil.FormatUtil.TAB;
+
 import org.gusdb.fgputil.FormatUtil;
+
 import org.gusdb.fgputil.db.runner.BasicResultSetHandler;
 import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.gusdb.fgputil.db.runner.SingleLongResultSetHandler;
-import org.gusdb.fgputil.db.runner.SingleLongResultSetHandler.Status;
+
 import org.gusdb.fgputil.runtime.GusHome;
+
+import org.gusdb.fgputil.validation.ValidationBundle;
+import org.gusdb.fgputil.validation.ValidationBundle.ValidationBundleBuilder;
+import org.gusdb.fgputil.validation.ValidationLevel;
+
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkUserException;
+
 import org.gusdb.wdk.model.analysis.AbstractSimpleProcessAnalyzer;
-import org.gusdb.wdk.model.analysis.ValidationErrors;
+
 import org.gusdb.wdk.model.answer.AnswerValue;
+
 import org.gusdb.wdk.model.user.analysis.IllegalAnswerValueException;
+
 
 public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 
@@ -53,7 +64,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 	private static final String GOA_TRANSITIVE_CLOSURE_TABLE = "CBIL.GOAssociation_TC";
 	private static final String GOA_TABLE = "CBIL.GOAssociation";
 	private static final String GO_TERM_BACKGROUND_COUNTS_TRANSITIVE_CLOSURE_TABLE = "CBIL.GoTerm_TC";
-	private static final String GO_TERM_BACKGROUND_COUNTS_TABLE = "CBIL.GoTerm";
+	// private static final String GO_TERM_BACKGROUND_COUNTS_TABLE = "CBIL.GoTerm";
 	private static final String GOA_TOTALS_TABLE = "CBIL.GeneOntologyTotals";
 	private static final String GENE_ATTRIBUTE_TABLE = "CBIL.GeneAttributes";
 
@@ -68,20 +79,23 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 	private static final String DOWNLOAD_IMAGE_RESULT_FILE_NAME = RESULT_FILE_PREFIX + "_wordcloud.png";
 	private static final String INPUT_FILE_PREFIX = "goa_counts";
 
-	public ValidationErrors validateFormParams(Map<String, String[]> formParams)
-			throws WdkModelException, WdkUserException {
+	public ValidationBundle validateFormParams(Map<String, String[]> formParams) throws WdkModelException {
 
-		ValidationErrors errors = new ValidationErrors();
+		ValidationBundleBuilder errors = ValidationBundle.builder(ValidationLevel.SEMANTIC);
 
+		// validate pValueCutoff
+		EnrichmentPluginUtil.validatePValue(formParams, errors);
+
+		// validate ontology
 		String ontology = EnrichmentPluginUtil.getSingleAllowableValueParam(GO_ASSOC_ONTOLOGY_PARAM_KEY, formParams,
 				errors);
 
 		// only validate further if the above pass
-		if (errors.isEmpty()) {
+		if (!errors.hasErrors()) {
 			validateFilteredGoTerms(ontology, errors);
 		}
 
-		return errors;
+		return errors.build();
 	}
 
 	/**
@@ -101,14 +115,14 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 
 		String sql = "SELECT *" + NL + "FROM (" + NL + "SELECT b.ontology_abbrev AS ontology," + NL
 				+ "(jsonb_build_object('background', b.num_annotated_genes) || "
-				+ "jsonb_build_object('result', r.num_annotated_genes))::text AS tallies" + NL + "FROM  " + GOA_TOTALS_TABLE
-				+ " b," + NL
-				+ "(SELECT goa_tc.ontology_abbrev AS ontology, COUNT(DISTINCT goa.source_id) AS num_annotated_genes" + NL
-				+ "FROM " + GOA_TRANSITIVE_CLOSURE_TABLE + " goa_tc, " + NL + GOA_TABLE + " goa," + NL 
+				+ "jsonb_build_object('result', r.num_annotated_genes))::text AS tallies" + NL + "FROM  "
+				+ GOA_TOTALS_TABLE + " b," + NL
+				+ "(SELECT goa_tc.ontology_abbrev AS ontology, COUNT(DISTINCT goa.source_id) AS num_annotated_genes"
+				+ NL + "FROM " + GOA_TRANSITIVE_CLOSURE_TABLE + " goa_tc, " + NL + GOA_TABLE + " goa," + NL
 				// link through to make sure only get TC counts for terms directly annotated
 				+ "(" + idSql + ") ids" + NL + "WHERE ids.source_id = goa.source_id" + NL
-				+ "AND ids.source_id = goa_tc.source_id" + NL + "AND goa.ontology_term_id = goa_tc.ontology_term_id" + NL
-				+ "AND goa.ontology_abbrev ='" + ontology + "'" + NL + "GROUP BY goa_tc.ontology_abbrev) r" + NL
+				+ "AND ids.source_id = goa_tc.source_id" + NL + "AND goa.ontology_term_id = goa_tc.ontology_term_id"
+				+ NL + "AND goa.ontology_abbrev ='" + ontology + "'" + NL + "GROUP BY goa_tc.ontology_abbrev) r" + NL
 				+ "WHERE b.ontology_abbrev = r.ontology" + NL + "AND b.organism = ?) a";
 
 		logger.debug("get-annotated-gene-counts SQL:" + sql);
@@ -152,26 +166,29 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 				+ "string_agg(DISTINCT r.source_id, '//') AS gene_list_id," + NL
 				+ "string_agg(DISTINCT ga.gene_symbol, '//') AS gene_list_symbol," + NL
 				+ "count(DISTINCT r.source_id) AS result_count" + NL + "FROM r," + NL + GOA_TABLE + " goa," + NL
-				+ GENE_ATTRIBUTE_TABLE + " ga" + NL + "WHERE goa.source_id = r.source_id" + NL + "AND goa.ontology_abbrev='"
-				+ ontology + "'" + NL + "AND ga.gene_id = goa.gene_id" + NL + "GROUP BY goa.ontology_term_id)," + NL
+				+ GENE_ATTRIBUTE_TABLE + " ga" + NL + "WHERE goa.source_id = r.source_id" + NL
+				+ "AND goa.ontology_abbrev='" + ontology + "'" + NL + "AND ga.gene_id = goa.gene_id" + NL
+				+ "GROUP BY goa.ontology_term_id)," + NL
 
-				+ "tcAnnotation AS (SELECT da.ontology_term_id," + NL + "count(DISTINCT goa_tc.source_id) AS result_count," + NL
+				+ "tcAnnotation AS (SELECT da.ontology_term_id," + NL
+				+ "count(DISTINCT goa_tc.source_id) AS result_count," + NL
 				+ "string_agg(goa_tc.source_id || ';' || ga.gene_symbol, ',') AS gene_list_display," + NL
 				+ "string_agg(DISTINCT goa_tc.source_id, '//') AS gene_list_id," + NL
-				+ "string_agg(DISTINCT ga.gene_symbol, '//' ) AS gene_list_symbol" + NL + "FROM directAnnotation da," + NL
-				+ "r," + NL + GOA_TRANSITIVE_CLOSURE_TABLE + " goa_tc, " + NL + GENE_ATTRIBUTE_TABLE + " ga" + NL
+				+ "string_agg(DISTINCT ga.gene_symbol, '//' ) AS gene_list_symbol" + NL + "FROM directAnnotation da,"
+				+ NL + "r," + NL + GOA_TRANSITIVE_CLOSURE_TABLE + " goa_tc, " + NL + GENE_ATTRIBUTE_TABLE + " ga" + NL
 				+ "WHERE goa_tc.ontology_term_id = da.ontology_term_id" + NL + "AND goa_tc.source_id = r.source_id" + NL
 				+ "AND ga.gene_id = goa_tc.gene_id" + NL + "GROUP BY da.ontology_term_id)" + NL
 
 				+ "SELECT gtc.go_term_id," + NL + "tc.result_count AS result_count_tc," + NL
-				+ "gtc.num_annotated_genes AS background_count," + NL + "gtc.go_term," + NL + "gtc.ontology_abbrev AS ontology,"
-				+ NL + "da.result_count AS result_count_direct," + NL + "da.gene_list_symbol AS gene_list_symbol_direct," + NL
-				+ "da.gene_list_id AS gene_list_id_direct," + NL + "tc.gene_list_symbol AS gene_list_symbol_tc," + NL
-				+ "tc.gene_list_id AS gene_list_id_tc," + NL + "da.gene_list_display AS display_genes_direct," + NL
-				+ "tc.gene_list_display AS display_genes_tc" + NL + "FROM DirectAnnotation da," + NL + "tcAnnotation tc," + NL
+				+ "gtc.num_annotated_genes AS background_count," + NL + "gtc.go_term," + NL
+				+ "gtc.ontology_abbrev AS ontology," + NL + "da.result_count AS result_count_direct," + NL
+				+ "da.gene_list_symbol AS gene_list_symbol_direct," + NL + "da.gene_list_id AS gene_list_id_direct,"
+				+ NL + "tc.gene_list_symbol AS gene_list_symbol_tc," + NL + "tc.gene_list_id AS gene_list_id_tc," + NL
+				+ "da.gene_list_display AS display_genes_direct," + NL + "tc.gene_list_display AS display_genes_tc" + NL
+				+ "FROM DirectAnnotation da," + NL + "tcAnnotation tc," + NL
 				+ GO_TERM_BACKGROUND_COUNTS_TRANSITIVE_CLOSURE_TABLE + " gtc" + NL
-				+ "WHERE gtc.ontology_term_id = da.ontology_term_id" + NL + "AND tc.ontology_term_id = da.ontology_term_id" + NL
-				+ "AND gtc.organism = ?";
+				+ "WHERE gtc.ontology_term_id = da.ontology_term_id" + NL
+				+ "AND tc.ontology_term_id = da.ontology_term_id" + NL + "AND gtc.organism = ?";
 
 		logger.debug("term-counts SQL: " + sql);
 
@@ -189,21 +206,22 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		 * FOLD_ENRICHMENT, P_VALUE, FDR, ADJ_P_VALUE GENES, GENES_TRANSITIVE_CLOSURE
 		 */
 
-		try (BufferedWriter writer = Files.newBufferedWriter(countFile, StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
+		try (BufferedWriter writer = Files.newBufferedWriter(countFile, StandardCharsets.UTF_8,
+				StandardOpenOption.WRITE)) {
 
 			String[] columns = new String[] { Columns.GO_ID.key(), Columns.GO_TERM.key(),
-					Columns.RESULT_COUNTS_TRANSITIVE_CLOSURE.key(), Columns.BACKGROUND_COUNTS.key(), Columns.RESULT_COUNTS.key(),
-					Columns.GENES.key(), Columns.GENES_TRANSITIVE_CLOSURE.key(), Columns.GENES.key() + "_display",
-					Columns.GENES_TRANSITIVE_CLOSURE.key() + "_display", };
+					Columns.RESULT_COUNTS_TRANSITIVE_CLOSURE.key(), Columns.BACKGROUND_COUNTS.key(),
+					Columns.RESULT_COUNTS.key(), Columns.GENES.key(), Columns.GENES_TRANSITIVE_CLOSURE.key(),
+					Columns.GENES.key() + "_display", Columns.GENES_TRANSITIVE_CLOSURE.key() + "_display", };
 
 			String header = FormatUtil.join(columns, TAB) + NL;
 			writer.write(header);
 
 			for (Map<String, Object> r : results) {
 				String oString = r.get("go_term_id") + TAB + r.get("go_term") + TAB + r.get("result_count_tc") + TAB
-						+ r.get("background_count") + TAB + r.get("result_count_direct") + TAB + r.get("gene_list_symbol_direct")
-						+ TAB + r.get("gene_list_symbol_tc") + TAB + r.get("display_genes_direct") + TAB + r.get("display_genes_tc")
-						+ NL;
+						+ r.get("background_count") + TAB + r.get("result_count_direct") + TAB
+						+ r.get("gene_list_symbol_direct") + TAB + r.get("gene_list_symbol_tc") + TAB
+						+ r.get("display_genes_direct") + TAB + r.get("display_genes_tc") + NL;
 				writer.write(oString);
 			}
 			writer.close();
@@ -219,27 +237,24 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		return countFile.toString();
 	}
 
-	private void validateFilteredGoTerms(String ontology, ValidationErrors errors)
-			throws WdkModelException, WdkUserException {
+	private void validateFilteredGoTerms(String ontology, ValidationBundleBuilder errors) throws WdkModelException {
 
 		String idSql = EnrichmentPluginUtil.getOrgSpecificIdSql(getAnswerValue(), getFormParams());
 		// check against direct annotations
 		String sql = "SELECT COUNT(distinct goa.go_term_id) AS counts" + NL + "FROM " + GOA_TABLE + " goa," + NL + "("
-				+ idSql + ") r" + NL + "WHERE goa.source_id = r.source_id" + NL + "AND goa.ontology_abbrev='" + ontology + "'"
-				+ NL;
+				+ idSql + ") r" + NL + "WHERE goa.source_id = r.source_id" + NL + "AND goa.ontology_abbrev='" + ontology
+				+ "'" + NL;
 
 		logger.debug("filtered GO terms SQL: " + sql);
 
 		DataSource ds = getWdkModel().getAppDb().getDataSource();
-		SingleLongResultSetHandler result = new SQLRunner(ds, sql, "count-filtered-go-terms")
-				.executeQuery(new SingleLongResultSetHandler());
 
-		if (!Status.NON_NULL_VALUE.equals(result.getStatus())) {
-			throw new WdkModelException("No result found in count query: " + sql);
-		}
+		long result = new SQLRunner(ds, sql, "count-filtered-go-terms").executeQuery(new SingleLongResultSetHandler())
+				.orElseThrow(() -> new WdkModelException("No result found in count query: " + sql));
 
-		if (result.getRetrievedValue() < 1) {
-			errors.addMessage(
+
+		if (result < 1) {
+			errors.addError(
 					"Your result has no GO annotated genes in the selected ontology.  Please try adjusting the parameters.");
 		}
 
@@ -263,8 +278,8 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 
 			JSONObject totals = getAnnotatedGeneCountTotals(ontology);
 
-			String[] cmd = new String[] { qualifiedExe, "-p", pValueCutoff, "-r", String.valueOf(totals.get("result")), "-b",
-					String.valueOf(totals.get("background")), "-i", inputFile, "-o",
+			String[] cmd = new String[] { qualifiedExe, "-p", pValueCutoff, "-r", String.valueOf(totals.get("result")),
+					"-b", String.valueOf(totals.get("background")), "-i", inputFile, "-o",
 					getResultFilePath(RESULT_FILE_PREFIX).toString(), "--ontology", ontology, "--header" };
 
 			logger.debug("CMD: " + FormatUtil.join(cmd, " "));
@@ -295,8 +310,8 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		BasicResultSetHandler handler = new BasicResultSetHandler();
 
 		// check for non-zero count of genes with GO associations
-		String sql = "SELECT COUNT(DISTINCT gts.source_id) as " + countColumn + NL + "FROM " + GOA_TRANSITIVE_CLOSURE_TABLE
-				+ " gts, (" + idSql + ") r" + NL + "WHERE gts.source_id = r.source_id";
+		String sql = "SELECT COUNT(DISTINCT gts.source_id) as " + countColumn + NL + "FROM "
+				+ GOA_TRANSITIVE_CLOSURE_TABLE + " gts, (" + idSql + ") r" + NL + "WHERE gts.source_id = r.source_id";
 
 		logger.info("VALIDATE ANSWER: " + sql);
 
@@ -320,11 +335,6 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 	}
 
 	@Override
-	public JSONObject getFormViewModelJson() throws WdkModelException {
-		return null; // declared as a parameters in the XML
-	}
-
-	@Override
 	public JSONObject getResultViewModelJson() throws WdkModelException {
 		List<ResultRow> results = new ArrayList<>();
 		Path inputPath = getResultFilePath(TABBED_RESULT_FILE_NAME);
@@ -340,7 +350,8 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 			parser.close();
 			String revigoInputList = String.valueOf(revigoInputLists);
 			return new ResultViewModel(DOWNLOAD_TABBED_RESULT_FILE_NAME, results, getFormParams(),
-					DOWNLOAD_IMAGE_RESULT_FILE_NAME, revigoInputList).toJson(getProperty(GO_TERM_BASE_URL_PROP_KEY), getProperty(REVIGO_BASE_URL_PROP_KEY));
+					DOWNLOAD_IMAGE_RESULT_FILE_NAME, revigoInputList).toJson(getProperty(GO_TERM_BASE_URL_PROP_KEY),
+							getProperty(REVIGO_BASE_URL_PROP_KEY));
 		} catch (IOException ioe) {
 			throw new WdkModelException("Unable to process result file at: " + inputPath.toString(), ioe);
 		}
@@ -429,7 +440,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 			for (ResultRow rr : getResultData())
 				results.put(rr.toJson());
 			json.put("resultData", results);
-			
+
 			json.put("downloadPath", getDownloadPath());
 			json.put("imageDownloadPath", getImageDownloadPath());
 			json.put("pvalueCutoff", getPvalueCutoff());
@@ -487,7 +498,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 
 		public JSONObject toJson() {
 			JSONObject result = new JSONObject();
-			for (String key: _fields.keySet()) {
+			for (String key : _fields.keySet()) {
 				result.put(key, _fields.get(key));
 			}
 			return result;
@@ -526,9 +537,10 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 					String[] ids = gene.split(";");
 					pKeys += ids[0] + ",";
 				}
-				link = "processQuestion.do?" + "questionFullName=GeneQuestions.GeneUpload" + "&ds_gene_identifiers_type=data"
-						+ "&array(include_synonyms)=No" + "&ds_gene_identifiers_data=" + pKeys + "&ds_gene_identifiers_parser=list"
-						+ "&customName=" + goId;
+				link = "processQuestion.do?" + "questionFullName=GeneQuestions.GeneUpload"
+						+ "&ds_gene_identifiers_type=data" + "&array(include_synonyms)=No"
+						+ "&ds_gene_identifiers_data=" + pKeys + "&ds_gene_identifiers_parser=list" + "&customName="
+						+ goId;
 
 				link = "<a href=\"" + link + "\">View</a>";
 			} else {
@@ -549,7 +561,8 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		 * GENES_TRANSITIVE_CLOSURE, GENES, FOLD_ENRICHMENT, P_VALUE, FDR, ADJ_P_VALUE
 		 */
 		ONTOLOGY("ONTOLOGY", "Ontology",
-				"one of Biological Process (BP), Cellular Component (CC), or Molecular Function (MF)", null, true, null),
+				"one of Biological Process (BP), Cellular Component (CC), or Molecular Function (MF)", null, true,
+				null),
 		GO_ID("ID", "ID", "Gene Ontology ID", "html", true, "htmlText"),
 		GO_TERM("TERM", "Term", "Gene Ontology Term", "html", true, null),
 		RESULT_COUNTS("COUNT", "Result Count",

@@ -91,14 +91,11 @@ public class GWASService extends AbstractWdkService {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
-        SingleLongResultSetHandler result =
-        new SQLRunner(ds, DATASET_QUERY, "validate-dataset")
-          .executeQuery(new Object[] {dataset}, new SingleLongResultSetHandler());
+        long result = new SQLRunner(ds, DATASET_QUERY, "validate-dataset")
+          .executeQuery(new Object[] {dataset}, new SingleLongResultSetHandler())
+				.orElse((long) -1);
 
-        if (!Status.NON_NULL_VALUE.equals(result.getStatus())) {
-            return (long) -1;
-        }
-        return result.getRetrievedValue();
+        return result;
     }
 
 
