@@ -10,11 +10,10 @@
     <!-- =============================================================== -->
     <!-- By Identifier -->
     <!-- =============================================================== -->
-    <question name="gene_id" 
+    <question name="gid" 
               displayName="Identifier"
               shortDisplayName="ID"
 	            noSummaryOnSingleRecord="true"
-              urlName="id"
               queryRef="GeneIds.Identifier"
               recordClassRef="GeneRecordClasses.GeneRecordClass">
       <description>
@@ -28,7 +27,7 @@
       </summary>
     </question>
     
-    <question name="gene_upload" 
+    <question name="gupload" 
               displayName="Upload a list of genes"
               shortDisplayName="genes"
 	            noSummaryOnSingleRecord="true"
