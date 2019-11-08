@@ -66,3 +66,7 @@ flycheck_*.el
 .project
 target/*
 node_modules/*
+*/target/*
+*/.settings/*
+*/node_modules/*
+yarn.lock
