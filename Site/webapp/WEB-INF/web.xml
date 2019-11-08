@@ -71,7 +71,7 @@
 
   <filter>
     <filter-name>CheckLoginFilter</filter-name>
-    <filter-class>org.niagads.genomics.controller.filter.CheckLoginFilter</filter-class>
+     <filter-class>org.gusdb.wdk.controller.filter.CheckLoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>CheckLoginFilter</filter-name>
