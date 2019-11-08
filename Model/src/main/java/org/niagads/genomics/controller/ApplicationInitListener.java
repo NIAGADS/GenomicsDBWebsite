@@ -1,11 +1,9 @@
 package org.niagads.genomics.controller;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.eupathdb.common.controller.EuPathSiteSetup;
-import org.gusdb.wdk.controller.WdkInitializer;
+import org.gusdb.wdk.controller.ServletApplicationContext;
 
 /**
  * A class that is initialized at the start of the web application. This makes
@@ -15,14 +13,16 @@ public class ApplicationInitListener implements ServletContextListener {
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
-    ServletContext context = sce.getServletContext();
-    WdkInitializer.initializeWdk(context);
-    EuPathSiteSetup.initialize(WdkInitializer.getWdkModel(context));
+    SiteInitializer.startUp(
+      new ServletApplicationContext(
+        sce.getServletContext()));
   }
 
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
-    ServletContext context = sce.getServletContext();
-    WdkInitializer.terminateWdk(context);
+    SiteInitializer.shutDown(
+      new ServletApplicationContext(
+        sce.getServletContext()));
   }
+
 }
