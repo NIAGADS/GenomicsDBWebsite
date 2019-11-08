@@ -16,6 +16,7 @@ tramp
 .org-id-locations
 *_archive
 
+
 # flymake-mode
 *_flymake.*
 
@@ -55,7 +56,8 @@ flycheck_*.el
 # End of https://www.gitignore.io/api/emacs
 
 # vscode gitignore
-.vscode/*
+.vscode
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
