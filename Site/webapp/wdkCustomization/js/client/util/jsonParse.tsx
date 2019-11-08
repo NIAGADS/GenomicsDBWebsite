@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tooltip, Link } from 'wdk-client/Components';
 import { isString, isPlainObject, isNull } from 'lodash';
-import { safeHtml } from 'wdk-client/ComponentUtils';
+import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
 
 export interface LinkType {
 	url: string,

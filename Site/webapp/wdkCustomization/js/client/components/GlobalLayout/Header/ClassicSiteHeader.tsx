@@ -1,19 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { UserActions } from 'wdk-client/Actions';
-import { formatReleaseDate } from 'ebrc-client/util/formatters';
-import { makeMenuItems } from 'ebrc-client/util/menuItems';
-import { loadBasketCounts, loadQuickSearches } from 'ebrc-client/actioncreators/GlobalActionCreators';
-import Announcements from 'ebrc-client/components/Announcements';
-import QuickSearchMulti from '../../QuickSearchMulti';
-import SmallMenu from 'ebrc-client/components/SmallMenu';
-import ResponsiveMenu from './Menu/ResponsiveMenu';
-import { Loading, Link } from 'wdk-client/Components';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { UserActions } from "wdk-client/Actions";
+import { formatReleaseDate } from "ebrc-client/util/formatters";
+import { makeMenuItems } from "ebrc-client/util/menuItems";
+import {
+  loadBasketCounts,
+  loadQuickSearches
+} from "ebrc-client/actioncreators/GlobalActionCreators";
+import Announcements from "ebrc-client/components/Announcements";
+import QuickSearchMulti from "../../QuickSearchMulti";
+import SmallMenu from "ebrc-client/components/SmallMenu";
+import ResponsiveMenu from "./Menu/ResponsiveMenu";
+import { Loading, Link } from "wdk-client/Components";
 
-
-//todo:type out
-interface StateProps {
+interface StoreProps {
   isPartOfEuPathDB: boolean;
   location: any;
   user: any;
@@ -41,9 +42,14 @@ declare namespace CBILSH {
 }
 
 //todo: put in utils, use radius setting for size
-const waitFor = (item: any, func: { (): React.ReactElement<any> }) => item ? func() : <Loading>
-  <div className="wdk-LoadingData">Loading data...</div>
-</Loading>;
+const waitFor = (item: any, func: { (): React.ReactElement<any> }) =>
+  item ? (
+    func()
+  ) : (
+    <Loading>
+      <div className="wdk-LoadingData">Loading data...</div>
+    </Loading>
+  );
 
 //todo: move this when appropriate
 interface User {
@@ -55,7 +61,7 @@ interface User {
     lastName: string;
     organization: string;
     middleName: string;
-  }
+  };
 }
 
 interface BuildInfo {
@@ -63,42 +69,67 @@ interface BuildInfo {
 }
 const BuildInfo: React.SFC<BuildInfo> = props => {
   const { buildNumber } = props;
-  return <span>Build Number: {buildNumber}</span>
-}
+  return <span>Build Number: {buildNumber}</span>;
+};
 
-const UserSection: React.SFC<{ user: User, webAppUrl: string }> = props => {
+const UserSection: React.SFC<{ user: User; webAppUrl: string }> = props => {
   const { user, webAppUrl } = props;
-  return <div className='user-action-section'>
-    {user.isGuest ?
-      <GuestMenu webAppUrl={webAppUrl} /> : <UserMenu user={user} />}
-  </div>;
-}
+  return (
+    <div className="user-action-section">
+      {user.isGuest ? (
+        <GuestMenu webAppUrl={webAppUrl} />
+      ) : (
+        <UserMenu user={user} />
+      )}
+    </div>
+  );
+};
 
 const GuestMenu: React.SFC<{ webAppUrl: string }> = props => {
   const { webAppUrl } = props;
-  return <div>
-    <div className="login-section">
-      Welcome Guest
-      <a className='btn btn-blue'
-        onClick={() => window.location.assign(`${webAppUrl}/user/login`)}>Login
-      </a>
+  return (
+    <div>
+      <div className="login-section">
+        Welcome Guest
+        <a
+          className="btn btn-blue"
+          onClick={() => window.location.assign(`${webAppUrl}/user/login`)}
+        >
+          Login
+        </a>
+      </div>
     </div>
-  </div>
-}
+  );
+};
 
 const UserMenu: React.SFC<{ user: User }> = props => {
   const { user } = props;
-  return <div>
-    <span>Welcome, {user.properties.firstName} {user.properties.lastName}!</span>
-    <span><Link to={"/favorites"}><span className="fa fa-star" />Favorites</Link></span>
-    <span><Link to={"/logout"}><span className="fa fa-user-times" />Logout</Link></span>
-  </div>;
-}
+  return (
+    <div>
+      <span>
+        Welcome, {user.properties.firstName} {user.properties.lastName}!
+      </span>
+      <span>
+        <Link to={"/favorites"}>
+          <span className="fa fa-star" />
+          Favorites
+        </Link>
+      </span>
+      <span>
+        <Link to={"/logout"}>
+          <span className="fa fa-user-times" />
+          Logout
+        </Link>
+      </span>
+    </div>
+  );
+};
 
-
-const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class extends React.Component<CBILSH.props & StateProps, CBILSH.state> {
-
-  constructor(props: CBILSH.props & StateProps) {
+const CBILSiteHeader: React.ComponentClass<
+  CBILSH.props & StoreProps,
+  CBILSH.state
+> = class extends React.Component<CBILSH.props & StoreProps, CBILSH.state> {
+  constructor(props: CBILSH.props & StoreProps) {
     super(props);
     this.state = { responsiveMenuToggled: false };
   }
@@ -115,7 +146,7 @@ const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class e
       location = window.location,
       makeSmallMenuItems,
       makeMainMenuItems,
-      isPartOfEuPathDB = false,
+      isPartOfEuPathDB = false
     } = this.props;
 
     const {
@@ -123,12 +154,14 @@ const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class e
       buildNumber,
       projectId,
       releaseDate,
-      webAppUrl,
+      webAppUrl
     } = siteConfig;
 
     const menuItems = makeMenuItems(this.props);
-    const mainMenuItems = makeMainMenuItems && makeMainMenuItems(this.props, menuItems);
-    const smallMenuItems = makeSmallMenuItems && makeSmallMenuItems(this.props, menuItems);
+    const mainMenuItems =
+      makeMainMenuItems && makeMainMenuItems(this.props, menuItems);
+    const smallMenuItems =
+      makeSmallMenuItems && makeSmallMenuItems(this.props, menuItems);
 
     return (
       <div className="container-fluid">
@@ -138,7 +171,9 @@ const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class e
               <BuildInfo buildNumber={buildNumber} />
             </div>
             <div className="header_rt">
-              {waitFor(user, () => <UserSection user={user} webAppUrl={webAppUrl} />)}
+              {waitFor(user, () => (
+                <UserSection user={user} webAppUrl={webAppUrl} />
+              ))}
             </div>
           </div>
           <div className="col-sm-12 menu-container">
@@ -148,7 +183,11 @@ const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class e
                             </div>*/}
               <HamburgerToggle
                 className="d-md-none"
-                onToggle={() => this.setState({ responsiveMenuToggled: !this.state.responsiveMenuToggled })}
+                onToggle={() =>
+                  this.setState({
+                    responsiveMenuToggled: !this.state.responsiveMenuToggled
+                  })
+                }
               />
               <ResponsiveMenu
                 responsiveMenuToggled={this.state.responsiveMenuToggled}
@@ -156,16 +195,17 @@ const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class e
                 projectId={projectId}
                 showLoginWarning={showLoginWarning}
                 isGuest={user ? user.isGuest : true}
-                items={mainMenuItems}>
-              </ResponsiveMenu>
+                items={mainMenuItems}
+              ></ResponsiveMenu>
               <QuickSearchMulti
                 webappUrl={webAppUrl}
                 showTooltip={true}
-                className="d-none d-lg-flex" />
+                className="d-none d-lg-flex"
+              />
             </div>
           </div>
         </div>
-       {/* <div className="row">
+        {/* <div className="row">
           <div className="col-sm-12">
             <Announcements projectId={projectId} webAppUrl={webAppUrl} location={location} announcements={announcements} />
           </div>
@@ -173,7 +213,7 @@ const CBILSiteHeader: React.ComponentClass<CBILSH.props, CBILSH.state> = class e
       </div>
     );
   }
-}
+};
 
 interface HamburgerToggle {
   onToggle: { (): void };
@@ -181,12 +221,14 @@ interface HamburgerToggle {
 }
 
 const HamburgerToggle: React.SFC<HamburgerToggle> = props => {
-  return <a className={"hamburger " + props.className} onClick={props.onToggle}>
-    <i className="fa fa-2x fa-bars" />
-  </a>
-}
+  return (
+    <a className={"hamburger " + props.className} onClick={props.onToggle}>
+      <i className="fa fa-2x fa-bars" />
+    </a>
+  );
+};
 
-export default connect<StateProps, any, CBILSH.props, CBILSH.state>(
+export default connect<StoreProps, any, CBILSH.props, CBILSH.state>(
   (state: any) => state.globalData,
   { ...UserActions, loadBasketCounts, loadQuickSearches }
 )(CBILSiteHeader);

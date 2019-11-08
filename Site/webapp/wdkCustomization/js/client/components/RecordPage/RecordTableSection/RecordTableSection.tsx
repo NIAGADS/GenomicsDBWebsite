@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { includes } from 'lodash';
-import { safeHtml, wrappable } from 'wdk-client/ComponentUtils';
+import { safeHtml, wrappable } from 'wdk-client/Utils/ComponentUtils';
 import RecordTableContainer from '../RecordTable/RecordTableContainer/RecordTableContainer';
 import { CollapsibleSection, Tooltip } from 'wdk-client/Components';
 import { ErrorBoundary } from 'wdk-client/Controllers';

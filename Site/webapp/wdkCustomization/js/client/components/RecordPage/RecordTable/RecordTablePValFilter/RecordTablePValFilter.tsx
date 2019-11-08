@@ -99,7 +99,7 @@ const _buildUnXScale = (data: ChartDatum[], width: number, maxP: number) => {
 
 const _buildYScale = (data: ChartDatum[], height: number) => {
 	return d3.scale.linear()
-		.domain([0, d3.max(data, function(d) { return d.count; })])
+		.domain([0, d3.max(data, function (d) { return d.count; })])
 		.range([height, 0]);
 
 }
@@ -160,13 +160,15 @@ const _drawRectangle = (svg: d3.Selection<any>, xScale: d3.scale.Ordinal<string,
 
 const _buildDrag = (xScale: d3.scale.Ordinal<string, number>, unXScale: d3.scale.Linear<number, number>, pMin: number, cb: Function) => {
 	return d3.behavior.drag()
-		.on("drag", function(d: any, i) {
+		.on("drag", function (d: any, i) {
 			let event = d3.event as any;
-			const cx = event.x >= d.extent[0] && event.x <= d.extent[1] ? event.x : d3.select(this).attr('cx');
+			//@ts-ignore
+			const cx = event.x >= d.extent[0] && event.x <= d.extent[1] ? event.x : d3.select(this as any).attr('cx');
 			const rectWidth = d.extent[1] - cx;
 			d3.select('.sizer')
 				.attr('transform', 'translate(' + cx + ',0)')
 				.attr('width', rectWidth);
+			//@ts-ignore
 			d3.select(this).attr("cx", cx);
 			cb(unXScale(cx));
 		});

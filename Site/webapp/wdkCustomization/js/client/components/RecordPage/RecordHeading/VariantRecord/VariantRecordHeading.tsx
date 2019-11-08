@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RecordHeading, Tooltip } from 'wdk-client/Components';
 import { MostSevereConsequencesSection } from './Components/index';
 import { HeaderRecordActions, RecordOutLink } from './../Shared';
-import { safeHtml } from 'wdk-client/ComponentUtils';
+import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
 import { resolveJsonInput, isJson } from '../../../../util/jsonParse';
 import { isTrue } from '../../../../util/util';
 import { toNumber, map } from 'lodash';

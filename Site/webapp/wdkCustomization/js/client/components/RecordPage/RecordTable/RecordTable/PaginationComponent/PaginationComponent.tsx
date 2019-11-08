@@ -157,6 +157,8 @@ export default class ReactTablePagination extends React.Component<PT.PaginationP
     } = this.props
 
     return (
+      //webpack is getting confused here, need to dig deeper once build settles down
+      //@ts-ignore
       <div className={`${className} -pagination`} style={this.props.style}>
         <div className="-previous">
           <PreviousComponent

@@ -4,7 +4,7 @@ import jQuery from 'jquery';
 import SelectTableHOC, { SelectTableAdditionalProps } from 'react-table/lib/hoc/selectTable';
 import ReactTable, { AccessorFunction, FinalState, RowInfo, Filter, Column, TableProps, Instance as rtInstance, FilterFunction } from 'react-table';
 import { kebabCase, isString, isObject, findIndex, uniqueId, forIn } from 'lodash';
-import { safeHtml } from 'wdk-client/ComponentUtils';
+import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
 import { scientificToDecimal } from '../../../../util/util';
 import { withTooltip, isJson, resolveJsonInput } from '../../../../util/jsonParse';
 import { extractDisplayText } from '../util';
@@ -266,7 +266,7 @@ const resolveAccessor = (key: string, value: any, attribute: rt.TableAttribute):
 
 const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
 	return data.map(datum => {
-		return forIn(datum, (v, k, o) => {
+		return forIn(datum, (v: string, k: React.ReactText, o: { [x: string]: any; }) => {
 			if (isJson(v)) {
 				o[k] = JSON.parse(v);
 			}

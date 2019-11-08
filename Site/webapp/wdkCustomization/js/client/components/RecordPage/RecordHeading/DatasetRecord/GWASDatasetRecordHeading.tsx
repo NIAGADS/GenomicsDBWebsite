@@ -4,7 +4,6 @@ import { RecordHeading } from 'wdk-client/Components';
 import { HeaderRecordActions, RecordOutLink } from './../Shared';
 import * as gr from './../../types';
 import { resolveJsonInput, LinkType, withTooltip } from '../../../../util/jsonParse';
-import { recordClassDisplayName } from 'wdk-client/Core/MoveAfterRefactor/StoreModules/StepAnalysis/StepAnalysisSelectors';
 
 interface StoreProps {
 	externalUrls: { [key: string]: any },

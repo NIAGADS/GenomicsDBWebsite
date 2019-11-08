@@ -1,40 +1,22 @@
 {
+    "extends": "../../EbrcWebsiteCommon/Site/tsconfig.json",
     "compilerOptions": {
-        "target" : "es5",
-        "module": "esNext",
-        "allowJs": true,
+        "esModuleInterop": true,
+        "strictNullChecks": false,
         "checkJs": false,
-        "allowSyntheticDefaultImports": true,
-        "removeComments": false,
-        "preserveConstEnums": true,
-        "experimentalDecorators": true,
-        "downlevelIteration": true,
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "moduleResolution": "node",
-        "baseUrl": ".",
         "paths": {
-            "wdk-client/*": ["./../../WDKClient/Client/src/*", 
-                             "./../../WDKClient/Client/src/*/index.ts",
-                             "./../../WDKClient/Client/src/Core/*/index.ts",
-                             "./../../WDKClient/Client/src/Core/MoveAfterRefactor/Components/StepAnalysis/*",
-                             "./../../WDKClient/Client/src/Core/MoveAfterRefactor/Components/StepAnalysis/Utils/*",
-                             ],
-            "wdk-client/ComponentUtils" : ["./../../WDKClient/Client/src/Utils/ComponentUtils"],
-            "wdk-client/CategoryUtils" : ["./../../WDKClient/Client/src/Utils/CategoryUtils"],
-            "ebrc-client/*": ["./../../EbrcWebsiteCommon/Site/webapp/wdkCustomization/js/client/*"],
-            "lodash/fp" : ["./../../WDKClient/Client/node_modules/lodash/fp"],
-            "*": ["./node_modules/*",
-                  "./node_modules/@types/*/index.d.ts", 
-                  "./../../WDKClient/Client/node_modules/*/index.d.ts", 
-                  "./../../WDKClient/Client/node_modules/*/",
-                  "./../../WDKClient/Client/node_modules/@types/*/index.d.ts",
-                  "./../../WDKClient/Client/node_modules/@types/node/index.d.ts",
-                  "./../../WDKClient/Dependencies/*",
-                  "*"
-            ]
+            "wdk-client/ComponentUtils/*": ["./../../WDKClient/Client/src/Utils/ComponentUtils/*"],
+            "wdk-client/CategoryUtils/*": ["./../../WDKClient/Client/src/Utils/CategoryUtils/*"],
+            "*": [
+                "./node_modules/*",
+                "./node_modules/@types/*/index.d.ts",
+                "./../../WDKClient/Client/node_modules/*/index.d.ts",
+                "./../../WDKClient/Client/node_modules/*/",
+                "./../../WDKClient/Client/node_modules/@types/*/index.d.ts",
+                "./../../WDKClient/Client/node_modules/@types/node/index.d.ts",
+                "./../../WDKClient/Dependencies/*",
+                "*"
+              ]
         },
-        "jsx": "react",
-        "lib": ["es5", "es6", "es7", "es2017", "dom"],
-    }
+    },
 }

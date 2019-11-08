@@ -9,7 +9,7 @@ interface LzBaseProps {
 	chromosome: string,
 	population: string,
 	dataset: string,
-	selectClass: string, 
+	selectClass: string,
 	//from store
 	endpoint?: string
 }
@@ -101,8 +101,10 @@ const LoadingIndicator: React.SFC<LoadingIndicator> = props => {
 }
 
 const buildConstructorFunc = (url: string, idField: string) => {
-	return function() {
+	return function () {
+		//@ts-ignore
 		this.url = url;
+		//@ts-ignore
 		this.params = {
 			id_field: idField,
 		}
@@ -116,12 +118,12 @@ const _buildPlot = (selector: string, state: any, population: string, dataset: s
 		ldSource = lz.Data.Source.extend(buildConstructorFunc('/api/ld', 'assoc:id'), 'ld', 'LDLZ');
 
 
-	assocSource.prototype.getURL = function(state: any, chain: any, fields: any) {
+	assocSource.prototype.getURL = function (state: any, chain: any, fields: any) {
 		return `${endpoint}/locuszoom/gwas?dataset=${dataset}&chromosome=${state.chr}&locStart=${state.start}&locEnd=${state.end}`;
 	}
 
 	//probably better to use extractFields?
-	ldSource.prototype.normalizeResponse = function(data: { value: number[], id2: string[] }) {
+	ldSource.prototype.normalizeResponse = function (data: { value: number[], id2: string[] }) {
 		return {
 			id2: data.id2,
 			position2: data.id2.map(datum => +/\:(\d+):/.exec(datum)[1]),
@@ -129,7 +131,7 @@ const _buildPlot = (selector: string, state: any, population: string, dataset: s
 		}
 	}
 
-	ldSource.prototype.getURL = function(state: any, chain: any, fields: any) {
+	ldSource.prototype.getURL = function (state: any, chain: any, fields: any) {
 		const refVar = this.getRefvar(state, chain, fields);
 		chain.header.ldrefvar = refVar;
 		return `${endpoint}/locuszoom/linkage?population=${population}&variant=${refVar}`;

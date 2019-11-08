@@ -7,10 +7,6 @@ import NiagadsRecordTable from '../RecordTable/RecordTable';
 import { extractDisplayText } from '../util';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { BasketActions } from 'wdk-client/Actions';
-import { PrimaryKey } from 'wdk-client/Utils/WdkModel';
-import WdkService, { BasketRecordOperation } from 'wdk-client/Utils/WdkService';
-import { } from 'wdk-client/Components';
 import RecordTablePValFilter from '../RecordTablePValFilter/RecordTablePValFilter';
 
 
@@ -23,16 +19,10 @@ const INITIAL_STATE: rt.NiagadsTableStateProps = {
 	basket: []
 }
 
-const NiagadsTableContainer: React.ComponentClass<rt.IRecordTable & DispatchPropTypes, rt.NiagadsTableStateProps> = class extends React.Component<rt.IRecordTable & DispatchPropTypes, rt.NiagadsTableStateProps> {
-	constructor(props: rt.IRecordTable & DispatchPropTypes) {
+const NiagadsTableContainer: React.ComponentClass<rt.IRecordTable, rt.NiagadsTableStateProps> = class extends React.Component<rt.IRecordTable, rt.NiagadsTableStateProps> {
+	constructor(props: rt.IRecordTable) {
 		super(props);
 		this.state = this.state = INITIAL_STATE;
-	}
-
-	addSelectionsToBasket = () => {
-		const { basket } = this.state; //get pks out of basket....
-		let pk: Set<PrimaryKey> = new Set([[{ name: "fake", value: "fake" }]]);
-		this.props.updateBasket('add', this.props.recordClass.name, pk);
 	}
 
 	componentDidMount = () => {
@@ -122,11 +112,6 @@ const NiagadsTableContainer: React.ComponentClass<rt.IRecordTable & DispatchProp
 								onChange={this.handleSearchFilterChange} />
 						</div>
 					</div>
-					<div className="secondary-controls">
-						<div>
-							{this.state.basket.length > 0 && <a className="action-link btn" onClick={this.addSelectionsToBasket}>Add Selections to Basket</a>}
-						</div>
-					</div>
 				</div>
 				<NiagadsRecordTable
 					table={table}
@@ -142,20 +127,4 @@ const NiagadsTableContainer: React.ComponentClass<rt.IRecordTable & DispatchProp
 	}
 }
 
-const updateBasket = (action: BasketRecordOperation, recordClassName: string, primaryKeys: Set<PrimaryKey>) => {
-	return function run({ wdkService }: any) {
-		return wdkService.updateBasketStatus(action, recordClassName, primaryKeys)
-	}
-}
-
-const { requestUpdateBasket } = BasketActions;
-
-function mapDispatch(dispatch: Dispatch) {
-	return bindActionCreators({ updateBasket, requestUpdateBasket }, dispatch)
-}
-
-interface DispatchPropTypes {
-	updateBasket: { (action: BasketRecordOperation, recordClassName: string, primaryKeys: Set<PrimaryKey>): any },
-}
-
-export default connect<rt.NiagadsTableStateProps, DispatchPropTypes, rt.IRecordTable>(null, mapDispatch)(NiagadsTableContainer);
+export default NiagadsTableContainer;

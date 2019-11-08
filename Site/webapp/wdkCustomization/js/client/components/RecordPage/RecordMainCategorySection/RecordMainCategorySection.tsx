@@ -1,15 +1,14 @@
 import React from 'react';
 import { RecordAttributeSection, CollapsibleSection, Tooltip } from 'wdk-client/Components';
 import RecordTableSection from '../RecordTableSection/RecordTableSection';
-import { getId, getTargetType, getDisplayName } from 'wdk-client/CategoryUtils';
+import { getId, getTargetType, getDisplayName } from 'wdk-client/Utils/CategoryUtils';
 import * as GR from '../types';
 import { resolveJsonInput } from '../../../util/jsonParse';
 import { IdeogramPlot, HighchartPlot, HighchartPlotList } from './Visualizations';
-import { safeHtml } from 'wdk-client/ComponentUtils';
+import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
 import { isEmpty } from 'lodash';
 import { VariantTranscriptConsequencesSummary, GeneGeneticVariationSummary, VariantLzPlot } from './SectionSummaries';
 import LzPlot, { LzGeneProps } from './Visualizations/LocusZoom/LZPlot';
-import { CATEGORY_EXPANSION } from 'wdk-client/Actions/RecordActions';
 
 interface RecordMainCategorySection {
     category: any;
@@ -188,7 +187,9 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                     <CollapsibleSection
                         id={id}
                         className={depth === 0 ? 'wdk-RecordSection' : 'wdk-RecordSubsection'}
-                        headerComponent={Header}
+                        //this seems to be an issue with section component typing
+                        //@ts-ignore
+                        headerComponent={Header} 
                         headerContent={headerContent}
                         isCollapsed={isCollapsed}
                         onCollapsedChange={this.toggleCollapse}
