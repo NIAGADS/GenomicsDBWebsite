@@ -10,8 +10,7 @@
     <!-- =============================================================== -->
     <!-- By Identifier -->
     <!-- =============================================================== -->
-    <question name="variant_id" displayName="Identifier" shortDisplayName="ID" queryRef="VariantIds.Identifier" 
-        noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <question name="vid" displayName="Identifier" shortDisplayName="ID" queryRef="VariantIds.Identifier" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
       <description>
         <![CDATA[
     		 View details and curated annotations for a specific
@@ -24,7 +23,7 @@
       </summary>
     </question>
 
-    <question name="variant_upload" displayName="Upload a list of Variants" shortDisplayName="Upload" queryRef="VariantIds.Upload" noSummaryOnSingleRecord="true" urlName="upload" recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <question name="vupload" displayName="Upload a list of Variants" shortDisplayName="Upload" queryRef="VariantIds.Upload" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
       <description>
         <![CDATA[
     	      <p>Upload a list of variants to compare against curated GenomicsDB resources or integrate with existing search strategies.</p>
@@ -46,13 +45,7 @@
     <!-- Location -->
     <!-- =============================================================== -->
 
-  <!--   <question name="Gene" 
-              displayName="Gene" 
-              shortDisplayName="Gene" 
-              urlName="gene"
-              queryRef="VariantIds.Gene" 
-              noSummaryOnSingleRecord="true" 
-              recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <!--   <question name="vgene" displayName="Gene" shortDisplayName="Gene"  queryRef="VariantIds.Gene" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
      <description>
         <![CDATA[
           <p>Retrieve a list of variants located within the genomic span of a gene.</p>
@@ -68,13 +61,7 @@
       </dynamicAttributes>
     </question>
 
-    <question name="Transcript" 
-              displayName="Transcript" 
-              shortDisplayName="Transcript" 
-              urlName="transcript"
-              queryRef="VariantIds.Transcript" 
-              noSummaryOnSingleRecord="true" 
-              recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <question name="vtranscript" displayName="Transcript" shortDisplayName="Transcript" queryRef="VariantIds.Transcript" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
       <description>
           Retrieve a list of variants located within the genomic span of a specific transcript, specified using the Ensembl transcript ID.
       </description>
@@ -84,13 +71,7 @@
     </question>
 
 
-    <question name="Region" 
-              displayName="Genomic Region" 
-              shortDisplayName="Region" 
-              urlName="region"
-              queryRef="VariantIds.Region" 
-              noSummaryOnSingleRecord="true" 
-              recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <question name="vregion" displayName="Genomic Region" shortDisplayName="Region" queryRef="VariantIds.Region" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
       <description>
         <![CDATA[<p>Retrieve a list of variants located within a specifc genomic region</p>
                   <p>Specify the genomic region in the format chr:start-end (e.g.,19:45409011-45412650))</p>
@@ -108,13 +89,7 @@
     <!-- =============================================================== -->
     <!-- Dataset -->
     <!-- =============================================================== -->
-    <question name="gwas_stats" 
-              displayName="NIAGADS GWAS" 
-              shortDisplayName="GWAS" 
-              queryRef="VariantIds.GWAS" 
-              noSummaryOnSingleRecord="true" 
-              urlName="gwas_stats" 
-              recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <question name="gwas_stats" displayName="NIAGADS GWAS" shortDisplayName="GWAS" queryRef="VariantIds.GWAS" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
 
       <attributesList summary="pvalue,is_adsp_variant,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding" />
 
@@ -141,12 +116,7 @@
     <!-- Transforms -->
     <!--===========================================================================-->
 
-    <!-- <question name="Variants.FromGenes" 
-              displayName="Transform -> Variants" 
-              shortDisplayName="From Genes" 
-              queryRef="VariantIds.FromGenes" 
-              urlName="genes2variants" 
-              recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <!-- <question name="gene_variant_transform" displayName="Transform -> Variants" shortDisplayName="From Genes" queryRef="VariantIds.FromGenes"  recordClassRef="VariantRecordClasses.VariantRecordClass">
 
       <description>
         <![CDATA[From the gene result, get a list of variants (colocated based on genomic coordinates). After this gene to region transformation, the strategy can be exteneded further by adding new steps from the available variant searches]]>.
