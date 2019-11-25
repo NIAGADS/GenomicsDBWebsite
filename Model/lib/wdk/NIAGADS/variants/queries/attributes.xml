@@ -8,9 +8,9 @@
     <!-- allow search by refsnp, but only return first hit -->
     <!-- =================================================================== -->
     <sqlQuery name="VariantAlias" doNotTest="true">
-      <column name="source_id"/>
-      <column name="project_id"/>
-      <column name="old_source_id"/>
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="old_source_id" columnType="string"/>
       <sql>
 	<![CDATA[
 			WITH ids AS (##WDK_ID_SQL##)
@@ -28,9 +28,9 @@
     <!-- =============================================================== -->
 
     <sqlQuery name="SortingAttributes">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="display_metaseq_id"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="display_metaseq_id" columnType="string"/>
       <sql>
 	<![CDATA[
 		 SELECT '@PROJECT_ID@'::text AS project_id, 
@@ -42,46 +42,46 @@
     </sqlQuery>
 
     <sqlQuery name="BasicAttributes">
-      <column name="project_id"/>
-      <column name="source_id"/>
-	  <column name="is_annotated"/>
-      <column name="metaseq_id"/>
-      <column name="ref_snp_id"/>
-      <column name="adsp_id"/>
-      <column name="variant_source"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+	  <column name="is_annotated" columnType="boolean"/>
+      <column name="metaseq_id" columnType="string"/>
+      <column name="ref_snp_id" columnType="string"/>
+      <column name="adsp_id" columnType="string"/>
+      <column name="variant_source" columnType="string"/>
 
-      <column name="chromosome"/>
-      <column name="position"/>
-      <column name="location"/>
+      <column name="chromosome" columnType="string"/>
+      <column name="position" columnType="number"/>
+      <column name="location" columnType="string"/>
 
-      <column name="full_jbrowse_link"/>
-      <column name="jbrowse_source_url"/>
+      <column name="full_jbrowse_link" columnType="string"/>
+      <column name="jbrowse_source_url" columnType="string"/>
 
-      <column name="ref_allele"/>
-      <column name="alt_allele"/>
-      <column name="display_allele"/>
+      <column name="ref_allele" columnType="string"/>
+      <column name="alt_allele" columnType="string"/>
+      <column name="display_allele" columnType="string"/>
 
-      <column name="variant_class_abbrev"/>
+      <column name="variant_class_abbrev" columnType="string"/>
 
-      <column name="sequence_allele"/>
+      <column name="sequence_allele" columnType="string"/>
 
-      <column name="is_reversed"/>
+      <column name="is_reversed" columnType="boolean"/>
 
-      <column name="is_adsp_variant"/>
-      <column name="is_adsp_wes"/>
-      <column name="is_adsp_wgs"/>
+      <column name="is_adsp_variant" columnType="boolean"/>
+      <column name="is_adsp_wes" columnType="boolean"/>
+      <column name="is_adsp_wgs" columnType="boolean"/>
 
-      <column name="is_multi_allelic"/>
+      <column name="is_multi_allelic" columnType="boolean"/>
 
-      <column name="most_severe_consequence"/>
-      <column name="msc_impacted_gene"/>
-      <column name="msc_impacted_gene_link"/>
-      <column name="msc_impacted_gene_symbol"/>
-      <column name="msc_impact"/>
-      <column name="msc_amino_acid_change"/>
-      <column name="msc_codon_change"/>
-      <column name="msc_impacted_transcript"/>
-      <column name="msc_is_coding"/>
+      <column name="most_severe_consequence" columnType="string"/>
+      <column name="msc_impacted_gene" columnType="string"/>
+      <column name="msc_impacted_gene_link" columnType="string"/>
+      <column name="msc_impacted_gene_symbol" columnType="string"/>
+      <column name="msc_impact" columnType="string"/>
+      <column name="msc_amino_acid_change" columnType="string"/>
+      <column name="msc_codon_change" columnType="string"/>
+      <column name="msc_impacted_transcript" columnType="string"/>
+      <column name="msc_is_coding" columnType="string"/>
 
       <sql>
 	<![CDATA[
@@ -166,11 +166,11 @@
     </sqlQuery>
 
     <sqlQuery name="Sequence">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="upstream_sequence"/>
-      <column name="downstream_sequence"/>
-      <column name="flanking_sequence"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="upstream_sequence" columnType="string"/>
+      <column name="downstream_sequence" columnType="string"/>
+      <column name="flanking_sequence" columnType="string"/>
       <sql>
 			<![CDATA[
 				SELECT source_id, 
@@ -204,9 +204,9 @@
     </sqlQuery>
 
     <sqlQuery name="RefSnpStatus">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="has_merge_history"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="has_merge_history"columnType="boolean"/>
       <sql>
 	<![CDATA[
 		 SELECT id.source_id,
@@ -218,9 +218,9 @@
     </sqlQuery>
 
     <sqlQuery name="VariantClass">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="variant_class"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="variant_class" columnType="string"/>
       <sql>
 			<![CDATA[		 
 				WITH ids AS (##WDK_ID_SQL##),
@@ -251,10 +251,10 @@
     <!-- =============================================================== -->
 
     <sqlQuery name="WGSQCFilter">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="adsp_wgs_qc_filter_status_display"/>
-      <column name="adsp_wgs_qc_filter_status"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="adsp_wgs_qc_filter_status_display" columnType="string"/>
+      <column name="adsp_wgs_qc_filter_status" columnType="boolean"/>
       <sql>
 	<![CDATA[
 		 	WITH id AS (##WDK_ID_SQL##),
@@ -280,10 +280,10 @@
     </sqlQuery>
 
     <sqlQuery name="WESQCFilter">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="adsp_wes_qc_filter_status_display"/>
-      <column name="adsp_wes_qc_filter_status"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="adsp_wes_qc_filter_status_display" columnType="string"/>
+      <column name="adsp_wes_qc_filter_status" columnType="boolean"/>
       <sql>
 	<![CDATA[
 		WITH id AS (##WDK_ID_SQL##),
@@ -314,10 +314,10 @@
     <!-- =============================================================== -->
 
     <sqlQuery name="ColocatedVariants">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="num_colocated_variants"/>
-      <column name="colocated_variants"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="num_colocated_variants" columnType="number"/>
+      <column name="colocated_variants" columnType="string"/>
       <sql>
 	<![CDATA[
 		 WITH record AS (
@@ -362,10 +362,10 @@
     </sqlQuery>
 
     <sqlQuery name="AlternativeVariants">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="num_alternative_variants"/>
-      <column name="alternative_variants"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="num_alternative_variants" columnType="number"/>
+      <column name="alternative_variants" columnType="string"/>
       <sql>
 			<![CDATA[
 				WITH record AS (
@@ -402,10 +402,10 @@
     </sqlQuery>
 
     <sqlQuery name="ColocatedGenes">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="colocated_genes"/>
-      <column name="num_colocated_genes"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="colocated_genes" columnType="string"/>
+      <column name="num_colocated_genes" columnType="number"/>
 
       <sql>
 	<![CDATA[
@@ -442,10 +442,10 @@ ON genes.source_id = id.source_id
     <!-- =============================================================== -->
 
     <sqlQuery name="ImpactedFeatureCount">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="num_impacted_genes"/>
-      <column name="num_impacted_transcripts"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="num_impacted_genes" columnType="number"/>
+      <column name="num_impacted_transcripts" columnType="number"/>
       <sql>
 	<![CDATA[
 		 WITH vEffect AS (
@@ -476,9 +476,9 @@ GROUP BY id.source_id
 
 
     <sqlQuery name="TranscriptConsequenceSummary">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="transcript_consequence_summary"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="transcript_consequence_summary" columnType="string"/>
       <sql>
 	<![CDATA[ 
 		 WITH vEffect AS (
@@ -533,10 +533,10 @@ WHERE NOT EXISTS (SELECT * FROM Result) -- keeps jsonb operators from being perf
 
 
     <sqlQuery name="CADD">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="cadd_phred_score"/>
-      <column name="cadd_raw_score"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="cadd_phred_score" columnType="float"/>
+      <column name="cadd_raw_score" columnType="float"/>
 
       <sql>
 	<![CDATA[
@@ -562,11 +562,11 @@ WHERE NOT EXISTS (SELECT * FROM Result) -- keeps jsonb operators from being perf
 
 
     <sqlQuery name="CATO">
-      <column name="project_id"/>
-      <column name="source_id"/>
-      <column name="cato_motif_affected"/>
-      <column name="cato_score_percentile"/>
-      <column name="cato_cell_types_affected"/>
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="cato_motif_affected" columnType="string"/>
+      <column name="cato_score_percentile" columnType="float"/>
+      <column name="cato_cell_types_affected" columnType="string"/>
 
       <sql>
 	<![CDATA[

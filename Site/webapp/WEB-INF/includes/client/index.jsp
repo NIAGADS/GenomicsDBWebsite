@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="imp" tagdir="/WEB-INF/tags/imp" %>
-<%@ taglib prefix="api" uri="http://eupathdb.org/taglib"%>
 <%@ taglib prefix="json" uri="http://www.atg.com/taglibs/json" %>
 
 <c:set var="model" value="${applicationScope.wdkModel.model}"/>
@@ -19,24 +18,6 @@
       </c:if>
     </c:forEach>
   </json:object>
-</c:set>
-
-<%-- only show information on home page. this jsp never gets loaded on home page --%>
-<%-- FIXME Add logic to show information messages on homepage if this gets used for homepage --%>
-<c:set var="information" value="[]"/>
-<api:messages var="degraded" projectName="${model.projectId}" messageCategory="Degraded"/> 
-<api:messages var="down" projectName="${model.projectId}" messageCategory="Down"/> 
-
-<c:set var="recordClassesWithProjectId">
-  [
-    <c:forEach items="${applicationScope.wdkModel.recordClasses}" var="recordClass">
-      <c:forEach items="${recordClass.primaryKeyColumns}" var="columnName">
-        <c:if test="${columnName eq 'project_id'}">
-          "${recordClass.urlSegment}",
-        </c:if>
-      </c:forEach>
-    </c:forEach>
-  ]
 </c:set>
 
 <!doctype html>
@@ -58,14 +39,9 @@
         buildNumber: "${model.buildNumber}",
         releaseDate: "${model.releaseDate}",
         webAppUrl: "${webAppUrl}",
-	externalUrls: ${externalUrls},
-        recordClassesWithProjectId: ${recordClassesWithProjectId}
+	      externalUrls: ${externalUrls},
       };
-      window.__SITE_ANNOUNCEMENTS__ = {
-        information: ${information},
-        degraded: ${degraded},
-        down: ${down}
-      };
+    
 
       <%-- Initialize google analytics. A pageview event will be sent in the JavaScript code. --%>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

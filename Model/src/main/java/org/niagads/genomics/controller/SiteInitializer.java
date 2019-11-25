@@ -10,7 +10,7 @@ public class SiteInitializer {
   public static void startUp(ApplicationContext context) {
     WdkInitializer.initializeWdk(context);
     WdkModel wdkModel = WdkInitializer.getWdkModel(context);
-    EuPathSiteSetup.initialize(wdkModel);
+    // EuPathSiteSetup.initialize(wdkModel);
     // ApiSiteSetup.initialize(wdkModel);
   }
 

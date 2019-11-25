@@ -1,5 +1,4 @@
 import React from 'react';
-import jQuery from 'jquery';
 //@ts-ignore
 import SelectTableHOC, { SelectTableAdditionalProps } from 'react-table/lib/hoc/selectTable';
 import ReactTable, { AccessorFunction, FinalState, RowInfo, Filter, Column, TableProps, Instance as rtInstance, FilterFunction } from 'react-table';
