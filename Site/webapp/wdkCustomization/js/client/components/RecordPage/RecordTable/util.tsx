@@ -1,4 +1,3 @@
-import jQuery from 'jquery';
 import { isString, isObject, toNumber, get } from 'lodash';
 
 /*
