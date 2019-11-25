@@ -3,7 +3,7 @@ package org.niagads.genomics.controller;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.gusdb.wdk.controller.ServletApplicationContext;
+import org.gusdb.fgputil.web.servlet.HttpServletApplicationContext;
 
 /**
  * A class that is initialized at the start of the web application. This makes
@@ -14,14 +14,14 @@ public class ApplicationInitListener implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     SiteInitializer.startUp(
-      new ServletApplicationContext(
+      new HttpServletApplicationContext(
         sce.getServletContext()));
   }
 
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
     SiteInitializer.shutDown(
-      new ServletApplicationContext(
+      new HttpServletApplicationContext(
         sce.getServletContext()));
   }
 
