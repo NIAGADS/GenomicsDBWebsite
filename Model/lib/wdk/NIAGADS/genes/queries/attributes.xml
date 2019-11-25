@@ -17,9 +17,9 @@
     <!-- for now just for current gene symbol  -->
     <!-- =================================================================== -->
     <sqlQuery name="GeneAlias" doNotTest="true">
-      <column name="source_id"/>
-      <column name="project_id"/>
-      <column name="old_source_id"/>
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="old_source_id" columnType="string"/>
       <sql>
         <![CDATA[
                 WITH gs AS (
@@ -45,29 +45,29 @@
     <!-- =============================================================== -->
 
     <sqlQuery name="BasicAttributes">
-      <column name="source_id"/>
-      <column name="project_id"/>
-      <column name="gene_symbol"/>
-      <column name="gene_type"/>
-      <column name="chromosome"/>
-      <column name="location_start"/>
-      <column name="location_end"/>
-      <column name="span"/>
-      <column name="location"/>
-      <column name="gene_name"/>
-      <column name="hgnc_id"/>
-      <column name="omim_id"/>
-      <column name="ucsc_id"/>
-      <column name="vega_id"/>
-      <column name="entrez_id"/>
-      <column name="ensembl_id"/>
-      <column name="uniprot_id"/>
-      <column name="synonyms"/>
-      <column name="strand"/>
-      <column name="is_reversed"/>
-      <column name="full_jbrowse_link"/>
-      <column name="jbrowse_source_url"/>
-      <column name="dynspan_link"/>
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="gene_symbol" columnType="string"/>
+      <column name="gene_type" columnType="string"/>
+      <column name="chromosome" columnType="string"/>
+      <column name="location_start" columnType="number"/>
+      <column name="location_end" columnType="number"/>
+      <column name="span" columnType="string"/>
+      <column name="location" columnType="string"/>
+      <column name="gene_name" columnType="string"/>
+      <column name="hgnc_id" columnType="string"/>
+      <column name="omim_id" columnType="string"/>
+      <column name="ucsc_id" columnType="string"/>
+      <column name="vega_id" columnType="string"/>
+      <column name="entrez_id" columnType="string"/>
+      <column name="ensembl_id" columnType="string"/>
+      <column name="uniprot_id" columnType="string"/>
+      <column name="synonyms" columnType="string"/>
+      <column name="strand" columnType="string"/>
+      <column name="is_reversed" columnType="boolean"/>
+      <column name="full_jbrowse_link" columnType="string"/>
+      <column name="jbrowse_source_url" columnType="string"/>
+      <column name="dynspan_link" columnType="string"/>
 
       <sql>
         <![CDATA[

@@ -63,7 +63,7 @@
 			<attributeQueryRef ref="VariantAttributes.BasicAttributes">
 				<columnAttribute name="is_annotated" internal="true"/>
 				<columnAttribute name="variant_source" displayName="Variant Source" help="primary source of the variant: dbSNP, ADSP or NIAGADS GWAS; some ADSP variants are known dbSNP variants.  To differentiate, add the the 'ADSP Variant?' column to this summary or filter the result by variant source" type="string" />
-				<columnAttribute name="metaseq_id" displayName="Metaseq ID" internal="true" inReportMaker="true" type="string" />
+				<columnAttribute name="metaseq_id" displayName="Metaseq ID" internal="true" inReportMaker="true" type="string" columnType="string"/>
 				<columnAttribute name="ref_snp_id" displayName="RefSNP ID" help="dbSNP reference SNP identifier" type="string" />
 				<columnAttribute name="adsp_id" displayName="ADSP ID" help="Unique ADSP variant identifier (for novel ADSP variants)" type="string" />
 				<columnAttribute name="ref_allele" displayName="Ref Allele" type="string" />

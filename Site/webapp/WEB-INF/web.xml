@@ -39,15 +39,6 @@
   </listener>
 
   <filter>
-    <filter-name>MDCServletFilter</filter-name>
-    <filter-class>org.gusdb.wdk.controller.filter.MDCServletFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>MDCServletFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <filter>
     <filter-name>HttpResponseLogger</filter-name>
     <filter-class>org.gusdb.wdk.controller.filter.HttpResponseHeaderLogger</filter-class>
   </filter>
@@ -69,48 +60,6 @@
   </filter-mapping>
   <!-- End UrlRewrite filter -->
 
-  <filter>
-    <filter-name>CheckLoginFilter</filter-name>
-     <filter-class>org.gusdb.wdk.controller.filter.CheckLoginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>CheckLoginFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <!-- mitigation for Struts1 security hole CVE-2014-0114 -->
-  <filter>
-    <filter-name>ParamFilter</filter-name>
-    <filter-class>org.gusdb.wdk.controller.filter.ParameterFilter</filter-class>
-    <init-param>
-      <param-name>excludeParams</param-name>
-      <param-value>(.*\.|^|.*|\[('|"))(c|C)lass(\.|('|")]|\[).*</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>ParamFilter</filter-name>
-    <servlet-name>wdkEuPathDbBrc</servlet-name>
-  </filter-mapping>
-
-  <!-- Struts servlet to serve out most of the site -->
-  <servlet>
-    <servlet-name>NiagadsWebsite</servlet-name>
-    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-    <init-param>
-      <param-name>config</param-name>
-      <param-value>/WEB-INF/struts-config.xml</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>NiagadsWebsite</servlet-name>
-    <url-pattern>/webservices/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>NiagadsWebsite</servlet-name>
-    <url-pattern>*.do</url-pattern>
-  </servlet-mapping>
-  <!-- End Struts servlet and mapping -->
 
   <!-- WDK RESTful client filter -->
   <servlet>
@@ -159,9 +108,4 @@
   </welcome-file-list>
 
   <!-- Error Page Mappings -->
-  <error-page>
-    <exception-type>java.lang.Exception</exception-type>
-    <location>/wdkCustomization/jsp/Error.jsp</location>
-  </error-page>
-
 </web-app>
