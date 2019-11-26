@@ -1,24 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import { UserActions } from "wdk-client/Actions";
-import { formatReleaseDate } from "ebrc-client/util/formatters";
 import { makeMenuItems } from "ebrc-client/util/menuItems";
 import {
   loadBasketCounts,
   loadQuickSearches
 } from "ebrc-client/actioncreators/GlobalActionCreators";
-import Announcements from "ebrc-client/components/Announcements";
 import QuickSearchMulti from "../../QuickSearchMulti";
-import SmallMenu from "ebrc-client/components/SmallMenu";
 import ResponsiveMenu from "./Menu/ResponsiveMenu";
 import { Loading, Link } from "wdk-client/Components";
 
 interface StoreProps {
-  isPartOfEuPathDB: boolean;
-  location: any;
-  user: any;
-  siteConfig: {
+  isPartOfEuPathDB?: boolean;
+  location?: any;
+  user?: any;
+  siteConfig?: {
     announcements: any;
     buildNumber: string;
     projectId: string;

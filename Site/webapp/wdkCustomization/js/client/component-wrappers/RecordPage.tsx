@@ -29,7 +29,7 @@ const findRecordPageComponent = findExportWith(requireCast.context('../component
 function makeDynamicWrapper(componentName: string) {
   return function dynamicWrapper(DefaultComponent: React.Component) {
     return function DynamicWrapper(props: any) {
-      const ResolvedComponent = findRecordPageComponent(componentName)(`./${props.recordClass.name}`) || DefaultComponent;
+      const ResolvedComponent = findRecordPageComponent(componentName)(`./${props.recordClass.fullName}`) || DefaultComponent;
       return (
         <ResolvedComponent {...props} DefaultComponent={DefaultComponent} />
       );

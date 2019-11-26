@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { isVariantRecord, BaseRecord } from '../components/RecordPage/types';
 import { isTrue } from '../util/util';
-import { cloneDeep, partial, bind } from 'lodash';
 
 //here we're wrapping the RecordUI component -- in case this is an unannotated variant record, we want to show only
 //our header message and nothing
@@ -28,7 +27,7 @@ interface UnannotatedVariantHeading {
 	DBSNP_URL: string;
 }
 const _UnannotatedVariantHeading: React.SFC<UnannotatedVariantHeading> = props => {
-	const { record, recordClass } = props,
+	const { record } = props,
 		classNames = `wdk-RecordContainer wdk-RecordContainer__$
 			{props.recordClass.name}`;
 	return (

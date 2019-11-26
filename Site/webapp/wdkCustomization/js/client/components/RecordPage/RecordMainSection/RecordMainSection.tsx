@@ -1,11 +1,8 @@
 import React from 'react';
-import { cloneDeep } from 'lodash';
 import { RecordMainSection } from 'wdk-client/Components';
 import RecordMainCategorySection from '../RecordMainCategorySection/RecordMainCategorySection';
-import { pure, wrappable } from 'wdk-client/Utils/ComponentUtils';
 import { getId, getLabel } from 'wdk-client/Utils/CategoryUtils';
 import * as GR from '../types';
-import { isTrue } from '../../../util/util';
 import { RecordClass } from 'wdk-client/Utils/WdkModel';
 
 interface RecordMainSection {
@@ -17,8 +14,6 @@ interface RecordMainSection {
     parentEnumeration: string;
     onSectionToggle: { (sectionName: string, isVisible: boolean): any };
 }
-
-const RecordMainSectionCast: any = RecordMainSection;
 
 const NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
     depth = 0,

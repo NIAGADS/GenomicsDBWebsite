@@ -4,19 +4,5 @@
         "esModuleInterop": true,
         "strictNullChecks": false,
         "checkJs": false,
-        "paths": {
-            "wdk-client/ComponentUtils/*": ["./../../WDKClient/Client/src/Utils/ComponentUtils/*"],
-            "wdk-client/CategoryUtils/*": ["./../../WDKClient/Client/src/Utils/CategoryUtils/*"],
-            "*": [
-                "./node_modules/*",
-                "./node_modules/@types/*/index.d.ts",
-                "./../../WDKClient/Client/node_modules/*/index.d.ts",
-                "./../../WDKClient/Client/node_modules/*/",
-                "./../../WDKClient/Client/node_modules/@types/*/index.d.ts",
-                "./../../WDKClient/Client/node_modules/@types/node/index.d.ts",
-                "./../../WDKClient/Dependencies/*",
-                "*"
-              ]
-        },
     },
 }
