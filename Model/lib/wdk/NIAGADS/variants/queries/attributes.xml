@@ -206,7 +206,7 @@
     <sqlQuery name="RefSnpStatus">
       <column name="project_id" columnType="string"/>
       <column name="source_id" columnType="string"/>
-      <column name="has_merge_history"columnType="boolean"/>
+      <column name="has_merge_history" columnType="boolean"/>
       <sql>
 	<![CDATA[
 		 SELECT id.source_id,
