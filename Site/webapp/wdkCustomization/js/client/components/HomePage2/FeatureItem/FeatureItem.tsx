@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'wdk-client/Components';
 import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
-import { loadSearches } from 'ebrc-client/App/Searches/SearchCardActionCreators';
+
 interface FeatureItem {
 	config: {
 		title: string,

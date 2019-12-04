@@ -14,5 +14,7 @@
   <!-- @Controller, @Service, @Configuration, etc. -->
   <context:component-scan base-package="org.gusdb"/>
   <context:component-scan base-package="org.apidb"/>
+  <context:component-scan base-package="org.niagads"/>
+   <context:component-scan base-package="org.niagads"/>
   
 </beans>
