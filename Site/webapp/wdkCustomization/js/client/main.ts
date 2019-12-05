@@ -11,6 +11,8 @@ import { initialize } from "ebrc-client/bootstrap";
 import * as componentWrappers from "./component-wrappers";
 import { wrapRoutes } from "./routes";
 
+import pluginConfig from './pluginConfig';
+
 // Initialize the application.
 const castInitialize: any = initialize;
 
@@ -18,8 +20,8 @@ const context = castInitialize({
   isPartOfEuPathDB: false,
   includeQueryGrid: true,
   componentWrappers,
-  wrapRoutes
-  //pluginConfig
+  wrapRoutes,
+  pluginConfig
   //storeWrappers,
 });
 
