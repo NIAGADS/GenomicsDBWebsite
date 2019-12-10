@@ -12,7 +12,7 @@ export default function mainMenuItems({ siteConfig, preferences }: { siteConfig:
   return [
     { id: 'home', text: 'GenomicsDB', route: '/'},
     { id: 'about', text: 'About', tooltip: 'Coming soon', webAppUrl: '#' },
-    { id: 'search', text: 'Search Datasets', tooltip: 'browse & search GWAS summary statistics datasets', webAppUrl: '/showQuestion.do?questionFullName=VariantQuestions.gwas_stats' },
+    { id: 'search', text: 'Search Datasets', tooltip: 'browse & search GWAS summary statistics datasets', route: '/search/variant/gwas_stats' },
     { id: 'workspace', text: 'Workspace', webAppUrl: '#', tooltip: 'Coming soon' },
     {
       id: 'tools',
