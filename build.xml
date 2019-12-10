@@ -125,8 +125,7 @@
     <exec executable="${patch-full-path-wdkclient}"/>
   </target>
 
-  <target name="GenomicsDBWebsite/Site-WebInstallation" depends="GenomicsDBWebsite-Website-Patch,
-                  WDKWebsite-WebInstallation">
+  <target name="GenomicsDBWebsite/Site-WebInstallation">
     <ant target="eupathWebComponentInstall">
       <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
