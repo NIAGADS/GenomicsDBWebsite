@@ -48,7 +48,7 @@ const HomePage: React.SFC<HomePage> = props => {
 					</div>
 				</div>
 				<div className='mt-5 col-sm-12 search-buttons'>
-				<a className='advanced-search-button mr-2' href="showQuestion.do?questionFullName=VariantQuestions.gwas_stats">Search Datasets</a>
+				<a className='advanced-search-button mr-2' href="/search/variant/gwas_stats">Search Datasets</a>
 					{/*<a className='mine-featured-datasets-link'>Mine Featured Datasets</a>*/}
 				</div>
 			</div>
