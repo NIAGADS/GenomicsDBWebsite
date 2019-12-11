@@ -100,6 +100,7 @@ public class SiteSearchService extends AbstractWdkService {
         String response = "{}";
         try {
             response = lookupTerm(term);
+            if (response == null) { response = "{}";}
             LOG.debug("query result: " + response);
         }
         
