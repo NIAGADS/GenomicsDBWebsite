@@ -19,8 +19,8 @@ interface VariantLzPlotState {
 }
 
 const INITIAL_STATE: VariantLzPlotState = {
-  dataset: undefined,
-  population: undefined
+  dataset: '',
+  population: ''
 }
 
 class VariantLzPlot extends React.Component<VariantLzPlotProps, VariantLzPlotState>{

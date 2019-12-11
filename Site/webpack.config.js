@@ -11,6 +11,7 @@ module.exports = configure({
       "/webapp/wdkCustomization/js/client/main.ts"
     )
   },
+  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -20,7 +21,7 @@ module.exports = configure({
           {
             loader: "babel-loader",
             options: {
-              configFile: path.join(process.cwd(), ".babelrc")
+              configFile: path.join(process.cwd(), ".babelrc"),
             }
           },
           {

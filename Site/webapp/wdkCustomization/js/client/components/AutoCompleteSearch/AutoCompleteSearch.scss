@@ -1,0 +1,27 @@
+.autocomplete-box {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  padding: 5px;
+  top: 19.5px;
+  .search-box-with-dropdown {
+    
+    .results-list {
+      position: absolute;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      background-color: $lavender;
+      border-radius: 5px 5px;
+      z-index: 999999;
+      a {
+        &.wdk-ReactRouterLink {
+          color: white;
+          &:hover {
+            color: $dove-grey;
+          }
+        }
+      }
+    }
+  }
+}

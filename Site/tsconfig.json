@@ -1,8 +1,8 @@
 {
-    "extends": "../../EbrcWebsiteCommon/Site/tsconfig.json",
-    "compilerOptions": {
-        "esModuleInterop": true,
-        "strictNullChecks": false,
-        "checkJs": false,
-    },
+  "extends": "../../EbrcWebsiteCommon/Site/tsconfig.json",
+  "include": ["./webapp/**/*", "../../WDKClient/Client/src/index.d.ts"],
+  "compilerOptions": {
+    "sourceMap": true,
+    "strictNullChecks": false
+  }
 }

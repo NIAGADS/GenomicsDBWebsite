@@ -6,7 +6,7 @@ import {
   loadBasketCounts,
   loadQuickSearches
 } from "ebrc-client/actioncreators/GlobalActionCreators";
-import QuickSearchMulti from "../../QuickSearchMulti";
+import AutoCompleteSearch from "../../AutoCompleteSearch/AutoCompleteSearch";
 import ResponsiveMenu from "./Menu/ResponsiveMenu";
 import { Loading, Link } from "wdk-client/Components";
 
@@ -42,7 +42,7 @@ const waitFor = (item: any, func: { (): React.ReactElement<any> }) =>
   item ? (
     func()
   ) : (
-    <Loading>
+    <Loading radius={5}>
       <div className="wdk-LoadingData">Loading data...</div>
     </Loading>
   );
@@ -193,11 +193,7 @@ const CBILSiteHeader: React.ComponentClass<
                 isGuest={user ? user.isGuest : true}
                 items={mainMenuItems}
               ></ResponsiveMenu>
-              <QuickSearchMulti
-                webappUrl={webAppUrl}
-                showTooltip={true}
-                className="d-none d-lg-flex"
-              />
+              <AutoCompleteSearch />
             </div>
           </div>
         </div>

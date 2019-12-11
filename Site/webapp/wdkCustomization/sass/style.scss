@@ -23,6 +23,8 @@ body, h1, h2, h3, h4, h5, h6 {
     padding: 0px;
     font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
+
+@import '../js/client/components/AutoCompleteSearch/AutoCompleteSearch';
 @import '../js/client/components/GlobalLayout/GlobalLayout';
 @import '../js/client/components/HomePage/HomePage';
 @import '../js/client/components/HomePage2/HomePage';

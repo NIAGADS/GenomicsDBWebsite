@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Mesa } from 'wdk-client/Components';
 
-
-//TODO: connect to store
-
 interface QuickSearchMulti  {
   webappUrl: string;
   showTooltip: boolean;
@@ -51,7 +48,6 @@ const toolTipConfig = {
 const QuickSearchMulti: React.ComponentClass<QuickSearchMulti, qsState> = class extends React.Component<QuickSearchMulti, qsState>  {
 
   private questionList = questionList;
-  private formGroup: React.ComponentType;
 
   constructor(props: QuickSearchMulti) {
     super(props);

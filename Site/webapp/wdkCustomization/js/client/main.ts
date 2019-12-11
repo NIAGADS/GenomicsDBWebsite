@@ -1,5 +1,5 @@
 // import CSS/LESS/SAS files
-import "../../css/client.css"; // copied from ApiCommonWebsite/Site/webapp/wdkCustomization/css/client.ss; may not be needed in long run
+//import "../../css/client.css"; // copied from ApiCommonWebsite/Site/webapp/wdkCustomization/css/client.ss; may not be needed in long run
 import "../../sass/style.scss";
 
 import * as siteConfig from "./config";
