@@ -26,14 +26,14 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
     Math.random()
       .toString(36)
       .slice(2)
-  ).current;
+  ).current.replace("0", "");
 
   useEffect(() => {
-    const boxWidth = get(
-      window.document.querySelectorAll(`.${randomClass}`),
-      "[0].clientWidth",
-      0
-    );
+    let boxWidth = 0;
+    try {
+      boxWidth = window.document.querySelectorAll(`.${randomClass}`)[0]
+        .clientWidth;
+    } catch (e) {}
 
     if (boxWidth != width) {
       setWidth(boxWidth);
@@ -122,7 +122,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
     wrappedKeyDown = (e: React.KeyboardEvent) => {
       //enter
       if (e.keyCode === 13 && selected) {
-        history.push("/" + _buildRouteFromResult(selected));
+        history.push(_buildRouteFromResult(selected));
         reset();
       } else {
         onKeyDown(e);
@@ -188,6 +188,6 @@ const ResultRow: React.FC<ResultRow> = ({
 };
 
 const _buildRouteFromResult = (result: SearchResult) =>
-  `record/${result.record_type}/${result.primary_key}`;
+  `/record/${result.record_type}/${result.primary_key}`;
 
 export default AutoCompleteSearch;
