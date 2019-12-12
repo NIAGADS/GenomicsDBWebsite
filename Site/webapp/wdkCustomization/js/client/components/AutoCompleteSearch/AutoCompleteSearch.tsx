@@ -19,38 +19,19 @@ interface AutoCompleteSearch {}
 const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
   const [searchTerm, setSearchTerm] = useState<string>(),
     [results, setResults] = useState<SearchResult[]>(),
-    [selected, setSelected] = useState<number>(),
-    [width, setWidth] = useState<number>();
-
-  const randomClass = useRef(
-    Math.random()
-      .toString(36)
-      .slice(2)
-  ).current.replace("0", "");
-
-  useEffect(() => {
-    let boxWidth = 0;
-    try {
-      boxWidth = window.document.querySelectorAll(`.${randomClass}`)[0]
-        .clientWidth;
-    } catch (e) {}
-
-    if (boxWidth != width) {
-      setWidth(boxWidth);
-    }
-  });
-
-  const _setResults = (results: SearchResult[]) =>
-    setResults((Array.isArray(results) ? results : []).slice(0, 15));
-
-  const _setSearchTerm = (term: string) =>
-    term.length > 2 ? setSearchTerm(term) : reset();
+    [selected, setSelected] = useState<number>();
 
   const reset = () => {
     setResults(null);
     setSelected(null);
     setSearchTerm(null);
   };
+
+  const _setResults = (results: SearchResult[]) =>
+    setResults((Array.isArray(results) ? results : []).slice(0, 15));
+
+  const _setSearchTerm = (term: string) =>
+    term.length > 2 ? setSearchTerm(term) : reset();
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     e.stopPropagation();
@@ -74,7 +55,7 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
   };
 
   return (
-    <div className={`autocomplete-box ${randomClass}`}>
+    <div className={`autocomplete-box`}>
       <AutoCompleteSearchBox
         onChange={_setSearchTerm}
         onKeyDown={onKeyDown}
@@ -83,7 +64,6 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
         results={results}
         searchTerm={searchTerm}
         selected={get(results, `[${selected}]`)}
-        width={width}
       />
     </div>
   );
@@ -98,7 +78,6 @@ interface AutoCompleteSearchBox {
   results: SearchResult[];
   searchTerm: string;
   selected?: SearchResult;
-  width: number;
 }
 
 const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
@@ -110,8 +89,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   reset,
   results,
   searchTerm,
-  selected,
-  width
+  selected
 }) => {
   const sendRequest = (searchTerm: string) => (service: WdkService) => {
       service
@@ -129,24 +107,35 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
       }
     };
   useWdkEffect(sendRequest(searchTerm), [searchTerm]);
+
+  const container = useRef(),
+    boxWidth = useRef(0);
+
+  useEffect(() => {
+    boxWidth.current = get(container, "current.clientWidth", 0);
+    boxWidth.current;
+  });
+
   return (
-    <div className="search-box-with-dropdown">
+    <div className="search-box-with-dropdown" onMouseLeave={reset}>
       <span className="text-box-container">
-        <TextBox
-          onChange={onChange}
+        <input
+          ref={container}
+          onChange={e => onChange(e.currentTarget.value)}
           className="form-control"
           onKeyDown={wrappedKeyDown}
           placeholder="Enter a gene or variant"
+          value={searchTerm}
         />
       </span>
-      {results && (
+      {!!get(results, "length") && (
         <div className="results-list">
           {results.map((result, i) => {
             return (
               <ResultRow
                 result={result}
                 key={`${i}-${result.primary_key}`}
-                width={width}
+                width={boxWidth.current}
                 selected={isEqual(selected, result)}
               >
                 {result.display}
