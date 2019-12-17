@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { TextBox, Link } from "wdk-client/Components";
+import { Link } from "wdk-client/Components";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { get, isEqual } from "lodash";
 
@@ -113,7 +113,6 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
 
   useEffect(() => {
     boxWidth.current = get(container, "current.clientWidth", 0);
-    boxWidth.current;
   });
 
   return (
@@ -125,7 +124,6 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
           className="form-control"
           onKeyDown={wrappedKeyDown}
           placeholder="Enter a gene or variant"
-          value={searchTerm}
         />
       </span>
       {!!get(results, "length") && (
