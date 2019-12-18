@@ -1,13 +1,12 @@
 @import './Menu/ResponsiveMenu';
 .menu-container {
     display: flex;
-    flex-direction: row; //    background: $primary;
+    flex-direction: row; 
     color: $gray;
     font-family: 'Open Sans';
     justify-content: flex-end;
     .menu-inner-container {
-        //      max-width: 1080px;
-        display: flex; //        flex-grow: 1;
+        display: flex; 
         justify-content: flex-end;
         align-items: center;
         a.hamburger {
@@ -44,12 +43,9 @@
         display: flex;
         align-items: baseline;
         div {
-            //margin: 0px 10px; //font-size: 1.2em;
-            //font-weight: 700;
             &.user-action-section {
                 >div {
-                    padding: 5px; //font-family: 'Open Sans';
-                    //font-variant: small-caps;
+                    padding: 5px; 
                     display: flex;
                     align-items: center;
                     font-size: 1em;
@@ -68,9 +64,8 @@
                 }
             }
             &.login-section {
-                // color: $marine;
                 display: flex;
-                align-items: flex-end;
+                align-items: center;
                 color: $gray;
             }
         }

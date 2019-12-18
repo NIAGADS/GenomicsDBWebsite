@@ -25,7 +25,7 @@ const NiagadsRecordTableSection: React.SFC<INiagadsRecordTableSection> = props =
     isError = includes(record.tableErrors, name),
     isLoading = value == null,
     className = ['wdk-RecordTable', 'wdk-RecordTable__' + table.name].join(' '),
-    headerContent = <div className='d-flex justify-between align-items-center'>
+    headerContent = <div className='d-flex justify-between align-items-baseline'>
       <p>{displayName}</p>
       {description && <Tooltip content={safeHtml(_parseTemplate(description, urls))}
         showDelay={0}

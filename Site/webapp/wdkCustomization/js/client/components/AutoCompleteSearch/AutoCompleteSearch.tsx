@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { Link } from "wdk-client/Components";
+import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
-import { get, isEqual } from "lodash";
+import { get, isEqual, isEmpty } from "lodash";
 
-interface SearchResult {
+export interface SearchResult {
+  type?: "result" | "summary";
+  description: string;
   display: string;
   match_rank: number;
   primary_key: string;
@@ -19,16 +22,16 @@ interface AutoCompleteSearch {}
 const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
   const [searchTerm, setSearchTerm] = useState<string>(),
     [results, setResults] = useState<SearchResult[]>(),
-    [selected, setSelected] = useState<number>();
+    [selected, setSelected] = useState<number>(),
+    [resultsVisible, setResultsVisible] = useState(false);
+
+  const displayCount = 5;
 
   const reset = () => {
     setResults(null);
     setSelected(null);
     setSearchTerm(null);
   };
-
-  const _setResults = (results: SearchResult[]) =>
-    setResults((Array.isArray(results) ? results : []).slice(0, 15));
 
   const _setSearchTerm = (term: string) =>
     term.length > 2 ? setSearchTerm(term) : reset();
@@ -38,13 +41,14 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
     switch (e.keyCode) {
       //down arrow
       case 40:
-        return setSelected(
+        const _index =
           selected == null
             ? 0
-            : selected < results.length - 1
+            : // +1 b/c we will have summary row if all items cannot be displayed
+            selected < (displayCount ? displayCount : results.length - 1)
             ? selected + 1
-            : 0
-        );
+            : 0;
+        return setSelected(_index);
       //up arrow
       case 38:
         return setSelected(selected > 0 ? selected - 1 : null);
@@ -54,16 +58,39 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
     }
   };
 
+  //for now empty results are coming back as an empty object rather than array, so cover both possibilities
+  const resultsArray = isEmpty(results) ? [] : results,
+    displayResults = resultsArray.slice(0, displayCount),
+    undisplayedCount =
+      resultsArray.length > displayCount
+        ? resultsArray.length - displayCount
+        : 0;
+  //if we're truncating results list, push in results entry with a bunch of dummy values
+  if (undisplayedCount) {
+    displayResults.push({
+      description: "",
+      display: "",
+      match_rank: 0,
+      matched_term: "",
+      record_type: "",
+      primary_key: "fake",
+      type: "summary"
+    });
+  }
+
   return (
     <div className={`autocomplete-box`}>
       <AutoCompleteSearchBox
         onChange={_setSearchTerm}
         onKeyDown={onKeyDown}
-        onResult={_setResults}
+        onResult={setResults}
         reset={reset}
-        results={results}
+        results={displayResults}
+        resultsVisible={resultsVisible}
         searchTerm={searchTerm}
-        selected={get(results, `[${selected}]`)}
+        selected={get(displayResults, `[${selected}]`)}
+        setResultsVisible={setResultsVisible}
+        undisplayedCount={undisplayedCount}
       />
     </div>
   );
@@ -75,9 +102,12 @@ interface AutoCompleteSearchBox {
   onKeyDown: (e: React.KeyboardEvent) => void;
   onResult: (results: SearchResult[]) => void;
   reset: () => void;
+  setResultsVisible: (isVisible: boolean) => void;
   results: SearchResult[];
+  resultsVisible: boolean;
   searchTerm: string;
   selected?: SearchResult;
+  undisplayedCount: number;
 }
 
 const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
@@ -88,19 +118,27 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   onResult,
   reset,
   results,
+  resultsVisible,
   searchTerm,
-  selected
+  selected,
+  setResultsVisible,
+  undisplayedCount
 }) => {
   const sendRequest = (searchTerm: string) => (service: WdkService) => {
       service
         ._fetchJson<SearchResult[]>("get", `/search/site?term=${searchTerm}`)
         .then(res => onResult(res))
-        .catch(e => console.log("caught: " + e));
+        .catch(e => onResult(null));
     },
     wrappedKeyDown = (e: React.KeyboardEvent) => {
       //enter
-      if (e.keyCode === 13 && selected) {
-        history.push(_buildRouteFromResult(selected));
+      if (e.keyCode === 13 && searchTerm) {
+        const route =
+          //if the selection is the summary row or there is no selection (the user has just pressed enter), go to summary page
+          !selected || selected.type === "summary"
+            ? _buildSummaryRoute(searchTerm)
+            : buildRouteFromResult(selected);
+        history.push(route);
         reset();
       } else {
         onKeyDown(e);
@@ -116,27 +154,39 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   });
 
   return (
-    <div className="search-box-with-dropdown" onMouseLeave={reset}>
+    <div
+      className="search-box-with-dropdown"
+      onMouseLeave={setResultsVisible.bind(null, false)}
+      onMouseEnter={setResultsVisible.bind(null, true)}
+    >
       <span className="text-box-container">
         <input
           ref={container}
           onChange={e => onChange(e.currentTarget.value)}
+          onFocus={setResultsVisible.bind(null, true)}
           className="form-control"
           onKeyDown={wrappedKeyDown}
           placeholder="Enter a gene or variant"
         />
       </span>
-      {!!get(results, "length") && (
+      {!!get(results, "length") && resultsVisible && (
         <div className="results-list">
           {results.map((result, i) => {
             return (
               <ResultRow
-                result={result}
                 key={`${i}-${result.primary_key}`}
-                width={boxWidth.current}
+                result={result}
+                searchTerm={searchTerm}
                 selected={isEqual(selected, result)}
+                width={boxWidth.current}
               >
-                {result.display}
+                <span onClick={reset}>
+                  {result.type === "summary" ? (
+                    <span>{`Plus ${undisplayedCount} more`}</span>
+                  ) : (
+                    _buildResultDisplay(result, searchTerm)
+                  )}
+                </span>
               </ResultRow>
             );
           })}
@@ -150,13 +200,16 @@ const AutoCompleteSearchBox = withRouter(_AutoCompleteSearchBox);
 
 interface ResultRow {
   result: SearchResult;
+  searchTerm: string;
   selected: boolean;
   width: number;
+  children: JSX.Element;
 }
 
 const ResultRow: React.FC<ResultRow> = ({
   children,
   result,
+  searchTerm,
   selected,
   width
 }) => {
@@ -167,14 +220,49 @@ const ResultRow: React.FC<ResultRow> = ({
         backgroundColor: selected ? "#9ca3c1" : "inherit", //$dove-grey
         border: selected ? "#950065 thin solid" : "none" //$light-purple
       }}
-      to={_buildRouteFromResult(result)}
+      to={
+        get(result, "type") === "summary"
+          ? _buildSummaryRoute(searchTerm)
+          : buildRouteFromResult(result)
+      }
     >
       {children}
     </Link>
   );
 };
 
-const _buildRouteFromResult = (result: SearchResult) =>
+const _buildResultDisplay = (result: SearchResult, searchTerm: string) => {
+  return result.display === result.matched_term ? (
+    <span>{safeHtml(result.display)}</span>
+  ) : (
+    <span>
+      {safeHtml(result.display)}&nbsp;
+      <small>
+        <em>{_truncateMatch(result.matched_term, searchTerm)}</em>
+      </small>
+    </span>
+  );
+};
+
+const _buildSummaryRoute = (searchTerm: string) =>
+  `/searchResults?searchTerm=${searchTerm}`;
+
+export const buildRouteFromResult = (result: SearchResult) =>
   `/record/${result.record_type}/${result.primary_key}`;
+
+const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
+  const idx = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
+    length = searchTerm.length,
+    start = idx - 5 >= 0 ? idx - 5 : 0,
+    openingEllipsis = start === 0 ? "" : "...",
+    closingEllipsis = idx + 5 + length < matchedTerm.length ? "..." : "",
+    _content = safeHtml(matchedTerm),
+    content = _content.props.dangerouslySetInnerHTML.__html;
+
+  return `${openingEllipsis}${content.slice(
+    start,
+    idx + length + (idx === -1 ? 15 : 5)
+  )}${closingEllipsis}`;
+};
 
 export default AutoCompleteSearch;

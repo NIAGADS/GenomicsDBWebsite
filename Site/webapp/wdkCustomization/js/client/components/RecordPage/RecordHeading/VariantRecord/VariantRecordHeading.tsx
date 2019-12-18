@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RecordHeading, Tooltip } from 'wdk-client/Components';
+import { Tooltip } from 'wdk-client/Components';
 import { MostSevereConsequencesSection } from './Components/index';
 import { HeaderRecordActions, RecordOutLink } from './../Shared';
-import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
 import { resolveJsonInput, isJson } from '../../../../util/jsonParse';
 import { isTrue } from '../../../../util/util';
-import { toNumber, map } from 'lodash';
 import * as gr from './../../types';
 
 interface StoreProps {
@@ -149,11 +147,6 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 					)}
 				</div>
 			</div>
-			{/*<div className='col-8'>
-			<iframe style={{ border: "1px solid black" }}
-				src={`${props.webAppUrl}${attributes.jbrowse_source_url}`} height="300">
-			</iframe>
-			</div>*/}
 		</React.Fragment>
 	);
 };

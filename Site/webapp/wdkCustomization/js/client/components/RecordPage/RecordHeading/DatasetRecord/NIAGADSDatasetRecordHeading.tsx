@@ -31,7 +31,7 @@ const NIAGADSDatasetRecordSummary: React.SFC<IRecordHeading & StoreProps> = prop
 					recordClass={recordClass}
 					headerActions={headerActions}
 				/>
-				<h1 className="wdk-RecordHeading">Dataset: {record.displayName}</h1>
+				<h1 className="wdk-record-heading">Dataset: {record.displayName}</h1>
 			</div>
 			<h2>
 				{record.attributes.name} 

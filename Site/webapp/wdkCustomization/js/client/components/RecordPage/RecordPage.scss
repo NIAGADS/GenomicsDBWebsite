@@ -1,33 +1,44 @@
-@import './RecordHeading/RecordHeading';
-@import './RecordTable/RecordTable';
-@import './RecordMainCategorySection/RecordMainCategorySection';
-@import './RecordTableSection/RecordTableSection';
+@import "./RecordHeading/RecordHeading";
+@import "./RecordTable/RecordTable";
+@import "./RecordMainCategorySection/RecordMainCategorySection";
+@import "./RecordTableSection/RecordTableSection";
 ////////////
 //wdk resets and overrides
 ///
 .wdk-RecordContainer {
-    #_ideogramInnerWrap {
-        overflow-x: auto !important;
+  #_ideogramInnerWrap {
+    overflow-x: auto !important;
+  }
+  .wdk-RecordSidebar,
+  .wdk-RecordMain {
+    *,
+    *::before,
+    *::after {
+      box-sizing: content-box;
     }
-    .wdk-RecordSidebar, .wdk-RecordMain {
-        *, *::before, *::after {
-            box-sizing: content-box;
-        }
-        font-size: 0.85rem;
-        .btn {
-            font-size: inherit;
-        }
+    font-size: 0.85rem;
+    .btn {
+      font-size: inherit;
     }
-    .wdk-RecordSidebarToggle {
-        right: -45px;
-        font-size: 1.1rem;
+  }
+  .wdk-RecordSidebarToggle {
+    right: -45px;
+    font-size: 1.1rem;
+  }
+  .wdk-RecordSubsectionContent {
+    .section-summary-text {
+      margin-top: 50px;
     }
-    .wdk-RecordSubsectionContent {
-        .section-summary-text {
-            margin-top: 50px;
-        }
-    }
+  }
 }
 .wdk-RecordSectionHeader {
-    // margin-bottom: 0px;
+  // margin-bottom: 0px;
+}
+
+.wdk-CollapsibleSection,
+.wdk-RecordTableContainer {
+  .wdk-CollapsibleSectionHeader,
+  .wdk-RecordTableContainerHeader {
+    align-items: baseline;
+  }
 }
