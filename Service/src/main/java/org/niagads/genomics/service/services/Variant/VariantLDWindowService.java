@@ -96,7 +96,7 @@ public class VariantLDWindowService extends AbstractWdkService {
  
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    // @OutSchema("niagads.locuszoom.linkage.get-response")
+    // @OutSchema("niagads.variant.ldwindow.get-response")
     public Response buildResponse(String body, @QueryParam(RSID_PARAM) String rsid, 
                                   @QueryParam(VARIANT_PARAM) String variant,
                                   @QueryParam(POPULATION_PARAM) String population,
@@ -107,7 +107,7 @@ public class VariantLDWindowService extends AbstractWdkService {
         String response = "{}";
         try {
             String variantId = (rsid != null) ? rsid : variant;
-            response = fetchLinkageWindow(variantId, population, rThreshold, mafThreshold);
+            response = fetchResult(variantId, population, rThreshold, mafThreshold);
             if (response == null) {
                 response = "{}";
             }
@@ -120,7 +120,7 @@ public class VariantLDWindowService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
-    private String fetchLinkageWindow(String variant, String population, Double rThreshold, Double mafThreshold) {   
+    private String fetchResult(String variant, String population, Double rThreshold, Double mafThreshold) {   
     
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
