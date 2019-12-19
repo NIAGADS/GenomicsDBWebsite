@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,17 +24,18 @@ import org.gusdb.wdk.service.service.AbstractWdkService;
 
 
 @Path("variant/ldwindow")
-public class LinkageWindowService extends AbstractWdkService {
-    private static final Logger LOG = Logger.getLogger(LinkageWindowService.class);
+public class VariantLDWindowService extends AbstractWdkService {
+    private static final Logger LOG = Logger.getLogger(VariantLDWindowService.class);
 
     private static final String RSID_PARAM = "rsid";
     private static final String VARIANT_PARAM = "variant";
     private static final String POPULATION_PARAM = "population";
     private static final String R2_THRESHOLD_PARAM = "r2";
     private static final String MAF_THRESHOLD_PARAM = "maf";
+    
+    private static final String R2_THRESHOLD_DEFAULT = "0.5";
  
-
-    private static final String LD_SQL = "SELECT MIN(position) AS start" + NL
+    private static final String LD_SQL = "Result AS (SELECT MIN(position) AS start" + NL
         + ", MAX(position) AS end" + NL
         + ", MAX(REPLACE(chromosome, 'chr', '')) AS chr" + NL
         + ", REPLACE(chromosome, 'chr', '') || ':' || MIN(position)::text || '-' || MAX(position)::text AS ld_block" + NL
@@ -43,8 +45,8 @@ public class LinkageWindowService extends AbstractWdkService {
         + "GROUP BY chromosome" + NL
 
         //-- case if no LD
-
         + "UNION" + NL
+
         + "SELECT MIN(position) AS start" + NL
         + ", MAX(position) AS end" + NL
         + ", MAX(REPLACE(chromosome, 'chr', '')) AS chr" + NL
@@ -53,21 +55,23 @@ public class LinkageWindowService extends AbstractWdkService {
         + "FROM NIAGADS.Variant nv, variant v" + NL
         + "WHERE v.variant_id = nv.variant_id" + NL
         + "AND NOT EXISTS (SELECT * FROM FilteredLinkage)" + NL
-        + "GROUP BY chromosome";
-    
+        + "GROUP BY chromosome)" + NL
 
-    private String buildFilteredLinkageSql(Boolean filterMaf) {
+        + "SELECT (jsonb_agg(result)->0)::text AS ld_block" + NL
+        + "FROM result";
+    
+    private String buildFilteredLinkageSql(Boolean filterByMaf) {
         String sql = "SELECT DISTINCT unnest(ld.variants) AS variant_id" + NL
             + "FROM Linkage ld, Population p" + NL
             + "WHERE p.protocol_app_node_id = ld.protocol_app_node_id" + NL
             + "AND ld.r_squared >= ?";
-        if (filterMaf) {
-            sql = sql + " AND minor_allele_frequency <= ARRAY[?::float]";
+        if (filterByMaf) {
+            sql = sql + " AND minor_allele_frequency >= ARRAY[?::float]";
         }
         return sql;
     }
     
-    private String buildQueryCTE() {
+    private String buildFilterQueryCTE(Boolean filterByMaf) {
         String sql = "WITH Variant AS (" + NL
             + "SELECT ? AS variant_label, variant_id FROM (SELECT find_variant_id(?) AS variant_id) a"
             + ")," + NL
@@ -78,29 +82,35 @@ public class LinkageWindowService extends AbstractWdkService {
             + "SELECT * FROM Results.VariantLD, Variant v" + NL
             + "WHERE ARRAY[v.variant_id::integer] <@ variants" + NL
             + ")," + NL
-            + "FilteredLinkage AS (" + buildFilteredLinkageSql() + ")";
+            + "FilteredLinkage AS (" + buildFilteredLinkageSql(filterByMaf) + "),";
 
-            return sql;
+        return sql;
     }
     
   
-  
+    String prepareSql(Boolean filterByMaf) {
+        String sql = buildFilterQueryCTE(filterByMaf) + NL + LD_SQL;
+        return sql;
+    }
 
+ 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.locuszoom.linkage.get-response")
-    public Response buildResponse(String body, @QueryParam(REFERENCE_VARIANT_PARAM) String variant, 
-                                 /*@QueryParam(RANGE_START_PARAM) int start, 
-                                 @QueryParam(RANGE_END_PARAM) int end,*/
-                                 @QueryParam(POPULATION_PARAM) String population,
-                                 @QueryParam(SCORE_PARAM) String scoreType) throws WdkModelException {
-        LOG.info("Starting 'Locus Zoom Linkage' Service");
+    public Response buildResponse(String body, @QueryParam(RSID_PARAM) String rsid, 
+                                  @QueryParam(VARIANT_PARAM) String variant,
+                                  @QueryParam(POPULATION_PARAM) String population,
+                                  @DefaultValue(R2_THRESHOLD_DEFAULT)@QueryParam(R2_THRESHOLD_PARAM) Double rThreshold,
+                                  @QueryParam(MAF_THRESHOLD_PARAM) Double mafThreshold) throws WdkModelException {
+                                      
+        LOG.info("Starting 'Variant Linkage Window' Service");
         String response = "{}";
         try {
-            // query database for ld
-            response = fetchLinkage(variant, population);
-            LOG.debug("query result: " + response);
-            // return result
+            String variantId = (rsid != null) ? rsid : variant;
+            response = fetchLinkageWindow(variantId, population, rThreshold, mafThreshold);
+            if (response == null) {
+                response = "{}";
+            }
         }
 
         catch(WdkRuntimeException ex) {
@@ -110,22 +120,30 @@ public class LinkageWindowService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
-    private String fetchLinkage(String variant, String population) {   
+    private String fetchLinkageWindow(String variant, String population, Double rThreshold, Double mafThreshold) {   
     
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
         
-        LOG.debug("Fetching linkage for variant:" + variant + "; population: " + population);
+        LOG.debug("Fetching linkage window for variant:" + variant + "; population: " + population);
 
-	String[] vDetails = variant.split(":", 2);
-	String chromosome = "chr" + vDetails[0];
+        Boolean filterByMaf = (mafThreshold != null);
+        LOG.debug("Filter by MAF? " + filterByMaf.toString());
+        String sql = prepareSql(filterByMaf);
+        LOG.debug("LINKAGE WINDOW SQL:" + sql);
 
-        SQLRunner runner = new SQLRunner(ds, LINKAGE_QUERY, "linkage-query");
-        runner.executeQuery(new Object[] {variant, chromosome, population, variant, variant}, handler);
+        SQLRunner runner = new SQLRunner(ds, sql, "variant-ldwindow-query");
+
+        if (filterByMaf) {
+            runner.executeQuery(new Object[] {variant, variant, population, rThreshold, mafThreshold}, handler);
+        }
+        else {
+            runner.executeQuery(new Object[] {variant, variant, population, rThreshold}, handler);
+        }
 
         List <Map <String, Object>> results = handler.getResults();
-        return (String) results.get(0).get("result_json");
+        return (String) results.get(0).get("ld_block");
     }
 
 }

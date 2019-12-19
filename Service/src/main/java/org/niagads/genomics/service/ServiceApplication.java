@@ -7,7 +7,8 @@ import org.eupathdb.common.service.EuPathServiceApplication;
 import org.niagads.genomics.service.services.LocusZoom.GWASService;
 import org.niagads.genomics.service.services.LocusZoom.LinkageService;
 import org.niagads.genomics.service.services.Search.SiteSearchService;
-//import org.niagads.genomics.service.services.LocusZoom.Gwas;
+
+import org.niagads.genomics.service.services.Variant.VariantLDWindowService;
 
 import static org.gusdb.fgputil.functional.Functions.filter;
 import org.gusdb.fgputil.SetBuilder;
@@ -24,6 +25,8 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(LinkageService.class)
     .add(GWASService.class)
     .add(SiteSearchService.class)
+
+    .add(VariantLDWindowService.class)
 
     .toSet();
   }
