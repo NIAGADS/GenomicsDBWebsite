@@ -10,7 +10,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,10 +28,12 @@ public class VariantLookupService extends AbstractWdkService {
 
     private static final String VARIANT_PARAM = "id";
 
-    private static final String VARIANT_DETAILS_SQL = "WITH marker AS (" +NL
-        + "SELECT find_variant_primary_key(?) AS record_pk)," + NL
+    private static final String VARIANT_DETAILS_SQL = "WITH searchTerms AS (SELECT unnest(string_to_array(?, ',')) AS variant_id)," + NL
+        + "marker AS (" +NL
+        + "SELECT variant_id AS search_term, find_variant_primary_key(variant_id) AS record_pk FROM searchTerms)," + NL
+        + "unmapped AS (select jsonb_agg(marker) AS result from marker where record_pk IS NULL OR record_pk LIKE 'rs%')," + NL
         + "Details AS (" + NL
-        + "SELECT v.record_pk AS variant, v.source_id AS ref_snp_id, v.metaseq_id," + NL 
+        + "SELECT marker.search_term, v.record_pk AS variant, v.source_id AS ref_snp_id, v.metaseq_id," + NL 
         + "v.variant_class_abbrev AS variant_class, v.source AS variant_source," + NL 
         + "v.is_adsp_variant, v.is_adsp_wes, v.is_adsp_wgs, v.is_multi_allelic," + NL
         + "v.most_severe_consequence," + NL
@@ -40,8 +41,14 @@ public class VariantLookupService extends AbstractWdkService {
         + "(v.annotation->>'GWAS')::boolean AS is_associated_with_NIAGADS_dataset," + NL
         + "(v.annotation->'VEP_MS_CONSEQUENCE'->>'gene_id')::text || ' // ' || (v.annotation->'VEP_MS_CONSEQUENCE'->>'gene_symbol')::text AS impacted_gene" + NL
         + "FROM marker, NIAGADS.Variant v" + NL
-        + "WHERE v.record_pk = marker.record_pk)" + NL
-        + "SELECT (json_agg(details)->0)::text AS result FROM details";
+        + "WHERE v.record_pk = marker.record_pk)," + NL
+        + "Result AS (" + NL 
+        + "SELECT (jsonb_agg(details))::text AS result FROM details WHERE NOT EXISTS (SELECT result FROM unmapped WHERE result != NULL)" + NL
+        + "UNION" + NL
+        + "SELECT (jsonb_agg(details) || (select jsonb_agg(unmapped) FROM unmapped))::text AS result FROM details WHERE EXISTS (SELECT result FROM unmapped WHERE result != NULL))" + NL
+        + "SELECT * FROM result" + NL
+        + "WHERE result IS NOT NULL";
+
 
         @GET
         @Produces(MediaType.APPLICATION_JSON)
@@ -71,12 +78,9 @@ public class VariantLookupService extends AbstractWdkService {
             DataSource ds = wdkModel.getAppDb().getDataSource();
             BasicResultSetHandler handler = new BasicResultSetHandler();
             
-            LOG.debug("Fetching details for variant:" + variant);
-    
-          
+            //LOG.debug("Fetching details for variant:" + variant);
+
             SQLRunner runner = new SQLRunner(ds, VARIANT_DETAILS_SQL, "variant-lookup-query");
-    
-           
             runner.executeQuery(new Object[] {variant}, handler);
            
             List <Map <String, Object>> results = handler.getResults();

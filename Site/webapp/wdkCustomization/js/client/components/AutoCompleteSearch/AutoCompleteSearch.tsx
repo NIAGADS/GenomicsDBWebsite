@@ -232,7 +232,7 @@ const ResultRow: React.FC<ResultRow> = ({
 };
 
 const _buildResultDisplay = (result: SearchResult, searchTerm: string) => {
-  return result.display === result.matched_term ? (
+  return result.display.toLowerCase().indexOf(result.matched_term) > 1 ? (
     <span>{safeHtml(result.display)}</span>
   ) : (
     <span>
@@ -253,15 +253,16 @@ export const buildRouteFromResult = (result: SearchResult) =>
 const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
   const idx = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
     length = searchTerm.length,
-    start = idx - 5 >= 0 ? idx - 5 : 0,
+    start = idx - 25 >= 0 ? idx - 25 : 0,
+    end = idx + length + 25 <= matchedTerm.length ? idx + length + 25 : matchedTerm.length,
     openingEllipsis = start === 0 ? "" : "...",
-    closingEllipsis = idx + 5 + length < matchedTerm.length ? "..." : "",
+    closingEllipsis = end <= matchedTerm.length - 4 ? "..." : "",
     _content = safeHtml(matchedTerm),
     content = _content.props.dangerouslySetInnerHTML.__html;
 
-  return `${openingEllipsis}${content.slice(
+  return `matches: ${openingEllipsis}${content.slice(
     start,
-    idx + length + (idx === -1 ? 15 : 5)
+    end
   )}${closingEllipsis}`;
 };
 

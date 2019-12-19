@@ -139,7 +139,7 @@ public class SiteSearchService extends AbstractWdkService {
         BasicResultSetHandler handler = new BasicResultSetHandler();
         
         LOG.debug("Looking up term for site search: " + term);
-        
+        LOG.debug("SiteSearch Query: " + SEARCH_QUERY);
         SQLRunner runner = new SQLRunner(ds, SEARCH_QUERY, "site-search-query");
         runner.executeQuery(new Object[] {term}, handler);
         
