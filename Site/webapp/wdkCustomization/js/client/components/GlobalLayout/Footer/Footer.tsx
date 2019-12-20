@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatReleaseDate } from 'ebrc-client/util/formatters';
-import { buildNumber, releaseDate, displayName, projectId, webAppUrl } from 'ebrc-client/config';
+import { projectId, webAppUrl } from 'ebrc-client/config';
 import NewWindowLink from 'ebrc-client/components/NewWindowLink';
 
 const Footer: React.SFC = props => {
