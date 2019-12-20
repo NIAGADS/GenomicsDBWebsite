@@ -74,7 +74,7 @@
                         , '@PROJECT_ID@'::text AS project_id
                         , split_part(record_pk, ':', 1)::integer AS chr
                         , split_part(record_pk, ':', 2)::integer AS pos
-                        , build_icon_attribute('Expanded', 'fa fa-check', 'green', NULL, 'true') AS is_expanded
+                        , build_icon_attribute('Expanded', 'fa-check', 'green', NULL, 'true') AS is_expanded
                         , build_link_attribute(display_metaseq_id, '../variant/', record_pk) AS variant
                         , refsnp_id
                         , is_adsp_variant
