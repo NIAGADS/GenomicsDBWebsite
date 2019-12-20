@@ -99,7 +99,7 @@
               || CASE WHEN is_reversed THEN '-' ELSE '+' END, '@DYNSPAN_RECORD@', NULL, NULL) AS dynspan_link,
             replace(annotation->>'uniprot_ids', '|', '//') AS uniprot_id,
             source_id AS ensembl_id,
-            replace(annotation->>'alias_symbol', '|' ,', ') AS synonyms,
+            array_to_string(string_to_array(annotation->>'prev_symbol', '|') || string_to_array(annotation->>'alias_symbol', '|'), ', ') AS synonyms,
             CASE WHEN is_reversed THEN '-' ELSE '+' END AS strand,
             is_reversed
             FROM CBIL.GeneAttributes
