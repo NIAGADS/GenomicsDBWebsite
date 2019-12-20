@@ -50,6 +50,10 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = props => {
           <li>
             <h4 className="subtitle">{record.attributes.gene_name}</h4>
           </li>
+          
+          {record.attributes.synonyms && <li><span className="label">Also known as: {record.attributes.synonyms}</span></li>}
+          
+
           <li>
             <span className="label">Location</span>: {record.attributes.span}{" "}
           </li>
