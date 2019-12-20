@@ -232,13 +232,13 @@ const ResultRow: React.FC<ResultRow> = ({
 };
 
 const _buildResultDisplay = (result: SearchResult, searchTerm: string) => {
-  return result.display.toLowerCase().indexOf(result.matched_term) > 1 ? (
+  return result.display === result.matched_term ? (
     <span>{safeHtml(result.display)}</span>
   ) : (
     <span>
       {safeHtml(result.display)}&nbsp;
       <small>
-        <em>{_truncateMatch(result.matched_term, searchTerm)}</em>
+        <em>{_truncateMatch(result.matched_term, searchTerm, result.record_type)}</em>
       </small>
     </span>
   );
@@ -250,7 +250,7 @@ const _buildSummaryRoute = (searchTerm: string) =>
 export const buildRouteFromResult = (result: SearchResult) =>
   `/record/${result.record_type}/${result.primary_key}`;
 
-const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
+const _truncateMatch = (matchedTerm: string, searchTerm: string, recordType: string) => {
   const idx = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
     length = searchTerm.length,
     start = idx - 25 >= 0 ? idx - 25 : 0,
@@ -260,7 +260,7 @@ const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
     _content = safeHtml(matchedTerm),
     content = _content.props.dangerouslySetInnerHTML.__html;
 
-  return `matches: ${openingEllipsis}${content.slice(
+  return `${openingEllipsis}${content.slice(
     start,
     end
   )}${closingEllipsis}`;
