@@ -169,7 +169,8 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
           placeholder="Enter a gene or variant"
         />
       </span>
-      {!!get(results, "length") && resultsVisible && (
+      {/* need to check for search term in case fast typing wiped it out while results are loaded */}
+      {!!get(results, "length") && resultsVisible && searchTerm && (
         <div className="results-list">
           {results.map((result, i) => {
             return (
