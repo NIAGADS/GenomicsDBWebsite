@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import QuickSearchMulti from "../../components/QuickSearchMulti";
 import AutoCompleteSearch from "../../components/AutoCompleteSearch/AutoCompleteSearch";
 import FeatureItem from "./FeatureItem/FeatureItem";
 import Carousel from "./Carousel/Carousel";
