@@ -22,6 +22,13 @@ def grant_table_ops():
     with database.cursor() as cursor:
         cursor.execute(SQL)
 
+def grant_seq_usage():
+    SQL = "GRANT USAGE ON ALL SEQUENCES IN SCHEMA " + args.schema + " TO " + args.user
+    warning(SQL)
+    with database.cursor() as cursor:
+        cursor.execute(SQL)
+    
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="create foreign datawrapper mappings")
@@ -38,6 +45,7 @@ if __name__ == "__main__":
 
     grant_usage()
     grant_table_ops()
+    grant_seq_usage()
     
     if args.commit:
         database.commit()
