@@ -8,6 +8,8 @@ import org.niagads.genomics.service.services.LocusZoom.GWASService;
 import org.niagads.genomics.service.services.LocusZoom.LinkageService;
 import org.niagads.genomics.service.services.Search.SiteSearchService;
 
+import org.niagads.genomics.service.services.Dataset.DatasetModelRefService;
+
 import org.niagads.genomics.service.services.Variant.VariantLDWindowService;
 import org.niagads.genomics.service.services.Variant.VariantLookupService;
 
@@ -26,6 +28,8 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(LinkageService.class)
     .add(GWASService.class)
     .add(SiteSearchService.class)
+
+    .add(DatasetModelRefService.class)
 
     .add(VariantLDWindowService.class)
     .add(VariantLookupService.class)
