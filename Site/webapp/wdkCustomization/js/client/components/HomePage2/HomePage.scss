@@ -1,108 +1,110 @@
-@import 'FeatureItem/FeatureItem';
-@import 'Carousel/Carousel';
-@import 'NewsItem/NewsItem';
+@import "FeatureItem/FeatureItem";
+@import "Carousel/Carousel";
+@import "NewsItem/NewsItem";
 .home-page2 {
-    .section {
-        max-width: $content-max-width;
+  .section {
+    max-width: $content-max-width;
+  }
+  .row {
+    justify-content: center;
+    padding: 50px;
+    @include media-breakpoint-down(md) {
+      padding: 15px;
     }
-    .row {
-        justify-content: center;
-        padding: 50px;
-        @include media-breakpoint-down(md) {
-            padding: 15px;
-        }
+  }
+  .section-1 {
+    min-height: 400px;
+    padding: 10px;
+    .site-title {
+      font-family: "Raleway";
+      font-weight: bold;
+      font-size: 1.75em;
+      h1 {
+        color: $yellow;
+      }
+      h5 {
+        color: $white-smoke;
+      }
     }
-    .section-1 {
-        min-height: 400px;
-        padding: 10px;
-        .site-title {
-            font-family: 'Raleway';
-            font-weight: bold;
-            font-size: 1.75em;
-            h1 {
-                color: $yellow;
-            }
-            h5 {
-                color: $white-smoke;
-            }
-        }
-        .quick-search-multi-box {
-            box-shadow: 0 0 3px #ccc, 0 10px 15px #ebebeb inset;
-        }
-        .quick-search-container-main {
-            .input-group {
-                border: 1px solid $accent-light;
-                border-radius: 5px;
-                input {
-                    height: 60px;
-                    line-height: normal;
-                    font-size: 18px;
-                    color: $accent-light;
-                    background: $white;
-                }
-            }
-            .search-examples {
-                p {
-                    color: $light-gray;
-                    a {
-                        color: $white-smoke;
-                        text-decoration: underline;
-                    }
-                }
-            }
-        }
-        .search-buttons {
-            @include media-breakpoint-down(md) {
-                display: flex;
-                flex-direction: column;
-            }
-            .advanced-search-button {
-                background-color: $yellow;
-                color: $white;
-                padding: 12px;
-                border-radius: 4px;
-            }
-            .mine-featured-datasets-link {
-                color: $yellow;
-                text-decoration: underline;
-                &:hover {
-                    color: $white;
-                    text-decoration: underline;
-                }
-            }
-        }
+    .quick-search-multi-box {
+      box-shadow: 0 0 3px #ccc, 0 10px 15px #ebebeb inset;
     }
-    .section-2 {
-        color: $gray;
-        .heading {
-            font-family: 'Raleway';
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+    .quick-search-container-main {
+      .input-group {
+        border: 1px solid $accent-light;
+        border-radius: 5px;
+        input {
+          height: 60px;
+          line-height: normal;
+          font-size: 18px;
+          color: $accent-light;
+          background: $white;
         }
-        .feature-items {
-            display: flex;
-            justify-content: space-around;
-            .feature-item {
-                @include media-breakpoint-down(md) {
-                    margin-bottom: 10px;
-                }
-            }
+      }
+      .search-examples {
+        p {
+          color: $light-gray;
+          a {
+            color: $white-smoke;
+            text-decoration: underline;
+          }
         }
+      }
     }
-    .section-3 {
-        background-color: $white-smoke;
-    }
-    .section-4 {
+    .search-buttons {
+      @include media-breakpoint-down(md) {
+        display: flex;
+        flex-direction: column;
+      }
+      .advanced-search-button {
         background-color: $yellow;
-        .news-items {
-            display: flex;
-            justify-content: space-between;
-            .news-item {
-                @include media-breakpoint-down(md) {
-                    margin-bottom: 10px;
-                }
-            }
+        color: $white;
+        padding: 12px;
+        border-radius: 4px;
+      }
+      .mine-featured-datasets-link {
+        color: $yellow;
+        text-decoration: underline;
+        &:hover {
+          color: $white;
+          text-decoration: underline;
         }
+      }
     }
+  }
+  .section-2 {
+    color: $gray;
+    .heading {
+      font-family: "Raleway";
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .feature-items {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: nowrap;
+      .feature-item {
+        @include media-breakpoint-down(md) {
+          margin-bottom: 10px;
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
+  .section-3 {
+    background-color: $white-smoke;
+  }
+  .section-4 {
+    background-color: $yellow;
+    .news-items {
+      display: flex;
+      justify-content: space-between;
+      .news-item {
+        @include media-breakpoint-down(md) {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
 }
