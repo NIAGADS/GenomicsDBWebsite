@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+""" 
+grants usage on foreign schema to specified user; login in gus.config file must be admin
+"""
+
+import argparse
+from CBILDataCommon.Util.postgres_dbi import Database
+from CBILDataCommon.Util.utils import warning, die, xstr
+
+
+def grant_usage():
+    SQL = "GRANT USAGE ON SCHEMA " + args.schema + " TO " + args.user
+    warning(SQL)
+    with database.cursor() as cursor:
+        cursor.execute(SQL)
+
+
+def grant_table_ops():
+    SQL = "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA " + args.schema + " TO " + args.user
+    warning(SQL)
+    with database.cursor() as cursor:
+        cursor.execute(SQL)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="create foreign datawrapper mappings")
+    parser.add_argument('--schema', help="schema name", required=True)
+    parser.add_argument('--user', help="user name", required=True)
+    parser.add_argument('--commit', help="commit mode", action='store_true')
+    parser.add_argument('--gusConfigFile',
+                        help="GUS config file.  If not provided, assumes default: $GUS_HOME/conf/gus.config")
+
+    args = parser.parse_args()
+
+    database = Database(args.gusConfigFile)
+    database.connect()
+
+    grant_usage()
+    grant_table_ops()
+    
+    if args.commit:
+        database.commit()
+
+    else:
+        database.rollback()
+        
+    database.close()
+
+

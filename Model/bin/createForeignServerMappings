@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+
+""" 
+creates foreign datawrapper server and user mappings
+"""
+
+import argparse
+from psycopg2.errors import lookup as elookup
+from CBILDataCommon.Util.postgres_dbi import Database
+from CBILDataCommon.Util.utils import warning, die, xstr
+
+
+def alter_server():
+    ''' alter a server mapping '''
+    if not args.serverDB:
+        die("Must provide name of target database for server (--serverDB) to create the mapping.")
+    warning("Updating server mapping for", args.serverName, "to the following:", args.serverHost + ":" + xstr(args.serverPort) + "//" + args.serverDB)
+
+    SQL = "ALTER SERVER " + args.serverName \
+        + " VERSION %s" \
+        + " OPTIONS (SET host %s, SET port %s, SET dbname %s)"
+
+    with database.cursor() as cursor:
+        cursor.execute(SQL, (args.serverVersion, args.serverHost, xstr(args.serverPort), args.serverDB))
+        
+
+def create_server():
+    ''' create server mapping '''
+    if not args.serverDB:
+        die("Must provide name of target database for server (--serverDB) to create the mapping.")
+    warning("Creating server mapping", args.serverName, "to the following:", args.serverHost + ":" + xstr(args.serverPort) + "//" + args.serverDB)
+    
+    SQL = "CREATE SERVER IF NOT EXISTS " + args.serverName \
+        + " FOREIGN DATA WRAPPER postgres_fdw" \
+        + " OPTIONS (host %s, port %s, dbname %s, use_remote_estimate 'true')" # -- use_remote_estimate should enable use of remote indexes
+
+    with database.cursor() as cursor:
+        cursor.execute(SQL, (args.serverHost, xstr(args.serverPort), args.serverDB))
+
+        
+def create_user_mapping():
+    user = args.user if args.user else database.get_user()
+    pwd = args.pwd if args.pwd else database.get_pwd()
+    warning("Creating user mapping for", user)
+    SQL = "CREATE USER MAPPING FOR " + user \
+        + " SERVER " + args.serverName \
+        + " OPTIONS (user %s, password %s)"
+
+    try:
+        with database.cursor() as cursor:
+            cursor.execute(SQL, (user, pwd))
+            
+    except elookup("42710"): # already exists
+        die("User mapping for", user, "already exists.")
+        
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="create foreign datawrapper mappings")
+    parser.add_argument('--alterServer', help="for moving to standby or production from dev", action='store_true')
+    parser.add_argument('--serverVersion', help="server version; needed to alter config", default='production')
+    parser.add_argument('--createServer', help="create server (assumes does not exist)", action='store_true')
+    parser.add_argument('--serverName', help="name of the server", required=True)
+    parser.add_argument('--serverHost', help="server host", default="localhost")
+    parser.add_argument('--serverDB', help="server db")
+    parser.add_argument('--serverPort', help="server port", default=5437, type=int)
+    parser.add_argument('--createUserMapping', help="creates a user mapping based on the information in the GUS_CONFIG file or arg specified user", action='store_true')
+    parser.add_argument('--user', help="creates user mapping for this user; if not provided uses gus.config file")
+    parser.add_argument('--pwd', help="creates user mapping for this user with this pwd; if not provided uses gus.config file")
+    parser.add_argument('--commit', help="commit mode", action='store_true')
+    parser.add_argument('--gusConfigFile',
+                        help="GUS config file.  If not provided, assumes default: $GUS_HOME/conf/gus.config")
+
+    args = parser.parse_args()
+
+    database = Database(args.gusConfigFile)
+    database.connect()
+
+    if args.alterServer:
+        alter_server()
+
+    if args.createServer:
+        create_server()
+
+    if args.createUserMapping:
+        create_user_mapping()
+
+    if args.commit:
+        database.commit()
+
+    else:
+        database.rollback()
+        
+    database.close()
+
+
