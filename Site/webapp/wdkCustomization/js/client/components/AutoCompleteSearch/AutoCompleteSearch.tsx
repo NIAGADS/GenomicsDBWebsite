@@ -16,14 +16,21 @@ export interface SearchResult {
   matched_term: string;
 }
 
-interface AutoCompleteSearch {}
+interface AutoCompleteSearch {
+  canGrow?: boolean;
+}
 
 //container component, holds state for search and selection
-const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
+const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({
+  canGrow,
+}) => {
   const [searchTerm, setSearchTerm] = useState<string>(),
     [results, setResults] = useState<SearchResult[]>(),
     [selected, setSelected] = useState<number>(),
-    [resultsVisible, setResultsVisible] = useState(false);
+    [resultsVisible, setResultsVisible] = useState(false),
+    [hasFocus, setHasFocus] = useState(false);
+
+  const ownRef = useRef<any>();
 
   const displayCount = 5;
 
@@ -79,9 +86,15 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
   }
 
   return (
-    <div className={`autocomplete-box`}>
+    <div
+      className="autocomplete-box"
+      ref={ownRef}
+      style={{ flexGrow: hasFocus && canGrow ? 1 : 0 }}
+    >
       <AutoCompleteSearchBox
         onChange={_setSearchTerm}
+        onFocus={setHasFocus.bind(null, true)}
+        onBlur={setHasFocus.bind(null, false)}
         onKeyDown={onKeyDown}
         onResult={setResults}
         reset={reset}
@@ -98,7 +111,9 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = () => {
 
 //component that manages searching and selection
 interface AutoCompleteSearchBox {
+  onBlur: () => void;
   onChange: (arg: string) => void;
+  onFocus: () => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onResult: (results: SearchResult[]) => void;
   reset: () => void;
@@ -113,7 +128,9 @@ interface AutoCompleteSearchBox {
 const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   RouteComponentProps<any>> = ({
   history,
+  onBlur,
   onChange,
+  onFocus,
   onKeyDown,
   onResult,
   reset,
@@ -144,6 +161,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
         onKeyDown(e);
       }
     };
+
   useWdkEffect(sendRequest(searchTerm), [searchTerm]);
 
   const container = useRef(),
@@ -163,7 +181,11 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
         <input
           ref={container}
           onChange={e => onChange(e.currentTarget.value)}
-          onFocus={setResultsVisible.bind(null, true)}
+          onFocus={() => {
+            onFocus();
+            setResultsVisible(true);
+          }}
+          onBlur={onBlur}
           className="form-control"
           onKeyDown={wrappedKeyDown}
           placeholder="Enter a gene or variant"
@@ -239,7 +261,9 @@ const _buildResultDisplay = (result: SearchResult, searchTerm: string) => {
     <span>
       {safeHtml(result.display)}&nbsp;
       <small>
-        <em>{_truncateMatch(result.matched_term, searchTerm, result.record_type)}</em>
+        <em>
+          {_truncateMatch(result.matched_term, searchTerm, result.record_type)}
+        </em>
       </small>
     </span>
   );
@@ -251,20 +275,24 @@ const _buildSummaryRoute = (searchTerm: string) =>
 export const buildRouteFromResult = (result: SearchResult) =>
   `/record/${result.record_type}/${result.primary_key}`;
 
-const _truncateMatch = (matchedTerm: string, searchTerm: string, recordType: string) => {
+const _truncateMatch = (
+  matchedTerm: string,
+  searchTerm: string,
+  recordType: string
+) => {
   const idx = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
     length = searchTerm.length,
     start = idx - 25 >= 0 ? idx - 25 : 0,
-    end = idx + length + 25 <= matchedTerm.length ? idx + length + 25 : matchedTerm.length,
+    end =
+      idx + length + 25 <= matchedTerm.length
+        ? idx + length + 25
+        : matchedTerm.length,
     openingEllipsis = start === 0 ? "" : "...",
     closingEllipsis = end <= matchedTerm.length - 4 ? "..." : "",
     _content = safeHtml(matchedTerm),
     content = _content.props.dangerouslySetInnerHTML.__html;
 
-  return `${openingEllipsis}${content.slice(
-    start,
-    end
-  )}${closingEllipsis}`;
+  return `${openingEllipsis}${content.slice(start, end)}${closingEllipsis}`;
 };
 
 export default AutoCompleteSearch;

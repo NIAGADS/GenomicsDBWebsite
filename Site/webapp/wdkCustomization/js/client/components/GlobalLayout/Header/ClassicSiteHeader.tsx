@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { UserActions } from "wdk-client/Actions";
 import { makeMenuItems } from "ebrc-client/util/menuItems";
@@ -121,90 +121,65 @@ const UserMenu: React.SFC<{ user: User }> = props => {
   );
 };
 
-const CBILSiteHeader: React.ComponentClass<
-  CBILSH.props & StoreProps,
-  CBILSH.state
-> = class extends React.Component<CBILSH.props & StoreProps, CBILSH.state> {
-  constructor(props: CBILSH.props & StoreProps) {
-    super(props);
-    this.state = { responsiveMenuToggled: false };
-  }
+const CBILSiteHeader: React.FC<CBILSH.props & StoreProps> = props => {
+  const [responsiveMenuToggled, setResponsiveMenuToggled] = useState(false);
 
-  componentDidMount() {
-    this.props.loadBasketCounts();
-  }
+  useEffect(() => {
+    loadBasketCounts();
+  }, []);
 
-  render() {
-    const {
+  const autcoompleteContainerRef = useRef();
+
+  const {
+      loadBasketCounts,
       siteConfig,
       user,
       showLoginWarning,
-      location = window.location,
-      makeSmallMenuItems,
-      makeMainMenuItems,
-      isPartOfEuPathDB = false
-    } = this.props;
+      makeMainMenuItems
+    } = props,
+    { buildNumber, projectId, webAppUrl } = siteConfig,
+    menuItems = makeMenuItems(props),
+    mainMenuItems = makeMainMenuItems && makeMainMenuItems(props, menuItems);
 
-    const {
-      announcements,
-      buildNumber,
-      projectId,
-      releaseDate,
-      webAppUrl
-    } = siteConfig;
-
-    const menuItems = makeMenuItems(this.props);
-    const mainMenuItems =
-      makeMainMenuItems && makeMainMenuItems(this.props, menuItems);
-    const smallMenuItems =
-      makeSmallMenuItems && makeSmallMenuItems(this.props, menuItems);
-
-    return (
-      <div className="container-fluid">
-        <div id="header" className="row">
-          <div className="header2 col-sm-12">
-            <div className="header_lt">
-              <BuildInfo buildNumber={buildNumber} />
-            </div>
-            <div className="header_rt">
-              {waitFor(user, () => (
-                <UserSection user={user} webAppUrl={webAppUrl} />
-              ))}
-            </div>
+  return (
+    <div className="container-fluid">
+      <div id="header" className="row">
+        <div className="header2 col-sm-12">
+          <div className="header_lt">
+            <BuildInfo buildNumber={buildNumber} />
           </div>
-          <div className="col-sm-12 menu-container">
-            <div className="menu-inner-container">
-              {/*<div className="brand">
-                              <img src={`${webAppUrl}/images/niagads_logo.svg`} height="25px" />
-                            </div>*/}
-              <HamburgerToggle
-                className="d-md-none"
-                onToggle={() =>
-                  this.setState({
-                    responsiveMenuToggled: !this.state.responsiveMenuToggled
-                  })
-                }
-              />
-              <ResponsiveMenu
-                responsiveMenuToggled={this.state.responsiveMenuToggled}
-                webAppUrl={webAppUrl}
-                projectId={projectId}
-                showLoginWarning={showLoginWarning}
-                isGuest={user ? user.isGuest : true}
-                items={mainMenuItems}
-              ></ResponsiveMenu>
-              <AutoCompleteSearch />
-            </div>
+          <div className="header_rt">
+            {waitFor(user, () => (
+              <UserSection user={user} webAppUrl={webAppUrl} />
+            ))}
           </div>
         </div>
-        {/* <div className="row">
-          <div className="col-sm-12">
-            <Announcements projectId={projectId} webAppUrl={webAppUrl} location={location} announcements={announcements} />
+        <div
+          className="col-sm-12 menu-container"
+          ref={autcoompleteContainerRef}
+        >
+          <div className="menu-inner-container">
+            <HamburgerToggle
+              className="d-md-none"
+              onToggle={setResponsiveMenuToggled.bind(
+                null,
+                !responsiveMenuToggled
+              )}
+            />
+            <ResponsiveMenu
+              responsiveMenuToggled={responsiveMenuToggled}
+              webAppUrl={webAppUrl}
+              projectId={projectId}
+              showLoginWarning={showLoginWarning}
+              isGuest={user ? user.isGuest : true}
+              items={mainMenuItems}
+            ></ResponsiveMenu>
+            <AutoCompleteSearch canGrow={true} />
           </div>
-        </div>*/}
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 interface HamburgerToggle {
