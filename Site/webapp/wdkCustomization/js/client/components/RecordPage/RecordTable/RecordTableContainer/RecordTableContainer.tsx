@@ -12,8 +12,6 @@ import {
 } from "lodash";
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
-import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
 
 const INITIAL_STATE: rt.NiagadsTableStateProps = {
@@ -113,7 +111,7 @@ const NiagadsTableContainer: React.ComponentClass<
               <div className="main-controls">
                 {this.state.tableInstance && (
                   <CSVLink
-                    className="action-link btn"
+                    className="btn"
                     filename={`${kebabCase(table.displayName)}.csv`}
                     onClick={this._loadCsvData}
                     data={this.state.csvData}
@@ -134,7 +132,7 @@ const NiagadsTableContainer: React.ComponentClass<
                   {this.getHasPValFilter(table) && (
                     <a
                       onClick={this.togglePValueChartVisibility}
-                      className="btn action-link"
+                      className="btn"
                     >
                       P-value Filter
                     </a>

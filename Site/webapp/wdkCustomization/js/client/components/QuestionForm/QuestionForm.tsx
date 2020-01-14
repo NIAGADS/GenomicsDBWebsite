@@ -392,29 +392,6 @@ interface WebServicesTutorialLinkProps {
   weight: string;
 }
 
-function WebServicesTutorialLink(props: WebServicesTutorialLinkProps) {
-  let { searchName, paramValues, weight } = props;
-  weight = (weight === "" ? "0" : weight);
-  let queryString =
-    "searchName=" + searchName +
-    "&weight=" + weight +
-    Object.keys(paramValues)
-      .map(paramName => "&" + paramName + "=" + encodeURIComponent(paramValues[paramName]))
-      .join("");
-  let link = "/web-services-help?" + queryString;
-  return (
-    <div style={{marginBottom:"5px"}}>
-      <Link
-        to={link}
-        title="Build a Web Services URL from this Search"
-        className="wdk-ReactRouterLink wdk-RecordActionLink"
-        replace={false}>
-        Build a Web Services URL from this Search >>
-      </Link>
-    </div>
-  );
-}
-
 interface SubmitSectionProps {
   className: string;
   tooltipPosition: TooltipPosition;

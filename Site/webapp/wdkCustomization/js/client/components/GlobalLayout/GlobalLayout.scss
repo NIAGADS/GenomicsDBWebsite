@@ -50,6 +50,15 @@ a {
     color: $marine;
   }
 }
+
+.btn {
+  border-color: black;
+  &:hover {
+    background-color: $gray;
+    color: $white;
+  }
+}
+
 .badge,
 a.badge,
 .badge:link {
