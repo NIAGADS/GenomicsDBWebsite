@@ -177,7 +177,7 @@ function QuestionForm(props: Props) {
           submissionMetadata.type === "create-strategy" ||
           submissionMetadata.type === "edit-step"
         }
-        headerText={`Identify ${recordClass.displayNamePlural} based on ${question.displayName}`}
+        headerText={state.question.properties.title[0]}
       />
       <StepValidationInfo
         stepValidation={stepValidation}
