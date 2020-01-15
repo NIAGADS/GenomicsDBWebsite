@@ -29,8 +29,7 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 		);
 	return (
 		<React.Fragment>
-			{/*<div className='variant-record-summary-container col-4'>*/}
-			<div className="variant-record-summary-container">
+			<div className="record-summary-container variant-record-summary-container">
 				<div className="record-actions-container">
 					<HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
 				</div>

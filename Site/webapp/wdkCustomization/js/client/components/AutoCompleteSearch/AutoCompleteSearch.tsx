@@ -173,7 +173,10 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   return (
     <div
       className="search-box-with-dropdown"
-      onMouseLeave={setResultsVisible.bind(null, false)}
+      onMouseLeave={() => {
+        setResultsVisible(false);
+        onBlur();
+      }}
       onMouseEnter={setResultsVisible.bind(null, true)}
     >
       <span className="text-box-container">
@@ -184,7 +187,6 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
             onFocus();
             setResultsVisible(true);
           }}
-          onBlur={onBlur}
           className="form-control"
           onKeyDown={wrappedKeyDown}
           placeholder="Enter a gene or variant"

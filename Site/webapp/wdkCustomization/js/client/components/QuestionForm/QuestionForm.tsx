@@ -26,6 +26,7 @@ import {
 import "wdk-client/Views/Question/DefaultQuestionForm.scss";
 import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import StepValidationInfo from "wdk-client/Views/Question/StepValidationInfo";
+import { get } from "lodash";
 
 type TextboxChangeHandler = (
   event: React.ChangeEvent<HTMLInputElement>
@@ -177,7 +178,7 @@ function QuestionForm(props: Props) {
           submissionMetadata.type === "create-strategy" ||
           submissionMetadata.type === "edit-step"
         }
-        headerText={state.question.properties.title[0]}
+        headerText={get(state, "question.properties.title[0]", "")}
       />
       <StepValidationInfo
         stepValidation={stepValidation}
@@ -245,7 +246,7 @@ const DatasetsUsed: React.FC<DatasetsUsed> = ({ recordType, targetName }) => {
         Datasets used in this search
       </h2>
       <ul>
-        {datasetsUsedData &&
+        {datasetsUsedData && Array.isArray(datasetsUsedData) && //right now it's coming back as empty object if not configured
           datasetsUsedData.map(({ dataset_id, description, name }) => (
             <li key={dataset_id}>
               <div>

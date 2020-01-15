@@ -25,7 +25,7 @@ type GWASDatasetRecord = StoreProps & gr.GWASDatasetRecord;
 const GWASDatasetRecordSummary: React.SFC<IRecordHeading & StoreProps> = props => {
 	const { record, recordClass, headerActions, externalUrls } = props;
 	return <React.Fragment>
-		<div className="dataset-record-summary-container">
+		<div className="record-summary-container dataset-record-summary-container">
 			<div>
 				<HeaderRecordActions
 					record={record}

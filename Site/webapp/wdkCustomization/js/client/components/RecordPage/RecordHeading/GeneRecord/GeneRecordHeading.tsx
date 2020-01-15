@@ -31,8 +31,7 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = props => {
   const { record, recordClass, headerActions, externalUrls } = props;
   return (
     <React.Fragment>
-      {/*<div className="gene-record-summary-container col-4">*/}
-      <div className="gene-record-summary-container">
+      <div className="record-summary-container gene-record-summary-container">
         <div>
           <HeaderRecordActions
             record={record}

@@ -12,7 +12,7 @@ interface HeaderRecordActions {
 }
 
 const HeaderRecordActions: React.SFC<HeaderRecordActions> = props => {
-	return <ul className="wdk-RecordActions">
+	return <ul className="wdk-RecordActions d-flex">
 		{props.headerActions.map((action, index) => {
 			return (
 				<li key={index} className="wdk-RecordActionItem">
