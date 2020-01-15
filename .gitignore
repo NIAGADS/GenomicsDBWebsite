@@ -72,3 +72,9 @@ node_modules/*
 */.settings/*
 */node_modules/*
 yarn.lock
+
+# mac .ds_store
+**/.DS_Store
+
+# MSOffice temp files
+~$*

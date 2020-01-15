@@ -110,6 +110,12 @@
         <columnAttribute name="pvalue" displayName="p-value" sortable="true" type="numeric"/>
         <columnAttribute name="test_allele" displayName="GWAS Test Allele" help="allele associated with p-value" type="string"/>
       </dynamicAttributes>
+
+  <propertyList name="title">
+      <value>
+          Get variants with genome-wide significance in a NIAGADS GWAS summary statistics dataset
+      </value>
+      </propertyList>
     </question>
 
     <!--===========================================================================-->
