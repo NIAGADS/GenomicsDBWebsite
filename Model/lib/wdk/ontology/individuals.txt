@@ -57,9 +57,9 @@ GeneRecordClasses.GeneRecordClass.pathways	http://edamontology.org/topic_0602	Mo
 													
 ## Variant Questions  ##													
 													
-VariantRecordClasses.VariantRecordClass.VariantQuestions.Identifier	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.Identifier						menu	webservice	
-VariantRecordClasses.VariantRecordClass.VariantQuestions.Upload	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.Upload						menu	webservice	
-VariantRecordClasses.VariantRecordClass.VariantQuestions.GWAS	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.GWAS								
+VariantRecordClasses.VariantRecordClass.VariantQuestions.vid	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.vid						menu	webservice	
+VariantRecordClasses.VariantRecordClass.VariantQuestions.vupload	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.vupload						menu	webservice	
+VariantRecordClasses.VariantRecordClass.VariantQuestions.gwas_stats	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.gwas_stats								
 													
 ## Variant Attributes ##													
 													
