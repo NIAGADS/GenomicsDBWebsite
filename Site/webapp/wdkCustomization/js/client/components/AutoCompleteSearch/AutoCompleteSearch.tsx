@@ -21,9 +21,7 @@ interface AutoCompleteSearch {
 }
 
 //container component, holds state for search and selection
-const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({
-  canGrow,
-}) => {
+const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({ canGrow }) => {
   const [searchTerm, setSearchTerm] = useState<string>(),
     [results, setResults] = useState<SearchResult[]>(),
     [selected, setSelected] = useState<number>(),
@@ -72,7 +70,8 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({
       resultsArray.length > displayCount
         ? resultsArray.length - displayCount
         : 0;
-  //if we're truncating results list, push in results entry with a bunch of dummy values
+
+  //if we're truncating results list, push in results entry with dummy properties so that it's listed normally
   if (undisplayedCount) {
     displayResults.push({
       description: "",
@@ -145,7 +144,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
       service
         ._fetchJson<SearchResult[]>("get", `/search/site?term=${searchTerm}`)
         .then(res => onResult(res))
-        .catch(e => onResult(null));
+        .catch(() => onResult(null));
     },
     wrappedKeyDown = (e: React.KeyboardEvent) => {
       //enter
@@ -261,9 +260,7 @@ const _buildResultDisplay = (result: SearchResult, searchTerm: string) => {
     <span>
       {safeHtml(result.display)}&nbsp;
       <small>
-        <em>
-          {_truncateMatch(result.matched_term, searchTerm, result.record_type)}
-        </em>
+        <em>{_truncateMatch(result.matched_term, searchTerm)}</em>
       </small>
     </span>
   );
@@ -275,11 +272,7 @@ const _buildSummaryRoute = (searchTerm: string) =>
 export const buildRouteFromResult = (result: SearchResult) =>
   `/record/${result.record_type}/${result.primary_key}`;
 
-const _truncateMatch = (
-  matchedTerm: string,
-  searchTerm: string,
-  recordType: string
-) => {
+const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
   const idx = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
     length = searchTerm.length,
     start = idx - 25 >= 0 ? idx - 25 : 0,

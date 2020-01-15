@@ -1,11 +1,20 @@
-import React from 'react';
-import { HelpIcon, IconAlt, Link } from 'wdk-client/Components';
-import { DispatchAction } from 'wdk-client/Core/CommonTypes';
-import { makeClassNameHelper, safeHtml } from 'wdk-client/Utils/ComponentUtils';
-import { Seq } from 'wdk-client/Utils/IterableUtils';
-import { Parameter, ParameterGroup, RecordClass } from 'wdk-client/Utils/WdkModel';
-import { QuestionState, QuestionWithMappedParameters } from 'wdk-client/StoreModules/QuestionStoreModule';
-import { wrappable } from 'wdk-client/Utils/ComponentUtils';
+import React, { useState } from "react";
+import { HelpIcon, IconAlt, Link } from "wdk-client/Components";
+import { DispatchAction } from "wdk-client/Core/CommonTypes";
+import { makeClassNameHelper, safeHtml } from "wdk-client/Utils/ComponentUtils";
+import { Seq } from "wdk-client/Utils/IterableUtils";
+import {
+  Parameter,
+  ParameterGroup,
+  RecordClass
+} from "wdk-client/Utils/WdkModel";
+import {
+  QuestionState,
+  QuestionWithMappedParameters
+} from "wdk-client/StoreModules/QuestionStoreModule";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
+import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
+
 import {
   changeGroupVisibility,
   updateParamValue,
@@ -13,17 +22,19 @@ import {
   updateCustomQuestionName,
   updateQuestionWeight,
   SubmissionMetadata
-} from 'wdk-client/Actions/QuestionActions';
-import 'wdk-client/Views/Question/DefaultQuestionForm.scss';
-import { TooltipPosition } from 'wdk-client/Components/Overlays/Tooltip';
-import StepValidationInfo from 'wdk-client/Views/Question/StepValidationInfo';
+} from "wdk-client/Actions/QuestionActions";
+import "wdk-client/Views/Question/DefaultQuestionForm.scss";
+import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
+import StepValidationInfo from "wdk-client/Views/Question/StepValidationInfo";
 
-type TextboxChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => void;
+type TextboxChangeHandler = (
+  event: React.ChangeEvent<HTMLInputElement>
+) => void;
 
 type EventHandlers = {
-  setGroupVisibility: typeof changeGroupVisibility,
-  updateParamValue: typeof updateParamValue
-}
+  setGroupVisibility: typeof changeGroupVisibility;
+  updateParamValue: typeof updateParamValue;
+};
 
 export type Props = {
   state: QuestionState;
@@ -35,31 +46,58 @@ export type Props = {
   submitButtonText?: string;
   validateForm?: boolean;
   renderParamGroup?: (group: ParameterGroup, formProps: Props) => JSX.Element;
-  DescriptionComponent?: (props: { description?: string, navigatingToDescription: boolean }) => JSX.Element;
+  DescriptionComponent?: (props: {
+    description?: string;
+    navigatingToDescription: boolean;
+  }) => JSX.Element;
   onClickDescriptionLink?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   onSubmit?: (e: React.FormEvent) => boolean | void;
   containerClassName?: string;
-}
+};
 
-const cx = makeClassNameHelper('wdk-QuestionForm');
-const tooltipPosition = { my: 'right center', at: 'left center' };
+const cx = makeClassNameHelper("wdk-QuestionForm");
+const tooltipPosition = { my: "right center", at: "left center" };
 
-// FIXME Should be made nicer once we upgrade to a version of Redux that supports hooks
-export const useDefaultOnSubmit = (dispatchAction: DispatchAction, urlSegment: string, submissionMetadata: SubmissionMetadata) =>
+export const useDefaultOnSubmit = (
+  dispatchAction: DispatchAction,
+  urlSegment: string,
+  submissionMetadata: SubmissionMetadata
+) =>
   React.useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      dispatchAction(submitQuestion({ searchName: urlSegment, submissionMetadata }));
+      dispatchAction(
+        submitQuestion({ searchName: urlSegment, submissionMetadata })
+      );
     },
-    [ dispatchAction, urlSegment, submissionMetadata ]
+    [dispatchAction, urlSegment, submissionMetadata]
   );
 
-function DefaultQuestionForm(props: Props) {
+function QuestionForm(props: Props) {
+  const {
+    dispatchAction,
+    onSubmit,
+    submissionMetadata,
+    state,
+    submitButtonText,
+    recordClass,
+    validateForm = true,
+    containerClassName
+  } = props;
+  const {
+    question,
+    customName,
+    paramValues,
+    weight,
+    stepValidation,
+    submitting
+  } = state;
 
-  const { dispatchAction, onSubmit, submissionMetadata, state, submitButtonText, recordClass, validateForm = true, containerClassName } = props;
-  const { question, customName, paramValues, weight, stepValidation, submitting } = state;
-
-  let defaultOnSubmit = useDefaultOnSubmit(dispatchAction, question.urlSegment, submissionMetadata);
+  let defaultOnSubmit = useDefaultOnSubmit(
+    dispatchAction,
+    question.urlSegment,
+    submissionMetadata
+  );
 
   let handleSubmit = React.useCallback(
     (event: React.FormEvent) => {
@@ -69,63 +107,89 @@ function DefaultQuestionForm(props: Props) {
 
       return defaultOnSubmit(event);
     },
-    [ onSubmit, defaultOnSubmit ]
+    [onSubmit, defaultOnSubmit]
   );
 
   let handleCustomNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatchAction(updateCustomQuestionName({ searchName: question.urlSegment, customName: event.target.value }));
-  }
+    dispatchAction(
+      updateCustomQuestionName({
+        searchName: question.urlSegment,
+        customName: event.target.value
+      })
+    );
+  };
 
   let handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatchAction(updateQuestionWeight({ searchName: question.urlSegment, weight: event.target.value }));
-  }
+    dispatchAction(
+      updateQuestionWeight({
+        searchName: question.urlSegment,
+        weight: event.target.value
+      })
+    );
+  };
 
-  let renderParamGroup = props.renderParamGroup ? props.renderParamGroup : renderDefaultParamGroup;
+  let renderParamGroup = props.renderParamGroup
+    ? props.renderParamGroup
+    : renderDefaultParamGroup;
   let Description = props.DescriptionComponent || QuestionDescription;
 
-  let fullContainerClassName = `${containerClassName || ''} ` + (
-    question.parameters.every(({ type }) => type !== 'filter') 
-      ? cx('', 'default-width')
-      : cx('', 'wide-width')
-  );
+  let fullContainerClassName =
+    `${containerClassName || ""} ` +
+    (question.parameters.every(({ type }) => type !== "filter")
+      ? cx("", "default-width")
+      : cx("", "wide-width"));
 
   let containerRef = React.useRef<HTMLDivElement>(null);
 
-  let [ navigatingToDescription, setNavigatingToDescription ] = React.useState(false);
+  let [navigatingToDescription, setNavigatingToDescription] = React.useState(
+    false
+  );
 
-  let defaultOnClickDescriptionLink = React.useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const descriptionSection = containerRef.current && containerRef.current.querySelector(`.${cx('DescriptionSection')}`);
+  let defaultOnClickDescriptionLink = React.useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      const descriptionSection =
+        containerRef.current &&
+        containerRef.current.querySelector(`.${cx("DescriptionSection")}`);
 
-    if (descriptionSection) {
-      descriptionSection.scrollIntoView(true);
-      document.documentElement.scrollTop -= 22;
+      if (descriptionSection) {
+        descriptionSection.scrollIntoView(true);
+        document.documentElement.scrollTop -= 22;
 
-      setNavigatingToDescription(true);
-      setTimeout(() => {
-        setNavigatingToDescription(false);
-      }, 3000);
-    }
-  }, []);
+        setNavigatingToDescription(true);
+        setTimeout(() => {
+          setNavigatingToDescription(false);
+        }, 3000);
+      }
+    },
+    []
+  );
 
-  let onClickDescriptionLink = props.onClickDescriptionLink || defaultOnClickDescriptionLink;
+  let onClickDescriptionLink =
+    props.onClickDescriptionLink || defaultOnClickDescriptionLink;
 
   return (
     <div className={fullContainerClassName} ref={containerRef}>
       <QuestionHeader
-        showDescriptionLink={submissionMetadata.type === 'create-strategy'}
+        showDescriptionLink={submissionMetadata.type === "create-strategy"}
         onClickDescriptionLink={onClickDescriptionLink}
-        showHeader={submissionMetadata.type === 'create-strategy' || submissionMetadata.type === 'edit-step'}
+        showHeader={
+          submissionMetadata.type === "create-strategy" ||
+          submissionMetadata.type === "edit-step"
+        }
         headerText={`Identify ${recordClass.displayNamePlural} based on ${question.displayName}`}
       />
-      <StepValidationInfo stepValidation={stepValidation} question={question} isRevise={submissionMetadata.type === 'edit-step'}/>
+      <StepValidationInfo
+        stepValidation={stepValidation}
+        question={question}
+        isRevise={submissionMetadata.type === "edit-step"}
+      />
       <form onSubmit={handleSubmit} noValidate={!validateForm}>
         {question.groups
-          .filter(group => group.displayType !== 'hidden')
-          .map(group => renderParamGroup(group, props))
-        }
+          .filter(group => group.displayType !== "hidden")
+          .map(group => renderParamGroup(group, props))}
         <SubmitSection
-          className={cx('SubmitSection')}
+          className={cx("SubmitSection")}
           tooltipPosition={tooltipPosition}
           customName={customName}
           searchName={question.urlSegment}
@@ -137,42 +201,99 @@ function DefaultQuestionForm(props: Props) {
           submitting={submitting}
           submitButtonText={submitButtonText}
         />
-        <Description description={question.description} navigatingToDescription={navigatingToDescription} />
+        <Description
+          description={question.description}
+          navigatingToDescription={navigatingToDescription}
+        />
+        <hr />
+        <DatasetsUsed
+          recordType={recordClass.urlSegment}
+          targetName={question.urlSegment}
+        />
       </form>
     </div>
   );
 }
 
-export default wrappable(DefaultQuestionForm);
+interface DatasetsUsed {
+  recordType: string;
+  targetName: string;
+}
 
-type QuestionHeaderProps = { 
-  headerText: string, 
-  showHeader: boolean,
-  showDescriptionLink?: boolean,
-  onClickDescriptionLink?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+interface ServiceResult {
+  dataset_id: string;
+  description: string;
+  name: string;
+}
+
+const DatasetsUsed: React.FC<DatasetsUsed> = ({ recordType, targetName }) => {
+  const [datasetsUsedData, setDatasetsUsedData] = useState<ServiceResult[]>();
+
+  useWdkEffect((service: WdkService) => {
+    service
+      ._fetchJson<ServiceResult[]>(
+        "get",
+        `/dataset/reference?record_type=${recordType}&target_type=question&target_name=${targetName}`
+      )
+      .then(setDatasetsUsedData)
+      .catch(() => setDatasetsUsedData(null));
+  }, []);
+
+  return (
+    <div>
+      <h2 className="ebrc-DescriptionSearchDatasetsHeader">
+        Datasets used in this search
+      </h2>
+      <ul>
+        {datasetsUsedData &&
+          datasetsUsedData.map(({ dataset_id, description, name }) => (
+            <li key={dataset_id}>
+              <div>
+                <Link to={`/record/dataset/${dataset_id}`}>{name}</Link>
+              </div>
+              <div>{description}</div>
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+};
+
+export default QuestionForm;
+
+type QuestionHeaderProps = {
+  headerText: string;
+  showHeader: boolean;
+  showDescriptionLink?: boolean;
+  onClickDescriptionLink?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
 export function QuestionHeader(props: QuestionHeaderProps) {
-  return props.showHeader
-    ? (
-      <div className={cx('QuestionHeader')}>
-        {
-          !!props.showDescriptionLink && (
-            <div className={cx('DescriptionLink')}>
-              <IconAlt fa="info-circle" className="fa-fw" />
-              <a title="Read more about this search below" href="#" onClick={props.onClickDescriptionLink}>
-                Learn more about this search
-              </a>
-            </div>
-          )
-        }
-        <h1>{props.headerText}</h1>
-      </div>
-    )
-    : <></>;
+  return props.showHeader ? (
+    <div className={cx("QuestionHeader")}>
+      {!!props.showDescriptionLink && (
+        <div className={cx("DescriptionLink")}>
+          <IconAlt fa="info-circle" className="fa-fw" />
+          <a
+            title="Read more about this search below"
+            href="#"
+            onClick={props.onClickDescriptionLink}
+          >
+            Learn more about this search
+          </a>
+        </div>
+      )}
+      <h1>{props.headerText}</h1>
+    </div>
+  ) : (
+    <></>
+  );
 }
 
-export function renderDefaultParamGroup(group: ParameterGroup, formProps: Props) {
+export function renderDefaultParamGroup(
+  group: ParameterGroup,
+  formProps: Props
+) {
   let { state, eventHandlers, parameterElements } = formProps;
   let { question, groupUIState, paramDependenciesUpdating } = state;
   return (
@@ -192,13 +313,20 @@ type DefaultGroupProps = {
   question: QuestionWithMappedParameters;
   group: ParameterGroup;
   uiState: any;
-  onVisibilityChange: EventHandlers['setGroupVisibility'];
+  onVisibilityChange: EventHandlers["setGroupVisibility"];
   parameterElements: Record<string, React.ReactNode>;
   paramDependenciesUpdating: Record<string, boolean>;
-}
+};
 
 export function DefaultGroup(props: DefaultGroupProps) {
-  let { question, group, uiState, onVisibilityChange, parameterElements, paramDependenciesUpdating } = props;
+  let {
+    question,
+    group,
+    uiState,
+    onVisibilityChange,
+    parameterElements,
+    paramDependenciesUpdating
+  } = props;
   return (
     <Group
       key={group.name}
@@ -221,41 +349,47 @@ type GroupProps = {
   searchName: string;
   group: ParameterGroup;
   uiState: any;
-  onVisibilityChange: EventHandlers['setGroupVisibility'];
+  onVisibilityChange: EventHandlers["setGroupVisibility"];
   children: React.ReactChild;
-}
+};
 
 export function Group(props: GroupProps) {
-  switch(props.group.displayType) {
-    case 'ShowHide':
-      return <ShowHideGroup {...props}/>
+  switch (props.group.displayType) {
+    case "ShowHide":
+      return <ShowHideGroup {...props} />;
     default:
       return <div>{props.children}</div>;
   }
 }
 
 function ShowHideGroup(props: GroupProps) {
-  const { searchName, group, uiState: { isVisible }, onVisibilityChange } = props;
+  const {
+    searchName,
+    group,
+    uiState: { isVisible },
+    onVisibilityChange
+  } = props;
   return (
-    <div className={cx('ShowHideGroup')} >
+    <div className={cx("ShowHideGroup")}>
       <button
         type="button"
-        className={cx('ShowHideGroupToggle')}
+        className={cx("ShowHideGroupToggle")}
         onClick={() => {
           onVisibilityChange({
             searchName,
             groupName: group.name,
             isVisible: !isVisible
-          })
+          });
         }}
       >
-        <IconAlt fa={`caret-${isVisible ? 'down' : 'right'}`}/> {group.displayName}
+        <IconAlt fa={`caret-${isVisible ? "down" : "right"}`} />{" "}
+        {group.displayName}
       </button>
-      <div className={cx('ShowHideGroupContent')} >
+      <div className={cx("ShowHideGroupContent")}>
         {isVisible ? props.children : null}
       </div>
     </div>
-  )
+  );
 }
 
 type ParameterListProps = {
@@ -263,65 +397,83 @@ type ParameterListProps = {
   parameterMap: Record<string, Parameter>;
   parameterElements: Record<string, React.ReactNode>;
   paramDependenciesUpdating: Record<string, boolean>;
-}
+};
 
 export function ParameterList(props: ParameterListProps) {
-  const { parameters, parameterMap, parameterElements, paramDependenciesUpdating } = props;
+  const {
+    parameters,
+    parameterMap,
+    parameterElements,
+    paramDependenciesUpdating
+  } = props;
   return (
-    <div className={cx('ParameterList')}>
+    <div className={cx("ParameterList")}>
       {Seq.from(parameters)
         .map(paramName => parameterMap[paramName])
         .map(parameter => (
           <React.Fragment key={parameter.name}>
-            <ParameterHeading 
-              parameter={parameter} 
-              paramDependencyUpdating={!!paramDependenciesUpdating[parameter.name]}
+            <ParameterHeading
+              parameter={parameter}
+              paramDependencyUpdating={
+                !!paramDependenciesUpdating[parameter.name]
+              }
             />
-            <div className={cx('ParameterControl')}>
+            <div className={cx("ParameterControl")}>
               {parameterElements[parameter.name]}
-              {
-                parameter.visibleHelp !== undefined &&
-                <div className={cx('VisibleHelp')}>
+              {parameter.visibleHelp !== undefined && (
+                <div className={cx("VisibleHelp")}>
                   {safeHtml(parameter.visibleHelp)}
                 </div>
-              }
+              )}
             </div>
           </React.Fragment>
         ))}
     </div>
-  )
+  );
 }
 
-function ParameterHeading(props: { parameter: Parameter, paramDependencyUpdating: boolean }) {
+function ParameterHeading(props: {
+  parameter: Parameter;
+  paramDependencyUpdating: boolean;
+}) {
   const { parameter, paramDependencyUpdating } = props;
   return (
-    <div className={cx('ParameterHeading')}>
+    <div className={cx("ParameterHeading")}>
       <h2>
         <HelpIcon>{parameter.help}</HelpIcon> {parameter.displayName}
-        {paramDependencyUpdating && <IconAlt fa="circle-o-notch" className="fa-spin fa-fw" />}
+        {paramDependencyUpdating && (
+          <IconAlt fa="circle-o-notch" className="fa-spin fa-fw" />
+        )}
       </h2>
     </div>
-  )
+  );
 }
 
-export function SubmitButton(
-  props: { submissionMetadata: SubmissionMetadata, submitButtonText?: string, submitting: boolean }
-) {
-  return props.submitting
-    ? <div className={cx('SubmittingIndicator')}></div>
-    : <button type="submit" className="btn">
-        {getSubmitButtonText(props.submissionMetadata, props.submitButtonText)}
-      </button>;
+export function SubmitButton(props: {
+  submissionMetadata: SubmissionMetadata;
+  submitButtonText?: string;
+  submitting: boolean;
+}) {
+  return props.submitting ? (
+    <div className={cx("SubmittingIndicator")}></div>
+  ) : (
+    <button type="submit" className="btn">
+      {getSubmitButtonText(props.submissionMetadata, props.submitButtonText)}
+    </button>
+  );
 }
 
-export const getSubmitButtonText = (submissionMetadata: SubmissionMetadata, submitButtonText?: string) =>
+export const getSubmitButtonText = (
+  submissionMetadata: SubmissionMetadata,
+  submitButtonText?: string
+) =>
   submitButtonText
     ? submitButtonText
-    : submissionMetadata.type === 'create-strategy'
-    ? 'Get Answer'
-    : submissionMetadata.type === 'edit-step'
-    ? 'Revise Step'
-    : 'Run Step';
+    : submissionMetadata.type === "create-strategy"
+    ? "Get Answer"
+    : submissionMetadata.type === "edit-step"
+    ? "Revise Step"
+    : "Run Step";
 
 interface SearchNameInputProps {
   tooltipPosition: TooltipPosition;
@@ -374,22 +526,27 @@ export function WeightInput(props: WeightInputProps) {
   );
 }
 
-export function QuestionDescription(props: { description?: string, navigatingToDescription: boolean }) {
+export function QuestionDescription(props: {
+  description?: string;
+  navigatingToDescription: boolean;
+}) {
   return !props.description ? null : (
-    <div className={cx('DescriptionSection')}>
-      <div className={cx('Description')}>
-        <hr/>
-        <h2 className={props.navigatingToDescription ? 'navigatingToDescription' : undefined}>Description</h2>
+    <div className={cx("DescriptionSection")}>
+      <div className={cx("Description")}>
+        <hr />
+        <h2
+          className={
+            props.navigatingToDescription
+              ? "ebrc-DescriptionSearchDescriptionHeader"
+              : undefined
+          }
+        >
+          Description
+        </h2>
         {safeHtml(props.description)}
       </div>
     </div>
   );
-}
-
-interface WebServicesTutorialLinkProps {
-  searchName: string;
-  paramValues: Record<string,string>;
-  weight: string;
 }
 
 interface SubmitSectionProps {
@@ -397,7 +554,7 @@ interface SubmitSectionProps {
   tooltipPosition: TooltipPosition;
   customName?: string;
   searchName: string;
-  paramValues: Record<string,string>;
+  paramValues: Record<string, string>;
   weight?: string;
   handleCustomNameChange: TextboxChangeHandler;
   handleWeightChange: TextboxChangeHandler;
@@ -407,18 +564,18 @@ interface SubmitSectionProps {
 }
 
 export function SubmitSection(props: SubmitSectionProps) {
-  let { 
-    className, 
-    tooltipPosition, 
-    customName, 
-    handleCustomNameChange, 
-    searchName, 
-    paramValues, 
-    weight, 
-    handleWeightChange, 
-    submissionMetadata, 
+  let {
+    className,
+    tooltipPosition,
+    customName,
+    handleCustomNameChange,
+    searchName,
+    paramValues,
+    weight,
+    handleWeightChange,
+    submissionMetadata,
     submitting,
-    submitButtonText 
+    submitButtonText
   } = props;
   return (
     <div className={className}>
