@@ -43,13 +43,9 @@ interface GeneRecordTableType {
 }
 
 export interface GeneRecordAttributes {
-	[key: string]: any;
+//	[key: string]: any;
 	ad_evidence_flag: string;
-	alternative_variants: string;
 	chromosome: string;
-	jbrowse_source_url: string;
-	display_strand: string;
-	end_max: string;
 	ensembl_id: string;
 	entrez_id: string;
 	gene_name: string;
@@ -57,25 +53,17 @@ export interface GeneRecordAttributes {
 	gene_type: string;
 	has_ad_evidence: "true" | "false";
 	hgnc_id: string;
-	jbrowse_link: string; // LinkType;
-	jbrowse_span: string;
+	jbrowse_source_url: string;
 	location_end: string;
 	location_start: string;
-	location_text: string;
 	num_colocated_variants: string; // LinkOutGroup;
 	num_unique_colocated_variants: string;
-	num_alternative_variants: string;
 	omin_id: string;
-	record_link_outs: string; // LinkOutGroup;
 	source_id: string;
-	span_link: {
-		displayText: string;
-		url: string;
-	};
-	start_min: string;
 	strand?: "+" | "-";
 	synonyms: any;
 	uc_sc_id: string;
+	uniprot_id: string
 	vega_id: string;
 }
 

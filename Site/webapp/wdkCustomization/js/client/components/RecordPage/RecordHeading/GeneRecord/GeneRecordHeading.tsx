@@ -52,21 +52,9 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = props => {
           
           {record.attributes.synonyms && <li><span className="label">Also known as: {record.attributes.synonyms}</span></li>}
           
-
-          <li>
-            <span className="label">Location</span>: {record.attributes.span}{" "}
-          </li>
           <li>
             <span className="label">Gene Type</span>:{" "}
             {record.attributes.gene_type}
-          </li>
-          <li className="badge-links">
-            <span className="label">More Information</span>:
-            <RecordLinkOuts
-              linkOutJson={props.record.attributes.third_party_data_links}
-              type="badge"
-              direction="horizontal"
-            />
           </li>
           {record.attributes.ad_evidence_flag && (
             <li>
@@ -74,18 +62,8 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = props => {
             </li>
           )}
         </ul>
-        <div className="sub-categories">
-          <LabeledLinkOuts
-            linkOutJson={props.record.attributes.record_link_outs}
-            direction="vertical"
-          />
-        </div>
+
       </div>
-      {/*<div className='col-8'>
-			<iframe style={{ border: "1px solid black" }}
-				src={`${props.webAppUrl}${record.attributes.jbrowse_source_url}`} height="300">
-			</iframe>
-		</div>*/}
     </React.Fragment>
   );
 };

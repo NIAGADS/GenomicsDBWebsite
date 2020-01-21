@@ -1,16 +1,13 @@
 import React from 'react';
 //@ts-ignore
 import SelectTableHOC, { SelectTableAdditionalProps } from 'react-table/lib/hoc/selectTable';
-import ReactTable, { AccessorFunction, FinalState, RowInfo, Filter, Column, TableProps, Instance as rtInstance, FilterFunction } from 'react-table';
-import { kebabCase, isString, isObject, findIndex, uniqueId, forIn } from 'lodash';
-import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
+import ReactTable, { AccessorFunction, RowInfo, Filter, Column, TableProps } from 'react-table';
+import { isString, isObject, findIndex, uniqueId, forIn } from 'lodash';
 import { scientificToDecimal } from '../../../../util/util';
 import { withTooltip, isJson, resolveJsonInput } from '../../../../util/jsonParse';
 import { extractDisplayText } from '../util';
 import CssBarChart from './CssBarChart/CssBarChart';
-import { Tooltip } from 'wdk-client/Components';
 import * as rt from '../../types';
-import d3 from 'd3';
 import PaginationComponent from './PaginationComponent/PaginationComponent';
 
 const SelectTable = SelectTableHOC(ReactTable);
