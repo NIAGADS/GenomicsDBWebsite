@@ -32,11 +32,17 @@
 
   <!-- ooooooooooooooooooooooo  Install Components  ooooooooooooooooooooooo -->
 
-  <target name="GenomicsDBWebsite/Model-Installation" depends="EbrcModelCommon/Model-Installation">
+  <target name="GenomicsDBWebsite/Model-Installation">
     <ant target="defaultComponentInstall">
       <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Model"/>
     </ant>
+
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt to ${targetDir}/lib/wdk/ontology/annotation.txt"/>
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true"/> 
+
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl to ${targetDir}/lib/wdk/ontology/categories.owl"/>
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/> 
 
     <!-- the following four commands generate the website ontology -->
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
