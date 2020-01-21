@@ -37,8 +37,6 @@ GeneRecordClasses.GeneRecordClass.vega_id	http://edamontology.org/topic_0219	Cur
 GeneRecordClasses.GeneRecordClass.entrez_id	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	entrez_id				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.ensembl_id	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	ensembl_id				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.uniprot_id	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	uniprot_id				gene		results	record-internal	download
-GeneRecordClasses.GeneRecordClass.third_party_data_links	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	third_party_data_links				gene			record-internal	
-GeneRecordClasses.GeneRecordClass.record_link_outs	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	record_link_outs				gene			record-internal	
 GeneRecordClasses.GeneRecordClass.cytogenetic_location	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	cytogenetic_location				gene		results	record-internal	download
 													
 GeneRecordClasses.GeneRecordClass.full_jbrowse_link	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	full_jbrowse_link				gene			record-internal	
@@ -54,12 +52,18 @@ GeneRecordClasses.GeneRecordClass.ad_variants_from_catalog	http://www.niagadsont
 GeneRecordClasses.GeneRecordClass.other_variants_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	GeneRecordClasses.GeneRecordClass	table	other_variants_from_catalog				gene	4		record	download
 GeneRecordClasses.GeneRecordClass.go_terms	http://edamontology.org/topic_1775	Function analysis	GeneRecordClasses.GeneRecordClass	table	go_terms			GO Annotation	gene			record	download
 GeneRecordClasses.GeneRecordClass.pathways	http://edamontology.org/topic_0602	Molecular interactions	GeneRecordClasses.GeneRecordClass	table	pathways			KEGG Pathways	gene			record	download
+GeneRecordClasses.GeneRecordClass.record_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	record_link_outs				gene	1		record	download
+GeneRecordClasses.GeneRecordClass.sequence_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	sequence_link_outs				gene	4		record	download
+GeneRecordClasses.GeneRecordClass.protein_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	protein_link_outs				gene	3		record	download
+GeneRecordClasses.GeneRecordClass.clinical_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	clinical_link_outs				gene	2		record	download
+													
+													
 													
 ## Variant Questions  ##													
 													
 VariantRecordClasses.VariantRecordClass.VariantQuestions.vid	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.vid						menu	webservice	
 VariantRecordClasses.VariantRecordClass.VariantQuestions.vupload	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.vupload						menu	webservice	
-VariantRecordClasses.VariantRecordClass.VariantQuestions.gwas_stats	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.gwas_stats								
+VariantRecordClasses.VariantRecordClass.VariantQuestions.gwas_stats	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	search	VariantQuestions.gwas_stats						menu	webservice	
 													
 ## Variant Attributes ##													
 													

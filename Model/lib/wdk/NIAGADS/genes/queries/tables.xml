@@ -1,8 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-	<querySet name="GeneTables" 
-		queryType="table" 
-		isCacheable="false">
+	<querySet name="GeneTables" queryType="table" isCacheable="false">
+
+		<!-- =============================================================== -->
+		<!-- Link Outs -->
+		<!-- =============================================================== -->
+
+		<sqlQuery name="DbRefs_Gene">
+			<column name="source_id"/>
+			<column name="external_links"/>
+			<column name="external_id"/>
+			<sql>
+				<![CDATA[
+		 SELECT ga.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 a.external_id,
+		 jsonb_agg(build_link_attribute(drl.resource_abbrev, drl.url, a.external_id, drl.resource_full_name)) AS external_links
+		 FROM
+		 CBIL.DbRefLink drl,
+		 CBIL.GeneAttributes ga,
+		 LATERAL jsonb_each(annotation),
+		 LATERAL UNNEST(string_to_array(replace(value::text, '"',''), '|')) a(external_id)
+		 WHERE drl.dbref_id = key
+		 AND drl.resource_type = 'gene'
+		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
+		 ORDER BY ga.source_id, a.external_id
+			]]>
+			</sql>
+
+		</sqlQuery>
+
+		<sqlQuery name="DbRefs_Clinical">
+			<column name="source_id"/>
+			<column name="external_links"/>
+			<column name="external_id"/>
+			<sql>
+				<![CDATA[
+		 SELECT ga.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 a.external_id,
+		 jsonb_agg(build_link_attribute(drl.resource_abbrev, drl.url, a.external_id, drl.resource_full_name)) AS external_links
+		 FROM
+		 CBIL.DbRefLink drl,
+		 CBIL.GeneAttributes ga,
+		 LATERAL jsonb_each(annotation),
+		 LATERAL UNNEST(string_to_array(replace(value::text, '"',''), '|')) a(external_id)
+		 WHERE drl.dbref_id = key
+		 AND drl.resource_type = 'clinical'
+		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
+		 ORDER BY ga.source_id, a.external_id
+	]]>
+			</sql>
+		</sqlQuery>
+
+		<sqlQuery name="DbRefs_NSeq">
+			<column name="source_id"/>
+			<column name="external_links"/>
+			<column name="external_id"/>
+			<sql>
+				<![CDATA[
+		 SELECT ga.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 a.external_id,
+		 string_agg('<a href="' || drl.url || a.external_id || '" class="wdk-toolitp" title="' || drl.resource_full_name || '">' || drl.resource_abbrev || '</a>', ' // ') AS external_links
+		 FROM
+		 CBIL.DbRefLink drl,
+		 CBIL.GeneAttributes ga,
+		 LATERAL jsonb_each(annotation),
+		 LATERAL UNNEST(string_to_array(replace(value::text, '"',''), '|')) a(external_id)
+		 WHERE drl.dbref_id = key
+		 AND drl.resource_type = 'nucleotide sequences'
+		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
+		 ORDER BY ga.source_id, a.external_id
+	]]>
+			</sql>
+		</sqlQuery>
+
+		<sqlQuery name="DbRefs_Proteins">
+			<column name="source_id"/>
+			<column name="external_links"/>
+			<column name="external_id"/>
+			<sql>
+				<![CDATA[
+		 SELECT ga.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 a.external_id,
+		 jsonb_agg(build_link_attribute(drl.resource_abbrev, drl.url, a.external_id, drl.resource_full_name)) AS external_links
+		 FROM
+		 CBIL.DbRefLink drl,
+		 CBIL.GeneAttributes ga,
+		 LATERAL jsonb_each(annotation),
+		 LATERAL UNNEST(string_to_array(replace(value::text, '"',''), '|')) a(external_id)
+		 WHERE drl.dbref_id = key
+		 AND drl.resource_type = 'protein'
+		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
+		 ORDER BY ga.source_id, a.external_id
+	]]>
+			</sql>
+		</sqlQuery>
 
 		<!-- =============================================================== -->
 		<!-- Genomic Location -->

@@ -87,19 +87,30 @@
 				<columnAttribute name="location" displayName="Cytogenetic Location" type="string" />
 			</attributeQueryRef>
 
-		
+			<table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">
+				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+			</table>
 
-			<attributeQueryRef ref="GeneAttributes.InformationLinks">
-				<columnAttribute name="third_party_data_links" internal="true" inReportMaker="false" type="json" />
-			</attributeQueryRef>
+			<table name="sequence_link_outs" displayName="Nucleotide Sequences" inReportMaker="false" queryRef="GeneTables.DbRefs_NSeq">
+				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+			</table>
 
-			<attributeQueryRef ref="GeneAttributes.RecordLinks">
-				<columnAttribute name="record_link_outs" internal="true" inReportMaker="false" type="json_dictionary" />
-			</attributeQueryRef>
+			<table name="protein_link_outs" displayName="Proteins" inReportMaker="false" queryRef="GeneTables.DbRefs_Proteins">
+				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+			</table>
+
+			<table name="clinical_link_outs" displayName="Clinical" inReportMaker="false" queryRef="GeneTables.DbRefs_Clinical">
+				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+			</table>
 
 			<!-- =============================================================== -->
 			<!-- Gene Structure -->
 			<!-- =============================================================== -->
+
 			<table name="transcripts" displayName="Transcripts" queryRef="GeneTables.Transcripts">
 				<columnAttribute name="transcript_name" displayName="Transcript" type="string" />
 				<columnAttribute name="transcript_accession_link" displayName="Ensembl Transcript" type="json_link" />
