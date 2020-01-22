@@ -2,7 +2,6 @@ import { RecordClass } from "wdk-client/Utils/WdkModel";
 //@ts-ignore
 import { Filter } from "react-csv";
 import { Instance as rtInstance } from "react-table";
-import { LinkType } from "../../util/jsonParse";
 
 //when fixing this up, cf WdkModel.ts
 
@@ -44,7 +43,6 @@ interface GeneRecordTableType {
 }
 
 export interface GeneRecordAttributes {
-//	[key: string]: any;
 	ad_evidence_flag: string;
 	chromosome: string;
 	ensembl_id: string;
@@ -67,6 +65,93 @@ export interface GeneRecordAttributes {
 	uniprot_id: string
 	vega_id: string;
 }
+
+export interface VariantRecord extends BaseRecord {
+	kind: "variant";
+	attributes: VariantRecordAttributes;
+	recordClassName: string;
+	urlName: "variant";
+	tables: { [key: string]: any };
+}
+
+export interface VariantRecordAttributes {
+	adsp_id: string;
+	adsp_wes_qc_filter_status_display: string;
+	adsp_wes_qc_filter_status: string;
+	adsp_wgs_qc_filter_status: string;
+	adsp_wgs_qc_filter_status_display: string;
+	alt_allele: string;
+	alternative_variants: string;
+	chromosome: string;
+	display_metaseq_id: string;
+	colocated_variants: string;
+	display_allele: string;
+	downstream_sequence: string;
+	has_merge_history: string;
+	is_adsp_variant: string;
+	is_adsp_wes: string;
+	is_adsp_wgs: string;
+	is_annotated: string; //boolean
+	is_multi_allelic: string;
+	is_reversed: string;
+	jbrowse_highlight: string;
+	jbrowse_source_url: string;
+	jbrowse_span: string;
+	location: string;
+	locuszoom_gwas_datasets: string; //json
+	metaseq_id: string;
+	most_severe_consequence: string;
+	msc_amino_acid_change: string;
+	msc_codon_change: string;
+	msc_impact: string;
+	msc_impacted_gene: string;
+	msc_impacted_gene_link: string;
+	msc_impacted_transcript: string;
+	msc_is_coding: string;
+	num_impacted_genes: string;
+	num_impacted_transcripts: string;
+	position: string;
+	ref_snp_id: string;
+	ref_allele: string;
+	sequence_allele: string;
+	transcript_consequence_summary: string; //json
+	upstream_sequence: string;
+	variant_class: string;
+	variant_class_abbrev: string;
+	variant_source: string;
+}
+
+export interface GWASDatasetRecord extends BaseRecord {
+	kind: "GWASDataset";
+	attributes: GWASDatasetRecordAttributes;
+	urlName: "gwas_summary";
+	tables: { [key: string]: any };
+}
+
+export interface GWASDatasetRecordAttributes {
+	name: string;
+	description: string;
+	attribution: string;
+	category: string;
+	is_adsp: string;
+	accession_link: string;
+	search_link: string;
+}
+
+export interface NIAGADSDatasetRecord extends BaseRecord {
+	kind: "NIAGADSDataset";
+	attributes: NIAGADSDatasetRecordAttributes;
+	urlName: "gwas_summary";
+	tables: { [key: string]: any };
+}
+
+export interface NIAGADSDatasetRecordAttributes {
+	name: string;
+	description: string;
+	external_link: string;
+	is_adsp: string;
+}
+
 
 export interface IRecordTable {
 	//todo: other record types, likely need to use generic: IRecordTable<GeneRecord>
@@ -125,61 +210,6 @@ export interface NiagadsTableStateProps {
 	basket: { [key: string]: any }[];
 }
 
-export interface VariantRecord extends BaseRecord {
-	kind: "variant";
-	attributes: VariantRecordAttributes;
-	recordClassName: string;
-	urlName: "variant";
-	tables: { [key: string]: any };
-}
-
-export interface VariantRecordAttributes {
-	adsp_id: string;
-	adsp_wes_qc_filter_status_display: string;
-	adsp_wes_qc_filter_status: string;
-	adsp_wgs_qc_filter_status: string;
-	adsp_wgs_qc_filter_status_display: string;
-	alt_allele: string;
-	alternative_variants: string;
-	chromosome: string;
-	display_metaseq_id: string;
-	colocated_variants: string;
-	display_allele: string;
-	downstream_sequence: string;
-	has_merge_history: string;
-	is_adsp_variant: string;
-	is_adsp_wes: string;
-	is_adsp_wgs: string;
-	is_annotated: string; //boolean
-	is_multi_allelic: string;
-	is_reversed: string;
-	jbrowse_highlight: string;
-	jbrowse_source_url: string;
-	jbrowse_span: string;
-	location: string;
-	locuszoom_gwas_datasets: string; //json
-	metaseq_id: string;
-	most_severe_consequence: string;
-	msc_amino_acid_change: string;
-	msc_codon_change: string;
-	msc_impact: string;
-	msc_impacted_gene: string;
-	msc_impacted_gene_link: string;
-	msc_impacted_transcript: string;
-	msc_is_coding: string;
-	num_impacted_genes: string;
-	num_impacted_transcripts: string;
-	position: string;
-	ref_snp_id: string;
-	ref_allele: string;
-	sequence_allele: string;
-	transcript_consequence_summary: string; //json
-	upstream_sequence: string;
-	variant_class: string;
-	variant_class_abbrev: string;
-	variant_source: string;
-}
-
 export interface VariantRecordSummary {
 	record: VariantRecord;
 	recordClass: { [key: string]: any };
@@ -190,37 +220,6 @@ export interface HeaderActions {
 	iconClassName: string;
 	onClick: any;
 	label: string;
-}
-
-export interface GWASDatasetRecord extends BaseRecord {
-	kind: "GWASDataset";
-	attributes: GWASDatasetRecordAttributes;
-	urlName: "gwas_summary";
-	tables: { [key: string]: any };
-}
-
-export interface GWASDatasetRecordAttributes {
-	name: string;
-	description: string;
-	attribution: string;
-	category: string;
-	is_adsp: string;
-	accession_link: string;
-	search_link: string;
-}
-
-export interface NIAGADSDatasetRecord extends BaseRecord {
-	kind: "NIAGADSDataset";
-	attributes: NIAGADSDatasetRecordAttributes;
-	urlName: "gwas_summary";
-	tables: { [key: string]: any };
-}
-
-export interface NIAGADSDatasetRecordAttributes {
-	name: string;
-	description: string;
-	external_link: string;
-	is_adsp: string;
 }
 
 //typeguards
