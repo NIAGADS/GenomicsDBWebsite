@@ -102,7 +102,7 @@ const NiagadsTableContainer: React.ComponentClass<
   };
 
   render = () => {
-    const { record, recordClass, table, value } = this.props,
+    const { table, value } = this.props,
       { attributes } = table;
     return (
       <div className="record-table-container">
@@ -112,7 +112,7 @@ const NiagadsTableContainer: React.ComponentClass<
               <div className="main-controls">
                 {this.state.tableInstance && (
                   <CSVLink
-                    className="btn"
+                    className="btn control"
                     filename={`${kebabCase(table.displayName)}.csv`}
                     onClick={this._loadCsvData}
                     data={this.state.csvData}
@@ -129,19 +129,21 @@ const NiagadsTableContainer: React.ComponentClass<
                     selectClass={table.name + "_chart"}
                   />
                 )}
-                <div className="filters">
+                <div className="filters control">
                   {this.getHasPValFilter(table) && (
                     <a
                       onClick={this.togglePValueChartVisibility}
-                      className="btn"
+                      className="btn filter"
                     >
-                      P-value Filter
+                      {this.state.pValueFilterVisible
+                        ? "Close P-value Filter"
+                        : "Open P-value Filter"}
                     </a>
                   )}
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="filter"
+                    className="form-control filter"
+                    placeholder="text filter"
                     value={this.state.filterVal}
                     onChange={this.handleSearchFilterChange}
                   />

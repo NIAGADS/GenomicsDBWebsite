@@ -127,10 +127,13 @@ export const isJson = (item: any) => {
   //not reallly a json test, more like a check to see if the backend is sending us something we assume we can treat as json
   if (!item) return false;
   if (!isString(item)) return false;
-  try {
-    JSON.parse(item);
-  } catch (e) {
-    return false;
+  if (item.startsWith("[") || item.startsWith("[{") || item.startsWith("{")) {
+    try {
+      JSON.parse(item);
+      return true;
+    } catch ($e) {
+      return false;
+    }
   }
-  return true;
+  return false;
 };

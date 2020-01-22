@@ -80,7 +80,7 @@ const PvalFilter = class extends React.Component<
   render = () => {
     const { values, onChange } = this.props;
     return (
-      <div className="p-val-filter-chart">
+      <div className="p-val-filter-chart control">
         <svg className={this.props.selectClass}></svg>
       </div>
     );

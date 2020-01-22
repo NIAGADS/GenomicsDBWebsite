@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 //@ts-ignore
 import SelectTableHOC, {
   SelectTableAdditionalProps
@@ -45,7 +45,6 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
   table,
   value
 }) => {
-  
   const instance = useRef<Instance>();
 
   useEffect(() => {
@@ -96,7 +95,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                         );
                       }
                     }
-                  : _buildColumn(attribute, filterType);
+                  : _buildColumn(attribute, attribute.isSortable,/* columnWidth or maxColumnWidth, must be under 100px ,*/ filterType);
               }
             )
             .sort((c1, c2) => _indexSort(c1, c2, attributes));
@@ -119,7 +118,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                   const attribute = row.attributes.find(
                     (attr: rt.TableAttribute) => attr.name === k
                   );
-                  return _buildColumn(attribute);
+                  return _buildColumn(attribute, false);
                 }
               )
               .sort((col1, col2) => _indexSort(col1, col2, row.attributes));
@@ -315,11 +314,12 @@ const resolveData = (
   });
 };
 
-const _buildColumn = (attribute: rt.TableAttribute, filterType?: any) => ({
+const _buildColumn = (attribute: rt.TableAttribute, sortable: boolean, filterType?: any) => ({
   Header: _buildHeader(attribute),
-  sortable: false,
+  sortable,
   accessor: resolveAccessor(attribute.name, attribute),
   id: attribute.name,
+  maxWidth: 100,
   filterMethod: filterType ? filterType : (filter: any, rows: any) => rows
 });
 
