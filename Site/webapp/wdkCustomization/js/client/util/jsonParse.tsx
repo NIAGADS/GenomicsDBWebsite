@@ -18,9 +18,15 @@ export const resolveJsonInput = (input: string): React.ReactElement<any> => {
   return resolveObjectInput(JSON.parse(input));
 };
 
-export const resolveObjectInput = (obj: {
-  [key: string]: any;
-}): React.ReactElement<any> | React.ReactElement<any[]> => {
+export const resolveObjectInput = (
+  obj:
+    | {
+        [key: string]: any;
+      }
+    | {
+        [key: string]: any;
+      }[]
+): React.ReactElement<any> | React.ReactElement<any[]> => {
   if (!obj) return null;
 
   if (Array.isArray(obj)) {
@@ -28,9 +34,9 @@ export const resolveObjectInput = (obj: {
       <>
         {obj
           .map(item => resolveObjectInput(item))
-          .reduce((acc, curr) => {
+          .reduce((acc, curr, i) => {
             return acc.length
-              ? [...acc, <span>&nbsp;//&nbsp;</span>, curr]
+              ? [...acc, <span key={i}>&nbsp;//&nbsp;</span>, curr]
               : [curr];
           }, [])}
       </>
@@ -51,7 +57,9 @@ export const resolveObjectInput = (obj: {
     case "link":
       //probably need to designate outlinks and routelinks formally, but for now using a regex
       const el = /^http/.test(obj.url) ? (
-        <a href={obj.url}>{obj.value}</a>
+        <a key={obj.url} href={obj.url}>
+          {obj.value}
+        </a>
       ) : (
         <Link key={obj.url} to={obj.url}>
           {obj.value}
@@ -101,7 +109,13 @@ export const withTooltip = (
   const className = classes ? classes : ""; //removing wdk-tooltip class, caller will need to be explicit!
   if (content) {
     return (
-      <Tooltip content={safeHtml(content)} showDelay={0}>
+      <Tooltip
+        key={Math.random()
+          .toString(36)
+          .slice(2)}
+        content={safeHtml(content)}
+        showDelay={0}
+      >
         <span className={className}>{element}</span>
       </Tooltip>
     );
