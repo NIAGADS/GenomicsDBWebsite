@@ -44,7 +44,6 @@ GeneRecordClasses.GeneRecordClass.jbrowse_source_url	GenomicSequenceLocationCate
 GeneRecordClasses.GeneRecordClass.dynspan_link	http://edamontology.org/topic_1775	Function analysis	GeneRecordClasses.GeneRecordClass	attribute	dynspan_link				gene			record-internal	
 GeneRecordClasses.GeneRecordClass.span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	span				gene		results	record-internal	download
 													
-GeneRecordClasses.GeneRecordClass.transcripts	http://edamontology.org/topic_0114	Gene Structure	GeneRecordClasses.GeneRecordClass	table	transcripts			not displayed on production	gene			record	download
 GeneRecordClasses.GeneRecordClass.ad_skat_adsp	http://edamontology.org/topic_0199	Genetic variation	GeneRecordClasses.GeneRecordClass	table	ad_skat_adsp			ADSP Case/Control Genetic evidenc	gene			record	download
 GeneRecordClasses.GeneRecordClass.ad_variants_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	table	ad_variants_from_gwas				gene	3		record	download
 GeneRecordClasses.GeneRecordClass.other_variants_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	table	other_variants_from_gwas				gene	2		record	download
@@ -56,7 +55,7 @@ GeneRecordClasses.GeneRecordClass.record_link_outs	http://edamontology.org/topic
 GeneRecordClasses.GeneRecordClass.sequence_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	sequence_link_outs				gene	4		record	download
 GeneRecordClasses.GeneRecordClass.protein_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	protein_link_outs				gene	3		record	download
 GeneRecordClasses.GeneRecordClass.clinical_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	clinical_link_outs				gene	2		record	download
-													
+GeneRecordClasses.GeneRecordClass.transcript_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	transcript_link_outs				gene	5		record	download
 													
 													
 ## Variant Questions  ##													

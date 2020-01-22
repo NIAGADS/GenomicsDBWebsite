@@ -90,33 +90,41 @@
 			<table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">
 				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+					<propertyList name="type">
+					<value>default</value>
+				</propertyList>
 			</table>
 
 			<table name="sequence_link_outs" displayName="Nucleotide Sequences" inReportMaker="false" queryRef="GeneTables.DbRefs_NSeq">
 				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+					<propertyList name="type">
+					<value>default</value>
+				</propertyList>
 			</table>
 
 			<table name="protein_link_outs" displayName="Proteins" inReportMaker="false" queryRef="GeneTables.DbRefs_Proteins">
 				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+					<propertyList name="type">
+					<value>default</value>
+				</propertyList>
 			</table>
 
 			<table name="clinical_link_outs" displayName="Clinical" inReportMaker="false" queryRef="GeneTables.DbRefs_Clinical">
 				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+					<propertyList name="type">
+					<value>default</value>
+				</propertyList>
 			</table>
 
-			<!-- =============================================================== -->
-			<!-- Gene Structure -->
-			<!-- =============================================================== -->
-
-			<table name="transcripts" displayName="Transcripts" queryRef="GeneTables.Transcripts">
+			<table name="transcript_link_outs" displayName="Transcripts" queryRef="GeneTables.Transcripts">
 				<columnAttribute name="transcript_name" displayName="Transcript" type="string" />
 				<columnAttribute name="transcript_accession_link" displayName="Ensembl Transcript" type="json_link" />
 				<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
 				<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
-				<columnAttribute name="num_variants" displayName="No. Variants" help="click to retrieve list of colocated variants in your workspace" type="json_link" />
+				<columnAttribute name="num_variants" displayName="No. Variants" help="click to retrieve list of NIAGADS annotated variants contained within this transcript" type="json_link" />
 				<propertyList name="type">
 					<value>default</value>
 				</propertyList>
