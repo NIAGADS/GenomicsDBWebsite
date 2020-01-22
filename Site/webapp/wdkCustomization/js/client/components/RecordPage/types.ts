@@ -16,6 +16,7 @@ export interface BaseRecord {
 }
 
 export interface GeneRecord extends BaseRecord {
+	kind: "gene";
 	attributes: GeneRecordAttributes;
 	categories: any[];
 	description: string;
@@ -125,6 +126,7 @@ export interface NiagadsTableStateProps {
 }
 
 export interface VariantRecord extends BaseRecord {
+	kind: "variant";
 	attributes: VariantRecordAttributes;
 	recordClassName: string;
 	urlName: "variant";
@@ -191,8 +193,10 @@ export interface HeaderActions {
 }
 
 export interface GWASDatasetRecord extends BaseRecord {
+	kind: "GWASDataset";
 	attributes: GWASDatasetRecordAttributes;
 	urlName: "gwas_summary";
+	tables: { [key: string]: any };
 }
 
 export interface GWASDatasetRecordAttributes {
@@ -206,8 +210,10 @@ export interface GWASDatasetRecordAttributes {
 }
 
 export interface NIAGADSDatasetRecord extends BaseRecord {
+	kind: "NIAGADSDataset";
 	attributes: NIAGADSDatasetRecordAttributes;
 	urlName: "gwas_summary";
+	tables: { [key: string]: any };
 }
 
 export interface NIAGADSDatasetRecordAttributes {
