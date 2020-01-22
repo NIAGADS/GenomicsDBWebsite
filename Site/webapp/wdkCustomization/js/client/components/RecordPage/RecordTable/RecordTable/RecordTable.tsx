@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 //@ts-ignore
 import SelectTableHOC, {
   SelectTableAdditionalProps
 } from "react-table/lib/hoc/selectTable";
 import ReactTable, {
   AccessorFunction,
+  Instance,
   RowInfo,
   Filter,
   Column,
@@ -22,7 +23,6 @@ import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
 import { toString } from "lodash";
-import { attr } from "highcharts";
 
 const SelectTable = SelectTableHOC(ReactTable);
 
@@ -31,136 +31,141 @@ interface NiagadsRecordTable {
   value: { [key: string]: any }[];
   attributes: rt.TableAttribute[];
   filtered: Filter[];
-  onLoad: any;
+  onLoad: (ref: React.MutableRefObject<Instance>) => void;
   onSelectionToggled: any;
   isSelected: any;
 }
 
-const NiagadsRecordTable: React.ComponentClass<NiagadsRecordTable> = class extends React.Component<
-  NiagadsRecordTable
-> {
-  private instance: any;
-  componentDidMount = () => {
-    this.props.onLoad(this.props.onLoad(this.instance));
+const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
+  attributes,
+  filtered,
+  isSelected,
+  onLoad,
+  onSelectionToggled,
+  table,
+  value
+}) => {
+  
+  const instance = useRef<Instance>();
+
+  useEffect(() => {
+    onLoad(instance);
+  }, []);
+
+  const subCompKey = table.properties.subtable_field
+      ? table.properties.subtable_field[0]
+      : null,
+    columns: Column[] =
+      value.length === 0
+        ? []
+        : Object.keys(value[0])
+            .filter(k => {
+              const attribute: rt.TableAttribute = attributes.find(
+                item => item.name === k
+              );
+              return attribute && attribute.isDisplayable;
+            })
+            .map(
+              (k): Column => {
+                const attribute = attributes.find(
+                    attribute => attribute.name === k
+                  ),
+                  filterType =
+                    table.properties.type[0] === "chart_filter" &&
+                    table.properties.filter_field[0] === attribute.name
+                      ? pValFilter
+                      : (filter: any, rows: any) => rows;
+                return k === subCompKey
+                  ? {
+                      expander: true,
+                      Header: () => <span>{attribute.displayName}</span>,
+                      id: attribute.name,
+                      sortable: false,
+                      Expander: ({ original, isExpanded }) => {
+                        const iconClass = isExpanded
+                          ? "fa fa-caret-up"
+                          : "fa fa-caret-down";
+                        return (
+                          <span>
+                            <a className="action-element">
+                              {original[k].value}
+                            </a>
+                            &nbsp;
+                            <span className={iconClass} />
+                          </span>
+                        );
+                      }
+                    }
+                  : _buildColumn(attribute, filterType);
+              }
+            )
+            .sort((c1, c2) => _indexSort(c1, c2, attributes));
+
+  columns.push(hiddenFilterCol);
+
+  //for selectTable
+  const _setKeyCol = (values: { [key: string]: any }[]) => {
+    return values.map(row => Object.assign(row, { id: uniqueId() }));
   };
-  //todo: break up!
-  render = () => {
-    const { table, value, attributes, onLoad, filtered } = this.props,
-      subCompKey = table.properties.subtable_field
-        ? table.properties.subtable_field[0]
-        : null,
-      columns: Column[] =
-        value.length === 0
-          ? []
-          : Object.keys(value[0])
-              .filter(k => {
-                const attribute: rt.TableAttribute = attributes.find(
-                  item => item.name === k
-                );
-                return attribute && attribute.isDisplayable;
-              })
+
+  //todo: merge into header code above once stable, so we can call the same function
+  const subComponent = subCompKey
+    ? {
+        SubComponent: (rowInfo: RowInfo) => {
+          const row = rowInfo.original[subCompKey],
+            columns = Object.keys(row.data[0])
               .map(
                 (k): Column => {
-                  const attribute = attributes.find(
-                      attribute => attribute.name === k
-                    ),
-                    filterType =
-                      table.properties.type[0] === "chart_filter" &&
-                      table.properties.filter_field[0] === attribute.name
-                        ? pValFilter
-                        : (filter: any, rows: any) => rows;
-                  return k === subCompKey
-                    ? {
-                        expander: true,
-                        Header: () => <span>{attribute.displayName}</span>,
-                        id: attribute.name,
-                        sortable: false,
-                        Expander: ({ original, isExpanded }) => {
-                          const iconClass = isExpanded
-                            ? "fa fa-caret-up"
-                            : "fa fa-caret-down";
-                          return (
-                            <span>
-                              <a className="action-element">
-                                {original[k].value}
-                              </a>
-                              &nbsp;
-                              <span className={iconClass} />
-                            </span>
-                          );
-                        }
-                      }
-                    : _buildColumn(attribute, filterType);
+                  const attribute = row.attributes.find(
+                    (attr: rt.TableAttribute) => attr.name === k
+                  );
+                  return _buildColumn(attribute);
                 }
               )
-              .sort((c1, c2) => _indexSort(c1, c2, attributes));
-
-    columns.push(hiddenFilterCol);
-
-    //for selectTable
-    const _setKeyCol = (values: { [key: string]: any }[]) => {
-      return values.map(row => Object.assign(row, { id: uniqueId() }));
-    };
-
-    //todo: merge into header code above once stable, so we can call the same function
-    const subComponent = subCompKey
-      ? {
-          SubComponent: (rowInfo: RowInfo) => {
-            const row = rowInfo.original[subCompKey],
-              columns = Object.keys(row.data[0])
-                .map(
-                  (k): Column => {
-                    const attribute = row.attributes.find(
-                      (attr: rt.TableAttribute) => attr.name === k
-                    );
-                    return _buildColumn(attribute);
-                  }
-                )
-                .sort((col1, col2) => _indexSort(col1, col2, row.attributes));
-            return (
-              <ReactTable
-                columns={columns}
-                data={row.data}
-                minRows={0}
-                showPagination={false}
-                className="sub-table"
-                resolveData={resolveData}
-              />
-            );
-          }
+              .sort((col1, col2) => _indexSort(col1, col2, row.attributes));
+          return (
+            <ReactTable
+              columns={columns}
+              data={row.data}
+              minRows={0}
+              showPagination={false}
+              className="sub-table"
+              resolveData={resolveData}
+            />
+          );
         }
-      : {};
+      }
+    : {};
 
-    const tableProps = {
-      columns,
-      data: _setKeyCol(value),
-      minRows: 0,
-      filtered,
-      defaultSortMethod: NiagadsTableSort,
-      onLoad,
-      showPagination: value.length > 20,
-      resizable: true,
-      expanderDefaults: { width: 200 },
-      resolveData,
-      PaginationComponent,
-      ...subComponent
-    };
-
-    const selectTableProps = {
-      isSelected: this.props.isSelected,
-      toggleSelection: this.props.onSelectionToggled
-    };
-
-    return (
-      <div className="record-table">
-        {true ? (
-          <ReactTable {...tableProps} ref={(r: any) => (this.instance = r)} />
-        ) : (
-          <NiagadsSelectTable {...tableProps} {...selectTableProps} />
-        )}
-      </div>
-    );
+  const tableProps = {
+    columns,
+    data: _setKeyCol(value),
+    minRows: 0,
+    filtered,
+    defaultSortMethod: NiagadsTableSort,
+    onLoad,
+    showPagination: value.length > 20,
+    resizable: true,
+    expanderDefaults: { width: 200 },
+    resolveData,
+    PaginationComponent,
+    ...subComponent
   };
+
+  const selectTableProps = {
+    isSelected: isSelected,
+    toggleSelection: onSelectionToggled
+  };
+
+  return (
+    <div className="record-table">
+      {true ? (
+        <ReactTable {...tableProps} ref={instance} />
+      ) : (
+        <NiagadsSelectTable {...tableProps} {...selectTableProps} />
+      )}
+    </div>
+  );
 };
 
 interface NiagadsSelectTable extends Partial<TableProps> {

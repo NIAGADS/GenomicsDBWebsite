@@ -13,6 +13,7 @@ import {
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
+import { Instance } from "react-table";
 
 const INITIAL_STATE: rt.NiagadsTableStateProps = {
   pValueFilterVisible: false,
@@ -63,9 +64,9 @@ const NiagadsTableContainer: React.ComponentClass<
 
   isSelected = (key: string) => this._getBasketIndex(key) > -1;
 
-  onTableLoaded = (ref: any) => {
-    if (!this.state.tableInstance && ref) {
-      this.setState({ tableInstance: ref });
+  onTableLoaded = (ref: React.MutableRefObject<Instance>) => {
+    if (!this.state.tableInstance && ref.current) {
+      this.setState({ tableInstance: ref.current });
     }
   };
   toggleSelection = (
