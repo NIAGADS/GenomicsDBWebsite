@@ -11,7 +11,6 @@ import {
   getDisplayName
 } from "wdk-client/Utils/CategoryUtils";
 import * as GR from "../types";
-import { resolveJsonInput } from "../../../util/jsonParse";
 import {
   IdeogramPlot,
   HighchartPlot,
@@ -24,21 +23,24 @@ import {
   GeneGeneticVariationSummary,
   VariantLzPlot
 } from "./SectionSummaries";
-import LzPlot, { LzGeneProps } from "./Visualizations/LocusZoom/LZPlot";
 
 interface RecordMainCategorySection {
   category: any;
   onSectionToggle: { (sectionName: string, isVisible: boolean): any };
   isCollapsed: boolean;
   depth: number;
-  record: GR.GeneRecord | GR.VariantRecord | GR.GWASDatasetRecord | GR.NIAGADSDatasetRecord;
+  record:
+    | GR.GeneRecord
+    | GR.VariantRecord
+    | GR.GWASDatasetRecord
+    | GR.NIAGADSDatasetRecord;
   recordClass: any;
   enumeration: any;
 }
 
 export default class NiagadsRecordMainCategorySection extends React.PureComponent<
   RecordMainCategorySection
-  > {
+> {
   constructor(props: RecordMainCategorySection) {
     super(props);
     this.toggleCollapse = this.toggleCollapse.bind(this);
@@ -78,32 +80,32 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
       case "table":
         return category.wdkReference.name.includes("highchart") &&
           !isEmpty((record.tables as any)[category.wdkReference.name]) ? (
-            <CollapsibleSection
-              id={category.wdkReference.name}
-              className={"wdk-RecordTableContainer"}
-              headerComponent="h3"
-              headerContent={
-                <div className="d-flex justify-between align-items-baseline">
-                  <p className="mb-0">{category.wdkReference.displayName}</p>
-                  {category.wdkReference.description && (
-                    <Tooltip
-                      content={safeHtml(category.wdkReference.description)}
-                      showDelay={0}
-                      position={{
-                        my: "top right",
-                        at: "bottom left"
-                      }}
-                    >
-                      <span className="fa fa-question-circle-o table-help" />
-                    </Tooltip>
-                  )}
-                </div>
-              }
-              isCollapsed={isCollapsed}
-              onCollapsedChange={this.toggleCollapse}
-            >
-              {category.wdkReference.name.includes("highchart_list")
-                ? (record.tables as any)[category.wdkReference.name] && (
+          <CollapsibleSection
+            id={category.wdkReference.name}
+            className={"wdk-RecordTableContainer"}
+            headerComponent="h3"
+            headerContent={
+              <div className="d-flex justify-between align-items-baseline">
+                <p className="mb-0">{category.wdkReference.displayName}</p>
+                {category.wdkReference.description && (
+                  <Tooltip
+                    content={safeHtml(category.wdkReference.description)}
+                    showDelay={0}
+                    position={{
+                      my: "top right",
+                      at: "bottom left"
+                    }}
+                  >
+                    <span className="fa fa-question-circle-o table-help" />
+                  </Tooltip>
+                )}
+              </div>
+            }
+            isCollapsed={isCollapsed}
+            onCollapsedChange={this.toggleCollapse}
+          >
+            {category.wdkReference.name.includes("highchart_list")
+              ? (record.tables as any)[category.wdkReference.name] && (
                   <HighchartPlotList
                     attribute={category.wdkReference.name}
                     charts={
@@ -112,7 +114,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                     }
                   />
                 )
-                : (record.tables as any)[category.wdkReference.name] && (
+              : (record.tables as any)[category.wdkReference.name] && (
                   <HighchartPlot
                     multiPlot={false}
                     chart={JSON.parse(
@@ -121,85 +123,86 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                     )}
                   />
                 )}
-            </CollapsibleSection>
-          ) : category.wdkReference.name == "locuszoom_gwas_datasets"  && record.kind === "variant" ? (
-            <CollapsibleSection
-              id={category.wdkReference.name}
-              className={"wdk-RecordTableContainer"}
-              headerComponent="h3"
-              headerContent={category.wdkReference.displayName}
-              isCollapsed={isCollapsed}
-              onCollapsedChange={this.toggleCollapse}
-            >
-              {(record.tables as any)[category.wdkReference.name] && (
-                <VariantLzPlot
-                  selectClass={"lz-plot"}
-                  chromosome={record.attributes.chromosome}
-                  populationChoices={[
-                    { EUR: "EUR: European" },
-                    { AFR: "AFR: African/African American" },
-                    { AMR: "AMR: Ad Mixed American" },
-                    { EAS: "EAS: East Asian" },
-                    { SAS: "SAS: South Asian" }
-                  ]}
-                  variant={`${record.attributes.metaseq_id}_${record.attributes.ref_snp_id}`}
-                  location={+record.attributes.position}
-                  datasetChoices={JSON.parse(
-                    (record.tables as any)[category.wdkReference.name][0]
-                      .dataset_list
-                  )}
-                />
-              )}
-            </CollapsibleSection>
-          ) : category.wdkReference.name.includes("ideogram") &&
-            !isEmpty((record.tables as any)[category.wdkReference.name]) ? (
-                <CollapsibleSection
-                  id={category.wdkReference.name}
-                  className={"wdk-RecordTableContainer"}
-                  headerComponent="h3"
-                  headerContent={
-                    <div className="d-flex justify-between align-items-baseline">
-                      <p>{category.wdkReference.displayName}</p>
-                      {category.wdkReference.description && (
-                        <Tooltip
-                          content={safeHtml(category.wdkReference.description)}
-                          showDelay={0}
-                          position={{
-                            my: "top right",
-                            at: "bottom left"
-                          }}
-                        >
-                          <span className="fa fa-question-circle-o table-help" />
-                        </Tooltip>
-                      )}
-                    </div>
-                  }
-                  isCollapsed={isCollapsed}
-                  onCollapsedChange={this.toggleCollapse}
-                >
-                  {(record.tables as any)[category.wdkReference.name] && (
-                    <IdeogramPlot
-                      container={`${category.wdkReference.name}_plot`}
-                      tracks={JSON.parse(
-                        (record.tables as any)[category.wdkReference.name][0]
-                          .annotation_tracks
-                      )}
-                      data={JSON.parse(
-                        (record.tables as any)[category.wdkReference.name][0].data
-                      )}
-                    />
-                  )}
-                </CollapsibleSection>
-              ) : (
-                <RecordTableSection
-                  table={category.wdkReference}
-                  ontologyProperties={category.properties}
-                  record={record}
-                  recordClass={recordClass}
-                  isCollapsed={isCollapsed}
-                  onCollapsedChange={this.toggleCollapse}
-                />
-              );
+          </CollapsibleSection>
+        ) : category.wdkReference.name == "locuszoom_gwas_datasets" &&
+          GR.isVariantRecord(record) ? (
+          <CollapsibleSection
+            id={category.wdkReference.name}
+            className={"wdk-RecordTableContainer"}
+            headerComponent="h3"
+            headerContent={category.wdkReference.displayName}
+            isCollapsed={isCollapsed}
+            onCollapsedChange={this.toggleCollapse}
+          >
+            {(record.tables as any)[category.wdkReference.name] && (
+              <VariantLzPlot
+                selectClass={"lz-plot"}
+                chromosome={record.attributes.chromosome}
+                populationChoices={[
+                  { EUR: "EUR: European" },
+                  { AFR: "AFR: African/African American" },
+                  { AMR: "AMR: Ad Mixed American" },
+                  { EAS: "EAS: East Asian" },
+                  { SAS: "SAS: South Asian" }
+                ]}
+                variant={`${record.attributes.metaseq_id}_${record.attributes.ref_snp_id}`}
+                location={+record.attributes.position}
+                datasetChoices={JSON.parse(
+                  (record.tables as any)[category.wdkReference.name][0]
+                    .dataset_list
+                )}
+              />
+            )}
+          </CollapsibleSection>
+        ) : category.wdkReference.name.includes("ideogram") &&
+          !isEmpty((record.tables as any)[category.wdkReference.name]) ? (
+          <CollapsibleSection
+            id={category.wdkReference.name}
+            className={"wdk-RecordTableContainer"}
+            headerComponent="h3"
+            headerContent={
+              <div className="d-flex justify-between align-items-baseline">
+                <p>{category.wdkReference.displayName}</p>
+                {category.wdkReference.description && (
+                  <Tooltip
+                    content={safeHtml(category.wdkReference.description)}
+                    showDelay={0}
+                    position={{
+                      my: "top right",
+                      at: "bottom left"
+                    }}
+                  >
+                    <span className="fa fa-question-circle-o table-help" />
+                  </Tooltip>
+                )}
+              </div>
+            }
+            isCollapsed={isCollapsed}
+            onCollapsedChange={this.toggleCollapse}
+          >
+            {(record.tables as any)[category.wdkReference.name] && (
+              <IdeogramPlot
+                container={`${category.wdkReference.name}_plot`}
+                tracks={JSON.parse(
+                  (record.tables as any)[category.wdkReference.name][0]
+                    .annotation_tracks
+                )}
+                data={JSON.parse(
+                  (record.tables as any)[category.wdkReference.name][0].data
+                )}
+              />
+            )}
+          </CollapsibleSection>
+        ) : (
+          <RecordTableSection
+            table={category.wdkReference}
+            ontologyProperties={category.properties}
+            record={record}
+            recordClass={recordClass}
+            isCollapsed={isCollapsed}
+            onCollapsedChange={this.toggleCollapse}
+          />
+        );
 
       default: {
         const id = getId(category),
@@ -249,7 +252,11 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
 }
 
 interface SectionSummaryText {
-  record: GR.GeneRecord | GR.VariantRecord | GR.GWASDatasetRecord | GR.NIAGADSDatasetRecord;
+  record:
+    | GR.GeneRecord
+    | GR.VariantRecord
+    | GR.GWASDatasetRecord
+    | GR.NIAGADSDatasetRecord;
   categoryId: string;
 }
 
