@@ -13,9 +13,10 @@ import ReactTable, {
 import { isString, isObject, findIndex, uniqueId, forIn } from "lodash";
 import { scientificToDecimal } from "../../../../util/util";
 import {
-  withTooltip,
   isJson,
-  resolveJsonInput
+  resolveJsonInput,
+  resolveObjectInput,
+  withTooltip
 } from "../../../../util/jsonParse";
 import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
@@ -315,13 +316,12 @@ const resolveAccessor = (
   value: any,
   attribute: rt.TableAttribute
 ): AccessorFunction => {
-  const { type } = attribute;
   switch (attribute.type) {
     case "string":
-      //this !could! be json -->
       return (row: { [key: string]: any }) => {
-        if (isObject(row[key])) return resolveJsonInput(row[key]);
-        return row[key];
+        if (isObject(row[key])) {
+          return resolveObjectInput(row[key]);
+        } else return row[key];
       };
       break;
     case "integer":
@@ -340,7 +340,8 @@ const resolveAccessor = (
     case "json_text":
     case "json_text_or_link":
     case "json_dictionary":
-      return (row: { [key: string]: any }) => resolveJsonInput(row[key]);
+      //idea is that resolveData function has resolved all json...
+      return (row: { [key: string]: any }) => resolveObjectInput(row[key]);
       break;
   }
   throw new Error(
