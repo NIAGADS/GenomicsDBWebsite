@@ -62,7 +62,7 @@
 		 SELECT ga.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 a.external_id,
-		 string_agg('<a href="' || drl.url || a.external_id || '" class="wdk-toolitp" title="' || drl.resource_full_name || '">' || drl.resource_abbrev || '</a>', ' // ') AS external_links
+		 jsonb_agg(build_link_attribute(drl.resource_abbrev, drl.url, a.external_id, drl.resource_full_name)) AS external_links
 		 FROM
 		 CBIL.DbRefLink drl,
 		 CBIL.GeneAttributes ga,
