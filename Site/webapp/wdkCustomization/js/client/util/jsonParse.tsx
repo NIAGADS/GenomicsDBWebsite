@@ -2,6 +2,7 @@ import React from 'react';
 import { Tooltip, Link } from 'wdk-client/Components';
 import { isString, isPlainObject, isNull } from 'lodash';
 import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
+import { json } from 'd3';
 
 export interface LinkType {
 	url: string,
@@ -66,5 +67,10 @@ export const isJson = (item: any) => {
 	//not reallly a json test, more like a check to see if the backend is sending us something we assume we can treat as json
 	if (!item) return false;
 	if (!isString(item)) return false;
-	return /{"\w+": .+/.test(item);
+	try{
+		JSON.parse(item);
+	} catch (e){
+		return false;
+	}
+	return true;
 }
