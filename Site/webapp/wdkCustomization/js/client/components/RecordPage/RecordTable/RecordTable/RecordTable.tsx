@@ -14,7 +14,6 @@ import { isString, isObject, findIndex, uniqueId, forIn } from "lodash";
 import { scientificToDecimal } from "../../../../util/util";
 import {
   isJson,
-  resolveJsonInput,
   resolveObjectInput,
   withTooltip
 } from "../../../../util/jsonParse";
@@ -23,6 +22,7 @@ import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
 import { toString } from "lodash";
+import { attr } from "highcharts";
 
 const SelectTable = SelectTableHOC(ReactTable);
 
@@ -52,15 +52,15 @@ const NiagadsRecordTable: React.ComponentClass<NiagadsRecordTable> = class exten
       columns: Column[] =
         value.length === 0
           ? []
-          : Object.entries(value[0])
-              .filter(([k, v]) => {
+          : Object.keys(value[0])
+              .filter(k => {
                 const attribute: rt.TableAttribute = attributes.find(
                   item => item.name === k
                 );
                 return attribute && attribute.isDisplayable;
               })
               .map(
-                ([k, v]): Column => {
+                (k): Column => {
                   const attribute = attributes.find(
                       attribute => attribute.name === k
                     ),
@@ -90,37 +90,10 @@ const NiagadsRecordTable: React.ComponentClass<NiagadsRecordTable> = class exten
                           );
                         }
                       }
-                    : {
-                        Header: (): any => (
-                          <span className="header-container">
-                            <span className="header-left-side">
-                              <span className="header-display-name">
-                                {attribute.displayName}
-                              </span>
-                              {attribute.help
-                                ? withTooltip(
-                                    <span className="header-help fa fa-question-circle-o" />,
-                                    attribute.help,
-                                    "header-help"
-                                  )
-                                : null}
-                            </span>
-                            {attribute.isSortable && <SortIconGroup />}
-                          </span>
-                        ),
-                        sortable: attribute.isSortable,
-                        accessor: resolveAccessor(attribute.name, v, attribute),
-                        id: attribute.name,
-                        //todo: check table.propeties.type[0] and table.properties.filter_field[0]
-                        filterMethod: filterType
-                      };
+                    : _buildColumn(attribute, filterType);
                 }
               )
-              .sort((col1, col2) => {
-                const idx1 = findIndex(attributes, att => att.name === col1.id),
-                  idx2 = findIndex(attributes, att => att.name === col2.id);
-                return idx2 > idx1 ? -1 : 1;
-              });
+              .sort((c1, c2) => _indexSort(c1, c2, attributes));
 
     columns.push(hiddenFilterCol);
 
@@ -134,42 +107,16 @@ const NiagadsRecordTable: React.ComponentClass<NiagadsRecordTable> = class exten
       ? {
           SubComponent: (rowInfo: RowInfo) => {
             const row = rowInfo.original[subCompKey],
-              columns = Object.entries(row.data[0])
+              columns = Object.keys(row.data[0])
                 .map(
-                  ([k, v]): Column => {
+                  (k): Column => {
                     const attribute = row.attributes.find(
                       (attr: rt.TableAttribute) => attr.name === k
                     );
-                    return {
-                      Header: () => (
-                        <span className="header-display-name">
-                          {attribute.displayName}
-                          {attribute.help
-                            ? withTooltip(
-                                <span className="header-help fa fa-question-circle-o" />,
-                                attribute.help,
-                                "header-help"
-                              )
-                            : null}
-                        </span>
-                      ),
-                      sortable: false,
-                      accessor: resolveAccessor(attribute.name, v, attribute),
-                      id: attribute.name
-                    };
+                    return _buildColumn(attribute);
                   }
                 )
-                .sort((col1, col2) => {
-                  const idx1 = findIndex(
-                      row.attributes,
-                      (att: rt.TableAttribute) => att.name === col1.id
-                    ),
-                    idx2 = findIndex(
-                      row.attributes,
-                      (att: rt.TableAttribute) => att.name === col2.id
-                    );
-                  return idx2 > idx1 ? -1 : 1;
-                });
+                .sort((col1, col2) => _indexSort(col1, col2, row.attributes));
             return (
               <ReactTable
                 columns={columns}
@@ -296,7 +243,7 @@ const hiddenFilterCol = {
       const rowString = Object.entries(row)
         //filter out falsey vals and internal react-table properties marked by leading _
         .filter(([k, v]) => !(!v || /^_.+/.test(k)))
-        .map(([k, v]: any) => extractDisplayText(v))
+        .map(([_, v]: any) => extractDisplayText(v))
         .join("");
       return re.test(rowString);
     });
@@ -313,7 +260,6 @@ const pValFilter = (filter: Filter, row: any) => {
 
 const resolveAccessor = (
   key: string,
-  value: any,
   attribute: rt.TableAttribute
 ): AccessorFunction => {
   switch (attribute.type) {
@@ -340,7 +286,7 @@ const resolveAccessor = (
     case "json_text":
     case "json_text_or_link":
     case "json_dictionary":
-      //idea is that resolveData function has resolved all json...
+      //idea is that resolveData() has already parsed all json, here we just resolve the component through the accessor
       return (row: { [key: string]: any }) => resolveObjectInput(row[key]);
       break;
   }
@@ -362,6 +308,44 @@ const resolveData = (
       }
     );
   });
+};
+
+const _buildColumn = (attribute: rt.TableAttribute, filterType?: any) => ({
+  Header: _buildHeader(attribute),
+  sortable: false,
+  accessor: resolveAccessor(attribute.name, attribute),
+  id: attribute.name,
+  filterMethod: filterType ? filterType : (filter: any, rows: any) => rows
+});
+
+const _buildHeader = (attribute: rt.TableAttribute) => {
+  return (
+    <>
+      <span className="header-container">
+        <span className="header-left-side">
+          <span className="header-display-name">{attribute.displayName}</span>
+          {attribute.help
+            ? withTooltip(
+                <span className="header-help fa fa-question-circle-o" />,
+                attribute.help,
+                "header-help"
+              )
+            : null}
+        </span>
+        {attribute.isSortable && <SortIconGroup />}
+      </span>
+    </>
+  );
+};
+
+const _indexSort = (
+  col1: Column,
+  col2: Column,
+  attributes: rt.TableAttribute[]
+) => {
+  const idx1 = findIndex(attributes, att => att.name === col1.id),
+    idx2 = findIndex(attributes, att => att.name === col2.id);
+  return idx2 > idx1 ? -1 : 1;
 };
 
 export default NiagadsRecordTable;
