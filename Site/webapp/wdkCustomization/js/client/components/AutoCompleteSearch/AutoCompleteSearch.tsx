@@ -171,14 +171,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   });
 
   return (
-    <div
-      className="search-box-with-dropdown"
-      onMouseLeave={() => {
-        setResultsVisible(false);
-        onBlur();
-      }}
-      onMouseEnter={setResultsVisible.bind(null, true)}
-    >
+    <div className="search-box-with-dropdown">
       <span className="text-box-container">
         <input
           ref={container}
@@ -186,6 +179,10 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
           onFocus={() => {
             onFocus();
             setResultsVisible(true);
+          }}
+          onBlur={() => {
+            onBlur();
+            setResultsVisible(false);
           }}
           className="form-control"
           onKeyDown={wrappedKeyDown}
@@ -239,6 +236,10 @@ const ResultRow: React.FC<ResultRow> = ({
 }) => {
   return (
     <Link
+      onMouseDown={e => {
+        //prevent input blur event, which would fire before link click and hide dropdown and prevent navigation 
+        e.preventDefault();
+      }}
       style={{
         width: width + "px",
         backgroundColor: selected ? "#9ca3c1" : "inherit", //$dove-grey
