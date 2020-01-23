@@ -236,8 +236,8 @@ const ResultRow: React.FC<ResultRow> = ({
 }) => {
   return (
     <Link
-      onMouseDown={e => {
-        //prevent input blur event, which would fire before link click and hide dropdown and prevent navigation 
+      onMouseDown={(e: React.MouseEvent<any, MouseEvent>) => {
+        //prevent input blur event, which would fire before link click and hide dropdown and prevent navigation
         e.preventDefault();
       }}
       style={{
