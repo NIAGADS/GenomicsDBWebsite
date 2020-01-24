@@ -405,7 +405,7 @@
 						conseq->>'impact' AS impact,
 						CASE WHEN (conseq->>'strand')::int = 1 THEN '+' ELSE '-' END AS strand,
 						CASE WHEN (conseq->>'canonical')::int = 1 THEN 'Y' ELSE NULL END AS is_canonical_transcript,
-						build_link_attribute(conseq->>'gene_symbol', '../gene/', conseq->>'gene_id', 'view gene details') AS gene_link,
+						build_link_attribute(conseq->>'gene_symbol', '/record/gene/', conseq->>'gene_id', 'view gene details') AS gene_link,
 						build_link_attribute(conseq->>'transcript_id', CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_TRANSCRIPT_URL_GRCh37@' ELSE '@ENSEMBL_TRANSCRIPT_URL_GRCh38@' END, 
 						NULL, 'view transcript details from Ensembl' || CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN ' @PROJECT_ID@ Archive' ELSE '' END) AS transcript_link,
 						build_link_attribute(conseq->>'protein_id', CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_PROTEIN_URL_GRCh37@' ELSE '@ENSEMBL_PROTEIN_URL_GRCh38@' END, 
