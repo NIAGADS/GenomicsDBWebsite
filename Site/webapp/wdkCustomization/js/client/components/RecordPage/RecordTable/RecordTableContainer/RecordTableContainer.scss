@@ -39,6 +39,9 @@
           }
         }
         .control {
+          a {
+            color: black;
+          }
           + .control {
             margin-left: 10px;
           }

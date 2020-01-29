@@ -99,12 +99,12 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
             <div className="main-controls">
               {tableInstance && (
                 <CSVLink
-                  className="btn control"
+                  className="control"
                   filename={`${kebabCase(table.displayName)}.csv`}
                   onClick={_loadCsvData}
                   data={csvData}
                 >
-                  Download (CSV)
+                  <span className="fa fa-2x p-1 fa-download" />
                 </CSVLink>
               )}
               {pValueFilterVisible && (
