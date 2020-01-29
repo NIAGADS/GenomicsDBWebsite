@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as rt from "../../types";
 //@ts-ignore
 import { CSVLink } from "react-csv";
@@ -15,81 +15,69 @@ import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
 import { Instance } from "react-table";
 
-const INITIAL_STATE: rt.NiagadsTableStateProps = {
-  pValueFilterVisible: false,
-  filtered: [{ id: "all", value: "" }],
-  filterVal: "",
-  csvData: "",
-  tableInstance: null,
-  basket: []
-};
+const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
+  const defaultPVal = 8;
 
-const NiagadsTableContainer: React.ComponentClass<
-  rt.IRecordTable,
-  rt.NiagadsTableStateProps
-> = class extends React.Component<rt.IRecordTable, rt.NiagadsTableStateProps> {
-  constructor(props: rt.IRecordTable) {
-    super(props);
-    this.state = this.state = INITIAL_STATE;
-  }
+  const [filtered, setFiltered] = useState([{ id: "all", value: "" as any }]),
+    [tableInstance, setTableInstance] = useState<Instance>(),
+    [filterVal, setFilterVal] = useState(""),
+    [basket, setBasket] = useState([]),
+    [pValueFilterVisible, setPValueFilterVisible] = useState(false),
+    [csvData, setCsvData] = useState<any[]>([]);
 
-  componentDidMount = () => {
-    if (this.props.table.properties.type[0] === "chart_filter") {
-      this.setState({
-        filtered: this.state.filtered.concat([{ id: "pvalue", value: 0 }])
-      });
+  useEffect(() => {
+    if (table.properties.type[0] === "chart_filter") {
+      _setFiltered("pvalue", defaultPVal);
+    }
+  }, []);
+
+  const getHasPValFilter = (table: rt.Table) =>
+    tableInstance && table.properties.type[0] === "chart_filter";
+
+  const _setFiltered = (id: string, value: any) =>
+    setFiltered(
+      filtered
+        .filter(fil => (fil.id === id ? false : true))
+        .concat([{ id, value }])
+    );
+
+  const handleSearchFilterChange = (
+    e: React.SyntheticEvent<HTMLInputElement>
+  ) => {
+    setFilterVal(e.currentTarget.value);
+    _setFiltered("all", e.currentTarget.value);
+  };
+
+  const handlePValFilterChange = (pLow: number) => _setFiltered("pvalue", pLow);
+
+  const isSelected = (key: string) => _getBasketIndex(key) > -1;
+
+  const onTableLoaded = (ref: React.MutableRefObject<Instance>) => {
+    if (!tableInstance && ref.current) {
+      setTableInstance(ref.current);
     }
   };
 
-  getHasPValFilter = (table: rt.Table) =>
-    this.state.tableInstance && table.properties.type[0] === "chart_filter";
-
-  handleSearchFilterChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
-    this.setState({ filterVal: e.currentTarget.value });
-    this.setState({ filtered: [{ id: "all", value: e.currentTarget.value }] });
-  };
-
-  handlePValFilterChange = (pLow: number) => {
-    const newFiltered = this.state.filtered.map(filter => {
-      if (filter.id === "pvalue") {
-        return {
-          id: "pvalue",
-          value: pLow
-        };
-      }
-      return filter;
-    });
-    this.setState({ filtered: newFiltered });
-  };
-
-  isSelected = (key: string) => this._getBasketIndex(key) > -1;
-
-  onTableLoaded = (ref: React.MutableRefObject<Instance>) => {
-    if (!this.state.tableInstance && ref.current) {
-      this.setState({ tableInstance: ref.current });
-    }
-  };
-  toggleSelection = (
+  const toggleSelection = (
     key: string,
     shift: boolean,
     row: { [key: string]: any }
   ) => {
-    let { basket } = this.state;
-    const idx = this._getBasketIndex(key);
+    const idx = _getBasketIndex(key);
     idx > -1 ? basket.splice(idx, idx + 1) : basket.push(row);
-    this.setState({ basket });
+    setBasket(basket);
   };
 
-  togglePValueChartVisibility = () =>
-    this.setState({ pValueFilterVisible: !this.state.pValueFilterVisible });
+  const togglePValueChartVisibility = () =>
+    setPValueFilterVisible(!pValueFilterVisible);
 
-  _getBasketIndex = (key: string) =>
-    findIndex(this.state.basket, item => item.id === key);
+  const _getBasketIndex = (key: string) =>
+    findIndex(basket, item => item.id === key);
 
-  _loadCsvData = () => {
+  const _loadCsvData = () => {
     /*todo: i don't think we need to store any of this on state...*/
-    const data = this.state.tableInstance.getResolvedState().sortedData;
-    if (!this.state.csvData) {
+    const data = tableInstance.getResolvedState().sortedData;
+    if (!csvData) {
       const csvData = data.map((datum: any) => {
         const stripped = pickBy(datum, (v: any, k: string) => !/^_.+/.test(k));
         return forIn(
@@ -97,75 +85,74 @@ const NiagadsTableContainer: React.ComponentClass<
           (v: any, k: string, o: any) => (o[k] = extractDisplayText(v))
         );
       });
-      this.setState({ csvData });
+      setCsvData(csvData);
     }
   };
 
-  render = () => {
-    const { table, value } = this.props,
-      { attributes } = table;
-    return (
-      <div className="record-table-container">
-        {!isEmpty(value) ? (
-          <div className="record-table-inner-container">
-            <div className="record-table-controls-container">
-              <div className="main-controls">
-                {this.state.tableInstance && (
-                  <CSVLink
-                    className="btn control"
-                    filename={`${kebabCase(table.displayName)}.csv`}
-                    onClick={this._loadCsvData}
-                    data={this.state.csvData}
+  const { attributes } = table;
+
+  return (
+    <div className="record-table-container">
+      {!isEmpty(value) ? (
+        <div className="record-table-inner-container">
+          <div className="record-table-controls-container">
+            <div className="main-controls">
+              {tableInstance && (
+                <CSVLink
+                  className="btn control"
+                  filename={`${kebabCase(table.displayName)}.csv`}
+                  onClick={_loadCsvData}
+                  data={csvData}
+                >
+                  Download (CSV)
+                </CSVLink>
+              )}
+              {pValueFilterVisible && (
+                <RecordTablePValFilter
+                  key={table.name}
+                  values={cloneDeep(value)}
+                  onChange={handlePValFilterChange}
+                  filtered={filtered}
+                  selectClass={table.name + "_chart"}
+                  defaultPVal={defaultPVal}
+                />
+              )}
+              <div className="filters control">
+                {getHasPValFilter(table) && (
+                  <a
+                    onClick={togglePValueChartVisibility}
+                    className="btn filter"
                   >
-                    Download (CSV)
-                  </CSVLink>
+                    {pValueFilterVisible
+                      ? "Close P-value Filter"
+                      : "Open P-value Filter"}
+                  </a>
                 )}
-                {this.state.pValueFilterVisible && (
-                  <RecordTablePValFilter
-                    key={table.name}
-                    values={cloneDeep(value)}
-                    onChange={this.handlePValFilterChange}
-                    filtered={this.state.filtered}
-                    selectClass={table.name + "_chart"}
-                  />
-                )}
-                <div className="filters control">
-                  {this.getHasPValFilter(table) && (
-                    <a
-                      onClick={this.togglePValueChartVisibility}
-                      className="btn filter"
-                    >
-                      {this.state.pValueFilterVisible
-                        ? "Close P-value Filter"
-                        : "Open P-value Filter"}
-                    </a>
-                  )}
-                  <input
-                    type="text"
-                    className="form-control filter"
-                    placeholder="text filter"
-                    value={this.state.filterVal}
-                    onChange={this.handleSearchFilterChange}
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="filter"
+                  placeholder="filter"
+                  value={filterVal}
+                  onChange={handleSearchFilterChange}
+                />
               </div>
             </div>
-            <NiagadsRecordTable
-              table={table}
-              value={value}
-              attributes={attributes}
-              filtered={this.state.filtered}
-              onLoad={this.onTableLoaded}
-              onSelectionToggled={this.toggleSelection}
-              isSelected={this.isSelected}
-            />
           </div>
-        ) : (
-          "None Reported"
-        )}
-      </div>
-    );
-  };
+          <NiagadsRecordTable
+            table={table}
+            value={value}
+            attributes={attributes}
+            filtered={filtered}
+            onLoad={onTableLoaded}
+            onSelectionToggled={toggleSelection}
+            isSelected={isSelected}
+          />
+        </div>
+      ) : (
+        "None Reported"
+      )}
+    </div>
+  );
 };
 
 export default NiagadsTableContainer;

@@ -9,6 +9,7 @@ interface PvalFilterProps {
   onChange: { (pLow: number): void };
   filtered: Filter[];
   selectClass: string;
+  defaultPVal: number;
 }
 
 interface PvalFilterState {
@@ -41,7 +42,6 @@ const PvalFilter = class extends React.Component<
   PvalFilterState
 > {
   //p refers to negative log, so maxP means lowest pVal to display (e.g., 15 =  e-15)
-  private defaultP = 8;
   private maxP = 15;
   constructor(props: PvalFilterProps) {
     super(props);
@@ -49,9 +49,8 @@ const PvalFilter = class extends React.Component<
   }
 
   componentDidMount = () => {
-    this.props.onChange(this.defaultP); //set default filter
+    this.props.onChange(this.props.defaultPVal); //set default filter
     const smallestP = _getSmallestP(this.props.values),
-      selection = d3.select(`.${this.props.selectClass}`),
       data = _transformData(this.props.values),
       svg = _drawFrame(this.props.selectClass, canvasSpec),
       xScale = _buildXScale(data, canvasSpec.width, this.maxP),
@@ -71,7 +70,7 @@ const PvalFilter = class extends React.Component<
       xScale,
       unXScale,
       smallestP,
-      this.defaultP,
+      this.props.defaultPVal,
       canvasSpec,
       this.props.onChange
     );
