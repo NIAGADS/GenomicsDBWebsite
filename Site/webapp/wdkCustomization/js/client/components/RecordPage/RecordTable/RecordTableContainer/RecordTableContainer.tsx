@@ -3,12 +3,13 @@ import * as rt from "../../types";
 //@ts-ignore
 import { CSVLink } from "react-csv";
 import {
-  pickBy,
-  forIn,
-  kebabCase,
-  findIndex,
   cloneDeep,
-  isEmpty
+  findIndex,
+  forIn,
+  get,
+  isEmpty,
+  kebabCase,
+  pickBy
 } from "lodash";
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
@@ -138,6 +139,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
               </div>
             </div>
           </div>
+          {/* based on get(table, 'properties.canShrink[0]'), remove flex-grow: 1 from .ReactTable */}
           <NiagadsRecordTable
             table={table}
             value={value}
@@ -146,6 +148,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
             onLoad={onTableLoaded}
             onSelectionToggled={toggleSelection}
             isSelected={isSelected}
+            canShrink={get(table, "properties.canShrink[0]", false)}
           />
         </div>
       ) : (

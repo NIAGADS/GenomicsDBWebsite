@@ -34,10 +34,12 @@ interface NiagadsRecordTable {
   onLoad: (ref: React.MutableRefObject<Instance>) => void;
   onSelectionToggled: any;
   isSelected: any;
+  canShrink?: boolean;
 }
 
 const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
   attributes,
+  canShrink,
   filtered,
   isSelected,
   onLoad,
@@ -95,7 +97,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                         );
                       }
                     }
-                  : _buildColumn(attribute, attribute.isSortable,/* columnWidth or maxColumnWidth, must be under 100px ,*/ filterType);
+                  : _buildColumn(attribute, attribute.isSortable, filterType);
               }
             )
             .sort((c1, c2) => _indexSort(c1, c2, attributes));
@@ -107,7 +109,6 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     return values.map(row => Object.assign(row, { id: uniqueId() }));
   };
 
-  //todo: merge into header code above once stable, so we can call the same function
   const subComponent = subCompKey
     ? {
         SubComponent: (rowInfo: RowInfo) => {
@@ -141,6 +142,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     data: _setKeyCol(value),
     minRows: 0,
     filtered,
+    className: canShrink ? "shrink" : "",
     defaultSortMethod: NiagadsTableSort,
     onLoad,
     showPagination: value.length > 20,
@@ -314,12 +316,16 @@ const resolveData = (
   });
 };
 
-const _buildColumn = (attribute: rt.TableAttribute, sortable: boolean, filterType?: any) => ({
+const _buildColumn = (
+  attribute: rt.TableAttribute,
+  sortable: boolean,
+  filterType?: any
+) => ({
   Header: _buildHeader(attribute),
   sortable,
   accessor: resolveAccessor(attribute.name, attribute),
   id: attribute.name,
-  maxWidth: 100,
+  //maxWidth: 100,
   filterMethod: filterType ? filterType : (filter: any, rows: any) => rows
 });
 

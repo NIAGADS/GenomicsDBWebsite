@@ -1,11 +1,13 @@
 @import "~react-table/react-table.css";
 .record-table {
   display: flex;
-  flex-grow: 0;
-  flex-shrink: 1;
-  align-self: flex-start;
+  flex-grow: 1;
   .ReactTable {
     border: none;
+    flex-grow: 1;
+    &.shrink {
+      flex-grow: 0;
+    }
     .rt-resizer {
       width: 5px;
       right: -2.5px;
