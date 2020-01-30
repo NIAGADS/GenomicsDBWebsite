@@ -18,8 +18,8 @@ import org.gusdb.wdk.model.report.ReporterConfigException;
  * @author EGA
  */
 
-public class GenomeViewReporter extends AbstractReporter {
-    public GenomeViewReporter(AnswerValue answerValue) {
+public class IdeogramJSONReporter extends AbstractReporter {
+    public IdeogramJSONReporter(AnswerValue answerValue) {
         super(answerValue);
     }
 

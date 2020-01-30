@@ -47,8 +47,24 @@
 			<!-- =============================================================== -->
 			<!-- Step Analysis Plugins -->
 			<!-- =============================================================== -->
+		
+			<!-- =============================================================== -->
+			<!-- Summary and record views -->
+			<!-- =============================================================== -->
+			<summaryView name="_default" display="Variant Results">
+                 <description>
+                     <![CDATA[View variant details.]]>
+                 </description>
+             </summaryView>
 
+			<summaryView name="ideogram" display="Genome View">
+                 <description>
+                     <![CDATA[View your results mapped against the genome.]]>
+                 </description>
+             </summaryView>
 
+			<reporter name="ideogramJSONReporter" displayName="Ideogram"  scopes=""
+                    implementation="org.niagads.genomics.model.report.reporter.IdeogramJSONReporter" />
 			<!-- =============================================================== -->
 			<!-- Basic Attributes -->
 			<!-- =============================================================== -->
@@ -484,18 +500,7 @@
 			</instance>
 			</answerFilter>
 			-->
-			<!-- =============================================================== -->
-			<!-- Summary and record views -->
-			<!-- =============================================================== -->
-			<!-- <summaryView name="genomic-view" display="Genome View" -->
-			<!-- jsp="/wdkCustomization/jsp/results/genome-view.jsp" -->
-			<!-- handlerClass="org.niagads.genomics.model.view.genome.SnpGenomeViewHandler"> -->
-			<!-- <description> -->
-			<!-- <![CDATA[ -->
-			<!-- View your hits mapped to the containing chromosome -->
-			<!-- ]]> -->
-			<!-- </description> -->
-			<!-- </summaryView> -->
+		
 		</recordClass>
 	</recordClassSet>
 </wdkModel>

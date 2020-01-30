@@ -54,6 +54,7 @@
 					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
 			</reporter>
 
+
 			<!-- =============================================================== -->
 			<!-- Step Analysis Plugins -->
 			<!-- =============================================================== -->
