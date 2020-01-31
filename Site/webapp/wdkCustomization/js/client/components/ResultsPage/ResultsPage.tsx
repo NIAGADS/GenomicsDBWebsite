@@ -32,18 +32,18 @@ const ResultsPageNav: React.FC<ResultsPageNavProps> = ({
 }) => {
   return (
     <Nav className="flex-column">
-        {genes > 0 && (
-          <Nav.Link href="#genes">{genes} Gene{genes > 1 ? "s" : ""}</Nav.Link>
-        )}
-        {variants > 0 && (
-          <Nav.Link href="#variants">{variants} Variant{variants > 1 ? "s" : ""}</Nav.Link>
-        )}
-        {accessions > 0 && (
-          <Nav.Link href="#accessions">{accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}</Nav.Link>
-        )}
-        {datasets > 0 && (
-          <Nav.Link href="#datasets">{datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}</Nav.Link>
-        )}
+      {genes > 0 && (
+        <Nav.Link href="#genes">{genes} Gene{genes > 1 ? "s" : ""}</Nav.Link>
+      )}
+      {variants > 0 && (
+        <Nav.Link href="#variants">{variants} Variant{variants > 1 ? "s" : ""}</Nav.Link>
+      )}
+      {accessions > 0 && (
+        <Nav.Link href="#accessions">{accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}</Nav.Link>
+      )}
+      {datasets > 0 && (
+        <Nav.Link href="#datasets">{datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}</Nav.Link>
+      )}
     </Nav>
   );
 };
@@ -111,15 +111,26 @@ const ResultsPage: React.FC<ResultsPage & RouteComponentProps<any>> = ({
                 </Col>
               </Row>
             </Container>
-
-
-
           </React.Fragment>
         ) : (
-            <h2>No results for search "{searchTerm}"</h2>
+            <Container fluid={true}>
+              <Row>
+                <Col>
+                  <h2>Search Results</h2>
+                  <strong className="text-danger">No</strong> results were found for the search <strong className="text-danger">{searchTerm}</strong>
+                </Col>
+              </Row>
+            </Container>
           )
       ) : (
-          <h2>Loading results for {searchTerm}...</h2>
+          <Container fluid={true}>
+            <Row>
+              <Col>
+                <h2>Search Results</h2>
+                Loading results for the search <strong className="text-danger">{searchTerm}</strong>...
+          </Col>
+            </Row>
+          </Container>
         )}
     </div>
   );
