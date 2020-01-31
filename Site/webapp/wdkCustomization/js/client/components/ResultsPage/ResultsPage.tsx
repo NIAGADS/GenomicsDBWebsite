@@ -13,6 +13,7 @@ import { chain, isEmpty, isObject, get, groupBy, mapValues } from "lodash";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Nav from 'react-bootstrap/Nav';
 
 
 interface ResultsPage { }
@@ -30,38 +31,20 @@ const ResultsPageNav: React.FC<ResultsPageNavProps> = ({
   accessions
 }) => {
   return (
-    <div>
-      <ul className="nav">
+    <Nav className="flex-column">
         {genes > 0 && (
-          <li className="nav-item">
-            <a className="nav-link active" href="#genes">
-              {genes} Gene{genes > 1 ? "s" : ""}
-            </a>
-          </li>
+          <Nav.Link href="#genes">{genes} Gene{genes > 1 ? "s" : ""}</Nav.Link>
         )}
         {variants > 0 && (
-          <li className="nav-item">
-            <a className="nav-link active" href="#variants">
-              {variants} Variant{variants > 1 ? "s" : ""}
-            </a>
-          </li>
+          <Nav.Link href="#variants">{variants} Variant{variants > 1 ? "s" : ""}</Nav.Link>
         )}
         {accessions > 0 && (
-          <li className="nav-item">
-            <a className="nav-link active" href="#accessions">
-              {accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}
-            </a>
-          </li>
+          <Nav.Link href="#accessions">{accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}</Nav.Link>
         )}
         {datasets > 0 && (
-          <li className="nav-item">
-            <a className="nav-link active" href="#datasets">
-              {datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}
-            </a>
-          </li>
+          <Nav.Link href="#datasets">{datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}</Nav.Link>
         )}
-      </ul>
-    </div>
+    </Nav>
   );
 };
 
@@ -145,8 +128,7 @@ const ResultsPage: React.FC<ResultsPage & RouteComponentProps<any>> = ({
 const _buildSearchResult = (result: SearchResult, recordType: string) => {
   return (
     result.record_type === recordType && (
-      <div key={result.primary_key}>
-        <hr />
+      <div key={result.primary_key} className="mb-3">
         <div>
           <Link className="h6 wdk-Link" to={buildRouteFromResult(result)}>
             {safeHtml(result.display)}
@@ -158,9 +140,9 @@ const _buildSearchResult = (result: SearchResult, recordType: string) => {
         </div>
 
         <div>
-          <p className="site-search-result__description">
+          <small>
             {safeHtml(result.description)}
-          </p>
+          </small>
         </div>
       </div>
     )
