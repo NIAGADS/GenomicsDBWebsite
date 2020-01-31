@@ -142,7 +142,7 @@ const CBILSiteHeader: React.FC<CBILSH.props & StoreProps> = props => {
     mainMenuItems = makeMainMenuItems && makeMainMenuItems(props, menuItems);
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid mb-2">
       <div id="header" className="row">
         <div className="header2 col-sm-12">
           <div className="header_lt">
