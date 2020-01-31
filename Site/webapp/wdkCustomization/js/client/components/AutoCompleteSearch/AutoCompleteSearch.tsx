@@ -21,9 +21,7 @@ interface AutoCompleteSearch {
 }
 
 //container component, holds state for search and selection
-const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({
-  canGrow,
-}) => {
+const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({ canGrow }) => {
   const [searchTerm, setSearchTerm] = useState<string>(),
     [results, setResults] = useState<SearchResult[]>(),
     [selected, setSelected] = useState<number>(),
@@ -72,7 +70,8 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({
       resultsArray.length > displayCount
         ? resultsArray.length - displayCount
         : 0;
-  //if we're truncating results list, push in results entry with a bunch of dummy values
+
+  //if we're truncating results list, push in results entry with dummy properties so that it's listed normally
   if (undisplayedCount) {
     displayResults.push({
       description: "",
@@ -145,7 +144,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
       service
         ._fetchJson<SearchResult[]>("get", `/search/site?term=${searchTerm}`)
         .then(res => onResult(res))
-        .catch(e => onResult(null));
+        .catch(() => onResult(null));
     },
     wrappedKeyDown = (e: React.KeyboardEvent) => {
       //enter
@@ -172,11 +171,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   });
 
   return (
-    <div
-      className="search-box-with-dropdown"
-      onMouseLeave={setResultsVisible.bind(null, false)}
-      onMouseEnter={setResultsVisible.bind(null, true)}
-    >
+    <div className="search-box-with-dropdown">
       <span className="text-box-container">
         <input
           ref={container}
@@ -185,7 +180,10 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
             onFocus();
             setResultsVisible(true);
           }}
-          onBlur={onBlur}
+          onBlur={() => {
+            onBlur();
+            setResultsVisible(false);
+          }}
           className="form-control"
           onKeyDown={wrappedKeyDown}
           placeholder="Enter a gene or variant"
@@ -238,6 +236,10 @@ const ResultRow: React.FC<ResultRow> = ({
 }) => {
   return (
     <Link
+      onMouseDown={(e: React.MouseEvent<any, MouseEvent>) => {
+        //prevent input blur event, which would fire before link click and hide dropdown and prevent navigation
+        e.preventDefault();
+      }}
       style={{
         width: width + "px",
         backgroundColor: selected ? "#9ca3c1" : "inherit", //$dove-grey
@@ -261,9 +263,7 @@ const _buildResultDisplay = (result: SearchResult, searchTerm: string) => {
     <span>
       {safeHtml(result.display)}&nbsp;
       <small>
-        <em>
-          {_truncateMatch(result.matched_term, searchTerm, result.record_type)}
-        </em>
+        <em>{_truncateMatch(result.matched_term, searchTerm)}</em>
       </small>
     </span>
   );
@@ -275,11 +275,7 @@ const _buildSummaryRoute = (searchTerm: string) =>
 export const buildRouteFromResult = (result: SearchResult) =>
   `/record/${result.record_type}/${result.primary_key}`;
 
-const _truncateMatch = (
-  matchedTerm: string,
-  searchTerm: string,
-  recordType: string
-) => {
+const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
   const idx = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
     length = searchTerm.length,
     start = idx - 25 >= 0 ? idx - 25 : 0,

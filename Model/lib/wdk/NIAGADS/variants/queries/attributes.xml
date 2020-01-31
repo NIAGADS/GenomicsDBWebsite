@@ -411,7 +411,7 @@
 	<![CDATA[
 		 WITH genes AS (
 		 SELECT v.record_pk AS source_id, 
-		 jsonb_agg(build_link_attribute(ga.source_id, '../gene/', ga.gene_symbol, 'view gene details')) AS colocated_genes 
+		 jsonb_agg(build_link_attribute(ga.source_id, '/record/gene/', ga.gene_symbol, 'view gene details')) AS colocated_genes 
 		 FROM
 		 NIAGADS.Variant v,
 		 CBIL.GeneAttributes ga
@@ -492,7 +492,7 @@ GROUP BY id.source_id
 		 SELECT DISTINCT source_id, 
 		 multi_replace(conseq->>'consequence_terms', ARRAY[']', '[', '_', ', ', '"'], ARRAY['', '', ' ', ' & ', '']) AS consequence,
 		 conseq->>'gene_id' AS gene_source_id,
-		 build_link_attribute(conseq->>'gene_symbol', '../gene/', conseq->>'gene_id', 'view gene details') AS gene_link,
+		 build_link_attribute(conseq->>'gene_symbol', '/record/gene/', conseq->>'gene_id', 'view gene details') AS gene_link,
 		 build_link_attribute(conseq->>'transcript_id', CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_TRANSCRIPT_URL_GRCh37@' ELSE '@ENSEMBL_TRANSCRIPT_URL_GRCh38@' END, 
 		 NULL, 'view transcript details from Ensembl' || CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN ' @PROJECT_ID@ Archive' ELSE '' END) AS transcript_link
 		 FROM vEffect

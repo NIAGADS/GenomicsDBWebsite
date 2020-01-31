@@ -1,98 +1,109 @@
-@import '~react-table/react-table.css';
+@import "~react-table/react-table.css";
 .record-table {
-    .ReactTable {
-        border: none;
-        .rt-resizer {
-            width: 5px;
-            right: -2.5px;
-        }
-        .rt-th, .rt-td, .wdk-tooltip {
-            white-space: normal;
-        }
-        .rt-tr {
-            align-items: center;
-            .rt-td {
-                font-size: .9em;
-            }
-        }
-        .rt-tbody{
-            overflow-x: hidden;
-        }
-        .rt-thead {
-            &.-header {
-                box-shadow: none;
-                border-bottom: 3px solid black;
-                .header-container {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    .header-display-name {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        padding-right: 2px;
-                    }
-                }
-            }
-            .rt-tr {
-                text-align: left;
-                font-weight: bold;
-                .rt-th {
-                    box-shadow: none;
-                    .icon-inactive {
-                        color: $gray;
-                        opacity: .5;
-                    }
-                    .icon-desc, .icon-asc {
-                        display: none;
-                    }
-                    &.-sort-desc {
-                        .icon-desc {
-                            display: inline;
-                        }
-                        .icon-inactive {
-                            display: none;
-                        }
-                    }
-                    &.-sort-asc {
-                        .icon-asc {
-                            display: inline;
-                        }
-                        .icon-inactive {
-                            display: none;
-                        }
-                    }
-                    .sort-icons {}
-                }
-            }
-        }
-        .-pagination {
-            display: flex;
-            align-items: center;
-            .-previous, .-next {
-                display: flex;
-                justify-content: center;
-                .-btn {
-                    background: transparent;
-                    height: auto;
-                    width: auto;
-                    &:hover:enabled {
-                        color: $white;
-                        background: $primary;
-                    }
-                }
-            }
-            .-center {
-                .-pageJump {
-                    input {
-                        margin: 0px;
-                    }
-                }
-            }
-        }
-        &.sub-table {
-            width: 100%; //margin: 30px auto;
-            border: thin black solid; //box-shadow: rgba(black, .3) 5px 5px;
-            background-color: $light-gray;
-        }
+  display: flex;
+  flex-grow: 1;
+  .ReactTable {
+    border: none;
+    flex-grow: 1;
+    &.shrink {
+      flex-grow: 0;
     }
+    .rt-resizer {
+      width: 5px;
+      right: -2.5px;
+    }
+    .rt-th,
+    .rt-td,
+    .wdk-tooltip {
+      white-space: normal;
+    }
+    .rt-tr {
+      align-items: center;
+      .rt-td {
+        font-size: 0.9em;
+      }
+    }
+    .rt-tbody {
+      overflow-x: hidden;
+    }
+    .rt-thead {
+      &.-header {
+        box-shadow: none;
+        border-bottom: 3px solid black;
+        .header-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .header-display-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 2px;
+          }
+        }
+      }
+      .rt-tr {
+        text-align: left;
+        font-weight: bold;
+        .rt-th {
+          box-shadow: none;
+          .icon-inactive {
+            color: $gray;
+            opacity: 0.5;
+          }
+          .icon-desc,
+          .icon-asc {
+            display: none;
+          }
+          &.-sort-desc {
+            .icon-desc {
+              display: inline;
+            }
+            .icon-inactive {
+              display: none;
+            }
+          }
+          &.-sort-asc {
+            .icon-asc {
+              display: inline;
+            }
+            .icon-inactive {
+              display: none;
+            }
+          }
+          .sort-icons {
+          }
+        }
+      }
+    }
+    .-pagination {
+      display: flex;
+      align-items: center;
+      .-previous,
+      .-next {
+        display: flex;
+        justify-content: center;
+        .-btn {
+          background: transparent;
+          height: auto;
+          width: auto;
+          &:hover:enabled {
+            color: $white;
+            background: $primary;
+          }
+        }
+      }
+      .-center {
+        .-pageJump {
+          input {
+            margin: 0px;
+          }
+        }
+      }
+    }
+    &.sub-table {
+      width: 100%; //margin: 30px auto;
+      border: thin black solid; //box-shadow: rgba(black, .3) 5px 5px;
+      background-color: $light-gray;
+    }
+  }
 }

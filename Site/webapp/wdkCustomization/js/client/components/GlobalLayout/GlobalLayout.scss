@@ -1,6 +1,22 @@
 @import "./Header/ClassicSiteHeader";
 @import "./Footer/Footer";
 //globals
+
+html,
+body,
+#wdk-container,
+.main-stack,
+.wdk-RootContainer {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.wdk-PageContent {
+  flex: 1 0;
+}
+
 text {
   stroke: none;
   fill: $black;

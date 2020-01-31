@@ -9,6 +9,7 @@
     "highcharts": "^7.1.2",
     "highcharts-react-official": "^2.2.2",
     "ideogram": "^1.9.0",
+    "react-bootstrap": "^1.0.0-beta.16",
     "react-csv": "^1.0.19",
     "react-table": "6.8.6"
   },

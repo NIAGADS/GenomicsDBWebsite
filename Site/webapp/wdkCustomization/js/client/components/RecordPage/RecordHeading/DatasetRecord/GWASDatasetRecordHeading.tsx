@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RecordHeading } from 'wdk-client/Components';
-import { HeaderRecordActions, RecordOutLink } from './../Shared';
+import { HeaderRecordActions } from './../Shared';
 import * as gr from './../../types';
-import { resolveJsonInput, LinkType, withTooltip } from '../../../../util/jsonParse';
+import { resolveJsonInput } from '../../../../util/jsonParse';
 
 interface StoreProps {
 	externalUrls: { [key: string]: any },
@@ -25,7 +24,7 @@ type GWASDatasetRecord = StoreProps & gr.GWASDatasetRecord;
 const GWASDatasetRecordSummary: React.SFC<IRecordHeading & StoreProps> = props => {
 	const { record, recordClass, headerActions, externalUrls } = props;
 	return <React.Fragment>
-		<div className="dataset-record-summary-container">
+		<div className="record-summary-container dataset-record-summary-container">
 			<div>
 				<HeaderRecordActions
 					record={record}

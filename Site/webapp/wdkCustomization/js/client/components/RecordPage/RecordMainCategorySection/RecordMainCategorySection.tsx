@@ -11,7 +11,6 @@ import {
   getDisplayName
 } from "wdk-client/Utils/CategoryUtils";
 import * as GR from "../types";
-import { resolveJsonInput } from "../../../util/jsonParse";
 import {
   IdeogramPlot,
   HighchartPlot,
@@ -24,14 +23,17 @@ import {
   GeneGeneticVariationSummary,
   VariantLzPlot
 } from "./SectionSummaries";
-import LzPlot, { LzGeneProps } from "./Visualizations/LocusZoom/LZPlot";
 
 interface RecordMainCategorySection {
   category: any;
   onSectionToggle: { (sectionName: string, isVisible: boolean): any };
   isCollapsed: boolean;
   depth: number;
-  record: GR.GeneRecord;
+  record:
+    | GR.GeneRecord
+    | GR.VariantRecord
+    | GR.GWASDatasetRecord
+    | GR.NIAGADSDatasetRecord;
   recordClass: any;
   enumeration: any;
 }
@@ -122,7 +124,8 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                   />
                 )}
           </CollapsibleSection>
-        ) : category.wdkReference.name == "locuszoom_gwas_datasets" ? (
+        ) : category.wdkReference.name == "locuszoom_gwas_datasets" &&
+          GR.isVariantRecord(record) ? (
           <CollapsibleSection
             id={category.wdkReference.name}
             className={"wdk-RecordTableContainer"}
@@ -249,7 +252,11 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
 }
 
 interface SectionSummaryText {
-  record: GR.GeneRecord | GR.VariantRecord;
+  record:
+    | GR.GeneRecord
+    | GR.VariantRecord
+    | GR.GWASDatasetRecord
+    | GR.NIAGADSDatasetRecord;
   categoryId: string;
 }
 

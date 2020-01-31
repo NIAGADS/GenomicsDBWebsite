@@ -3,20 +3,7 @@
 @import './GeneRecord/GeneRecordHeading';
 @import './DatasetRecord/DatasetRecordHeading';
 
-.record-heading-container {
-    h2 {
-        font-weight: bold;
-    }
-    .wdk-RecordActions {
-        display: flex;
-    }
-    .label {
-        //color: $lavender;
-    }
-    ul {
-        margin: 0px;
-        &.horizontal-links {
-            display: flex;
-        }
-    }
+.record-summary-container {
+    display: flex;
+    flex-direction: column;
 }
