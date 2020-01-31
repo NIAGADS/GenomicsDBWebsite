@@ -10,7 +10,12 @@ import {
 } from "../AutoCompleteSearch/AutoCompleteSearch";
 import { chain, isEmpty, isObject, get, groupBy, mapValues } from "lodash";
 
-interface ResultsPage {}
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+
+interface ResultsPage { }
 interface ResultsPageNavProps {
   genes: number;
   variants: number;
@@ -92,31 +97,47 @@ const ResultsPage: React.FC<ResultsPage & RouteComponentProps<any>> = ({
       {isObject(results) ? (
         resultsArray.length ? (
           <React.Fragment>
-            <h2>Results for search "{searchTerm}"</h2>
-            <ResultsPageNav
-              genes={get(counts, "gene")}
-              variants={get(counts, "variant")}
-              datasets={get(counts, "gwas_summary")}
-              accessions={get(counts, "dataset")}
-            />
-            <a id="gene" />
-            {resultsArray.map(res => _buildSearchResult(res, "gene"))}
+            <Container fluid={true}>
+              <Row>
+                <Col>
+                  <h2>Search Results</h2>
+                  <strong className="text-danger">{resultsArray.length}</strong> results were found for the search <strong className="text-danger">{searchTerm}</strong>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={4}>
+                  <ResultsPageNav
+                    genes={get(counts, "gene")}
+                    variants={get(counts, "variant")}
+                    datasets={get(counts, "gwas_summary")}
+                    accessions={get(counts, "dataset")}
+                  />
+                </Col>
+                <Col sm={8}>
+                  <a id="gene" />
+                  {resultsArray.map(res => _buildSearchResult(res, "gene"))}
 
-            <a id="variant" />
-            {resultsArray.map(res => _buildSearchResult(res, "variant"))}
+                  <a id="variant" />
+                  {resultsArray.map(res => _buildSearchResult(res, "variant"))}
 
-            <a id="accessions" />
-            {resultsArray.map(res => _buildSearchResult(res, "dataset"))}
+                  <a id="accessions" />
+                  {resultsArray.map(res => _buildSearchResult(res, "dataset"))}
 
-            <a id="datasets" />
-            {resultsArray.map(res => _buildSearchResult(res, "gwas_summary"))}
+                  <a id="datasets" />
+                  {resultsArray.map(res => _buildSearchResult(res, "gwas_summary"))}
+                </Col>
+              </Row>
+            </Container>
+
+
+
           </React.Fragment>
         ) : (
-          <h2>No results for search "{searchTerm}"</h2>
-        )
+            <h2>No results for search "{searchTerm}"</h2>
+          )
       ) : (
-        <h2>Loading results for {searchTerm}...</h2>
-      )}
+          <h2>Loading results for {searchTerm}...</h2>
+        )}
     </div>
   );
 };

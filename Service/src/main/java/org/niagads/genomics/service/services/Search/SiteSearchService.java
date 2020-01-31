@@ -36,7 +36,7 @@ public class SiteSearchService extends AbstractWdkService {
         + "SELECT jsonb_agg(matches)::text AS result" + NL
         + "FROM matches";
 
-    @GET    
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.search.sitesearch.get-response")
     public Response buildResponse(String body, @QueryParam(SEARCH_TERM_PARAM) String term) throws WdkModelException {
