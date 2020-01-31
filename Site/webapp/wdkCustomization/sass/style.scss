@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto+Slab|Open+Sans:400italic,700italic,400,700|Oswald|Libre+Franklin);
+@import url("https://fonts.googleapis.com/css?family=Roboto+Slab|Open+Sans:400italic,700italic,400,700|Oswald|Libre+Franklin");
 @import "./variables";
 @import "~bootstrap/scss/bootstrap";
 @import "./marginPaddingLoop";
@@ -56,3 +56,4 @@ h6 {
 @import "../js/client/components/HomePage/HomePage";
 @import "../js/client/components/HomePage2/HomePage";
 @import "../js/client/components/RecordPage/RecordPage";
+@import "../js/client/components/StrategiesPage/StrategiesPage";

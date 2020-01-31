@@ -39,9 +39,10 @@ public class IdeogramJSONReporter extends AbstractReporter {
         // create output writer and initialize record stream
         try (JsonWriter writer = new JsonWriter(out)) {
             int numRecordsReturned = _baseAnswer.getResultSizeFactory().getResultSize();
+            writer.object();
             writer.key("message").value("Hello world!");
-            // end records array, write meta property, and close object
-            writer.endArray().key("num_records").value(numRecordsReturned);
+            writer.key("num_records").value(numRecordsReturned);
+            writer.endObject();
         }
         catch (WdkModelException e) {
             throw new WdkModelException("Error getting result size", e);
