@@ -15,7 +15,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 
-
 interface ResultsPage { }
 interface ResultsPageNavProps {
   genes: number;
@@ -75,6 +74,11 @@ const ResultsPage: React.FC<ResultsPage & RouteComponentProps<any>> = ({
   //search term could change in header box
   useWdkEffect(sendRequest(searchTerm), [searchTerm]);
 
+  const nGenes = get(counts, "gene");
+  const nVariants = get(counts, "variant");
+  const nDatasets = get(counts, "gwas_summary");
+  const nAccessions = get(counts, "dataset");
+
   return (
     <div>
       {isObject(results) ? (
@@ -82,32 +86,32 @@ const ResultsPage: React.FC<ResultsPage & RouteComponentProps<any>> = ({
           <React.Fragment>
             <Container fluid={true}>
               <Row>
-                <Col>
+                <Col sm={3} className="sticky-top h-100">
                   <h2>Search Results</h2>
                   <strong className="text-danger">{resultsArray.length}</strong> results were found for the search <strong className="text-danger">{searchTerm}</strong>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={4}>
                   <ResultsPageNav
-                    genes={get(counts, "gene")}
-                    variants={get(counts, "variant")}
-                    datasets={get(counts, "gwas_summary")}
-                    accessions={get(counts, "dataset")}
+                    genes={nGenes}
+                    variants={nVariants}
+                    datasets={nDatasets}
+                    accessions={nAccessions}
                   />
                 </Col>
                 <Col sm={8}>
-                  <a id="gene" />
-                  {resultsArray.map(res => _buildSearchResult(res, "gene"))}
+                  <a id="genes" />
+                  {nGenes > 0 && <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">Genes</h3>}
+                  {nGenes > 0 && resultsArray.map(res => _buildSearchResult(res, "gene"))}
 
-                  <a id="variant" />
-                  {resultsArray.map(res => _buildSearchResult(res, "variant"))}
+                  <a id="variants" />
+                  {nVariants > 0 && <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">Variants</h3>}
+                  {nVariants > 0 && resultsArray.map(res => _buildSearchResult(res, "variant"))}
 
                   <a id="accessions" />
-                  {resultsArray.map(res => _buildSearchResult(res, "dataset"))}
+                  {nAccessions > 0 && <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">NIAGADS Accessions</h3>}
+                  {nAccessions > 0 && resultsArray.map(res => _buildSearchResult(res, "dataset"))}
 
                   <a id="datasets" />
-                  {resultsArray.map(res => _buildSearchResult(res, "gwas_summary"))}
+                  {nDatasets > 0 && <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">GWAS Summary Statistics Datasets</h3>}
+                  {nDatasets > 0 && resultsArray.map(res => _buildSearchResult(res, "gwas_summary"))}
                 </Col>
               </Row>
             </Container>

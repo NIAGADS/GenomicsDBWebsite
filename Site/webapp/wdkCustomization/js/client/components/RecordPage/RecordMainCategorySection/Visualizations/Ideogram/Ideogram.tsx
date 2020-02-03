@@ -8,6 +8,7 @@ interface IdeogramBaseProps {
 	data: string,
 	tracks: string,
 	container: string;
+	genomeBuild?: string;
 }
 
 
@@ -21,7 +22,7 @@ class IdeogramPlot extends React.Component<IdeogramPlotProps> {
 	componentDidMount = () => new Ideogram(  
 	{
 		organism: 'human',
-		asm: 'GRCh37',
+		asm: this.props.genomeBuild ? this.props.genomeBuild : 'GRCh37',
 		orientation: 'vertical',
 		//chrWidth: 20,
 		annotations: this.props.data,
