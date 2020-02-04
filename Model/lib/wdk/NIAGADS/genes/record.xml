@@ -149,6 +149,11 @@
 			<!-- =============================================================== -->
 			<!-- Genetic Variation -->
 			<!-- =============================================================== -->
+
+			<attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
+				<columnAttribute name="gws_variants_summary_highchart" internal="true" inReportMaker="false" type="highchart_json"/>
+			</attributeQueryRef>
+			
 			<attributeQueryRef ref="GeneAttributes.ADEvidenceFlag">
 				<columnAttribute name="has_ad_evidence" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" internal="true" inReportMaker="true" type="string" />
 				<columnAttribute name="ad_evidence_flag" internal="false" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" inReportMaker="false" type="json_icon" />
