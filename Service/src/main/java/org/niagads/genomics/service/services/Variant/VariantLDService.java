@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -35,8 +36,11 @@ public class VariantLDService extends AbstractWdkService {
 
     private static final String VARIANT_PARAM = "variants"; 
     private static final String POPULATION_PARAM = "population";
+    private static final String DEFAULT_POPULATION = "EUR";
 
-    private static final String ID_CTE = "SELECT find_variant_primary_key(variant_identifier) AS record_pk, variant_identifier FROM unnest(string_to_array(?, ',')) variant_identifier";
+
+    private static final String REQUEST_ID_CTE = "SELECT * FROM unnest(string_to_array(?, ',')) variant_identifier";
+    private static final String RECORD_PK_CTE = "SELECT find_variant_primary_key(variant_identifier) AS record_pk, variant_identifier FROM request_ids";
     
     private static final String VARIANT_CTE = "SELECT ids.variant_identifier AS request_variant_id," + NL 
         + "v.variant_id::integer AS variant_id, v.record_pk," + NL
@@ -75,29 +79,46 @@ public class VariantLDService extends AbstractWdkService {
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.linkage.get-response")
     public Response buildResponse(String body, @QueryParam(VARIANT_PARAM) String variants,
-                                  @QueryParam(POPULATION_PARAM) String population) throws WdkModelException {
+        @DefaultValue(DEFAULT_POPULATION)@QueryParam(POPULATION_PARAM) String population) throws WdkModelException {
                                       
         LOG.info("Starting 'Variant Linkage' Service");
-        JSONArray linkage = null;
-        JSONArray variantDetails = null;
+        String linkage = null;
+        String variantDetails = null;
+        String unmappedVariants = null;
         String message = "success";
         JSONObject response = new JSONObject();
         try {
             variantDetails = fetchVariantDetails(variants);
-            linkage = fetchResult(variants, population);       
+      
             if (variantDetails == null) {
                message = "Variants could not be mapped to database.";
             }
-            else {
-                response.put("variants", variantDetails);
+            else { // no need to request linkage if variants could not be mapped
+                response.put("variants", new JSONArray(variantDetails));
+
+                linkage = fetchResult(variants, population); 
+        
+                if (linkage == null) {
+                    message = "No LD exists among the submitted variants.";
+                }
+                else {
+                    response.put("data", new JSONArray(linkage));
+                }
             }
 
-            if (linkage == null) {
-                message = "No LD exists among the submitted variants.";
+            unmappedVariants = fetchUnmappedVariants(variants);
+            JSONObject umvResult = new JSONObject();
+            if (unmappedVariants == null) {
+                umvResult.put("count", 0);
             }
             else {
-                response.put("data", linkage);
+                JSONArray umvIds = new JSONArray(unmappedVariants);
+                umvResult.put("count", umvIds.length());
+                umvResult.put("request_ids", umvIds);
             }
+
+            response.put("unmapped_variants", umvResult);
+
             response.put("message", message);           
         }
 
@@ -109,7 +130,7 @@ public class VariantLDService extends AbstractWdkService {
     }
 
 
-    private JSONArray fetchResult(String variants, String population) {   
+    private String fetchResult(String variants, String population) {   
     
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
@@ -119,36 +140,63 @@ public class VariantLDService extends AbstractWdkService {
         runner.executeQuery(new Object[] {variants, population}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
-        return new JSONArray((String) results.get(0).get("result"));
+        return (String) results.get(0).get("result");
     }
 
     private String prepareIdCTE() {
-        String sql = "WITH ids AS (" + ID_CTE + ")," + NL
-            + "variants AS (" + VARIANT_CTE + ")";
+        String sql = "WITH request_ids AS (" + REQUEST_ID_CTE + ")," + NL
+            + "ids AS (" + RECORD_PK_CTE + ")";
+        return sql;
+    }
 
+    private String prepareMappedVariantIdCTE() {
+        String sql = prepareIdCTE() + "," + NL
+            + "variants AS (" + VARIANT_CTE + ")";
+        return sql;
+    }
+
+    private String prepareUnmappedVariantQuery() {
+        String sql = prepareIdCTE() + NL
+            + "SELECT json_agg(ids.variant_identifier)::text AS unmapped_variants" + NL
+            + "FROM ids" + NL
+            + "WHERE ids.record_pk NOT IN" + NL 
+            + "(SELECT v.record_pk FROM NIAGADS.Variant v, ids WHERE ids.record_pk = v.record_pk)";
         return sql;
     }
 
     private String prepareLDQuery() {
-        String sql = prepareIdCTE() + ", " + NL
+        String sql = prepareMappedVariantIdCTE() + ", " + NL
             + "linkage AS (" + LD_CTE + ")" + NL
             + LD_RESULT_QUERY;
         return sql;
     }
 
-    private JSONArray fetchVariantDetails(String variants) {
+    private String fetchUnmappedVariants(String variants) {
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-        String sql = prepareIdCTE() + NL
+        String sql = prepareUnmappedVariantQuery();
+
+        SQLRunner runner = new SQLRunner(ds, sql, "unmapped-variants-query");
+        runner.executeQuery(new Object[] {variants}, handler);
+
+        List <Map <String, Object>> results = handler.getResults();
+        return (String) results.get(0).get("unmapped_variants");
+    }
+
+    private String fetchVariantDetails(String variants) {
+        WdkModel wdkModel = getWdkModel();
+        DataSource ds = wdkModel.getAppDb().getDataSource();
+        BasicResultSetHandler handler = new BasicResultSetHandler();
+
+        String sql = prepareMappedVariantIdCTE() + NL
             + VARIANT_DETAILS_JSON_QUERY;
         SQLRunner runner = new SQLRunner(ds, sql, "variant-details-query");
         runner.executeQuery(new Object[] {variants}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
-
-        return new JSONArray((String) results.get(0).get("details"));
+        return (String) results.get(0).get("details");
     }
 
 }
