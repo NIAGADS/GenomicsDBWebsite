@@ -5,12 +5,12 @@ import { ServiceBase } from "wdk-client/Service/ServiceBase";
 import { get } from "lodash";
 import { NumberSelector } from "wdk-client/Components";
 
-interface Ideogram {
+interface GenomeView {
   serviceUrl: string;
   stepId: NumberSelector;
 }
 
-const Ideogram: React.FC<any> = ({ serviceUrl, stepId }) => {
+const GenomeView: React.FC<any> = ({ serviceUrl, stepId }) => {
   const [data, setData] = useState<{ [key: string]: any }>();
   useEffect(() => {
     const base = ServiceBase(serviceUrl);
@@ -25,7 +25,6 @@ const Ideogram: React.FC<any> = ({ serviceUrl, stepId }) => {
   }, []);
 
   return <pre>{JSON.stringify(data)}</pre>;
-
 };
 
 const mapStateToProps = (state: any) => {
@@ -35,4 +34,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps)(Ideogram);
+export default connect(mapStateToProps)(GenomeView);
