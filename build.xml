@@ -118,7 +118,9 @@
   <target name="GenomicsDBWebsite-WebInstallation" depends="GenomicsDBWebsite-Installation,
                                                             EbrcWebSvcCommon-WebInstallation,
                                                             GenomicsDBWebsite/View-WebInstallation,
-                                                            GenomicsDBWebsite/Site-WebInstallation">
+                                                            GenomicsDBWebsite/Site-WebInstallation,
+                                                            GenomicsDBWebsite/Service-WebInstallation,
+                                                            checkLinks,docLink">
   </target>
 
   <target name="GenomicsDBWebsite-Website-Patch">
@@ -154,6 +156,22 @@
 
   </target>
 
+  <target name="GenomicsDBWebsite/Service-WebInstallation" depends="WDK/Service-Installation">
+  <echo message="Generating API documentation"/>
+    <antcall target="runRaml2Html">
+      <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml"/>
+      <param name="outputFile" value="${htdocsTargetDir}/service-api.html"/>
+    </antcall>
+  </target>
+
+  <target name="checkLinks">
+    <available file="${webappTargetDir}/docs" property="docsLinkExists" />
+  </target>
+
+  <target name="docLink" unless="docsLinkExists">
+    <symlink link="${htdocsTargetDir}"
+             resource="${targetDir}/htdocs" />
+  </target>
 
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooo  Release  ooooooooooooooooooooooooooooo -->
