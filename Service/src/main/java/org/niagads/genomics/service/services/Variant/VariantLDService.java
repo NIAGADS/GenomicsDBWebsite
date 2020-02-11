@@ -85,9 +85,12 @@ public class VariantLDService extends AbstractWdkService {
         String linkage = null;
         String variantDetails = null;
         String unmappedVariants = null;
+        //Boolean chrCount = null;
         String message = "success";
         JSONObject response = new JSONObject();
         try {
+            //chrCount = verifySingleChromosome(variants); -- only necessary if rendering a graphic
+
             variantDetails = fetchVariantDetails(variants);
       
             if (variantDetails == null) {
@@ -129,6 +132,19 @@ public class VariantLDService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
+    
+    private Boolean verifySingleChromosome(String variants) {
+
+        WdkModel wdkModel = getWdkModel();
+        DataSource ds = wdkModel.getAppDb().getDataSource();
+        BasicResultSetHandler handler = new BasicResultSetHandler();
+
+        SQLRunner runner = new SQLRunner(ds, prepareChrCountSql(), "verify-chr-query");
+        runner.executeQuery(new Object[] {variants}, handler);
+
+        List <Map <String, Object>> results = handler.getResults();
+        return ((Integer) results.get(0).get("chr_count") == 1);
+    }
 
     private String fetchResult(String variants, String population) {   
     
@@ -146,6 +162,13 @@ public class VariantLDService extends AbstractWdkService {
     private String prepareIdCTE() {
         String sql = "WITH request_ids AS (" + REQUEST_ID_CTE + ")," + NL
             + "ids AS (" + RECORD_PK_CTE + ")";
+        return sql;
+    }
+
+    private String prepareChrCountSql() {
+        String sql = prepareMappedVariantIdCTE() + NL
+            + "SELECT COUNT(DISTINCT chromosome) AS chr_count" + NL
+            + "FROM variants";
         return sql;
     }
 
@@ -192,6 +215,7 @@ public class VariantLDService extends AbstractWdkService {
 
         String sql = prepareMappedVariantIdCTE() + NL
             + VARIANT_DETAILS_JSON_QUERY;
+
         SQLRunner runner = new SQLRunner(ds, sql, "variant-details-query");
         runner.executeQuery(new Object[] {variants}, handler);
 
