@@ -30,4 +30,9 @@ import static org.gusdb.fgputil.FormatUtil.NL;
             + "GROUP BY chromosome";
         return sql;
     }
+
+    @Override
+    public String getDisplayRecordType() {
+        return "Variant";
+    }
   }

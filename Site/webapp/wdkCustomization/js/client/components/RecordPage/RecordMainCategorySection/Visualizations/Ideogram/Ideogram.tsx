@@ -9,6 +9,7 @@ interface IdeogramProps {
 	legend?: any;
 	annotationHeight?: number;
 	chrWidth?: number;
+	chrHeight?: number;
 	genomeBuild?: "GRCh37" | "GRCh38";
 	orientation?: "vertical" | "horizontal";
 	rotatable?: boolean;
@@ -16,14 +17,17 @@ interface IdeogramProps {
 }
 
 const IdeogramPlot: React.SFC<IdeogramProps> = props => {
-	const { annotations, tracks, container, legend, annotationHeight, chrWidth, genomeBuild, orientation, rotatable, showBandLabels } = props;
+	const { annotations, tracks, container, legend, annotationHeight,
+		    chrWidth, chrHeight,
+			genomeBuild,
+			orientation, rotatable, showBandLabels } = props;
 
 	useEffect(() => {
 		let ideogramProps:any = {
 			organism: 'human',
-			asm: genomeBuild ? genomeBuild : 'GRCh37',
+			assembly: genomeBuild ? genomeBuild : 'GRCh37',
 			container: '#'.concat(container),
-			dataDir: 'https://unpkg.com/ideogram@1.9.0/dist/data/bands/native/',
+			dataDir: 'https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/',
 			orientation: orientation ? orientation : 'vertical',
 			rotatable: rotatable ? rotatable : false,
 			showBandLabels: showBandLabels ? showBandLabels: false,
@@ -33,6 +37,10 @@ const IdeogramPlot: React.SFC<IdeogramProps> = props => {
 
 		if (chrWidth) {
 			ideogramProps['chrWidth'] = chrWidth;
+		}
+
+		if (chrHeight) {
+			ideogramProps['chrHeight'] = chrHeight;
 		}
 
 		if (legend) {

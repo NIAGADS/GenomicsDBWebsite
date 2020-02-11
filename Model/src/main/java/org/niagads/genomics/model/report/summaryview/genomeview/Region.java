@@ -81,16 +81,12 @@ public class Region {
     }
 
     public long getStart() {
-        if (_location == null) {
-            setLocation();
-        }
+        setLocation();
         return _location[0];
     }
 
     public long getEnd() {
-        if (_location == null) {
-            setLocation();
-        }
+        setLocation();
         return _location[1];
     }
 
@@ -99,9 +95,7 @@ public class Region {
     }
 
     public long[] getLocation() {
-        if (_location == null) {
-            setLocation();
-        }
+        setLocation();
         return _location;
     }
 }

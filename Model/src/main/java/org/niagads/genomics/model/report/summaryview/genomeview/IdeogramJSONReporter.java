@@ -46,7 +46,7 @@ public abstract class IdeogramJSONReporter extends AbstractReporter {
     final private static String BIN_FEATURES_OPTION = "bin_features";
 
     final private static String EXCEEDS_LIMIT_PROP = "exceeds_limit";
-    final private static double MAX_FEATURE_LIMIT = 1000;
+    final private static double MAX_FEATURE_LIMIT = 5000;
 
     final private static String COLUMN_FEATURE_JSON = "feature_json";
     final private static String COLUMN_CHROMOSOME = "chromosome";
@@ -65,6 +65,7 @@ public abstract class IdeogramJSONReporter extends AbstractReporter {
     protected Boolean _binFeatures = false;
 
     public abstract String prepareSql(String idSql);
+    public abstract String getDisplayRecordType();
 
     public IdeogramJSONReporter(AnswerValue answerValue) {
         super(answerValue);
@@ -113,6 +114,8 @@ public abstract class IdeogramJSONReporter extends AbstractReporter {
 
         DataSource dataSource = answerValue.getAnswerSpec().getQuestion().getWdkModel().getAppDb().getDataSource();
         writer.object();
+
+        writer.key("record_type").value(getDisplayRecordType());
 
         // don't render
         if (answerValue.getResultSizeFactory().getResultSize() > MAX_FEATURE_LIMIT) {
@@ -217,7 +220,7 @@ public abstract class IdeogramJSONReporter extends AbstractReporter {
         while(iterator.hasNext()) {
             JSONObject feature = (JSONObject) iterator.next();
             Integer fStart = (Integer) feature.get(FIELD_START_POSITION);
-            if (region == null || ((fStart.longValue() - region.getEnd()) / chrSize) > MIN_FEATURE_PERCENT_GAP) {            
+            if (region == null || ((fStart.longValue() - region.getEnd()) / (double) chrSize) > MIN_FEATURE_PERCENT_GAP) {            
                 if (region != null) {
                     regions.add(region); // region exists but is too far from next feature, so time to create a new one
                 }
