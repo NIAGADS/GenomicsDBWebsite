@@ -187,7 +187,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                   (record.tables as any)[category.wdkReference.name][0]
                     .annotation_tracks
                 )}
-                data={JSON.parse(
+                annotations={JSON.parse(
                   (record.tables as any)[category.wdkReference.name][0].data
                 )}
               />

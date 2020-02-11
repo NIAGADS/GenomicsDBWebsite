@@ -4,6 +4,7 @@ import StepService from "wdk-client/Service/Mixins/StepsService";
 import { ServiceBase } from "wdk-client/Service/ServiceBase";
 import { get } from "lodash";
 import { NumberSelector } from "wdk-client/Components";
+import { IdeogramPlot } from '../RecordPage/RecordMainCategorySection/Visualizations';
 
 interface GenomeView {
   serviceUrl: string;
@@ -11,7 +12,7 @@ interface GenomeView {
   projectId: string;
 }
 
-const GenomeView: React.FC<any> = ({ serviceUrl, stepId }) => {
+const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
   const [data, setData] = useState<{ [key: string]: any }>();
 
   const legend = [{
@@ -28,7 +29,6 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId }) => {
   ];
 
   const annotHeight = 5;
-
   const chrWidth = 25;
 
   useEffect(() => {
@@ -43,7 +43,10 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId }) => {
       .then(data => setData(data));
   }, []);
 
-  return <pre>{JSON.stringify(data)}</pre>;
+
+  return data ? <IdeogramPlot annotations={data.ideogram_annotation} container="ideogram" tracks={annotationTracks} legend={legend} genomeBuild={projectId} showBandLabels={true} chrWidth={chrWidth}/> 
+    : <div>Loading...</div>;
+  
 };
 
 const mapStateToProps = (state: any) => {

@@ -142,7 +142,7 @@ public abstract class IdeogramJSONReporter extends AbstractReporter {
                    featureAnnotation = buildAnnotationJson(features);
                 
                 annotation.put("annots", featureAnnotation);
-                writer.key("data").value(annotation);
+                writer.key("ideogram_annotation").value(annotation);
                 writer.endObject();
             } 
             

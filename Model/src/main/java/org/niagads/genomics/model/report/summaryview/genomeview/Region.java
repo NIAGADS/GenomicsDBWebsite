@@ -28,10 +28,6 @@ public class Region {
         return _chromosome;
     }
 
-    public String getSourceId() {
-        return getChromosome() + "-" + getStart();
-    }
-
     public void addFeature(JSONObject feature) {
         _features.put(feature);
     }
@@ -65,7 +61,7 @@ public class Region {
 
     private void setLocation() { 
 
-        if (_features.length() < 0) {
+        if (_features.length() <= 0) {
             _location =  new long[] { 0, 0 };
         }
         else {    
@@ -102,7 +98,7 @@ public class Region {
         return (_location[1] - _location[0] + 1); 
     }
 
-    private long[] getLocation() {
+    public long[] getLocation() {
         if (_location == null) {
             setLocation();
         }
