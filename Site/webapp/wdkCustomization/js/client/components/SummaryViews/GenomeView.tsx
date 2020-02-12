@@ -25,9 +25,17 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
     { id: 'binned_features', displayName: 'Locus', color: locusTrackColor, shape: 'triangle' },
   ];
 
-  const annotHeight = 3;
-  const chrWidth = 15;
-  const chrHeight= 750;
+  const config = {
+    annotationHeight: 4,
+    chrWidth: 20,
+    chrHeight: 1000,
+    chrMargin: 20,
+    rotatable: false,
+    annotationTracks: annotationTracks,
+    assembly: projectId,
+    showBandLabels: true,
+    orientation: "horizontal",
+  }
 
   useEffect(() => {
     const base = ServiceBase(serviceUrl);
@@ -50,11 +58,10 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
         { name: 'Locus containing multiple ' + data.record_type + 's', color: locusTrackColor, shape: 'triangle' },
       ]
     }];
+
   }
 
-  return data ? <IdeogramPlot rotatable={false} annotations={data.ideogram_annotation} container="ideogram" 
-                              tracks={annotationTracks} legend={legend} genomeBuild={projectId} showBandLabels={true} orientation="horizontal" 
-                              chrWidth={chrWidth} chrHeight={chrHeight} annotationHeight={annotHeight}/>
+  return data ? <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend}/>
     :   <LoadingOverlay>Loading results...</LoadingOverlay>
 
 };

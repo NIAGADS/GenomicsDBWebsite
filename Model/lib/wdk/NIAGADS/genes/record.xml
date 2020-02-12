@@ -64,9 +64,9 @@
 			<!-- =============================================================== -->
 			<!-- Summary and record views -->
 			<!-- =============================================================== -->
-			<summaryView name="_default" display="Variant Results">
+			<summaryView name="_default" display="Gene Results">
                  <description>
-                     <![CDATA[View variant details.]]>
+                     <![CDATA[View gene details.]]>
                  </description>
              </summaryView>
 

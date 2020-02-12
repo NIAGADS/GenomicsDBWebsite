@@ -4,54 +4,33 @@ import Ideogram from 'ideogram';
 
 interface IdeogramProps {
 	annotations: any;
-	tracks: any;
 	container: string;
 	legend?: any;
-	annotationHeight?: number;
-	chrWidth?: number;
-	chrHeight?: number;
-	genomeBuild?: "GRCh37" | "GRCh38";
-	orientation?: "vertical" | "horizontal";
-	rotatable?: boolean;
-	showBandLabels?: boolean;
+	config?: any; // set options from the ideogram API
+	tracks?: any; // maybe set in config/ this is for legacy support
 }
 
 const IdeogramPlot: React.SFC<IdeogramProps> = props => {
-	const { annotations, tracks, container, legend, annotationHeight,
-		    chrWidth, chrHeight,
-			genomeBuild,
-			orientation, rotatable, showBandLabels } = props;
+	const { annotations, container, legend, tracks, config } = props;
 
 	useEffect(() => {
-		let ideogramProps:any = {
-			organism: 'human',
-			assembly: genomeBuild ? genomeBuild : 'GRCh37',
-			container: '#'.concat(container),
-			dataDir: 'https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/',
-			orientation: orientation ? orientation : 'vertical',
-			rotatable: rotatable ? rotatable : false,
-			showBandLabels: showBandLabels ? showBandLabels: false,
-			annotationHeight: annotationHeight ? annotationHeight : 5,
-			annotationTracks: tracks
-		}
-
-		if (chrWidth) {
-			ideogramProps['chrWidth'] = chrWidth;
-		}
-
-		if (chrHeight) {
-			ideogramProps['chrHeight'] = chrHeight;
-		}
-
-		if (legend) {
-			ideogramProps['legend'] = legend;
-		}
-
-
-
 		if (annotations) {
-			ideogramProps['annotations'] = annotations;
-			new Ideogram(ideogramProps);
+			let baseConfig:any = {
+				organism: 'human',
+				container: '#'.concat(container),
+				dataDir: 'https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/',
+				annotations: annotations
+			}
+			
+			if (legend) {
+				baseConfig['legend'] = legend;
+			}		
+
+			if (tracks) {
+				baseConfig['tracks'] = tracks;
+ 			}
+			
+			new Ideogram(Object.assign({}, baseConfig, config));
 		}
 	}, []);
 
