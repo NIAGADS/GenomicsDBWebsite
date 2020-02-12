@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 //@ts-ignore
 import Ideogram from "ideogram";
 import d3 from "d3";
+import { get } from "lodash";
 
 import CorrelationModal from "./CorrelationModal";
 
@@ -55,10 +56,11 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
         organism: "human",
         dataDir: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
         annotations: annotations,
+        container: "#".concat(container),
         showAnnotTooltip: false,
         onLoad: () => {
           d3.selectAll(".annot path").on("click", d => {
-            if (!activePoint) {
+            if (!activePoint && Array.isArray(get(d, "features"))) {
               setActivePoint(d);
               setCorrelationModalOpen(true);
             }
@@ -81,7 +83,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
 
   return (
     <>
-      <div id={"#".concat(container)} className="ideogram-plot"></div>
+      <div id={container} className="ideogram-plot"></div>
       {correlationModalOpen && (
         <CorrelationModal
           onClose={() => {
