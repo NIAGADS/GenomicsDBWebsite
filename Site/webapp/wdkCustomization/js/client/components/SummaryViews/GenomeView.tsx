@@ -55,7 +55,7 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
   return data ? <IdeogramPlot rotatable={false} annotations={data.ideogram_annotation} container="ideogram" 
                               tracks={annotationTracks} legend={legend} genomeBuild={projectId} showBandLabels={true} orientation="horizontal" 
                               chrWidth={chrWidth} chrHeight={chrHeight} annotationHeight={annotHeight}/>
-    :   <LoadingOverlay>'Loading...'</LoadingOverlay>
+    :   <LoadingOverlay>Loading results...</LoadingOverlay>
 
 };
 
