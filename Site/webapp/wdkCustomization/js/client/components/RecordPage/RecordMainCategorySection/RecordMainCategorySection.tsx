@@ -15,7 +15,7 @@ import {
   IdeogramPlot,
   HighchartPlot,
   HighchartPlotList
-} from "./Visualizations";
+} from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { isEmpty } from "lodash";
 import {
