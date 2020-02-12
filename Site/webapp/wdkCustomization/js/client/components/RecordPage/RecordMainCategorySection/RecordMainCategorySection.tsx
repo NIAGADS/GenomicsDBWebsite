@@ -181,7 +181,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
             onCollapsedChange={this.toggleCollapse}
           >
             {(record.tables as any)[category.wdkReference.name] && (
-              <IdeogramPlot
+              <IdeogramPlot container="ideogram-container"
                 tracks={JSON.parse(
                   (record.tables as any)[category.wdkReference.name][0]
                     .annotation_tracks

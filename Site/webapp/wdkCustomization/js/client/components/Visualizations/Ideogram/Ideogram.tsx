@@ -4,6 +4,7 @@ import Ideogram from "ideogram";
 
 interface IdeogramProps {
   annotations: any;
+  container: string;
   legend?: any;
   config?: any; // set options from the ideogram API
   tracks?: any; // maybe set in config/ this is for legacy support
@@ -36,15 +37,15 @@ interface Feature {
 }
 
 const IdeogramPlot: React.SFC<IdeogramProps> = props => {
-  const { annotations, legend, tracks, config } = props;
+  const { annotations, container, legend, tracks, config } = props;
 
   useEffect(() => {
     if (annotations) {
       let baseConfig: any = {
         organism: "human",
-        container: "#ideogram-container",
         dataDir: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
         annotations: annotations,
+        container: '#'.concat(container),
         onWillShowAnnotTooltip: (point: Point) => {
           return point;
         }
@@ -62,7 +63,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = props => {
     }
   }, []);
 
-  return <div id="ideogram-container" className="ideogram-plot"></div>;
+  return <div id={container} className="ideogram-plot"></div>;
 };
 
 export default IdeogramPlot;
