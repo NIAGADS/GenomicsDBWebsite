@@ -62,6 +62,24 @@
 			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
 			<!-- =============================================================== -->
+			<!-- Summary and record views -->
+			<!-- =============================================================== -->
+			<summaryView name="_default" display="Gene Results">
+                 <description>
+                     <![CDATA[View gene details.]]>
+                 </description>
+             </summaryView>
+
+			<summaryView name="ideogram" display="Genome View">
+                 <description>
+                     <![CDATA[View your results mapped against the genome.]]>
+                 </description>
+             </summaryView>
+
+			<reporter name="genomeViewReporter" displayName="Ideogram"  scopes=""
+                    	implementation="org.niagads.genomics.model.report.summaryview.genomeview.GeneGenomeViewReporter" />
+
+			<!-- =============================================================== -->
 			<!-- Annotation and Link Outs -->
 			<!-- =============================================================== -->
 			<attributeQueryRef ref="GeneAttributes.BasicAttributes">

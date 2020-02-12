@@ -35,9 +35,17 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
     }
   ];
 
-  const annotHeight = 3;
-  const chrWidth = 15;
-  const chrHeight = 750;
+  const config = {
+    annotationHeight: 4,
+    chrWidth: 20,
+    chrHeight: 1000,
+    chrMargin: 20,
+    rotatable: false,
+    annotationTracks: annotationTracks,
+    assembly: projectId,
+    showBandLabels: true,
+    orientation: "horizontal",
+  }
 
   useEffect(() => {
     const base = ServiceBase(serviceUrl);
@@ -52,6 +60,7 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
   },[]);
 
   if (data) {
+<<<<<<< HEAD
     legend = [
       {
         name: "Legend",
@@ -87,6 +96,21 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
   ) : (
     <LoadingOverlay>Loading results...</LoadingOverlay>
   );
+=======
+    legend = [{
+      name: 'Legend',
+      rows: [
+        { name: data.record_type, color: featureTrackColor, shape: 'triangle' },
+        { name: 'Locus containing multiple ' + data.record_type + 's', color: locusTrackColor, shape: 'triangle' },
+      ]
+    }];
+
+  }
+
+  return data ? <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend}/>
+    :   <LoadingOverlay>Loading results...</LoadingOverlay>
+
+>>>>>>> 79e3451576d3e8653e589d2cf7813bb388fdb1e7
 };
 
 const mapStateToProps = (state: any) => {
