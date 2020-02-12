@@ -61,7 +61,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = props => {
 
       new Ideogram(Object.assign({}, baseConfig, config));
     }
-  }, []);
+  }, [annotations]);
 
   return <div id={container} className="ideogram-plot"></div>;
 };
