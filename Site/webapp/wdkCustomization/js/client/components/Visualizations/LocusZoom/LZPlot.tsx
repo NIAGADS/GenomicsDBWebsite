@@ -1,6 +1,6 @@
 import React from 'react';
-import locuszoom from './../../../../../../lib/locusZoom/locuszoom.app';
-import './../../../../../../lib/locusZoom/locuszoom.css';
+import locuszoom from './../../../../lib/locusZoom/locuszoom.app';
+import './../../../../lib/locusZoom/locuszoom.css';
 import { connect } from 'react-redux';
 
 const lz = locuszoom as any; //typescript shim -- lz is already a global (see webpack) (needs to be global so tooltips work)

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { HeaderRecordActions } from "./../Shared";
 import * as gr from "./../../types";
-import HighchartPlot from "./../../RecordMainCategorySection/Visualizations/Highcharts/HighchartPlot";
+import HighchartPlot from "../../../Visualizations/Highcharts/HighchartPlot";
 
 interface StoreProps {
   externalUrls: { [key: string]: any };
