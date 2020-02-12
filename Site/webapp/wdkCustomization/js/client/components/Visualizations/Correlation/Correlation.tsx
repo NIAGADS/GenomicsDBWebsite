@@ -26,6 +26,12 @@ interface ChartData {
   variants: Variant[];
 }
 
+interface Datum {
+  variant: Variant;
+  correlate: Variant;
+  value: number;
+}
+
 const CorrelationPlot: React.FC<CorrelationPlot> = ({
   variants,
   population
@@ -51,13 +57,11 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         height = 500;
 
       const margin = {
-        top: 50,
-        right: 50,
+        top: 250,
+        right: 150,
         bottom: 75,
         left: 100
       };
-
-      //draw canvas
 
       const xScale = d3.scale
         .ordinal()
@@ -69,14 +73,34 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         .rangeBands([height, 0])
         .domain(chartData.variants.map(v => v.display_label).reverse());
 
+      const zScale = d3.scale
+        .ordinal()
+        .rangeBands([
+          height - yScale.rangeBand() / 4,
+          -(yScale.rangeBand() / 4)
+        ])
+        .domain(chartData.variants.map(v => v.display_label).reverse());
+
+      const yContScale = d3.scale
+        .linear()
+        .range([-yScale.rangeBand(), height])
+        .domain([0, chartData.variants.length - 1]);
+
+      const xContScale = d3.scale
+        .linear()
+        .range([0, width + xScale.rangeBand()])
+        .domain([0, chartData.variants.length - 1]);
+
       const xAxis = d3.svg
         .axis()
         .scale(xScale)
+        .tickValues([])
         .orient("bottom");
 
       const yAxis = d3.svg
         .axis()
         .scale(yScale)
+        .tickValues([])
         .orient("left");
 
       //margin convention
@@ -178,10 +202,11 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
             .data(block)
             .enter()
             .append("rect")
-            .attr("class", "block")
+            .attr("class", (d, i) => `block-${i}`)
             .attr("width", xScale.rangeBand())
             .attr("height", yScale.rangeBand())
-            .attr("fill", d => (d.value < 0.2 ? "gray" : "red"))
+            .attr("fill", d => (d.value < 0.2 ? "white" : "red"))
+            .attr("stroke", "black")
             .attr("opacity", d => (d.value < 0.2 ? 1 : d.value))
             .attr("x", d => xScale(d.variant.display_label))
             .attr("y", d => yScale(d.correlate.display_label));
@@ -194,6 +219,33 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         .style("text-anchor", "start")
         .attr("dy", "0")
         .attr("x", "5");
+
+      svg.selectAll(".bar").each(function(d: Datum[]) {
+        const last = d[0];
+        const x = xScale(last.variant.display_label);
+        const y = zScale(last.correlate.display_label);
+        //@ts-ignore
+        d3.select(this)
+          .append("g")
+          .attr("transform", "translate(" + xScale.rangeBand() * 1.33 + ", 0)")
+          .append("text")
+          .attr("transform", "rotate(-45," + x + "," + y + ")")
+          .attr("x", x)
+          .attr("y", y)
+          .style("font-size", 16)
+          .text(() => last.variant.display_label);
+      });
+
+      const line = d3.svg
+        .line()
+        .x((d: any, i) => xContScale(i) + 20)
+        .y((d: any, i) => yContScale(i));
+
+      svg
+        .append("path")
+        .attr("class", "line")
+        .style("stroke", "black")
+        .attr("d", (d: any) => line(data as any));
     }
   }, [chartData]);
 

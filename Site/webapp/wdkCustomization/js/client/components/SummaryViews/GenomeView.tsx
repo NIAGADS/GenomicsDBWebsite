@@ -60,43 +60,6 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
   },[]);
 
   if (data) {
-<<<<<<< HEAD
-    legend = [
-      {
-        name: "Legend",
-        rows: [
-          {
-            name: data.record_type,
-            color: featureTrackColor,
-            shape: "triangle"
-          },
-          {
-            name: "Locus containing multiple " + data.record_type + "s",
-            color: locusTrackColor,
-            shape: "triangle"
-          }
-        ]
-      }
-    ];
-  }
-
-  return data ? (
-    <IdeogramPlot
-      rotatable={false}
-      annotations={data.ideogram_annotation}
-      tracks={annotationTracks}
-      legend={legend}
-      genomeBuild={projectId}
-      showBandLabels={true}
-      orientation="horizontal"
-      chrWidth={chrWidth}
-      chrHeight={chrHeight}
-      annotationHeight={annotHeight}
-    />
-  ) : (
-    <LoadingOverlay>Loading results...</LoadingOverlay>
-  );
-=======
     legend = [{
       name: 'Legend',
       rows: [
@@ -107,10 +70,9 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
 
   }
 
-  return data ? <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend}/>
+  return data ? <IdeogramPlot annotations={data.ideogram_annotation} config={config} legend={legend}/>
     :   <LoadingOverlay>Loading results...</LoadingOverlay>
 
->>>>>>> 79e3451576d3e8653e589d2cf7813bb388fdb1e7
 };
 
 const mapStateToProps = (state: any) => {
