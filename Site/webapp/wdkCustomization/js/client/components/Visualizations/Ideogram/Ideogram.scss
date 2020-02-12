@@ -1,3 +1,16 @@
 .ideogram-plot {
-    max-width: 500px;
+  .annot {
+    path {
+      cursor: pointer;
+    }
+  }
+}
+
+.correlation-modal {
+  .wdk-DialogContent {
+    overflow: hidden;
+  }
+  #correlation-plot {
+    height: 450px;
+  }
 }

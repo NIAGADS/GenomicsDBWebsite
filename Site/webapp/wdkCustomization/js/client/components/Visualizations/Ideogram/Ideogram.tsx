@@ -1,6 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 //@ts-ignore
 import Ideogram from "ideogram";
+import d3 from "d3";
+
+import CorrelationModal from "./CorrelationModal";
 
 interface IdeogramProps {
   annotations: any;
@@ -35,8 +38,14 @@ interface Feature {
   span_length: number;
 }
 
-const IdeogramPlot: React.SFC<IdeogramProps> = props => {
-  const { annotations, legend, tracks, config } = props;
+const IdeogramPlot: React.SFC<IdeogramProps> = ({
+  annotations,
+  legend,
+  tracks,
+  config
+}) => {
+  const [correlationModalOpen, setCorrelationModalOpen] = useState(false),
+    [activePoint, setActivePoint] = useState<Point>();
 
   useEffect(() => {
     if (annotations) {
@@ -45,8 +54,14 @@ const IdeogramPlot: React.SFC<IdeogramProps> = props => {
         container: "#ideogram-container",
         dataDir: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
         annotations: annotations,
-        onWillShowAnnotTooltip: (point: Point) => {
-          return point;
+        showAnnotTooltip: false,
+        onLoad: () => {
+          d3.selectAll(".annot path").on("click", d => {
+            if (!activePoint) {
+              setActivePoint(d);
+              setCorrelationModalOpen(true);
+            }
+          });
         }
       };
 
@@ -60,9 +75,24 @@ const IdeogramPlot: React.SFC<IdeogramProps> = props => {
 
       new Ideogram(Object.assign({}, baseConfig, config));
     }
-  }, []);
+    //force redraw on modal close so embedded css reloads
+  }, [correlationModalOpen]);
 
-  return <div id="ideogram-container" className="ideogram-plot"></div>;
+  return (
+    <>
+      <div id="ideogram-container" className="ideogram-plot"></div>
+      {correlationModalOpen && (
+        <CorrelationModal
+          onClose={() => {
+            setCorrelationModalOpen(false);
+            setActivePoint(null);
+          }}
+          open={true}
+          variants={activePoint.features.map(f => f.record_primary_key)}
+        />
+      )}
+    </>
+  );
 };
 
 export default IdeogramPlot;

@@ -36,31 +36,34 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
   variants,
   population
 }) => {
-  const [chartData, setChartData] = useState<ChartData>();
+  const [chartData, setChartData] = useState<ChartData>(),
+    [loading, setLoading] = useState(false),
+    pop = population ? population : "EUR";
 
   const sendRequest = (variants: string[]) => (service: WdkService) => {
+    setLoading(true);
     service
       ._fetchJson<ChartData>(
         "get",
-        `/variant/linkage?population=${population ? population : "EUR"}
-      &variants=${variants.join(",")}`
+        `/variant/linkage?population=${pop}&variants=${variants.join(",")}`
       )
       .then((res: ChartData) => setChartData(res))
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
 
   useWdkEffect(sendRequest(variants), [variants]);
 
   useLayoutEffect(() => {
     if (chartData) {
-      const width = 500,
-        height = 500;
+      const width = 200,
+        height = 200;
 
       const margin = {
-        top: 250,
-        right: 150,
-        bottom: 75,
-        left: 100
+        top: width / 2,
+        right: width / 2,
+        bottom: width / 8,
+        left: width / 5
       };
 
       const xScale = d3.scale
@@ -238,8 +241,8 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
 
       const line = d3.svg
         .line()
-        .x((d: any, i) => xContScale(i) + 20)
-        .y((d: any, i) => yContScale(i));
+        .x((d: any, i) => xContScale(i) + 5)
+        .y((d: any, i) => yContScale(i) - 5);
 
       svg
         .append("path")
@@ -249,7 +252,12 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
     }
   }, [chartData]);
 
-  return <div id="correlation-plot" />;
+  return (
+    <>
+      {loading && <span>Loading...</span>}
+      <div id="correlation-plot" />{" "}
+    </>
+  );
 };
 
 export default CorrelationPlot;
