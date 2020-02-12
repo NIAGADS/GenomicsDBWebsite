@@ -51,7 +51,7 @@ const GenomeView: React.FC<any> = ({ resultType, projectId }) => {
     }
 
     return data ? (data.exceeds_limit) 
-        ? <div>{`The number of ${data.record_type}s in the result exceeds the display limit (50000 IDs), Genomic Summary View is not available for the result.`}</div>
+        ? <div>{`The number of ${data.record_type}s in the result exceeds the display limit (50000 IDs).  Genome-wide Summary View is not available for the result.`}</div>
             : <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend} />
         : <LoadingOverlay>Loading results...</LoadingOverlay>
 
