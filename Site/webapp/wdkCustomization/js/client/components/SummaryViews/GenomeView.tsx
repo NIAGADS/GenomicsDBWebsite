@@ -49,7 +49,7 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
         "current"
       )
       .then(data => setData(data));
-  });
+  },[]);
 
   if (data) {
     legend = [
@@ -75,7 +75,6 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
     <IdeogramPlot
       rotatable={false}
       annotations={data.ideogram_annotation}
-      container="ideogram"
       tracks={annotationTracks}
       legend={legend}
       genomeBuild={projectId}
