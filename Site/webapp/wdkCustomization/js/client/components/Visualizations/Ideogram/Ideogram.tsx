@@ -41,9 +41,10 @@ interface Feature {
 
 const IdeogramPlot: React.SFC<IdeogramProps> = ({
   annotations,
+  config,
+  container,
   legend,
-  tracks,
-  config
+  tracks
 }) => {
   const [correlationModalOpen, setCorrelationModalOpen] = useState(false),
     [activePoint, setActivePoint] = useState<Point>();
@@ -75,12 +76,12 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
 
       new Ideogram(Object.assign({}, baseConfig, config));
     }
-    //force redraw on modal close so embedded css reloads
-  }, [correlationModalOpen]);
+    //redraw on modal open and close to reload css
+  }, [annotations, correlationModalOpen]);
 
   return (
     <>
-      <div id="ideogram-container" className="ideogram-plot"></div>
+      <div id={"#".concat(container)} className="ideogram-plot"></div>
       {correlationModalOpen && (
         <CorrelationModal
           onClose={() => {
