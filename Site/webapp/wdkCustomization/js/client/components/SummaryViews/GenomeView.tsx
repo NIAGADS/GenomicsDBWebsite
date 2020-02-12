@@ -70,7 +70,7 @@ const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
 
   }
 
-  return data ? <IdeogramPlot annotations={data.ideogram_annotation} config={config} legend={legend}/>
+  return data ? <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend}/>
     :   <LoadingOverlay>Loading results...</LoadingOverlay>
 
 };
@@ -79,7 +79,6 @@ const mapStateToProps = (state: any) => {
   return {
     serviceUrl: state.globalData.siteConfig.endpoint,
     projectId: state.globalData.siteConfig.projectId,
-    recordType: get(state, "strategyWorkspace.activeStrategy"),
     stepId: get(state, "strategyWorkspace.activeStrategy.stepId")
   };
 };

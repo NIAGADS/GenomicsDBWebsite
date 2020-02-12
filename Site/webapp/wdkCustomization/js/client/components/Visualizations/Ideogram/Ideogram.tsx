@@ -7,6 +7,7 @@ import CorrelationModal from "./CorrelationModal";
 
 interface IdeogramProps {
   annotations: any;
+  container: string;
   legend?: any;
   config?: any; // set options from the ideogram API
   tracks?: any; // maybe set in config/ this is for legacy support
@@ -51,7 +52,6 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
     if (annotations) {
       let baseConfig: any = {
         organism: "human",
-        container: "#ideogram-container",
         dataDir: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
         annotations: annotations,
         showAnnotTooltip: false,
