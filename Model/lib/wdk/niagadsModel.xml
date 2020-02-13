@@ -17,7 +17,7 @@
   
   <constant name="defaultGene">ABCA7</constant>
   <constant name="defaultTextExpression">*beta-amyloid*</constant>
-    
+  
   <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB" 
 	     version="%%releaseVersion37%%"
 	     releaseDate="%%releaseDate%%"
