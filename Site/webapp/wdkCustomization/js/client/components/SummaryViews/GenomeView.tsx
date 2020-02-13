@@ -1,86 +1,68 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import StepService from "wdk-client/Service/Mixins/StepsService";
-import { ServiceBase } from "wdk-client/Service/ServiceBase";
-import { get } from "lodash";
-import { NumberSelector } from "wdk-client/Components";
-import { IdeogramPlot } from "../Visualizations";
-import { LoadingOverlay } from "wdk-client/Components";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { useWdkEffect } from 'wdk-client/Service/WdkService';
+import { IdeogramPlot } from '../Visualizations';
+import { LoadingOverlay } from 'wdk-client/Components';
+import { ResultType, getCustomReport } from 'wdk-client/Utils/WdkResult';
 
-interface GenomeView {
-  serviceUrl: string;
-  stepId: NumberSelector;
-  projectId: string;
+const GenomeView: React.FC<any> = ({ resultType, projectId }) => {
+
+    const [data, setData] = useState<{ [key: string]: any }>();
+
+    const featureTrackColor = '#EE442F';
+    const locusTrackColor = '#63ACBE'
+    let legend: any = [];
+
+    const annotationTracks = [
+        { id: 'single_feature', displayName: 'Feature', color: featureTrackColor, shape: 'triangle' },
+        { id: 'binned_features', displayName: 'Locus', color: locusTrackColor, shape: 'triangle' },
+    ];
+
+    const config = {
+        annotationHeight: 4,
+        chrWidth: 15,
+        chrHeight: 750,
+        chrMargin: 20,
+        rotatable: false,
+        annotationTracks: annotationTracks,
+        assembly: projectId,
+        showBandLabels: true,
+        orientation: "vertical",
+    }
+
+    // load data from WDK service if necessary
+    useWdkEffect(wdkService => {
+        getCustomReport(wdkService, resultType,
+            {
+                format: "genomeViewReporter",
+                formatConfig: { "bin_features": true }
+            }
+        ).then(data => setData(data));
+    }, [resultType])
+
+    if (data) {
+        legend = [{
+            name: 'Legend',
+            rows: [
+                { name: data.record_type, color: featureTrackColor, shape: 'triangle' },
+                { name: 'Locus containing multiple ' + data.record_type + 's', color: locusTrackColor, shape: 'triangle' },
+            ]
+        }];
+    }
+
+    return data ? (data.exceeds_limit) 
+        ? <div>{`The number of ${data.record_type}s in the result exceeds the display limit (50000 IDs).  Genome-wide Summary View is not available for the result.`}</div>
+            : <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend} />
+        : <LoadingOverlay>Loading results...</LoadingOverlay>
+
+
 }
 
-const GenomeView: React.FC<any> = ({ serviceUrl, stepId, projectId }) => {
-  const [data, setData] = useState<{ [key: string]: any }>();
-
-  const featureTrackColor = "#EE442F";
-  const locusTrackColor = "#63ACBE";
-  let legend: any = [];
-
-  const annotationTracks = [
-    {
-      id: "single_feature",
-      displayName: "Feature",
-      color: featureTrackColor,
-      shape: "triangle"
-    },
-    {
-      id: "binned_features",
-      displayName: "Locus",
-      color: locusTrackColor,
-      shape: "triangle"
-    }
-  ];
-
-  const config = {
-    annotationHeight: 4,
-    chrWidth: 20,
-    chrHeight: 1000,
-    chrMargin: 20,
-    rotatable: false,
-    annotationTracks: annotationTracks,
-    assembly: projectId,
-    showBandLabels: true,
-    orientation: "horizontal",
-  }
-
-  useEffect(() => {
-    const base = ServiceBase(serviceUrl);
-
-    StepService(base)
-      .getStepCustomReport(
-        stepId,
-        { format: "genomeViewReporter", formatConfig: { bin_features: true } },
-        "current"
-      )
-      .then(data => setData(data));
-  },[]);
-
-  if (data) {
-    legend = [{
-      name: 'Legend',
-      rows: [
-        { name: data.record_type, color: featureTrackColor, shape: 'triangle' },
-        { name: 'Locus containing multiple ' + data.record_type + 's', color: locusTrackColor, shape: 'triangle' },
-      ]
-    }];
-
-  }
-
-  return data ? <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend}/>
-    :   <LoadingOverlay>Loading results...</LoadingOverlay>
-
-};
-
 const mapStateToProps = (state: any) => {
-  return {
-    serviceUrl: state.globalData.siteConfig.endpoint,
-    projectId: state.globalData.siteConfig.projectId,
-    stepId: get(state, "strategyWorkspace.activeStrategy.stepId")
-  };
+    return {
+        projectId: state.globalData.siteConfig.projectId
+    };
 };
+
 
 export default connect(mapStateToProps)(GenomeView);

@@ -3,7 +3,7 @@ import { StepAnalysisDefaultResult } from "wdk-client/Plugins";
 import DefaultQuestionForm from "wdk-client/Views/Question/DefaultQuestionForm";
 
 import { StepAnalysisGoEnrichmentResults } from "./components/StepAnalysis/StepAnalysisGoEnrichmentResults";
-import GenomeView from "./components/SummaryViews/GenomeView2";
+import GenomeView from "./components/SummaryViews/GenomeView";
 
 export default [
   /* {
