@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 //@ts-ignore
 import Ideogram from "ideogram";
 import d3 from "d3";
+import { connect } from "react-redux";
 import { get } from "lodash";
+import { isPlainObject } from "lodash";
 
 import CorrelationModal from "./CorrelationModal";
+import { webAppUrl } from "../../../config";
 
 interface IdeogramProps {
   annotations: any;
@@ -12,13 +15,16 @@ interface IdeogramProps {
   legend?: any;
   config?: any; // set options from the ideogram API
   tracks?: any; // maybe set in config/ this is for legacy support
+  //connected prop
+  webappUrl?: string;
 }
 
 interface Point {
   chr: string;
   chrIndex: number;
   color: string;
-  features: Feature[];
+  displayName?: any;
+  features: Feature | Feature[];
   length: number;
   name: string; //span
   px: number;
@@ -57,7 +63,8 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
         dataDir: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
         annotations: annotations,
         container: "#".concat(container),
-        showAnnotTooltip: false,
+        showAnnotTooltip: true,
+        onWillShowAnnotTooltip: showToolTip,
         onLoad: () => {
           d3.selectAll(".annot path").on("click", d => {
             if (!activePoint && Array.isArray(get(d, "features"))) {
@@ -91,11 +98,31 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
             setActivePoint(null);
           }}
           open={true}
-          variants={activePoint.features.map(f => f.record_primary_key)}
+          variants={(activePoint.features as Feature[]).map(
+            f => f.record_primary_key
+          )}
         />
       )}
     </>
   );
 };
 
-export default IdeogramPlot;
+const showToolTip = (point: Point) => {
+  if (isPlainObject(get(point, "features"))) {
+    //this needs to be a plain url b/c callback expects html string
+    //https://github.com/eweitz/ideogram/blob/d5a5402ed311ef6d3b85969c05be3db17c2bbb1e/src/js/annotations/events.js#L40
+    const feature = point.features as Feature;
+    const link = `${webAppUrl}/app/record/${feature.record_type}/${feature.record_primary_key}`;
+    point.displayName = `<a href=${link}>${feature.display_label}</a>`;
+  } else {
+    const features = point.features as Feature[];
+    point.displayName = `${features.length} ${features[0].record_type}${
+      features.length > 1 ? "s" : ""
+    }`;
+  }
+  return point;
+};
+
+export default connect<{ webAppUrl: string }, any, {}>((state: any) => ({
+  webAppUrl: state.globalData.siteConfig.webAppUrl
+}))(IdeogramPlot);
