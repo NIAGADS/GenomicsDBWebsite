@@ -133,6 +133,7 @@ export interface GWASDatasetRecordAttributes {
   category: string;
   is_adsp: string;
   accession_link: string;
+  niagads_accession: string;
   search_link: string;
 }
 

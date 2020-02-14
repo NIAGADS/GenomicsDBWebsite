@@ -285,6 +285,7 @@
 				<columnAttribute name="name" displayName="Name" type="string"/>
 				<columnAttribute name="description" displayName="Description" type="string"/>
 				<columnAttribute name="accession_link" displayName="Accession" type="json_link"/>
+				<columnAttribute name="niagads_accession" displayName="Accession" type="string" internal="true"/>
 				<columnAttribute name="category" displayName="Category" type="string"/>
 				<columnAttribute name="is_adsp" displayName="ADSP?" type="json_icon"/>
 				<columnAttribute name="search_link" displayName="Search" type="json_link"/>
