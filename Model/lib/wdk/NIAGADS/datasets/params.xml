@@ -11,6 +11,7 @@
                backgroundQueryRef="GWASDatasetVocab.TrackFilterMetadata"
                ontologyQueryRef="GWASDatasetVocab.TrackFilterOntology"
                prompt="GWAS Summary Statistics Datasets"
+               trimMetadataTerms="false"
                filterDataTypeDisplayName="Datasets">
                <help>Find GWAS summary statistics datasets matching the selected criteria.</help>
           </filterParam>
