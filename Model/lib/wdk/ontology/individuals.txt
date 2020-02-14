@@ -154,7 +154,8 @@ DatasetRecordClasses.GWASDatasetRecordClass.name	http://edamontology.org/topic_0
 DatasetRecordClasses.GWASDatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	description						results	record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.category	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	category						results	record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.is_adsp	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	is_adsp						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.accession_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	accession_link						results	record-internal	download
+DatasetRecordClasses.GWASDatasetRecordClass.accession_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	accession_link						results	record-internal	
+DatasetRecordClasses.GWASDatasetRecordClass.niagads_accession	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	niagads_accession							record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	search_link						results	record-internal	
 													
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_expanded_snps					1		record	

@@ -20,6 +20,7 @@
             <column name="track"/>
             <column name="project_id"/>
             <column name="accession_link"/>
+            <column name="niagads_accession"/>
             <column name="name"/>
             <column name="description"/>
             <column name="category"/>
@@ -32,6 +33,7 @@
                         name || ' (' || attribution || ')' AS name,
                         description,
                         build_link_attribute(dataset_accession, '../dataset/') AS accession_link,
+                        dataset_accession AS niagads_accession,
                         category,
                         build_link_attribute('Mine this dataset', '@NIAGADS_BASE_URL@' || '/' || '@WEBAPP@' || '/' ||
                          '@SHOW_GWAS_SEARCH@', '&' || 'gwas_accession=' || dataset_accession || '&' || 'gwas_dataset=' || track) AS search_link,
