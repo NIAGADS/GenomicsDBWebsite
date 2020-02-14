@@ -44,7 +44,7 @@ public class VariantLDService extends AbstractWdkService {
     
     private static final String VARIANT_CTE = "SELECT ids.variant_identifier AS request_variant_id," + NL 
         + "v.variant_id::integer AS variant_id, v.record_pk," + NL
-        + "v.source_id AS refsnp_id, v.metaseq_id, v.chromosome" + NL
+        + "v.source_id AS refsnp_id, v.metaseq_id, v.chromosome, v.location_start" + NL
         + "FROM NIAGADS.Variant v, ids" + NL
         + "WHERE v.record_pk = ids.record_pk";
     
@@ -55,7 +55,7 @@ public class VariantLDService extends AbstractWdkService {
         + "'display_label'," + NL 
         + "CASE WHEN v.refsnp_id LIKE 'rs%' THEN refsnp_id" + NL 
         + "ELSE CASE WHEN length(metaseq_id) > 30 THEN substr(metaseq_id, 0, 27) || '...'" + NL 
-        + "ELSE metaseq_id END END))::text AS details" + NL 
+        + "ELSE metaseq_id END END) ORDER BY v.location_start)::text AS details" + NL 
         + "FROM variants v";
 
     private static final String LD_CTE = "SELECT ld.variants," + NL
