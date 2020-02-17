@@ -1,6 +1,6 @@
 import React from 'react';
-import LzPlot, { LzVariantProps } from './../../Visualizations/LocusZoom/LZPlot';
-import LzLegend from './../../Visualizations/LocusZoom/LZLegend/LZLegend';
+import LzPlot, { LzVariantProps } from '../../../../Visualizations/LocusZoom/LZPlot';
+import LzLegend from '../../../../Visualizations/LocusZoom/LZLegend/LZLegend';
 import { safeHtml } from 'wdk-client/Utils/ComponentUtils';
 
 

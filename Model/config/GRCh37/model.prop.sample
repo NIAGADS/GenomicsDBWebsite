@@ -52,6 +52,8 @@ FLANKING_REGION=10000
 
 NON_GWAS_SS_NIAGADS=NG00061
 INFERNO_PUBMED_ID=30113658
+GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
+
 #----------------------------------------------------------
 # Internal Urls
 #----------------------------------------------------------

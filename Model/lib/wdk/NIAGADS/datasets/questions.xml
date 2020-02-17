@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
 
-  <questionSet name="GWASDatasetQuestions" displayName="Find datasets">
+  <questionSet name="GWASDatasetQuestions" 
+    displayName="Find datasets">
 
     <description>
       Dataset Searches
@@ -10,21 +11,21 @@
     <!-- =============================================================== -->
     <!-- By Identifier -->
     <!-- =============================================================== -->
-    <question name="browse" displayName="Browse Datasets" shortDisplayName="Dataset" 
-            queryRef="GWASDatasetIds.Browse" noSummaryOnSingleRecord="true"
-            recordClassRef="DatasetRecordClasses.GWASDatasetRecordClass">
+    <question name="browse" 
+      displayName="Browse Datasets" 
+      shortDisplayName="Dataset" 
+      queryRef="GWASDatasetIds.Browse" 
+      noSummaryOnSingleRecord="true" 
+      recordClassRef="DatasetRecordClasses.GWASDatasetRecordClass">
+
       <description>
-        <![CDATA[
-    		Find a GWAS summary statistics dataset.
-    	]]>
+        <![CDATA[Find a GWAS summary statistics dataset.]]>
       </description>
+
       <summary>
             Find a GWAS summary statistics dataset. 
       </summary>
     </question>
-
-  
-
   </questionSet>
 
 </wdkModel>

@@ -63,8 +63,8 @@
                  </description>
              </summaryView>
 
-			<reporter name="ideogramJSONReporter" displayName="Ideogram"  scopes=""
-                    implementation="org.niagads.genomics.model.report.reporter.IdeogramJSONReporter" />
+			<reporter name="genomeViewReporter" displayName="Ideogram"  scopes=""
+                    implementation="org.niagads.genomics.model.report.summaryview.genomeview.VariantGenomeViewReporter" />
 			<!-- =============================================================== -->
 			<!-- Basic Attributes -->
 			<!-- =============================================================== -->

@@ -1,37 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-	<paramSet name="datasetParams">
+     <paramSet name="datasetParams">
 
-		<!-- =============================================================== -->
-		<!-- ID Search Params -->
-		<!-- =============================================================== -->
+          <!-- =============================================================== -->
+          <!-- Filter Parameters -->
+          <!-- =============================================================== -->
 
-        <filterParam name="phenotype" 
-                      metadataQueryRef="GWASDatasetVocab.DatasetPhenotypeFilterMetadata"
-                      backgroundQueryRef="GWASDatasetVocab.DatasetPhenotypeFilterMetadata"
-                      ontologyQueryRef="GWASDatasetVocab.DatasetPhenotypeFilterOntology"
-                      prompt="Phenotype"
-                      trimMetadataTerms="false">
-         <help>
-              Filter based on phenotype data
-         </help>
-       </filterParam>
+          <filterParam name="gwas_summary_tracks"
+               metadataQueryRef="GWASDatasetVocab.TrackFilterMetadata"
+               backgroundQueryRef="GWASDatasetVocab.TrackFilterMetadata"
+               ontologyQueryRef="GWASDatasetVocab.TrackFilterOntology"
+               prompt="GWAS Summary Statistics Datasets"
+               trimMetadataTerms="false"
+               filterDataTypeDisplayName="Datasets">
+               <help>Find GWAS summary statistics datasets matching the selected criteria.</help>
+          </filterParam>
 
-       <filterParam name="project" 
-                      metadataQueryRef="GWASDatasetVocab.DatasetProjectFilterMetadata"
-                      backgroundQueryRef="GWASDatasetVocab.DatasetProjectFilterMetadata"
-                      ontologyQueryRef="GWASDatasetVocab.DatasetProjectFilterOntology"
-                      prompt="Project"
-                      trimMetadataTerms="false">
-         <help>
-              Filter based on phenotype data
-         </help>
-       </filterParam>
-		
-		<!-- =============================================================== -->
-		<!-- Spans -->
-		<!-- =============================================================== -->
+          <!-- =============================================================== -->
+          <!-- Spans -->
+          <!-- =============================================================== -->
 
-	
-	</paramSet>
+
+     </paramSet>
 </wdkModel>

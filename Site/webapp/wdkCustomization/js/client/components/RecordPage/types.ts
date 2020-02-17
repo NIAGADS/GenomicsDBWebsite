@@ -49,6 +49,7 @@ export interface GeneRecordAttributes {
   gene_name: string;
   gene_symbol: string;
   gene_type: string;
+  gws_variants_summary_highchart: string;
   has_ad_evidence: "true" | "false";
   hgnc_id: string;
   jbrowse_source_url: string;
@@ -132,6 +133,7 @@ export interface GWASDatasetRecordAttributes {
   category: string;
   is_adsp: string;
   accession_link: string;
+  niagads_accession: string;
   search_link: string;
 }
 
@@ -166,7 +168,7 @@ export interface Table {
   displayName: string;
   isDisplayable: boolean;
   isInReport: boolean;
-  name: string; 
+  name: string;
   properties: {
     [key: string]: any;
     type: tableType[];

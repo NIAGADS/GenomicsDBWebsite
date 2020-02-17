@@ -1,0 +1,16 @@
+.ideogram-plot {
+  .annot {
+    path {
+      cursor: pointer;
+    }
+  }
+}
+
+.correlation-modal {
+  .wdk-DialogContent {
+    overflow: hidden;
+  }
+  #correlation-plot {
+    height: 450px;
+  }
+}

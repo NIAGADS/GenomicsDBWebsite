@@ -7,15 +7,14 @@
 		<!-- By Identifier -->
 		<!-- =============================================================== -->
 		<sqlQuery name="Browse">
-			<paramRef ref="datasetParams.phenotype"/>
-			<paramRef ref="datasetParams.project"/>
+			<paramRef ref="datasetParams.gwas_summary_tracks"/>
 			
 			<column name="track"/>
 			<column name="project_id"/>
 			<sql>
 				<![CDATA[
 					SELECT track, '@PROJECT_ID'::text AS project_id FROM NIAGADS.TrackAttributes 
-					WHERE track IN ($$phenotype$$) AND track IN ($$project$$)
+					WHERE track IN ($$gwas_summary_tracks$$)
 				]]>
 			</sql>
 		</sqlQuery>

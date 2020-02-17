@@ -22,6 +22,13 @@ import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
+/**
+ *  Provides expanse of LD window for a give variant
+ *  @author ega
+ * 
+*/
+
+
 
 @Path("variant/ldwindow")
 public class VariantLDWindowService extends AbstractWdkService {
@@ -60,6 +67,11 @@ public class VariantLDWindowService extends AbstractWdkService {
         + "SELECT (jsonb_agg(result)->0)::text AS ld_block" + NL
         + "FROM result";
     
+    
+    /** 
+     * @param filterByMaf
+     * @return String
+     */
     private String buildFilteredLinkageSql(Boolean filterByMaf) {
         String sql = "SELECT DISTINCT unnest(ld.variants) AS variant_id" + NL
             + "FROM Linkage ld, Population p" + NL
@@ -71,6 +83,11 @@ public class VariantLDWindowService extends AbstractWdkService {
         return sql;
     }
     
+    
+    /** 
+     * @param filterByMaf
+     * @return String
+     */
     private String buildFilterQueryCTE(Boolean filterByMaf) {
         String sql = "WITH Variant AS (" + NL
             + "SELECT ? AS variant_label, variant_id FROM (SELECT find_variant_id(?) AS variant_id) a"
@@ -88,12 +105,23 @@ public class VariantLDWindowService extends AbstractWdkService {
     }
     
   
+    
+    /** 
+     * @param filterByMaf
+     * @return String
+     */
     String prepareSql(Boolean filterByMaf) {
         String sql = buildFilterQueryCTE(filterByMaf) + NL + LD_SQL;
         return sql;
     }
 
  
+    
+    /** 
+     * @param body
+     * @param @QueryParams
+     * @return Response
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.ldwindow.get-response")
@@ -120,6 +148,14 @@ public class VariantLDWindowService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
+    
+    /** 
+     * @param variant
+     * @param population
+     * @param rThreshold
+     * @param mafThreshold
+     * @return String
+     */
     private String fetchResult(String variant, String population, Double rThreshold, Double mafThreshold) {   
     
         WdkModel wdkModel = getWdkModel();

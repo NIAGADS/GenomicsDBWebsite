@@ -19,7 +19,7 @@ Heatmap(Highcharts);
 
 interface HighchartBaseProps {
 	chart: Options,
-	multiPlot: boolean
+	multiPlot?: boolean
 }
 
 

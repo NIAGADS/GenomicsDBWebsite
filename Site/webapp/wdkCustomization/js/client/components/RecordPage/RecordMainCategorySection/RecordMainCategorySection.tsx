@@ -15,7 +15,7 @@ import {
   IdeogramPlot,
   HighchartPlot,
   HighchartPlotList
-} from "./Visualizations";
+} from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { isEmpty } from "lodash";
 import {
@@ -181,13 +181,12 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
             onCollapsedChange={this.toggleCollapse}
           >
             {(record.tables as any)[category.wdkReference.name] && (
-              <IdeogramPlot
-                container={`${category.wdkReference.name}_plot`}
+              <IdeogramPlot container="ideogram-container"
                 tracks={JSON.parse(
                   (record.tables as any)[category.wdkReference.name][0]
                     .annotation_tracks
                 )}
-                data={JSON.parse(
+                annotations={JSON.parse(
                   (record.tables as any)[category.wdkReference.name][0].data
                 )}
               />

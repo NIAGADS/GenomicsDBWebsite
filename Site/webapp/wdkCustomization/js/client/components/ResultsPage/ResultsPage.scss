@@ -1,5 +1,6 @@
 .site-search-result {
-    &__description {
-        font-size: 0.8rem;
+    &__section-title {
+        font-variant: small-caps;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 }

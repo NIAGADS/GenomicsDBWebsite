@@ -56,7 +56,7 @@ GeneRecordClasses.GeneRecordClass.sequence_link_outs	http://edamontology.org/top
 GeneRecordClasses.GeneRecordClass.protein_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	protein_link_outs				gene	3		record	download
 GeneRecordClasses.GeneRecordClass.clinical_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	clinical_link_outs				gene	2		record	download
 GeneRecordClasses.GeneRecordClass.transcript_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	transcript_link_outs				gene	5		record	download
-													
+GeneRecordClasses.GeneRecordClass.gws_variants_summary_highchart	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_highchart							record-internal	
 													
 ## Variant Questions  ##													
 													
@@ -154,7 +154,8 @@ DatasetRecordClasses.GWASDatasetRecordClass.name	http://edamontology.org/topic_0
 DatasetRecordClasses.GWASDatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	description						results	record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.category	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	category						results	record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.is_adsp	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	is_adsp						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.accession_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	accession_link						results	record-internal	download
+DatasetRecordClasses.GWASDatasetRecordClass.accession_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	accession_link						results	record-internal	
+DatasetRecordClasses.GWASDatasetRecordClass.niagads_accession	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	niagads_accession							record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	search_link						results	record-internal	
 													
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_expanded_snps					1		record	

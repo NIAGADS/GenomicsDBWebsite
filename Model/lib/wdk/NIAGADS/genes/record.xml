@@ -62,6 +62,24 @@
 			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
 			<!-- =============================================================== -->
+			<!-- Summary and record views -->
+			<!-- =============================================================== -->
+			<summaryView name="_default" display="Gene Results">
+                 <description>
+                     <![CDATA[View gene details.]]>
+                 </description>
+             </summaryView>
+
+			<summaryView name="ideogram" display="Genome View">
+                 <description>
+                     <![CDATA[View your results mapped against the genome.]]>
+                 </description>
+             </summaryView>
+
+			<reporter name="genomeViewReporter" displayName="Ideogram"  scopes=""
+                    	implementation="org.niagads.genomics.model.report.summaryview.genomeview.GeneGenomeViewReporter" />
+
+			<!-- =============================================================== -->
 			<!-- Annotation and Link Outs -->
 			<!-- =============================================================== -->
 			<attributeQueryRef ref="GeneAttributes.BasicAttributes">
@@ -149,6 +167,11 @@
 			<!-- =============================================================== -->
 			<!-- Genetic Variation -->
 			<!-- =============================================================== -->
+
+			<attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
+				<columnAttribute name="gws_variants_summary_highchart" internal="true" inReportMaker="false" type="highchart_json"/>
+			</attributeQueryRef>
+			
 			<attributeQueryRef ref="GeneAttributes.ADEvidenceFlag">
 				<columnAttribute name="has_ad_evidence" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" internal="true" inReportMaker="true" type="string" />
 				<columnAttribute name="ad_evidence_flag" internal="false" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" inReportMaker="false" type="json_icon" />
