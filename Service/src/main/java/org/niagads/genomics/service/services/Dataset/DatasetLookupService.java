@@ -22,7 +22,7 @@ import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
 
-@Path("dataset/lookup")
+@Path("dataset")
 public class DatasetLookupService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(DatasetLookupService.class);
     private static final String ACCESSION_PARAM = "accession";
@@ -51,7 +51,7 @@ public class DatasetLookupService extends AbstractWdkService {
         + "FROM accession a," + NL
         + "NIAGADS.TrackAttributes ta," + NL
         + "TrackChars c" + NL
-        + "WHERE a.accession = ta.dataset_accession" + NLd
+        + "WHERE a.accession = ta.dataset_accession" + NL
         + "AND c.track = ta.track" + NL
         + "GROUP BY a.details";
 
@@ -90,6 +90,9 @@ public class DatasetLookupService extends AbstractWdkService {
         runner.executeQuery(new Object[] {accession}, handler);
         
         List <Map <String, Object>> results = handler.getResults();
-        return (String) results.get(0).get("result");
+        if (!results.isEmpty())
+            return (String) results.get(0).get("result");
+    
+        return null;
     }
 }

@@ -27,6 +27,7 @@ public class VariantLookupService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
 
     private static final String VARIANT_PARAM = "id";
+    private static final String FULL_VEP_PARAM = "full_vep";
 
     private static final String VARIANT_DETAILS_SQL = "WITH searchTerms AS (SELECT unnest(string_to_array(?, ',')) AS variant_id)," + NL
         + "marker AS (" +NL
@@ -53,7 +54,8 @@ public class VariantLookupService extends AbstractWdkService {
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         // @OutSchema("niagads.variant.get-response")
-        public Response buildResponse(String body, @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
+        public Response buildResponse(String body, @QueryParam(FULL_VEP_PARAM) Boolean fullVep, 
+            @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
                                           
             LOG.info("Starting 'Variant Lookup' Service");
             String response = "{}";
