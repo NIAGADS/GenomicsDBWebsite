@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { get } from "lodash";
@@ -54,6 +55,8 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
   };
 
   useWdkEffect(sendRequest(variants), [variants]);
+
+  const history = useHistory();
 
   const blockSize = 30;
 
@@ -253,10 +256,17 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
           .append("g")
           .attr("transform", "translate(" + xScale.rangeBand() * 1.33 + ", 0)")
           .append("text")
+          .attr("class", "variant-label")
           .attr("transform", "rotate(-45," + x + "," + y + ")")
           .attr("x", x)
           .attr("y", y)
           .style("font-size", 16)
+          .style("cursor", "pointer")
+          .style("fill", "blue")
+          .style("text-decoration", "underline")
+          .on("click", () =>
+            history.push(`/record/variant/${last.variant.record_pk}`)
+          )
           .text(() => last.variant.display_label);
       });
 
