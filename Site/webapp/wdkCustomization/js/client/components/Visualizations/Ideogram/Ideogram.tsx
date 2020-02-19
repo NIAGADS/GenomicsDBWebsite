@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { get } from "lodash";
 import { isPlainObject } from "lodash";
 
-import CorrelationModal from "./CorrelationModal";
+import LinkageModal from "./LinkageModal";
 import { webAppUrl } from "../../../config";
 
 interface IdeogramProps {
@@ -53,7 +53,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
   legend,
   tracks
 }) => {
-  const [correlationModalOpen, setCorrelationModalOpen] = useState(false),
+  const [LinkageModalOpen, setLinkageModalOpen] = useState(false),
     [activePoint, setActivePoint] = useState<Point>();
 
   useEffect(() => {
@@ -69,7 +69,8 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
           d3.selectAll(".annot path").on("click", d => {
             if (!activePoint && Array.isArray(get(d, "features"))) {
               setActivePoint(d);
-              setCorrelationModalOpen(true);
+              //if array has more than... 7 elements, redirect to new window?
+              setLinkageModalOpen(true);
             }
           });
         }
@@ -86,15 +87,15 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
       new Ideogram(Object.assign({}, baseConfig, config));
     }
     //redraw on modal open and close to reload css
-  }, [annotations, correlationModalOpen]);
+  }, [annotations, LinkageModalOpen]);
 
   return (
     <>
       <div id={container} className="ideogram-plot"></div>
-      {correlationModalOpen && (
-        <CorrelationModal
+      {LinkageModalOpen && (
+        <LinkageModal
           onClose={() => {
-            setCorrelationModalOpen(false);
+            setLinkageModalOpen(false);
             setActivePoint(null);
           }}
           open={true}
@@ -108,6 +109,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
 };
 
 const showToolTip = (point: Point) => {
+  
   if (isPlainObject(get(point, "features"))) {
     //this needs to be a plain url b/c callback expects html string
     //https://github.com/eweitz/ideogram/blob/d5a5402ed311ef6d3b85969c05be3db17c2bbb1e/src/js/annotations/events.js#L40

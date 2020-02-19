@@ -11,6 +11,9 @@
     overflow: hidden;
   }
   #correlation-plot {
-    height: 450px;
+    padding: 6%;
+    align-content: center;
+    justify-content: center;
+    display: flex;
   }
 }

@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
+import { get } from "lodash";
 import d3 from "d3";
 
 interface CorrelationPlot {
@@ -54,15 +55,17 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
 
   useWdkEffect(sendRequest(variants), [variants]);
 
+  const blockSize = 30;
+
   useLayoutEffect(() => {
     if (chartData) {
-      const width = 200,
-        height = 200;
+      const width = chartData.variants.length * blockSize,
+        height = chartData.variants.length * blockSize;
 
       const margin = {
-        top: width / 2,
-        right: width / 2,
-        bottom: width / 8,
+        top: width < 200 ? 115 : width / 1.75,
+        right: width < 200 ? 115 : width / 1.75,
+        bottom: width / 7,
         left: width / 5
       };
 
@@ -93,6 +96,24 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         .linear()
         .range([0, width + xScale.rangeBand()])
         .domain([0, chartData.variants.length - 1]);
+
+      const ryScale = d3.scale
+        .linear()
+        .range([-yScale.rangeBand(), height - yScale.rangeBand()])
+        .domain(
+          d3.extent(
+            chartData.variants.map(vari => +vari.record_pk.split(":")[1])
+          )
+        );
+
+      const rxScale = d3.scale
+        .linear()
+        .range([xScale.rangeBand(), width + xScale.rangeBand()])
+        .domain(
+          d3.extent(
+            chartData.variants.map(vari => +vari.record_pk.split(":")[1])
+          )
+        );
 
       const xAxis = d3.svg
         .axis()
@@ -249,13 +270,91 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         .attr("class", "line")
         .style("stroke", "black")
         .attr("d", (d: any) => line(data as any));
+
+      const labelLine = d3.svg
+        .line()
+        .x(
+          (d: any, i) =>
+            (i % 2
+              ? rxScale(+d.record_pk.split(":")[1]) + 5
+              : xScale(d.display_label) + xScale.rangeBand() * 1.25) + 65
+        )
+        .y(
+          (d: any, i) =>
+            (i % 2
+              ? ryScale(+d.record_pk.split(":")[1]) - 5
+              : zScale(d.display_label)) - 65
+        );
+
+      svg
+        .selectAll(".label-line")
+        .data(chartData.variants.map(v => [v, v]))
+        .enter()
+        .append("g")
+        .attr("class", "label-line")
+        .append("path")
+        .style("stroke", "black")
+        .attr("d", d => labelLine(d as any));
+
+      const cLine1 = d3.svg
+        .line()
+        .x((d: any, i) => rxScale(+d.record_pk.split(":")[1]) + 70)
+        .y((d: any, i) => ryScale(+d.record_pk.split(":")[1]) - 70);
+
+      const cLine2 = d3.svg
+        .line()
+        .x((d: any, i) => rxScale(+d.record_pk.split(":")[1]) + 75)
+        .y((d: any, i) => ryScale(+d.record_pk.split(":")[1]) - 75);
+
+      const bandLine = d3.svg
+        .line()
+        .x((d: any, i) =>
+          i % 2
+            ? rxScale(+d.record_pk.split(":")[1]) + 70
+            : rxScale(+d.record_pk.split(":")[1]) + 75
+        )
+        .y((d: any, i) =>
+          i % 2
+            ? ryScale(+d.record_pk.split(":")[1]) - 70
+            : ryScale(+d.record_pk.split(":")[1]) - 75
+        );
+
+      svg
+        .selectAll(".band-line")
+        .data(chartData.variants.map(v => [v, v]))
+        .enter()
+        .append("g")
+        .attr("class", "band-line")
+        .append("path")
+        .style("stroke", "black")
+        .attr("d", d => bandLine(d as any));
+
+      svg
+        .append("path")
+        .attr("class", "cline-1")
+        .style("stroke", "black")
+        .attr("d", (d: any) => cLine1(chartData.variants as any));
+
+      svg
+        .append("path")
+        .attr("class", "cline-2")
+        .style("stroke", "black")
+        .attr("d", (d: any) => cLine2(chartData.variants as any));
     }
   }, [chartData]);
 
   return (
     <>
       {loading && <span>Loading...</span>}
-      <div id="correlation-plot" />{" "}
+      <div
+        id="correlation-plot"
+        style={{
+          marginTop:
+            get(chartData, "variants.length", 0) * -blockSize +
+            105 /* margin, labels */ +
+            "px"
+        }}
+      />
     </>
   );
 };
