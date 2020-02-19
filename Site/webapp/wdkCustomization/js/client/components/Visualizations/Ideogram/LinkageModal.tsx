@@ -17,7 +17,6 @@ const LinkageModal: React.FC<LinkageModal> = ({ onClose, open, variants }) => {
         title="LD Correlation"
         onClose={onClose}
       >
-        {/*  if 2-4, just list in modal*/}
         <LinkagePlot variants={variants} />
       </Dialog>
     )

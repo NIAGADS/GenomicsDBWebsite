@@ -17,3 +17,13 @@
     display: flex;
   }
 }
+
+.ideogram-detail-modal {
+  align-content: center;
+  justify-content: center;
+  display: flex;
+  .wdk-DialogTitle {
+    overflow: unset;
+    text-overflow: unset;
+  }
+}

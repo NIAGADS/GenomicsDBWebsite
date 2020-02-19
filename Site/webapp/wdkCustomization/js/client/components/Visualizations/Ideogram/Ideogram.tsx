@@ -7,6 +7,7 @@ import { get } from "lodash";
 import { isPlainObject } from "lodash";
 
 import LinkageModal from "./LinkageModal";
+import DetailModal from "./IdeogramDetailModal";
 import { webAppUrl } from "../../../config";
 
 interface IdeogramProps {
@@ -54,6 +55,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
   tracks
 }) => {
   const [LinkageModalOpen, setLinkageModalOpen] = useState(false),
+    [DetailModalOpen, setDetailModalOpen] = useState(false),
     [activePoint, setActivePoint] = useState<Point>();
 
   useEffect(() => {
@@ -69,8 +71,14 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
           d3.selectAll(".annot path").on("click", d => {
             if (!activePoint && Array.isArray(get(d, "features"))) {
               setActivePoint(d);
-              //if array has more than... 7 elements, redirect to new window?
-              setLinkageModalOpen(true);
+              //if array has more than... 20 elements, redirect to new window?
+              if (get(d, "features.length") > 20) {
+                //redirect
+                return console.log("redirecting to page");
+              } else if (get(d, "features.length") < 5) {
+                return setDetailModalOpen(true);
+              }
+              return setLinkageModalOpen(true);
             }
           });
         }
@@ -104,12 +112,24 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
           )}
         />
       )}
+      {DetailModalOpen && (
+        <DetailModal
+          onClose={() => {
+            setDetailModalOpen(false);
+            setActivePoint(null);
+          }}
+          open={true}
+          variants={(activePoint.features as Feature[]).map(
+            f => f.record_primary_key
+          )}
+          name={activePoint.name}
+        />
+      )}
     </>
   );
 };
 
 const showToolTip = (point: Point) => {
-  
   if (isPlainObject(get(point, "features"))) {
     //this needs to be a plain url b/c callback expects html string
     //https://github.com/eweitz/ideogram/blob/d5a5402ed311ef6d3b85969c05be3db17c2bbb1e/src/js/annotations/events.js#L40
@@ -118,6 +138,7 @@ const showToolTip = (point: Point) => {
     point.displayName = `<a href=${link}>${feature.display_label}</a>`;
   } else {
     const features = point.features as Feature[];
+
     point.displayName = `${features.length} ${features[0].record_type}${
       features.length > 1 ? "s" : ""
     }`;
