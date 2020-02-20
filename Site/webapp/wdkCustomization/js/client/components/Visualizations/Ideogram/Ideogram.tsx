@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 //@ts-ignore
 import Ideogram from "ideogram";
 import d3 from "d3";
 import { connect } from "react-redux";
 import { get } from "lodash";
 import { isPlainObject } from "lodash";
-
-import LinkageModal from "./LinkageModal";
 import DetailModal from "./IdeogramDetailModal";
 import { webAppUrl } from "../../../config";
 
@@ -54,9 +53,9 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
   legend,
   tracks
 }) => {
-  const [LinkageModalOpen, setLinkageModalOpen] = useState(false),
-    [DetailModalOpen, setDetailModalOpen] = useState(false),
-    [activePoint, setActivePoint] = useState<Point>();
+  const [detailModalOpen, setDetailModalOpen] = useState(false),
+    [activePoint, setActivePoint] = useState<Point>(),
+    history = useHistory();
 
   useEffect(() => {
     if (annotations) {
@@ -69,16 +68,9 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
         onWillShowAnnotTooltip: showToolTip,
         onLoad: () => {
           d3.selectAll(".annot path").on("click", d => {
-            if (!activePoint && Array.isArray(get(d, "features"))) {
+            if (Array.isArray(get(d, "features"))) {
               setActivePoint(d);
-              //if array has more than... 20 elements, redirect to new window?
-              if (get(d, "features.length") > 20) {
-                //redirect
-                return console.log("redirecting to page");
-              } else if (get(d, "features.length") < 5) {
-                return setDetailModalOpen(true);
-              }
-              return setLinkageModalOpen(true);
+              return setDetailModalOpen(true);
             }
           });
         }
@@ -95,24 +87,12 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
       new Ideogram(Object.assign({}, baseConfig, config));
     }
     //redraw on modal open and close to reload css
-  }, [annotations, LinkageModalOpen]);
+  }, [annotations, detailModalOpen]);
 
   return (
     <>
       <div id={container} className="ideogram-plot"></div>
-      {LinkageModalOpen && (
-        <LinkageModal
-          onClose={() => {
-            setLinkageModalOpen(false);
-            setActivePoint(null);
-          }}
-          open={true}
-          variants={(activePoint.features as Feature[]).map(
-            f => f.record_primary_key
-          )}
-        />
-      )}
-      {DetailModalOpen && (
+      {detailModalOpen && (
         <DetailModal
           onClose={() => {
             setDetailModalOpen(false);

@@ -58,7 +58,7 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
 
   const history = useHistory();
 
-  const blockSize = 30;
+  const blockSize = get(chartData, "variants.length", 0) > 20 ? 20 : 30;
 
   useLayoutEffect(() => {
     if (chartData) {
@@ -360,9 +360,11 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         id="correlation-plot"
         style={{
           marginTop:
+          //negative margin to 'center' after rotating
             get(chartData, "variants.length", 0) * -blockSize +
             105 /* margin, labels */ +
-            "px"
+            "px",
+            marginBottom: get(chartData, "variants.length", 0) * 3.5 //rough estimate for now...
         }}
       />
     </>
