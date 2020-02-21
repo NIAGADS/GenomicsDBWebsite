@@ -217,6 +217,18 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         data.push(ret);
       });
 
+      const colorScale = d3.scale
+        .linear()
+        .domain([0, .2, .2, .6, 1])
+        //http://colorbrewer2.org/#type=sequential&scheme=OrRd&n=3
+        .range([
+          "white" as any,
+          "white" as any,
+          "#fee8c8" as any,
+          "#fdbb84" as any,
+          "#e34a33" as any
+        ]);
+
       svg
         .selectAll(".bar")
         .data(data)
@@ -233,9 +245,8 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
             .attr("class", (d, i) => `block-${i}`)
             .attr("width", xScale.rangeBand())
             .attr("height", yScale.rangeBand())
-            .attr("fill", d => (d.value < 0.2 ? "white" : "red"))
+            .attr("fill", d => colorScale(d.value))
             .attr("stroke", "black")
-            .attr("opacity", d => (d.value < 0.2 ? 1 : d.value))
             .attr("x", d => xScale(d.variant.display_label))
             .attr("y", d => yScale(d.correlate.display_label));
         });
@@ -361,11 +372,11 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         id="correlation-plot"
         style={{
           marginTop:
-          //negative margin to 'center' in container after rotating (todo: hide overflow here rather than in stylesheet?)
+            //negative margin to 'center' in container after rotating (todo: hide overflow here rather than in stylesheet?)
             get(chartData, "variants.length", 0) * -blockSize +
             105 /* margin, labels */ +
             "px",
-            marginBottom: get(chartData, "variants.length", 0) * 3.5 //rough estimate for now...
+          marginBottom: get(chartData, "variants.length", 0) * 3.5 //rough estimate for now...
         }}
       />
     </>
