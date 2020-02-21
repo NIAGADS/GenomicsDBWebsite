@@ -58,6 +58,7 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
 
   const history = useHistory();
 
+  //todo: use a clamped scale for better sensitivity and clearer logic here and use it to control margins as well
   const blockSize = get(chartData, "variants.length", 0) > 20 ? 20 : 30;
 
   useLayoutEffect(() => {
@@ -360,7 +361,7 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({
         id="correlation-plot"
         style={{
           marginTop:
-          //negative margin to 'center' after rotating
+          //negative margin to 'center' in container after rotating (todo: hide overflow here rather than in stylesheet?)
             get(chartData, "variants.length", 0) * -blockSize +
             105 /* margin, labels */ +
             "px",

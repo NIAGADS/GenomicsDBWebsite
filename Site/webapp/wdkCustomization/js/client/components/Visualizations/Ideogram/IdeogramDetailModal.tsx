@@ -2,11 +2,12 @@ import React from "react";
 import { Dialog } from "wdk-client/Components";
 import { Link } from "wdk-client/Components";
 import LinkagePlot from "../Linkage/Linkage";
+import { Feature } from "./Ideogram";
 
 interface IdeogramDetailModal {
   open: boolean;
   onClose: () => void;
-  variants: string[];
+  features: Feature[];
   name: string;
 }
 
@@ -14,7 +15,7 @@ const IdeogramDetailModal: React.FC<IdeogramDetailModal> = ({
   onClose,
   open,
   name,
-  variants
+  features
 }) => {
   return (
     open && (
@@ -25,24 +26,24 @@ const IdeogramDetailModal: React.FC<IdeogramDetailModal> = ({
         onClose={onClose}
       >
         <div>
-          {variants.length < 5 ? (
+          {features.length < 5 ? (
             <ul>
-              {variants.map(v => (
-                <li key={v}>
-                  <Link to={`/record/variant/${v}`}>{v}</Link>
+              {features.map(f => (
+                <li key={f.record_primary_key}>
+                  <Link to={`/record/variant/${f.record_primary_key}`}>{f.display_label}</Link>
                 </li>
               ))}
             </ul>
-          ) : variants.length < 21 ? (
-            <LinkagePlot variants={variants} />
+          ) : features.length < 21 ? (
+            <LinkagePlot variants={features.map(f => f.record_primary_key)} />
           ) : (
             <div>
               The number of results is too large to display here. Please click
               this&nbsp;
               <Link
-                to={`/visualizations/linkage?name=${name}&variants=${variants.join(
-                  ","
-                )}`}
+                to={`/visualizations/linkage?name=${name}&variants=${features
+                  .map(f => f.record_primary_key)
+                  .join(",")}`}
               >
                 link
               </Link>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 //@ts-ignore
 import Ideogram from "ideogram";
 import d3 from "d3";
@@ -37,7 +36,7 @@ interface Point {
   trackIndexOriginal: number;
 }
 
-interface Feature {
+export interface Feature {
   display_label: string;
   location_end: number;
   location_start: number;
@@ -54,8 +53,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
   tracks
 }) => {
   const [detailModalOpen, setDetailModalOpen] = useState(false),
-    [activePoint, setActivePoint] = useState<Point>(),
-    history = useHistory();
+    [activePoint, setActivePoint] = useState<Point>();
 
   useEffect(() => {
     if (annotations) {
@@ -99,9 +97,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
             setActivePoint(null);
           }}
           open={true}
-          variants={(activePoint.features as Feature[]).map(
-            f => f.record_primary_key
-          )}
+          features={activePoint.features as Feature[]}
           name={activePoint.name}
         />
       )}
