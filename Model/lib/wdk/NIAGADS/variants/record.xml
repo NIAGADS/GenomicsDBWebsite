@@ -12,9 +12,19 @@
 			<idAttribute name="primary_key" displayName="Variant" 
 			             help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
 				<text>
-					<![CDATA[$$display_metaseq_id$$]]>
+					<![CDATA[$$source_id$$]]>
 				</text>
 			</idAttribute>
+
+			<!-- <idAttribute name="primary_key" displayName="Variant" 
+			             help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
+				<text>
+					<![CDATA[$$display_metaseq_id$$]]>
+				</text>
+			</idAttribute> -->
+
+    		<attributesList summary="is_adsp_variant,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding"
+							sorting="display_metaseq_id ASC" />
 
 			<!-- =================================================================== -->
 			<!-- Reporters -->
@@ -69,8 +79,6 @@
 			<!-- Basic Attributes -->
 			<!-- =============================================================== -->
 
-		<!--<attributesList summary="is_adsp_variant,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding" /> -->
-
 			<attributeQueryRef ref="VariantAttributes.SortingAttributes">
 				<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
 				<columnAttribute name="display_metaseq_id" displayName="Variant" internal="true" inReportMaker="false" type="string" />
@@ -99,7 +107,7 @@
 				<columnAttribute name="variant_class_abbrev" displayName="Variant Class" type="string" />
 
 				<!-- start in record page header for msc attributes -->
-				<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence for the variant" internal="true" inReportMaker="true" type="string" />
+				<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence for the variant" inReportMaker="true" type="string" />
 				<columnAttribute name="msc_impacted_gene" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" internal="true" inReportMaker="true" type="string" />
 				<columnAttribute name="msc_impacted_gene_symbol" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" type="string" />
 				<columnAttribute name="msc_impacted_gene_link" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" inReportMaker="false" type="json_link" />
