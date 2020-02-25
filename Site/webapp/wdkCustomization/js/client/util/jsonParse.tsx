@@ -12,6 +12,10 @@ export interface LinkType {
 
 export const resolveJsonInput = (input: string): React.ReactElement<any> => {
   if (isNull(input)) return null;
+  //hack for now, need to solve upstream
+  if (!isJson(input) && isPlainObject(input)) {
+    return resolveObjectInput((input as unknown) as { [key: string]: any });
+  }
   if (!isJson(input as string)) {
     throw new Error("Trying to resolve bad input!");
   }

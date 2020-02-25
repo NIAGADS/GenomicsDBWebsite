@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useWdkEffect } from 'wdk-client/Service/WdkService';
 import { IdeogramPlot } from '../Visualizations';
 import { LoadingOverlay } from 'wdk-client/Components';
-import { ResultType, getCustomReport } from 'wdk-client/Utils/WdkResult';
+import { getCustomReport } from 'wdk-client/Utils/WdkResult';
 
 const GenomeView: React.FC<any> = ({ resultType, projectId }) => {
 

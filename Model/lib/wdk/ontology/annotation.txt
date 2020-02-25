@@ -10,7 +10,7 @@ Literature 	http://edamontology.org/topic_3068	Literature	7
 Immunology	http://edamontology.org/topic_0804	Immunology	21
 Molecular interactions	http://edamontology.org/topic_0602	Pathways and interactions	19
 Genetic Variation	http://edamontology.org/topic_0199	Genetic variation	10
-Phenomics	http://edamontology.org/topic_3298	Trait associations	11
+Phenomics	http://edamontology.org/topic_3298	Trait associations	1
 Epigenomics	http://edamontology.org/topic_3173	Epigenomics	12
 Transcriptomics	http://edamontology.org/topic_3308	Transcriptomics	13
 Sequence Analysis	http://edamontology.org/topic_0080	Sequence analysis	14

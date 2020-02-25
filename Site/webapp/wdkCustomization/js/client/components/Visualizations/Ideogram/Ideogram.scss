@@ -6,11 +6,20 @@
   }
 }
 
-.correlation-modal {
-  .wdk-DialogContent {
+.ideogram-detail-modal {
+  align-content: center;
+  justify-content: center;
+  display: flex;
+  .ideogram-detail-modalContent {
     overflow: hidden;
   }
+  .wdk-DialogTitle {
+    overflow: unset;
+    text-overflow: unset;
+  }
   #correlation-plot {
-    height: 450px;
+    align-content: center;
+    justify-content: center;
+    display: flex;
   }
 }

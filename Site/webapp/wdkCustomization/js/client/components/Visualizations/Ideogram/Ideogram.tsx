@@ -5,8 +5,7 @@ import d3 from "d3";
 import { connect } from "react-redux";
 import { get } from "lodash";
 import { isPlainObject } from "lodash";
-
-import CorrelationModal from "./CorrelationModal";
+import DetailModal from "./IdeogramDetailModal";
 import { webAppUrl } from "../../../config";
 
 interface IdeogramProps {
@@ -37,7 +36,7 @@ interface Point {
   trackIndexOriginal: number;
 }
 
-interface Feature {
+export interface Feature {
   display_label: string;
   location_end: number;
   location_start: number;
@@ -53,7 +52,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
   legend,
   tracks
 }) => {
-  const [correlationModalOpen, setCorrelationModalOpen] = useState(false),
+  const [detailModalOpen, setDetailModalOpen] = useState(false),
     [activePoint, setActivePoint] = useState<Point>();
 
   useEffect(() => {
@@ -67,9 +66,9 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
         onWillShowAnnotTooltip: showToolTip,
         onLoad: () => {
           d3.selectAll(".annot path").on("click", d => {
-            if (!activePoint && Array.isArray(get(d, "features"))) {
+            if (Array.isArray(get(d, "features"))) {
               setActivePoint(d);
-              setCorrelationModalOpen(true);
+              return setDetailModalOpen(true);
             }
           });
         }
@@ -86,21 +85,20 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({
       new Ideogram(Object.assign({}, baseConfig, config));
     }
     //redraw on modal open and close to reload css
-  }, [annotations, correlationModalOpen]);
+  }, [annotations, detailModalOpen]);
 
   return (
     <>
       <div id={container} className="ideogram-plot"></div>
-      {correlationModalOpen && (
-        <CorrelationModal
+      {detailModalOpen && (
+        <DetailModal
           onClose={() => {
-            setCorrelationModalOpen(false);
+            setDetailModalOpen(false);
             setActivePoint(null);
           }}
           open={true}
-          variants={(activePoint.features as Feature[]).map(
-            f => f.record_primary_key
-          )}
+          features={activePoint.features as Feature[]}
+          name={activePoint.name}
         />
       )}
     </>
@@ -116,6 +114,7 @@ const showToolTip = (point: Point) => {
     point.displayName = `<a href=${link}>${feature.display_label}</a>`;
   } else {
     const features = point.features as Feature[];
+
     point.displayName = `${features.length} ${features[0].record_type}${
       features.length > 1 ? "s" : ""
     }`;
