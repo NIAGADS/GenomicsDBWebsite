@@ -32,7 +32,7 @@
                         '@PROJECT_ID@'::text AS project_id,
                         name || ' (' || attribution || ')' AS name,
                         description,
-                        build_link_attribute(dataset_accession, '../dataset/') AS accession_link,
+                        build_link_attribute(dataset_accession, '/record/dataset/') AS accession_link,
                         dataset_accession AS niagads_accession,
                         category,
                         build_link_attribute('Mine this dataset', '@NIAGADS_BASE_URL@' || '/' || '@WEBAPP@' || '/' ||
