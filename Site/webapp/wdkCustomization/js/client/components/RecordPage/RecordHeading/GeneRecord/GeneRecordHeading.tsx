@@ -28,7 +28,7 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
   headerActions
 }) => {
   return (
-    <div className="row">
+    <>
       <div className="col-sm-6">
         <div className="record-summary-container gene-record-summary-container">
           <div>
@@ -70,11 +70,13 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
         </div>
       </div>
       <div className="col-sm-6">
-        <HighchartPlot
-          chart={JSON.parse(record.attributes.gws_variants_summary_highchart)}
-        />
+        {record.attributes.gws_variants_summary_highchart && (
+          <HighchartPlot
+            chart={JSON.parse(record.attributes.gws_variants_summary_highchart)}
+          />
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

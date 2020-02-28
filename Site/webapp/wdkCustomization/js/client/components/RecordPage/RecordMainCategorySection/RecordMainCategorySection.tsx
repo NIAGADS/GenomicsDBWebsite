@@ -26,16 +26,17 @@ import {
 
 interface RecordMainCategorySection {
   category: any;
-  onSectionToggle: { (sectionName: string, isVisible: boolean): any };
-  isCollapsed: boolean;
   depth: number;
+  enumeration: any;
+  isCollapsed: boolean;
+  onSectionToggle: { (sectionName: string, isVisible: boolean): any };
   record:
     | GR.GeneRecord
     | GR.VariantRecord
     | GR.GWASDatasetRecord
     | GR.NIAGADSDatasetRecord;
   recordClass: any;
-  enumeration: any;
+  requestPartialRecord: any;
 }
 
 export default class NiagadsRecordMainCategorySection extends React.PureComponent<
@@ -56,13 +57,14 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
 
   render() {
     let {
+      children,
+      depth,
+      enumeration,
+      isCollapsed,
       record,
       recordClass,
-      category,
-      depth,
-      isCollapsed,
-      enumeration,
-      children
+      requestPartialRecord,
+      category
     } = this.props;
 
     //todo: use target type and create new section type component to break this all up
@@ -74,6 +76,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
           record={record}
           recordClass={recordClass}
           isCollapsed={isCollapsed}
+          requestParialRecord={requestPartialRecord}
           onCollapsedChange={this.toggleCollapse}
         />;
 
@@ -181,7 +184,8 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
             onCollapsedChange={this.toggleCollapse}
           >
             {(record.tables as any)[category.wdkReference.name] && (
-              <IdeogramPlot container="ideogram-container"
+              <IdeogramPlot
+                container="ideogram-container"
                 tracks={JSON.parse(
                   (record.tables as any)[category.wdkReference.name][0]
                     .annotation_tracks
@@ -194,12 +198,13 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
           </CollapsibleSection>
         ) : (
           <RecordTableSection
-            table={category.wdkReference}
+            isCollapsed={isCollapsed}
+            onCollapsedChange={this.toggleCollapse}
             ontologyProperties={category.properties}
             record={record}
             recordClass={recordClass}
-            isCollapsed={isCollapsed}
-            onCollapsedChange={this.toggleCollapse}
+            requestPartialRecord={requestPartialRecord}
+            table={category.wdkReference}
           />
         );
 
