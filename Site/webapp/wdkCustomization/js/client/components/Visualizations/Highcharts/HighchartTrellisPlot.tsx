@@ -2,6 +2,9 @@ import React from 'react';
 import { isEmpty, assign } from 'lodash';
 import HighchartPlot from './HighchartPlot';
 
+
+// https://jsfiddle.net/65mbxwc9/
+
 interface PlotProps {
 	charts: string,
 	attribute: string;
