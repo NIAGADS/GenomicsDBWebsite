@@ -38,9 +38,8 @@ class HighchartPlot extends React.Component<HighchartPlotProps> {
 					<HighchartsReact highcharts={Highcharts} options={this.props.chart} />
 				</div>
 				:
-				<div className="highchart-plot">
-					<HighchartsReact highcharts={Highcharts} options={this.props.chart} />
-				</div>
+				<HighchartsReact highcharts={Highcharts} options={this.props.chart} />
+
 	}
 }
 

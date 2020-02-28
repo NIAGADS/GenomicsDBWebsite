@@ -2,16 +2,13 @@ import React from 'react';
 import { isEmpty, assign } from 'lodash';
 import HighchartPlot from './HighchartPlot';
 
-interface HighchartListBaseProps {
+interface PlotProps {
 	charts: string,
 	attribute: string;
 }
 
-
-type HighchartPlotListProps = HighchartListBaseProps;
-
-class HighchartPlotList extends React.Component<HighchartPlotListProps> {
-	constructor(props: HighchartPlotListProps) {
+class HighchartTrellisPlot extends React.Component<PlotProps> {
+	constructor(props: PlotProps) {
 		super(props);
 	}
 
@@ -25,4 +22,4 @@ class HighchartPlotList extends React.Component<HighchartPlotListProps> {
 	}
 }
 
-export default HighchartPlotList;
+export default HighchartTrellisPlot;
