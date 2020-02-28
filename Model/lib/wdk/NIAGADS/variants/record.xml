@@ -12,16 +12,9 @@
 			<idAttribute name="primary_key" displayName="Variant" 
 			             help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
 				<text>
-					<![CDATA[$$source_id$$]]>
-				</text>
-			</idAttribute>
-
-			<!-- <idAttribute name="primary_key" displayName="Variant" 
-			             help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
-				<text>
 					<![CDATA[$$display_metaseq_id$$]]>
 				</text>
-			</idAttribute> -->
+			</idAttribute>
 
 			<attributesList summary="is_adsp_variant,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding" />
 
