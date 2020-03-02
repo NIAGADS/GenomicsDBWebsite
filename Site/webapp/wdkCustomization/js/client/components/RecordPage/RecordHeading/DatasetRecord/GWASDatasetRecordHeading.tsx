@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { HeaderRecordActions } from './../Shared';
 import * as gr from './../../types';
@@ -45,7 +45,6 @@ const GWASDatasetSearchHelp: React.SFC<any> = props => {
 
 const GWASDatasetSearch: React.FC<SearchProps> = props => {
 	const { questionState } = props;
-	//const [activeQuestion, setActionQuestion] = useState(null);
 
 	const submissionMetadata: SubmissionMetadata = { type: 'create-strategy' };
 	const dispatch = useDispatch();

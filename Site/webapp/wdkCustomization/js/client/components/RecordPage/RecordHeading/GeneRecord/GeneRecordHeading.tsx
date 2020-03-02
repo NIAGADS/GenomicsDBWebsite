@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { HeaderRecordActions } from "./../Shared";
+import { getAttributeChartProperties } from './../Shared/HeaderRecordActions/HeaderRecordActions';
 import * as gr from "./../../types";
-import HighchartPlot from "../../../Visualizations/Highcharts/HighchartPlot";
+import HighchartsTrellisPlot from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
 
 interface StoreProps {
   externalUrls: { [key: string]: any };
@@ -27,6 +28,7 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
   recordClass,
   headerActions
 }) => {
+
   return (
     <>
       <div className="col-sm-6">
@@ -70,9 +72,11 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
         </div>
       </div>
       <div className="col-sm-6">
+      
         {record.attributes.gws_variants_summary_highchart && (
-          <HighchartPlot
-            chart={JSON.parse(record.attributes.gws_variants_summary_highchart)}
+          <HighchartsTrellisPlot
+            data={JSON.parse(record.attributes.gws_variants_summary_highchart)}
+            properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_variants_summary_highchart"))}
           />
         )}
       </div>

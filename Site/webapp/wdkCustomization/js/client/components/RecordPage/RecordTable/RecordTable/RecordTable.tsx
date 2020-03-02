@@ -35,6 +35,7 @@ interface NiagadsRecordTable {
   onSelectionToggled: any;
   isSelected: any;
   canShrink?: boolean;
+  chartProperties?: any;
 }
 
 const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
@@ -45,7 +46,8 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
   onLoad,
   onSelectionToggled,
   table,
-  value
+  value,
+  chartProperties
 }) => {
   const instance = useRef<Instance>();
 
@@ -149,6 +151,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     resizable: true,
     expanderDefaults: { width: 200 },
     resolveData,
+    chartProperties,
     PaginationComponent,
     ...subComponent
   };
