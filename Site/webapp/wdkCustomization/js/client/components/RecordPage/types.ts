@@ -11,6 +11,8 @@ export interface BaseRecord {
   displayNamePlural: string;
   recordClassName: string;
   shortDisplayName: string;
+  tables: any;
+  tableErrors: any[];
   useBasket: boolean;
 }
 
@@ -25,20 +27,21 @@ export interface GeneRecord extends BaseRecord {
   primaryKeyColumnRefs: string[];
   recordIdAttributeName: string;
   shortDisplayNamePlural: string;
-  tableErrors: any[];
   tables: GeneRecordTableType;
   urlSegment: "gene";
 }
 
 interface GeneRecordTableType {
-  transcripts: any;
-  ad_skat_adsp: any;
-  ad_gwas_nhgri: any;
-  other_gwas_nhgri: any;
-  ad_gwas_niagads: any;
-  other_gwas_niagads: any;
-  go_terms: any;
-  pathways: any;
+  [key: string]: {
+    transcripts: any;
+    ad_skat_adsp: any;
+    ad_gwas_nhgri: any;
+    other_gwas_nhgri: any;
+    ad_gwas_niagads: any;
+    other_gwas_niagads: any;
+    go_terms: any;
+    pathways: any;
+  };
 }
 
 export interface GeneRecordAttributes {
@@ -152,10 +155,10 @@ export interface NIAGADSDatasetRecordAttributes {
 
 export interface IRecordTable {
   //todo: other record types, likely need to use generic: IRecordTable<GeneRecord>
-  record: GeneRecord;
+  record: BaseRecord;
   recordClass: RecordClass;
   table: Table;
-  value: { [key: string]: string }[];
+  value: { [key: string]: any }[];
   className: string;
 }
 

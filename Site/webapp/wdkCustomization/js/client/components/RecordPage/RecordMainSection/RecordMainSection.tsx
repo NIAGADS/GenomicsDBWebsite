@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { RecordMainSection } from "wdk-client/Components";
 import { getTableNames } from "wdk-client/Views/Records/RecordUtils";
@@ -11,18 +11,18 @@ import {
 } from "wdk-client/Utils/CategoryUtils";
 import * as GR from "../types";
 import { RecordClass } from "wdk-client/Utils/WdkModel";
-import { flatMap } from "lodash";
+import { flatMap, intersection, isEmpty } from "lodash";
 
 interface RecordMainSection {
   categories: CategoryTreeNode[];
-  collapsedSections: any;
   depth: number;
   onSectionToggle: { (sectionName: string, isVisible: boolean): any };
   parentEnumeration: string;
   record: GR.GeneRecord;
   recordClass: RecordClass;
-  requestPartialRecord: any;
+  requestPartialRecord?: any;
   //connected
+  collapsedSections: string[];
   setCollapsedSections?: (sections: string[]) => any;
 }
 
@@ -37,9 +37,16 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
   parentEnumeration,
   setCollapsedSections
 }) => {
-  useEffect(() => {
-    setCollapsedSections(flatMap(categories, getTableNames));
-  }, []);
+  //set all sections collapsed by default
+  //using useState instead of useEffect b/c we need it to set collapsed *before* first render
+  const [loaded, setLoaded] = useState(false);
+  if (!loaded) {
+    const sectionNames = flatMap(categories, getTableNames);
+    if (isEmpty(intersection(sectionNames, collapsedSections))) {
+      setCollapsedSections([...sectionNames, ...collapsedSections]);
+      setLoaded(true);
+    }
+  }
 
   return categories == null ? null : (
     <div>
@@ -66,7 +73,6 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
           >
             <NiagadsRecordMainSection
               categories={category.children}
-              collapsedSections={collapsedSections}
               depth={depth + 1}
               onSectionToggle={onSectionToggle}
               parentEnumeration={enumeration}
@@ -81,8 +87,12 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
   );
 };
 
-const NiagadsRecordMainSection = connect(null, { setCollapsedSections })(
-  _NiagadsRecordMainSection
-);
+const mapStateToProps = (state: any) => ({
+  collapsedSections: state.record.collapsedSections
+});
+
+const NiagadsRecordMainSection = connect(mapStateToProps, {
+  setCollapsedSections
+})(_NiagadsRecordMainSection);
 
 export default NiagadsRecordMainSection;

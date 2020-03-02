@@ -1,17 +1,18 @@
 import React, { useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import { includes } from "lodash";
-import { safeHtml, wrappable } from "wdk-client/Utils/ComponentUtils";
+import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import RecordTableContainer from "../RecordTable/RecordTableContainer/RecordTableContainer";
 import { CollapsibleSection, Tooltip } from "wdk-client/Components";
 import { ErrorBoundary } from "wdk-client/Controllers";
 import { clone } from "lodash";
+import { BaseRecord } from "../../RecordPage/types";
 
 interface INiagadsRecordTableSection {
   isCollapsed: boolean;
-  record: any;
+  record: BaseRecord;
   recordClass: any;
-  requestPartialRecord: any;
+  requestPartialRecord?: any;
   onCollapsedChange: any;
   ontologyProperties: any;
   //from store
@@ -32,7 +33,10 @@ const NiagadsRecordTableSection: React.SFC<INiagadsRecordTableSection> = ({
 
   useEffect(() => {
     if (isCollapsed || requestedRef.current) return;
-    requestPartialRecord({ tables: [name] });
+    requestPartialRecord({
+      tables: [name],
+      attributes: Object.keys(record.attributes)
+    });
     requestedRef.current = true;
   }, [isCollapsed]);
 
@@ -49,8 +53,8 @@ const NiagadsRecordTableSection: React.SFC<INiagadsRecordTableSection> = ({
             content={safeHtml(_parseTemplate(description, urls))}
             showDelay={0}
             position={{
-              my: "top right",
-              at: "bottom left"
+              my: "top left",
+              at: "bottom right"
             }}
           >
             <span className="fa fa-question-circle-o table-help" />
