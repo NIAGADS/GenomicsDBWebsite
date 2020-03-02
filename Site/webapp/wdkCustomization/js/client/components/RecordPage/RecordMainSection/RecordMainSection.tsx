@@ -40,12 +40,12 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
   //set all sections collapsed by default
   //using useState instead of useEffect b/c we need it to set collapsed *before* first render
   const [loaded, setLoaded] = useState(false);
+  const sectionNames = flatMap(categories, getTableNames);
   if (!loaded) {
-    const sectionNames = flatMap(categories, getTableNames);
     if (isEmpty(intersection(sectionNames, collapsedSections))) {
       setCollapsedSections([...sectionNames, ...collapsedSections]);
-      setLoaded(true);
     }
+    setLoaded(true);
   }
 
   return categories == null ? null : (
