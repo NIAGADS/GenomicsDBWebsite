@@ -9,20 +9,28 @@ export function RecordController(
     globalData: state.globalData
   }));
   class ApiRecordController extends WdkRecordController {
-    getRecordRequestOptions(recordClass: any, categoryTree: CategoryTreeNode) {
+    getRecordRequestOptions = (
+      recordClass: { [key: string]: any },
+      categoryTree: CategoryTreeNode
+    ) => {
       //@ts-ignore
       const requestOptions = super.getRecordRequestOptions(
         recordClass,
         categoryTree
       );
-      //we're going to lazy load tables, so returning only initialOptions and no additionalOptions
+      //we're going to lazy load tables (minus those that are 'nonstandard', like locuszoom),
+      //so we need only initialOptions and no additionalOptions
       return [
         {
           attributes: requestOptions[0].attributes,
-          tables: requestOptions[0].tables
+          tables: requestOptions[0].tables.concat(
+            recordClass.fullName === "VariantRecordClasses.VariantRecordClass"
+              ? ["locuszoom_gwas_datasets"]
+              : []
+          )
         }
       ];
-    }
+    };
   }
   return enhance(ApiRecordController);
 }
