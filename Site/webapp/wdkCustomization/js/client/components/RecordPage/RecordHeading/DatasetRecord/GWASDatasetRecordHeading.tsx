@@ -61,11 +61,11 @@ const GWASDatasetSearch: React.FC<SearchProps> = props => {
 		(event) => {
 			dispatch(updateParamValue({
 				searchName: SEARCH_NAME,
-				parameter: questionState.question.parametersByName[PVALUE_PARAM_NAME],
+				parameter: questionState.question.parametersByName["pvalue"],
 				paramValues: questionState.paramValues,
 				paramValue: event.target.value
 			}));
-		}, []
+		}, [questionState]
 	);
 
 	return (
