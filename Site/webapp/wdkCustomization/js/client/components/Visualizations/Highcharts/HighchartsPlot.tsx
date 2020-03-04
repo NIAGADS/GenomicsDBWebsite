@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 
 import { buildChartOptions, addCategories, addTitle, addSeries } from './HighchartsOptions';
@@ -23,16 +23,11 @@ export interface HighchartsPlotProps {
 	properties: any
 	noDataMessage?: string;
 	displayNoDataMessage?: boolean;
-
 }
 
-function _buildOptions(props: HighchartsPlotProps) {
-	const {data, properties} = props;
+export function buildOptions(data: any, properties:any) {
 
-	let opts = {};
-	if (data) {
-		opts = buildChartOptions(properties.chartType, properties);
-	}
+	let opts = buildChartOptions(properties.type);
 
 	if (data.categories)
 		Object.assign(opts, addCategories(data.categories));
@@ -51,15 +46,17 @@ function _buildOptions(props: HighchartsPlotProps) {
 
 const HighchartsPlot: React.FC<HighchartsPlotProps> = props => {
 	const { data, properties, noDataMessage, displayNoDataMessage } = props;
+	const [options, setOptions] = useState();
+
+	useLayoutEffect(() => {setOptions(buildOptions(data, properties))}, []);
 
 	const message = noDataMessage ? noDataMessage : "None reported.";
 	const displayMessage = displayNoDataMessage === false ? false : true;
 
-	const options = _buildOptions(props);
-
 	return (
 		data ?
-			<HighchartsReact highcharts={Highcharts} options={options} />
+			<HighchartsReact highcharts={Highcharts} 
+			                 options={options} />
 			: displayMessage ? <div>{message}</div> : null
 	);
 }

@@ -335,6 +335,7 @@
         SELECT
             r.source_id,
             jsonb_build_object(
+                'key', 'diagnosis',
                 'title', 'Diagnosis',
                 'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
                 'series', jsonb_build_array(
@@ -364,6 +365,7 @@
         SELECT
             r.source_id,
             jsonb_build_object(
+                'key', 'neuropathology',
                 'title', 'Neuropathology',
                 'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
                 'series', jsonb_build_array(
@@ -392,6 +394,7 @@
         SELECT
             r.source_id,
             jsonb_build_object(
+                'key', 'biomarker',
                 'title', 'Biomarker',
                 'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
                 'series', jsonb_build_array(

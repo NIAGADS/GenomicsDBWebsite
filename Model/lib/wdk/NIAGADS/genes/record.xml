@@ -172,7 +172,7 @@
 				<columnAttribute name="gws_variants_summary_highchart" internal="true" inReportMaker="false" type="highchart_json">
 				<propertyList name="chartProperties">
 					<value>
-					{"type": "gene_gws_summary", "isStacked": true, "isInverted": true, "useTrellis": true}
+					{"type": "gene_gws_summary", "useTrellis": true}
 					</value>
 				</propertyList>
 				</columnAttribute>

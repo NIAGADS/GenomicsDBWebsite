@@ -1,41 +1,61 @@
-import { Options } from 'highcharts';
+import { Options, OptionsStackingValue } from 'highcharts';
 
 export const HIGHCHARTS_DEFAULTS: Options = {
     credits: { enabled: false }
 }
 
-export function buildColumnChartOptions(options: any) {
+
+export function buildChartOptions(chartType:string) {
+    switch (chartType) {
+        case "column":
+            return buildColumnChartOptions();
+        case "gene_gws_summary":
+            return buildGeneGwsSummaryOptions();
+        default:
+            return HIGHCHARTS_DEFAULTS;
+    }
+}
+
+
+export function buildGeneGwsSummaryOptions(options?: Options) {
+    let plotOptions:Options = {
+        yAxis: {
+            title: { text: "N GWAS Variants within +/- 100kb of the gene" }
+        },
+    }
+    if (options) {
+        plotOptions = Object.assign(plotOptions, options);
+    }
+    return buildColumnChartOptions(true, "normal", plotOptions)
+}
+
+
+export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsStackingValue, options?: Options) {
     const sharedTooltip = true;
     const drawTooltipsOutside = true;
 
     let plotOptions:Options = { 
         chart: {
             type: "column",
-            inverted: options.isInverted ? options.isInverted : false
+            inverted: inverted ? inverted : false
         },
         legend: { 
-            reversed: options.isInverted ? options.isInverted : false
+            reversed: inverted ? inverted : false
         },
         plotOptions: {
             column: { 
-                stacking: options.stacking ? options.stacking === "none" ? undefined : options.stacking
-                    : undefined
+                stacking: stacking ? stacking : undefined
             }
         }
     }
 
     plotOptions = Object.assign(plotOptions, buildTooltipOptions(sharedTooltip, drawTooltipsOutside));
 
-    return Object.assign(HIGHCHARTS_DEFAULTS, plotOptions);
-}
-
-export function buildGeneGwsSummaryOptions(options: any) {
-    const plotOptions:Options = {
-        yAxis: {
-            title: { text: "N GWS Variants" }
-        },
+    if (options) {
+        plotOptions = Object.assign(plotOptions, options);
     }
-    return Object.assign(buildColumnChartOptions(options), plotOptions)
+    
+    return Object.assign(HIGHCHARTS_DEFAULTS, plotOptions);
 }
 
 export function addSeries(series: any) {
@@ -76,13 +96,3 @@ export function addTitle(title: string) {
     return plotOptions;
 }
 
-export function buildChartOptions(chartType:string, options:any) {
-    switch (chartType) {
-        case "column":
-            return buildColumnChartOptions(options);
-        case "gene_gws_summary":
-            return buildGeneGwsSummaryOptions(options);
-        default:
-            return HIGHCHARTS_DEFAULTS;
-    }
-}
