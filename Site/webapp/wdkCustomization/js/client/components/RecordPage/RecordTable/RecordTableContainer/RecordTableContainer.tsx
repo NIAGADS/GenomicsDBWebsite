@@ -19,21 +19,18 @@ import { Instance } from "react-table";
 const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
   const defaultPVal = 8;
 
-  const [filtered, setFiltered] = useState([{ id: "all", value: "" as any }]),
+  const [filtered, setFiltered] = useState(
+      [{ id: "all", value: "" as any }].concat(
+        get(table, "properties.type[0]") === "chart_filter"
+          ? [{ id: "pvalue", value: defaultPVal }]
+          : []
+      )
+    ),
     [tableInstance, setTableInstance] = useState<Instance>(),
     [filterVal, setFilterVal] = useState(""),
     [basket, setBasket] = useState([]),
     [pValueFilterVisible, setPValueFilterVisible] = useState(false),
     [csvData, setCsvData] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (table.properties.type[0] === "chart_filter") {
-      _setFiltered("pvalue", defaultPVal);
-    }
-  }, []);
-
-  const getHasPValFilter = (table: rt.Table) =>
-    tableInstance && table.properties.type[0] === "chart_filter";
 
   const _setFiltered = (id: string, value: any) =>
     setFiltered(
@@ -41,6 +38,13 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
         .filter(fil => (fil.id === id ? false : true))
         .concat([{ id, value }])
     );
+
+  const getHasPValFilter = (table: rt.Table) =>
+    tableInstance && table.properties.type[0] === "chart_filter";
+
+  const getPValFilteredResultsEmpty = () =>
+    getHasPValFilter(table) &&
+    !tableInstance.getResolvedState().sortedData.length;
 
   const handleSearchFilterChange = (
     e: React.SyntheticEvent<HTMLInputElement>
@@ -92,6 +96,10 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
 
   const { attributes } = table;
 
+  if (tableInstance) {
+    console.log(tableInstance.getResolvedState());
+  }
+
   return (
     <div className="record-table-container">
       {!isEmpty(value) ? (
@@ -139,8 +147,8 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
               </div>
             </div>
           </div>
-          {/* based on get(table, 'properties.canShrink[0]'), remove flex-grow: 1 from .ReactTable */}
           <NiagadsRecordTable
+            visible={!getPValFilteredResultsEmpty()}
             table={table}
             value={value}
             attributes={attributes}
@@ -150,6 +158,20 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
             isSelected={isSelected}
             canShrink={get(table, "properties.canShrink[0]", false)}
           />
+          <>
+            {getPValFilteredResultsEmpty() && (
+              <p style={{ textAlign: "center" }}>
+                No data is available for the default p-value ({defaultPVal}). To
+                see more results, please adjust the p-value limit with the{" "}
+                <span
+                  className="niagads-link"
+                  onClick={setPValueFilterVisible.bind(null, true)}
+                >
+                  p-value filter
+                </span>
+              </p>
+            )}
+          </>
         </div>
       ) : (
         "None Reported"

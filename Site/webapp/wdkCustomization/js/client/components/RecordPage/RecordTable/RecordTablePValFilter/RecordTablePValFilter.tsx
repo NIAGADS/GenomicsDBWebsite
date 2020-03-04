@@ -49,7 +49,7 @@ const PvalFilter = class extends React.Component<
   }
 
   componentDidMount = () => {
-    this.props.onChange(this.props.defaultPVal); //set default filter
+    //this.props.onChange(this.props.defaultPVal); //set default filter
     const smallestP = _getSmallestP(this.props.values),
       data = _transformData(this.props.values),
       svg = _drawFrame(this.props.selectClass, canvasSpec),
