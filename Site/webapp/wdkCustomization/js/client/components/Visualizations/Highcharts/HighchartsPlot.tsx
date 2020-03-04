@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, merge } from 'lodash';
 
 import { buildChartOptions, addCategories, addTitle, addSeries } from './HighchartsOptions';
 
@@ -23,40 +23,51 @@ export interface HighchartsPlotProps {
 	properties: any
 	noDataMessage?: string;
 	displayNoDataMessage?: boolean;
+	plotOptions?: Options;
 }
 
-export function buildOptions(data: any, properties:any) {
+export function buildOptions(data: any, properties: any, options: Options) {
 
 	let opts = buildChartOptions(properties.type);
 
 	if (data.categories)
-		Object.assign(opts, addCategories(data.categories));
+		opts = merge(opts, addCategories(data.categories));
 
 	if (data.series) {
-		Object.assign(opts, addSeries(data.series))
+		opts = merge(opts, addSeries(data.series))
 	}
 
 	if (data.title) {
-		Object.assign(opts, addTitle(data.title));
+		opts = merge(opts, addTitle(data.title));
 	}
 
-	return (opts);
+	if (options) 
+		return merge(opts, options);
+	return opts;
 }
 
 
 const HighchartsPlot: React.FC<HighchartsPlotProps> = props => {
-	const { data, properties, noDataMessage, displayNoDataMessage } = props;
-	const [options, setOptions] = useState();
+	const { data, properties, noDataMessage, displayNoDataMessage, plotOptions } = props;
+	const [options, setOptions] = useState(plotOptions);
 
-	useLayoutEffect(() => {setOptions(buildOptions(data, properties))}, []);
+	useLayoutEffect(() => {
+		setOptions(buildOptions(data, properties, plotOptions))
+		/*if (!plotOptions) {
+			setOptions(buildOptions(data, properties))
+		}
+		else {
+			!options && setOptions(plotOptions);
+		}*/
+	}, [data, plotOptions]);
 
-	const message = noDataMessage ? noDataMessage : "None reported.";
+	const message = options ? "Loading..." : noDataMessage ? noDataMessage : "None reported.";
 	const displayMessage = displayNoDataMessage === false ? false : true;
 
 	return (
-		data ?
-			<HighchartsReact highcharts={Highcharts} 
-			                 options={options} />
+		options ?
+			<HighchartsReact highcharts={Highcharts}
+				options={options} />
 			: displayMessage ? <div>{message}</div> : null
 	);
 }

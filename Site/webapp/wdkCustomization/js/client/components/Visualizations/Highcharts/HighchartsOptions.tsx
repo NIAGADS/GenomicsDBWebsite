@@ -1,11 +1,12 @@
 import { Options, OptionsStackingValue } from 'highcharts';
+import { Term, Glossary } from '../../../data/glossary';
+import { merge } from 'lodash';
 
 export const HIGHCHARTS_DEFAULTS: Options = {
     credits: { enabled: false }
 }
 
-
-export function buildChartOptions(chartType:string) {
+export function buildChartOptions(chartType: string) {
     switch (chartType) {
         case "column":
             return buildColumnChartOptions();
@@ -18,14 +19,33 @@ export function buildChartOptions(chartType:string) {
 
 
 export function buildGeneGwsSummaryOptions(options?: Options) {
-    let plotOptions:Options = {
-        yAxis: {
-            title: { text: "N GWAS Variants within +/- 100kb of the gene" }
+    let plotOptions: Options = {
+        chart: {
+            height: 300,
+            width: 300
         },
+        title: {
+            align: "left",
+            style: { fontSize: "12px" },
+            x: 0
+        },
+        yAxis: {
+            title: { text: "N GWS Variants" }
+        },
+        legend: {
+            enabled: false
+        },
+        navigation: {
+            buttonOptions: {
+                symbolSize: 10,
+                symbolStrokeWidth: 1,
+            }
+        }
     }
     if (options) {
-        plotOptions = Object.assign(plotOptions, options);
+        plotOptions = merge(plotOptions, options);
     }
+
     return buildColumnChartOptions(true, "normal", plotOptions)
 }
 
@@ -34,16 +54,16 @@ export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsSt
     const sharedTooltip = true;
     const drawTooltipsOutside = true;
 
-    let plotOptions:Options = { 
+    let plotOptions: Options = {
         chart: {
             type: "column",
             inverted: inverted ? inverted : false
         },
-        legend: { 
+        legend: {
             reversed: inverted ? inverted : false
         },
         plotOptions: {
-            column: { 
+            column: {
                 stacking: stacking ? stacking : undefined
             }
         }
@@ -52,35 +72,36 @@ export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsSt
     plotOptions = Object.assign(plotOptions, buildTooltipOptions(sharedTooltip, drawTooltipsOutside));
 
     if (options) {
-        plotOptions = Object.assign(plotOptions, options);
+        plotOptions = merge(plotOptions, options)      
     }
-    
-    return Object.assign(HIGHCHARTS_DEFAULTS, plotOptions);
+
+    return Object.assign({}, HIGHCHARTS_DEFAULTS, plotOptions);
 }
 
 export function addSeries(series: any) {
-    const plotOptions:Options = {
+    const plotOptions: Options = {
         series: series
     }
     return plotOptions;
 }
 
+
 export function buildTooltipOptions(shared?: boolean, outside?: boolean) {
-    const plotOptions:Options = {
+    const plotOptions: Options = {
         tooltip: {
             shared: shared ? shared : false,
-            outside: outside ? outside: false
+            outside: outside ? outside : false
         }
     }
 
     return plotOptions;
 }
 
-export function addCategories(categories:string[]) {
-    const plotOptions:Options = {
+export function addCategories(categories: string[]) {
+    const plotOptions: Options = {
         xAxis: {
-             categories: categories
-        }   
+            categories: categories
+        }
     }
 
     return plotOptions;
