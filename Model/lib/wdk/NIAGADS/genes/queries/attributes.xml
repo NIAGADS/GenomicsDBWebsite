@@ -341,15 +341,18 @@
                 'series', jsonb_build_array(
                         jsonb_build_object(
                                 'name', 'downstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream'),
+                                'legendIndex', 3
                         ),
                         jsonb_build_object(
                                 'name', 'in gene',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene'),
+                                'legendIndex', 2
                         ),
                         jsonb_build_object(
                                 'name', 'upstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'),
+                                'legendIndex', 1
                         ) 
            )) AS chart_data
         FROM
@@ -371,15 +374,18 @@
                 'series', jsonb_build_array(
                         jsonb_build_object(
                                 'name', 'downstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream'),
+                                'legendIndex', 3
                         ),
                         jsonb_build_object(
                                 'name', 'in gene',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene'),
+                                'legendIndex', 2
                         ),
                         jsonb_build_object(
                                 'name', 'upstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'),
+                                'legendIndex', 1
                         ) 
            )) AS chart_data
         FROM
@@ -400,15 +406,18 @@
                 'series', jsonb_build_array(
                         jsonb_build_object(
                                 'name', 'downstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream'),
+                                'legendIndex', 3
                         ),
                         jsonb_build_object(
                                 'name', 'in gene',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene'),
+                                'legendIndex', 2
                         ),
                         jsonb_build_object(
                                 'name', 'upstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'),
+                                'legendIndex', 1
                         ) 
            )) AS chart_data
         FROM

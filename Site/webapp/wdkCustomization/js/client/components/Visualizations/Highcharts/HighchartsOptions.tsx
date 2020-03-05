@@ -2,6 +2,24 @@ import { Options, OptionsStackingValue } from 'highcharts';
 import { Term, Glossary } from '../../../data/glossary';
 import { merge } from 'lodash';
 
+/* const HIGHCHARTS_EXPORTING_MENU_ITEMS = [
+    "printChart",
+    "separator",
+    "downloadPNG",
+    "downloadJPEG",
+    "downloadPDF",
+    "downloadSVG",
+    "separator",
+    "downloadCSV",
+    "downloadXLS",
+    "viewData",
+    "openInCloud"
+]; */
+
+
+const PuBlRd_COLOR_BLIND_PALETTE = ["#601A4A", "#EE442F", "#63ACBE"];
+const RdBlPu_COLOR_BLIND_PALETTE = ["#EE442F",  "#601A4A", "#63ACBE"];
+
 export const HIGHCHARTS_DEFAULTS: Options = {
     credits: { enabled: false }
 }
@@ -21,8 +39,8 @@ export function buildChartOptions(chartType: string) {
 export function buildGeneGwsSummaryOptions(options?: Options) {
     let plotOptions: Options = {
         chart: {
-            height: 300,
-            width: 300
+            height: 250,
+            width: 250
         },
         title: {
             align: "left",
@@ -40,13 +58,25 @@ export function buildGeneGwsSummaryOptions(options?: Options) {
                 symbolSize: 10,
                 symbolStrokeWidth: 1,
             }
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0 // no white border around stacked elements
+            }
         }
     }
+
+    plotOptions = merge(plotOptions, disableLegendClick());
+    plotOptions = merge(plotOptions, disableLegendHover());
+    plotOptions = merge(plotOptions, limitedExportMenu());
+    plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
+    plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE));
+
     if (options) {
         plotOptions = merge(plotOptions, options);
     }
 
-    return buildColumnChartOptions(true, "normal", plotOptions)
+    return buildColumnChartOptions(true, "normal", plotOptions) // stacked bar (inverted column) w/additional formatting from above
 }
 
 
@@ -72,11 +102,85 @@ export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsSt
     plotOptions = Object.assign(plotOptions, buildTooltipOptions(sharedTooltip, drawTooltipsOutside));
 
     if (options) {
-        plotOptions = merge(plotOptions, options)      
+        plotOptions = merge(plotOptions, options)
     }
 
     return Object.assign({}, HIGHCHARTS_DEFAULTS, plotOptions);
 }
+
+
+
+function limitedExportMenu() {
+    const plotOptions:Options = {
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: ["printChart", "separator", "downloadPNG", "downloadPDF", "downloadSVG", "separator", "downloadCSV"]
+                }
+            }
+        }
+    }
+
+    return plotOptions;
+}
+
+export function disableSeriesAnimationOnLoad() {
+    const plotOptions: Options = {
+        plotOptions: {
+            series: {
+                animation: false
+            }
+        }
+    }
+
+    return plotOptions;
+}
+
+export function applyCustomSeriesColor(palette: string[]) {
+    const plotOptions:Options = {
+        colors: palette    
+    }
+
+    return plotOptions;
+}
+
+
+export function disableLegendClick() {
+    const plotOptions: Options = {
+        plotOptions: {
+            series: {
+                events: {
+                    legendItemClick: function () {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    return plotOptions;
+}
+
+export function disableLegendHover() {
+    const plotOptions: Options = {
+        plotOptions: {
+            series: {
+                states: {
+                    inactive: {
+                        opacity: 1
+                    },
+                    hover: {
+                        enabled: false
+                    }
+                }
+            }
+
+        }
+    }
+
+    return plotOptions;
+}
+
 
 export function addSeries(series: any) {
     const plotOptions: Options = {

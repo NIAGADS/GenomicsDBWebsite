@@ -46,11 +46,14 @@ export const HighchartsTableTrellis: React.FC<HighchartsPlotProps & TableTrellis
 						{data.map((item: any, index: number) => {
 							let plotOptions: Options = {				
 								legend: {
-									enabled: true, // index == (data.length - 1),
+									enabled: index == (data.length - 1),
 									layout: "vertical",
 									align: "right",
 									verticalAlign: "middle",
 									itemStyle: {fontWeight: "10px", fontSize: "10px"},
+								},
+								chart: {
+									width: index == (data.length - 1) ? 300 : 250
 								}
 							}
 							return (
