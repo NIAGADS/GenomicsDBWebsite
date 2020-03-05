@@ -35,7 +35,7 @@ interface RecordMainCategorySection {
   | GR.GWASDatasetRecord
   | GR.NIAGADSDatasetRecord;
   recordClass: any;
-  requestPartialRecord: any;
+  requestPartialRecord?: any;
 }
 
 export default class NiagadsRecordMainCategorySection extends React.PureComponent<
