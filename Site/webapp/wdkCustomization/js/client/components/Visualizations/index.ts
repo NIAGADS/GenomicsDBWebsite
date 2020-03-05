@@ -1,7 +1,6 @@
 import IdeogramPlot from './Ideogram/Ideogram';
-import HighchartPlot from './Highcharts/HighchartPlot';
-import HighchartPlotList from './Highcharts/HighchartPlotList';
+import HighchartsPlot from './Highcharts/HighchartsPlot';
 
 export {
-	IdeogramPlot, HighchartPlot, HighchartPlotList
+	IdeogramPlot, HighchartsPlot
 }

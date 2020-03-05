@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { HeaderRecordActions } from "./../Shared";
+import { getAttributeChartProperties } from './../Shared/HeaderRecordActions/HeaderRecordActions';
 import * as gr from "./../../types";
-import HighchartPlot from "../../../Visualizations/Highcharts/HighchartPlot";
+import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
 
 interface StoreProps {
   externalUrls: { [key: string]: any };
@@ -27,9 +28,10 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
   recordClass,
   headerActions
 }) => {
+
   return (
     <>
-      <div className="col-sm-6">
+      <div className="col-sm-3">
         <div className="record-summary-container gene-record-summary-container">
           <div>
             <HeaderRecordActions
@@ -69,10 +71,12 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
           </ul>
         </div>
       </div>
-      <div className="col-sm-6">
+      <div className="col">
+      
         {record.attributes.gws_variants_summary_highchart && (
-          <HighchartPlot
-            chart={JSON.parse(record.attributes.gws_variants_summary_highchart)}
+          <HighchartsTableTrellis yAxisTitle="N GWAS Variants"
+            data={JSON.parse(record.attributes.gws_variants_summary_highchart)}
+            properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_variants_summary_highchart"))}
           />
         )}
       </div>

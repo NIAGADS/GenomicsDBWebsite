@@ -27,4 +27,29 @@ const HeaderRecordActions: React.SFC<HeaderRecordActions> = props => {
 	</ul>
 }
 
+// return the attribute details from the record class
+export function getAttributeByName(recordClass: any, attributeName:string) {
+	let targetAttribute = recordClass.attributes.filter(
+		function(attribute: any){ return attribute.name == attributeName }
+	);
+	return targetAttribute[0];
+  }
+
+
+  // return attribute properties (specified in propertyList in model)
+export function getAttributePropertiesByName(recordClass: any, attributeName:string) {
+	let targetAttribute = recordClass.attributes.filter(
+		function(attribute: any){ return attribute.name == attributeName }
+	);
+	return targetAttribute[0].properties;
+}
+
+// return chartProperties (specified in propertyList (name=chartProperties) in model)
+export function getAttributeChartProperties(recordClass: any, attributeName: string) {
+	let targetAttribute = recordClass.attributes.filter(
+		function(attribute: any){ return attribute.name == attributeName }
+	);
+	return targetAttribute[0].properties.chartProperties;
+}
+
 export default HeaderRecordActions;
