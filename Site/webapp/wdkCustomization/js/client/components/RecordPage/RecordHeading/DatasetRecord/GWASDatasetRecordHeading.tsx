@@ -3,7 +3,7 @@ import { connect, useDispatch } from "react-redux";
 import { HeaderRecordActions } from "./../Shared";
 import * as gr from "./../../types";
 import { resolveJsonInput } from "../../../../util/jsonParse";
-import { HelpIcon } from "wdk-client/Components";
+import { HelpIcon, LoadingOverlay } from "wdk-client/Components";
 import {
   SubmissionMetadata,
   submitQuestion,
@@ -121,6 +121,11 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
         <p className="red">
           Please enter a valid p-value, e.g., 0.0007, 3e-6, 3^-6, 3x10^-6
         </p>
+      )}
+      {questionState.submitting && (
+        <LoadingOverlay>
+          <span>Loading Data...</span>
+        </LoadingOverlay>
       )}
     </>
   );
