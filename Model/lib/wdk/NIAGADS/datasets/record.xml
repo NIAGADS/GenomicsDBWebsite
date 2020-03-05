@@ -430,6 +430,9 @@
 					<propertyList name="type">
 						<value>highchart</value>
 					</propertyList>
+					<propertyList name="chartProperties">
+
+					</propertyList>
 			
 					<description>	
 						<![CDATA[
