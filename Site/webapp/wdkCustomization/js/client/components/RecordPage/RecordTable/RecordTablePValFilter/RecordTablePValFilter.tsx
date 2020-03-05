@@ -49,7 +49,6 @@ const PvalFilter = class extends React.Component<
   }
 
   componentDidMount = () => {
-    this.props.onChange(this.props.defaultPVal); //set default filter
     const smallestP = _getSmallestP(this.props.values),
       data = _transformData(this.props.values),
       svg = _drawFrame(this.props.selectClass, canvasSpec),
@@ -210,9 +209,8 @@ const _drawRectangle = (
 };
 
 const _buildDrag = (
-  xScale: d3.scale.Ordinal<string, number>,
   unXScale: d3.scale.Linear<number, number>,
-  pMin: number,
+  sizerClass: string,
   cb: Function
 ) => {
   return d3.behavior.drag().on("drag", function(d: any, i) {
@@ -225,7 +223,7 @@ const _buildDrag = (
           //@ts-ignore
           d3.select(this as any).attr("cx");
     const rectWidth = d.extent[1] - cx;
-    d3.select(".sizer")
+    d3.select("." + sizerClass)
       .attr("transform", "translate(" + cx + ",0)")
       .attr("width", rectWidth);
     //@ts-ignore
@@ -263,8 +261,9 @@ const _drawSlider = (
   cs: CanvasSpec,
   cb: Function
 ) => {
-  const drag = _buildDrag(xScale, unXScale, minP, cb);
-  _drawRectangle(svg, xScale, defaultP, cs.height, "sizer");
+  const sizerClass = "sizer-" + Math.random().toString(36).slice(3),
+   drag = _buildDrag(unXScale, sizerClass, cb);
+  _drawRectangle(svg, xScale, defaultP, cs.height, sizerClass);
   _drawCircle(svg, xScale, defaultP, minP, cs.height, drag);
 };
 
