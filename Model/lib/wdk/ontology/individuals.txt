@@ -45,10 +45,10 @@ GeneRecordClasses.GeneRecordClass.dynspan_link	http://edamontology.org/topic_177
 GeneRecordClasses.GeneRecordClass.span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	span				gene		results	record-internal	download
 													
 GeneRecordClasses.GeneRecordClass.ad_skat_adsp	http://edamontology.org/topic_0199	Genetic variation	GeneRecordClasses.GeneRecordClass	table	ad_skat_adsp			ADSP Case/Control Genetic evidenc	gene			record	download
-GeneRecordClasses.GeneRecordClass.ad_variants_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	table	ad_variants_from_gwas				gene	3		record	download
+GeneRecordClasses.GeneRecordClass.ad_variants_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	table	ad_variants_from_gwas				gene	1		record	download
 GeneRecordClasses.GeneRecordClass.other_variants_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	table	other_variants_from_gwas				gene	2		record	download
 GeneRecordClasses.GeneRecordClass.ad_variants_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	GeneRecordClasses.GeneRecordClass	table	ad_variants_from_catalog				gene	1		record	download
-GeneRecordClasses.GeneRecordClass.other_variants_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	GeneRecordClasses.GeneRecordClass	table	other_variants_from_catalog				gene	4		record	download
+GeneRecordClasses.GeneRecordClass.other_variants_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	GeneRecordClasses.GeneRecordClass	table	other_variants_from_catalog				gene	2		record	download
 GeneRecordClasses.GeneRecordClass.go_terms	http://edamontology.org/topic_1775	Function analysis	GeneRecordClasses.GeneRecordClass	table	go_terms			GO Annotation	gene			record	download
 GeneRecordClasses.GeneRecordClass.pathways	http://edamontology.org/topic_0602	Molecular interactions	GeneRecordClasses.GeneRecordClass	table	pathways			KEGG Pathways	gene			record	download
 GeneRecordClasses.GeneRecordClass.record_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	record_link_outs				gene	1		record	download
@@ -56,7 +56,7 @@ GeneRecordClasses.GeneRecordClass.sequence_link_outs	http://edamontology.org/top
 GeneRecordClasses.GeneRecordClass.protein_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	protein_link_outs				gene	3		record	download
 GeneRecordClasses.GeneRecordClass.clinical_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	clinical_link_outs				gene	2		record	download
 GeneRecordClasses.GeneRecordClass.transcript_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	transcript_link_outs				gene	5		record	download
-GeneRecordClasses.GeneRecordClass.gws_variants_summary_highchart	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_highchart							record-internal	
+GeneRecordClasses.GeneRecordClass.gws_variants_summary_plot	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_plot							record-internal	
 													
 ## Variant Questions  ##													
 													
@@ -121,15 +121,16 @@ VariantRecordClasses.VariantRecordClass.num_impacted_genes	http://edamontology.o
 VariantRecordClasses.VariantRecordClass.transcript_consequence_summary	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	transcript_consequence_summary							record-internal	
 VariantRecordClasses.VariantRecordClass.locuszoom_gwas_datasets	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	locuszoom_gwas_datasets					1		record	
 VariantRecordClasses.VariantRecordClass.display_metaseq_id	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	display_metaseq_id							record-internal	
+VariantRecordClasses.VariantRecordClass.gws_datasets_summary_plot	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	gws_datasets_summary_plot							record-internal	
 													
 VariantRecordClasses.VariantRecordClass.allele_frequencies	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	table	allele_frequencies					1		record	download
 VariantRecordClasses.VariantRecordClass.transcript_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	transcript_consequences					1		record	download
 VariantRecordClasses.VariantRecordClass.intergenic_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	intergenic_consequences					3		record	download
 VariantRecordClasses.VariantRecordClass.regulatory_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	regulatory_consequences					2		record	download
-VariantRecordClasses.VariantRecordClass.ad_associations_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	ad_associations_from_gwas					2		record	download
-VariantRecordClasses.VariantRecordClass.other_associations_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	other_associations_from_gwas					3		record	download
-VariantRecordClasses.VariantRecordClass.ad_associations_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	VariantRecordClasses.VariantRecordClass	table	ad_associations_from_catalog					5		record	download
-VariantRecordClasses.VariantRecordClass.other_associations_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	VariantRecordClasses.VariantRecordClass	table	other_associations_from_catalog					4		record	download
+VariantRecordClasses.VariantRecordClass.ad_associations_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	ad_associations_from_gwas					1		record	download
+VariantRecordClasses.VariantRecordClass.other_associations_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	other_associations_from_gwas					2		record	download
+VariantRecordClasses.VariantRecordClass.ad_associations_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	VariantRecordClasses.VariantRecordClass	table	ad_associations_from_catalog					1		record	download
+VariantRecordClasses.VariantRecordClass.other_associations_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	VariantRecordClasses.VariantRecordClass	table	other_associations_from_catalog					2		record	download
 VariantRecordClasses.VariantRecordClass.linkage	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	table	linkage					2		record	download
 													
 ## Resource Questions  ##													

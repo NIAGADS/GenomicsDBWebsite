@@ -73,10 +73,10 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
       </div>
       <div className="col">
       
-        {record.attributes.gws_variants_summary_highchart && (
-          <HighchartsTableTrellis yAxisTitle="N GWAS Variants"
-            data={JSON.parse(record.attributes.gws_variants_summary_highchart)}
-            properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_variants_summary_highchart"))}
+        {record.attributes.gws_variants_summary_plot && (
+          <HighchartsTableTrellis 
+            data={JSON.parse(record.attributes.gws_variants_summary_plot)}
+            properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_variants_summary_plot"))}
           />
         )}
       </div>

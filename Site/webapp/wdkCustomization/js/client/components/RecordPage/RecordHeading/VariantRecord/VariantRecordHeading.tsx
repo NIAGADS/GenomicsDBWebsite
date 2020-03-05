@@ -3,9 +3,12 @@ import { connect } from 'react-redux';
 import { Tooltip } from 'wdk-client/Components';
 import { MostSevereConsequencesSection } from './Components/index';
 import { HeaderRecordActions, RecordOutLink } from './../Shared';
+import { getAttributeChartProperties } from './../Shared/HeaderRecordActions/HeaderRecordActions';
 import { resolveJsonInput, isJson } from '../../../../util/jsonParse';
 import { isTrue } from '../../../../util/util';
 import * as gr from './../../types';
+import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
+
 
 interface StoreProps {
 	externalUrls: { [key: string]: any };
@@ -34,13 +37,14 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 					<HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
 				</div>
 				<hr />
-				<div className="record-subtitle-container">
+				<div className="col col-sm-3">
+								<div className="record-subtitle-container">
 					<h3 className="mb-2">
 						<strong>
 							{isJson(attributes.display_metaseq_id)
 								? resolveJsonInput(attributes.display_metaseq_id)
 								: attributes.display_metaseq_id}
-							{attributes.ref_snp_id && '(' + attributes.ref_snp_id + ')'}
+							{attributes.ref_snp_id && ' (' + attributes.ref_snp_id + ')'}
 						</strong>
 					</h3>
 					<p>
@@ -117,33 +121,14 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 						</div>
 					)}
 				</div>
-				<div className="links-contaner">
-					{!attributes.ref_snp_id ? (
-						<h4>Variant not in dbSNP b151.</h4>
-					) : (
-						<ul className="horizontal-links">
-							<span className="label">More information:&nbsp;</span>{' '}
-							{horizontalLinks.map((item, i) => {
-								const url = props.externalUrls[item.baseUrl];
-								return (
-									<RecordOutLink
-										key={i}
-										baseUrl={url}
-										title={item.title}
-										modelKey={item.modelKey}
-										attributes={attributes}
-										render={(props, val) => (
-											<li>
-												<a className="badge" href={`${props.baseUrl}${val}`}>
-													{props.title}
-												</a>
-											</li>
-										)}
-									/>
-								);
-							})}
-						</ul>
-					)}
+				</div>
+				<div className="col">
+				{record.attributes.gws_datasets_summary_plot && (
+          <HighchartsTableTrellis 
+            data={JSON.parse(record.attributes.gws_datasets_summary_plot)}
+            properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_datasets_summary_plot"))}
+          />
+        )}
 				</div>
 			</div>
 		</React.Fragment>

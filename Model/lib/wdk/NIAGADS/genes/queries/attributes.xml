@@ -199,7 +199,7 @@
 
     <sqlQuery name="GWSVariantsPlot">
       <column name="source_id" columnType="string"/>
-      <column name="gws_variants_summary_highchart" columnType="string"/>
+      <column name="gws_variants_summary_plot" columnType="string"/>
       <sql>
         <![CDATA[
     WITH
@@ -335,24 +335,20 @@
         SELECT
             r.source_id,
             jsonb_build_object(
-                'key', 'diagnosis',
                 'title', 'Diagnosis',
                 'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
                 'series', jsonb_build_array(
                         jsonb_build_object(
                                 'name', 'downstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream'),
-                                'legendIndex', 3
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
                         ),
                         jsonb_build_object(
                                 'name', 'in gene',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene'),
-                                'legendIndex', 2
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
                         ),
                         jsonb_build_object(
                                 'name', 'upstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'),
-                                'legendIndex', 1
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
                         ) 
            )) AS chart_data
         FROM
@@ -368,24 +364,20 @@
         SELECT
             r.source_id,
             jsonb_build_object(
-                'key', 'neuropathology',
                 'title', 'Neuropathology',
                 'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
                 'series', jsonb_build_array(
                         jsonb_build_object(
                                 'name', 'downstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream'),
-                                'legendIndex', 3
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
                         ),
                         jsonb_build_object(
                                 'name', 'in gene',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene'),
-                                'legendIndex', 2
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
                         ),
                         jsonb_build_object(
                                 'name', 'upstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'),
-                                'legendIndex', 1
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
                         ) 
            )) AS chart_data
         FROM
@@ -400,24 +392,20 @@
         SELECT
             r.source_id,
             jsonb_build_object(
-                'key', 'biomarker',
                 'title', 'Biomarker',
                 'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
                 'series', jsonb_build_array(
                         jsonb_build_object(
                                 'name', 'downstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream'),
-                                'legendIndex', 3
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
                         ),
                         jsonb_build_object(
                                 'name', 'in gene',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene'),
-                                'legendIndex', 2
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
                         ),
                         jsonb_build_object(
                                 'name', 'upstream',
-                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'),
-                                'legendIndex', 1
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
                         ) 
            )) AS chart_data
         FROM
@@ -429,7 +417,7 @@
     )	                       
 
     SELECT ids.source_id,
-    jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), (SELECT chart_data FROM neuropathology), (SELECT chart_data FROM biomarker))::text AS gws_variants_summary_highchart
+    jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), (SELECT chart_data FROM neuropathology), (SELECT chart_data FROM biomarker))::text AS gws_variants_summary_plot
     FROM ids
         ]]>
       </sql>

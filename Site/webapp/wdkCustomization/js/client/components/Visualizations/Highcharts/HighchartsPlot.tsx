@@ -18,6 +18,8 @@ Data(Highcharts);
 import Heatmap from 'highcharts/modules/heatmap';
 Heatmap(Highcharts);
 
+require('highcharts/highcharts-more')(Highcharts); // bubble plot & others
+
 export interface HighchartsPlotProps {
 	data: any,
 	properties: any
@@ -33,6 +35,10 @@ export function buildOptions(data: any, properties: any, options: Options) {
 	if (data.categories)
 		opts = merge(opts, addCategories(data.categories));
 
+	if (data.ycategories) {
+		opts = merge(opts, addCategories(data.ycategories, 'yAxis'));
+	}
+
 	if (data.series) {
 		opts = merge(opts, addSeries(data.series))
 	}
@@ -42,7 +48,8 @@ export function buildOptions(data: any, properties: any, options: Options) {
 	}
 
 	if (options) 
-		return merge(opts, options);
+		opts = merge(opts, options);
+
 	return opts;
 }
 

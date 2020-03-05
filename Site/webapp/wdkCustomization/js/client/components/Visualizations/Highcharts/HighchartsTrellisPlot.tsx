@@ -30,13 +30,8 @@ export const HighchartsColumnTrellis: React.FC<HighchartsPlotProps> = props => {
 	)
 }
 
-interface TableTrellisProps {
-	yAxisTitle: string;
-
-}
-
-export const HighchartsTableTrellis: React.FC<HighchartsPlotProps & TableTrellisProps> = props => {
-	const { yAxisTitle, data, properties, noDataMessage, displayNoDataMessage } = props;
+export const HighchartsTableTrellis: React.FC<HighchartsPlotProps > = props => {
+	const { data, properties, noDataMessage, displayNoDataMessage } = props;
 
 	return (
 		data ? <Container>

@@ -169,7 +169,7 @@
 			<!-- =============================================================== -->
 
 			<attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
-				<columnAttribute name="gws_variants_summary_highchart" internal="true" inReportMaker="false" type="highchart_json">
+				<columnAttribute name="gws_variants_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
 				<propertyList name="chartProperties">
 					<value>
 					{"type": "gene_gws_summary"}

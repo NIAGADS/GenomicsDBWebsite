@@ -244,7 +244,253 @@
       </sql>
     </sqlQuery>
 
+	<sqlQuery name="GWSDatasetsPlot">
+      <column name="source_id" columnType="string"/>
+      <column name="gws_datasets_summary_plot" columnType="string"/>
+      <sql>
+	  <![CDATA[
+	  	WITH
+    ids AS ( ##WDK_ID_SQL## )
+    ,
+    phenotype AS
+    (
+        SELECT DISTINCT
+            t.protocol_app_node_id,
+            c.characteristic_type AS category,
+            CASE
+                WHEN c.characteristic_type = 'diagnosis'
+                THEN
+                    CASE
+                        WHEN c.characteristic ILIKE '%Alzheimer%'
+                        THEN 'AD'
+                        WHEN c.characteristic ILIKE 'Progressive%'
+                        THEN 'PSP'
+                        WHEN c.characteristic ILIKE 'Frontotemporal%'
+                        THEN 'FTD'
+                        WHEN c.characteristic ILIKE 'Lewy%'
+                        THEN 'LBD'
+                        WHEN c.characteristic = 'dementia'
+                        THEN 'DEM'
+                    END
+                WHEN c.characteristic_type = 'neuropathology'
+                THEN -- neuropathology
+                    CASE
+                        WHEN c.characteristic ILIKE '%Braak%'
+                        THEN 'Braak Stages'
+                        WHEN c.characteristic ILIKE '%CERAD%'
+                        THEN 'CERAD Score'
+                        WHEN c.characteristic ILIKE '%angiopathy%'
+                        THEN 'CAA'
+                        WHEN c.characteristic ILIKE '%hippo%'
+                        THEN 'Hs-Aging'
+                        WHEN c.characteristic ILIKE 'Lewy%'
+                        THEN 'LB'
+                        WHEN c.characteristic ILIKE '%plaques%'
+                        THEN 'NP'
+                        WHEN c.characteristic ILIKE '%tangles%'
+                        THEN 'NT'
+                        WHEN c.characteristic ILIKE '%vascular%'
+                        THEN 'VBI'
+                    END
+                ELSE
+                    CASE
+                        WHEN c.characteristic ILIKE '%Beta%'
+                        THEN 'AB42'
+                        ELSE c.characteristic
+                    END
+            END AS phenotype
+        FROM
+            NIAGADS.TrackAttributes t,
+            NIAGADS.ProtocolAppNodeCharacteristic c
+        WHERE
+            t.subcategory = 'GWAS summary statistics'
+        AND t.dataset_accession NOT LIKE '%CATALOG%'
+        AND c.protocol_app_node_id = t.protocol_app_node_id
+        AND c.characteristic_type IN ('diagnosis',
+                                      'neuropathology',
+                                      'biomarker')
+        AND c.characteristic != 'autopsy-based diagnosis'
+    )
+    ,
+    results AS
+    (
+        SELECT DISTINCT
+            ids.source_id,
+            r.protocol_app_node_id,
+            CASE
+                WHEN r.neg_log10_pvalue < -1 * log(5e-8)
+                THEN false
+                ELSE true
+            END AS is_gws,
+            p.phenotype,
+            p.category,
+            ROW_NUMBER() OVER(ORDER BY category, phenotype) AS sort_order
+        FROM
+            Results.VariantGWAS r,
+            NIAGADS.Variant v,
+            ids,
+            phenotype p
+        WHERE
+            v.record_pk = ids.source_id
+        AND r.variant_id = v.variant_id
+        AND r.neg_log10_pvalue >= 3.0
+        AND p.protocol_app_node_id = r.protocol_app_node_id
+        ORDER BY
+            p.category,
+            p.phenotype
+    )
+    ,
+    ycategories AS
+    (
+        SELECT DISTINCT
+            source_id,
+            category,
+            phenotype,
+            MIN(sort_order)                                 AS sort_order,
+            ROW_NUMBER() OVER(ORDER BY MIN(sort_order)) - 1 AS y_index
+        FROM
+            results
+        GROUP BY
+            source_id,
+            category,
+            phenotype
+    )
+    ,
+    ycategories_json AS
+    (
+        SELECT
+            source_id,
+            category,
+            jsonb_agg(phenotype ORDER BY y_index) AS json
+        FROM
+            ycategories
+        GROUP BY
+            source_id,
+            category
+    )
+    ,
+    gws_counts AS
+    (
+        SELECT
+            r.source_id,
+            r.category,
+            r.phenotype,
+            SUM (
+                CASE
+                    WHEN r.is_gws
+                    THEN 1
+                    ELSE 0
+                END) AS gws_count,
+            SUM (
+                CASE
+                    WHEN r.is_gws
+                    THEN 0
+                    ELSE 1
+                END) AS not_gws_count
+        FROM
+            results r
+        GROUP BY
+            r.source_id,
+            r.phenotype,
+            r.category
+    )
+    ,
+    series AS
+    (
+        SELECT
+            gc.source_id,
+            gc.category,
+            jsonb_build_object('x', 0, 'y', c.y_index, 'z', gc.gws_count) AS json,
+            c.y_index
+        FROM
+            gws_counts gc,
+            ycategories c
+        WHERE
+            gc.source_id = c.source_id
+        AND gc.phenotype = c.phenotype
+        AND gc.category = c.category
+        AND gc.gws_count > 0
+        UNION ALL
+        SELECT
+            gc.source_id,
+            gc.category,
+            jsonb_build_object('x', 1, 'y', c.y_index, 'z', gc.not_gws_count) AS json,
+            c.y_index
+        FROM
+            gws_counts gc,
+            ycategories c
+        WHERE
+            gc.source_id = c.source_id
+        AND gc.phenotype = c.phenotype
+        AND gc.category = c.category
+        AND gc.not_gws_count > 0
+        ORDER BY
+            y_index
+    ),
+    
+diagnosis AS (
+SELECT
+    s.source_id,
+    jsonb_build_object(
+        'title', 'Diagnosis',
+        'ycategories', yc.json, 
+        'categories', jsonb_build_array('GWS', 'p < 1e-3'),
+        'series', jsonb_build_array(jsonb_build_object('data', jsonb_agg(s.json)))) AS chart_data
+FROM
+    series s,
+    ycategories_json yc
+WHERE
+    s.source_id = yc.source_id
+AND s.category = 'diagnosis'
+AND s.category = yc.category
+GROUP BY
+    s.source_id,
+    yc.json),
+    
+neuropathology AS (
+SELECT
+    s.source_id,
+    jsonb_build_object(
+        'title', 'Neuropathology',
+        'ycategories', yc.json, 
+        'categories', jsonb_build_array('GWS', 'p < 1e-3'),
+        'series', jsonb_build_array(jsonb_build_object('data', jsonb_agg(s.json)))) AS chart_data
+FROM
+    series s,
+    ycategories_json yc
+WHERE
+    s.source_id = yc.source_id
+AND s.category = 'neuropathology'
+AND s.category = yc.category
+GROUP BY
+    s.source_id,
+    yc.json),
 
+biomarker AS (
+SELECT
+    s.source_id,
+    jsonb_build_object(
+        'title', 'Biomarker',
+        'ycategories', yc.json, 
+        'categories', jsonb_build_array('GWS', 'p < 1e-3'),
+        'series', jsonb_build_array(jsonb_build_object('data', jsonb_agg(s.json)))) AS chart_data
+FROM
+    series s,
+    ycategories_json yc
+WHERE
+    s.source_id = yc.source_id
+AND s.category = 'biomarker'
+AND s.category = yc.category
+GROUP BY
+    s.source_id,
+    yc.json)
+ 
+SELECT ids.source_id,
+    jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), (SELECT chart_data FROM neuropathology), (SELECT chart_data FROM biomarker))::text AS gws_datasets_summary_plot
+FROM ids                 
+	  ]]>
+	  </sql>
+	</sqlQuery>
 
     <!-- =============================================================== -->
     <!-- QC -->

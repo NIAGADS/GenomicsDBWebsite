@@ -18,7 +18,7 @@ import { merge } from 'lodash';
 
 
 const PuBlRd_COLOR_BLIND_PALETTE = ["#601A4A", "#EE442F", "#63ACBE"];
-const RdBlPu_COLOR_BLIND_PALETTE = ["#EE442F",  "#601A4A", "#63ACBE"];
+const RdBlPu_COLOR_BLIND_PALETTE = ["#EE442F", "#601A4A", "#63ACBE"];
 
 export const HIGHCHARTS_DEFAULTS: Options = {
     credits: { enabled: false }
@@ -28,11 +28,53 @@ export function buildChartOptions(chartType: string) {
     switch (chartType) {
         case "column":
             return buildColumnChartOptions();
+        case "bubble":
+            return buildBubbleChartOptions();
         case "gene_gws_summary":
             return buildGeneGwsSummaryOptions();
+        case "variant_gws_summary":
+            return buildVariantGwsSummaryOptions();
         default:
             return HIGHCHARTS_DEFAULTS;
     }
+}
+
+export function buildVariantGwsSummaryOptions(options?: Options) {
+    let plotOptions: Options = {
+        chart: {
+            height: 250,
+            width: 250
+        },
+        title: {
+            align: "left",
+            style: { fontSize: "12px" },
+            x: 0
+        },
+        yAxis: {
+            title: { text: "N Datasets" }
+        },
+        legend: {
+            enabled: false
+        },
+        navigation: {
+            buttonOptions: {
+                symbolSize: 10,
+                symbolStrokeWidth: 1,
+            }
+        }
+    }
+
+    plotOptions = merge(plotOptions, disableLegendClick());
+    plotOptions = merge(plotOptions, disableLegendHover());
+    plotOptions = merge(plotOptions, limitedExportMenu());
+    plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
+    // plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE));
+
+    if (options) {
+        plotOptions = merge(plotOptions, options);
+    }
+
+    return buildBubbleChartOptions(plotOptions);
 }
 
 
@@ -79,6 +121,19 @@ export function buildGeneGwsSummaryOptions(options?: Options) {
     return buildColumnChartOptions(true, "normal", plotOptions) // stacked bar (inverted column) w/additional formatting from above
 }
 
+export function buildBubbleChartOptions(options?: Options) {
+    let plotOptions: Options = {
+        chart: {
+            type: "bubble"
+        }
+    }
+
+    if (options) {
+        plotOptions = merge(plotOptions, options);
+    }
+
+    return Object.assign({}, HIGHCHARTS_DEFAULTS, plotOptions);
+}
 
 export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsStackingValue, options?: Options) {
     const sharedTooltip = true;
@@ -111,7 +166,7 @@ export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsSt
 
 
 function limitedExportMenu() {
-    const plotOptions:Options = {
+    const plotOptions: Options = {
         exporting: {
             buttons: {
                 contextButton: {
@@ -137,8 +192,8 @@ export function disableSeriesAnimationOnLoad() {
 }
 
 export function applyCustomSeriesColor(palette: string[]) {
-    const plotOptions:Options = {
-        colors: palette    
+    const plotOptions: Options = {
+        colors: palette
     }
 
     return plotOptions;
@@ -201,12 +256,11 @@ export function buildTooltipOptions(shared?: boolean, outside?: boolean) {
     return plotOptions;
 }
 
-export function addCategories(categories: string[]) {
-    const plotOptions: Options = {
-        xAxis: {
-            categories: categories
-        }
-    }
+export function addCategories(categories: string[], axis: string = "xAxis") {
+
+    const plotOptions: Options = axis === "xAxis" 
+        ? { xAxis: { categories: categories } }
+        : { yAxis: { categories: categories } }
 
     return plotOptions;
 }

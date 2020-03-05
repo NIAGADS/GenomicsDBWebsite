@@ -52,7 +52,7 @@ export interface GeneRecordAttributes {
   gene_name: string;
   gene_symbol: string;
   gene_type: string;
-  gws_variants_summary_highchart: string;
+  gws_variants_summary_plot: string;
   has_ad_evidence: "true" | "false";
   hgnc_id: string;
   jbrowse_source_url: string;
@@ -89,6 +89,7 @@ export interface VariantRecordAttributes {
   colocated_variants: string;
   display_allele: string;
   downstream_sequence: string;
+  gws_datasets_summary_plot: string;
   has_merge_history: string;
   is_adsp_variant: string;
   is_adsp_wes: string;
