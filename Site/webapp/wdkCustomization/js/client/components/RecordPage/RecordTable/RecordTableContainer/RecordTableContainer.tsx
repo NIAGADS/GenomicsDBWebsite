@@ -82,16 +82,14 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
   const _loadCsvData = () => {
     /*todo: i don't think we need to store any of this on state...*/
     const data = tableInstance.getResolvedState().sortedData;
-    if (!csvData) {
-      const csvData = data.map((datum: any) => {
-        const stripped = pickBy(datum, (v: any, k: string) => !/^_.+/.test(k));
-        return forIn(
-          stripped,
-          (v: any, k: string, o: any) => (o[k] = extractDisplayText(v))
-        );
-      });
-      setCsvData(csvData);
-    }
+    const csvData = data.map((datum: any) => {
+      const stripped = pickBy(datum, (v: any, k: string) => !/^_.+/.test(k));
+      return forIn(
+        stripped,
+        (v: any, k: string, o: any) => (o[k] = extractDisplayText(v))
+      );
+    });
+    setCsvData(csvData);
   };
 
   const { attributes } = table;
