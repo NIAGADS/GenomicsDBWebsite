@@ -100,7 +100,7 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 				</div>
 				<div className="col">
 					<div className="header-summary-plot-title">
-						Has this variant been flagged by the <a href={`${externalUrls.ADSP_URL}`}>ADSP</a>ADSP?
+						Has this variant been flagged by the <a href={`${externalUrls.ADSP_URL}`}>ADSP</a>?
 							</div>
 					{record.attributes.is_adsp_variant ?
 						<ADSPQCDisplay attributes={record.attributes} /> : <span className="none-adsp-variant">No</span>}
