@@ -11,7 +11,6 @@ export interface MenuItem {
 export default function mainMenuItems({ siteConfig, preferences }: { siteConfig: any, preferences: any }, defaultItems: any): MenuItem[] {
   return [
     { id: 'home', text: 'GenomicsDB', route: '/'},
-    { id: 'about', text: 'About', tooltip: 'Coming soon', webAppUrl: '#' },
     { id: 'search', text: 'Search Datasets', tooltip: 'browse & search GWAS summary statistics datasets', route: '/search/gwas_summary/browse' },
     { id: 'workspace', text: 'Workspace', route: '/workspace/strategies' },
     {

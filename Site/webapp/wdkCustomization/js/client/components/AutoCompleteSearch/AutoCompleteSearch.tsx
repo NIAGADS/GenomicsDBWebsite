@@ -6,6 +6,8 @@ import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { get, isEqual, isEmpty } from "lodash";
 
+import './AutoCompleteSearch.scss';
+
 export interface SearchResult {
   type?: "result" | "summary";
   description: string;

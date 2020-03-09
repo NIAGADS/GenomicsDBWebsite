@@ -26,7 +26,7 @@ import {
 import "wdk-client/Views/Question/DefaultQuestionForm.scss";
 import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import StepValidationInfo from "wdk-client/Views/Question/StepValidationInfo";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 
 type TextboxChangeHandler = (
   event: React.ChangeEvent<HTMLInputElement>
@@ -242,11 +242,12 @@ const DatasetsUsed: React.FC<DatasetsUsed> = ({ recordType, targetName }) => {
 
   return (
     <div>
+      {!isEmpty(datasetsUsedData)  && 
       <h2 className="ebrc-DescriptionSearchDatasetsHeader">
         Datasets used in this search
-      </h2>
+      </h2>}
       <ul>
-        {datasetsUsedData && Array.isArray(datasetsUsedData) && //right now it's coming back as empty object if not configured
+        {!isEmpty(datasetsUsedData) && Array.isArray(datasetsUsedData) && //right now it's coming back as empty object if not configured
           datasetsUsedData.map(({ dataset_id, description, name }) => (
             <li key={dataset_id}>
               <div>

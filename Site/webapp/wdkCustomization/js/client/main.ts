@@ -1,16 +1,15 @@
-// import CSS/LESS/SAS files
-//import "../../css/client.css"; // copied from ApiCommonWebsite/Site/webapp/wdkCustomization/css/client.ss; may not be needed in long run
-
 import * as siteConfig from "./config";
-
-// initialize from ebrc
 import { initialize } from "ebrc-client/bootstrap";
-
-// import wrappers and additional routes
 import * as componentWrappers from "./component-wrappers";
 import { wrapRoutes } from "./routes";
-
 import pluginConfig from "./pluginConfig";
+
+import $ from 'jquery';
+import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import 'site/wdkCustomization/css/client.css'; 
+import 'site/wdkCustomization/sass/client.scss';
+
 
 // Initialize the application.
 const context = initialize({
@@ -27,4 +26,3 @@ context.store.dispatch({
   payload: { siteConfig }
 });
 
-import "../../sass/style.scss";

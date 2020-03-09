@@ -1,33 +1,28 @@
+
 //global colors
 
-$purple: #2b1626;
-$light-purple: #950065;
-$dove-grey: #9ca3c1;
-$lavender: #592a4f;
+// color-blind friendly palettle for plots
+$cb-palette-red: #EE442F;
+$cb-palette-purple : #601A4A;
+$cb-palette-blue: #63ACBE;
 
-$button-blue: #618eb5;
+// home page colors
+$secondary: #F9C664;
+$bluegrey: #27333F;
+$grey: #77878B;
+$gray: $grey;
+$dark: #5C164E;
+$light: #E2FCEF;
+$warning: #9B287B;
+$light-purple: #5C164E12;
 
-$light-gray: rgba(#dad9e1, 0.5);
-$gray: #6c6a77;
-$white: #fff;
-$white-smoke: rgba(#f0f2e9, 0.5);
+$yellow: $secondary;
 
-//todo: typography;
-$yellow: #f9c664;
-$dark-blue: #27333f;
-
-//utility colors
 $lime-green: #32cd32;
 $marine: #069;
 $pale-green: #dae0c8;
 
-//palette:
-//$primary: $purple;
-$accent-light: $lavender;
-$accent-lighter: $light-purple;
-$accent-lightest: $dove-grey;
-
-//impact indicators
+// variant impact indicators
 $high: #ff00ff;
 $moderate: gold;
 $low: green;

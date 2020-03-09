@@ -1,8 +1,4 @@
-.table-trellis-plot {
-    td {
-   //   width: 300px;
-    //  height: 300px;
-    //  padding: 0px;
-    }
-
+.table-trellis-plot>thead>tr:first-child>td,
+.table-trellis-plot>tbody>tr:first-child>td {
+    border: none;
 }

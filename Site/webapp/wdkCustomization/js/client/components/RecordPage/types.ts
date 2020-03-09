@@ -58,6 +58,7 @@ export interface GeneRecordAttributes {
   jbrowse_source_url: string;
   location_end: string;
   location_start: string;
+  location: string;
   num_colocated_variants: string; // LinkOutGroup;
   num_unique_colocated_variants: string;
   omin_id: string;

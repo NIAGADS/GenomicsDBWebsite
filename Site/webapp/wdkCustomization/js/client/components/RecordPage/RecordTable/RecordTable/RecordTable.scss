@@ -102,8 +102,8 @@
     }
     &.sub-table {
       width: 100%; //margin: 30px auto;
-      border: thin black solid; //box-shadow: rgba(black, .3) 5px 5px;
-      background-color: $light-gray;
+      border: thin $grey solid; //box-shadow: rgba(black, .3) 5px 5px;
+      //background-color: $gray;
     }
   }
 }

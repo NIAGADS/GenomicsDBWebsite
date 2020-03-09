@@ -113,7 +113,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
                   onClick={_loadCsvData}
                   data={csvData}
                 >
-                  <span className="fa fa-2x p-1 fa-download" />
+                  Download <span className="fa p-1 fa-download" />
                 </CSVLink>
               )}
               {pValueFilterVisible && (
@@ -130,7 +130,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
                 {getHasPValFilter(table) && (
                   <a
                     onClick={togglePValueChartVisibility}
-                    className="btn filter"
+                    className="btn filter btn-primary"
                   >
                     {pValueFilterVisible
                       ? "Close P-value Filter"

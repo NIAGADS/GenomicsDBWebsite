@@ -4,6 +4,7 @@ import { HeaderRecordActions } from "./../Shared";
 import { getAttributeChartProperties } from './../Shared/HeaderRecordActions/HeaderRecordActions';
 import * as gr from "./../../types";
 import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
+import { RealTimeSearchBox } from "wdk-client/Components";
 
 interface StoreProps {
   externalUrls: { [key: string]: any };
@@ -22,6 +23,8 @@ interface IRecordHeading {
 }
 
 type GeneRecordSummary = StoreProps & gr.GeneRecord;
+
+
 
 const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
   record,
@@ -63,6 +66,12 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
               <span className="label">Gene Type</span>:{" "}
               {record.attributes.gene_type}
             </li>
+            
+            <li>
+              <span className="label">Location</span>:{" "}
+              {record.attributes.chromosome}:{record.attributes.location_start}-{record.attributes.location_end} {record.attributes.location 
+                ? '/ '.concat(record.attributes.location) : ''}
+            </li>
             {record.attributes.ad_evidence_flag && (
               <li>
                 <span className="label">Genetic Evidence for AD?</span>&nbsp;YES
@@ -72,9 +81,15 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
         </div>
       </div>
       <div className="col">
-      
         {record.attributes.gws_variants_summary_plot && (
-          <HighchartsTableTrellis 
+          <div className="header-summary-plot-title">
+            To which AD-related dementias, neuropathologies, or biomarkers have variants proximal or co-located with {record.attributes.gene_symbol} been linked through GWAS? 
+            &nbsp;&nbsp;&nbsp;<a href="#ad_variants_from_gwas">Browse the association evidence <i className="fa fa-level-down"></i></a> 
+          </div>
+        )}
+        {record.attributes.gws_variants_summary_plot && (
+
+          <HighchartsTableTrellis
             data={JSON.parse(record.attributes.gws_variants_summary_plot)}
             properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_variants_summary_plot"))}
           />

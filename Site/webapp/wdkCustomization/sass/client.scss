@@ -1,0 +1,24 @@
+@import './variables';
+@import './mixins';
+@import './wdk.scss';
+@import './style';
+
+// Override default variables before the bootstrap import
+//$body-bg: #000;
+
+$font-size-base: 0.75rem;
+
+$theme-colors: (
+  //"primary": $primary,
+  "light": $light,
+  "secondary": $secondary,
+  "dark": $dark,
+  "warning": $warning,
+  "success": $bluegrey
+);
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+
+
+@import '../js/client/components/Components.scss';

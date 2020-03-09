@@ -1,12 +1,12 @@
 import React from 'react';
-import ClassicSiteHeader from './GlobalLayout/Header/ClassicSiteHeader';
+import Header from './GlobalLayout/Header/Header';
 import makeMainMenuItems from '../data/mainMenuItems';
 import makeSmallMenuItems from '../data/smallMenuItems';
 
 const placeholder = () => false;
 
 export default () => {
-  return <ClassicSiteHeader
+  return <Header
     makeMainMenuItems={makeMainMenuItems}
     makeSmallMenuItems={makeSmallMenuItems}
     showLoginForm={placeholder}

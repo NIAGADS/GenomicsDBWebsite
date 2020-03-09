@@ -68,13 +68,13 @@ export function buildVariantGwsSummaryOptions(options?: Options) {
     plotOptions = merge(plotOptions, disableLegendHover());
     plotOptions = merge(plotOptions, limitedExportMenu());
     plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
-    // plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE));
+    plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE.slice(0,2)));
 
     if (options) {
         plotOptions = merge(plotOptions, options);
     }
 
-    return buildBubbleChartOptions(plotOptions);
+    return buildColumnChartOptions(true, "normal", plotOptions);
 }
 
 

@@ -400,8 +400,8 @@
         SELECT
             gc.source_id,
             gc.category,
-            jsonb_build_object('x', 0, 'y', c.y_index, 'z', gc.gws_count) AS json,
-            c.y_index
+            jsonb_build_object('name', 'GWS', 'data', jsonb_agg(gc.gws_count ORDER BY c.y_index)) AS series_data
+
         FROM
             gws_counts gc,
             ycategories c
@@ -409,13 +409,15 @@
             gc.source_id = c.source_id
         AND gc.phenotype = c.phenotype
         AND gc.category = c.category
-        AND gc.gws_count > 0
+        GROUP BY gc.source_id, gc.category
+        
         UNION ALL
+        
         SELECT
             gc.source_id,
             gc.category,
-            jsonb_build_object('x', 1, 'y', c.y_index, 'z', gc.not_gws_count) AS json,
-            c.y_index
+            jsonb_build_object('name', '5e-8 < p < 1e-3', 'data', jsonb_agg(gc.not_gws_count ORDER BY c.y_index)) AS series_data
+
         FROM
             gws_counts gc,
             ycategories c
@@ -423,19 +425,19 @@
             gc.source_id = c.source_id
         AND gc.phenotype = c.phenotype
         AND gc.category = c.category
-        AND gc.not_gws_count > 0
-        ORDER BY
-            y_index
-    ),
+        GROUP BY gc.source_id,
+         gc.category
+    ) ,
+    
     
 diagnosis AS (
 SELECT
     s.source_id,
     jsonb_build_object(
         'title', 'Diagnosis',
-        'ycategories', yc.json, 
-        'categories', jsonb_build_array('GWS', 'p < 1e-3'),
-        'series', jsonb_build_array(jsonb_build_object('data', jsonb_agg(s.json)))) AS chart_data
+        'categories', yc.json,
+        'series', jsonb_agg(series_data)
+        ) AS chart_data
 FROM
     series s,
     ycategories_json yc
@@ -443,6 +445,7 @@ WHERE
     s.source_id = yc.source_id
 AND s.category = 'diagnosis'
 AND s.category = yc.category
+
 GROUP BY
     s.source_id,
     yc.json),
@@ -452,9 +455,9 @@ SELECT
     s.source_id,
     jsonb_build_object(
         'title', 'Neuropathology',
-        'ycategories', yc.json, 
-        'categories', jsonb_build_array('GWS', 'p < 1e-3'),
-        'series', jsonb_build_array(jsonb_build_object('data', jsonb_agg(s.json)))) AS chart_data
+        'categories', yc.json,
+        'series', jsonb_agg(series_data)
+        ) AS chart_data
 FROM
     series s,
     ycategories_json yc
@@ -462,18 +465,19 @@ WHERE
     s.source_id = yc.source_id
 AND s.category = 'neuropathology'
 AND s.category = yc.category
+
 GROUP BY
     s.source_id,
     yc.json),
-
-biomarker AS (
+    
+    biomarker AS (
 SELECT
     s.source_id,
     jsonb_build_object(
         'title', 'Biomarker',
-        'ycategories', yc.json, 
-        'categories', jsonb_build_array('GWS', 'p < 1e-3'),
-        'series', jsonb_build_array(jsonb_build_object('data', jsonb_agg(s.json)))) AS chart_data
+        'categories', yc.json,
+        'series', jsonb_agg(series_data)
+        ) AS chart_data
 FROM
     series s,
     ycategories_json yc
@@ -481,13 +485,15 @@ WHERE
     s.source_id = yc.source_id
 AND s.category = 'biomarker'
 AND s.category = yc.category
+
 GROUP BY
     s.source_id,
     yc.json)
+    
  
 SELECT ids.source_id,
     jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), (SELECT chart_data FROM neuropathology), (SELECT chart_data FROM biomarker))::text AS gws_datasets_summary_plot
-FROM ids                 
+FROM ids            
 	  ]]>
 	  </sql>
 	</sqlQuery>

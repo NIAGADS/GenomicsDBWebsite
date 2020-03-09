@@ -3,7 +3,7 @@ import React, { Fragment, useState } from 'react';
 import { scientificCellFactory, decimalCellFactory } from 'wdk-client/Components';
 import { StepAnalysisResultPluginProps } from 'wdk-client/Components';
 import { StepAnalysisEnrichmentResultTable } from 'wdk-client/Components';
-import { StepAnalysisButtonArray } from 'wdk-client/Components';
+import { StepAnalysisButtonArray } from './StepAnalysisButtonArray';
 import { WordCloudModal } from 'wdk-client/Components';
 
 // import 'wdk-client/Core/MoveAfterRefactor/Components/StepAnalysis/StepAnalysisEnrichmentResult.scss';
@@ -37,7 +37,7 @@ const goButtonsConfigFactory = (
     },
     {
       key: 'wordCloud',
-      onClick: (event: React.MouseEvent<HTMLAnchorElement>) => {
+      onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         setWordCloudOpen(true);
       },
