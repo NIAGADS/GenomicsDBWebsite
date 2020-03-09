@@ -103,7 +103,7 @@
 				<columnAttribute name="entrez_id" displayName="NCBI Gene (Entrez) ID" type="string" />
 				<columnAttribute name="ensembl_id" displayName="Ensembl ID" type="string" />
 				<columnAttribute name="span" displayName="Location" type="string" />
-				<columnAttribute name="location" displayName="Cytogenetic Location" type="string" />
+				<columnAttribute name="cytogenetic_location" displayName="Cytogenetic Location" type="string" />
 			</attributeQueryRef>
 
 			<table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">

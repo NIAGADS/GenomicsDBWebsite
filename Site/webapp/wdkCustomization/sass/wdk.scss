@@ -9,13 +9,16 @@
  font-size: 1.2em;
 }
 
+wdk-RecordNavigationSectionHeader{ // record name in conext menu
+  display: none;
+}
 
 h1.record-heading {
     display: none;
 }
 
 #header {
-    height: 95px;
+    //height: 95px;
 }
 
 .no-padding {

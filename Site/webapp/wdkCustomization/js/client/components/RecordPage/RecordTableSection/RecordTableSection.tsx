@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { includes } from "lodash";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import RecordTableContainer from "../RecordTable/RecordTableContainer/RecordTableContainer";
-import { CollapsibleSection, Tooltip } from "wdk-client/Components";
+import { CollapsibleSection, Tooltip, HelpIcon } from "wdk-client/Components";
 import { ErrorBoundary } from "wdk-client/Controllers";
 import { clone } from "lodash";
 import { BaseRecord } from "../../RecordPage/types";
@@ -49,16 +49,7 @@ const NiagadsRecordTableSection: React.SFC<INiagadsRecordTableSection> = ({
       <div className="d-flex justify-between align-items-baseline">
         <p>{displayName}</p>
         {description && (
-          <Tooltip
-            content={safeHtml(_parseTemplate(description, urls))}
-            showDelay={0}
-            position={{
-              my: "top left",
-              at: "bottom right"
-            }}
-          >
-            <span className="fa fa-question-circle-o table-help" />
-          </Tooltip>
+         <HelpIcon children={safeHtml(description)}></HelpIcon>   
         )}
       </div>
     );

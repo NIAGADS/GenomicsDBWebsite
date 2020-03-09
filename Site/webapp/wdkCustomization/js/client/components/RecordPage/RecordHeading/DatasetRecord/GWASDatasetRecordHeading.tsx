@@ -154,6 +154,7 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
 
   return (
     <React.Fragment>
+
       <div className="record-summary-container dataset-record-summary-container">
         <div>
           <HeaderRecordActions
@@ -163,6 +164,9 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
           />
           <h1 className="record-heading">Dataset: {record.attributes.name} </h1>
         </div>
+        <h2>
+            {record.attributes.name}
+          </h2>
         <h2>
           {record.attributes.is_adsp && (
             <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong>

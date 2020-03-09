@@ -55,6 +55,7 @@
 </sql>
 </sqlQuery>
 
+
         <sqlQuery name="TopVariants">
             <column name="track"/>
             <column name="project_id"/>

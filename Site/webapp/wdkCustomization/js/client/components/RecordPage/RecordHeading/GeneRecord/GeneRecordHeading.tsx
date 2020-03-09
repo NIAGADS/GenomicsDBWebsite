@@ -69,8 +69,8 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
             
             <li>
               <span className="label">Location</span>:{" "}
-              {record.attributes.chromosome}:{record.attributes.location_start}-{record.attributes.location_end} {record.attributes.location 
-                ? '/ '.concat(record.attributes.location) : ''}
+              {record.attributes.span} {record.attributes.cytogenetic_location 
+                ? '/ '.concat(record.attributes.cytogenetic_location) : ''}
             </li>
             {record.attributes.ad_evidence_flag && (
               <li>
@@ -83,7 +83,7 @@ const GeneRecordSummary: React.SFC<IRecordHeading & StoreProps> = ({
       <div className="col">
         {record.attributes.gws_variants_summary_plot && (
           <div className="header-summary-plot-title">
-            To which AD-related dementias, neuropathologies, or biomarkers have variants proximal or co-located with {record.attributes.gene_symbol} been linked through GWAS? 
+            With which AD-related dementias, neuropathologies, and/or biomarkers are variants proximal to or co-located with {record.attributes.gene_symbol} associated? 
             &nbsp;&nbsp;&nbsp;<a href="#ad_variants_from_gwas">Browse the association evidence <i className="fa fa-level-down"></i></a> 
           </div>
         )}

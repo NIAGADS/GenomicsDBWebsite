@@ -311,6 +311,10 @@
 			<!-- Genetic Variation  -->
 			<!-- =============================================================== -->
 		
+			<attributeQueryRef ref="GwasDatasetAttributes.TopGenes">
+				<columnAttribute name="top_gene_list" displayName="Top Genes" type="json" internal="true" inReportMaker="false"/>
+			</attributeQueryRef>
+			
 			<table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
 				<columnAttribute name="variant" displayName="Variant" type="json_link"/>
 				<columnAttribute name="pvalue" displayName="p-value" type="numeric"/>

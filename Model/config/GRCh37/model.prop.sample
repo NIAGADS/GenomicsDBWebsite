@@ -73,6 +73,7 @@ REGION_COLOCATED_VARIANT_SEARCH=/processQuestion.do?questionFullName=VariantQues
 # External URLS
 #----------------------------------------------------------
 
+ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
 
 ENSEMBL_URL=http://www.ensembl.org/

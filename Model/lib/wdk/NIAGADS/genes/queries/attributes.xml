@@ -53,7 +53,7 @@
       <column name="location_start" columnType="number"/>
       <column name="location_end" columnType="number"/>
       <column name="span" columnType="string"/>
-      <column name="location" columnType="string"/>
+      <column name="cytogenetic_location" columnType="string"/>
       <column name="gene_name" columnType="string"/>
       <column name="hgnc_id" columnType="string"/>
       <column name="omim_id" columnType="string"/>
@@ -82,7 +82,7 @@
             build_link_attribute(replace(chromosome,'chr','') || ':' || (location_start - 1000)::text || '..' || (location_end + 1000)::text,
             '/genomics/jbrowse.jsp?loc=', NULL, NULL) AS full_jbrowse_link,
             '/genomics/rjbrowse/?loc=' || replace(chromosome,'chr','') || ':' || (location_start - 1000)::text || '..' || (location_end + 1000)::text || '&' || 'tracks=@GENE_DEFAULT_TRACKS@' AS jbrowse_source_url,
-            annotation->>'location' AS location,
+            annotation->>'location' AS cytogenetic_location,
             annotation->>'name' AS gene_name,
             annotation->>'hgnc_id' AS hgnc_id,
             annotation->>'omim_id' AS omim_id,

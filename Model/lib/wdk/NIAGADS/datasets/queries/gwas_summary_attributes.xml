@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
 
-    <querySet name="GwasDatasetAttributes" queryType="attribute" isCacheable="false">
+    <querySet name="GwasDatasetAttributes" 
+        queryType="attribute" 
+        isCacheable="false">
 
         <defaultTestParamValues>
             <paramValue name="dataset_id">NG00027</paramValue>
@@ -42,8 +44,47 @@
                     ]]>
             </sql>
         </sqlQuery>
+
+
+        <sqlQuery name="TopGenes">
+            <column name="top_gene_list" columnType="string"/>
+            <column name="project_id" columnType="string"/>
+            <column name="track" columnType="string"/>
+            <sql>
+                <![CDATA[
+  WITH datasets AS (  ##WDK_ID_SQL## ),
+            genes as (                      
+                        SELECT datasets.track,
+                      
+                        v.msc_impacted_gene_link AS gene_link, -- virtual column
+                        max(neg_log10_pvalue) as max_p
+                        FROM 
+                        Results.VariantGWAS r,
+                        NIAGADS.Variant v,
+                        Study.ProtocolAppNode pan,
+                        Datasets
+                        WHERE pan.source_id = datasets.track
+                        AND r.protocol_app_node_id = pan.protocol_app_node_id
+                        AND r.neg_log10_pvalue >= abs(log(5e-8))
+                        AND v.variant_id = r.variant_id
+                        GROUP BY datasets.track, v.msc_impacted_gene_link),
+      unique_genes AS  (
+                        SELECT
+            genes.track,
+            (FIRST_VALUE(gene_link) OVER (PARTITION BY gene_link ORDER BY max_p DESC))::jsonb AS gene_link,
+            FIRST_VALUE(max_p) OVER (PARTITION BY gene_link ORDER BY max_p DESC) AS max_p
+                FROM genes 
+                WHERE gene_link IS NOT NULL) 
+                SELECT track,
+                jsonb_agg(gene_link ORDER BY max_p DESC)::text AS top_gene_list
+                FROM unique_genes
+                GROUP BY track
+                
+            ]]>
+            </sql>
+        </sqlQuery>
     </querySet>
 
 
-  
+
 </wdkModel>

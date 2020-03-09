@@ -21,7 +21,7 @@ const enhance = connect<StoreProps, any, gr.VariantRecordSummary>((state: any) =
 }));
 
 const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = props => {
-	const { record, headerActions, recordClass } = props,
+	const { record, headerActions, recordClass, externalUrls } = props,
 		{ attributes } = record,
 		sequence = (
 			<React.Fragment>
@@ -32,21 +32,21 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 		);
 	return (
 		<React.Fragment>
-			<div className="record-summary-container variant-record-summary-container">
-				<div className="record-actions-container">
-					<HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-				</div>
-				<hr />
-				<div className="col col-sm-3">
+			<div className="col-sm-3">
+				<div className="record-summary-container variant-record-summary-container">
+					<div>
+						<HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+					</div>
+					<h2 className="mb-2">
+						<strong>
+							{isJson(attributes.display_metaseq_id)
+								? resolveJsonInput(attributes.display_metaseq_id)
+								: attributes.display_metaseq_id}
+							{attributes.ref_snp_id && ' (' + attributes.ref_snp_id + ')'}
+						</strong>
+					</h2>
 					<div className="record-subtitle-container">
-						<h3 className="mb-2">
-							<strong>
-								{isJson(attributes.display_metaseq_id)
-									? resolveJsonInput(attributes.display_metaseq_id)
-									: attributes.display_metaseq_id}
-								{attributes.ref_snp_id && ' (' + attributes.ref_snp_id + ')'}
-							</strong>
-						</h3>
+
 						<p>
 							<strong>{sequence}</strong>
 						</p>
@@ -97,19 +97,20 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 						)}
 					</div>
 				</div>
+				</div>
 				<div className="col">
-							<div className="header-summary-plot-title">
-								Has this variant been flagged by the ADSP?
+					<div className="header-summary-plot-title">
+						Has this variant been flagged by the <a href={`${externalUrls.ADSP_URL}`}>ADSP</a>ADSP?
 							</div>
-							{record.attributes.is_adsp_variant ? 
-							 <ADSPQCDisplay attributes={record.attributes} /> : <span className="none-adsp-variant">No</span>}
+					{record.attributes.is_adsp_variant ?
+						<ADSPQCDisplay attributes={record.attributes} /> : <span className="none-adsp-variant">No</span>}
 
 					{record.attributes.gws_datasets_summary_plot && (
 						<div className="header-summary-plot-title">
-							To which AD-related dementias, neuropathologies, or biomarkers has this variant been linked through GWAS? 
-            &nbsp;&nbsp;&nbsp;<a href="#ad_variants_from_gwas">Browse the association evidence <i className="fa fa-level-down"></i></a> 
+							With which AD-related dementias, neuropathologies, or biomarkers has this variant been associated?
+            &nbsp;&nbsp;&nbsp;<a href="#ad_variants_from_gwas">Browse the association evidence <i className="fa fa-level-down"></i></a>
 						</div>
-						)}
+					)}
 
 					{record.attributes.gws_datasets_summary_plot && (
 						<HighchartsTableTrellis
@@ -118,42 +119,22 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = pr
 						/>
 					)}
 				</div>
-			</div>
-		</React.Fragment>
+	
+		</React.Fragment >
 	);
 };
 
 
-const ADSPQCDisplay: React.SFC<{attributes: gr.VariantRecordAttributes}> = props => {
+const ADSPQCDisplay: React.SFC<{ attributes: gr.VariantRecordAttributes, }> = props => {
 	const { attributes } = props;
 	return (
-		{(attributes.adsp_wgs_qc_filter_status_display || attributes.adsp_wes_qc_filter_status_display) && (
+		(attributes.adsp_wgs_qc_filter_status_display || attributes.adsp_wes_qc_filter_status_display) && (
 			<div className="adsp-variant-info-container">
-				<hr className="small" />
-				{attributes.is_adsp_variant && (
-					<strong>{resolveJsonInput(attributes.is_adsp_variant)}&nbsp;</strong>
-				)}
-				{attributes.is_adsp_wes && resolveJsonInput(attributes.is_adsp_wes)}
-				{attributes.is_adsp_wgs && resolveJsonInput(attributes.is_adsp_wgs)}
-				<div className="qc-filters-container">
-					{attributes.adsp_wgs_qc_filter_status_display && (
-						<div>
-							<strong>WGS Filter Status</strong>:&nbsp;
-						{resolveJsonInput(attributes.adsp_wgs_qc_filter_status_display)}
-						</div>
-					)}
-					{attributes.adsp_wes_qc_filter_status_display && (
-						<div>
-							<strong>WES Filter Staus</strong>:&nbsp;
-						{resolveJsonInput(attributes.adsp_wes_qc_filter_status_display)}
-						</div>
-					)}
-				</div>
-				<hr className="small" />
+				{attributes.is_adsp_variant && (<strong>{resolveJsonInput(attributes.is_adsp_variant)}&nbsp;</strong>)}
+				{attributes.is_adsp_wes && (<div>{resolveJsonInput(attributes.is_adsp_wes)} <strong>{resolveJsonInput(attributes.adsp_wes_qc_filter_status_display)}</strong></div>)}
+				{attributes.is_adsp_wgs && (<div>{resolveJsonInput(attributes.is_adsp_wgs)} <strong>{resolveJsonInput(attributes.adsp_wgs_qc_filter_status_display)}</strong></div>)}
 			</div>
-		)}
-
-
+		)
 	);
 }
 

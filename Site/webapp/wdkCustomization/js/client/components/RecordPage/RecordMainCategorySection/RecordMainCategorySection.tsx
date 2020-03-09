@@ -2,7 +2,8 @@ import React from "react";
 import {
   RecordAttributeSection,
   CollapsibleSection,
-  Tooltip
+  Tooltip,
+  HelpIcon
 } from "wdk-client/Components";
 import RecordTableSection from "../RecordTableSection/RecordTableSection";
 import {
@@ -89,18 +90,9 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
               headerContent={
                 <div className="d-flex justify-between align-items-baseline">
                   <p className="mb-0">{category.wdkReference.displayName}</p>
-                  {category.wdkReference.description && (
-                    <Tooltip
-                      content={safeHtml(category.wdkReference.description)}
-                      showDelay={0}
-                      position={{
-                        my: "top right",
-                        at: "bottom left"
-                      }}
-                    >
-                      <span className="fa fa-question-circle-o table-help" />
-                    </Tooltip>
-                  )}
+                  {category.wdkReference.description && 
+                    <HelpIcon children={safeHtml(category.wdkReference.description)}></HelpIcon>
+                  }
                 </div>
               }
               isCollapsed={isCollapsed}
@@ -150,16 +142,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                     <div className="d-flex justify-between align-items-baseline">
                       <p>{category.wdkReference.displayName}</p>
                       {category.wdkReference.description && (
-                        <Tooltip
-                          content={safeHtml(category.wdkReference.description)}
-                          showDelay={0}
-                          position={{
-                            my: "top right",
-                            at: "bottom left"
-                          }}
-                        >
-                          <span className="fa fa-question-circle-o table-help" />
-                        </Tooltip>
+                     <HelpIcon children={safeHtml(category.wdkReference.description)}></HelpIcon>
                       )}
                     </div>
                   }
