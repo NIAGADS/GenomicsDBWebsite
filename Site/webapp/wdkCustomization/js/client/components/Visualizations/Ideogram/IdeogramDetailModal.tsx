@@ -38,7 +38,7 @@ const IdeogramDetailModal: React.FC<IdeogramDetailModal> = ({
             </ul>
           ) : features.length < 21 ? (
             <LinkagePlot variants={features.map(f => f.record_primary_key)} />
-          ) : features.length < 21 ? (
+          ) : features.length < 45 ? (
             <div>
               The number of results is too large to display here. Please click
               this&nbsp;
