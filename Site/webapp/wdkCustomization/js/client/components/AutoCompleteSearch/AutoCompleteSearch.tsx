@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
-import { useWdkEffect } from "wdk-client/Service/WdkService";
+import { WdkServiceContext } from "wdk-client/Service/WdkService";
 import { Link } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
-import { get, isEqual, isEmpty } from "lodash";
+import { debounce, get, isEmpty, isEqual } from "lodash";
 
-import './AutoCompleteSearch.scss';
+import "./AutoCompleteSearch.scss";
 
 export interface SearchResult {
   type?: "result" | "summary";
@@ -93,7 +92,7 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearch> = ({ canGrow }) => {
       style={{ flexGrow: hasFocus && canGrow ? 1 : 0 }}
     >
       <AutoCompleteSearchBox
-        onChange={_setSearchTerm}
+        onChange={debounce(_setSearchTerm, 650)}
         onFocus={setHasFocus.bind(null, true)}
         onBlur={setHasFocus.bind(null, false)}
         onKeyDown={onKeyDown}
@@ -142,28 +141,55 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   setResultsVisible,
   undisplayedCount
 }) => {
-  const sendRequest = (searchTerm: string) => (service: WdkService) => {
-      service
-        ._fetchJson<SearchResult[]>("get", `/search/site?term=${searchTerm}`)
-        .then(res => onResult(res))
-        .catch(() => onResult(null));
-    },
-    wrappedKeyDown = (e: React.KeyboardEvent) => {
-      //enter
-      if (e.keyCode === 13 && searchTerm) {
-        const route =
-          //if the selection is the summary row or there is no selection (the user has just pressed enter), go to summary page
-          !selected || selected.type === "summary"
-            ? _buildSummaryRoute(searchTerm)
-            : buildRouteFromResult(selected);
-        history.push(route);
-        reset();
-      } else {
-        onKeyDown(e);
-      }
-    };
+  //need to make sure first request returns before second is sent
+  //means we need a loading state
+  //one effect pushes the requests into the request array, the other fires them in order, as long as nothing is loading
+  //make sure one of the effects clears the array of waiting requests on close to prevent a memory leak
 
-  useWdkEffect(sendRequest(searchTerm), [searchTerm]);
+  const searchInProgress = useRef(false),
+    [searchQueue, setSearchQueue] = useState<string[]>([]),
+    wdkService = useContext(WdkServiceContext);
+
+  const wrappedKeyDown = (e: React.KeyboardEvent) => {
+    //enter
+    if (e.keyCode === 13 && searchTerm) {
+      const route =
+        //if the selection is the summary row or there is no selection (the user has just pressed enter), go to summary page
+        !selected || selected.type === "summary"
+          ? _buildSummaryRoute(searchTerm)
+          : buildRouteFromResult(selected);
+      history.push(route);
+      reset();
+    } else {
+      onKeyDown(e);
+    }
+  };
+
+  //the queue ensures that searches are sent in the order received
+  useEffect(() => {
+    setSearchQueue([searchTerm].concat(searchQueue));
+  }, [searchTerm]);
+
+  const _onResult = (res: any) => {
+    searchInProgress.current = false;
+    onResult(res);
+  };
+
+  useEffect(() => {
+    if (searchQueue.length && !searchInProgress.current) {
+      const term = searchQueue.pop();
+      setSearchQueue(searchQueue);
+      searchInProgress.current = true;
+      wdkService
+        ._fetchJson<SearchResult[]>("get", `/search/site?term=${term}`)
+        .then(res => _onResult(res))
+        .catch(() => _onResult(null));
+    }
+    return () => {
+      searchInProgress.current = false;
+      setSearchQueue([]);
+    };
+  }, [searchQueue, searchInProgress]);
 
   const container = useRef(),
     boxWidth = useRef(0);
@@ -191,28 +217,32 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
           placeholder="Enter a gene or variant"
         />
       </span>
-      {/* need to check for search term in case fast typing wiped it out while results are loaded */}
-      {!!get(results, "length") && resultsVisible && searchTerm && (
+      {resultsVisible && (!!results.length || !!searchQueue.length) && (
         <div className="results-list">
-          {results.map((result, i) => {
-            return (
-              <ResultRow
-                key={`${i}-${result.primary_key}`}
-                result={result}
-                searchTerm={searchTerm}
-                selected={isEqual(selected, result)}
-                width={boxWidth.current}
-              >
-                <span onClick={reset}>
-                  {result.type === "summary" ? (
-                    <span>{`Plus ${undisplayedCount} more`}</span>
-                  ) : (
-                    _buildResultDisplay(result, searchTerm)
-                  )}
-                </span>
-              </ResultRow>
-            );
-          })}
+          {(!!searchQueue.length || searchInProgress.current) && (
+            <span>Loading...</span>
+          )}
+          {!searchQueue.length &&
+            !searchInProgress.current &&
+            results.map((result, i) => {
+              return (
+                <ResultRow
+                  key={`${i}-${result.primary_key}`}
+                  result={result}
+                  searchTerm={searchTerm}
+                  selected={isEqual(selected, result)}
+                  width={boxWidth.current}
+                >
+                  <span onClick={reset}>
+                    {result.type === "summary" ? (
+                      <span>{`Plus ${undisplayedCount} more`}</span>
+                    ) : (
+                      _buildResultDisplay(result, searchTerm)
+                    )}
+                  </span>
+                </ResultRow>
+              );
+            })}
         </div>
       )}
     </div>
