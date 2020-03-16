@@ -1,6 +1,6 @@
 @import './variables';
 @import './mixins';
-@import './wdk.scss';
+@import './wdk';
 @import './style';
 
 // Override default variables before the bootstrap import
@@ -8,17 +8,22 @@
 
 $font-size-base: 0.75rem;
 
-$theme-colors: (
-  //"primary": $primary,
+$theme-colors: ( //"primary": $primary,
   "light": $light,
   "secondary": $secondary,
   "dark": $dark,
   "warning": $warning,
-  "success": $bluegrey
-);
+  "success": $bluegrey);
 
-// Import Bootstrap and its default variables
+  // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';
+@import './button';
+
+// set default 'btn' to btn-dark so do not need to find and replace in all Ebrc/WDKClient code
+// based off result of applying bootstrap button-variant mixin
+
+
+
 
 
 @import '../js/client/components/Components.scss';
