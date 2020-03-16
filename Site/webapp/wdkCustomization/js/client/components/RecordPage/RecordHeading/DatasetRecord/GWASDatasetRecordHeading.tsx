@@ -140,7 +140,7 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
   useEffect(() => {
     const initialParamData = {
       gwas_accession: record.attributes.niagads_accession,
-      gwas_dataset: record.displayName,
+      gwas_dataset: record.id[0].value,
       pvalue: "5e-8"
     };
     dispatch(

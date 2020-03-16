@@ -54,19 +54,24 @@ NON_GWAS_SS_NIAGADS=NG00061
 INFERNO_PUBMED_ID=30113658
 GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
 
+DATASETS_WITH_RELAXED_PVALUE=NG00027_ADJ_STAGE2|NG00040
+
 #----------------------------------------------------------
 # Internal Urls
 #----------------------------------------------------------
 
 DOCUMENTATION_URL=/showXmlDataContent.do?name=XmlQuestions.Documentation
+
 GENE_RECORD=/app/record/gene/
 RESOURCE_RECORD=/app/record/dataset/
 VARIANT_RECORD=/app/record/variant/
-SPAN_RECORD=/showRecord.do?name=DynSpanRecordClasses.DynSpanRecordClass&primary_key=
-VARIANTS_BY_FEATURE_SEARCH=/processQuestion.do?questionFullName=VariantQuestions.VariantsByGeneOrTranscript&checkbox_include_synonyms=false&flanking=0kb&feature_identifier=
+SPAN_RECORD=/app/record/span
+
+VARIANTS_BY_FEATURE_SEARCH=/query?question=by_feature&flanking=0kb&feature_identifier=
+GWAS_SEARCH=/query?question=gwas_stats
+
 GENE_IN_REGION_SEARCH=/processQuestion.do?questionFullName=GeneQuestions.GenesByRegion&span=
-GWAS_SEARCH=processQuestion.do?questionFullName=VariantQuestions.gwas_stats
-SHOW_GWAS_SEARCH=showQuestion.do?questionFullName=VariantQuestions.gwas_stats
+
 REGION_COLOCATED_VARIANT_SEARCH=/processQuestion.do?questionFullName=VariantQuestions.VariantsByRegion&span=
 
 #----------------------------------------------------------
@@ -77,9 +82,11 @@ ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
 
 ENSEMBL_URL=http://www.ensembl.org/
+ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
+
 GENE_ONTOLOGY_URL=http://www.geneontology.org/
 NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
-ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
+
 DBSNP_BASE_URL=http://www.ncbi.nlm.nih.gov/SNP
 KEGG_BASE_URL=http://www.kegg.jp/
 SNP_EFF_URL=http://snpeff.sourceforge.net/
@@ -94,6 +101,7 @@ NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
 ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
 ENSEMBL_TRANSCRIPT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
 ENSEMBL_VARIANT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
+ENSEMBL_REGULATORY_FEATURE_URL_GRCh37=https://grch37.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
 
 VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
 OMIM_URL=http://omim.org/entry/

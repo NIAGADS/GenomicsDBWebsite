@@ -61,7 +61,7 @@ export interface GeneRecordAttributes {
   cytogenetic_location: string;
   num_colocated_variants: string; // LinkOutGroup;
   num_unique_colocated_variants: string;
-  omin_id: string;
+  omim_id: string;
   source_id: string;
   span: string;
   strand?: "+" | "-";
@@ -128,6 +128,7 @@ export interface VariantRecordAttributes {
 
 export interface GWASDatasetRecord extends BaseRecord {
   attributes: GWASDatasetRecordAttributes;
+  id: { [key: string]: any };
   urlName: "gwas_summary";
   tables: { [key: string]: any };
 }

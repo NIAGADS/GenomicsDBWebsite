@@ -72,6 +72,7 @@ const Features: React.SFC<SectionProps> = props => {
             <FeatureItem
               key={feature.title}
               feature={feature}
+              webAppUrl={webAppUrl}
             />
         ))}
         </CardDeck>

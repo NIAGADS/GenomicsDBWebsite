@@ -10,11 +10,12 @@ interface FeatureItem {
         description: string,
         id: string
     },
-    className?: string
+    className?: string,
+    webAppUrl: string
 }
 
 const FeatureItem: React.SFC<FeatureItem> = props => {
-    const { feature, className } = props;
+    const { feature, className, webAppUrl } = props;
     return (
         <Card style={{ width: "18rem" }}>
             <Card.Body>
@@ -22,7 +23,7 @@ const FeatureItem: React.SFC<FeatureItem> = props => {
                 <Card.Text >
                     {safeHtml(feature.description)}
                 </Card.Text>
-                <Button className="feature-link-button" variant="secondary" href={`record/dataset/${feature.id}`}>
+                <Button className="feature-link-button" variant="secondary" href={`${webAppUrl}/app/record/dataset/${feature.id}`}>
                     Explore this dataset <i className="ml-1 fa fa-caret-right" />
                 </Button>
             </Card.Body>

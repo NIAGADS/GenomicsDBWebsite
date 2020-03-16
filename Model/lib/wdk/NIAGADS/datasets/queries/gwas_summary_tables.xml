@@ -89,7 +89,8 @@
                         Datasets
                         WHERE pan.source_id = datasets.track
                         AND r.protocol_app_node_id = pan.protocol_app_node_id
-                        AND r.neg_log10_pvalue >= abs(log(5e-8))
+                        AND ((datasets.track SIMILAR TO '%(' || '@DATASETS_WITH_RELAXED_PVALUE@' || ')%' AND  r.neg_log10_pvalue >= abs(log(1e-3)))
+                        OR r.neg_log10_pvalue >= abs(log(5e-8)))
                         AND v.variant_id = r.variant_id
                         ORDER BY neg_log10_pvalue DESC
                     ]]>

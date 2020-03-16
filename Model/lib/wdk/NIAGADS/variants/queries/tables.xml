@@ -173,10 +173,12 @@
 						(##WDK_ID_SQL##) id
 						WHERE id.source_id = v.record_pk),
 
+--  build_link_attribute(display_value TEXT, url TEXT, url_parameter TEXT DEFAULT NULL, tooltip TEXT DEFAULT NULL)
+
 						Tracks AS (
 						SELECT  DISTINCT t.protocol_app_node_id, 
-						build_text_attribute(t.name, t.description, NULL) AS track_name,
-						da.accession_link
+						build_link_attribute(t.name, '/record/gwas_summary/', t.track, t.description) AS track_name,
+						build_link_attribute(da.accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
 						FROM NIAGADS.TrackAttributes t,
 						NIAGADS.DatasetAttributes da,
 						Study.Characteristic c,
@@ -223,8 +225,8 @@
 
 						Tracks AS (
 						SELECT  DISTINCT t.protocol_app_node_id, 
-						build_text_attribute(t.name, t.description, NULL) AS track_name,
-						da.accession_link
+						build_link_attribute(t.name, '/record/gwas_summary/', t.track, t.description) AS track_name,
+						build_link_attribute(da.accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
 						FROM NIAGADS.TrackAttributes t,
 						NIAGADS.DatasetAttributes da,
 						Study.Characteristic c,

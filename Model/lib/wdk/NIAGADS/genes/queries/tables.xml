@@ -179,8 +179,8 @@
 				<![CDATA[
 				WITH track AS (
 				SELECT  DISTINCT t.protocol_app_node_id, 
-				build_text_attribute(t.name, t.description, NULL) AS track_name,
-				da.accession_link
+				build_link_attribute(t.name, '/record/gwas_summary/', t.track, t.description) AS track_name,
+				build_link_attribute(da.accession, '/record/dataset/', NULL, 'view accession details') AS accession_link									
 				FROM NIAGADS.TrackAttributes t,
 				NIAGADS.DatasetAttributes da,
 				Study.Characteristic c,
@@ -258,8 +258,8 @@
 				<![CDATA[
 					WITH track AS (
 					SELECT  DISTINCT t.protocol_app_node_id, 
-					build_text_attribute(t.name, t.description, NULL) AS track_name,
-					da.accession_link
+					build_link_attribute(t.name, '/record/gwas_summary/', t.track, t.description) AS track_name,
+					build_link_attribute(da.accession, '/record/dataset/', NULL, 'view accession details') AS accession_link					
 					FROM NIAGADS.TrackAttributes t,
 					NIAGADS.DatasetAttributes da,
 					Study.Characteristic c,
@@ -529,7 +529,7 @@
 					SELECT ga.source_id,
 					'@PROJECT_ID@'::text AS project_id,
 					p.name AS pathway_name, 
-					build_link_attribute(p.source_id, '@KEGG_PATHWAY_URL@', null, null) AS accession,
+					build_link_attribute(p.source_id, '@KEGG_PATHWAY_LINK_URL@', null, null) AS accession,
 					'KEGG'::text AS source,
 					CASE WHEN ga.annotation->'entrez_id' IS NULL THEN NULL
 					ELSE 
