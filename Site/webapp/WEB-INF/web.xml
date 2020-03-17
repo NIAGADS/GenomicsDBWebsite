@@ -74,7 +74,7 @@
     </init-param>
     <init-param>
       <param-name>cors.allowed.headers</param-name>
-      <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+      <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Access-Control-Allow-Origin</param-value>
     </init-param>
     <init-param>
       <param-name>cors.exposed.headers</param-name>
