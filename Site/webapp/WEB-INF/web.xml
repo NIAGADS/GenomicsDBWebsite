@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4"
-    xmlns="http://java.sun.com/xml/ns/j2ee"
-    xmlns:web="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app version="2.4" 
+  xmlns="http://java.sun.com/xml/ns/j2ee" 
+  xmlns:web="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
   <context-param>
     <param-name>GUS_HOME</param-name>
@@ -20,10 +19,10 @@
     <listener-class>org.niagads.genomics.controller.ApplicationInitListener</listener-class>
   </listener>
 
- <listener>
+  <listener>
     <listener-class>org.gusdb.wdk.controller.InitListenerForBeans</listener-class>
   </listener>
-  
+
   <listener>
     <listener-class>org.gusdb.wdk.jmx.JmxInitListener</listener-class>
   </listener>
@@ -47,6 +46,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+
   <!-- UrlRewrite filter -->
   <!-- This is used in conjuction with the asset fingerprinting utilities in EbrcWebsiteCommon.
        We also set some cache-related headers here (see /WEB-INF/urlrewrite.xml). -->
@@ -60,6 +60,39 @@
   </filter-mapping>
   <!-- End UrlRewrite filter -->
 
+
+  <filter>
+    <filter-name>CorsFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+    <init-param>
+      <param-name>cors.allowed.origins</param-name>
+      <param-value>https://string-db.org,https://cdpn.io</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.allowed.methods</param-name>
+      <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.allowed.headers</param-name>
+      <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Access-Control-Allow-Origin</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.exposed.headers</param-name>
+      <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.support.credentials</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.preflight.maxage</param-name>
+      <param-value>10</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>CorsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <!-- WDK RESTful client filter -->
   <servlet>
