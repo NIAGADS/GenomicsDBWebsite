@@ -24,6 +24,7 @@
             <column name="accession_link"/>
             <column name="niagads_accession"/>
             <column name="name"/>
+            <column name="attribution"/>
             <column name="description"/>
             <column name="category"/>
             <column name="is_adsp"/>
@@ -32,7 +33,8 @@
                 <![CDATA[
                         SELECT track,
                         '@PROJECT_ID@'::text AS project_id,
-                        name || ' (' || attribution || ')' AS name,
+                        name,
+                        attribution,
                         description,
                         build_link_attribute(dataset_accession, '/record/dataset/') AS accession_link,
                         dataset_accession AS niagads_accession,
@@ -43,7 +45,6 @@
                     ]]>
             </sql>
         </sqlQuery>
-
 
         <sqlQuery name="TopGenes">
             <column name="top_gene_list" columnType="string"/>
