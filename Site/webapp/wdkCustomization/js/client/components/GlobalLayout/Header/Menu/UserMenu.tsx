@@ -32,8 +32,8 @@ const GuestUserMenu: React.SFC<{ webAppUrl: string }> = props => {
     return (
         <div className="user-menu float-right mr-2">
             <span className="user-welcome">Welcome, Guest</span>
-            <Button variant="dark"
-                onClick={() => window.location.assign(`${webAppUrl}/user/login`)}>
+            <Button variant="dark" 
+                onClick={() => window.location.assign(`${webAppUrl}/user/login`)} disabled>
                 Login / Register
                 </Button>
         </div>
@@ -43,11 +43,11 @@ const GuestUserMenu: React.SFC<{ webAppUrl: string }> = props => {
 const RegisteredUserMenu: React.SFC<{ user: User }> = props => {
     const { user } = props;
 
-    const userName = user ? "Welcome, " + user.properties.firstName + " " + user.properties.lastName : "Welcome, User";
+    const userName = user ? "Welcome, " + user.properties.firstName + " " + user.properties.lastName : "Welcome, Guest";
 
     return (
         <div className="user-menu float-right mr-2">
-            <DropdownButton variant="dark" id="dropdown-basic-button" title={userName}>
+            <DropdownButton variant="dark" id="dropdown-basic-button" title={userName} disabled>
                 <Dropdown.Item href="/favorites"> <i className="fa fa-star"></i> Favorites</Dropdown.Item>
                 <Dropdown.Item href="/logout">Logout</Dropdown.Item>
             </DropdownButton>
