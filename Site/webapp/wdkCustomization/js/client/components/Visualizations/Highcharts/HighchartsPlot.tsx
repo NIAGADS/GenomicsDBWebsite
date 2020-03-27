@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useEffect, useState } from 'react';
 import { isEmpty, merge } from 'lodash';
 
 import { buildChartOptions, addCategories, addTitle, addSeries } from './HighchartsOptions';
@@ -16,12 +16,13 @@ import Data from 'highcharts/modules/data';
 Data(Highcharts);
 
 import Heatmap from 'highcharts/modules/heatmap';
+import { useWdkEffect } from 'wdk-client/Service/WdkService';
 Heatmap(Highcharts);
 
 require('highcharts/highcharts-more')(Highcharts); // bubble plot & others
 
 export interface HighchartsPlotProps {
-	data: any,
+	data?: any,
 	properties: any
 	noDataMessage?: string;
 	displayNoDataMessage?: boolean;
@@ -60,13 +61,8 @@ const HighchartsPlot: React.FC<HighchartsPlotProps> = props => {
 
 	useLayoutEffect(() => {
 		setOptions(buildOptions(data, properties, plotOptions))
-		/*if (!plotOptions) {
-			setOptions(buildOptions(data, properties))
-		}
-		else {
-			!options && setOptions(plotOptions);
-		}*/
 	}, [data, plotOptions]);
+
 
 	const message = options ? "Loading..." : noDataMessage ? noDataMessage : "None reported.";
 	const displayMessage = displayNoDataMessage === false ? false : true;
@@ -78,5 +74,6 @@ const HighchartsPlot: React.FC<HighchartsPlotProps> = props => {
 			: displayMessage ? <div>{message}</div> : null
 	);
 }
+
 
 export default HighchartsPlot;

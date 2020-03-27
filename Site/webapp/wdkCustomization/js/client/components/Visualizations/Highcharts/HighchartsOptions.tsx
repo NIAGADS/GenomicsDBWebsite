@@ -16,6 +16,19 @@ import { merge } from 'lodash';
     "openInCloud"
 ]; */
 
+/* const HIGHCHARTS_EXPORTING_MENU_ITEMS = [
+    "printChart",
+    "separator",
+    "downloadPNG",
+    "downloadJPEG",
+    "downloadPDF",
+    "downloadSVG",
+    "separator",
+    "downloadCSV",
+    "downloadXLS",
+    "viewData",
+    "openInCloud"
+]; */
 
 const PuBlRd_COLOR_BLIND_PALETTE = ["#601A4A", "#EE442F", "#63ACBE"];
 const RdBlPu_COLOR_BLIND_PALETTE = ["#EE442F", "#601A4A", "#63ACBE"];
@@ -34,9 +47,103 @@ export function buildChartOptions(chartType: string) {
             return buildGeneGwsSummaryOptions();
         case "variant_gws_summary":
             return buildVariantGwsSummaryOptions();
+        case "imanhattan":
+            return buildInteractiveManhattanOptions();
         default:
             return HIGHCHARTS_DEFAULTS;
     }
+}
+
+
+export function buildInteractiveManhattanOptions(options?: Options) {
+
+    function formatTooltip(point: any) {
+        var label = point.refsnp ? point.refsnp : point.variant;
+        var link =
+            '<a href="../variant/' +
+            point.variant +
+            '">' +
+            label +
+            "</a>";
+
+        return (
+            link + "<br/> <strong>p-value = " + point.pvalue + "</strong></br>");
+    }
+
+    let plotOptions: Options = {
+        plotOptions: {
+            series: {
+                turboThreshold: 500000,
+                marker: {
+                    radius: 2
+                }
+            }
+        },
+        title: {
+            text: ""
+        },
+        loading: {
+            showDuration: 10000
+        },
+        yAxis: {
+            min: 0,
+            max: 50,
+            title: {
+                useHTML: true,
+                text: "-log<sub>10</sub> <em>p</em>-value"
+            },
+            labels: {
+                formatter: function () {
+                    if (this.value == 50) { return ">=" + this.value.toString(); }
+                    return this.value.toString();
+                }
+            },
+            plotLines: [
+                {
+                    color: "red",
+                    width: 1,
+                    dashStyle: "Dash",
+                    value: 7.30102999566,
+                    label: { text: "p <= 5e-8", style: { color: "red" } , align: "right"},
+                    zIndex: 5
+                }
+            ]
+        },
+        tooltip: {
+            useHTML: true,
+            hideDelay: 3000,
+            style: {
+                pointerEvents: "auto"
+            },
+            headerFormat: "",
+            pointFormatter: function () {
+                return formatTooltip(this);
+            }
+        },
+
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            min: 1,
+            max: 22,
+            minTickInterval: 1,
+            tickInterval: 1,
+            title: { text: "Chromosome" },
+            labels: {
+                align: "left"
+            }
+        }
+    }
+
+
+    if (options) {
+        plotOptions = merge(plotOptions, options);
+    }
+
+    plotOptions = merge(plotOptions, noDataExports());
+
+    return buildScatterChartOptions(plotOptions);
 }
 
 export function buildVariantGwsSummaryOptions(options?: Options) {
@@ -68,7 +175,7 @@ export function buildVariantGwsSummaryOptions(options?: Options) {
     plotOptions = merge(plotOptions, disableLegendHover());
     plotOptions = merge(plotOptions, limitedExportMenu());
     plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
-    plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE.slice(0,2)));
+    plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE.slice(0, 2)));
 
     if (options) {
         plotOptions = merge(plotOptions, options);
@@ -90,7 +197,7 @@ export function buildGeneGwsSummaryOptions(options?: Options) {
             x: 0
         },
         yAxis: {
-            title: { text: "N GWS Variants" }
+            title: { text: "N Variants (p < 5e-8)" }
         },
         legend: {
             enabled: false
@@ -119,6 +226,22 @@ export function buildGeneGwsSummaryOptions(options?: Options) {
     }
 
     return buildColumnChartOptions(true, "normal", plotOptions) // stacked bar (inverted column) w/additional formatting from above
+}
+
+
+export function buildScatterChartOptions(options?: Options) {
+    let plotOptions: Options = {
+        chart: {
+            type: "scatter",
+            zoomType: "xy"
+        }
+    }
+
+    if (options) {
+        plotOptions = merge(plotOptions, options);
+    }
+
+    return Object.assign({}, HIGHCHARTS_DEFAULTS, plotOptions);
 }
 
 export function buildBubbleChartOptions(options?: Options) {
@@ -164,6 +287,31 @@ export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsSt
 }
 
 
+function noDataExports() {
+    const HIGHCHARTS_EXPORTING_MENU_ITEMS = [
+        "printChart",
+        "separator",
+        "downloadPNG",
+        "downloadJPEG",
+        "downloadPDF",
+        "downloadSVG",
+        "separator",
+        "openInCloud"
+    ];
+
+    const plotOptions: Options = {
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: HIGHCHARTS_EXPORTING_MENU_ITEMS
+                }
+            }
+        }
+    }
+
+    return plotOptions;
+
+}
 
 function limitedExportMenu() {
     const plotOptions: Options = {
@@ -258,7 +406,7 @@ export function buildTooltipOptions(shared?: boolean, outside?: boolean) {
 
 export function addCategories(categories: string[], axis: string = "xAxis") {
 
-    const plotOptions: Options = axis === "xAxis" 
+    const plotOptions: Options = axis === "xAxis"
         ? { xAxis: { categories: categories } }
         : { yAxis: { categories: categories } }
 

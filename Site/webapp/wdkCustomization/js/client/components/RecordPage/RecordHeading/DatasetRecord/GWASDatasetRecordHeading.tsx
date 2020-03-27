@@ -12,6 +12,8 @@ import {
   updateActiveQuestion
 } from "wdk-client/Actions/QuestionActions";
 import { QuestionState } from "wdk-client/StoreModules/QuestionStoreModule";
+import { HighchartsManhattan } from "../../../Visualizations/Highcharts/HighchartsManhattan";
+import { getAttributeChartProperties } from './../Shared/HeaderRecordActions/HeaderRecordActions';
 
 const SEARCH_NAME = "gwas_stats";
 const PVALUE_PARAM_NAME = "pvalue";
@@ -157,38 +159,45 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
 
     return (
       <React.Fragment>
-        <div className="record-summary-container dataset-record-summary-container">
-          <div>
-            <HeaderRecordActions
-              record={record}
-              recordClass={recordClass}
-              headerActions={headerActions}
-            />
-            <h1 className="record-heading">
-              Dataset: {record.attributes.name}{" "}
-            </h1>
+        <div className="col-sm-3">
+          <div className="record-summary-container dataset-record-summary-container">
+            <div>
+              <HeaderRecordActions
+                record={record}
+                recordClass={recordClass}
+                headerActions={headerActions}
+              />
+              <h1 className="record-heading">
+                Dataset: {record.attributes.name}{" "}
+              </h1>
+            </div>
+            <h2>{convertHtmlEntites(record.attributes.name)} &nbsp;({record.attributes.attribution})</h2>
+
+            <ul>
+              <li>
+                <h5 className="dataset-subtitle">
+                  {record.attributes.description}
+                </h5>
+              </li>
+              <li>
+                <span className="label">Category:</span> {recordClass.displayName}
+              </li>
+              <li>
+                <span className="label">Explore related datasets: </span>
+                {resolveJsonInput(record.attributes.accession_link)}{" "}
+              </li>
+            </ul>
+            {record.attributes.is_adsp && (
+              <h2><strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong></h2>
+            )}
+
+            <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
           </div>
-          <h2>{convertHtmlEntites(record.attributes.name)} &nbsp;({record.attributes.attribution})</h2>
-
-          <ul>
-            <li>
-              <h5 className="dataset-subtitle">
-                {record.attributes.description}
-              </h5>
-            </li>
-            <li>
-              <span className="label">Category:</span> {recordClass.displayName}
-            </li>
-            <li>
-              <span className="label">Explore related datasets:</span>
-              {resolveJsonInput(record.attributes.accession_link)}{" "}
-            </li>
-          </ul>
-          {record.attributes.is_adsp && (
-            <h2><strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong></h2>
-          )}
-
-          <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
+        </div>
+        <div className="col">
+          {record.attributes.has_manhattan_plot &&
+            <HighchartsManhattan track={record.id[0].value}
+              properties={JSON.parse(getAttributeChartProperties(recordClass, "has_manhattan_plot"))}></HighchartsManhattan>}
         </div>
       </React.Fragment>
     );

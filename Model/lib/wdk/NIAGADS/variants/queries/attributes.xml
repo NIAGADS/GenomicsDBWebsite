@@ -400,7 +400,7 @@
         SELECT
             gc.source_id,
             gc.category,
-            jsonb_build_object('name', 'GWS', 'data', jsonb_agg(gc.gws_count ORDER BY c.y_index)) AS series_data
+            jsonb_build_object('name', 'p < 5e-8', 'data', jsonb_agg(gc.gws_count ORDER BY c.y_index)) AS series_data
 
         FROM
             gws_counts gc,

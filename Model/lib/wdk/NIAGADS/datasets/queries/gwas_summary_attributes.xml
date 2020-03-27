@@ -46,6 +46,23 @@
             </sql>
         </sqlQuery>
 
+
+        <sqlQuery name="HasManhattanPlot">
+            <column name="track" columnType="string"/>
+            <column name="project_id" columnType="string"/>
+            <column name="has_manhattan_plot" columnType="boolean"/>
+
+            <sql>
+                <![CDATA[
+                WITH id AS (##WDK_ID_SQL##)
+                SELECT id.track, '@PROJECT_ID@'::text AS project_id,
+                tm.track = id.track AS has_manhattan_plot
+                FROM id LEFT OUTER JOIN NIAGADS.TrackManhattan tm
+                ON id.track = tm.track LIMIT 1
+                ]]>
+        </sql>
+        </sqlQuery>
+
         <sqlQuery name="TopGenes">
             <column name="top_gene_list" columnType="string"/>
             <column name="project_id" columnType="string"/>

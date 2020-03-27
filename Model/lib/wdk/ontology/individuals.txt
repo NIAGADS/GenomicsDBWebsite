@@ -159,7 +159,7 @@ DatasetRecordClasses.GWASDatasetRecordClass.accession_link	http://edamontology.o
 DatasetRecordClasses.GWASDatasetRecordClass.niagads_accession	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	niagads_accession							record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	search_link						results	record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.attribution	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	attribution						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.interactive_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	table	interactive_manhattan_plot					1		record	
+DatasetRecordClasses.GWASDatasetRecordClass.has_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	has_manhattan_plot					1		record-internal	
 													
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_expanded_snps					1		record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_tag_ideogram	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_tag_ideogram					2		record-internal	

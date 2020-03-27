@@ -142,6 +142,7 @@ export interface GWASDatasetRecordAttributes {
   accession_link: string;
   niagads_accession: string;
   search_link: string;
+  has_manhattan_plot: boolean;
 }
 
 export interface NIAGADSDatasetRecord extends BaseRecord {

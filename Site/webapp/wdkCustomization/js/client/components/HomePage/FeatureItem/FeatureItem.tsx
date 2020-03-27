@@ -24,7 +24,7 @@ const FeatureItem: React.SFC<FeatureItem> = props => {
                     {safeHtml(feature.description)}
                 </Card.Text>
                 <Button className="feature-link-button" variant="secondary" href={`${webAppUrl}/app/record/dataset/${feature.id}`}>
-                    Explore this dataset <i className="ml-1 fa fa-caret-right" />
+                    Explore this accession <i className="ml-1 fa fa-caret-right" />
                 </Button>
             </Card.Body>
         </Card>

@@ -21,8 +21,8 @@
             <column name="project_id"/>
             <column name="phenotype_category"/>
             <column name="phenotype"/>
-        <sql>
-        <![CDATA[
+            <sql>
+                <![CDATA[
                 WITH dataset AS (##WDK_ID_SQL##),
                 chars AS (
                 SELECT dataset.track, '@PROJECT_ID@'::text AS project_id,
@@ -52,37 +52,18 @@
                 UNION
                 SELECT track, project_id, 'Covariates' AS phenotype_category, covariate AS phenotype FROM chars WHERE covariate IS NOT NULL
         ]]>
-</sql>
-</sqlQuery>
-
-
-        <sqlQuery name="InteractiveManhattanPlot">
-            <column name="track" columnType="string"/>
-            <column name="project_id" columnType="string"/>
-            <column name="has_manhattan_plot" columnType="boolean"/>
-
-            <sql>
-                <![CDATA[
-                WITH id AS (##WDK_ID_SQL##)
-                SELECT id.track, '@PROJECT_ID@'::text AS project_id,
-                tm.track = id.track AS has_manhattan_plot
-                FROM id LEFT OUTER JOIN NIAGADS.TrackManhattan tm
-                ON id.track = tm.track LIMIT 1
-                ]]>
-        </sql>
+            </sql>
         </sqlQuery>
-
-
 
         <sqlQuery name="TopVariants">
             <column name="track"/>
             <column name="project_id"/>
             <column name="variant"/>
-			<column name="refsnp_id" />
-			<column name="is_adsp_variant" />
-			<column name="most_severe_consequence"/>
-			<column name="msc_impact" />
-			<column name="msc_is_coding" />
+            <column name="refsnp_id" />
+            <column name="is_adsp_variant" />
+            <column name="most_severe_consequence"/>
+            <column name="msc_impact" />
+            <column name="msc_is_coding" />
             <column name="msc_impacted_gene_link" />
             <column name="pvalue" />
             <sql>
@@ -117,5 +98,5 @@
     </querySet>
 
 
-  
+
 </wdkModel>
