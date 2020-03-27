@@ -40,7 +40,7 @@ const GWASDatasetSearchHelp: React.SFC<any> = props => {
   return (
     <div>
       <p>
-        Set the adjusted p-value threshold for GWAS significant. The search will
+        Set the adjusted p-value threshold for GWAS significance. The search will
         return all genes supported by an p-value &le; the specified threshold.
       </p>
       <p>
@@ -92,14 +92,16 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
 
   return (
     <>
+    <h4>Mine this dataset</h4>
       <form className="form-inline" onSubmit={handleSubmit}>
-        <div className="input-group mb-3 d-flex align-items-center">
-          <div className="input-group-prepend mr-2">Mine this dataset
+        <div className="input-group mb-3 d-flex align-items-center">  p-value &le;  
+          <div className="input-group-prepend mr-2">
             <span className="help-block">
               <HelpIcon>
                 <GWASDatasetSearchHelp />
               </HelpIcon>
             </span>
+     
           </div>
           <input
             type="text"
@@ -194,7 +196,7 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
             <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
           </div>
         </div>
-        <div className="col">
+        <div className="col mt-5">
           {record.attributes.has_manhattan_plot &&
             <HighchartsManhattan track={record.id[0].value}
               properties={JSON.parse(getAttributeChartProperties(recordClass, "has_manhattan_plot"))}></HighchartsManhattan>}
