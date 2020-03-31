@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { RecordController as WdkRecordController } from "wdk-client/Controllers";
 import { CategoryTreeNode } from "wdk-client/Utils/CategoryUtils";
 
 export function RecordController(
