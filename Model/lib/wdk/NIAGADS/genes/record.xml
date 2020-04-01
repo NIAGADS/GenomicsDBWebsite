@@ -206,6 +206,10 @@
 					<value>pvalue</value>
 				</propertyList>
 
+				<propertyList name="defaultOpen">
+					<value>true</value>
+				</propertyList>
+
 				<description>
 					<![CDATA[
 					        <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for Alzheimer's disease.<br/>
