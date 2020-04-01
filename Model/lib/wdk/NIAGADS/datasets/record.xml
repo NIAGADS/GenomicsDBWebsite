@@ -307,6 +307,9 @@
 				<propertyList name="type">
 					<value>default</value>
 				</propertyList>
+				<propertyList name="defaultOpen">
+					<value>true</value>
+				</propertyList>
 		
 				<description>
 					<![CDATA[
