@@ -22,7 +22,7 @@ import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
-import { toString } from "lodash";
+import { get, toString } from "lodash";
 
 const SelectTable = SelectTableHOC(ReactTable);
 
@@ -276,12 +276,24 @@ const resolveAccessor = (
 ): AccessorFunction => {
   switch (attribute.type) {
     case "string":
+    case "json_text":
       return (row: { [key: string]: any }) => {
-        if (isObject(row[key])) {
-          return resolveObjectInput(row[key]);
-        } else return row[key];
+        const content: string = isObject(row[key])
+          ? resolveObjectInput(row[key])
+          : row[key];
+        return content;
+        /*  display =
+            get(content, "length", 0) > 35
+              ? withTooltip(
+                  <span>{`${content.slice(0, 35)}...`}</span>,
+                  content,
+                  "",
+                  { my: "top left", at: "top left" }
+                )
+              : content;
+        return display; */
       };
-      break;
+
     case "integer":
     case "boolean":
     case "numeric":
@@ -295,12 +307,10 @@ const resolveAccessor = (
       );
     case "json_link":
     case "json_icon":
-    case "json_text":
     case "json_text_or_link":
     case "json_dictionary":
       //idea is that resolveData() has already parsed all json, here we just resolve the component through the accessor
       return (row: { [key: string]: any }) => resolveObjectInput(row[key]);
-      break;
   }
   throw new Error(
     `I'm JSON of type ${attribute.type} and no one will parse me`
