@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { CategoryTreeNode } from "wdk-client/Utils/CategoryUtils";
+import { RecordClass } from "wdk-client/Utils/WdkModel";
 
 export function RecordController(
   WdkRecordController: React.ComponentClass<any, any>
@@ -9,7 +10,7 @@ export function RecordController(
   }));
   class ApiRecordController extends WdkRecordController {
     getRecordRequestOptions = (
-      recordClass: { [key: string]: any },
+      recordClass: RecordClass,
       categoryTree: CategoryTreeNode
     ) => {
       //@ts-ignore
@@ -17,8 +18,9 @@ export function RecordController(
         recordClass,
         categoryTree
       );
-      //we're going to lazy load tables (minus those that are 'nonstandard', like locuszoom),
+      //we're going to lazy load tables (minus those that don't implement standard partialRecord fetch, like locuszoom)
       //so we need only initialOptions and no additionalOptions
+
       return [
         {
           attributes: requestOptions[0].attributes,

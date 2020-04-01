@@ -182,6 +182,7 @@ export interface Table {
     type: tableType[];
     canShrink: boolean[];
     filter_field: string[];
+    defaultOpen: string[];
   };
 }
 
