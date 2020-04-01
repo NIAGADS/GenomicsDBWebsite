@@ -205,6 +205,11 @@
 					<value>default</value>
 				</propertyList>
 
+				<propertyList name="defaultOpen">
+					<value>true</value>
+				</propertyList>
+
+
 				<description>
 					<![CDATA[
                             Summary statistics results associated with this accession.  Click on the track to search or browse these data.
