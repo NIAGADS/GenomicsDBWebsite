@@ -1,5 +1,5 @@
 {
-  "name": "Site",
+  "name": "site",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -8,16 +8,24 @@
     "d3": "3.5.17",
     "highcharts": "^7.1.2",
     "highcharts-react-official": "^2.2.2",
-    "ideogram": "^1.9.0",
-    "react-bootstrap": "^1.0.0-beta.16",
+    "ideogram": "^1.18.0",
+    "prettier": "^2.0.4",
+    "react-bootstrap": "^1.0.0",
     "react-csv": "^1.0.19",
     "react-table": "6.8.6"
   },
   "devDependencies": {
     "@types/d3": "^3.5",
     "@types/lodash": "^4.14.144",
-    "@types/react-table": "^6.7.19",
+    "@types/react-table": "^6.8.7",
     "@types/redux": "^3.6.0",
-    "webpack": "^4.41.2"
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "typescript": "^3.7.5",
+    "webpack": "^4.42.1"
   }
 }
