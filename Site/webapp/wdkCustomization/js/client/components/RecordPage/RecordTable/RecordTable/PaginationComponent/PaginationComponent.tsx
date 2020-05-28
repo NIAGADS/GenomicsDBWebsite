@@ -77,7 +77,6 @@ export default class ReactTablePagination extends React.Component<PT.PaginationP
   }
 
   getSafePage(page: number) {
-    console.log(page);
     if (Number.isNaN(page)) {
       page = this.props.page
     }

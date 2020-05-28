@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { includes } from "lodash";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import RecordTableContainer from "../RecordTable/RecordTableContainer/RecordTableContainer";
-import { CollapsibleSection, Tooltip, HelpIcon } from "wdk-client/Components";
+import { CollapsibleSection, HelpIcon } from "wdk-client/Components";
 import { ErrorBoundary } from "wdk-client/Controllers";
 import { clone } from "lodash";
 import { BaseRecord } from "../../RecordPage/types";

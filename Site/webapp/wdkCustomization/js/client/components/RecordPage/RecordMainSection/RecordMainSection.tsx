@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { RecordMainSection } from "wdk-client/Components";
 import { getTableNames } from "wdk-client/Views/Records/RecordUtils";
@@ -11,7 +11,7 @@ import {
 } from "wdk-client/Utils/CategoryUtils";
 import * as GR from "../types";
 import { RecordClass } from "wdk-client/Utils/WdkModel";
-import { flatMap, intersection, isEmpty } from "lodash";
+import { flatMap, get, intersection, isEmpty } from "lodash";
 
 interface RecordMainSection {
   categories: CategoryTreeNode[];
@@ -23,7 +23,7 @@ interface RecordMainSection {
   requestPartialRecord?: any;
   //connected
   collapsedSections: string[];
-  setCollapsedSections?: (sections: string[]) => any;
+  setCollapsedSections: (sections: string[]) => any;
 }
 
 const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
@@ -39,11 +39,16 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
 }) => {
   //set all sections collapsed by default
   //using useState instead of useEffect b/c we need it to set collapsed *before* first render
-  const [loaded, setLoaded] = useState(false);
-  const sectionNames = flatMap(categories, getTableNames);
+  const [loaded, setLoaded] = useState(false),
+    defaultOpen = (recordClass.tables || [])
+      .filter(t => get(t, "properties.defaultOpen[0]") === "true")
+      .map(t => t.name),
+    defaultClosed = flatMap(categories, getTableNames).filter(
+      n => !defaultOpen.includes(n)
+    );
   if (!loaded) {
-    if (isEmpty(intersection(sectionNames, collapsedSections))) {
-      setCollapsedSections([...sectionNames, ...collapsedSections]);
+    if (isEmpty(intersection(defaultClosed, collapsedSections))) {
+      setCollapsedSections([...defaultClosed, ...collapsedSections]);
     }
     setLoaded(true);
   }

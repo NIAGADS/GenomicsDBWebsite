@@ -56,12 +56,7 @@ flycheck_*.el
 # End of https://www.gitignore.io/api/emacs
 
 # vscode gitignore
-.vscode
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+
 *.code-workspace
 .classpath
 .settings/*

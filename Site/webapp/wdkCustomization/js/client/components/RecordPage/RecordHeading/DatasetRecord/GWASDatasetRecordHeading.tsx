@@ -13,7 +13,7 @@ import {
 } from "wdk-client/Actions/QuestionActions";
 import { QuestionState } from "wdk-client/StoreModules/QuestionStoreModule";
 import { HighchartsManhattan } from "../../../Visualizations/Highcharts/HighchartsManhattan";
-import { getAttributeChartProperties } from './../Shared/HeaderRecordActions/HeaderRecordActions';
+import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
 
 const SEARCH_NAME = "gwas_stats";
 const PVALUE_PARAM_NAME = "pvalue";
@@ -40,8 +40,9 @@ const GWASDatasetSearchHelp: React.SFC<any> = props => {
   return (
     <div>
       <p>
-        Set the adjusted p-value threshold for GWAS significance. The search will
-        return all genes supported by an p-value &le; the specified threshold.
+        Set the adjusted p-value threshold for GWAS significance. The search
+        will return all genes supported by an p-value &le; the specified
+        threshold.
       </p>
       <p>
         p-values may be specified in decimal (e.g., 0.000003) or scientific
@@ -92,16 +93,17 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
 
   return (
     <>
-    <h4>Mine this dataset</h4>
+      <h4>Mine this dataset</h4>
       <form className="form-inline" onSubmit={handleSubmit}>
-        <div className="input-group mb-3 d-flex align-items-center">  p-value &le;  
+        <div className="input-group mb-3 d-flex align-items-center">
+          {" "}
+          p-value &le;
           <div className="input-group-prepend mr-2">
             <span className="help-block">
               <HelpIcon>
                 <GWASDatasetSearchHelp />
               </HelpIcon>
             </span>
-     
           </div>
           <input
             type="text"
@@ -121,7 +123,6 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
               <i className="fa fa-search" />
             </button>
           </div>
-
         </div>
       </form>
       {error && (
@@ -140,70 +141,82 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
 
 const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
   StoreProps> = props => {
-    const { record, recordClass, headerActions, questionState } = props;
+  const { record, recordClass, headerActions, questionState } = props;
 
-    const dispatch = useDispatch();
-    useEffect(() => {
-      const initialParamData = {
-        gwas_accession: record.attributes.niagads_accession,
-        gwas_dataset: record.id[0].value,
-        pvalue: "5e-8"
-      };
-      dispatch(
-        updateActiveQuestion({
-          searchName: SEARCH_NAME,
-          autoRun: false,
-          initialParamData: initialParamData,
-          stepId: undefined
-        })
-      );
-    }, []);
-
-    return (
-      <React.Fragment>
-        <div className="col-sm-3">
-          <div className="record-summary-container dataset-record-summary-container">
-            <div>
-              <HeaderRecordActions
-                record={record}
-                recordClass={recordClass}
-                headerActions={headerActions}
-              />
-              <h1 className="record-heading">
-                Dataset: {record.attributes.name}{" "}
-              </h1>
-            </div>
-            <h2>{convertHtmlEntites(record.attributes.name)} &nbsp;({record.attributes.attribution})</h2>
-
-            <ul>
-              <li>
-                <h5 className="dataset-subtitle">
-                  {record.attributes.description}
-                </h5>
-              </li>
-              <li>
-                <span className="label">Category:</span> {recordClass.displayName}
-              </li>
-              <li>
-                <span className="label">Explore related datasets: </span>
-                {resolveJsonInput(record.attributes.accession_link)}{" "}
-              </li>
-            </ul>
-            {record.attributes.is_adsp && (
-              <h2><strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong></h2>
-            )}
-
-            <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
-          </div>
-        </div>
-        <div className="col mt-5">
-          {record.attributes.has_manhattan_plot &&
-            <HighchartsManhattan track={record.id[0].value}
-              properties={JSON.parse(getAttributeChartProperties(recordClass, "has_manhattan_plot"))}></HighchartsManhattan>}
-        </div>
-      </React.Fragment>
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const initialParamData = {
+      gwas_accession: record.attributes.niagads_accession,
+      gwas_dataset: record.id[0].value,
+      pvalue: "5e-8"
+    };
+    dispatch(
+      updateActiveQuestion({
+        searchName: SEARCH_NAME,
+        autoRun: false,
+        initialParamData: initialParamData,
+        stepId: undefined
+      })
     );
-  };
+  }, []);
+
+  return (
+    <React.Fragment>
+      <div className="col-sm-3">
+        <div className="record-summary-container dataset-record-summary-container">
+          <div>
+            <HeaderRecordActions
+              record={record}
+              recordClass={recordClass}
+              headerActions={headerActions}
+            />
+            <h1 className="record-heading">
+              Dataset: {record.attributes.name}{" "}
+            </h1>
+          </div>
+          <h2>
+            {convertHtmlEntites(record.attributes.name)} &nbsp;(
+            {record.attributes.attribution})
+          </h2>
+
+          <ul>
+            <li>
+              <h5 className="dataset-subtitle">
+                {record.attributes.description}
+              </h5>
+            </li>
+            <li>
+              <span className="label">Category:</span> {recordClass.displayName}
+            </li>
+            <li>
+              <span className="label">Explore related datasets: </span>
+              {resolveJsonInput(record.attributes.accession_link)}{" "}
+            </li>
+          </ul>
+          {record.attributes.is_adsp && (
+            <h2>
+              <strong>
+                &nbsp;{resolveJsonInput(record.attributes.is_adsp)}
+              </strong>
+            </h2>
+          )}
+
+          <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
+        </div>
+      </div>
+      <div className="col-sm-9 mt-5">
+        {record.attributes.has_manhattan_plot && (
+          <HighchartsManhattan
+            track={record.id[0].value}
+            properties={JSON.parse(
+              getAttributeChartProperties(recordClass, "has_manhattan_plot")
+            )}
+          ></HighchartsManhattan>
+        )}
+      </div>
+    </React.Fragment>
+  );
+};
 
 const enhance = connect<StoreProps, any, IRecordHeading>((state: any) => ({
   externalUrls: state.globalData.siteConfig.externalUrls,

@@ -1,0 +1,4 @@
+{
+  "eslint.workingDirectories": ["./Site"],
+  "eslint.enable": true
+}

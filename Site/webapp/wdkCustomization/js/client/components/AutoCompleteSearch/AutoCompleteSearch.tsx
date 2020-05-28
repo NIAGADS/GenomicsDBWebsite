@@ -5,8 +5,6 @@ import { Link } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { debounce, get, isEmpty, isEqual } from "lodash";
 
-import "./AutoCompleteSearch.scss";
-
 export interface SearchResult {
   type?: "result" | "summary";
   description: string;
@@ -141,11 +139,6 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
   setResultsVisible,
   undisplayedCount
 }) => {
-  //need to make sure first request returns before second is sent
-  //means we need a loading state
-  //one effect pushes the requests into the request array, the other fires them in order, as long as nothing is loading
-  //make sure one of the effects clears the array of waiting requests on close to prevent a memory leak
-
   const searchInProgress = useRef(false),
     [searchQueue, setSearchQueue] = useState<string[]>([]),
     wdkService = useContext(WdkServiceContext);
@@ -232,6 +225,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
                   searchTerm={searchTerm}
                   selected={isEqual(selected, result)}
                   width={boxWidth.current}
+                  reset={reset}
                 >
                   <span onClick={reset}>
                     {result.type === "summary" ? (
@@ -252,6 +246,7 @@ const _AutoCompleteSearchBox: React.FC<AutoCompleteSearchBox &
 const AutoCompleteSearchBox = withRouter(_AutoCompleteSearchBox);
 
 interface ResultRow {
+  reset: () => void;
   result: SearchResult;
   searchTerm: string;
   selected: boolean;
@@ -261,6 +256,7 @@ interface ResultRow {
 
 const ResultRow: React.FC<ResultRow> = ({
   children,
+  reset,
   result,
   searchTerm,
   selected,
@@ -272,6 +268,7 @@ const ResultRow: React.FC<ResultRow> = ({
         //prevent input blur event, which would fire before link click and hide dropdown and prevent navigation
         e.preventDefault();
       }}
+      
       style={{
         width: width + "px",
         backgroundColor: selected ? "#9ca3c1" : "inherit", //$dove-grey
