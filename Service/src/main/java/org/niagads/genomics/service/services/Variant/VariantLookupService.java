@@ -86,6 +86,9 @@ public class VariantLookupService extends AbstractWdkService {
             runner.executeQuery(new Object[] {variant}, handler);
            
             List <Map <String, Object>> results = handler.getResults();
+	    if (results.isEmpty()) {
+		return null;
+	    }
             return (String) results.get(0).get("result");
         }
 }
