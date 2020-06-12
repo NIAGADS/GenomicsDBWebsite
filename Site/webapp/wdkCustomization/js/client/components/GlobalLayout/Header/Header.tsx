@@ -1,14 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { connect } from "react-redux";
 import { UserActions } from "wdk-client/Actions";
 import { makeMenuItems } from "ebrc-client/util/menuItems";
 import AutoCompleteSearch from "../../AutoCompleteSearch/AutoCompleteSearch";
 import ResponsiveMenu from "./Menu/ResponsiveMenu";
-import UserSection from './Menu/UserMenu';
-
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import UserSection from "./Menu/UserMenu";
 
 interface StoreProps {
     isPartOfEuPathDB?: boolean;
@@ -23,65 +19,50 @@ interface StoreProps {
     };
 }
 
-declare namespace HeaderProps {
-    interface props {
-        showLoginWarning: any;
-        showLoginForm: any;
-        showLogoutWarning: any;
-        makeSmallMenuItems: any;
-        loadBasketCounts: any;
-        makeMainMenuItems: any;
-    }
-    interface state {
-        responsiveMenuToggled: boolean;
-    }
+interface HeaderProps {
+    showLoginWarning: any;
+    showLoginForm: any;
+    showLogoutWarning: any;
+    makeSmallMenuItems: any;
+    loadBasketCounts: any;
+    makeMainMenuItems: any;
 }
 
 interface BuildInfo {
     buildNumber: string;
 }
 
-const BuildInfo: React.SFC<BuildInfo> = props => {
+const BuildInfo: React.SFC<BuildInfo> = (props) => {
     const { buildNumber } = props;
     return <span className="build-info ml-2">Build Number: {buildNumber}</span>;
 };
 
-
-const Header: React.FC<HeaderProps.props & StoreProps> = props => {
+const Header: React.FC<HeaderProps & StoreProps> = (props) => {
     const [responsiveMenuToggled, setResponsiveMenuToggled] = useState(false);
 
     const autoCompleteContainerRef = useRef();
 
-    const {
-        loadBasketCounts,
-        siteConfig,
-        user,
-        showLoginWarning,
-        makeMainMenuItems
-    } = props,
+    const { siteConfig, user, showLoginWarning, makeMainMenuItems } = props,
         { buildNumber, projectId, webAppUrl } = siteConfig,
         menuItems = makeMenuItems(props),
         mainMenuItems = makeMainMenuItems && makeMainMenuItems(props, menuItems);
 
     return (
-        <Container id="header" fluid={true}>
-            <Row className="justify-content-between mt-2 no-gutters" >
-                <Col sm={4}>
+        <div className="container-fluid" id="header">
+            <div className="row justify-content-between mt-2 no-gutters">
+                <div className="col-sm-6">
                     <BuildInfo buildNumber={buildNumber} />
-                </Col>
-                <Col sm={4}>
+                </div>
+                <div className="col-sm-6 d-flex justify-content-end">
                     <UserSection user={user} webAppUrl={webAppUrl} />
-                </Col>
-            </Row>
-            <Row className="no-gutters menu-outer-container mt-2">            
-                <Col sm={12} className="menu-container" ref={autoCompleteContainerRef}>
+                </div>
+            </div>
+            <div className="row no-gutters menu-outer-container mt-2">
+                <div className="col-sm-12 menu-container" ref={autoCompleteContainerRef}>
                     <div className="menu-inner-container">
                         <HamburgerToggle
                             className="d-md-none"
-                            onToggle={setResponsiveMenuToggled.bind(
-                                null,
-                                !responsiveMenuToggled
-                            )}
+                            onToggle={setResponsiveMenuToggled.bind(null, !responsiveMenuToggled)}
                         />
                         <ResponsiveMenu
                             responsiveMenuToggled={responsiveMenuToggled}
@@ -93,9 +74,9 @@ const Header: React.FC<HeaderProps.props & StoreProps> = props => {
                         />
                         <AutoCompleteSearch canGrow={true} />
                     </div>
-                </Col>
-            </Row>
-        </Container >
+                </div>
+            </div>
+        </div>
     );
 };
 
@@ -104,7 +85,7 @@ interface HamburgerToggle {
     className: string;
 }
 
-const HamburgerToggle: React.SFC<HamburgerToggle> = props => {
+const HamburgerToggle: React.SFC<HamburgerToggle> = (props) => {
     return (
         <a className={"hamburger " + props.className} onClick={props.onToggle}>
             <i className="fa fa-2x fa-bars" />
@@ -112,7 +93,6 @@ const HamburgerToggle: React.SFC<HamburgerToggle> = props => {
     );
 };
 
-export default connect<StoreProps, any, HeaderProps.props, HeaderProps.state>(
-    (state: any) => state.globalData,
-    { ...UserActions }
-)(Header);
+export default connect((state: any) => state.globalData, {
+    ...UserActions,
+})(Header);

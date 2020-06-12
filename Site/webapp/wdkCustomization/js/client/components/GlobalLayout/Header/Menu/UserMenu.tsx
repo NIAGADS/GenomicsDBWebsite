@@ -1,8 +1,5 @@
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { UserSessionActions } from 'wdk-client/Actions';
+import React, { useState, useRef, useEffect } from "react";
+import { get } from "lodash";
 
 interface User {
     isGuest: boolean;
@@ -14,46 +11,69 @@ interface User {
         organization: string;
         middleName: string;
         group: string;
-    }
+    };
 }
 
-const UserSection: React.SFC<{ user: User; webAppUrl: string }> = props => {
-    const { user, webAppUrl } = props;
-    const isGuest: boolean = user && user.isGuest ? true : false;
-    return (
-        isGuest
-            ? <GuestUserMenu webAppUrl={webAppUrl} />
-            : <RegisteredUserMenu user={user} />
-    );
-};
+const UserSection: React.SFC<{ user: User; webAppUrl: string }> = ({ user, webAppUrl }) => (
+    <div className="user-menu">
+        {get(user, "isGuest", true) ? <GuestUserMenu webAppUrl={webAppUrl} /> : <RegisteredUserMenu user={user} />}
+    </div>
+);
 
-const GuestUserMenu: React.SFC<{ webAppUrl: string }> = props => {
+const GuestUserMenu: React.SFC<{ webAppUrl: string }> = (props) => {
     const { webAppUrl } = props;
     return (
-        <div className="user-menu float-right mr-2">
-            <span className="user-welcome">Welcome, Guest</span>
-            <Button variant="dark" 
-                onClick={() => window.location.assign(`${webAppUrl}/user/login`)} disabled>
+        <div className="guest-user-menu mr-2">
+            <span className="guest-user-welcome mr-2">Welcome, Guest</span>
+            <button className="btn btn-dark" onClick={() => window.location.assign(`${webAppUrl}/user/login`)} disabled>
                 Login / Register
-                </Button>
+            </button>
         </div>
     );
 };
 
-const RegisteredUserMenu: React.SFC<{ user: User }> = props => {
-    const { user } = props;
+const RegisteredUserMenu: React.SFC<{ user: User }> = ({ user }) => {
+    const [dropdownOpen, setDropdownOpen] = useState(false),
+        userName = user ? "Welcome, " + user.properties.firstName + " " + user.properties.lastName : "Welcome, Guest",
+        containerRef = useRef<any>();
 
-    const userName = user ? "Welcome, " + user.properties.firstName + " " + user.properties.lastName : "Welcome, Guest";
+    /* todo: package as custom hook w/ callback arg */
+    useEffect(() => {
+        const listener = (e: Event) => {
+            if (!containerRef.current.contains(e.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+        window.document.addEventListener("click", listener);
+        return () => window.document.removeEventListener("onclick", listener);
+    }, []);
 
     return (
-        <div className="user-menu float-right mr-2">
-            <DropdownButton variant="dark" id="dropdown-basic-button" title={userName} disabled>
-                <Dropdown.Item href="/favorites"> <i className="fa fa-star"></i> Favorites</Dropdown.Item>
-                <Dropdown.Item href="/logout">Logout</Dropdown.Item>
-            </DropdownButton>
+        <div ref={containerRef} className="registered-user-menu mr-2">
+            <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="btn btn-dark"
+                id="dropdown-basic-button"
+                disabled
+            >
+                {userName}
+            </button>
+            {dropdownOpen && (
+                <ul className="niagads-dropdown-menu" style={{ minWidth: get(containerRef, "current.clientWidth") }}>
+                    <li className="niagads-dropdown-item">
+                        <a href="/favorites">
+                            {" "}
+                            <i className="fa fa-star"></i>&nbsp;Favorites
+                        </a>
+                    </li>
+                    <li className="niagads-dropdown-item">
+                        {" "}
+                        <a href="/logout">Logout</a>
+                    </li>
+                </ul>
+            )}
         </div>
     );
 };
 
 export default UserSection;
-

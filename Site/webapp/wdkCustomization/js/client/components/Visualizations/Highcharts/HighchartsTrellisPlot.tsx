@@ -1,67 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { isEmpty, assign } from 'lodash';
-import { Options } from 'highcharts';
-import HighchartsPlot, { HighchartsPlotProps, buildOptions } from './HighchartsPlot';
+import React from "react";
+import { Options } from "highcharts";
+import HighchartsPlot, { HighchartsPlotProps } from "./HighchartsPlot";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Table from 'react-bootstrap/Table';
-
-import './HighchartsTrellisPlot.scss';
+import "./HighchartsTrellisPlot.scss";
 
 // https://jsfiddle.net/65mbxwc9/
 
-export const HighchartsColumnTrellis: React.FC<HighchartsPlotProps> = props => {
-	const { data, properties, noDataMessage, displayNoDataMessage } = props;
+export const HighchartsColumnTrellis: React.FC<HighchartsPlotProps> = ({ data, properties }) => {
+    return data ? (
+        <div className="container">
+            <div className="row">
+                {data.map((item: any, index: number) => {
+                    return (
+                        <div className="col" key={`col_${index}`}>
+                            <HighchartsPlot data={item} properties={properties} />
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    ) : null;
+};
 
-	return (
-		data ? <Container>
-			<Row>
-				{data.map((item: any, index: number) => {
-					return (
-						<Col key={`col_${index}`}>
-							<HighchartsPlot data={item} properties={properties} />
-						</Col>
-					)
-				})}
-			</Row>
-		</Container> : null
-	)
-}
+export const HighchartsTableTrellis: React.FC<HighchartsPlotProps> = (props) => {
+    const { data, properties } = props;
 
-export const HighchartsTableTrellis: React.FC<HighchartsPlotProps > = props => {
-	const { data, properties, noDataMessage, displayNoDataMessage } = props;
-
-	return (
-		data ? <Container>
-			<Table className="table-trellis-plot">
-				<tbody>
-					<tr>
-						{data.map((item: any, index: number) => {
-							let plotOptions: Options = {				
-								legend: {
-									enabled: index == (data.length - 1),
-									layout: "vertical",
-									align: "right",
-									verticalAlign: "middle",
-									itemStyle: {fontWeight: "10px", fontSize: "10px"},
-								},
-								chart: {
-									width: index == (data.length - 1) ? 300 : 250
-								}
-							}
-							return (
-								<td key={index}>
-									<HighchartsPlot data={item} properties={properties} plotOptions={plotOptions} />
-								</td>
-							)
-						})}
-					</tr>
-				</tbody>
-			</Table>
-		</Container> : null
-	)
-}
-
-
+    return data ? (
+        <div className="container">
+            <table className="table table-trellis-plot">
+                <tbody>
+                    <tr>
+                        {data.map((item: any, index: number) => {
+                            const plotOptions: Options = {
+                                legend: {
+                                    enabled: index == data.length - 1,
+                                    layout: "vertical",
+                                    align: "right",
+                                    verticalAlign: "middle",
+                                    itemStyle: { fontWeight: "10px", fontSize: "10px" },
+                                },
+                                chart: {
+                                    width: index == data.length - 1 ? 300 : 250,
+                                },
+                            };
+                            return (
+                                <td key={index}>
+                                    <HighchartsPlot data={item} properties={properties} plotOptions={plotOptions} />
+                                </td>
+                            );
+                        })}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    ) : null;
+};
