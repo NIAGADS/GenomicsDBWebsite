@@ -2,12 +2,10 @@ import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { toString, chain } from "lodash";
 import { scientificToDecimal } from "../../../../util/util";
-import { Filter } from "react-table";
 
 interface PvalFilterProps {
     values: any[];
-    onChange: { (pLow: number): void };
-    filtered: Filter[];
+    setFilter: (id: string, value: any) => void;
     selectClass: string;
     defaultPVal: number;
 }
@@ -29,9 +27,14 @@ const canvasSpec: CanvasSpec = {
     height: 150,
 };
 
-const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, onChange, selectClass, values }) => {
+const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setFilter, selectClass, values }) => {
     //p refers to negative log, so maxP means lowest pVal to display (e.g., 15 =  e-15)
     const maxP = 15;
+
+    //note that this component NEVER needs to rerender
+    useEffect(() => {
+        console.log("rerendering");
+    });
 
     useEffect(() => {
         const smallestP = _getSmallestP(values),
@@ -44,7 +47,11 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, onChange, selectCl
         _drawArea(svg, data, area);
         _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale, maxP), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec);
-        _drawSlider(svg, xScale, unXScale, smallestP, defaultPVal, canvasSpec, onChange);
+        _drawSlider(svg, xScale, unXScale, smallestP, defaultPVal, canvasSpec, (val: number) =>
+            setFilter("pvalue", val)
+        );
+        //this component is uncontrolled and holds its own state after initialization; it never rerenders
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
 
     return (
@@ -54,7 +61,8 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, onChange, selectCl
     );
 };
 
-export default PvalFilter;
+//never rerender!
+export default React.memo(PvalFilter, () => true);
 
 const _buildYAxis = (yScale: any) => {
     return d3.svg.axis().scale(yScale).orient("left");
@@ -169,6 +177,7 @@ const _buildDrag = (unXScale: d3.scale.Linear<number, number>, sizerClass: strin
             .attr("width", rectWidth);
         //@ts-ignore
         d3.select(this).attr("cx", cx);
+        // tested: the callback is what's slowing this down.
         cb(unXScale(cx));
     });
 };
@@ -199,7 +208,7 @@ const _drawSlider = (
     minP: number,
     defaultP: number,
     cs: CanvasSpec,
-    cb: Function
+    cb: (val: number) => void
 ) => {
     const sizerClass = "sizer-" + Math.random().toString(36).slice(3),
         drag = _buildDrag(unXScale, sizerClass, cb);
