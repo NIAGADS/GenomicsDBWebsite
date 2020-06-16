@@ -1,10 +1,11 @@
 import React, { Fragment, useState } from "react";
-
-import { scientificCellFactory, decimalCellFactory } from "wdk-client/Components";
-import { StepAnalysisResultPluginProps } from "wdk-client/Components";
-import { StepAnalysisEnrichmentResultTable } from "wdk-client/Components";
+import { StepAnalysisEnrichmentResultTable } from "wdk-client/Core/MoveAfterRefactor/Components/StepAnalysis/StepAnalysisEnrichmentResultTable";
+import {
+    decimalCellFactory,
+    scientificCellFactory,
+} from "wdk-client/Core/MoveAfterRefactor/Components/StepAnalysis/Utils/StepAnalysisResults";
 import { StepAnalysisButtonArray } from "./StepAnalysisButtonArray";
-import { WordCloudModal } from "wdk-client/Components";
+import { WordCloudModal } from "wdk-client/Core/MoveAfterRefactor/Components/StepAnalysis/StepAnalysisWordCloudModal";
 
 // import 'wdk-client/Core/MoveAfterRefactor/Components/StepAnalysis/StepAnalysisEnrichmentResult.scss';
 
@@ -59,11 +60,7 @@ const goButtonsConfigFactory = (
     },
 ];
 
-export const StepAnalysisGoEnrichmentResults: React.FC<StepAnalysisResultPluginProps> = ({
-    analysisResult,
-    analysisConfig,
-    webAppUrl,
-}) => {
+export const StepAnalysisGoEnrichmentResults: React.FC<any> = ({ analysisResult, analysisConfig, webAppUrl }) => {
     const [wordCloudOpen, setWordCloudOpen] = useState(false);
 
     return (
