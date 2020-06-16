@@ -1,29 +1,25 @@
-@import './variables';
-@import './mixins';
-@import './wdk';
-@import './style';
+@import "./api-common-client.scss";
+@import "./variables";
 
-// Override default variables before the bootstrap import
+// Override default bootstrap variables before the bootstrap import
 //$body-bg: #000;
-
 $font-size-base: 0.75rem;
 
-$theme-colors: ( //"primary": $primary,
-  "light": $light,
-  "secondary": $secondary,
-  "dark": $dark,
-  "warning": $warning,
-  "success": $bluegrey);
+$theme-colors: (
+    //"primary": $primary,
+        "light": $light,
+    "secondary": $secondary,
+    "dark": $dark,
+    "warning": $warning,
+    "success": $bluegrey
+);
 
-  // Import Bootstrap and its default variables
-@import '~bootstrap/scss/bootstrap.scss';
-@import './button';
+// Import Bootstrap and its default variables
+@import "~bootstrap/scss/bootstrap";
 
-// set default 'btn' to btn-dark so do not need to find and replace in all Ebrc/WDKClient code
-// based off result of applying bootstrap button-variant mixin
+@import "./mixins";
+@import "../js/client/components/Components";
+@import "./wdk";
+@import "./style";
 
-
-
-
-
-@import '../js/client/components/Components.scss';
+@import "./button";

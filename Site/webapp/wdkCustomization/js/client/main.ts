@@ -4,8 +4,6 @@ import * as componentWrappers from "./component-wrappers";
 import { wrapRoutes } from "./routes";
 import pluginConfig from "./pluginConfig";
 
-import "bootstrap/dist/js/bootstrap.bundle.min";
-import "site/wdkCustomization/css/client.css";
 import "site/wdkCustomization/sass/client.scss";
 
 // Initialize the application.
