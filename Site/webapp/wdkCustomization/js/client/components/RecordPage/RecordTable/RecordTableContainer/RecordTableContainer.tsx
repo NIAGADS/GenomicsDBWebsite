@@ -28,8 +28,8 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
 
     const updateFilter = (id: string, value: any) =>
         //we're wrapping setFiltered here b/c useState function returns reliable state, which is important b/c we're binding to
-        //a d3 callback down the line outside the react ecosystm and trying to limit updates based on React state,
-        //a function wrapping current (filter) state will be stale, need guarantee our d3 callback has access to the right state
+        //a d3 callback down the line outside the react ecosystm and trying to limit updates by checking state first for redundancy
+        //note that a function wrapping current (filter) state will be stale, this guarantees our d3 callback has access to the right state
         setFiltered((oldFilter: Filter[]) => {
             const filter = oldFilter.find((f) => f.id === id);
             if (filter.value !== value) {
