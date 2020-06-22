@@ -11,16 +11,8 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultLocus }) => {
         const igvDiv = document.getElementById("igv-div"),
             options = {
                 genome: "hg19",
-                //                locus: "chr19:45,354,518-45,376,909",
                 locus: defaultLocus,
                 tracks: [
-                    {
-                        name: "HG00103",
-                        url:
-                            "http://s3.amazonaws.com/1000genomes/phase3/data/HG00103/alignment/HG00103.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram",
-                        indexURL:
-                            "http://s3.amazonaws.com/1000genomes/phase3/data/HG00103/alignment/HG00103.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram.crai",
-                    },
                     {
                         name: "Gencode v18 Basic",
                         type: "annotation",
@@ -30,7 +22,6 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultLocus }) => {
                             "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.annotation.sorted.gtf.gz",
                         indexURL:
                             "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.annotation.sorted.gtf.gz.tbi",
-                        visibilityWindow: 1000000,
                     },
                 ],
             };
