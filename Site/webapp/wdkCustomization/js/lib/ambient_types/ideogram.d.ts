@@ -1,1 +1,1 @@
-declare module 'ideogram';
+declare module "ideogram";

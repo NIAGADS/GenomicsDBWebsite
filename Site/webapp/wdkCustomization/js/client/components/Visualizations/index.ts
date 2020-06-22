@@ -1,6 +1,6 @@
-import IdeogramPlot from './Ideogram/Ideogram';
-import HighchartsPlot from './Highcharts/HighchartsPlot';
+import IdeogramPlot from "./Ideogram/Ideogram";
+import HighchartsPlot from "./Highcharts/HighchartsPlot";
+import { HighchartsTableTrellis } from "./Highcharts/HighchartsTrellisPlot";
+import IgvBrowser from "./igv/IgvBrowser";
 
-export {
-	IdeogramPlot, HighchartsPlot
-}
+export { HighchartsPlot, HighchartsTableTrellis, IdeogramPlot, IgvBrowser };
