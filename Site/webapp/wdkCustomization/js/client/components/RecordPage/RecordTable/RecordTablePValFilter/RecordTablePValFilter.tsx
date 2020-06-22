@@ -31,11 +31,6 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setFilter, selectC
     //p refers to negative log, so maxP means lowest pVal to display (e.g., 15 =  e-15)
     const maxP = 15;
 
-    //note that this component NEVER needs to rerender
-    useEffect(() => {
-        console.log("rerendering");
-    });
-
     useEffect(() => {
         const smallestP = _getSmallestP(values),
             data = _transformData(values),
@@ -177,7 +172,7 @@ const _buildDrag = (unXScale: d3.scale.Linear<number, number>, sizerClass: strin
             .attr("width", rectWidth);
         //@ts-ignore
         d3.select(this).attr("cx", cx);
-        // tested: the callback is what's slowing this down.
+        //note that this will lag while table is rerendering after callback, ReactTable seems to be the culprit
         cb(unXScale(cx));
     });
 };

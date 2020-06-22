@@ -1,9 +1,9 @@
-import { StepAnalysisDefaultResult } from 'wdk-client/Plugins';
+import { StepAnalysisDefaultResult } from "wdk-client/Plugins";
 
-import DefaultQuestionForm from 'wdk-client/Views/Question/DefaultQuestionForm';
+import DefaultQuestionForm from "wdk-client/Views/Question/DefaultQuestionForm";
 
-import { StepAnalysisGoEnrichmentResults } from './components/StepAnalysis/StepAnalysisGoEnrichmentResults';
-import GenomeView from './components/SummaryViews/GenomeView';
+import { StepAnalysisGoEnrichmentResults } from "./components/StepAnalysis/StepAnalysisGoEnrichmentResults";
+import GenomeView from "./components/SummaryViews/GenomeView";
 
 export default [
     /* {
@@ -18,23 +18,23 @@ export default [
    },*/
 
     {
-        type: 'questionForm',
+        type: "questionForm",
         component: DefaultQuestionForm,
     },
     {
-        type: 'summaryView',
-        name: 'ideogram',
+        type: "summaryView",
+        name: "ideogram",
         component: GenomeView,
     },
 
     {
-        type: 'stepAnalysisResult',
-        name: 'pathway-enrichment',
+        type: "stepAnalysisResult",
+        name: "pathway-enrichment",
         component: StepAnalysisDefaultResult,
     },
     {
-        type: 'stepAnalysisResult',
-        name: 'go-enrichment',
+        type: "stepAnalysisResult",
+        name: "go-enrichment",
         component: StepAnalysisGoEnrichmentResults,
     },
 ];
