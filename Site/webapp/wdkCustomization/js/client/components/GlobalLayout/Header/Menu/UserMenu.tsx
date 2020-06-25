@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
+import { useClickAway } from "./../../../../hooks";
 import { get } from "lodash";
 
 interface User {
@@ -37,25 +38,11 @@ const RegisteredUserMenu: React.SFC<{ user: User }> = ({ user }) => {
         userName = user ? "Welcome, " + user.properties.firstName + " " + user.properties.lastName : "Welcome, Guest",
         containerRef = useRef<any>();
 
-    /* todo: package as custom hook w/ callback arg */
-    useEffect(() => {
-        const listener = (e: Event) => {
-            if (!containerRef.current.contains(e.target as Node)) {
-                setDropdownOpen(false);
-            }
-        };
-        window.document.addEventListener("click", listener);
-        return () => window.document.removeEventListener("onclick", listener);
-    }, []);
+    useClickAway(containerRef, () => setDropdownOpen(false));
 
     return (
         <div ref={containerRef} className="registered-user-menu mr-2">
-            <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="btn btn-dark"
-                id="dropdown-basic-button"
-                disabled
-            >
+            <button onClick={() => setDropdownOpen(!dropdownOpen)} className="btn btn-dark" id="dropdown-basic-button">
                 {userName}
             </button>
             {dropdownOpen && (
