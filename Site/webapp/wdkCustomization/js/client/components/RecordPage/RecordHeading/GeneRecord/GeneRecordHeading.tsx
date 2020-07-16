@@ -85,7 +85,9 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
             </div>
             <div className="col-sm-12">
                 <IgvBrowser
-                    defaultLocus={`${record.attributes.chromosome}:${record.attributes.location_start}-${record.attributes.location_end}`}
+                    defaultSpan={`${record.attributes.chromosome}:${+record.attributes.location_start - 50000}-${
+                        +record.attributes.location_end + 50000
+                    }`}
                 />
             </div>
         </>

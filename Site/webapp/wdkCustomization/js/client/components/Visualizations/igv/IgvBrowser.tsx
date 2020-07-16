@@ -2,26 +2,22 @@ import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.esm";
 
 interface IgvBrowser {
-    defaultLocus: string;
+    defaultSpan: string;
 }
 
-const IgvBrowser: React.FC<IgvBrowser> = ({ defaultLocus }) => {
+const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan }) => {
     useLayoutEffect(() => {
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
             options = {
                 genome: "hg19",
-                locus: defaultLocus,
+                locus: defaultSpan,
                 tracks: [
                     {
-                        name: "Gencode v18 Basic",
                         type: "annotation",
-                        format: "gtf",
-                        displayMode: "EXPANDED",
+                        name: "FILER: Expressed enhancer sites",
                         url:
-                            "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.annotation.sorted.gtf.gz",
-                        indexURL:
-                            "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.annotation.sorted.gtf.gz.tbi",
+                            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/broadpeak/hg19/ENCFF000AIA.bed.gz",
                     },
                 ],
             };
@@ -70,7 +66,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultLocus }) => {
             });
             //setBrowser(browser);
         });
-    }, []);
+    }, [defaultSpan]);
 
     return <span style={{ width: "100%" }} id="igv-div" />;
 };
