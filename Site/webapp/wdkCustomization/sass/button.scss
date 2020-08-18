@@ -3,7 +3,8 @@
 //account for allsites' a.btn having greater specificity than our/bootstrap's .btn
 
 a.btn,
-button.btn {
+button.btn,
+a:link.btn {
     color: #fff;
     background-color: $dark;
     background-image: none;

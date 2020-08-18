@@ -1,25 +1,31 @@
 import React, { useLayoutEffect } from "react";
-import igv from "igv/dist/igv.esm";
+import igv from "../../../../lib/igv/igv";
+import { noop } from "lodash";
 
 interface IgvBrowser {
     defaultSpan: string;
+    defaultTracks?: TrackConfig[];
+    onBrowserLoad?: (Browser: any) => void;
 }
 
-const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan }) => {
+export interface TrackConfig {
+    name: string;
+    format?: string;
+    displayMode: string;
+    height?: number;
+    url: string;
+    indexURL?: string;
+    visibilityWindow: number;
+}
+
+const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad }) => {
     useLayoutEffect(() => {
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
             options = {
                 genome: "hg19",
                 locus: defaultSpan,
-                tracks: [
-                    {
-                        type: "annotation",
-                        name: "FILER: Expressed enhancer sites",
-                        url:
-                            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/broadpeak/hg19/ENCFF000AIA.bed.gz",
-                    },
-                ],
+                tracks: defaultTracks || [],
             };
 
         igv.createBrowser(igvDiv, options).then((browser: any) => {
@@ -31,7 +37,27 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan }) => {
                     return false;
                 }
 
-                popoverData.forEach((nameValue: { name: string; value: string }) => {
+                //if we're on a niagads gwas track, transform
+                const ppd =
+                    track.config.name === "NG00027 stage 12"
+                        ? [
+                              {
+                                  name: "variant",
+                                  value:
+                                      "<a href='https://beta.niagads.org/genomics/app/record/variant/" +
+                                      popoverData.find((pd: any) => pd.name === "strand").value.split("//")[0] +
+                                      "'>" +
+                                      popoverData.find((pd: any) => pd.name === "name").value +
+                                      "</a>",
+                              },
+                              {
+                                  name: "p-value",
+                                  value: popoverData.find((pd: any) => pd.name === "strand").value.split("//")[1],
+                              },
+                          ]
+                        : popoverData;
+
+                ppd.forEach((nameValue: { name: string; value: string }) => {
                     if (nameValue.name) {
                         const value =
                             nameValue.name.toLowerCase() === "gene_id"
@@ -64,9 +90,10 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan }) => {
 
                 return markup;
             });
-            //setBrowser(browser);
+
+            onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
-    }, [defaultSpan]);
+    }, [defaultSpan, defaultTracks, onBrowserLoad]);
 
     return <span style={{ width: "100%" }} id="igv-div" />;
 };

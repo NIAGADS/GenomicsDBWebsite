@@ -4,6 +4,7 @@ import { HeaderRecordActions } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
 import * as gr from "./../../types";
 import { HighchartsTableTrellis, IgvBrowser } from "../../../Visualizations";
+import { Link } from "wdk-client/Components";
 
 interface StoreProps {
     externalUrls: { [key: string]: any };
@@ -84,6 +85,13 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
                 )}
             </div>
             <div className="col-sm-12">
+                <Link
+                    to={`/visualizations/browser?locus=${record.attributes.chromosome}:${
+                        +record.attributes.location_start + 10000
+                    }-${+record.attributes.location_end + 10000}`}
+                >
+                    Full Browser View
+                </Link>
                 <IgvBrowser
                     defaultSpan={`${record.attributes.chromosome}:${+record.attributes.location_start - 50000}-${
                         +record.attributes.location_end + 50000
