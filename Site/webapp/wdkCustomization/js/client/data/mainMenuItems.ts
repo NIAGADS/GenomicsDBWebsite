@@ -25,6 +25,7 @@ export default function mainMenuItems(
             text: "Tools",
             webAppUrl: "#",
             tooltip: "Coming soon",
+            children: [{ id: "browser", text: "Genome Browser", route: "/visualizations/browser" }],
         },
         {
             id: "documentation",

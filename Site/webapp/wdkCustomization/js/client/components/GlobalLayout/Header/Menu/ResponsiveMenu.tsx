@@ -1,7 +1,7 @@
-import React from "react";
-import { isEmpty } from "lodash";
+import React, { useEffect, useRef, useState } from "react";
 import { MenuItem } from "../../../../data/mainMenuItems";
 import { Link } from "wdk-client/Components";
+import { useClickAway } from "./../../../../hooks";
 
 interface BaseMenu {
     webAppUrl: string;
@@ -19,67 +19,40 @@ interface Menu extends BaseMenu {
     responsiveMenuToggled: boolean;
 }
 
-interface MenuState {
-    responsiveMenuToggled: boolean;
-    width?: number;
-}
+const Menu: React.FC<Menu> = ({ webAppUrl, projectId, showLoginWarning, isGuest, items, responsiveMenuToggled }) => {
+    const widthRef = useRef<number>();
 
-const Menu: React.ComponentClass<Menu, MenuState> = class extends React.Component<Menu, MenuState> {
-    private dropdownOpen: string;
+    useEffect(() => {
+        widthRef.current = window.innerWidth;
+    }, []);
 
-    constructor(props: Menu) {
-        super(props);
-        this.state = { responsiveMenuToggled: false };
-    }
-
-    componentWillMount = () => this.getWidth();
-
-    componentDidMount = () => window.addEventListener("resize", this.updateWidth);
-
-    componentWillUnmount = () => window.removeEventListener("resize", this.updateWidth);
-
-    sendClosedSignal = (id: string) => {
-        this.dropdownOpen = id;
-    };
-
-    getWidth = () => this.setState({ width: window.innerWidth });
-
-    updateWidth = (e: any) => this.setState({ width: e.currentTarget.innerWidth });
-
-    render = () => (
+    return (
         <div className="site-menu">
             <nav>
-                {(this.state.width > 767 || this.props.responsiveMenuToggled) && (
+                {(widthRef.current > 767 || responsiveMenuToggled) && (
                     <ul>
-                        {this.props.items.map((item: any, index: any) => {
-                            return !isEmpty(item.children) ? (
-                                <NavDropdown
-                                    title={item.text}
-                                    id={item.id}
-                                    key={index}
-                                    onOpen={this.sendClosedSignal}
-                                    opening={this.dropdownOpen}
-                                >
-                                    {item.children.map((child: MenuItem) => (
-                                        <MenuItem
-                                            key={child.id}
-                                            item={child}
-                                            webAppUrl={this.props.webAppUrl + child.webAppUrl}
-                                            isGuest={this.props.isGuest}
-                                            showLoginWarning={this.props.showLoginWarning}
-                                            projectId={this.props.projectId}
-                                        />
-                                    ))}
-                                </NavDropdown>
-                            ) : (
-                                <MenuItem
-                                    key={item.id}
+                        {items.map((item: MenuItem, index: number) => {
+                            return (
+                                <NavDropdownItem
                                     item={item}
-                                    webAppUrl={this.props.webAppUrl + item.webAppUrl}
-                                    isGuest={this.props.isGuest}
-                                    showLoginWarning={this.props.showLoginWarning}
-                                    projectId={this.props.projectId}
-                                />
+                                    webAppUrl={webAppUrl}
+                                    isGuest={isGuest}
+                                    showLoginWarning={showLoginWarning}
+                                    projectId={projectId}
+                                    key={index}
+                                >
+                                    {item.children &&
+                                        item.children.map((child: MenuItem) => (
+                                            <MenuItem
+                                                key={child.id}
+                                                item={child}
+                                                webAppUrl={webAppUrl + child.webAppUrl}
+                                                isGuest={isGuest}
+                                                showLoginWarning={showLoginWarning}
+                                                projectId={projectId}
+                                            />
+                                        ))}
+                                </NavDropdownItem>
                             );
                         })}
                     </ul>
@@ -91,55 +64,38 @@ const Menu: React.ComponentClass<Menu, MenuState> = class extends React.Componen
 
 export default Menu;
 
-const HamburgerMenu: React.SFC<{ onToggle: { (): void } }> = (props: { onToggle: { (): void } }) => {
+interface Hamburger {
+    onToggle: () => void;
+}
+
+export const HamburgerMenu: React.SFC<Hamburger> = ({ onToggle }) => {
     return (
-        <a className="hamburger" onClick={props.onToggle}>
+        <a className="hamburger" onClick={onToggle}>
             <i className="fa fa-2x fa-bars" />
         </a>
     );
 };
 
-interface NavDropdown {
-    title: string;
-    id: string;
-    onOpen: { (id: string): void };
-    opening: string;
-}
+const NavDropdownItem: React.FC<RespMenuItem> = (props) =>
+    props.children ? <DropdownParent {...props} /> : <MenuItem {...props} />;
 
-const NavDropdown: React.ComponentClass<NavDropdown, { open: boolean }> = class extends React.Component<
-    NavDropdown,
-    { open: boolean }
-> {
-    constructor(props: NavDropdown) {
-        super(props);
-        this.state = { open: false };
-    }
+const DropdownParent: React.FC<RespMenuItem> = ({ children, item }) => {
+    const [childrenVisible, setChildrenVisible] = useState(false),
+        dropdownClass = !children ? "" : childrenVisible ? "up" : "down",
+        containerRef = useRef<any>();
 
-    componentWillReceiveProps = (nextProps: NavDropdown) => {
-        if (nextProps.opening && nextProps.opening != this.props.id) this.setState({ open: false });
-    };
-
-    toggleVisibility = (event: React.SyntheticEvent) => {
-        event.stopPropagation();
-        this.props.onOpen(this.props.id);
-        this.setState({ open: !this.state.open });
-    };
-    render = () => {
-        const dropdownClass = this.state.open ? "up" : "down";
-        return (
-            <li onMouseEnter={this.toggleVisibility} onMouseLeave={this.toggleVisibility}>
-                <a href="#" onClick={this.toggleVisibility} className="nav-item">
-                    {this.props.title}
-                    &nbsp;
-                    <i className={`fa fa-chevron-${dropdownClass}`} />
-                </a>
-                <ul className="dropdown-list">{this.state.open && this.props.children}</ul>
-            </li>
-        );
-    };
+    useClickAway(containerRef, () => setChildrenVisible(false));
+    return (
+        <li ref={containerRef} onClick={() => setChildrenVisible(!childrenVisible)}>
+            <a href="#" className="nav-item">
+                {item.text}
+                &nbsp;
+                <i className={`fa fa-chevron-${dropdownClass}`} />
+            </a>
+            <ul className="dropdown-list">{childrenVisible && children}</ul>
+        </li>
+    );
 };
-
-//todo: add <Link> option for items that correspond to routes
 const MenuItem: React.SFC<RespMenuItem> = ({ item, webAppUrl }) => (
     <li>
         {item.webAppUrl ? (

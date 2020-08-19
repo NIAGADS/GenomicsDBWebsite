@@ -33,18 +33,21 @@ const useDemoStyles = makeStyles((theme) =>
         AppBar: {
             padding: "0px 10px",
         },
+        Accordion: {
+            flexGrow: 1,
+        },
+        AccordionDetails: {
+            flexDirection: "column",
+        },
+        Container: {
+            marginTop: "5px",
+        },
         Drawer: {
             position: "relative",
             right: "auto",
             bottom: "auto",
             top: "auto",
             left: "auto",
-        },
-        Accordion: {
-            flexGrow: 1,
-        },
-        AccordionDetails: {
-            flexDirection: "column",
         },
         FormControl: {
             flexGrow: 1,
