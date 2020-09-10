@@ -300,7 +300,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 	 */
 	@Override
 	public void validateAnswerValue(AnswerValue answerValue)
-			throws IllegalAnswerValueException, WdkModelException, WdkUserException {
+			throws IllegalAnswerValueException, WdkModelException {
 		logger.info("entering validate answer value");
 
 		String countColumn = "num_genes";
