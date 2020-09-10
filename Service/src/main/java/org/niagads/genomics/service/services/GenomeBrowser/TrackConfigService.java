@@ -1,4 +1,4 @@
-package org.niagads.genomics.service.services.Track;
+package org.niagads.genomics.service.services.GenomeBrowser;
 
 import static org.gusdb.fgputil.FormatUtil.NL;
 
@@ -37,21 +37,23 @@ public class TrackConfigService extends AbstractWdkService {
         + "UNION ALL" + NL
         + "SELECT track, characteristic_type, characteristic" + NL
         + "FROM NIAGADS.ProtocolAppNodeCharacteristic" + NL
-        + "WHERE characteristic_type != 'covariate specification')" + NL
+        + "WHERE characteristic_type != 'covariate specification')," + NL
+        + "tracks AS (" + NL 
         + "SELECT jsonb_build_object(" + NL
         + "'track', ta.track," + NL
         + "'label', ta.name," + NL
-        + "'type', 'niagadsgwas'," + NL
+        + "'type', 'gwas_summary_statistics'," + NL
         + "'source', 'NIAGADS'," + NL
         + "'record', 'gwas_summary/' || ta.track," + NL
         + "'description', ta.description," + NL
         + "'name', ta.name || ' (' || ta.attribution || ')'," + NL
-        + "'phenotypes', json_agg(jsonb_build_object(p.characteristic_type, p.characteristic)))::text AS result " + NL
+        + "'phenotypes', json_agg(jsonb_build_object(p.characteristic_type, p.characteristic))) AS track_config " + NL
         + "FROM Phenotypes p," + NL
         + "NIAGADS.TrackAttributes ta" + NL
         + "WHERE p.track = ta.track" + NL
         + "AND ta.track LIKE 'NG%'" + NL
-        + "GROUP BY ta.track, ta.name, ta.description, ta.attribution";
+        + "GROUP BY ta.track, ta.name, ta.description, ta.attribution)" + NL
+        + "SELECT jsonb_agg(track_config)::text AS result FROM tracks";
 
 
     @GET    
@@ -75,14 +77,14 @@ public class TrackConfigService extends AbstractWdkService {
         return Response.ok(response).build();
     }
     
-    private String lookup(String accession) {   
+    private String lookup(String trackType) {   
         
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
         SQLRunner runner = new SQLRunner(ds, GWAS_TRACK_SQL, "track-lookup-query");
-        runner.executeQuery(new Object[] {accession}, handler);
+        runner.executeQuery(handler);
         
         List <Map <String, Object>> results = handler.getResults();
         if (!results.isEmpty())
