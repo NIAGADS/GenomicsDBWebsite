@@ -6,7 +6,7 @@ import { StepAnalysisGoEnrichmentResults } from "./components/StepAnalysis/StepA
 import GenomeView from "./components/SummaryViews/GenomeView";
 
 export default [
-  /* {
+    /* {
      type: 'questionFilter',
      name: 'matched_transcript_filter_array',
      component: MatchedTranscriptsFilterPlugin
@@ -17,24 +17,24 @@ export default [
      component: MatchedTranscriptsFilterPlugin
    },*/
 
-  {
-    type: "questionForm",
-    component: DefaultQuestionForm
-  },
-  {
-    type: "summaryView",
-    name: "ideogram",
-    component: GenomeView
-  },
+    {
+        type: "questionForm",
+        component: DefaultQuestionForm,
+    },
+    {
+        type: "summaryView",
+        name: "ideogram",
+        component: GenomeView,
+    },
 
-  {
-    type: "stepAnalysisResult",
-    name: "pathway-enrichment",
-    component: StepAnalysisDefaultResult
-  },
-  {
-    type: "stepAnalysisResult",
-    name: "go-enrichment",
-    component: StepAnalysisGoEnrichmentResults
-  }
+    {
+        type: "stepAnalysisResult",
+        name: "pathway-enrichment",
+        component: StepAnalysisDefaultResult,
+    },
+    {
+        type: "stepAnalysisResult",
+        name: "go-enrichment",
+        component: StepAnalysisGoEnrichmentResults,
+    },
 ];

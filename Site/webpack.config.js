@@ -11,6 +11,9 @@ module.exports = configure({
       "/webapp/wdkCustomization/js/client/main.ts"
     )
   },
+  stats: {
+    children: false // hide mini css plugin verbiage
+  },
   devtool: 'inline-source-map',
   module: {
     rules: [

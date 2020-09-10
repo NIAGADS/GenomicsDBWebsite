@@ -19,7 +19,7 @@ export interface DatasetHighlightConfig {
 	id: string;
 	summary: string;
 	description: string;
-	imgUrl: string;
+	hasImg: boolean;
 	imgCaption: string;
 	imgCaptionLink: caption;
 	actions: highlightAction[]
@@ -30,7 +30,7 @@ const igapHighlights: DatasetHighlightConfig[] = [
 		id: 'NG00036',
 		summary: 'Summary statistics from the International Genomics of Alzheimer\'s Project (IGAP) 2013 meta-analysis of genome-wide association (GWAS) data in Alzheimer\'s disease',
 		description: 'IGAP 2013',
-		imgUrl: 'images/NG00036.png',
+		hasImg: true,
 		imgCaption: 'Top SNPs and associated loci (genes) as reported in Lambert et al. (2013) Extended meta-analysis of 74,046 individuals identifies 11 new susceptibility loci for Alzheimer\'s disease. Nat Gen 45(12):1452-1458 (after Table 1)',
 		imgCaptionLink: {
 			pmid: '24162737',
@@ -74,9 +74,9 @@ const igapHighlights: DatasetHighlightConfig[] = [
 const adspHighlights: DatasetHighlightConfig[] = [
 	{
 		id: 'NG00061',
-		summary: 'Variants and annotations from the Discovery Phase of the Alzheimer\'s Disease Sequencing Project (ADSP)',
+		summary: "Variants and annotations from the Discovery Phase of the Alzheimer's Disease Sequencing Project (ADSP)",
 		description: 'ADSP Variant Annotation',
-		imgUrl: 'images/NG00061.png',
+		hasImg: true,
 		imgCaption: 'Overview of variants annotated from the Discovery Phase of the ADSP. 578 individuals from 111 families were whole-genome sequenced (WES), and 10,913 unrelated cases and controls were whole-exome (WES) sequenced. From Butkiewicz et al. (2018) Functional annotation of genomic variants in studies of late-onset Alzheimer\'s disease. Bioinformatics 34(16):2724-2731 (after Table 1).',
 		imgCaptionLink: {
 			pmid: '29590295',
@@ -113,7 +113,7 @@ const adspHighlights: DatasetHighlightConfig[] = [
 		id: 'NG00065',
 		summary: 'Gene-level genetic evidence for AD based on analysis of exonic ADSP variants',
 		description: 'ADSP Discovery Phase Case/Control Whole-Exome Sequencing',
-		imgUrl: 'images/NG00065.png',
+		hasImg: true,
 		imgCaption: '',
 		imgCaptionLink: {
 			pmid: '',

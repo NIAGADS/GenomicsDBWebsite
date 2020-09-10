@@ -228,6 +228,16 @@
 			<!-- =============================================================== -->
 		
 
+			<attributeQueryRef ref="VariantAttributes.GWSDatasetsPlot">
+				<columnAttribute name="gws_datasets_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
+				<propertyList name="chartProperties">
+					<value>
+					{"type": "variant_gws_summary"}
+					</value>
+				</propertyList>
+				</columnAttribute>
+			</attributeQueryRef>
+
 			<attributeQueryRef ref="VariantAttributes.ColocatedVariants">
 				<columnAttribute name="num_colocated_variants" internal="true" inReportMaker="false" type="integer" />
 				<columnAttribute name="colocated_variants" internal="true" inReportMaker="false" type="json" />

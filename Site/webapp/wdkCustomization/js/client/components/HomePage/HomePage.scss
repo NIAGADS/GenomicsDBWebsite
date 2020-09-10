@@ -1,68 +1,53 @@
-@import 'HomePageCard/HomePageCard';
-@import 'DatasetHighlightRow/DatasetHighlightRow';
-@import 'DatasetHighlightSummary/DatasetHighlightSummary';
-
 .home-page {
-    .site-title {
-        font-family: Oswald;
-        font-size: 3em;
-        line-height: 1.2;
-        color: $gray;
+  .feature-highlight {
+    &.section-heading {
+      h3 {
+        color:$bluegrey;
+        font-weight: bold;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+      }
+      h2 {
+        color: $bluegrey;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        margin-top: -10px;
+      }
     }
-    .highlight-title{
-        color: $lime-green;
+  }
+
+  .search-panel {
+    &.container-fluid {
+      @include no-padding;
+      padding-top: 50px;
+      padding-bottom: 50px;
     }
-    .quick-search-multi-box {
-        box-shadow: 0 0 3px #ccc, 0 10px 15px #ebebeb inset;
+
+    .main-title {
+      color: $yellow;
+      font-weight: bold;
+      font-size: 3.25em;
+      margin-bottom: 0.25em;
+      padding-bottom: 0px;
     }
-    .quick-search-container-main {
-        .input-group {
-            border: 1px solid $accent-light;
-            border-radius: 5px;
-            input {
-                height: 60px;
-                line-height: normal;
-                font-size: 18px;
-                color: $accent-light;
-                background: $white;
-            }
-        }
+
+    .welcome-text {
+      color: $light;
+      font-size: 1.25em;
     }
-    .dataset-highlight-summary-container {
-        font-family: 'Open Sans';
-        background-color: $primary;
-        .dataset-highlight-inner-container {
-            margin: 0 auto;
-            max-width: 1080px;
-            color: $white;
-            display: flex; 
-        }
+
+    .search-examples {
+      color: $light;
+      a {
+        color: $yellow !important;
+      }
     }
-    .cards-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        .row {
-            max-width: 1080px;
-            .card-column {
-                display: flex; 
-            }
-            @include media-breakpoint-down(sm) {
-                >.card-column {
-                    margin-bottom: 10px;
-                }
-            }
-        }
+
+    .autocomplete-box {
+      @include no-padding;
     }
-    .highlights-container {
-        .highlights-inner-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: $white-smoke;
-        }
-        >.highlights-inner-container {
-            margin-bottom: 20px;
-        }
-    }
+  }
 }
+
+
+

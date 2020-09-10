@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HelpIcon, IconAlt, Link } from "wdk-client/Components";
 import { DispatchAction } from "wdk-client/Core/CommonTypes";
+import { useLocation } from "react-router-dom";
 import { makeClassNameHelper, safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { Seq } from "wdk-client/Utils/IterableUtils";
 import {
@@ -26,7 +27,7 @@ import {
 import "wdk-client/Views/Question/DefaultQuestionForm.scss";
 import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import StepValidationInfo from "wdk-client/Views/Question/StepValidationInfo";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 
 type TextboxChangeHandler = (
   event: React.ChangeEvent<HTMLInputElement>
@@ -242,11 +243,14 @@ const DatasetsUsed: React.FC<DatasetsUsed> = ({ recordType, targetName }) => {
 
   return (
     <div>
-      <h2 className="ebrc-DescriptionSearchDatasetsHeader">
-        Datasets used in this search
-      </h2>
+      {!isEmpty(datasetsUsedData) && (
+        <h2 className="ebrc-DescriptionSearchDatasetsHeader">
+          Datasets used in this search
+        </h2>
+      )}
       <ul>
-        {datasetsUsedData && Array.isArray(datasetsUsedData) && //right now it's coming back as empty object if not configured
+        {!isEmpty(datasetsUsedData) &&
+        Array.isArray(datasetsUsedData) && //right now it's coming back as empty object if not configured
           datasetsUsedData.map(({ dataset_id, description, name }) => (
             <li key={dataset_id}>
               <div>
@@ -458,7 +462,7 @@ export function SubmitButton(props: {
   return props.submitting ? (
     <div className={cx("SubmittingIndicator")}></div>
   ) : (
-    <button type="submit" className="btn">
+    <button type="submit" className="btn btn-dark">
       {getSubmitButtonText(props.submissionMetadata, props.submitButtonText)}
     </button>
   );

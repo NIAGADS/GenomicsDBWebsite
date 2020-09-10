@@ -30,8 +30,12 @@ public class VariantLookupService extends AbstractWdkService {
     private static final String FULL_VEP_PARAM = "full_vep";
 
     private static final String VARIANT_DETAILS_SQL = "WITH searchTerms AS (SELECT unnest(string_to_array(?, ',')) AS variant_id)," + NL
+	+ "refSnps AS (SELECT r.search_term, v.record_pk FROM NIAGADS.Variant v," + NL
+        + "(SELECT variant_id AS search_term, find_variant_by_refsnp(variant_id) AS variant_id FROM searchTerms) r" + NL
+	+ "WHERE r.variant_id = v.variant_id)," + NL
         + "marker AS (" +NL
-        + "SELECT variant_id AS search_term, find_variant_primary_key(variant_id) AS record_pk FROM searchTerms)," + NL
+        + "SELECT variant_id AS search_term, find_variant_primary_key(variant_id) AS record_pk FROM searchTerms" + NL
+        + "UNION SELECT * FROM refSnps)," + NL
         + "unmapped AS (select jsonb_agg(marker) AS result from marker where record_pk IS NULL OR record_pk LIKE 'rs%')," + NL
         + "Details AS (" + NL
         + "SELECT marker.search_term, v.record_pk AS variant, v.source_id AS ref_snp_id, v.metaseq_id," + NL 
@@ -86,6 +90,9 @@ public class VariantLookupService extends AbstractWdkService {
             runner.executeQuery(new Object[] {variant}, handler);
            
             List <Map <String, Object>> results = handler.getResults();
+	    if (results.isEmpty()) {
+		return null;
+	    }
             return (String) results.get(0).get("result");
         }
 }

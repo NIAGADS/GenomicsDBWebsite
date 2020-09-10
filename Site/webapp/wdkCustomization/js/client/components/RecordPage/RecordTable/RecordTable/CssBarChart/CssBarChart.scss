@@ -7,12 +7,12 @@
         max-height: 1.4em;
         flex-grow: 1;
         .filled {
-            background-color: $yellow;
-            border: 1px $accent-lighter solid;
+            background-color: $cb-palette-purple;
+            //border: 1px $accent-lighter solid;
         }
         .empty {
             flex-grow: 1;
-            background-color: $accent-lighter;
+            background-color: $cb-palette-blue;
         }
     }
     .pct-text {

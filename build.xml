@@ -11,7 +11,7 @@
   <!-- oooooooooooooooooooooooooo  Installation  oooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
 
-  <target name="GenomicsDBWebsite-Installation" depends="EbrcModelCommon/Model-Installation,
+  <target name="GenomicsDBWebsite-Installation" depends="EbrcModelCommon-Installation,
                                                          EbrcWebSvcCommon-Installation,
 				                                                 GenomicsDBWebsite-MavenInstallation,
 						                                             GenomicsDBWebsite/Model-Installation,
@@ -197,4 +197,3 @@
   </target>
 
 </project>
-

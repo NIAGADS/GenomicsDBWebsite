@@ -1,25 +1,27 @@
 .autocomplete-box {
   display: flex;
   flex-direction: column;
-  margin: 10px;
   padding: 5px;
-  top: 19.5px;
+
+
   .search-box-with-dropdown {
+
     .results-list {
       position: absolute;
       padding: 10px;
       display: flex;
       flex-direction: column;
-      background-color: $lavender;
-      border-radius: 5px 5px;
+      background-color: white;
+      //border-radius: 5px 5px;
       z-index: 999999;
-      a {
-        &.wdk-ReactRouterLink {
-          color: white;
-          &:hover {
-            color: $dove-grey;
-          }
-        }
+
+      &:active,
+      :focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #d96aba;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(155, 40, 123, 0.25);
       }
     }
   }

@@ -1,5 +1,6 @@
 import React from "react";
-import { Tooltip, Link } from "wdk-client/Components";
+import { Link, Tooltip } from "wdk-client/Components";
+import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import { isString, isPlainObject, isNull } from "lodash";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 
@@ -57,7 +58,6 @@ export const resolveObjectInput = (
         props = href ? Object.assign({}, href, { className }) : { className },
         element = React.createElement(obj.url ? "a" : "span", props, obj.text);
       return withTooltip(element, obj.tooltip);
-      break;
     case "link":
       //probably need to designate outlinks and routelinks formally, but for now using a regex
       const el = /^http/.test(obj.url) ? (
@@ -70,7 +70,6 @@ export const resolveObjectInput = (
         </Link>
       );
       return withTooltip(el, obj.tooltip);
-      break;
     case "text":
       className = obj.color ? obj.color : "";
       return withTooltip(
@@ -85,14 +84,12 @@ export const resolveObjectInput = (
         obj.tooltip,
         "wdk-tooltip"
       );
-      break;
     case "icon":
       className = obj.color ? `${obj.color} fa ${obj.icon}` : `fa ${obj.icon}`;
       return withTooltip(
         <span className={className}>{obj.text}</span>,
         obj.tooltip
       );
-      break;
     case "dictionary":
       /*	
 				this comes with style property, but need to decide whether we want to return component here
@@ -100,17 +97,19 @@ export const resolveObjectInput = (
 				somethiing more like 'page_heading_out_links' so we know exactly what component to return
 			*/
       return <>obj</>;
-      break;
   }
   throw new Error(`no parser for object of type ${obj.type}!`);
 };
 
+//todo: move
 export const withTooltip = (
   element: React.ReactElement<any>,
   content: string,
-  classes?: string
+  classes?: string,
+  position?: TooltipPosition
 ) => {
-  const className = classes ? classes : ""; //removing wdk-tooltip class, caller will need to be explicit!
+  const className = classes ? classes : "", //removing wdk-tooltip class, caller will need to be explicit!
+    pos = position ? position : { my: "top left", at: "bottom left" };
   if (content) {
     return (
       <Tooltip
@@ -119,6 +118,7 @@ export const withTooltip = (
           .slice(2)}
         content={safeHtml(content)}
         showDelay={0}
+        position={pos}
       >
         <span className={className}>{element}</span>
       </Tooltip>

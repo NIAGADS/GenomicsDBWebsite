@@ -6,10 +6,10 @@
 //wdk resets and overrides
 ///
 .wdk-RecordContainer {
-  #_ideogramInnerWrap {
-    overflow-x: auto !important;
-  }
-  .wdk-RecordSidebar,
+    #_ideogramInnerWrap {
+        overflow-x: auto !important;
+    }
+    /* .wdk-RecordSidebar,
   .wdk-RecordMain {
     *,
     *::before,
@@ -21,18 +21,23 @@
       font-size: inherit;
     }
   }
-  .wdk-RecordSidebarToggle {
-    right: -45px;
-    font-size: 1.1rem;
-  }
+  */
+    .wdk-RecordSidebar {
+        top: 10px;
+        button.wdk-RecordSidebarToggle {
+            top: 2px;
+        }
+    }
+
+    /*
   .wdk-RecordSubsectionContent {
     .section-summary-text {
       margin-top: 50px;
     }
   }
 }
-.wdk-RecordSectionHeader {
-  // margin-bottom: 0px;
+.wdk-RecordNavigationSectionHeader {
+  display: none;
 }
 
 .wdk-CollapsibleSection,
@@ -40,5 +45,5 @@
   .wdk-CollapsibleSectionHeader,
   .wdk-RecordTableContainerHeader {
     align-items: baseline;
-  }
+  } */
 }

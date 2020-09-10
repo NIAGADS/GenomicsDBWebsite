@@ -53,12 +53,10 @@
       <id>eupathdb</id>
       <name>EuPathDB Project Dependencies</name>
       <layout>default</layout>
-      <url>https://raw.githubusercontent.com/EuPathDB/FgpUtil/master/Dependencies/</url>
+      <url>https://raw.githubusercontent.com/NIAGADS/FgpUtil/master/Dependencies/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
     </repository>
   </repositories>
-
-
 </project>

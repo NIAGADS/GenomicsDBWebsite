@@ -1,7 +1,11 @@
 .p-val-filter-chart {
     fill: none;
     stroke: #000;
+    text {
+        fill: $black;
+        stroke-width: 0;
+    }
     .area {
-        fill: rgba($accent-lightest, .25);
+        fill: rgba($light-purple, 0.25);
     }
 }

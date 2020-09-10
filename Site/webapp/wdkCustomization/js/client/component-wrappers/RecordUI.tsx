@@ -4,7 +4,7 @@ import { isVariantRecord, BaseRecord } from '../components/RecordPage/types';
 import { isTrue } from '../util/util';
 
 //here we're wrapping the RecordUI component -- in case this is an unannotated variant record, we want to show only
-//our header message and nothing
+//our header message and nothing else
 //we're wrapping here b/c header and main components are called by wrapper ui and so:
 //	1. there will be bugs if we suppress the main section entirely
 //  2. the categories tree will render anyway

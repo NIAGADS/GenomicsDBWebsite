@@ -53,7 +53,7 @@
       <column name="location_start" columnType="number"/>
       <column name="location_end" columnType="number"/>
       <column name="span" columnType="string"/>
-      <column name="location" columnType="string"/>
+      <column name="cytogenetic_location" columnType="string"/>
       <column name="gene_name" columnType="string"/>
       <column name="hgnc_id" columnType="string"/>
       <column name="omim_id" columnType="string"/>
@@ -82,7 +82,7 @@
             build_link_attribute(replace(chromosome,'chr','') || ':' || (location_start - 1000)::text || '..' || (location_end + 1000)::text,
             '/genomics/jbrowse.jsp?loc=', NULL, NULL) AS full_jbrowse_link,
             '/genomics/rjbrowse/?loc=' || replace(chromosome,'chr','') || ':' || (location_start - 1000)::text || '..' || (location_end + 1000)::text || '&' || 'tracks=@GENE_DEFAULT_TRACKS@' AS jbrowse_source_url,
-            annotation->>'location' AS location,
+            annotation->>'location' AS cytogenetic_location,
             annotation->>'name' AS gene_name,
             annotation->>'hgnc_id' AS hgnc_id,
             annotation->>'omim_id' AS omim_id,
@@ -199,102 +199,226 @@
 
     <sqlQuery name="GWSVariantsPlot">
       <column name="source_id" columnType="string"/>
-      <column name="gws_variants_summary_highchart" columnType="string"/>
+      <column name="gws_variants_summary_plot" columnType="string"/>
       <sql>
         <![CDATA[
-        WITH 
-						
-				topResults AS (
-				SELECT protocol_app_node_id, variant_id, bin_index, split_part(metaseq_id, ':', 2)::numeric AS position
-				FROM Results.VariantGWAS r
-				WHERE r.neg_log10_pvalue >= -1 * log(5e-8)),
-				
-				ids AS (##WDK_ID_SQL##),
-					
-				phenotype AS (
-				SELECT DISTINCT t.protocol_app_node_id, 
-				c.characteristic_type AS category,
-				CASE WHEN c.characteristic_type = 'diagnosis' THEN 
-				    CASE WHEN c.characteristic ILIKE '%Alzheimer%' THEN 'AD'
-				    WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
-				    WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
-				    WHEN c.characteristic ILIKE 'Lewy%' THEN 'LBD'
-				    WHEN c.characteristic = 'dementia' THEN 'DEM'
-				    END
-				WHEN c.characteristic_type = 'neuropathology' THEN -- neuropathology
-				    CASE WHEN c.characteristic ILIKE '%Braak%' THEN 'Braak'
-				    WHEN c.characteristic ILIKE '%CERAD%' THEN 'CERAD'
-				    WHEN c.characteristic ILIKE '%angiopathy%' THEN 'CAA'
-				    WHEN c.characteristic ILIKE '%hippo%' THEN 'Hs-Aging'
-				    WHEN c.characteristic ILIKE 'Lewy%' THEN 'LB'
-				    WHEN c.characteristic ILIKE '%plaques%' THEN 'NP'
-				    WHEN c.characteristic ILIKE '%tangles%' THEN 'NT'
-				    WHEN c.characteristic ILIKE '%vascular%' THEN 'VBI'
-				    END
-				ELSE
-				    CASE WHEN c.characteristic ILIKE '%Beta%' THEN 'AB42'
-				    ELSE c.characteristic 
-				    END
-				END AS phenotype
+    WITH
+    topResults AS
+    (
+        SELECT
+            protocol_app_node_id,
+            variant_id,
+            bin_index,
+            split_part(metaseq_id, ':', 2)::NUMERIC AS position
+        FROM
+            Results.VariantGWAS r
+        WHERE
+            r.neg_log10_pvalue >= -1 * log(5e-8)
+    )
+    ,
+    ids AS
+    (
+      ##WDK_ID_SQL##
+    )
+    ,
+    phenotype AS
+    (
+        SELECT DISTINCT
+            t.protocol_app_node_id,
+            c.characteristic_type AS category,
+            CASE
+                WHEN c.characteristic_type = 'diagnosis'
+                THEN
+                    CASE
+                        WHEN c.characteristic ILIKE '%Alzheimer%'
+                        THEN 'AD'
+                        WHEN c.characteristic ILIKE 'Progressive%'
+                        THEN 'PSP'
+                        WHEN c.characteristic ILIKE 'Frontotemporal%'
+                        THEN 'FTD'
+                        WHEN c.characteristic ILIKE 'Lewy%'
+                        THEN 'LBD'
+                        WHEN c.characteristic = 'dementia'
+                        THEN 'DEM'
+                    END
+                WHEN c.characteristic_type = 'neuropathology'
+                THEN -- neuropathology
+                    CASE
+                        WHEN c.characteristic ILIKE '%Braak%'
+                        THEN 'Braak'
+                        WHEN c.characteristic ILIKE '%CERAD%'
+                        THEN 'CERAD'
+                        WHEN c.characteristic ILIKE '%angiopathy%'
+                        THEN 'CAA'
+                        WHEN c.characteristic ILIKE '%hippo%'
+                        THEN 'Hs-Aging'
+                        WHEN c.characteristic ILIKE 'Lewy%'
+                        THEN 'LB'
+                        WHEN c.characteristic ILIKE '%plaques%'
+                        THEN 'NP'
+                        WHEN c.characteristic ILIKE '%tangles%'
+                        THEN 'NT'
+                        WHEN c.characteristic ILIKE '%vascular%'
+                        THEN 'VBI'
+                    END
+                ELSE
+                    CASE
+                        WHEN c.characteristic ILIKE '%Beta%'
+                        THEN 'AB42'
+                        ELSE c.characteristic
+                    END
+            END AS phenotype
+        FROM
+            NIAGADS.TrackAttributes t,
+            NIAGADS.ProtocolAppNodeCharacteristic c
+        WHERE
+            t.subcategory = 'GWAS summary statistics'
+        AND t.dataset_accession NOT LIKE '%CATALOG%'
+        AND c.protocol_app_node_id = t.protocol_app_node_id
+        AND c.characteristic_type IN ('diagnosis',
+                                      'neuropathology',
+                                      'biomarker')
+        AND c.characteristic != 'autopsy-based diagnosis'
+    )
+    ,
+    GeneResults AS
+    (
+        SELECT
+            ga.source_id,
+            ga.gene_symbol,
+            r.protocol_app_node_id,
+            r.variant_id,
+            r.position,
+            CASE
+                WHEN r.position < ga.location_start
+                THEN 'upstream'
+                WHEN r.position > ga.location_end
+                THEN 'downstream'
+                ELSE 'in gene'
+            END AS relative_position
+        FROM
+            topResults r,
+            CBIL.GeneAttributes ga,
+            ids
+        WHERE
+            ids.source_id = ga.source_id
+        AND (
+                SELECT
+                    find_bin_index(ga.chromosome, ga.location_start - 100000, ga.location_end + 100000)) @> r.bin_index
+        AND numrange(ga.location_start - 100000, ga.location_end + 100000, '[]') @> r.position
+    )
+    ,
+    geneResultSummary AS
+    (
+        SELECT
+            r.source_id,
+            r.gene_symbol,
+            COUNT(position) AS n_variants,
+            p.phenotype,
+            r.relative_position,
+            category
+        FROM
+            geneResults r,
+            phenotype p
+        WHERE
+            r.protocol_app_node_id = p.protocol_app_node_id
+        GROUP BY
+            source_id,
+            r.gene_symbol,
+            phenotype,
+            relative_position,
+            category
+    )
+    ,
+    diagnosis AS
+    (
+        SELECT
+            r.source_id,
+            jsonb_build_object(
+                'title', 'Diagnosis',
+                'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
+                'series', jsonb_build_array(
+                        jsonb_build_object(
+                                'name', 'downstream',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
+                        ),
+                        jsonb_build_object(
+                                'name', 'in gene',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
+                        ),
+                        jsonb_build_object(
+                                'name', 'upstream',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
+                        ) 
+           )) AS chart_data
+        FROM
+            GeneResultSummary r
+        WHERE
+            category = 'diagnosis'
+        GROUP BY
+            source_id
+    )
+    ,
+    neuropathology AS
+    (
+        SELECT
+            r.source_id,
+            jsonb_build_object(
+                'title', 'Neuropathology',
+                'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
+                'series', jsonb_build_array(
+                        jsonb_build_object(
+                                'name', 'downstream',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
+                        ),
+                        jsonb_build_object(
+                                'name', 'in gene',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
+                        ),
+                        jsonb_build_object(
+                                'name', 'upstream',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
+                        ) 
+           )) AS chart_data
+        FROM
+            GeneResultSummary r
+        WHERE
+            category = 'neuropathology'
+        GROUP BY
+            source_id
+    ), 
+    biomarker AS
+    (
+        SELECT
+            r.source_id,
+            jsonb_build_object(
+                'title', 'Biomarker',
+                'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype),
+                'series', jsonb_build_array(
+                        jsonb_build_object(
+                                'name', 'downstream',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')
+                        ),
+                        jsonb_build_object(
+                                'name', 'in gene',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')
+                        ),
+                        jsonb_build_object(
+                                'name', 'upstream',
+                                'data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream')
+                        ) 
+           )) AS chart_data
+        FROM
+            GeneResultSummary r
+        WHERE
+            category = 'biomarker'
+        GROUP BY
+            source_id
+    )	                       
 
-				FROM NIAGADS.TrackAttributes t,
-                                NIAGADS.ProtocolAppNodeCharacteristic c
-				WHERE t.subcategory = 'GWAS summary statistics'
-				AND t.dataset_accession NOT LIKE '%CATALOG%'
-				AND c.protocol_app_node_id = t.protocol_app_node_id
-				AND c.characteristic_type IN ('diagnosis', 'neuropathology', 'biomarker')
-				AND c.characteristic != 'autopsy-based diagnosis'
-				),
-
-				geneResults AS (
-				SELECT ga.source_id,  ga.gene_symbol, r.protocol_app_node_id, 
-				r.variant_id, r.position,
-				
-				CASE WHEN r.position < ga.location_start THEN 'upstream'
-				WHEN r.position > ga.location_end THEN 'downstream'
-				ELSE 'in gene' END AS relative_position
-				
-				FROM topResults r,
-				CBIL.GeneAttributes ga,
-				ids
-				WHERE ids.source_id = ga.source_id
-				AND (SELECT find_bin_index(ga.chromosome, ga.location_start - 100000, ga.location_end + 100000)) @> r.bin_index
-				AND numrange(ga.location_start - 100000, ga.location_end + 100000, '[]') @> r.position),
-
-        geneResultSummary AS (
-				SELECT r.source_id, r.gene_symbol, count(position) AS n_variants, p.phenotype,  r.relative_position
-				FROM geneResults r,
-				phenotype p
-				WHERE r.protocol_app_node_id = p.protocol_app_node_id
-				GROUP by source_id, r.gene_symbol, phenotype, relative_position)
-			
-				SELECT r.source_id, 
-        jsonb_build_object('colors', jsonb_build_array('#EE442F', '#601A4A', '#63ACBE'),
-				'chart', 
-				    CASE WHEN COUNT(DISTINCT r.phenotype) <= 3 THEN jsonb_build_object('type', 'column', 'inverted', true) 
-				    ELSE jsonb_build_object('type', 'column', 'inverted', true, 'polar', true) END,
-				'title', jsonb_build_object('text', 'N Variants with GWS within +/- 100kb of ' || gene_symbol,
-                                    'style', jsonb_build_object('fontSize', '14px' )),
-				'tooltip', jsonb_build_object('outside', true, 'shared', true),
-				'credits', jsonb_build_object('enabled', false),
-				'legend', jsonb_build_object('reversed', true),
-				'pane', CASE WHEN COUNT(DISTINCT r.phenotype) > 3 THEN jsonb_build_object('endAngle', 270, 'size', '100' || '%') ELSE '{}'::jsonb END,
-				'xAxis', jsonb_build_object('tickInterval', 1, 
-				                            'labels', jsonb_build_object('align', 'right', 'useHTML', true, 'allowOverlap', true, 'step', 1, 'y', 4,
-				                                                         'style', jsonb_build_object('fontSize', '12px')),
-				                            'lineWidth', 0,
-				                            'categories', jsonb_agg(DISTINCT phenotype ORDER BY phenotype)),
-				'yAxis', jsonb_build_object('lineWidth', 0, 'showLastLabel', true, 'title', jsonb_build_object('text', 'N Variants', 'align', 'high') 
-				    || CASE WHEN COUNT(DISTINCT r.phenotype) > 3 THEN jsonb_build_object('rotation', 30) ELSE '{}'::jsonb END),
-				'plotOptions', jsonb_build_object('column', jsonb_build_object('stacking', 'normal', 'borderWidth', 0, 'pointPadding', 0, 'groupPadding', 0.15) 
-				    || CASE WHEN COUNT(DISTINCT r.phenotype) <= 3 THEN  jsonb_build_object('pointWidth', 40) ELSE  '{}'::jsonb END),
-				'series', jsonb_build_array(jsonb_build_object('name', 'downstream','data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'downstream')),
-				                            jsonb_build_object('name', 'in gene','data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'in gene')),
-				                            jsonb_build_object('name', 'upstream','data', jsonb_agg(n_variants ORDER BY phenotype) FILTER (WHERE relative_position = 'upstream'))
-				                            )	
-				)::text AS gws_variants_summary_highchart
-				FROM geneResultSummary r 
-				GROUP BY source_id, gene_symbol LIMIT 1        
+    SELECT ids.source_id,
+    jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), (SELECT chart_data FROM neuropathology), (SELECT chart_data FROM biomarker))::text AS gws_variants_summary_plot
+    FROM ids
         ]]>
       </sql>
     </sqlQuery>

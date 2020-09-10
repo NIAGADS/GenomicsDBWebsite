@@ -1,151 +1,111 @@
-import React from 'react';
-import { isEmpty } from 'lodash';
-import { MenuItem } from '../../../../data/mainMenuItems';
-import { Link } from 'wdk-client/Components';
-
+import React, { useEffect, useRef, useState } from "react";
+import { MenuItem } from "../../../../data/mainMenuItems";
+import { Link } from "wdk-client/Components";
+import { useClickAway } from "./../../../../hooks";
 
 interface BaseMenu {
-	webAppUrl: string;
-	projectId: string;
-	showLoginWarning: boolean;
-	isGuest: boolean;
+    webAppUrl: string;
+    projectId: string;
+    showLoginWarning: boolean;
+    isGuest: boolean;
 }
 
 interface RespMenuItem extends BaseMenu {
-	item: MenuItem,
+    item: MenuItem;
 }
 
 interface Menu extends BaseMenu {
-	items: MenuItem[];
-	responsiveMenuToggled: boolean;
+    items: MenuItem[];
+    responsiveMenuToggled: boolean;
 }
 
-interface MenuState {
-	responsiveMenuToggled: boolean;
-	width?: number;
-}
+const Menu: React.FC<Menu> = ({ webAppUrl, projectId, showLoginWarning, isGuest, items, responsiveMenuToggled }) => {
+    const widthRef = useRef<number>();
 
-const Menu: React.ComponentClass<Menu, MenuState> = class extends React.Component<Menu, MenuState> {
-	private dropdownOpen: string;
+    useEffect(() => {
+        widthRef.current = window.innerWidth;
+    }, []);
 
-	constructor(props: Menu) {
-		super(props);
-		this.state = { responsiveMenuToggled: false }
-	}
-
-	componentWillMount = () => this.getWidth();
-
-	componentDidMount = () => window.addEventListener("resize", this.updateWidth);
-
-	componentWillUnmount = () => window.removeEventListener("resize", this.updateWidth);
-
-	sendClosedSignal = (id: string) => {
-		this.dropdownOpen = id;
-	};
-
-	getWidth = () => this.setState({ width: window.innerWidth });
-
-	updateWidth = (e: any) => this.setState({ width: e.currentTarget.innerWidth });
-
-	render = () => (
-		<div className="site-menu">
-			<nav>
-				{(this.state.width > 767 || this.props.responsiveMenuToggled)
-					&& <ul>
-						{this.props.items.map((item: any, index: any) => {
-							return !isEmpty(item.children) ?
-								<NavDropdown
-									title={item.text}
-									id={item.id}
-									key={index}
-									onOpen={this.sendClosedSignal}
-									opening={this.dropdownOpen}>
-									{item.children.map((child: MenuItem) =>
-										<MenuItem
-											key={child.id}
-											item={child}
-											webAppUrl={this.props.webAppUrl + child.webAppUrl}
-											isGuest={this.props.isGuest}
-											showLoginWarning={this.props.showLoginWarning}
-											projectId={this.props.projectId}
-										/>
-									)}
-								</NavDropdown>
-								:
-								<MenuItem
-									key={item.id}
-									item={item}
-									webAppUrl={this.props.webAppUrl + item.webAppUrl}
-									isGuest={this.props.isGuest}
-									showLoginWarning={this.props.showLoginWarning}
-									projectId={this.props.projectId}
-								/>
-						})}
-					</ul>
-				}
-			</nav>
-
-		</div>
-	);
-}
+    return (
+        <div className="site-menu">
+            <nav>
+                {(widthRef.current > 767 || responsiveMenuToggled) && (
+                    <ul>
+                        {items.map((item: MenuItem, index: number) => {
+                            return (
+                                <NavDropdownItem
+                                    item={item}
+                                    webAppUrl={webAppUrl}
+                                    isGuest={isGuest}
+                                    showLoginWarning={showLoginWarning}
+                                    projectId={projectId}
+                                    key={index}
+                                >
+                                    {item.children &&
+                                        item.children.map((child: MenuItem) => (
+                                            <MenuItem
+                                                key={child.id}
+                                                item={child}
+                                                webAppUrl={webAppUrl + child.webAppUrl}
+                                                isGuest={isGuest}
+                                                showLoginWarning={showLoginWarning}
+                                                projectId={projectId}
+                                            />
+                                        ))}
+                                </NavDropdownItem>
+                            );
+                        })}
+                    </ul>
+                )}
+            </nav>
+        </div>
+    );
+};
 
 export default Menu;
 
-const HamburgerMenu: React.SFC<{ onToggle: { (): void } }> = (props: { onToggle: { (): void } }) => {
-	return <a className="hamburger" onClick={props.onToggle}>
-		<i className="fa fa-2x fa-bars" />
-	</a>
+interface Hamburger {
+    onToggle: () => void;
 }
 
-interface NavDropdown {
-	title: string;
-	id: string;
-	onOpen: { (id: string): void };
-	opening: string;
-}
+export const HamburgerMenu: React.SFC<Hamburger> = ({ onToggle }) => {
+    return (
+        <a className="hamburger" onClick={onToggle}>
+            <i className="fa fa-2x fa-bars" />
+        </a>
+    );
+};
 
-const NavDropdown: React.ComponentClass<NavDropdown, { open: boolean }> = class extends React.Component<NavDropdown, { open: boolean }> {
-	constructor(props: NavDropdown) {
-		super(props);
-		this.state = { open: false }
-	}
+const NavDropdownItem: React.FC<RespMenuItem> = (props) =>
+    props.children ? <DropdownParent {...props} /> : <MenuItem {...props} />;
 
-	componentWillReceiveProps = (nextProps: NavDropdown) => {
-		if (nextProps.opening && nextProps.opening != this.props.id) this.setState({ open: false });
-	}
+const DropdownParent: React.FC<RespMenuItem> = ({ children, item }) => {
+    const [childrenVisible, setChildrenVisible] = useState(false),
+        dropdownClass = !children ? "" : childrenVisible ? "up" : "down",
+        containerRef = useRef<any>();
 
-	toggleVisibility = (event: React.SyntheticEvent) => {
-		event.stopPropagation();
-		this.props.onOpen(this.props.id);
-		this.setState({ open: !this.state.open })
-	}
-	render = () => {
-		const dropdownClass = this.state.open ? 'up' : 'down';
-		return <li onMouseEnter={this.toggleVisibility}
-			onMouseLeave={this.toggleVisibility}>
-			<a href="#"
-				onClick={this.toggleVisibility}
-				className="nav-item">{this.props.title}
-				&nbsp;
-				<i className={`fa fa-chevron-${dropdownClass}`} />
-			</a>
-			<ul className="dropdown-list">
-				{this.state.open && this.props.children}
-			</ul>
-		</li>
-	}
-}
-
-//todo: add <Link> option for items that correspond to routes
-const MenuItem: React.SFC<RespMenuItem> = props => {
-
-	let { item, webAppUrl, showLoginWarning, isGuest, projectId } = props;
-
-	return <li>
-		{item.webAppUrl ?
-			<a title={item.tooltip} href={props.webAppUrl}>{item.text}&nbsp;{item.id == 'home' && <i className="fa fa-home" />}</a> :
-			item.route ? <Link to={item.route}>{item.text}&nbsp;{item.id == 'home' && <i className="fa fa-home" />}</Link> :
-				null
-		}
-	</li>
-}
+    useClickAway(containerRef, () => setChildrenVisible(false));
+    return (
+        <li ref={containerRef} onClick={() => setChildrenVisible(!childrenVisible)}>
+            <a href="#" className="nav-item">
+                {item.text}
+                &nbsp;
+                <i className={`fa fa-chevron-${dropdownClass}`} />
+            </a>
+            <ul className="dropdown-list">{childrenVisible && children}</ul>
+        </li>
+    );
+};
+const MenuItem: React.SFC<RespMenuItem> = ({ item, webAppUrl }) => (
+    <li>
+        {item.webAppUrl ? (
+            <a title={item.tooltip} href={webAppUrl}>
+                {item.text}&nbsp;{item.id == "home" && <i className="fa fa-home" />}
+            </a>
+        ) : item.route ? (
+            <Link to={item.route}>
+                {item.text}&nbsp;{item.id == "home" && <i className="fa fa-home" />}
+            </Link>
+        ) : null}
+    </li>
+);

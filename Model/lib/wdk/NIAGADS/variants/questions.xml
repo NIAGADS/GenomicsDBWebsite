@@ -45,7 +45,7 @@
     <!-- Location -->
     <!-- =============================================================== -->
 
-    <!--   <question name="vgene" displayName="Gene" shortDisplayName="Gene"  queryRef="VariantIds.Gene" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
+  <!--  <question name="by_feature" displayName="Variants by Gene or Feature" shortDisplayName="Feature"  queryRef="VariantIds.ByFeature" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
      <description>
         <![CDATA[
           <p>Retrieve a list of variants located within the genomic span of a gene.</p>

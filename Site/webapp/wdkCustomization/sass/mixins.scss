@@ -1,0 +1,10 @@
+@mixin no-padding {
+    padding: 0px;
+}
+
+
+@mixin disabled {
+    color: grey !important;
+    cursor: default;
+    pointer-events: none;
+  }

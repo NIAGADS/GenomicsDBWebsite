@@ -1,5 +1,6 @@
 .niagads-site-footer {
   flex-shrink: 0;
+
   .niagads-section {
     padding: 2em 1em;
     font-size: 0.875em;
@@ -8,19 +9,24 @@
     display: flex;
     flex-direction: column;
     align-content: center;
+
     .policies-menu {
       ul {
         display: flex;
         flex-direction: row;
         justify-content: center;
+
         li {
           padding: 0px 5px;
-          + li {
+
+          +li {
             border-left: 0.5px solid gray;
           }
+
           a {
             color: #ffc665;
             text-decoration: none;
+
             &:hover {
               text-decoration: underline;
             }
@@ -28,23 +34,27 @@
         }
       }
     }
+
     .niagads-logo {
       display: inline-flex;
       flex-direction: column;
       align-items: center;
+
       figcaption {
         color: white;
         text-decoration: none;
       }
     }
+
     .copyright {
       display: flex;
       justify-content: center;
       font-size: 85%;
       color: #aaaaaa;
-      margin-top: 1em;
+      //margin-top: 1em;
     }
   }
+
   .wdk-section {
     display: flex;
     justify-content: space-between;

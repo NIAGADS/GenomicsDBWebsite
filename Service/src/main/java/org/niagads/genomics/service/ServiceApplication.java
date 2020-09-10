@@ -16,6 +16,10 @@ import org.niagads.genomics.service.services.Variant.VariantLDWindowService;
 import org.niagads.genomics.service.services.Variant.VariantLookupService;
 import org.niagads.genomics.service.services.Variant.VariantLDService;
 
+
+import org.niagads.genomics.service.services.Manhattan.InteractivePlotService;
+import org.niagads.genomics.service.services.GenomeBrowser.GWASSummaryStatisticsTrackService;
+
 import org.niagads.genomics.service.services.Track.TrackConfigService;
 
 // import static org.gusdb.fgputil.functional.Functions.filter;
@@ -42,6 +46,12 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(VariantLookupService.class)
     .add(VariantLDService.class)
 
+
+    // manhattan plot
+    .add(InteractivePlotService.class)
+
+    // genome browser tracks
+    .add(GWASSummaryStatisticsTrackService.class)
     .add(TrackConfigService.class)
     
     .toSet();
