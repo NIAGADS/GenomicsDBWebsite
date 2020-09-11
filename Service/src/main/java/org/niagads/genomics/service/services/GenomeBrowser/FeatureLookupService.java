@@ -48,7 +48,7 @@ public class FeatureLookupService extends AbstractWdkService {
         String response = "{}";
         try {
             response = lookup(id);
-            if (response == null) { response = "{}";}
+            if (response == null) { response = "[{}]";}
             LOG.debug("query result: " + response);
         }
         
