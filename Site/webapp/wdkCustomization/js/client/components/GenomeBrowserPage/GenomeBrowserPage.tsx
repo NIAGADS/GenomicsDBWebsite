@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
@@ -63,7 +64,11 @@ const makeReloadKey = () => Math.random().toString(36).slice(2);
 
 const MemoBroswer = React.memo(IGVBrowser);
 
-export default () => {
+interface GenomeBrowserPage {
+    webAppUrl: string;
+}
+
+const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ webAppUrl }) => {
     const classes = useDemoStyles(),
         [Browser, setBrowser] = useState<any>(),
         [loadingTrack, setLoadingTrack] = useState<string>(),
@@ -233,7 +238,11 @@ export default () => {
                             </Grid>
                         </Box>
                     </Drawer>
-                    <MemoBroswer onBrowserLoad={buildBrowser} defaultSpan={defaultSpan} />
+                    <MemoBroswer
+                        onBrowserLoad={buildBrowser}
+                        defaultSpan={defaultSpan}
+                        searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
+                    />
                 </Grid>
                 <TrackBrowser
                     activeTracks={getLoadedTracks(Browser)}
@@ -250,6 +259,8 @@ export default () => {
         </Container>
     );
 };
+
+export default connect((state: any) => ({ webAppUrl: state.globalData.siteConfig.webAppUrl }))(GenomeBrowserPage);
 
 export interface TrackConfig {
     name: string;

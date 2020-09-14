@@ -6,6 +6,7 @@ interface IgvBrowser {
     defaultSpan: string;
     defaultTracks?: TrackConfig[];
     onBrowserLoad?: (Browser: any) => void;
+    searchUrl: string;
 }
 
 export interface TrackConfig {
@@ -18,7 +19,7 @@ export interface TrackConfig {
     visibilityWindow: number;
 }
 
-const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad }) => {
+const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad, searchUrl }) => {
     useLayoutEffect(() => {
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
@@ -26,6 +27,9 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                 genome: "hg19",
                 locus: defaultSpan,
                 tracks: defaultTracks || [],
+                search: {
+                    url: `${searchUrl}$FEATURE$`,
+                },
             };
 
         igv.createBrowser(igvDiv, options).then((browser: any) => {

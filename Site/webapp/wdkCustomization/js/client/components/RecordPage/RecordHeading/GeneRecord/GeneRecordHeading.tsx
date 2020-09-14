@@ -24,7 +24,12 @@ interface RecordHeading {
 
 type GeneRecordSummary = StoreProps & gr.GeneRecord;
 
-const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, recordClass, headerActions }) => {
+const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({
+    record,
+    recordClass,
+    headerActions,
+    webAppUrl,
+}) => {
     return (
         <>
             <div className="col-sm-3">
@@ -96,6 +101,7 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
                     defaultSpan={`${record.attributes.chromosome}:${+record.attributes.location_start - 50000}-${
                         +record.attributes.location_end + 50000
                     }`}
+                    searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
                 />
             </div>
         </>
