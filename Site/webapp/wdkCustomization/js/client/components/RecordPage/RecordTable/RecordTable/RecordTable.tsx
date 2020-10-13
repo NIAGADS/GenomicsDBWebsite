@@ -227,10 +227,7 @@ const hiddenFilterCol = {
     filterAll: true,
 };
 
-const pValFilter = (filter: Filter, row: any) => {
-    const exponent = Math.abs((toString(row.pvalue).split("e")[1] as unknown) as number);
-    return exponent >= filter.value;
-};
+const pValFilter = (filter: Filter, row: any) => +row.pvalue <= +filter.value;
 
 const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFunction => {
     switch (attribute.type) {

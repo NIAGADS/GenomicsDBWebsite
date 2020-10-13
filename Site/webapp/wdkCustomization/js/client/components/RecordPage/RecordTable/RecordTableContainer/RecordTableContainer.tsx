@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as rt from "../../types";
 //@ts-ignore
 import { CSVLink } from "react-csv";
-import { cloneDeep, findIndex, forIn, get, isEmpty, kebabCase, pickBy } from "lodash";
+import { cloneDeep, findIndex, forIn, get, isEmpty, kebabCase, pickBy, round } from "lodash";
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
@@ -16,7 +16,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
         [pValueFilterVisible, setPValueFilterVisible] = useState(false),
         [csvData, setCsvData] = useState<any[]>([]);
 
-    const defaultPVal = 8;
+    const defaultPVal = 5e-8;
 
     useEffect(() => {
         setFiltered(
@@ -84,45 +84,48 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
             {!isEmpty(value) ? (
                 <div className="record-table-inner-container">
                     <div className="record-table-controls-container">
-                        <div className="main-controls">
+                        <div className="main-controls row">
                             {tableInstance && (
-                                <CSVLink
-                                    className="control"
-                                    filename={`${kebabCase(table.displayName)}.csv`}
-                                    onClick={loadCsvData}
-                                    data={csvData}
-                                >
-                                    Download <span className="fa p-1 fa-download" />
-                                </CSVLink>
+                                <div className="col flex-grow-0 align-items-center d-flex">
+                                    <CSVLink
+                                        className="control d-flex"
+                                        filename={`${kebabCase(table.displayName)}.csv`}
+                                        onClick={loadCsvData}
+                                        data={csvData}
+                                    >
+                                        Download <span className="fa p-1 fa-download" />
+                                    </CSVLink>
+                                    <input
+                                        type="text"
+                                        className="filter"
+                                        placeholder="Search table"
+                                        value={filterVal}
+                                        onChange={handleSearchFilterChange}
+                                    />
+                                </div>
                             )}
-                            {pValueFilterVisible && (
-                                <RecordTablePValFilter
-                                    key={table.name}
-                                    values={(cloneDeep(value) as unknown) as { [key: string]: any; pvalue: string }[]}
-                                    setFilter={updateFilter}
-                                    selectClass={table.name + "_chart"}
-                                    defaultPVal={
+                            {/* todo: extract to its own component with maxPvalue as internal state */}
+                            {getHasPValFilter(table) && (
+                                <PvalFilterControls
+                                    defaultPValue={
                                         get(
                                             filtered.find((f) => f.id === "pvalue"),
                                             "value"
                                         ) || defaultPVal
                                     }
+                                    filterPVal={
+                                        get(
+                                            filtered.find((f) => f.id === "pvalue"),
+                                            "value"
+                                        ) || defaultPVal
+                                    }
+                                    filterVisible={pValueFilterVisible}
+                                    tableName={table.name}
+                                    toggleVisibility={togglePValueChartVisibility}
+                                    updatePvalFilter={updateFilter.bind(null, "pvalue")}
+                                    values={value}
                                 />
                             )}
-                            <div className="filters control">
-                                {getHasPValFilter(table) && (
-                                    <a onClick={togglePValueChartVisibility} className="btn filter btn-primary">
-                                        {pValueFilterVisible ? "Close P-value Filter" : "Open P-value Filter"}
-                                    </a>
-                                )}
-                                <input
-                                    type="text"
-                                    className="filter"
-                                    placeholder="filter"
-                                    value={filterVal}
-                                    onChange={handleSearchFilterChange}
-                                />
-                            </div>
                         </div>
                     </div>
                     <NiagadsRecordTable
@@ -136,17 +139,15 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
                         isSelected={isSelected}
                         canShrink={get(table, "properties.canShrink[0]", false)}
                     />
-                    <>
-                        {getPValFilteredResultsEmpty() && (
-                            <p style={{ textAlign: "center" }}>
-                                No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-
-                                {defaultPVal}). To see more results, please adjust the p-value limit with the{" "}
-                                <span className="link" onClick={setPValueFilterVisible.bind(null, true)}>
-                                    p-value filter
-                                </span>
-                            </p>
-                        )}
-                    </>
+                    {getPValFilteredResultsEmpty() && (
+                        <p style={{ textAlign: "center" }}>
+                            No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-
+                            {defaultPVal}). To see more results, please adjust the p-value limit with the{" "}
+                            <span className="link" onClick={setPValueFilterVisible.bind(null, true)}>
+                                p-value filter
+                            </span>
+                        </p>
+                    )}
                 </div>
             ) : (
                 "None Reported"
@@ -156,3 +157,76 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
 };
 
 export default NiagadsTableContainer;
+
+/* moving this to its own component so it can carry local filter state, avoiding costly table rerenders */
+
+interface PvalFilterControls {
+    defaultPValue: number;
+    filterPVal: number;
+    filterVisible: boolean;
+    tableName: string;
+    toggleVisibility: () => void;
+    updatePvalFilter: (val: number) => void;
+    values: any[];
+}
+
+const PvalFilterControls: React.FC<PvalFilterControls> = ({
+    defaultPValue,
+    filterPVal,
+    filterVisible,
+    tableName,
+    toggleVisibility,
+    updatePvalFilter,
+    values,
+}) => {
+    const transform = (pval: number) => {
+        //depending how small it is, pval may or may not come as exponent
+        const asExp = Number(pval).toExponential();
+        //to get a well-displayed number, we'll round only as far as first digit of coeff
+        const exp = asExp.replace(/^\d+(\.\d+)?e-/, "");
+        return Number(round(pval, +exp + 1)).toExponential();
+    };
+
+    const [maxPvalue, setMaxPValue] = useState<string>(transform(defaultPValue));
+
+    return (
+        <div className="col d-flex">
+            {filterVisible && (
+                <RecordTablePValFilter
+                    key={tableName}
+                    defaultPVal={defaultPValue}
+                    selectClass={tableName + "_chart"}
+                    setMaxPvalue={(val: number) => setMaxPValue(Number(val).toString())}
+                    values={
+                        /* no need to memoize, since pval filter is itself memoized and will never rerender */
+                        (cloneDeep(values) as unknown) as {
+                            [key: string]: any;
+                            pvalue: string;
+                        }[]
+                    }
+                />
+            )}
+            <div className="flex-column d-flex align-self-center">
+                {filterVisible && (
+                    <>
+                        <div>
+                            <strong>Current p-value:&nbsp;</strong>
+                            {transform(+filterPVal)}
+                        </div>
+                        <div>
+                            <strong>New p-value:&nbsp;</strong>
+                            {transform(+maxPvalue)}
+                        </div>
+
+                        <a onClick={() => updatePvalFilter(+transform(+maxPvalue))} className="btn filter btn-primary">
+                            Update
+                        </a>
+                    </>
+                )}
+                <a onClick={toggleVisibility} className="btn filter btn-primary">
+                    {filterVisible ? "Close P-value Filter" : "Open P-value Filter"}
+                </a>
+            </div>
+        </div>
+    );
+};

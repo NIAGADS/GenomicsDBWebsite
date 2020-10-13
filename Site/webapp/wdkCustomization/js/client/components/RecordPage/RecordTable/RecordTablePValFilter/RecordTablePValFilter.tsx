@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import d3 from "d3";
-import { chain, clone, groupBy, toString } from "lodash";
+import React, { useEffect } from "react";
+import d3, { DragEvent } from "d3";
+import { chain, debounce, groupBy } from "lodash";
 
 interface PvalFilterProps {
-    values: { [key: string]: any; pvalue: string }[];
-    setFilter: (id: string, value: any) => void;
-    selectClass: string;
     defaultPVal: number;
+    setMaxPvalue: (value: number) => void;
+    selectClass: string;
+    values: { [key: string]: any; pvalue: string }[];
 }
 
 interface CanvasSpec {
@@ -26,35 +26,23 @@ const canvasSpec: CanvasSpec = {
     height: 150,
 };
 
-const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setFilter, selectClass, values }) => {
-    const [dragFilter, setDragFilter] = useState(15);
-
+const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, selectClass, values }) => {
     useEffect(() => {
         const data = _transformData(values),
             svg = _drawFrame(selectClass, canvasSpec),
-            xScale = _buildXScale(canvasSpec.width, maxP),
-            unXScale = _buildUnXScale(canvasSpec.width, maxP),
+            xScale = _buildXScale(canvasSpec.width, minP),
+            unXScale = _buildUnXScale(canvasSpec.width, minP),
             yScale = _buildYScale(data, canvasSpec.height),
             area = _buildAreaFunc(canvasSpec.height, xScale, yScale);
         _drawArea(svg, data, area);
-        _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale, maxP), _buildYAxis(yScale));
+        _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale, minP), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec);
-        _drawSlider(
-            svg,
-            xScale,
-            unXScale,
-            data[data.length - 1].pValueLog10,
-            defaultPVal,
-            canvasSpec,
-            setDragFilter /* (val: number) =>
-            setFilter("pvalue", val) */
-        );
+        _drawSlider(svg, xScale, unXScale, data[data.length - 1].pValueLog10, defaultPVal, canvasSpec, setMaxPvalue);
         //this component is uncontrolled and holds its own state after initialization; it never rerenders
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
 
-    //p refers to negative log, so maxP means lowest pVal to display (e.g., 15 =  e-15)
-    const maxP = 15;
+    const minP = 1e-15;
 
     return (
         <div className="p-val-filter-chart control">
@@ -66,13 +54,26 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setFilter, selectC
 //never rerender!
 export default React.memo(PvalFilter, () => true);
 
-const _buildYAxis = (yScale: any) => d3.svg.axis().scale(yScale).orient("left");
+const _buildYAxis = (yScale: any) =>
+    d3.svg
+        .axis()
+        .scale(yScale)
+        .orient("left")
+        .ticks(5)
+        .tickFormat((d) => formatNumber(d));
 
-const _buildXAxis = (xScale: d3.scale.Linear<number, number>, maxP: number) =>
+const formatNumber = (n: number) => {
+    if (n > 999) {
+        return d3.format(".2s")(n);
+    } else return String(n);
+};
+
+const _buildXAxis = (xScale: d3.scale.Linear<number, number>, minP: number) =>
     d3.svg
         .axis()
         .scale(xScale)
-        .tickFormat((tick) => (+tick === maxP ? tick + "+" : tick))
+        .ticks(+String(minP).slice(-2) - 1)
+        .tickFormat((tick) => (+tick === Math.log10(minP) ? tick + "+" : tick))
         .orient("bottom");
 
 interface ChartDatum {
@@ -80,17 +81,17 @@ interface ChartDatum {
     count: number;
 }
 
-const _buildXScale = (width: number, maxP: number) =>
+const _buildXScale = (width: number, minP: number) =>
     d3.scale
         .linear()
         .range([0, width])
-        .domain([1, Math.log10(Number(`1e-${maxP}`))]);
+        .domain([1, Math.log10(Number(minP))]);
 
-const _buildUnXScale = (width: number, maxP: number) => {
+const _buildUnXScale = (width: number, minP: number) => {
     return d3.scale
         .linear()
         .domain([0, width])
-        .range([Math.log10(Number(`1e-${maxP}`)), 1]);
+        .range([1, Math.log10(Number(minP))]);
 };
 
 const _buildYScale = (data: ChartDatum[], height: number) => {
@@ -139,11 +140,11 @@ const _drawAxes = (svg: any, height: number, xAxis: any, yAxis: any) => {
 const _drawRectangle = (
     svg: d3.Selection<any>,
     xScale: d3.scale.Linear<number, number>,
-    minPVal: number,
+    defaultPvalue: number,
     height: number,
     classname = ""
 ) => {
-    const xStart = xScale(minPVal);
+    const xStart = xScale(Math.log10(defaultPvalue));
     svg.append("g")
         .append("rect")
         .attr("width", xScale.range()[1] - xStart)
@@ -154,30 +155,27 @@ const _drawRectangle = (
         .attr("transform", "translate(" + xStart + ",0)");
 };
 
-const _buildDrag = (
+function _buildDrag(
+    this: any,
     xScale: d3.scale.Linear<number, number>,
     unXScale: d3.scale.Linear<number, number>,
     sizerClass: string,
     maxExtantP: number,
     cb: (val: number) => void
-) => {
-    return d3.behavior.drag().on("drag", function (d: any) {
-        //note that the right hand x value of the rectangle is static
-        const event = d3.event as any;
-
+) {
+    return d3.behavior.drag().on("drag", function (this: any) {
+        const event = d3.event as DragEvent;
         if (event.x > xScale(maxExtantP) && event.x < xScale.range()[1]) {
             //move slider
-            //@ts-ignore
             d3.select(this).attr("cx", event.x);
             //shift rectangle
             d3.select("." + sizerClass)
                 .attr("width", xScale.range()[1] - event.x)
                 .attr("transform", "translate(" + event.x + ",0)");
-            //note that this will lag while table is rerendering after callback, ReactTable seems to be the culprit
+            debounce(() => cb(Math.pow(10, unXScale(event.x))), 100)();
         }
-        cb(unXScale(event.x));
     });
-};
+}
 
 const _drawCircle = (
     svg: d3.Selection<any>,
@@ -191,7 +189,7 @@ const _drawCircle = (
         .attr("fill", "orange")
         .attr("r", 7)
         .attr("opacity", 0.5)
-        .attr("cx", xScale(-defaultP))
+        .attr("cx", xScale(Math.log10(defaultP)))
         .attr("cy", height)
         .call(drag);
 };
@@ -207,7 +205,7 @@ const _drawSlider = (
 ) => {
     const sizerClass = "sizer-" + Math.random().toString(36).slice(3),
         drag = _buildDrag(xScale, unXScale, sizerClass, maxRepresentedP, cb);
-    _drawRectangle(svg, xScale, -defaultP, cs.height, sizerClass);
+    _drawRectangle(svg, xScale, defaultP, cs.height, sizerClass);
     _drawCircle(svg, xScale, defaultP, cs.height, drag);
 };
 
