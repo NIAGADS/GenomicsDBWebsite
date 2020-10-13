@@ -98,7 +98,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
                             {pValueFilterVisible && (
                                 <RecordTablePValFilter
                                     key={table.name}
-                                    values={cloneDeep(value)}
+                                    values={(cloneDeep(value) as unknown) as { [key: string]: any; pvalue: string }[]}
                                     setFilter={updateFilter}
                                     selectClass={table.name + "_chart"}
                                     defaultPVal={
