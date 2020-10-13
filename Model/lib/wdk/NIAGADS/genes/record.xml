@@ -155,7 +155,6 @@
 				<columnAttribute name="transcript_accession_link" displayName="Ensembl Transcript" type="json_link" />
 				<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
 				<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
-				<columnAttribute name="num_variants" displayName="No. Variants" help="click to retrieve list of NIAGADS annotated variants contained within this transcript" type="json_link" />
 				<propertyList name="type">
 					<value>default</value>
 				</propertyList>
@@ -183,10 +182,6 @@
 				<columnAttribute name="ad_evidence_flag" internal="false" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" inReportMaker="false" type="json_icon" />
 			</attributeQueryRef>
 
-			<attributeQueryRef ref="GeneAttributes.ColocatedVariantCount">
-				<columnAttribute name="num_colocated_variants" displayName="Num Colocated Variants" help="Number of variant records contained within this gene" internal="true" inReportMaker="false" type="json_link" />
-				<columnAttribute name="num_unique_colocated_variants" internal="true" inReportMaker="false" type="integer" />
-			</attributeQueryRef>
 
 			<!-- GWAS -->
 			<table name="ad_variants_from_gwas" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromGWAS">
