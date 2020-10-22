@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
 
-  <constant name="releaseDate" includeProjects="GRCh37,GRCh38">9 September 2018 00:00</constant>
+  <constant name="releaseDate" includeProjects="GRCh37,GRCh38">10 October 2020 00:00</constant>
   <constant name="releaseVersion37"
 	    includeProjects="GRCh37">3.5</constant>
   <constant name="releaseVersion38" includeProjects="GRCh38">1.0</constant>
