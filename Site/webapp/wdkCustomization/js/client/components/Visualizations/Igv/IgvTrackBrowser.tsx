@@ -24,12 +24,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { Track } from "./tempTracklist";
 import { TableCell, Typography } from "@material-ui/core";
-import { startCase, get, truncate, uniq as unique } from "lodash";
-import { TrackConfig } from "./IgvBrowser";
 import { ThemeProvider, makeStyles, createStyles } from "@material-ui/core/styles";
 import { theme } from "./mui-theme";
+import { flatMap, memoize, startCase, truncate, uniq as unique } from "lodash";
+import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
 
 const useBrowserStyles = makeStyles((theme) =>
     createStyles({
@@ -72,8 +71,8 @@ interface TrackBrowser {
     handleClose: () => void;
     loadingTrack: string;
     isOpen: boolean;
-    tracks: Track[];
-    toggleTracks: (t: TrackConfig[]) => void;
+    toggleTracks: (t: IgvTrackConfig[]) => void;
+    trackList: NiagadsBrowserTrackConfig[];
 }
 
 const TrackBrowser: React.FC<TrackBrowser> = ({
@@ -82,7 +81,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
     isOpen,
     loadingTrack,
     toggleTracks,
-    tracks,
+    trackList,
 }) => {
     const [searchTerm, setSearchTerm] = useState(""),
         [sources, setSources] = useState<string[]>([]),
@@ -102,171 +101,181 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                 setTypes(types.concat([type]));
             }
         },
-        tracksToTrackConfigs = (tracks: Track[]): TrackConfig[] => {
+        tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
             return tracks.map((track) => ({
-                name: track.track,
-                format: track.format,
                 displayMode: "expanded",
+                format: track.format,
+                indexURL: `${track.url}.tbi`,
+                name: track.name,
+                type: track.trackType,
                 url: track.url,
-                indexURL: track.url + ".tbi",
                 visibilityWindow: -1,
             }));
         };
 
     return (
         <ThemeProvider theme={theme}>
-            <Dialog
-                onBackdropClick={handleClose}
-                onEscapeKeyDown={handleClose}
-                maxWidth={false}
-                fullWidth={true}
-                open={isOpen}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleClose}
-                classes={{ paper: classes.DialogPaper }}
-            >
-                <DialogTitle disableTypography>
-                    <Grid container justify="space-between">
-                        <Typography variant="h4">Browse Tracks</Typography>
-                        <IconButton onClick={handleClose}>
-                            <CloseIcon />
-                        </IconButton>
-                    </Grid>
-                </DialogTitle>
+            {trackList && (
+                <Dialog
+                    onBackdropClick={handleClose}
+                    onEscapeKeyDown={handleClose}
+                    maxWidth={false}
+                    fullWidth={true}
+                    open={isOpen}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    classes={{ paper: classes.DialogPaper }}
+                >
+                    <DialogTitle disableTypography>
+                        <Grid container justify="space-between">
+                            <Typography variant="h4">Browse Tracks</Typography>
+                            <IconButton onClick={handleClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Grid>
+                    </DialogTitle>
 
-                <DialogContent className={classes.DialogContent}>
-                    <Grid container alignItems="flex-start" spacing={1}>
-                        <Grid item container direction="column" wrap="nowrap" spacing={2} xs={2}>
-                            <Grid container alignItems="center" item xs={12}>
-                                <SearchIcon />
-                                <Input
-                                    className={classes.input}
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.currentTarget.value)}
-                                />
+                    <DialogContent className={classes.DialogContent}>
+                        <Grid container alignItems="flex-start" spacing={1}>
+                            <Grid item container direction="column" wrap="nowrap" spacing={2} xs={2}>
+                                <Grid container alignItems="center" item xs={12}>
+                                    <SearchIcon />
+                                    <Input
+                                        className={classes.input}
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.currentTarget.value.toLowerCase())}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h5">Filters</Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Accordion className={classes.Accordion}>
+                                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography>Loaded Tracks</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails className={classes.AccordionDetails}>
+                                            <List>
+                                                {activeTracks.map((a) => (
+                                                    <ListItem key={a}>{startCase(a)}</ListItem>
+                                                ))}
+                                            </List>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    <Accordion className={classes.Accordion}>
+                                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography>Source</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails className={classes.AccordionDetails}>
+                                            <List>
+                                                {unique(trackList.map((t) => t.source)).map((a: string) => (
+                                                    <ListItem key={a}>
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={sources.includes(a)}
+                                                            onChange={toggleSource.bind(null, a)}
+                                                        />{" "}
+                                                        {a}
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    <Accordion className={classes.Accordion}>
+                                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography>Type</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails className={classes.AccordionDetails}>
+                                            <List>
+                                                {unique(trackList.map((t) => t.type)).map((a: string) => (
+                                                    <ListItem key={a}>
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={types.includes(a)}
+                                                            onChange={toggleType.bind(null, a)}
+                                                        />{" "}
+                                                        {a}
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant="h5">Filters</Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Accordion className={classes.Accordion}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                        <Typography>Loaded Tracks</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails className={classes.AccordionDetails}>
-                                        <List>
-                                            {activeTracks.map((a) => (
-                                                <ListItem key={a}>{startCase(a)}</ListItem>
-                                            ))}
-                                        </List>
-                                    </AccordionDetails>
-                                </Accordion>
-                                <Accordion className={classes.Accordion}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                        <Typography>Source</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails className={classes.AccordionDetails}>
-                                        <List>
-                                            {unique(tracks.map((t) => t.source)).map((a: string) => (
-                                                <ListItem key={a}>
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={sources.includes(a)}
-                                                        onChange={toggleSource.bind(null, a)}
-                                                    />{" "}
-                                                    {a}
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </AccordionDetails>
-                                </Accordion>
-                                <Accordion className={classes.Accordion}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                        <Typography>Type</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails className={classes.AccordionDetails}>
-                                        <List>
-                                            {unique(tracks.map((t) => t.type)).map((a: string) => (
-                                                <ListItem key={a}>
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={types.includes(a)}
-                                                        onChange={toggleType.bind(null, a)}
-                                                    />{" "}
-                                                    {a}
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </AccordionDetails>
-                                </Accordion>
+                            <Grid item container xs={10}>
+                                <TableContainer className={classes.TableContainer}>
+                                    <Table stickyHeader>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>
+                                                    <Typography>Select</Typography>
+                                                </TableCell>
+                                                {getTableHeadings(trackList).map((t) => (
+                                                    <TableCell key={t}>{startCase(t)}</TableCell>
+                                                ))}
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {trackList
+                                                .filter(
+                                                    (t) =>
+                                                        t.track.toLowerCase().includes(searchTerm) ||
+                                                        t.description.toLowerCase().includes(searchTerm) ||
+                                                        t.name.toLowerCase().includes(searchTerm)
+                                                )
+                                                .filter((t) => {
+                                                    if (
+                                                        sources.includes(t.source) ||
+                                                        types.includes(t.type) ||
+                                                        (!sources.length && !types.length)
+                                                    ) {
+                                                        return true;
+                                                    } else {
+                                                        return false;
+                                                    }
+                                                })
+                                                .map((t, i) => (
+                                                    <TableRow key={i}>
+                                                        <TableCell className={classes.CheckBoxCell}>
+                                                            {loadingTrack === t.track ? (
+                                                                <CircularProgress size={25} />
+                                                            ) : (
+                                                                <Checkbox
+                                                                    color="primary"
+                                                                    checked={activeTracks.includes(t.name)}
+                                                                    onChange={toggleTracks.bind(
+                                                                        null,
+                                                                        tracksToTrackConfigs([t])
+                                                                    )}
+                                                                    disabled={!!loadingTrack}
+                                                                />
+                                                            )}
+                                                        </TableCell>
+                                                        {getTableHeadings(trackList).map((h) => {
+                                                            const v =
+                                                                h in t
+                                                                    ? transformTableContent(
+                                                                          t[h as keyof NiagadsBrowserTrackConfig]
+                                                                      )
+                                                                    : null;
+                                                            return <TableCell key={`${h}${i}`}>{v}</TableCell>;
+                                                        })}
+                                                    </TableRow>
+                                                ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
                             </Grid>
                         </Grid>
-                        <Grid item container xs={10}>
-                            <TableContainer className={classes.TableContainer}>
-                                <Table stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>
-                                                <Typography>Select</Typography>
-                                            </TableCell>
-                                            {Object.keys(get(tracks, "[0]", [])).map((t) => (
-                                                <TableCell key={t}>{startCase(t)}</TableCell>
-                                            ))}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {tracks
-                                            .filter(
-                                                (t) =>
-                                                    t.track.toLowerCase().includes(searchTerm) ||
-                                                    t.description.toLowerCase().includes(searchTerm)
-                                            )
-                                            .filter((t) => {
-                                                if (
-                                                    sources.includes(t.source) ||
-                                                    types.includes(t.type) ||
-                                                    (!sources.length && !types.length)
-                                                ) {
-                                                    return true;
-                                                } else {
-                                                    return false;
-                                                }
-                                            })
-                                            .map((t, i) => (
-                                                <TableRow key={i}>
-                                                    <TableCell className={classes.CheckBoxCell}>
-                                                        {loadingTrack === t.track ? (
-                                                            <CircularProgress size={25} />
-                                                        ) : (
-                                                            <Checkbox
-                                                                color="primary"
-                                                                checked={activeTracks.includes(t.track)}
-                                                                onChange={toggleTracks.bind(
-                                                                    null,
-                                                                    tracksToTrackConfigs([t])
-                                                                )}
-                                                                disabled={!!loadingTrack}
-                                                            />
-                                                        )}
-                                                    </TableCell>
-                                                    {Object.values(t).map((p, i) => (
-                                                        <TableCell key={i}>{_truncateLongStrings(p)}</TableCell>
-                                                    ))}
-                                                </TableRow>
-                                            ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Dismiss
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                            Dismiss
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            )}
         </ThemeProvider>
     );
 };
@@ -278,3 +287,41 @@ const _truncateLongStrings = (str: string) =>
         .join(" ");
 
 export default TrackBrowser;
+
+export interface IgvTrackConfig {
+    name: string;
+    format?: string;
+    displayMode: string;
+    height?: number;
+    url: string;
+    indexURL?: string;
+    visibilityWindow: number;
+}
+
+const getTableHeadings = memoize((trackList: NiagadsBrowserTrackConfig[]) =>
+    unique(flatMap(trackList, (t) => Object.keys(t)))
+);
+
+const transformTableContent = (el: string) => <ShowMore str={_truncateLongStrings(el)} />;
+
+const ShowMore: React.FC<{ str: string }> = ({ str }) => {
+    const [fullStringVisible, setFullStringVisible] = useState(false);
+
+    if (str.length < 50) return <span>{str}</span>;
+
+    return fullStringVisible ? (
+        <span>
+            {str}&nbsp;
+            <span className="link" onClick={() => setFullStringVisible(false)}>
+                less
+            </span>
+        </span>
+    ) : (
+        <span>
+            {truncate(str, { length: 50 })}{" "}
+            <span className="link" onClick={() => setFullStringVisible(true)}>
+                more
+            </span>
+        </span>
+    );
+};

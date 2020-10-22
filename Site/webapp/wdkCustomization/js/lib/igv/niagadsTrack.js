@@ -39,7 +39,6 @@ var ObjectFunctionString = fnToString.call(Object);
 var support = {};
 
 var isFunction = function isFunction(obj) {
-
     // Support: Chrome <=57, Firefox <=52
     // In some browsers, typeof returns "function" for HTML <object> elements
     // (i.e., `typeof document.createElement( "object" ) === "function"`).
@@ -47,16 +46,14 @@ var isFunction = function isFunction(obj) {
     return typeof obj === "function" && typeof obj.nodeType !== "number";
 };
 
-
 var isWindow = function isWindow(obj) {
     return obj != null && obj === obj.window;
 };
 
-
 var preservedScriptAttributes = {
     type: true,
     src: true,
-    noModule: true
+    noModule: true,
 };
 
 function DOMEval(code, doc, node) {
@@ -76,40 +73,34 @@ function DOMEval(code, doc, node) {
     doc.head.appendChild(script).parentNode.removeChild(script);
 }
 
-
 function toType(obj) {
     if (obj == null) {
         return obj + "";
     }
 
     // Support: Android <=2.3 only (functionish RegExp)
-    return typeof obj === "object" || typeof obj === "function" ?
-        class2type[toString.call(obj)] || "object" :
-        typeof obj;
+    return typeof obj === "object" || typeof obj === "function"
+        ? class2type[toString.call(obj)] || "object"
+        : typeof obj;
 }
 
 // global Symbol
 // Defining this global in .eslintrc.json would create a danger of using the global
 // unguarded in another place, it seems safer to define global only for this module
 
-
-var
-    version = "3.3.1 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-effects,-effects/Tween,-effects/animatedSelector",
-
+var version =
+        "3.3.1 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-effects,-effects/Tween,-effects/animatedSelector",
     // Define a local copy of jQuery
     jQuery = function (selector, context) {
-
         // The jQuery object is actually just the init constructor 'enhanced'
         // Need init if jQuery is called (just allow error to be thrown if not included)
         return new jQuery.fn.init(selector, context);
     },
-
     // Support: Android <=4.0 only
     // Make sure we trim BOM and NBSP
     rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 
 jQuery.fn = jQuery.prototype = {
-
     // The current version of jQuery being used
     jquery: version,
 
@@ -125,7 +116,6 @@ jQuery.fn = jQuery.prototype = {
     // Get the Nth element in the matched element set OR
     // Get the whole matched element set as a clean array
     get: function (num) {
-
         // Return all the elements in a clean array
         if (num == null) {
             return slice.call(this);
@@ -138,7 +128,6 @@ jQuery.fn = jQuery.prototype = {
     // Take an array of elements and push it onto the stack
     // (returning the new matched element set)
     pushStack: function (elems) {
-
         // Build a new jQuery matched element set
         var ret = jQuery.merge(this.constructor(), elems);
 
@@ -155,9 +144,11 @@ jQuery.fn = jQuery.prototype = {
     },
 
     map: function (callback) {
-        return this.pushStack(jQuery.map(this, function (elem, i) {
-            return callback.call(elem, i, elem);
-        }));
+        return this.pushStack(
+            jQuery.map(this, function (elem, i) {
+                return callback.call(elem, i, elem);
+            })
+        );
     },
 
     slice: function () {
@@ -186,11 +177,16 @@ jQuery.fn = jQuery.prototype = {
     // Behaves like an Array's method, not like a jQuery method.
     push: push,
     sort: arr.sort,
-    splice: arr.splice
+    splice: arr.splice,
 };
 
 jQuery.extend = jQuery.fn.extend = function () {
-    var options, name, src, copy, copyIsArray, clone,
+    var options,
+        name,
+        src,
+        copy,
+        copyIsArray,
+        clone,
         target = arguments[0] || {},
         i = 1,
         length = arguments.length,
@@ -217,10 +213,8 @@ jQuery.extend = jQuery.fn.extend = function () {
     }
 
     for (; i < length; i++) {
-
         // Only deal with non-null/undefined values
         if ((options = arguments[i]) != null) {
-
             // Extend the base object
             for (name in options) {
                 src = target[name];
@@ -232,13 +226,10 @@ jQuery.extend = jQuery.fn.extend = function () {
                 }
 
                 // Recurse if we're merging plain objects or arrays
-                if (deep && copy && (jQuery.isPlainObject(copy) ||
-                    (copyIsArray = Array.isArray(copy)))) {
-
+                if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
                     if (copyIsArray) {
                         copyIsArray = false;
                         clone = src && Array.isArray(src) ? src : [];
-
                     } else {
                         clone = src && jQuery.isPlainObject(src) ? src : {};
                     }
@@ -259,7 +250,6 @@ jQuery.extend = jQuery.fn.extend = function () {
 };
 
 jQuery.extend({
-
     // Unique for each copy of jQuery on the page
     expando: "jQuery" + (version + Math.random()).replace(/\D/g, ""),
 
@@ -270,8 +260,7 @@ jQuery.extend({
         throw new Error(msg);
     },
 
-    noop: function () {
-    },
+    noop: function () {},
 
     isPlainObject: function (obj) {
         var proto, Ctor;
@@ -295,7 +284,6 @@ jQuery.extend({
     },
 
     isEmptyObject: function (obj) {
-
         /* eslint-disable no-unused-vars */
         // See https://github.com/eslint/eslint/issues/6125
         var name;
@@ -312,7 +300,8 @@ jQuery.extend({
     },
 
     each: function (obj, callback) {
-        var length, i = 0;
+        var length,
+            i = 0;
 
         if (isArrayLike(obj)) {
             length = obj.length;
@@ -334,9 +323,7 @@ jQuery.extend({
 
     // Support: Android <=4.0 only
     trim: function (text) {
-        return text == null ?
-            "" :
-            (text + "").replace(rtrim, "");
+        return text == null ? "" : (text + "").replace(rtrim, "");
     },
 
     // results is for internal usage only
@@ -345,10 +332,7 @@ jQuery.extend({
 
         if (arr != null) {
             if (isArrayLike(Object(arr))) {
-                jQuery.merge(ret,
-                    typeof arr === "string" ?
-                        [arr] : arr
-                );
+                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
             } else {
                 push.call(ret, arr);
             }
@@ -398,7 +382,8 @@ jQuery.extend({
 
     // arg is for internal usage only
     map: function (elems, callback, arg) {
-        var length, value,
+        var length,
+            value,
             i = 0,
             ret = [];
 
@@ -433,7 +418,7 @@ jQuery.extend({
 
     // jQuery.support is not used in Core but other projects attach their
     // properties to it so it needs to exist.
-    support: support
+    support: support,
 });
 
 if (typeof Symbol === "function") {
@@ -441,13 +426,11 @@ if (typeof Symbol === "function") {
 }
 
 // Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object Error Symbol".split(" "),
-    function (i, name) {
-        class2type["[object " + name + "]"] = name.toLowerCase();
-    });
+jQuery.each("Boolean Number String Function Array Date RegExp Object Error Symbol".split(" "), function (i, name) {
+    class2type["[object " + name + "]"] = name.toLowerCase();
+});
 
 function isArrayLike(obj) {
-
     // Support: real iOS 8.2 only (not reproducible in simulator)
     // `in` check used to prevent JIT error (gh-2145)
     // hasOwn isn't used here due to false negatives
@@ -459,23 +442,21 @@ function isArrayLike(obj) {
         return false;
     }
 
-    return type === "array" || length === 0 ||
-        typeof length === "number" && length > 0 && (length - 1) in obj;
+    return type === "array" || length === 0 || (typeof length === "number" && length > 0 && length - 1 in obj);
 }
 
 var Sizzle =
     /*!
- * Sizzle CSS Selector Engine v2.3.3
- * https://sizzlejs.com/
- *
- * Copyright jQuery Foundation and other contributors
- * Released under the MIT license
- * http://jquery.org/license
- *
- * Date: 2016-08-08
- */
+     * Sizzle CSS Selector Engine v2.3.3
+     * https://sizzlejs.com/
+     *
+     * Copyright jQuery Foundation and other contributors
+     * Released under the MIT license
+     * http://jquery.org/license
+     *
+     * Date: 2016-08-08
+     */
     (function (window) {
-
         var i,
             support,
             Expr,
@@ -487,7 +468,6 @@ var Sizzle =
             outermostContext,
             sortInput,
             hasDuplicate,
-
             // Local document vars
             setDocument,
             document,
@@ -497,7 +477,6 @@ var Sizzle =
             rbuggyMatches,
             matches,
             contains,
-
             // Instance-specific data
             expando = "sizzle" + 1 * new Date(),
             preferredDoc = window.document,
@@ -512,9 +491,8 @@ var Sizzle =
                 }
                 return 0;
             },
-
             // Instance methods
-            hasOwn = ({}).hasOwnProperty,
+            hasOwn = {}.hasOwnProperty,
             arr = [],
             pop = arr.pop,
             push_native = arr.push,
@@ -532,73 +510,91 @@ var Sizzle =
                 }
                 return -1;
             },
-
-            booleans = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",
-
+            booleans =
+                "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",
             // Regular expressions
 
             // http://www.w3.org/TR/css3-selectors/#whitespace
             whitespace = "[\\x20\\t\\r\\n\\f]",
-
             // http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
             identifier = "(?:\\\\.|[\\w-]|[^\0-\\xa0])+",
-
             // Attribute selectors: http://www.w3.org/TR/selectors/#attribute-selectors
-            attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace +
+            attributes =
+                "\\[" +
+                whitespace +
+                "*(" +
+                identifier +
+                ")(?:" +
+                whitespace +
                 // Operator (capture 2)
-                "*([*^$|!~]?=)" + whitespace +
+                "*([*^$|!~]?=)" +
+                whitespace +
                 // "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
-                "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + identifier + "))|)" + whitespace +
+                "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" +
+                identifier +
+                "))|)" +
+                whitespace +
                 "*\\]",
-
-            pseudos = ":(" + identifier + ")(?:\\((" +
+            pseudos =
+                ":(" +
+                identifier +
+                ")(?:\\((" +
                 // To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
                 // 1. quoted (capture 3; capture 4 or capture 5)
                 "('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|" +
                 // 2. simple (capture 6)
-                "((?:\\\\.|[^\\\\()[\\]]|" + attributes + ")*)|" +
+                "((?:\\\\.|[^\\\\()[\\]]|" +
+                attributes +
+                ")*)|" +
                 // 3. anything else (capture 2)
                 ".*" +
                 ")\\)|)",
-
             // Leading and non-escaped trailing whitespace, capturing some non-whitespace characters preceding the latter
             rwhitespace = new RegExp(whitespace + "+", "g"),
             rtrim = new RegExp("^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g"),
-
             rcomma = new RegExp("^" + whitespace + "*," + whitespace + "*"),
             rcombinators = new RegExp("^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*"),
-
             rattributeQuotes = new RegExp("=" + whitespace + "*([^\\]'\"]*?)" + whitespace + "*\\]", "g"),
-
             rpseudo = new RegExp(pseudos),
             ridentifier = new RegExp("^" + identifier + "$"),
-
             matchExpr = {
-                "ID": new RegExp("^#(" + identifier + ")"),
-                "CLASS": new RegExp("^\\.(" + identifier + ")"),
-                "TAG": new RegExp("^(" + identifier + "|[*])"),
-                "ATTR": new RegExp("^" + attributes),
-                "PSEUDO": new RegExp("^" + pseudos),
-                "CHILD": new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + whitespace +
-                    "*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
-                    "*(\\d+)|))" + whitespace + "*\\)|)", "i"),
-                "bool": new RegExp("^(?:" + booleans + ")$", "i"),
+                ID: new RegExp("^#(" + identifier + ")"),
+                CLASS: new RegExp("^\\.(" + identifier + ")"),
+                TAG: new RegExp("^(" + identifier + "|[*])"),
+                ATTR: new RegExp("^" + attributes),
+                PSEUDO: new RegExp("^" + pseudos),
+                CHILD: new RegExp(
+                    "^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" +
+                        whitespace +
+                        "*(even|odd|(([+-]|)(\\d*)n|)" +
+                        whitespace +
+                        "*(?:([+-]|)" +
+                        whitespace +
+                        "*(\\d+)|))" +
+                        whitespace +
+                        "*\\)|)",
+                    "i"
+                ),
+                bool: new RegExp("^(?:" + booleans + ")$", "i"),
                 // For use in libraries implementing .is()
                 // We use this for POS matching in `select`
-                "needsContext": new RegExp("^" + whitespace + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" +
-                    whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i")
+                needsContext: new RegExp(
+                    "^" +
+                        whitespace +
+                        "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" +
+                        whitespace +
+                        "*((?:-\\d)?\\d*)" +
+                        whitespace +
+                        "*\\)|)(?=[^-]|$)",
+                    "i"
+                ),
             },
-
             rinputs = /^(?:input|select|textarea|button)$/i,
             rheader = /^h\d$/i,
-
             rnative = /^[^{]+\{\s*\[native \w/,
-
             // Easily-parseable/retrievable ID or TAG or CLASS selectors
             rquickExpr = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
-
             rsibling = /[+~]/,
-
             // CSS escapes
             // http://www.w3.org/TR/CSS21/syndata.html#escaped-characters
             runescape = new RegExp("\\\\([\\da-f]{1,6}" + whitespace + "?|(" + whitespace + ")|.)", "ig"),
@@ -607,22 +603,20 @@ var Sizzle =
                 // NaN means non-codepoint
                 // Support: Firefox<24
                 // Workaround erroneous numeric interpretation of +"0x"
-                return high !== high || escapedWhitespace ?
-                    escaped :
-                    high < 0 ?
-                        // BMP codepoint
-                        String.fromCharCode(high + 0x10000) :
-                        // Supplemental Plane codepoint (surrogate pair)
-                        String.fromCharCode(high >> 10 | 0xD800, high & 0x3FF | 0xDC00);
+                return high !== high || escapedWhitespace
+                    ? escaped
+                    : high < 0
+                    ? // BMP codepoint
+                      String.fromCharCode(high + 0x10000)
+                    : // Supplemental Plane codepoint (surrogate pair)
+                      String.fromCharCode((high >> 10) | 0xd800, (high & 0x3ff) | 0xdc00);
             },
-
             // CSS string/identifier serialization
             // https://drafts.csswg.org/cssom/#common-serializing-idioms
             // eslint-disable-next-line no-control-regex
             rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,
             fcssescape = function (ch, asCodePoint) {
                 if (asCodePoint) {
-
                     // U+0000 NULL becomes U+FFFD REPLACEMENT CHARACTER
                     if (ch === "\0") {
                         return "\uFFFD";
@@ -635,7 +629,6 @@ var Sizzle =
                 // Other potentially-special ASCII characters get backslash-escaped
                 return "\\" + ch;
             },
-
             // Used for iframes
             // See setDocument()
             // Removing the function wrapper causes a "Permission Denied"
@@ -643,82 +636,73 @@ var Sizzle =
             unloadHandler = function () {
                 setDocument();
             },
-
             disabledAncestor = addCombinator(
                 function (elem) {
                     return elem.disabled === true && ("form" in elem || "label" in elem);
                 },
-                {dir: "parentNode", next: "legend"}
+                { dir: "parentNode", next: "legend" }
             );
 
-// Optimize for push.apply( _, NodeList )
+        // Optimize for push.apply( _, NodeList )
         try {
-            push.apply(
-                (arr = slice.call(preferredDoc.childNodes)),
-                preferredDoc.childNodes
-            );
+            push.apply((arr = slice.call(preferredDoc.childNodes)), preferredDoc.childNodes);
             // Support: Android<4.0
             // Detect silently failing push.apply
             arr[preferredDoc.childNodes.length].nodeType;
         } catch (e) {
             push = {
-                apply: arr.length ?
-
-                    // Leverage slice if possible
-                    function (target, els) {
-                        push_native.apply(target, slice.call(els));
-                    } :
-
-                    // Support: IE<9
-                    // Otherwise append directly
-                    function (target, els) {
-                        var j = target.length,
-                            i = 0;
-                        // Can't trust NodeList.length
-                        while ((target[j++] = els[i++])) {
-                        }
-                        target.length = j - 1;
-                    }
+                apply: arr.length
+                    ? // Leverage slice if possible
+                      function (target, els) {
+                          push_native.apply(target, slice.call(els));
+                      }
+                    : // Support: IE<9
+                      // Otherwise append directly
+                      function (target, els) {
+                          var j = target.length,
+                              i = 0;
+                          // Can't trust NodeList.length
+                          while ((target[j++] = els[i++])) {}
+                          target.length = j - 1;
+                      },
             };
         }
 
         function Sizzle(selector, context, results, seed) {
-            var m, i, elem, nid, match, groups, newSelector,
+            var m,
+                i,
+                elem,
+                nid,
+                match,
+                groups,
+                newSelector,
                 newContext = context && context.ownerDocument,
-
                 // nodeType defaults to 9, since context defaults to document
                 nodeType = context ? context.nodeType : 9;
 
             results = results || [];
 
             // Return early from calls with invalid selector or context
-            if (typeof selector !== "string" || !selector ||
-                nodeType !== 1 && nodeType !== 9 && nodeType !== 11) {
-
+            if (typeof selector !== "string" || !selector || (nodeType !== 1 && nodeType !== 9 && nodeType !== 11)) {
                 return results;
             }
 
             // Try to shortcut find operations (as opposed to filters) in HTML documents
             if (!seed) {
-
                 if ((context ? context.ownerDocument || context : preferredDoc) !== document) {
                     setDocument(context);
                 }
                 context = context || document;
 
                 if (documentIsHTML) {
-
                     // If the selector is sufficiently simple, try using a "get*By*" DOM method
                     // (excepting DocumentFragment context, where the methods don't exist)
                     if (nodeType !== 11 && (match = rquickExpr.exec(selector))) {
-
                         // ID selector
                         if ((m = match[1])) {
-
                             // Document context
                             if (nodeType === 9) {
                                 if ((elem = context.getElementById(m))) {
-
                                     // Support: IE, Opera, Webkit
                                     // TODO: identify versions
                                     // getElementById can match elements by name instead of ID
@@ -732,14 +716,15 @@ var Sizzle =
 
                                 // Element context
                             } else {
-
                                 // Support: IE, Opera, Webkit
                                 // TODO: identify versions
                                 // getElementById can match elements by name instead of ID
-                                if (newContext && (elem = newContext.getElementById(m)) &&
+                                if (
+                                    newContext &&
+                                    (elem = newContext.getElementById(m)) &&
                                     contains(context, elem) &&
-                                    elem.id === m) {
-
+                                    elem.id === m
+                                ) {
                                     results.push(elem);
                                     return results;
                                 }
@@ -751,19 +736,14 @@ var Sizzle =
                             return results;
 
                             // Class selector
-                        } else if ((m = match[3]) && support.getElementsByClassName &&
-                            context.getElementsByClassName) {
-
+                        } else if ((m = match[3]) && support.getElementsByClassName && context.getElementsByClassName) {
                             push.apply(results, context.getElementsByClassName(m));
                             return results;
                         }
                     }
 
                     // Take advantage of querySelectorAll
-                    if (support.qsa &&
-                        !compilerCache[selector + " "] &&
-                        (!rbuggyQSA || !rbuggyQSA.test(selector))) {
-
+                    if (support.qsa && !compilerCache[selector + " "] && (!rbuggyQSA || !rbuggyQSA.test(selector))) {
                         if (nodeType !== 1) {
                             newContext = context;
                             newSelector = selector;
@@ -773,7 +753,6 @@ var Sizzle =
                             // Support: IE <=8
                             // Exclude object elements
                         } else if (context.nodeName.toLowerCase() !== "object") {
-
                             // Capture the context ID, setting it first if necessary
                             if ((nid = context.getAttribute("id"))) {
                                 nid = nid.replace(rcssescape, fcssescape);
@@ -790,15 +769,12 @@ var Sizzle =
                             newSelector = groups.join(",");
 
                             // Expand context for sibling selectors
-                            newContext = rsibling.test(selector) && testContext(context.parentNode) ||
-                                context;
+                            newContext = (rsibling.test(selector) && testContext(context.parentNode)) || context;
                         }
 
                         if (newSelector) {
                             try {
-                                push.apply(results,
-                                    newContext.querySelectorAll(newSelector)
-                                );
+                                push.apply(results, newContext.querySelectorAll(newSelector));
                                 return results;
                             } catch (qsaError) {
                             } finally {
@@ -888,8 +864,7 @@ var Sizzle =
          */
         function siblingCheck(a, b) {
             var cur = b && a,
-                diff = cur && a.nodeType === 1 && b.nodeType === 1 &&
-                    a.sourceIndex - b.sourceIndex;
+                diff = cur && a.nodeType === 1 && b.nodeType === 1 && a.sourceIndex - b.sourceIndex;
 
             // Use IE sourceIndex if available on both nodes
             if (diff) {
@@ -935,15 +910,12 @@ var Sizzle =
          * @param {Boolean} disabled true for :disabled; false for :enabled
          */
         function createDisabledPseudo(disabled) {
-
             // Known :disabled false positives: fieldset[disabled] > legend:nth-of-type(n+2) :can-disable
             return function (elem) {
-
                 // Only certain elements can match :enabled or :disabled
                 // https://html.spec.whatwg.org/multipage/scripting.html#selector-enabled
                 // https://html.spec.whatwg.org/multipage/scripting.html#selector-disabled
                 if ("form" in elem) {
-
                     // Check for inherited disabledness on relevant non-disabled elements:
                     // * listed form-associated elements in a disabled fieldset
                     //   https://html.spec.whatwg.org/multipage/forms.html#category-listed
@@ -952,7 +924,6 @@ var Sizzle =
                     //   https://html.spec.whatwg.org/multipage/forms.html#concept-option-disabled
                     // All such elements have a "form" property.
                     if (elem.parentNode && elem.disabled === false) {
-
                         // Option elements defer to a parent optgroup if present
                         if ("label" in elem) {
                             if ("label" in elem.parentNode) {
@@ -964,12 +935,12 @@ var Sizzle =
 
                         // Support: IE 6 - 11
                         // Use the isDisabled shortcut property to check for disabled fieldset ancestors
-                        return elem.isDisabled === disabled ||
-
+                        return (
+                            elem.isDisabled === disabled ||
                             // Where there is no isDisabled, check manually
                             /* jshint -W018 */
-                            elem.isDisabled !== !disabled &&
-                            disabledAncestor(elem) === disabled;
+                            (elem.isDisabled !== !disabled && disabledAncestor(elem) === disabled)
+                        );
                     }
 
                     return elem.disabled === disabled;
@@ -1017,7 +988,7 @@ var Sizzle =
             return context && typeof context.getElementsByTagName !== "undefined" && context;
         }
 
-// Expose support vars for convenience
+        // Expose support vars for convenience
         support = Sizzle.support = {};
 
         /**
@@ -1038,7 +1009,8 @@ var Sizzle =
          * @returns {Object} Returns the current document
          */
         setDocument = Sizzle.setDocument = function (node) {
-            var hasCompare, subWindow,
+            var hasCompare,
+                subWindow,
                 doc = node ? node.ownerDocument || node : preferredDoc;
 
             // Return early if doc is invalid or already selected
@@ -1053,9 +1025,7 @@ var Sizzle =
 
             // Support: IE 9-11, Edge
             // Accessing iframe documents after unload throws "permission denied" errors (jQuery #13936)
-            if (preferredDoc !== document &&
-                (subWindow = document.defaultView) && subWindow.top !== subWindow) {
-
+            if (preferredDoc !== document && (subWindow = document.defaultView) && subWindow.top !== subWindow) {
                 // Support: IE 11, Edge
                 if (subWindow.addEventListener) {
                     subWindow.addEventListener("unload", unloadHandler, false);
@@ -1116,8 +1086,7 @@ var Sizzle =
                 Expr.filter["ID"] = function (id) {
                     var attrId = id.replace(runescape, funescape);
                     return function (elem) {
-                        var node = typeof elem.getAttributeNode !== "undefined" &&
-                            elem.getAttributeNode("id");
+                        var node = typeof elem.getAttributeNode !== "undefined" && elem.getAttributeNode("id");
                         return node && node.value === attrId;
                     };
                 };
@@ -1126,11 +1095,12 @@ var Sizzle =
                 // getElementById is not reliable as a find shortcut
                 Expr.find["ID"] = function (id, context) {
                     if (typeof context.getElementById !== "undefined" && documentIsHTML) {
-                        var node, i, elems,
+                        var node,
+                            i,
+                            elems,
                             elem = context.getElementById(id);
 
                         if (elem) {
-
                             // Verify the id attribute
                             node = elem.getAttributeNode("id");
                             if (node && node.value === id) {
@@ -1154,43 +1124,44 @@ var Sizzle =
             }
 
             // Tag
-            Expr.find["TAG"] = support.getElementsByTagName ?
-                function (tag, context) {
-                    if (typeof context.getElementsByTagName !== "undefined") {
-                        return context.getElementsByTagName(tag);
+            Expr.find["TAG"] = support.getElementsByTagName
+                ? function (tag, context) {
+                      if (typeof context.getElementsByTagName !== "undefined") {
+                          return context.getElementsByTagName(tag);
 
-                        // DocumentFragment nodes don't have gEBTN
-                    } else if (support.qsa) {
-                        return context.querySelectorAll(tag);
-                    }
-                } :
+                          // DocumentFragment nodes don't have gEBTN
+                      } else if (support.qsa) {
+                          return context.querySelectorAll(tag);
+                      }
+                  }
+                : function (tag, context) {
+                      var elem,
+                          tmp = [],
+                          i = 0,
+                          // By happy coincidence, a (broken) gEBTN appears on DocumentFragment nodes too
+                          results = context.getElementsByTagName(tag);
 
-                function (tag, context) {
-                    var elem,
-                        tmp = [],
-                        i = 0,
-                        // By happy coincidence, a (broken) gEBTN appears on DocumentFragment nodes too
-                        results = context.getElementsByTagName(tag);
+                      // Filter out possible comments
+                      if (tag === "*") {
+                          while ((elem = results[i++])) {
+                              if (elem.nodeType === 1) {
+                                  tmp.push(elem);
+                              }
+                          }
 
-                    // Filter out possible comments
-                    if (tag === "*") {
-                        while ((elem = results[i++])) {
-                            if (elem.nodeType === 1) {
-                                tmp.push(elem);
-                            }
-                        }
-
-                        return tmp;
-                    }
-                    return results;
-                };
+                          return tmp;
+                      }
+                      return results;
+                  };
 
             // Class
-            Expr.find["CLASS"] = support.getElementsByClassName && function (className, context) {
-                if (typeof context.getElementsByClassName !== "undefined" && documentIsHTML) {
-                    return context.getElementsByClassName(className);
-                }
-            };
+            Expr.find["CLASS"] =
+                support.getElementsByClassName &&
+                function (className, context) {
+                    if (typeof context.getElementsByClassName !== "undefined" && documentIsHTML) {
+                        return context.getElementsByClassName(className);
+                    }
+                };
 
             /* QSA/matchesSelector
 	---------------------------------------------------------------------- */
@@ -1216,8 +1187,13 @@ var Sizzle =
                     // setting a boolean content attribute,
                     // since its presence should be enough
                     // https://bugs.jquery.com/ticket/12359
-                    docElem.appendChild(el).innerHTML = "<a id='" + expando + "'></a>" +
-                        "<select id='" + expando + "-\r\\' msallowcapture=''>" +
+                    docElem.appendChild(el).innerHTML =
+                        "<a id='" +
+                        expando +
+                        "'></a>" +
+                        "<select id='" +
+                        expando +
+                        "-\r\\' msallowcapture=''>" +
                         "<option selected=''></option></select>";
 
                     // Support: IE8, Opera 11-12.16
@@ -1255,8 +1231,8 @@ var Sizzle =
                 });
 
                 assert(function (el) {
-                    el.innerHTML = "<a href='' disabled='disabled'></a>" +
-                        "<select disabled='disabled'><option/></select>";
+                    el.innerHTML =
+                        "<a href='' disabled='disabled'></a>" + "<select disabled='disabled'><option/></select>";
 
                     // Support: Windows 8 Native Apps
                     // The type and name attributes are restricted during .innerHTML assignment
@@ -1289,12 +1265,16 @@ var Sizzle =
                 });
             }
 
-            if ((support.matchesSelector = rnative.test((matches = docElem.matches ||
-                docElem.webkitMatchesSelector ||
-                docElem.mozMatchesSelector ||
-                docElem.oMatchesSelector ||
-                docElem.msMatchesSelector)))) {
-
+            if (
+                (support.matchesSelector = rnative.test(
+                    (matches =
+                        docElem.matches ||
+                        docElem.webkitMatchesSelector ||
+                        docElem.mozMatchesSelector ||
+                        docElem.oMatchesSelector ||
+                        docElem.msMatchesSelector)
+                ))
+            ) {
                 assert(function (el) {
                     // Check to see if it's possible to do matchesSelector
                     // on a disconnected node (IE 9)
@@ -1317,126 +1297,132 @@ var Sizzle =
             // Element contains another
             // Purposefully self-exclusive
             // As in, an element does not contain itself
-            contains = hasCompare || rnative.test(docElem.contains) ?
-                function (a, b) {
-                    var adown = a.nodeType === 9 ? a.documentElement : a,
-                        bup = b && b.parentNode;
-                    return a === bup || !!(bup && bup.nodeType === 1 && (
-                        adown.contains ?
-                            adown.contains(bup) :
-                            a.compareDocumentPosition && a.compareDocumentPosition(bup) & 16
-                    ));
-                } :
-                function (a, b) {
-                    if (b) {
-                        while ((b = b.parentNode)) {
-                            if (b === a) {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                };
+            contains =
+                hasCompare || rnative.test(docElem.contains)
+                    ? function (a, b) {
+                          var adown = a.nodeType === 9 ? a.documentElement : a,
+                              bup = b && b.parentNode;
+                          return (
+                              a === bup ||
+                              !!(
+                                  bup &&
+                                  bup.nodeType === 1 &&
+                                  (adown.contains
+                                      ? adown.contains(bup)
+                                      : a.compareDocumentPosition && a.compareDocumentPosition(bup) & 16)
+                              )
+                          );
+                      }
+                    : function (a, b) {
+                          if (b) {
+                              while ((b = b.parentNode)) {
+                                  if (b === a) {
+                                      return true;
+                                  }
+                              }
+                          }
+                          return false;
+                      };
 
             /* Sorting
 	---------------------------------------------------------------------- */
 
             // Document order sorting
-            sortOrder = hasCompare ?
-                function (a, b) {
+            sortOrder = hasCompare
+                ? function (a, b) {
+                      // Flag for duplicate removal
+                      if (a === b) {
+                          hasDuplicate = true;
+                          return 0;
+                      }
 
-                    // Flag for duplicate removal
-                    if (a === b) {
-                        hasDuplicate = true;
-                        return 0;
-                    }
+                      // Sort on method existence if only one input has compareDocumentPosition
+                      var compare = !a.compareDocumentPosition - !b.compareDocumentPosition;
+                      if (compare) {
+                          return compare;
+                      }
 
-                    // Sort on method existence if only one input has compareDocumentPosition
-                    var compare = !a.compareDocumentPosition - !b.compareDocumentPosition;
-                    if (compare) {
-                        return compare;
-                    }
+                      // Calculate position if both inputs belong to the same document
+                      compare =
+                          (a.ownerDocument || a) === (b.ownerDocument || b)
+                              ? a.compareDocumentPosition(b)
+                              : // Otherwise we know they are disconnected
+                                1;
 
-                    // Calculate position if both inputs belong to the same document
-                    compare = (a.ownerDocument || a) === (b.ownerDocument || b) ?
-                        a.compareDocumentPosition(b) :
+                      // Disconnected nodes
+                      if (compare & 1 || (!support.sortDetached && b.compareDocumentPosition(a) === compare)) {
+                          // Choose the first element that is related to our preferred document
+                          if (a === document || (a.ownerDocument === preferredDoc && contains(preferredDoc, a))) {
+                              return -1;
+                          }
+                          if (b === document || (b.ownerDocument === preferredDoc && contains(preferredDoc, b))) {
+                              return 1;
+                          }
 
-                        // Otherwise we know they are disconnected
-                        1;
+                          // Maintain original order
+                          return sortInput ? indexOf(sortInput, a) - indexOf(sortInput, b) : 0;
+                      }
 
-                    // Disconnected nodes
-                    if (compare & 1 ||
-                        (!support.sortDetached && b.compareDocumentPosition(a) === compare)) {
+                      return compare & 4 ? -1 : 1;
+                  }
+                : function (a, b) {
+                      // Exit early if the nodes are identical
+                      if (a === b) {
+                          hasDuplicate = true;
+                          return 0;
+                      }
 
-                        // Choose the first element that is related to our preferred document
-                        if (a === document || a.ownerDocument === preferredDoc && contains(preferredDoc, a)) {
-                            return -1;
-                        }
-                        if (b === document || b.ownerDocument === preferredDoc && contains(preferredDoc, b)) {
-                            return 1;
-                        }
+                      var cur,
+                          i = 0,
+                          aup = a.parentNode,
+                          bup = b.parentNode,
+                          ap = [a],
+                          bp = [b];
 
-                        // Maintain original order
-                        return sortInput ?
-                            (indexOf(sortInput, a) - indexOf(sortInput, b)) :
-                            0;
-                    }
+                      // Parentless nodes are either documents or disconnected
+                      if (!aup || !bup) {
+                          return a === document
+                              ? -1
+                              : b === document
+                              ? 1
+                              : aup
+                              ? -1
+                              : bup
+                              ? 1
+                              : sortInput
+                              ? indexOf(sortInput, a) - indexOf(sortInput, b)
+                              : 0;
 
-                    return compare & 4 ? -1 : 1;
-                } :
-                function (a, b) {
-                    // Exit early if the nodes are identical
-                    if (a === b) {
-                        hasDuplicate = true;
-                        return 0;
-                    }
+                          // If the nodes are siblings, we can do a quick check
+                      } else if (aup === bup) {
+                          return siblingCheck(a, b);
+                      }
 
-                    var cur,
-                        i = 0,
-                        aup = a.parentNode,
-                        bup = b.parentNode,
-                        ap = [a],
-                        bp = [b];
+                      // Otherwise we need full lists of their ancestors for comparison
+                      cur = a;
+                      while ((cur = cur.parentNode)) {
+                          ap.unshift(cur);
+                      }
+                      cur = b;
+                      while ((cur = cur.parentNode)) {
+                          bp.unshift(cur);
+                      }
 
-                    // Parentless nodes are either documents or disconnected
-                    if (!aup || !bup) {
-                        return a === document ? -1 :
-                            b === document ? 1 :
-                                aup ? -1 :
-                                    bup ? 1 :
-                                        sortInput ?
-                                            (indexOf(sortInput, a) - indexOf(sortInput, b)) :
-                                            0;
+                      // Walk down the tree looking for a discrepancy
+                      while (ap[i] === bp[i]) {
+                          i++;
+                      }
 
-                        // If the nodes are siblings, we can do a quick check
-                    } else if (aup === bup) {
-                        return siblingCheck(a, b);
-                    }
-
-                    // Otherwise we need full lists of their ancestors for comparison
-                    cur = a;
-                    while ((cur = cur.parentNode)) {
-                        ap.unshift(cur);
-                    }
-                    cur = b;
-                    while ((cur = cur.parentNode)) {
-                        bp.unshift(cur);
-                    }
-
-                    // Walk down the tree looking for a discrepancy
-                    while (ap[i] === bp[i]) {
-                        i++;
-                    }
-
-                    return i ?
-                        // Do a sibling check if the nodes have a common ancestor
-                        siblingCheck(ap[i], bp[i]) :
-
-                        // Otherwise nodes in our document sort first
-                        ap[i] === preferredDoc ? -1 :
-                            bp[i] === preferredDoc ? 1 :
-                                0;
-                };
+                      return i
+                          ? // Do a sibling check if the nodes have a common ancestor
+                            siblingCheck(ap[i], bp[i])
+                          : // Otherwise nodes in our document sort first
+                          ap[i] === preferredDoc
+                          ? -1
+                          : bp[i] === preferredDoc
+                          ? 1
+                          : 0;
+                  };
 
             return document;
         };
@@ -1454,23 +1440,27 @@ var Sizzle =
             // Make sure that attribute selectors are quoted
             expr = expr.replace(rattributeQuotes, "='$1']");
 
-            if (support.matchesSelector && documentIsHTML &&
+            if (
+                support.matchesSelector &&
+                documentIsHTML &&
                 !compilerCache[expr + " "] &&
                 (!rbuggyMatches || !rbuggyMatches.test(expr)) &&
-                (!rbuggyQSA || !rbuggyQSA.test(expr))) {
-
+                (!rbuggyQSA || !rbuggyQSA.test(expr))
+            ) {
                 try {
                     var ret = matches.call(elem, expr);
 
                     // IE 9's matchesSelector returns false on disconnected nodes
-                    if (ret || support.disconnectedMatch ||
+                    if (
+                        ret ||
+                        support.disconnectedMatch ||
                         // As well, disconnected nodes are said to be in a document
                         // fragment in IE 9
-                        elem.document && elem.document.nodeType !== 11) {
+                        (elem.document && elem.document.nodeType !== 11)
+                    ) {
                         return ret;
                     }
-                } catch (e) {
-                }
+                } catch (e) {}
             }
 
             return Sizzle(expr, document, null, [elem]).length > 0;
@@ -1492,17 +1482,18 @@ var Sizzle =
 
             var fn = Expr.attrHandle[name.toLowerCase()],
                 // Don't get fooled by Object.prototype properties (jQuery #13807)
-                val = fn && hasOwn.call(Expr.attrHandle, name.toLowerCase()) ?
-                    fn(elem, name, !documentIsHTML) :
-                    undefined;
+                val =
+                    fn && hasOwn.call(Expr.attrHandle, name.toLowerCase())
+                        ? fn(elem, name, !documentIsHTML)
+                        : undefined;
 
-            return val !== undefined ?
-                val :
-                support.attributes || !documentIsHTML ?
-                    elem.getAttribute(name) :
-                    (val = elem.getAttributeNode(name)) && val.specified ?
-                        val.value :
-                        null;
+            return val !== undefined
+                ? val
+                : support.attributes || !documentIsHTML
+                ? elem.getAttribute(name)
+                : (val = elem.getAttributeNode(name)) && val.specified
+                ? val.value
+                : null;
         };
 
         Sizzle.escape = function (sel) {
@@ -1582,7 +1573,6 @@ var Sizzle =
         };
 
         Expr = Sizzle.selectors = {
-
             // Can be adjusted by the user
             cacheLength: 50,
 
@@ -1595,14 +1585,14 @@ var Sizzle =
             find: {},
 
             relative: {
-                ">": {dir: "parentNode", first: true},
-                " ": {dir: "parentNode"},
-                "+": {dir: "previousSibling", first: true},
-                "~": {dir: "previousSibling"}
+                ">": { dir: "parentNode", first: true },
+                " ": { dir: "parentNode" },
+                "+": { dir: "previousSibling", first: true },
+                "~": { dir: "previousSibling" },
             },
 
             preFilter: {
-                "ATTR": function (match) {
+                ATTR: function (match) {
                     match[1] = match[1].replace(runescape, funescape);
 
                     // Move the given value to match[3] whether quoted or unquoted
@@ -1615,7 +1605,7 @@ var Sizzle =
                     return match.slice(0, 4);
                 },
 
-                "CHILD": function (match) {
+                CHILD: function (match) {
                     /* matches from matchExpr["CHILD"]
 				1 type (only|nth|...)
 				2 what (child|of-type)
@@ -1636,8 +1626,10 @@ var Sizzle =
 
                         // numeric x and y parameters for Expr.filter.CHILD
                         // remember that false/true cast respectively to 0/1
-                        match[4] = +(match[4] ? match[5] + (match[6] || 1) : 2 * (match[3] === "even" || match[3] === "odd"));
-                        match[5] = +((match[7] + match[8]) || match[3] === "odd");
+                        match[4] = +(match[4]
+                            ? match[5] + (match[6] || 1)
+                            : 2 * (match[3] === "even" || match[3] === "odd"));
+                        match[5] = +(match[7] + match[8] || match[3] === "odd");
 
                         // other types prohibit arguments
                     } else if (match[3]) {
@@ -1647,7 +1639,7 @@ var Sizzle =
                     return match;
                 },
 
-                "PSEUDO": function (match) {
+                PSEUDO: function (match) {
                     var excess,
                         unquoted = !match[6] && match[2];
 
@@ -1660,12 +1652,14 @@ var Sizzle =
                         match[2] = match[4] || match[5] || "";
 
                         // Strip excess characters from unquoted arguments
-                    } else if (unquoted && rpseudo.test(unquoted) &&
+                    } else if (
+                        unquoted &&
+                        rpseudo.test(unquoted) &&
                         // Get excess from tokenize (recursively)
                         (excess = tokenize(unquoted, true)) &&
                         // advance to the next closing parenthesis
-                        (excess = unquoted.indexOf(")", unquoted.length - excess) - unquoted.length)) {
-
+                        (excess = unquoted.indexOf(")", unquoted.length - excess) - unquoted.length)
+                    ) {
                         // excess is a negative index
                         match[0] = match[0].slice(0, excess);
                         match[2] = unquoted.slice(0, excess);
@@ -1673,33 +1667,38 @@ var Sizzle =
 
                     // Return only captures needed by the pseudo filter method (type and argument)
                     return match.slice(0, 3);
-                }
+                },
             },
 
             filter: {
-
-                "TAG": function (nodeNameSelector) {
+                TAG: function (nodeNameSelector) {
                     var nodeName = nodeNameSelector.replace(runescape, funescape).toLowerCase();
-                    return nodeNameSelector === "*" ?
-                        function () {
-                            return true;
-                        } :
-                        function (elem) {
-                            return elem.nodeName && elem.nodeName.toLowerCase() === nodeName;
-                        };
+                    return nodeNameSelector === "*"
+                        ? function () {
+                              return true;
+                          }
+                        : function (elem) {
+                              return elem.nodeName && elem.nodeName.toLowerCase() === nodeName;
+                          };
                 },
 
-                "CLASS": function (className) {
+                CLASS: function (className) {
                     var pattern = classCache[className + " "];
 
-                    return pattern ||
-                        (pattern = new RegExp("(^|" + whitespace + ")" + className + "(" + whitespace + "|$)")) &&
-                        classCache(className, function (elem) {
-                            return pattern.test(typeof elem.className === "string" && elem.className || typeof elem.getAttribute !== "undefined" && elem.getAttribute("class") || "");
-                        });
+                    return (
+                        pattern ||
+                        ((pattern = new RegExp("(^|" + whitespace + ")" + className + "(" + whitespace + "|$)")) &&
+                            classCache(className, function (elem) {
+                                return pattern.test(
+                                    (typeof elem.className === "string" && elem.className) ||
+                                        (typeof elem.getAttribute !== "undefined" && elem.getAttribute("class")) ||
+                                        ""
+                                );
+                            }))
+                    );
                 },
 
-                "ATTR": function (name, operator, check) {
+                ATTR: function (name, operator, check) {
                     return function (elem) {
                         var result = Sizzle.attr(elem, name);
 
@@ -1712,153 +1711,163 @@ var Sizzle =
 
                         result += "";
 
-                        return operator === "=" ? result === check :
-                            operator === "!=" ? result !== check :
-                                operator === "^=" ? check && result.indexOf(check) === 0 :
-                                    operator === "*=" ? check && result.indexOf(check) > -1 :
-                                        operator === "$=" ? check && result.slice(-check.length) === check :
-                                            operator === "~=" ? (" " + result.replace(rwhitespace, " ") + " ").indexOf(check) > -1 :
-                                                operator === "|=" ? result === check || result.slice(0, check.length + 1) === check + "-" :
-                                                    false;
+                        return operator === "="
+                            ? result === check
+                            : operator === "!="
+                            ? result !== check
+                            : operator === "^="
+                            ? check && result.indexOf(check) === 0
+                            : operator === "*="
+                            ? check && result.indexOf(check) > -1
+                            : operator === "$="
+                            ? check && result.slice(-check.length) === check
+                            : operator === "~="
+                            ? (" " + result.replace(rwhitespace, " ") + " ").indexOf(check) > -1
+                            : operator === "|="
+                            ? result === check || result.slice(0, check.length + 1) === check + "-"
+                            : false;
                     };
                 },
 
-                "CHILD": function (type, what, argument, first, last) {
+                CHILD: function (type, what, argument, first, last) {
                     var simple = type.slice(0, 3) !== "nth",
                         forward = type.slice(-4) !== "last",
                         ofType = what === "of-type";
 
-                    return first === 1 && last === 0 ?
+                    return first === 1 && last === 0
+                        ? // Shortcut for :nth-*(n)
+                          function (elem) {
+                              return !!elem.parentNode;
+                          }
+                        : function (elem, context, xml) {
+                              var cache,
+                                  uniqueCache,
+                                  outerCache,
+                                  node,
+                                  nodeIndex,
+                                  start,
+                                  dir = simple !== forward ? "nextSibling" : "previousSibling",
+                                  parent = elem.parentNode,
+                                  name = ofType && elem.nodeName.toLowerCase(),
+                                  useCache = !xml && !ofType,
+                                  diff = false;
 
-                        // Shortcut for :nth-*(n)
-                        function (elem) {
-                            return !!elem.parentNode;
-                        } :
+                              if (parent) {
+                                  // :(first|last|only)-(child|of-type)
+                                  if (simple) {
+                                      while (dir) {
+                                          node = elem;
+                                          while ((node = node[dir])) {
+                                              if (ofType ? node.nodeName.toLowerCase() === name : node.nodeType === 1) {
+                                                  return false;
+                                              }
+                                          }
+                                          // Reverse direction for :only-* (if we haven't yet done so)
+                                          start = dir = type === "only" && !start && "nextSibling";
+                                      }
+                                      return true;
+                                  }
 
-                        function (elem, context, xml) {
-                            var cache, uniqueCache, outerCache, node, nodeIndex, start,
-                                dir = simple !== forward ? "nextSibling" : "previousSibling",
-                                parent = elem.parentNode,
-                                name = ofType && elem.nodeName.toLowerCase(),
-                                useCache = !xml && !ofType,
-                                diff = false;
+                                  start = [forward ? parent.firstChild : parent.lastChild];
 
-                            if (parent) {
+                                  // non-xml :nth-child(...) stores cache data on `parent`
+                                  if (forward && useCache) {
+                                      // Seek `elem` from a previously-cached index
 
-                                // :(first|last|only)-(child|of-type)
-                                if (simple) {
-                                    while (dir) {
-                                        node = elem;
-                                        while ((node = node[dir])) {
-                                            if (ofType ?
-                                                node.nodeName.toLowerCase() === name :
-                                                node.nodeType === 1) {
+                                      // ...in a gzip-friendly way
+                                      node = parent;
+                                      outerCache = node[expando] || (node[expando] = {});
 
-                                                return false;
-                                            }
-                                        }
-                                        // Reverse direction for :only-* (if we haven't yet done so)
-                                        start = dir = type === "only" && !start && "nextSibling";
-                                    }
-                                    return true;
-                                }
+                                      // Support: IE <9 only
+                                      // Defend against cloned attroperties (jQuery gh-1709)
+                                      uniqueCache = outerCache[node.uniqueID] || (outerCache[node.uniqueID] = {});
 
-                                start = [forward ? parent.firstChild : parent.lastChild];
+                                      cache = uniqueCache[type] || [];
+                                      nodeIndex = cache[0] === dirruns && cache[1];
+                                      diff = nodeIndex && cache[2];
+                                      node = nodeIndex && parent.childNodes[nodeIndex];
 
-                                // non-xml :nth-child(...) stores cache data on `parent`
-                                if (forward && useCache) {
+                                      while (
+                                          (node =
+                                              (++nodeIndex && node && node[dir]) ||
+                                              // Fallback to seeking `elem` from the start
+                                              (diff = nodeIndex = 0) ||
+                                              start.pop())
+                                      ) {
+                                          // When found, cache indexes on `parent` and break
+                                          if (node.nodeType === 1 && ++diff && node === elem) {
+                                              uniqueCache[type] = [dirruns, nodeIndex, diff];
+                                              break;
+                                          }
+                                      }
+                                  } else {
+                                      // Use previously-cached element index if available
+                                      if (useCache) {
+                                          // ...in a gzip-friendly way
+                                          node = elem;
+                                          outerCache = node[expando] || (node[expando] = {});
 
-                                    // Seek `elem` from a previously-cached index
+                                          // Support: IE <9 only
+                                          // Defend against cloned attroperties (jQuery gh-1709)
+                                          uniqueCache = outerCache[node.uniqueID] || (outerCache[node.uniqueID] = {});
 
-                                    // ...in a gzip-friendly way
-                                    node = parent;
-                                    outerCache = node[expando] || (node[expando] = {});
+                                          cache = uniqueCache[type] || [];
+                                          nodeIndex = cache[0] === dirruns && cache[1];
+                                          diff = nodeIndex;
+                                      }
 
-                                    // Support: IE <9 only
-                                    // Defend against cloned attroperties (jQuery gh-1709)
-                                    uniqueCache = outerCache[node.uniqueID] ||
-                                        (outerCache[node.uniqueID] = {});
+                                      // xml :nth-child(...)
+                                      // or :nth-last-child(...) or :nth(-last)?-of-type(...)
+                                      if (diff === false) {
+                                          // Use the same loop as above to seek `elem` from the start
+                                          while (
+                                              (node =
+                                                  (++nodeIndex && node && node[dir]) ||
+                                                  (diff = nodeIndex = 0) ||
+                                                  start.pop())
+                                          ) {
+                                              if (
+                                                  (ofType
+                                                      ? node.nodeName.toLowerCase() === name
+                                                      : node.nodeType === 1) &&
+                                                  ++diff
+                                              ) {
+                                                  // Cache the index of each encountered element
+                                                  if (useCache) {
+                                                      outerCache = node[expando] || (node[expando] = {});
 
-                                    cache = uniqueCache[type] || [];
-                                    nodeIndex = cache[0] === dirruns && cache[1];
-                                    diff = nodeIndex && cache[2];
-                                    node = nodeIndex && parent.childNodes[nodeIndex];
+                                                      // Support: IE <9 only
+                                                      // Defend against cloned attroperties (jQuery gh-1709)
+                                                      uniqueCache =
+                                                          outerCache[node.uniqueID] || (outerCache[node.uniqueID] = {});
 
-                                    while ((node = ++nodeIndex && node && node[dir] ||
+                                                      uniqueCache[type] = [dirruns, diff];
+                                                  }
 
-                                        // Fallback to seeking `elem` from the start
-                                        (diff = nodeIndex = 0) || start.pop())) {
+                                                  if (node === elem) {
+                                                      break;
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  }
 
-                                        // When found, cache indexes on `parent` and break
-                                        if (node.nodeType === 1 && ++diff && node === elem) {
-                                            uniqueCache[type] = [dirruns, nodeIndex, diff];
-                                            break;
-                                        }
-                                    }
-
-                                } else {
-                                    // Use previously-cached element index if available
-                                    if (useCache) {
-                                        // ...in a gzip-friendly way
-                                        node = elem;
-                                        outerCache = node[expando] || (node[expando] = {});
-
-                                        // Support: IE <9 only
-                                        // Defend against cloned attroperties (jQuery gh-1709)
-                                        uniqueCache = outerCache[node.uniqueID] ||
-                                            (outerCache[node.uniqueID] = {});
-
-                                        cache = uniqueCache[type] || [];
-                                        nodeIndex = cache[0] === dirruns && cache[1];
-                                        diff = nodeIndex;
-                                    }
-
-                                    // xml :nth-child(...)
-                                    // or :nth-last-child(...) or :nth(-last)?-of-type(...)
-                                    if (diff === false) {
-                                        // Use the same loop as above to seek `elem` from the start
-                                        while ((node = ++nodeIndex && node && node[dir] ||
-                                            (diff = nodeIndex = 0) || start.pop())) {
-
-                                            if ((ofType ?
-                                                node.nodeName.toLowerCase() === name :
-                                                node.nodeType === 1) &&
-                                                ++diff) {
-
-                                                // Cache the index of each encountered element
-                                                if (useCache) {
-                                                    outerCache = node[expando] || (node[expando] = {});
-
-                                                    // Support: IE <9 only
-                                                    // Defend against cloned attroperties (jQuery gh-1709)
-                                                    uniqueCache = outerCache[node.uniqueID] ||
-                                                        (outerCache[node.uniqueID] = {});
-
-                                                    uniqueCache[type] = [dirruns, diff];
-                                                }
-
-                                                if (node === elem) {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // Incorporate the offset, then check against cycle size
-                                diff -= last;
-                                return diff === first || (diff % first === 0 && diff / first >= 0);
-                            }
-                        };
+                                  // Incorporate the offset, then check against cycle size
+                                  diff -= last;
+                                  return diff === first || (diff % first === 0 && diff / first >= 0);
+                              }
+                          };
                 },
 
-                "PSEUDO": function (pseudo, argument) {
+                PSEUDO: function (pseudo, argument) {
                     // pseudo-class names are case-insensitive
                     // http://www.w3.org/TR/selectors/#pseudo-classes
                     // Prioritize by case sensitivity in case custom pseudos are added with uppercase letters
                     // Remember that setFilters inherits from pseudos
                     var args,
-                        fn = Expr.pseudos[pseudo] || Expr.setFilters[pseudo.toLowerCase()] ||
+                        fn =
+                            Expr.pseudos[pseudo] ||
+                            Expr.setFilters[pseudo.toLowerCase()] ||
                             Sizzle.error("unsupported pseudo: " + pseudo);
 
                     // The user may use createPseudo to indicate that
@@ -1871,28 +1880,28 @@ var Sizzle =
                     // But maintain support for old signatures
                     if (fn.length > 1) {
                         args = [pseudo, pseudo, "", argument];
-                        return Expr.setFilters.hasOwnProperty(pseudo.toLowerCase()) ?
-                            markFunction(function (seed, matches) {
-                                var idx,
-                                    matched = fn(seed, argument),
-                                    i = matched.length;
-                                while (i--) {
-                                    idx = indexOf(seed, matched[i]);
-                                    seed[idx] = !(matches[idx] = matched[i]);
-                                }
-                            }) :
-                            function (elem) {
-                                return fn(elem, 0, args);
-                            };
+                        return Expr.setFilters.hasOwnProperty(pseudo.toLowerCase())
+                            ? markFunction(function (seed, matches) {
+                                  var idx,
+                                      matched = fn(seed, argument),
+                                      i = matched.length;
+                                  while (i--) {
+                                      idx = indexOf(seed, matched[i]);
+                                      seed[idx] = !(matches[idx] = matched[i]);
+                                  }
+                              })
+                            : function (elem) {
+                                  return fn(elem, 0, args);
+                              };
                     }
 
                     return fn;
-                }
+                },
             },
 
             pseudos: {
                 // Potentially complex pseudos
-                "not": markFunction(function (selector) {
+                not: markFunction(function (selector) {
                     // Trim the selector passed to compile
                     // to avoid treating leading and trailing
                     // spaces as combinators
@@ -1900,35 +1909,35 @@ var Sizzle =
                         results = [],
                         matcher = compile(selector.replace(rtrim, "$1"));
 
-                    return matcher[expando] ?
-                        markFunction(function (seed, matches, context, xml) {
-                            var elem,
-                                unmatched = matcher(seed, null, xml, []),
-                                i = seed.length;
+                    return matcher[expando]
+                        ? markFunction(function (seed, matches, context, xml) {
+                              var elem,
+                                  unmatched = matcher(seed, null, xml, []),
+                                  i = seed.length;
 
-                            // Match elements unmatched by `matcher`
-                            while (i--) {
-                                if ((elem = unmatched[i])) {
-                                    seed[i] = !(matches[i] = elem);
-                                }
-                            }
-                        }) :
-                        function (elem, context, xml) {
-                            input[0] = elem;
-                            matcher(input, null, xml, results);
-                            // Don't keep the element (issue #299)
-                            input[0] = null;
-                            return !results.pop();
-                        };
+                              // Match elements unmatched by `matcher`
+                              while (i--) {
+                                  if ((elem = unmatched[i])) {
+                                      seed[i] = !(matches[i] = elem);
+                                  }
+                              }
+                          })
+                        : function (elem, context, xml) {
+                              input[0] = elem;
+                              matcher(input, null, xml, results);
+                              // Don't keep the element (issue #299)
+                              input[0] = null;
+                              return !results.pop();
+                          };
                 }),
 
-                "has": markFunction(function (selector) {
+                has: markFunction(function (selector) {
                     return function (elem) {
                         return Sizzle(selector, elem).length > 0;
                     };
                 }),
 
-                "contains": markFunction(function (text) {
+                contains: markFunction(function (text) {
                     text = text.replace(runescape, funescape);
                     return function (elem) {
                         return (elem.textContent || elem.innerText || getText(elem)).indexOf(text) > -1;
@@ -1942,7 +1951,7 @@ var Sizzle =
                 // The matching of C against the element's language value is performed case-insensitively.
                 // The identifier C does not have to be a valid language name."
                 // http://www.w3.org/TR/selectors/#lang-pseudo
-                "lang": markFunction(function (lang) {
+                lang: markFunction(function (lang) {
                     // lang value must be a valid identifier
                     if (!ridentifier.test(lang || "")) {
                         Sizzle.error("unsupported lang: " + lang);
@@ -1951,10 +1960,11 @@ var Sizzle =
                     return function (elem) {
                         var elemLang;
                         do {
-                            if ((elemLang = documentIsHTML ?
-                                elem.lang :
-                                elem.getAttribute("xml:lang") || elem.getAttribute("lang"))) {
-
+                            if (
+                                (elemLang = documentIsHTML
+                                    ? elem.lang
+                                    : elem.getAttribute("xml:lang") || elem.getAttribute("lang"))
+                            ) {
                                 elemLang = elemLang.toLowerCase();
                                 return elemLang === lang || elemLang.indexOf(lang + "-") === 0;
                             }
@@ -1964,31 +1974,35 @@ var Sizzle =
                 }),
 
                 // Miscellaneous
-                "target": function (elem) {
+                target: function (elem) {
                     var hash = window.location && window.location.hash;
                     return hash && hash.slice(1) === elem.id;
                 },
 
-                "root": function (elem) {
+                root: function (elem) {
                     return elem === docElem;
                 },
 
-                "focus": function (elem) {
-                    return elem === document.activeElement && (!document.hasFocus || document.hasFocus()) && !!(elem.type || elem.href || ~elem.tabIndex);
+                focus: function (elem) {
+                    return (
+                        elem === document.activeElement &&
+                        (!document.hasFocus || document.hasFocus()) &&
+                        !!(elem.type || elem.href || ~elem.tabIndex)
+                    );
                 },
 
                 // Boolean properties
-                "enabled": createDisabledPseudo(false),
-                "disabled": createDisabledPseudo(true),
+                enabled: createDisabledPseudo(false),
+                disabled: createDisabledPseudo(true),
 
-                "checked": function (elem) {
+                checked: function (elem) {
                     // In CSS3, :checked should return both checked and selected elements
                     // http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
                     var nodeName = elem.nodeName.toLowerCase();
                     return (nodeName === "input" && !!elem.checked) || (nodeName === "option" && !!elem.selected);
                 },
 
-                "selected": function (elem) {
+                selected: function (elem) {
                     // Accessing this property makes selected-by-default
                     // options in Safari work properly
                     if (elem.parentNode) {
@@ -1999,7 +2013,7 @@ var Sizzle =
                 },
 
                 // Contents
-                "empty": function (elem) {
+                empty: function (elem) {
                     // http://www.w3.org/TR/selectors/#empty-pseudo
                     // :empty is negated by element (1) or content nodes (text: 3; cdata: 4; entity ref: 5),
                     //   but not by others (comment: 8; processing instruction: 7; etc.)
@@ -2012,48 +2026,49 @@ var Sizzle =
                     return true;
                 },
 
-                "parent": function (elem) {
+                parent: function (elem) {
                     return !Expr.pseudos["empty"](elem);
                 },
 
                 // Element/input types
-                "header": function (elem) {
+                header: function (elem) {
                     return rheader.test(elem.nodeName);
                 },
 
-                "input": function (elem) {
+                input: function (elem) {
                     return rinputs.test(elem.nodeName);
                 },
 
-                "button": function (elem) {
+                button: function (elem) {
                     var name = elem.nodeName.toLowerCase();
-                    return name === "input" && elem.type === "button" || name === "button";
+                    return (name === "input" && elem.type === "button") || name === "button";
                 },
 
-                "text": function (elem) {
+                text: function (elem) {
                     var attr;
-                    return elem.nodeName.toLowerCase() === "input" &&
+                    return (
+                        elem.nodeName.toLowerCase() === "input" &&
                         elem.type === "text" &&
-
                         // Support: IE<8
                         // New HTML5 attribute values (e.g., "search") appear with elem.type === "text"
-                        ((attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text");
+                        ((attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text")
+                    );
                 },
 
                 // Position-in-collection
-                "first": createPositionalPseudo(function () {
+                first: createPositionalPseudo(function () {
                     return [0];
                 }),
 
-                "last": createPositionalPseudo(function (matchIndexes, length) {
+                last: createPositionalPseudo(function (matchIndexes, length) {
                     return [length - 1];
                 }),
 
-                "eq": createPositionalPseudo(function (matchIndexes, length, argument) {
+                eq: createPositionalPseudo(function (matchIndexes, length, argument) {
                     return [argument < 0 ? argument + length : argument];
                 }),
 
-                "even": createPositionalPseudo(function (matchIndexes, length) {
+                even: createPositionalPseudo(function (matchIndexes, length) {
                     var i = 0;
                     for (; i < length; i += 2) {
                         matchIndexes.push(i);
@@ -2061,7 +2076,7 @@ var Sizzle =
                     return matchIndexes;
                 }),
 
-                "odd": createPositionalPseudo(function (matchIndexes, length) {
+                odd: createPositionalPseudo(function (matchIndexes, length) {
                     var i = 1;
                     for (; i < length; i += 2) {
                         matchIndexes.push(i);
@@ -2069,44 +2084,48 @@ var Sizzle =
                     return matchIndexes;
                 }),
 
-                "lt": createPositionalPseudo(function (matchIndexes, length, argument) {
+                lt: createPositionalPseudo(function (matchIndexes, length, argument) {
                     var i = argument < 0 ? argument + length : argument;
-                    for (; --i >= 0;) {
+                    for (; --i >= 0; ) {
                         matchIndexes.push(i);
                     }
                     return matchIndexes;
                 }),
 
-                "gt": createPositionalPseudo(function (matchIndexes, length, argument) {
+                gt: createPositionalPseudo(function (matchIndexes, length, argument) {
                     var i = argument < 0 ? argument + length : argument;
-                    for (; ++i < length;) {
+                    for (; ++i < length; ) {
                         matchIndexes.push(i);
                     }
                     return matchIndexes;
-                })
-            }
+                }),
+            },
         };
 
         Expr.pseudos["nth"] = Expr.pseudos["eq"];
 
-// Add button/input type pseudos
-        for (i in {radio: true, checkbox: true, file: true, password: true, image: true}) {
+        // Add button/input type pseudos
+        for (i in { radio: true, checkbox: true, file: true, password: true, image: true }) {
             Expr.pseudos[i] = createInputPseudo(i);
         }
-        for (i in {submit: true, reset: true}) {
+        for (i in { submit: true, reset: true }) {
             Expr.pseudos[i] = createButtonPseudo(i);
         }
 
-// Easy API for creating new setFilters
-        function setFilters() {
-        }
+        // Easy API for creating new setFilters
+        function setFilters() {}
 
         setFilters.prototype = Expr.filters = Expr.pseudos;
         Expr.setFilters = new setFilters();
 
         tokenize = Sizzle.tokenize = function (selector, parseOnly) {
-            var matched, match, tokens, type,
-                soFar, groups, preFilters,
+            var matched,
+                match,
+                tokens,
+                type,
+                soFar,
+                groups,
+                preFilters,
                 cached = tokenCache[selector + " "];
 
             if (cached) {
@@ -2118,7 +2137,6 @@ var Sizzle =
             preFilters = Expr.preFilter;
 
             while (soFar) {
-
                 // Comma and first run
                 if (!matched || (match = rcomma.exec(soFar))) {
                     if (match) {
@@ -2136,20 +2154,22 @@ var Sizzle =
                     tokens.push({
                         value: matched,
                         // Cast descendant combinators to space
-                        type: match[0].replace(rtrim, " ")
+                        type: match[0].replace(rtrim, " "),
                     });
                     soFar = soFar.slice(matched.length);
                 }
 
                 // Filters
                 for (type in Expr.filter) {
-                    if ((match = matchExpr[type].exec(soFar)) && (!preFilters[type] ||
-                        (match = preFilters[type](match)))) {
+                    if (
+                        (match = matchExpr[type].exec(soFar)) &&
+                        (!preFilters[type] || (match = preFilters[type](match)))
+                    ) {
                         matched = match.shift();
                         tokens.push({
                             value: matched,
                             type: type,
-                            matches: match
+                            matches: match,
                         });
                         soFar = soFar.slice(matched.length);
                     }
@@ -2163,12 +2183,12 @@ var Sizzle =
             // Return the length of the invalid excess
             // if we're just parsing
             // Otherwise, throw an error or return tokens
-            return parseOnly ?
-                soFar.length :
-                soFar ?
-                    Sizzle.error(selector) :
-                    // Cache the tokens
-                    tokenCache(selector, groups).slice(0);
+            return parseOnly
+                ? soFar.length
+                : soFar
+                ? Sizzle.error(selector)
+                : // Cache the tokens
+                  tokenCache(selector, groups).slice(0);
         };
 
         function toSelector(tokens) {
@@ -2188,75 +2208,78 @@ var Sizzle =
                 checkNonElements = base && key === "parentNode",
                 doneName = done++;
 
-            return combinator.first ?
-                // Check against closest ancestor/preceding element
-                function (elem, context, xml) {
-                    while ((elem = elem[dir])) {
-                        if (elem.nodeType === 1 || checkNonElements) {
-                            return matcher(elem, context, xml);
-                        }
-                    }
-                    return false;
-                } :
+            return combinator.first
+                ? // Check against closest ancestor/preceding element
+                  function (elem, context, xml) {
+                      while ((elem = elem[dir])) {
+                          if (elem.nodeType === 1 || checkNonElements) {
+                              return matcher(elem, context, xml);
+                          }
+                      }
+                      return false;
+                  }
+                : // Check against all ancestor/preceding elements
+                  function (elem, context, xml) {
+                      var oldCache,
+                          uniqueCache,
+                          outerCache,
+                          newCache = [dirruns, doneName];
 
-                // Check against all ancestor/preceding elements
-                function (elem, context, xml) {
-                    var oldCache, uniqueCache, outerCache,
-                        newCache = [dirruns, doneName];
+                      // We can't set arbitrary data on XML nodes, so they don't benefit from combinator caching
+                      if (xml) {
+                          while ((elem = elem[dir])) {
+                              if (elem.nodeType === 1 || checkNonElements) {
+                                  if (matcher(elem, context, xml)) {
+                                      return true;
+                                  }
+                              }
+                          }
+                      } else {
+                          while ((elem = elem[dir])) {
+                              if (elem.nodeType === 1 || checkNonElements) {
+                                  outerCache = elem[expando] || (elem[expando] = {});
 
-                    // We can't set arbitrary data on XML nodes, so they don't benefit from combinator caching
-                    if (xml) {
-                        while ((elem = elem[dir])) {
-                            if (elem.nodeType === 1 || checkNonElements) {
-                                if (matcher(elem, context, xml)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    } else {
-                        while ((elem = elem[dir])) {
-                            if (elem.nodeType === 1 || checkNonElements) {
-                                outerCache = elem[expando] || (elem[expando] = {});
+                                  // Support: IE <9 only
+                                  // Defend against cloned attroperties (jQuery gh-1709)
+                                  uniqueCache = outerCache[elem.uniqueID] || (outerCache[elem.uniqueID] = {});
 
-                                // Support: IE <9 only
-                                // Defend against cloned attroperties (jQuery gh-1709)
-                                uniqueCache = outerCache[elem.uniqueID] || (outerCache[elem.uniqueID] = {});
+                                  if (skip && skip === elem.nodeName.toLowerCase()) {
+                                      elem = elem[dir] || elem;
+                                  } else if (
+                                      (oldCache = uniqueCache[key]) &&
+                                      oldCache[0] === dirruns &&
+                                      oldCache[1] === doneName
+                                  ) {
+                                      // Assign to newCache so results back-propagate to previous elements
+                                      return (newCache[2] = oldCache[2]);
+                                  } else {
+                                      // Reuse newcache so results back-propagate to previous elements
+                                      uniqueCache[key] = newCache;
 
-                                if (skip && skip === elem.nodeName.toLowerCase()) {
-                                    elem = elem[dir] || elem;
-                                } else if ((oldCache = uniqueCache[key]) &&
-                                    oldCache[0] === dirruns && oldCache[1] === doneName) {
-
-                                    // Assign to newCache so results back-propagate to previous elements
-                                    return (newCache[2] = oldCache[2]);
-                                } else {
-                                    // Reuse newcache so results back-propagate to previous elements
-                                    uniqueCache[key] = newCache;
-
-                                    // A match means we're done; a fail means we have to keep checking
-                                    if ((newCache[2] = matcher(elem, context, xml))) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return false;
-                };
+                                      // A match means we're done; a fail means we have to keep checking
+                                      if ((newCache[2] = matcher(elem, context, xml))) {
+                                          return true;
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                      return false;
+                  };
         }
 
         function elementMatcher(matchers) {
-            return matchers.length > 1 ?
-                function (elem, context, xml) {
-                    var i = matchers.length;
-                    while (i--) {
-                        if (!matchers[i](elem, context, xml)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                } :
-                matchers[0];
+            return matchers.length > 1
+                ? function (elem, context, xml) {
+                      var i = matchers.length;
+                      while (i--) {
+                          if (!matchers[i](elem, context, xml)) {
+                              return false;
+                          }
+                      }
+                      return true;
+                  }
+                : matchers[0];
         }
 
         function multipleContexts(selector, contexts, results) {
@@ -2297,29 +2320,25 @@ var Sizzle =
                 postFinder = setMatcher(postFinder, postSelector);
             }
             return markFunction(function (seed, results, context, xml) {
-                var temp, i, elem,
+                var temp,
+                    i,
+                    elem,
                     preMap = [],
                     postMap = [],
                     preexisting = results.length,
-
                     // Get initial elements from seed or context
                     elems = seed || multipleContexts(selector || "*", context.nodeType ? [context] : context, []),
-
                     // Prefilter to get matcher input, preserving a map for seed-results synchronization
-                    matcherIn = preFilter && (seed || !selector) ?
-                        condense(elems, preMap, preFilter, context, xml) :
-                        elems,
-
-                    matcherOut = matcher ?
-                        // If we have a postFinder, or filtered seed, or non-seed postFilter or preexisting results,
-                        postFinder || (seed ? preFilter : preexisting || postFilter) ?
-
-                            // ...intermediate processing is necessary
-                            [] :
-
-                            // ...otherwise use results directly
-                            results :
-                        matcherIn;
+                    matcherIn =
+                        preFilter && (seed || !selector) ? condense(elems, preMap, preFilter, context, xml) : elems,
+                    matcherOut = matcher
+                        ? // If we have a postFinder, or filtered seed, or non-seed postFilter or preexisting results,
+                          postFinder || (seed ? preFilter : preexisting || postFilter)
+                            ? // ...intermediate processing is necessary
+                              []
+                            : // ...otherwise use results directly
+                              results
+                        : matcherIn;
 
                 // Find primary matches
                 if (matcher) {
@@ -2358,9 +2377,7 @@ var Sizzle =
                         // Move matched elements from seed to results to keep them synchronized
                         i = matcherOut.length;
                         while (i--) {
-                            if ((elem = matcherOut[i]) &&
-                                (temp = postFinder ? indexOf(seed, elem) : preMap[i]) > -1) {
-
+                            if ((elem = matcherOut[i]) && (temp = postFinder ? indexOf(seed, elem) : preMap[i]) > -1) {
                                 seed[temp] = !(results[temp] = elem);
                             }
                         }
@@ -2369,9 +2386,7 @@ var Sizzle =
                     // Add elements to results, through postFinder if defined
                 } else {
                     matcherOut = condense(
-                        matcherOut === results ?
-                            matcherOut.splice(preexisting, matcherOut.length) :
-                            matcherOut
+                        matcherOut === results ? matcherOut.splice(preexisting, matcherOut.length) : matcherOut
                     );
                     if (postFinder) {
                         postFinder(null, results, matcherOut, xml);
@@ -2383,28 +2398,40 @@ var Sizzle =
         }
 
         function matcherFromTokens(tokens) {
-            var checkContext, matcher, j,
+            var checkContext,
+                matcher,
+                j,
                 len = tokens.length,
                 leadingRelative = Expr.relative[tokens[0].type],
                 implicitRelative = leadingRelative || Expr.relative[" "],
                 i = leadingRelative ? 1 : 0,
-
                 // The foundational matcher ensures that elements are reachable from top-level context(s)
-                matchContext = addCombinator(function (elem) {
-                    return elem === checkContext;
-                }, implicitRelative, true),
-                matchAnyContext = addCombinator(function (elem) {
-                    return indexOf(checkContext, elem) > -1;
-                }, implicitRelative, true),
-                matchers = [function (elem, context, xml) {
-                    var ret = (!leadingRelative && (xml || context !== outermostContext)) || (
-                        (checkContext = context).nodeType ?
-                            matchContext(elem, context, xml) :
-                            matchAnyContext(elem, context, xml));
-                    // Avoid hanging onto element (issue #299)
-                    checkContext = null;
-                    return ret;
-                }];
+                matchContext = addCombinator(
+                    function (elem) {
+                        return elem === checkContext;
+                    },
+                    implicitRelative,
+                    true
+                ),
+                matchAnyContext = addCombinator(
+                    function (elem) {
+                        return indexOf(checkContext, elem) > -1;
+                    },
+                    implicitRelative,
+                    true
+                ),
+                matchers = [
+                    function (elem, context, xml) {
+                        var ret =
+                            (!leadingRelative && (xml || context !== outermostContext)) ||
+                            ((checkContext = context).nodeType
+                                ? matchContext(elem, context, xml)
+                                : matchAnyContext(elem, context, xml));
+                        // Avoid hanging onto element (issue #299)
+                        checkContext = null;
+                        return ret;
+                    },
+                ];
 
             for (; i < len; i++) {
                 if ((matcher = Expr.relative[tokens[i].type])) {
@@ -2423,10 +2450,11 @@ var Sizzle =
                         }
                         return setMatcher(
                             i > 1 && elementMatcher(matchers),
-                            i > 1 && toSelector(
-                            // If the preceding token was a descendant combinator, insert an implicit any-element `*`
-                            tokens.slice(0, i - 1).concat({value: tokens[i - 2].type === " " ? "*" : ""})
-                            ).replace(rtrim, "$1"),
+                            i > 1 &&
+                                toSelector(
+                                    // If the preceding token was a descendant combinator, insert an implicit any-element `*`
+                                    tokens.slice(0, i - 1).concat({ value: tokens[i - 2].type === " " ? "*" : "" })
+                                ).replace(rtrim, "$1"),
                             matcher,
                             i < j && matcherFromTokens(tokens.slice(i, j)),
                             j < len && matcherFromTokens((tokens = tokens.slice(j))),
@@ -2444,14 +2472,16 @@ var Sizzle =
             var bySet = setMatchers.length > 0,
                 byElement = elementMatchers.length > 0,
                 superMatcher = function (seed, context, xml, results, outermost) {
-                    var elem, j, matcher,
+                    var elem,
+                        j,
+                        matcher,
                         matchedCount = 0,
                         i = "0",
                         unmatched = seed && [],
                         setMatched = [],
                         contextBackup = outermostContext,
                         // We must always have either seed elements or outermost context
-                        elems = seed || byElement && Expr.find["TAG"]("*", outermost),
+                        elems = seed || (byElement && Expr.find["TAG"]("*", outermost)),
                         // Use integer dirruns iff this is the outermost matcher
                         dirrunsUnique = (dirruns += contextBackup == null ? 1 : Math.random() || 0.1),
                         len = elems.length;
@@ -2530,9 +2560,7 @@ var Sizzle =
                         push.apply(results, setMatched);
 
                         // Seedless set matches succeeding multiple successful matchers stipulate sorting
-                        if (outermost && !seed && setMatched.length > 0 &&
-                            (matchedCount + setMatchers.length) > 1) {
-
+                        if (outermost && !seed && setMatched.length > 0 && matchedCount + setMatchers.length > 1) {
                             Sizzle.uniqueSort(results);
                         }
                     }
@@ -2546,9 +2574,7 @@ var Sizzle =
                     return unmatched;
                 };
 
-            return bySet ?
-                markFunction(superMatcher) :
-                superMatcher;
+            return bySet ? markFunction(superMatcher) : superMatcher;
         }
 
         compile = Sizzle.compile = function (selector, match /* Internal Use Only */) {
@@ -2591,7 +2617,11 @@ var Sizzle =
          * @param {Array} [seed] A set of elements to match against
          */
         select = Sizzle.select = function (selector, context, results, seed) {
-            var i, tokens, token, type, find,
+            var i,
+                tokens,
+                token,
+                type,
+                find,
                 compiled = typeof selector === "function" && selector,
                 match = !seed && tokenize((selector = compiled.selector || selector));
 
@@ -2600,12 +2630,15 @@ var Sizzle =
             // Try to minimize operations if there is only one selector in the list and no seed
             // (the latter of which guarantees us context)
             if (match.length === 1) {
-
                 // Reduce context if the leading compound selector is an ID
                 tokens = match[0] = match[0].slice(0);
-                if (tokens.length > 2 && (token = tokens[0]).type === "ID" &&
-                    context.nodeType === 9 && documentIsHTML && Expr.relative[tokens[1].type]) {
-
+                if (
+                    tokens.length > 2 &&
+                    (token = tokens[0]).type === "ID" &&
+                    context.nodeType === 9 &&
+                    documentIsHTML &&
+                    Expr.relative[tokens[1].type]
+                ) {
                     context = (Expr.find["ID"](token.matches[0].replace(runescape, funescape), context) || [])[0];
                     if (!context) {
                         return results;
@@ -2629,11 +2662,12 @@ var Sizzle =
                     }
                     if ((find = Expr.find[type])) {
                         // Search, expanding context for leading sibling combinators
-                        if ((seed = find(
-                            token.matches[0].replace(runescape, funescape),
-                            rsibling.test(tokens[0].type) && testContext(context.parentNode) || context
-                        ))) {
-
+                        if (
+                            (seed = find(
+                                token.matches[0].replace(runescape, funescape),
+                                (rsibling.test(tokens[0].type) && testContext(context.parentNode)) || context
+                            ))
+                        ) {
                             // If seed is empty or no tokens remain, we can return early
                             tokens.splice(i, 1);
                             selector = seed.length && toSelector(tokens);
@@ -2655,37 +2689,39 @@ var Sizzle =
                 context,
                 !documentIsHTML,
                 results,
-                !context || rsibling.test(selector) && testContext(context.parentNode) || context
+                !context || (rsibling.test(selector) && testContext(context.parentNode)) || context
             );
             return results;
         };
 
-// One-time assignments
+        // One-time assignments
 
-// Sort stability
+        // Sort stability
         support.sortStable = expando.split("").sort(sortOrder).join("") === expando;
 
-// Support: Chrome 14-35+
-// Always assume duplicates if they aren't passed to the comparison function
+        // Support: Chrome 14-35+
+        // Always assume duplicates if they aren't passed to the comparison function
         support.detectDuplicates = !!hasDuplicate;
 
-// Initialize against the default document
+        // Initialize against the default document
         setDocument();
 
-// Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
-// Detached nodes confoundingly follow *each other*
+        // Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
+        // Detached nodes confoundingly follow *each other*
         support.sortDetached = assert(function (el) {
             // Should return 1, but returns 4 (following)
             return el.compareDocumentPosition(document.createElement("fieldset")) & 1;
         });
 
-// Support: IE<8
-// Prevent attribute/property "interpolation"
-// https://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
-        if (!assert(function (el) {
-            el.innerHTML = "<a href='#'></a>";
-            return el.firstChild.getAttribute("href") === "#";
-        })) {
+        // Support: IE<8
+        // Prevent attribute/property "interpolation"
+        // https://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
+        if (
+            !assert(function (el) {
+                el.innerHTML = "<a href='#'></a>";
+                return el.firstChild.getAttribute("href") === "#";
+            })
+        ) {
             addHandle("type|href|height|width", function (elem, name, isXML) {
                 if (!isXML) {
                     return elem.getAttribute(name, name.toLowerCase() === "type" ? 1 : 2);
@@ -2693,13 +2729,16 @@ var Sizzle =
             });
         }
 
-// Support: IE<9
-// Use defaultValue in place of getAttribute("value")
-        if (!support.attributes || !assert(function (el) {
-            el.innerHTML = "<input/>";
-            el.firstChild.setAttribute("value", "");
-            return el.firstChild.getAttribute("value") === "";
-        })) {
+        // Support: IE<9
+        // Use defaultValue in place of getAttribute("value")
+        if (
+            !support.attributes ||
+            !assert(function (el) {
+                el.innerHTML = "<input/>";
+                el.firstChild.setAttribute("value", "");
+                return el.firstChild.getAttribute("value") === "";
+            })
+        ) {
             addHandle("value", function (elem, name, isXML) {
                 if (!isXML && elem.nodeName.toLowerCase() === "input") {
                     return elem.defaultValue;
@@ -2707,26 +2746,27 @@ var Sizzle =
             });
         }
 
-// Support: IE<9
-// Use getAttributeNode to fetch booleans when getAttribute lies
-        if (!assert(function (el) {
-            return el.getAttribute("disabled") == null;
-        })) {
+        // Support: IE<9
+        // Use getAttributeNode to fetch booleans when getAttribute lies
+        if (
+            !assert(function (el) {
+                return el.getAttribute("disabled") == null;
+            })
+        ) {
             addHandle(booleans, function (elem, name, isXML) {
                 var val;
                 if (!isXML) {
-                    return elem[name] === true ? name.toLowerCase() :
-                        (val = elem.getAttributeNode(name)) && val.specified ?
-                            val.value :
-                            null;
+                    return elem[name] === true
+                        ? name.toLowerCase()
+                        : (val = elem.getAttributeNode(name)) && val.specified
+                        ? val.value
+                        : null;
                 }
             });
         }
 
         return Sizzle;
-
     })(window);
-
 
 jQuery.find = Sizzle;
 jQuery.expr = Sizzle.selectors;
@@ -2738,7 +2778,6 @@ jQuery.text = Sizzle.getText;
 jQuery.isXMLDoc = Sizzle.isXML;
 jQuery.contains = Sizzle.contains;
 jQuery.escapeSelector = Sizzle.escape;
-
 
 var dir = function (elem, dir, until) {
     var matched = [],
@@ -2755,7 +2794,6 @@ var dir = function (elem, dir, until) {
     return matched;
 };
 
-
 var siblings = function (n, elem) {
     var matched = [];
 
@@ -2768,17 +2806,12 @@ var siblings = function (n, elem) {
     return matched;
 };
 
-
 var rneedsContext = jQuery.expr.match.needsContext;
 
-
 function nodeName(elem, name) {
-
     return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
-
 }
-var rsingleTag = (/^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i);
-
+var rsingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 // Implement the identical functionality for filter and not
 function winnow(elements, qualifier, not) {
@@ -2798,7 +2831,7 @@ function winnow(elements, qualifier, not) {
     // Arraylike of elements (jQuery, arguments, Array)
     if (typeof qualifier !== "string") {
         return jQuery.grep(elements, function (elem) {
-            return (indexOf.call(qualifier, elem) > -1) !== not;
+            return indexOf.call(qualifier, elem) > -1 !== not;
         });
     }
 
@@ -2817,25 +2850,31 @@ jQuery.filter = function (expr, elems, not) {
         return jQuery.find.matchesSelector(elem, expr) ? [elem] : [];
     }
 
-    return jQuery.find.matches(expr, jQuery.grep(elems, function (elem) {
-        return elem.nodeType === 1;
-    }));
+    return jQuery.find.matches(
+        expr,
+        jQuery.grep(elems, function (elem) {
+            return elem.nodeType === 1;
+        })
+    );
 };
 
 jQuery.fn.extend({
     find: function (selector) {
-        var i, ret,
+        var i,
+            ret,
             len = this.length,
             self = this;
 
         if (typeof selector !== "string") {
-            return this.pushStack(jQuery(selector).filter(function () {
-                for (i = 0; i < len; i++) {
-                    if (jQuery.contains(self[i], this)) {
-                        return true;
+            return this.pushStack(
+                jQuery(selector).filter(function () {
+                    for (i = 0; i < len; i++) {
+                        if (jQuery.contains(self[i], this)) {
+                            return true;
+                        }
                     }
-                }
-            }));
+                })
+            );
         }
 
         ret = this.pushStack([]);
@@ -2858,28 +2897,22 @@ jQuery.fn.extend({
 
             // If this is a positional/relative selector, check membership in the returned set
             // so $("p:first").is("p:last") won't return true for a doc with two "p".
-            typeof selector === "string" && rneedsContext.test(selector) ?
-                jQuery(selector) :
-                selector || [],
+            typeof selector === "string" && rneedsContext.test(selector) ? jQuery(selector) : selector || [],
             false
         ).length;
-    }
+    },
 });
-
 
 // Initialize a jQuery object
 
-
 // A central reference to the root jQuery(document)
 var rootjQuery,
-
     // A simple way to check for HTML strings
     // Prioritize #id over <tag> to avoid XSS via location.hash (#9521)
     // Strict HTML recognition (#11290: must start with <)
     // Shortcut simple #id case for speed
     rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/,
-
-    init = jQuery.fn.init = function (selector, context, root) {
+    init = (jQuery.fn.init = function (selector, context, root) {
         var match, elem;
 
         // HANDLE: $(""), $(null), $(undefined), $(false)
@@ -2893,36 +2926,33 @@ var rootjQuery,
 
         // Handle HTML strings
         if (typeof selector === "string") {
-            if (selector[0] === "<" &&
-                selector[selector.length - 1] === ">" &&
-                selector.length >= 3) {
-
+            if (selector[0] === "<" && selector[selector.length - 1] === ">" && selector.length >= 3) {
                 // Assume that strings that start and end with <> are HTML and skip the regex check
                 match = [null, selector, null];
-
             } else {
                 match = rquickExpr.exec(selector);
             }
 
             // Match html or make sure no context is specified for #id
             if (match && (match[1] || !context)) {
-
                 // HANDLE: $(html) -> $(array)
                 if (match[1]) {
                     context = context instanceof jQuery ? context[0] : context;
 
                     // Option to run scripts is true for back-compat
                     // Intentionally let the error be thrown if parseHTML is not present
-                    jQuery.merge(this, jQuery.parseHTML(
-                        match[1],
-                        context && context.nodeType ? context.ownerDocument || context : document,
-                        true
-                    ));
+                    jQuery.merge(
+                        this,
+                        jQuery.parseHTML(
+                            match[1],
+                            context && context.nodeType ? context.ownerDocument || context : document,
+                            true
+                        )
+                    );
 
                     // HANDLE: $(html, props)
                     if (rsingleTag.test(match[1]) && jQuery.isPlainObject(context)) {
                         for (match in context) {
-
                             // Properties of context are called as methods if possible
                             if (isFunction(this[match])) {
                                 this[match](context[match]);
@@ -2941,7 +2971,6 @@ var rootjQuery,
                     elem = document.getElementById(match[2]);
 
                     if (elem) {
-
                         // Inject the element directly into the jQuery object
                         this[0] = elem;
                         this.length = 1;
@@ -2968,15 +2997,14 @@ var rootjQuery,
             // HANDLE: $(function)
             // Shortcut for document ready
         } else if (isFunction(selector)) {
-            return root.ready !== undefined ?
-                root.ready(selector) :
-
-                // Execute immediately if ready is not present
-                selector(jQuery);
+            return root.ready !== undefined
+                ? root.ready(selector)
+                : // Execute immediately if ready is not present
+                  selector(jQuery);
         }
 
         return jQuery.makeArray(selector, this);
-    };
+    });
 
 // Give the init function the jQuery prototype for later instantiation
 init.prototype = jQuery.fn;
@@ -2984,15 +3012,13 @@ init.prototype = jQuery.fn;
 // Initialize central reference
 rootjQuery = jQuery(document);
 
-
 var rparentsprev = /^(?:parents|prev(?:Until|All))/,
-
     // Methods guaranteed to produce a unique set when starting from a unique set
     guaranteedUnique = {
         children: true,
         contents: true,
         next: true,
-        prev: true
+        prev: true,
     };
 
 jQuery.fn.extend({
@@ -3021,15 +3047,14 @@ jQuery.fn.extend({
         if (!rneedsContext.test(selectors)) {
             for (; i < l; i++) {
                 for (cur = this[i]; cur && cur !== context; cur = cur.parentNode) {
-
                     // Always skip document fragments
-                    if (cur.nodeType < 11 && (targets ?
-                        targets.index(cur) > -1 :
-
-                        // Don't pass non-elements to Sizzle
-                        cur.nodeType === 1 &&
-                        jQuery.find.matchesSelector(cur, selectors))) {
-
+                    if (
+                        cur.nodeType < 11 &&
+                        (targets
+                            ? targets.index(cur) > -1
+                            : // Don't pass non-elements to Sizzle
+                              cur.nodeType === 1 && jQuery.find.matchesSelector(cur, selectors))
+                    ) {
                         matched.push(cur);
                         break;
                     }
@@ -3042,10 +3067,9 @@ jQuery.fn.extend({
 
     // Determine the position of an element within the set
     index: function (elem) {
-
         // No argument, return index in parent
         if (!elem) {
-            return (this[0] && this[0].parentNode) ? this.first().prevAll().length : -1;
+            return this[0] && this[0].parentNode ? this.first().prevAll().length : -1;
         }
 
         // Index in selector
@@ -3054,7 +3078,8 @@ jQuery.fn.extend({
         }
 
         // Locate the position of the desired element
-        return indexOf.call(this,
+        return indexOf.call(
+            this,
 
             // If it receives a jQuery object, the first element is used
             elem.jquery ? elem[0] : elem
@@ -3062,105 +3087,99 @@ jQuery.fn.extend({
     },
 
     add: function (selector, context) {
-        return this.pushStack(
-            jQuery.uniqueSort(
-                jQuery.merge(this.get(), jQuery(selector, context))
-            )
-        );
+        return this.pushStack(jQuery.uniqueSort(jQuery.merge(this.get(), jQuery(selector, context))));
     },
 
     addBack: function (selector) {
-        return this.add(selector == null ?
-            this.prevObject : this.prevObject.filter(selector)
-        );
-    }
+        return this.add(selector == null ? this.prevObject : this.prevObject.filter(selector));
+    },
 });
 
 function sibling(cur, dir) {
-    while ((cur = cur[dir]) && cur.nodeType !== 1) {
-    }
+    while ((cur = cur[dir]) && cur.nodeType !== 1) {}
     return cur;
 }
 
-jQuery.each({
-    parent: function (elem) {
-        var parent = elem.parentNode;
-        return parent && parent.nodeType !== 11 ? parent : null;
-    },
-    parents: function (elem) {
-        return dir(elem, "parentNode");
-    },
-    parentsUntil: function (elem, i, until) {
-        return dir(elem, "parentNode", until);
-    },
-    next: function (elem) {
-        return sibling(elem, "nextSibling");
-    },
-    prev: function (elem) {
-        return sibling(elem, "previousSibling");
-    },
-    nextAll: function (elem) {
-        return dir(elem, "nextSibling");
-    },
-    prevAll: function (elem) {
-        return dir(elem, "previousSibling");
-    },
-    nextUntil: function (elem, i, until) {
-        return dir(elem, "nextSibling", until);
-    },
-    prevUntil: function (elem, i, until) {
-        return dir(elem, "previousSibling", until);
-    },
-    siblings: function (elem) {
-        return siblings((elem.parentNode || {}).firstChild, elem);
-    },
-    children: function (elem) {
-        return siblings(elem.firstChild);
-    },
-    contents: function (elem) {
-        if (nodeName(elem, "iframe")) {
-            return elem.contentDocument;
-        }
+jQuery.each(
+    {
+        parent: function (elem) {
+            var parent = elem.parentNode;
+            return parent && parent.nodeType !== 11 ? parent : null;
+        },
+        parents: function (elem) {
+            return dir(elem, "parentNode");
+        },
+        parentsUntil: function (elem, i, until) {
+            return dir(elem, "parentNode", until);
+        },
+        next: function (elem) {
+            return sibling(elem, "nextSibling");
+        },
+        prev: function (elem) {
+            return sibling(elem, "previousSibling");
+        },
+        nextAll: function (elem) {
+            return dir(elem, "nextSibling");
+        },
+        prevAll: function (elem) {
+            return dir(elem, "previousSibling");
+        },
+        nextUntil: function (elem, i, until) {
+            return dir(elem, "nextSibling", until);
+        },
+        prevUntil: function (elem, i, until) {
+            return dir(elem, "previousSibling", until);
+        },
+        siblings: function (elem) {
+            return siblings((elem.parentNode || {}).firstChild, elem);
+        },
+        children: function (elem) {
+            return siblings(elem.firstChild);
+        },
+        contents: function (elem) {
+            if (nodeName(elem, "iframe")) {
+                return elem.contentDocument;
+            }
 
-        // Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
-        // Treat the template element as a regular one in browsers that
-        // don't support it.
-        if (nodeName(elem, "template")) {
-            elem = elem.content || elem;
-        }
+            // Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
+            // Treat the template element as a regular one in browsers that
+            // don't support it.
+            if (nodeName(elem, "template")) {
+                elem = elem.content || elem;
+            }
 
-        return jQuery.merge([], elem.childNodes);
+            return jQuery.merge([], elem.childNodes);
+        },
+    },
+    function (name, fn) {
+        jQuery.fn[name] = function (until, selector) {
+            var matched = jQuery.map(this, fn, until);
+
+            if (name.slice(-5) !== "Until") {
+                selector = until;
+            }
+
+            if (selector && typeof selector === "string") {
+                matched = jQuery.filter(selector, matched);
+            }
+
+            if (this.length > 1) {
+                // Remove duplicates
+                if (!guaranteedUnique[name]) {
+                    jQuery.uniqueSort(matched);
+                }
+
+                // Reverse order for parents* and prev-derivatives
+                if (rparentsprev.test(name)) {
+                    matched.reverse();
+                }
+            }
+
+            return this.pushStack(matched);
+        };
     }
-}, function (name, fn) {
-    jQuery.fn[name] = function (until, selector) {
-        var matched = jQuery.map(this, fn, until);
-
-        if (name.slice(-5) !== "Until") {
-            selector = until;
-        }
-
-        if (selector && typeof selector === "string") {
-            matched = jQuery.filter(selector, matched);
-        }
-
-        if (this.length > 1) {
-
-            // Remove duplicates
-            if (!guaranteedUnique[name]) {
-                jQuery.uniqueSort(matched);
-            }
-
-            // Reverse order for parents* and prev-derivatives
-            if (rparentsprev.test(name)) {
-                matched.reverse();
-            }
-        }
-
-        return this.pushStack(matched);
-    };
-});
-var rnothtmlwhite = (/[^\x20\t\r\n\f]+/g);
-
+);
+var rnothtmlwhite = /[^\x20\t\r\n\f]+/g;
 
 // Convert String-formatted options into Object-formatted ones
 function createOptions(options) {
@@ -3194,37 +3213,26 @@ function createOptions(options) {
  *
  */
 jQuery.Callbacks = function (options) {
-
     // Convert options from String-formatted to Object-formatted if needed
     // (we check in cache first)
-    options = typeof options === "string" ?
-        createOptions(options) :
-        jQuery.extend({}, options);
+    options = typeof options === "string" ? createOptions(options) : jQuery.extend({}, options);
 
     var // Flag to know if list is currently firing
         firing,
-
         // Last fire value for non-forgettable lists
         memory,
-
         // Flag to know if list was already fired
         fired,
-
         // Flag to prevent firing
         locked,
-
         // Actual callback list
         list = [],
-
         // Queue of execution data for repeatable lists
         queue = [],
-
         // Index of currently firing callback (modified by add/remove as needed)
         firingIndex = -1,
-
         // Fire callbacks
         fire = function () {
-
             // Enforce single-firing
             locked = locked || options.once;
 
@@ -3234,11 +3242,8 @@ jQuery.Callbacks = function (options) {
             for (; queue.length; firingIndex = -1) {
                 memory = queue.shift();
                 while (++firingIndex < list.length) {
-
                     // Run callback and check for early termination
-                    if (list[firingIndex].apply(memory[0], memory[1]) === false &&
-                        options.stopOnFalse) {
-
+                    if (list[firingIndex].apply(memory[0], memory[1]) === false && options.stopOnFalse) {
                         // Jump to end and forget the data so .add doesn't re-fire
                         firingIndex = list.length;
                         memory = false;
@@ -3255,7 +3260,6 @@ jQuery.Callbacks = function (options) {
 
             // Clean up if we're done firing for good
             if (locked) {
-
                 // Keep an empty list if we have data for future add calls
                 if (memory) {
                     list = [];
@@ -3266,14 +3270,11 @@ jQuery.Callbacks = function (options) {
                 }
             }
         },
-
         // Actual Callbacks object
         self = {
-
             // Add a callback or a collection of callbacks to the list
             add: function () {
                 if (list) {
-
                     // If we have memory from a past run, we should fire after adding
                     if (memory && !firing) {
                         firingIndex = list.length - 1;
@@ -3287,7 +3288,6 @@ jQuery.Callbacks = function (options) {
                                     list.push(arg);
                                 }
                             } else if (arg && arg.length && toType(arg) !== "string") {
-
                                 // Inspect recursively
                                 add(arg);
                             }
@@ -3320,9 +3320,7 @@ jQuery.Callbacks = function (options) {
             // Check if a given callback is in the list.
             // If no argument is given, return whether or not list has callbacks attached.
             has: function (fn) {
-                return fn ?
-                    jQuery.inArray(fn, list) > -1 :
-                    list.length > 0;
+                return fn ? jQuery.inArray(fn, list) > -1 : list.length > 0;
             },
 
             // Remove all callbacks from the list
@@ -3381,12 +3379,11 @@ jQuery.Callbacks = function (options) {
             // To know if the callbacks have already been called at least once
             fired: function () {
                 return !!fired;
-            }
+            },
         };
 
     return self;
 };
-
 
 function Identity(v) {
     return v;
@@ -3400,7 +3397,6 @@ function adoptValue(value, resolve, reject, noValue) {
     var method;
 
     try {
-
         // Check for promise aspect first to privilege synchronous behavior
         if (value && isFunction((method = value.promise))) {
             method.call(value).done(resolve).fail(reject);
@@ -3411,7 +3407,6 @@ function adoptValue(value, resolve, reject, noValue) {
 
             // Other non-thenables
         } else {
-
             // Control `resolve` arguments by letting Array#slice cast boolean `noValue` to integer:
             // * false: [ value ].slice( 0 ) => resolve( value )
             // * true: [ value ].slice( 1 ) => resolve()
@@ -3422,7 +3417,6 @@ function adoptValue(value, resolve, reject, noValue) {
         // Since jQuery.when doesn't unwrap thenables, we can skip the extra checks appearing in
         // Deferred#then to conditionally suppress rejection.
     } catch (value) {
-
         // Support: Android 4.0 only
         // Strict mode functions invoked without .call/.apply get global-object context
         reject.apply(undefined, [value]);
@@ -3430,18 +3424,13 @@ function adoptValue(value, resolve, reject, noValue) {
 }
 
 jQuery.extend({
-
     Deferred: function (func) {
         var tuples = [
-
                 // action, add listener, callbacks,
                 // ... .then handlers, argument index, [final state]
-                ["notify", "progress", jQuery.Callbacks("memory"),
-                    jQuery.Callbacks("memory"), 2],
-                ["resolve", "done", jQuery.Callbacks("once memory"),
-                    jQuery.Callbacks("once memory"), 0, "resolved"],
-                ["reject", "fail", jQuery.Callbacks("once memory"),
-                    jQuery.Callbacks("once memory"), 1, "rejected"]
+                ["notify", "progress", jQuery.Callbacks("memory"), jQuery.Callbacks("memory"), 2],
+                ["resolve", "done", jQuery.Callbacks("once memory"), jQuery.Callbacks("once memory"), 0, "resolved"],
+                ["reject", "fail", jQuery.Callbacks("once memory"), jQuery.Callbacks("once memory"), 1, "rejected"],
             ],
             state = "pending",
             promise = {
@@ -3452,40 +3441,39 @@ jQuery.extend({
                     deferred.done(arguments).fail(arguments);
                     return this;
                 },
-                "catch": function (fn) {
+                catch: function (fn) {
                     return promise.then(null, fn);
                 },
 
                 // Keep pipe for back-compat
-                pipe: function ( /* fnDone, fnFail, fnProgress */) {
+                pipe: function (/* fnDone, fnFail, fnProgress */) {
                     var fns = arguments;
 
-                    return jQuery.Deferred(function (newDefer) {
-                        jQuery.each(tuples, function (i, tuple) {
+                    return jQuery
+                        .Deferred(function (newDefer) {
+                            jQuery.each(tuples, function (i, tuple) {
+                                // Map tuples (progress, done, fail) to arguments (done, fail, progress)
+                                var fn = isFunction(fns[tuple[4]]) && fns[tuple[4]];
 
-                            // Map tuples (progress, done, fail) to arguments (done, fail, progress)
-                            var fn = isFunction(fns[tuple[4]]) && fns[tuple[4]];
-
-                            // deferred.progress(function() { bind to newDefer or newDefer.notify })
-                            // deferred.done(function() { bind to newDefer or newDefer.resolve })
-                            // deferred.fail(function() { bind to newDefer or newDefer.reject })
-                            deferred[tuple[1]](function () {
-                                var returned = fn && fn.apply(this, arguments);
-                                if (returned && isFunction(returned.promise)) {
-                                    returned.promise()
-                                        .progress(newDefer.notify)
-                                        .done(newDefer.resolve)
-                                        .fail(newDefer.reject);
-                                } else {
-                                    newDefer[tuple[0] + "With"](
-                                        this,
-                                        fn ? [returned] : arguments
-                                    );
-                                }
+                                // deferred.progress(function() { bind to newDefer or newDefer.notify })
+                                // deferred.done(function() { bind to newDefer or newDefer.resolve })
+                                // deferred.fail(function() { bind to newDefer or newDefer.reject })
+                                deferred[tuple[1]](function () {
+                                    var returned = fn && fn.apply(this, arguments);
+                                    if (returned && isFunction(returned.promise)) {
+                                        returned
+                                            .promise()
+                                            .progress(newDefer.notify)
+                                            .done(newDefer.resolve)
+                                            .fail(newDefer.reject);
+                                    } else {
+                                        newDefer[tuple[0] + "With"](this, fn ? [returned] : arguments);
+                                    }
+                                });
                             });
-                        });
-                        fns = null;
-                    }).promise();
+                            fns = null;
+                        })
+                        .promise();
                 },
                 then: function (onFulfilled, onRejected, onProgress) {
                     var maxDepth = 0;
@@ -3516,18 +3504,16 @@ jQuery.extend({
                                     // https://promisesaplus.com/#point-54
                                     // https://promisesaplus.com/#point-75
                                     // Retrieve `then` only once
-                                    then = returned &&
-
+                                    then =
+                                        returned &&
                                         // Support: Promises/A+ section 2.3.4
                                         // https://promisesaplus.com/#point-64
                                         // Only check objects and functions for thenability
-                                        (typeof returned === "object" ||
-                                            typeof returned === "function") &&
+                                        (typeof returned === "object" || typeof returned === "function") &&
                                         returned.then;
 
                                     // Handle a returned thenable
                                     if (isFunction(then)) {
-
                                         // Special processors (notify) just wait for resolution
                                         if (special) {
                                             then.call(
@@ -3538,7 +3524,6 @@ jQuery.extend({
 
                                             // Normal processors (resolve) also hook into progress
                                         } else {
-
                                             // ...and disregard older resolution values
                                             maxDepth++;
 
@@ -3546,14 +3531,12 @@ jQuery.extend({
                                                 returned,
                                                 resolve(maxDepth, deferred, Identity, special),
                                                 resolve(maxDepth, deferred, Thrower, special),
-                                                resolve(maxDepth, deferred, Identity,
-                                                    deferred.notifyWith)
+                                                resolve(maxDepth, deferred, Identity, deferred.notifyWith)
                                             );
                                         }
 
                                         // Handle all other returned values
                                     } else {
-
                                         // Only substitute handlers pass on context
                                         // and multiple values (non-spec behavior)
                                         if (handler !== Identity) {
@@ -3566,36 +3549,32 @@ jQuery.extend({
                                         (special || deferred.resolveWith)(that, args);
                                     }
                                 },
-
                                 // Only normal processors (resolve) catch and reject exceptions
-                                process = special ?
-                                    mightThrow :
-                                    function () {
-                                        try {
-                                            mightThrow();
-                                        } catch (e) {
+                                process = special
+                                    ? mightThrow
+                                    : function () {
+                                          try {
+                                              mightThrow();
+                                          } catch (e) {
+                                              if (jQuery.Deferred.exceptionHook) {
+                                                  jQuery.Deferred.exceptionHook(e, process.stackTrace);
+                                              }
 
-                                            if (jQuery.Deferred.exceptionHook) {
-                                                jQuery.Deferred.exceptionHook(e,
-                                                    process.stackTrace);
-                                            }
+                                              // Support: Promises/A+ section 2.3.3.3.4.1
+                                              // https://promisesaplus.com/#point-61
+                                              // Ignore post-resolution exceptions
+                                              if (depth + 1 >= maxDepth) {
+                                                  // Only substitute handlers pass on context
+                                                  // and multiple values (non-spec behavior)
+                                                  if (handler !== Thrower) {
+                                                      that = undefined;
+                                                      args = [e];
+                                                  }
 
-                                            // Support: Promises/A+ section 2.3.3.3.4.1
-                                            // https://promisesaplus.com/#point-61
-                                            // Ignore post-resolution exceptions
-                                            if (depth + 1 >= maxDepth) {
-
-                                                // Only substitute handlers pass on context
-                                                // and multiple values (non-spec behavior)
-                                                if (handler !== Thrower) {
-                                                    that = undefined;
-                                                    args = [e];
-                                                }
-
-                                                deferred.rejectWith(that, args);
-                                            }
-                                        }
-                                    };
+                                                  deferred.rejectWith(that, args);
+                                              }
+                                          }
+                                      };
 
                             // Support: Promises/A+ section 2.3.3.3.1
                             // https://promisesaplus.com/#point-57
@@ -3604,7 +3583,6 @@ jQuery.extend({
                             if (depth) {
                                 process();
                             } else {
-
                                 // Call an optional hook to record the stack, in case of exception
                                 // since it's otherwise lost when execution goes async
                                 if (jQuery.Deferred.getStackHook) {
@@ -3615,49 +3593,32 @@ jQuery.extend({
                         };
                     }
 
-                    return jQuery.Deferred(function (newDefer) {
+                    return jQuery
+                        .Deferred(function (newDefer) {
+                            // progress_handlers.add( ... )
+                            tuples[0][3].add(
+                                resolve(
+                                    0,
+                                    newDefer,
+                                    isFunction(onProgress) ? onProgress : Identity,
+                                    newDefer.notifyWith
+                                )
+                            );
 
-                        // progress_handlers.add( ... )
-                        tuples[0][3].add(
-                            resolve(
-                                0,
-                                newDefer,
-                                isFunction(onProgress) ?
-                                    onProgress :
-                                    Identity,
-                                newDefer.notifyWith
-                            )
-                        );
+                            // fulfilled_handlers.add( ... )
+                            tuples[1][3].add(resolve(0, newDefer, isFunction(onFulfilled) ? onFulfilled : Identity));
 
-                        // fulfilled_handlers.add( ... )
-                        tuples[1][3].add(
-                            resolve(
-                                0,
-                                newDefer,
-                                isFunction(onFulfilled) ?
-                                    onFulfilled :
-                                    Identity
-                            )
-                        );
-
-                        // rejected_handlers.add( ... )
-                        tuples[2][3].add(
-                            resolve(
-                                0,
-                                newDefer,
-                                isFunction(onRejected) ?
-                                    onRejected :
-                                    Thrower
-                            )
-                        );
-                    }).promise();
+                            // rejected_handlers.add( ... )
+                            tuples[2][3].add(resolve(0, newDefer, isFunction(onRejected) ? onRejected : Thrower));
+                        })
+                        .promise();
                 },
 
                 // Get a promise for this deferred
                 // If obj is provided, the promise aspect is added to the object
                 promise: function (obj) {
                     return obj != null ? jQuery.extend(obj, promise) : promise;
-                }
+                },
             },
             deferred = {};
 
@@ -3675,7 +3636,6 @@ jQuery.extend({
             if (stateString) {
                 list.add(
                     function () {
-
                         // state = "resolved" (i.e., fulfilled)
                         // state = "rejected"
                         state = stateString;
@@ -3730,27 +3690,21 @@ jQuery.extend({
 
     // Deferred helper
     when: function (singleValue) {
-        var
-
-            // count of uncompleted subordinates
+        var // count of uncompleted subordinates
             remaining = arguments.length,
-
             // count of unprocessed arguments
             i = remaining,
-
             // subordinate fulfillment data
             resolveContexts = Array(i),
             resolveValues = slice.call(arguments),
-
             // the master Deferred
             master = jQuery.Deferred(),
-
             // subordinate callback factory
             updateFunc = function (i) {
                 return function (value) {
                     resolveContexts[i] = this;
                     resolveValues[i] = arguments.length > 1 ? slice.call(arguments) : value;
-                    if (!(--remaining)) {
+                    if (!--remaining) {
                         master.resolveWith(resolveContexts, resolveValues);
                     }
                 };
@@ -3758,13 +3712,10 @@ jQuery.extend({
 
         // Single- and empty arguments are adopted like Promise.resolve
         if (remaining <= 1) {
-            adoptValue(singleValue, master.done(updateFunc(i)).resolve, master.reject,
-                !remaining);
+            adoptValue(singleValue, master.done(updateFunc(i)).resolve, master.reject, !remaining);
 
             // Use .then() to unwrap secondary thenables (cf. gh-3000)
-            if (master.state() === "pending" ||
-                isFunction(resolveValues[i] && resolveValues[i].then)) {
-
+            if (master.state() === "pending" || isFunction(resolveValues[i] && resolveValues[i].then)) {
                 return master.then();
             }
         }
@@ -3775,16 +3726,14 @@ jQuery.extend({
         }
 
         return master.promise();
-    }
+    },
 });
-
 
 // These usually indicate a programmer mistake during development,
 // warn about them ASAP rather than swallowing them by default.
 var rerrorNames = /^(Eval|Internal|Range|Reference|Syntax|Type|URI)Error$/;
 
 jQuery.Deferred.exceptionHook = function (error, stack) {
-
     // Support: IE 8 - 9 only
     // Console exists when dev tools are open, which can happen at any time
     if (window.console && window.console.warn && error && rerrorNames.test(error.name)) {
@@ -3792,19 +3741,16 @@ jQuery.Deferred.exceptionHook = function (error, stack) {
     }
 };
 
-
 jQuery.readyException = function (error) {
     window.setTimeout(function () {
         throw error;
     });
 };
 
-
 // The deferred used on DOM ready
 var readyList = jQuery.Deferred();
 
 jQuery.fn.ready = function (fn) {
-
     readyList
         .then(fn)
 
@@ -3819,7 +3765,6 @@ jQuery.fn.ready = function (fn) {
 };
 
 jQuery.extend({
-
     // Is the DOM ready to be used? Set to true once it occurs.
     isReady: false,
 
@@ -3829,7 +3774,6 @@ jQuery.extend({
 
     // Handle when the DOM is ready
     ready: function (wait) {
-
         // Abort if there are pending holds or we're already ready
         if (wait === true ? --jQuery.readyWait : jQuery.isReady) {
             return;
@@ -3845,7 +3789,7 @@ jQuery.extend({
 
         // If there are functions bound, to execute
         readyList.resolveWith(document, [jQuery]);
-    }
+    },
 });
 
 jQuery.ready.then = readyList.then;
@@ -3861,21 +3805,16 @@ function completed() {
 // after the browser event has already occurred.
 // Support: IE <=9 - 10 only
 // Older IE sometimes signals "interactive" too soon
-if (document.readyState === "complete" ||
-    (document.readyState !== "loading" && !document.documentElement.doScroll)) {
-
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
     // Handle it asynchronously to allow scripts the opportunity to delay ready
     window.setTimeout(jQuery.ready);
-
 } else {
-
     // Use the handy event callback
     document.addEventListener("DOMContentLoaded", completed);
 
     // A fallback to window.onload, that will always work
     window.addEventListener("load", completed);
 }
-
 
 // Multifunctional method to get and set values of a collection
 // The value/s can optionally be executed if it's a function
@@ -3900,7 +3839,6 @@ var access = function (elems, fn, key, value, chainable, emptyGet, raw) {
         }
 
         if (bulk) {
-
             // Bulk operations run against the entire set
             if (raw) {
                 fn.call(elems, value);
@@ -3917,11 +3855,7 @@ var access = function (elems, fn, key, value, chainable, emptyGet, raw) {
 
         if (fn) {
             for (; i < len; i++) {
-                fn(
-                    elems[i], key, raw ?
-                        value :
-                        value.call(elems[i], i, fn(elems[i], key))
-                );
+                fn(elems[i], key, raw ? value : value.call(elems[i], i, fn(elems[i], key)));
             }
         }
     }
@@ -3937,7 +3871,6 @@ var access = function (elems, fn, key, value, chainable, emptyGet, raw) {
 
     return len ? fn(elems[0], key) : emptyGet;
 };
-
 
 // Matches dashed string for camelizing
 var rmsPrefix = /^-ms-/,
@@ -3956,16 +3889,14 @@ function camelCase(string) {
 }
 
 var acceptData = function (owner) {
-
     // Accepts only:
     //  - Node
     //    - Node.ELEMENT_NODE
     //    - Node.DOCUMENT_NODE
     //  - Object
     //    - Any
-    return owner.nodeType === 1 || owner.nodeType === 9 || !(+owner.nodeType);
+    return owner.nodeType === 1 || owner.nodeType === 9 || !+owner.nodeType;
 };
-
 
 function Data() {
     this.expando = jQuery.expando + Data.uid++;
@@ -3974,9 +3905,7 @@ function Data() {
 Data.uid = 1;
 
 Data.prototype = {
-
     cache: function (owner) {
-
         // Check if the owner object already has a cache
         var value = owner[this.expando];
 
@@ -3988,7 +3917,6 @@ Data.prototype = {
             // but we should not, see #8335.
             // Always return an empty object.
             if (acceptData(owner)) {
-
                 // If it is a node unlikely to be stringify-ed or looped over
                 // use plain assignment
                 if (owner.nodeType) {
@@ -4000,7 +3928,7 @@ Data.prototype = {
                 } else {
                     Object.defineProperty(owner, this.expando, {
                         value: value,
-                        configurable: true
+                        configurable: true,
                     });
                 }
             }
@@ -4019,7 +3947,6 @@ Data.prototype = {
 
             // Handle: [ owner, { properties } ] args
         } else {
-
             // Copy the properties one-by-one to the cache object
             for (prop in data) {
                 cache[camelCase(prop)] = data[prop];
@@ -4028,14 +3955,12 @@ Data.prototype = {
         return cache;
     },
     get: function (owner, key) {
-        return key === undefined ?
-            this.cache(owner) :
-
-            // Always use camelCase key (gh-2257)
-            owner[this.expando] && owner[this.expando][camelCase(key)];
+        return key === undefined
+            ? this.cache(owner)
+            : // Always use camelCase key (gh-2257)
+              owner[this.expando] && owner[this.expando][camelCase(key)];
     },
     access: function (owner, key, value) {
-
         // In cases where either:
         //
         //   1. No key was specified
@@ -4047,9 +3972,7 @@ Data.prototype = {
         //   1. The entire cache object
         //   2. The data stored at the key
         //
-        if (key === undefined ||
-            ((key && typeof key === "string") && value === undefined)) {
-
+        if (key === undefined || (key && typeof key === "string" && value === undefined)) {
             return this.get(owner, key);
         }
 
@@ -4074,10 +3997,8 @@ Data.prototype = {
         }
 
         if (key !== undefined) {
-
             // Support array or space separated string of keys
             if (Array.isArray(key)) {
-
                 // If key is an array of keys...
                 // We always set camelCase keys, so remove that.
                 key = key.map(camelCase);
@@ -4086,9 +4007,7 @@ Data.prototype = {
 
                 // If a key with the spaces exists, use it.
                 // Otherwise, create an array by matching non-whitespace
-                key = key in cache ?
-                    [key] :
-                    (key.match(rnothtmlwhite) || []);
+                key = key in cache ? [key] : key.match(rnothtmlwhite) || [];
             }
 
             i = key.length;
@@ -4100,7 +4019,6 @@ Data.prototype = {
 
         // Remove the expando if there's no more data
         if (key === undefined || jQuery.isEmptyObject(cache)) {
-
             // Support: Chrome <=35 - 45
             // Webkit & Blink performance suffers when deleting properties
             // from DOM nodes, so set to undefined instead
@@ -4115,12 +4033,11 @@ Data.prototype = {
     hasData: function (owner) {
         var cache = owner[this.expando];
         return cache !== undefined && !jQuery.isEmptyObject(cache);
-    }
+    },
 };
 var dataPriv = new Data();
 
 var dataUser = new Data();
-
 
 //	Implementation Summary
 //
@@ -4172,8 +4089,7 @@ function dataAttr(elem, key, data) {
         if (typeof data === "string") {
             try {
                 data = getData(data);
-            } catch (e) {
-            }
+            } catch (e) {}
 
             // Make sure we set the data so it isn't changed later
             dataUser.set(elem, key, data);
@@ -4205,12 +4121,14 @@ jQuery.extend({
 
     _removeData: function (elem, name) {
         dataPriv.remove(elem, name);
-    }
+    },
 });
 
 jQuery.fn.extend({
     data: function (key, value) {
-        var i, name, data,
+        var i,
+            name,
+            data,
             elem = this[0],
             attrs = elem && elem.attributes;
 
@@ -4222,7 +4140,6 @@ jQuery.fn.extend({
                 if (elem.nodeType === 1 && !dataPriv.get(elem, "hasDataAttrs")) {
                     i = attrs.length;
                     while (i--) {
-
                         // Support: IE 11 only
                         // The attrs elements can be null (#14894)
                         if (attrs[i]) {
@@ -4247,50 +4164,55 @@ jQuery.fn.extend({
             });
         }
 
-        return access(this, function (value) {
-            var data;
+        return access(
+            this,
+            function (value) {
+                var data;
 
-            // The calling jQuery object (element matches) is not empty
-            // (and therefore has an element appears at this[ 0 ]) and the
-            // `value` parameter was not undefined. An empty jQuery object
-            // will result in `undefined` for elem = this[ 0 ] which will
-            // throw an exception if an attempt to read a data cache is made.
-            if (elem && value === undefined) {
+                // The calling jQuery object (element matches) is not empty
+                // (and therefore has an element appears at this[ 0 ]) and the
+                // `value` parameter was not undefined. An empty jQuery object
+                // will result in `undefined` for elem = this[ 0 ] which will
+                // throw an exception if an attempt to read a data cache is made.
+                if (elem && value === undefined) {
+                    // Attempt to get data from the cache
+                    // The key will always be camelCased in Data
+                    data = dataUser.get(elem, key);
+                    if (data !== undefined) {
+                        return data;
+                    }
 
-                // Attempt to get data from the cache
-                // The key will always be camelCased in Data
-                data = dataUser.get(elem, key);
-                if (data !== undefined) {
-                    return data;
+                    // Attempt to "discover" the data in
+                    // HTML5 custom data-* attrs
+                    data = dataAttr(elem, key);
+                    if (data !== undefined) {
+                        return data;
+                    }
+
+                    // We tried really hard, but the data doesn't exist.
+                    return;
                 }
 
-                // Attempt to "discover" the data in
-                // HTML5 custom data-* attrs
-                data = dataAttr(elem, key);
-                if (data !== undefined) {
-                    return data;
-                }
-
-                // We tried really hard, but the data doesn't exist.
-                return;
-            }
-
-            // Set the data...
-            this.each(function () {
-
-                // We always store the camelCased key
-                dataUser.set(this, key, value);
-            });
-        }, null, value, arguments.length > 1, null, true);
+                // Set the data...
+                this.each(function () {
+                    // We always store the camelCased key
+                    dataUser.set(this, key, value);
+                });
+            },
+            null,
+            value,
+            arguments.length > 1,
+            null,
+            true
+        );
     },
 
     removeData: function (key) {
         return this.each(function () {
             dataUser.remove(this, key);
         });
-    }
+    },
 });
-
 
 jQuery.extend({
     queue: function (elem, type, data) {
@@ -4330,7 +4252,6 @@ jQuery.extend({
         }
 
         if (fn) {
-
             // Add a progress sentinel to prevent the fx queue from being
             // automatically dequeued
             if (type === "fx") {
@@ -4350,12 +4271,15 @@ jQuery.extend({
     // Not public - generate a queueHooks object, or return the current one
     _queueHooks: function (elem, type) {
         var key = type + "queueHooks";
-        return dataPriv.get(elem, key) || dataPriv.access(elem, key, {
-            empty: jQuery.Callbacks("once memory").add(function () {
-                dataPriv.remove(elem, [type + "queue", key]);
+        return (
+            dataPriv.get(elem, key) ||
+            dataPriv.access(elem, key, {
+                empty: jQuery.Callbacks("once memory").add(function () {
+                    dataPriv.remove(elem, [type + "queue", key]);
+                }),
             })
-        });
-    }
+        );
+    },
 });
 
 jQuery.fn.extend({
@@ -4372,18 +4296,18 @@ jQuery.fn.extend({
             return jQuery.queue(this[0], type);
         }
 
-        return data === undefined ?
-            this :
-            this.each(function () {
-                var queue = jQuery.queue(this, type, data);
+        return data === undefined
+            ? this
+            : this.each(function () {
+                  var queue = jQuery.queue(this, type, data);
 
-                // Ensure a hooks for this queue
-                jQuery._queueHooks(this, type);
+                  // Ensure a hooks for this queue
+                  jQuery._queueHooks(this, type);
 
-                if (type === "fx" && queue[0] !== "inprogress") {
-                    jQuery.dequeue(this, type);
-                }
-            });
+                  if (type === "fx" && queue[0] !== "inprogress") {
+                      jQuery.dequeue(this, type);
+                  }
+              });
     },
     dequeue: function (type) {
         return this.each(function () {
@@ -4403,7 +4327,7 @@ jQuery.fn.extend({
             elements = this,
             i = this.length,
             resolve = function () {
-                if (!(--count)) {
+                if (!--count) {
                     defer.resolveWith(elements, [elements]);
                 }
             };
@@ -4423,36 +4347,35 @@ jQuery.fn.extend({
         }
         resolve();
         return defer.promise(obj);
-    }
+    },
 });
-var pnum = (/[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/).source;
+var pnum = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source;
 
 var rcssNum = new RegExp("^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i");
-
 
 var cssExpand = ["Top", "Right", "Bottom", "Left"];
 
 var isHiddenWithinTree = function (elem, el) {
-
     // isHiddenWithinTree might be called from jQuery#filter function;
     // in that case, element will be second argument
     elem = el || elem;
 
     // Inline style trumps all
-    return elem.style.display === "none" ||
-        elem.style.display === "" &&
-
-        // Otherwise, check computed style
-        // Support: Firefox <=43 - 45
-        // Disconnected elements can have computed display: none, so first confirm that elem is
-        // in the document.
-        jQuery.contains(elem.ownerDocument, elem) &&
-
-        jQuery.css(elem, "display") === "none";
+    return (
+        elem.style.display === "none" ||
+        (elem.style.display === "" &&
+            // Otherwise, check computed style
+            // Support: Firefox <=43 - 45
+            // Disconnected elements can have computed display: none, so first confirm that elem is
+            // in the document.
+            jQuery.contains(elem.ownerDocument, elem) &&
+            jQuery.css(elem, "display") === "none")
+    );
 };
 
 var swap = function (elem, options, callback, args) {
-    var ret, name,
+    var ret,
+        name,
         old = {};
 
     // Remember the old values, and insert the new ones
@@ -4471,26 +4394,23 @@ var swap = function (elem, options, callback, args) {
     return ret;
 };
 
-
 function adjustCSS(elem, prop, valueParts, tween) {
-    var adjusted, scale,
+    var adjusted,
+        scale,
         maxIterations = 20,
-        currentValue = tween ?
-            function () {
-                return tween.cur();
-            } :
-            function () {
-                return jQuery.css(elem, prop, "");
-            },
+        currentValue = tween
+            ? function () {
+                  return tween.cur();
+              }
+            : function () {
+                  return jQuery.css(elem, prop, "");
+              },
         initial = currentValue(),
-        unit = valueParts && valueParts[3] || (jQuery.cssNumber[prop] ? "" : "px"),
-
+        unit = (valueParts && valueParts[3]) || (jQuery.cssNumber[prop] ? "" : "px"),
         // Starting value computation is required for potential unit mismatches
-        initialInUnit = (jQuery.cssNumber[prop] || unit !== "px" && +initial) &&
-            rcssNum.exec(jQuery.css(elem, prop));
+        initialInUnit = (jQuery.cssNumber[prop] || (unit !== "px" && +initial)) && rcssNum.exec(jQuery.css(elem, prop));
 
     if (initialInUnit && initialInUnit[3] !== unit) {
-
         // Support: Firefox <=54
         // Halve the iteration target value to prevent interference from CSS upper bounds (gh-2144)
         initial = initial / 2;
@@ -4502,7 +4422,6 @@ function adjustCSS(elem, prop, valueParts, tween) {
         initialInUnit = +initial || 1;
 
         while (maxIterations--) {
-
             // Evaluate and update our best guess (doubling guesses that zero out).
             // Finish if the scale equals or crosses 1 (making the old*new product non-positive).
             jQuery.style(elem, prop, initialInUnit + unit);
@@ -4510,7 +4429,6 @@ function adjustCSS(elem, prop, valueParts, tween) {
                 maxIterations = 0;
             }
             initialInUnit = initialInUnit / scale;
-
         }
 
         initialInUnit = initialInUnit * 2;
@@ -4524,9 +4442,7 @@ function adjustCSS(elem, prop, valueParts, tween) {
         initialInUnit = +initialInUnit || +initial || 0;
 
         // Apply relative offset (+=/-=) if specified
-        adjusted = valueParts[1] ?
-            initialInUnit + (valueParts[1] + 1) * valueParts[2] :
-            +valueParts[2];
+        adjusted = valueParts[1] ? initialInUnit + (valueParts[1] + 1) * valueParts[2] : +valueParts[2];
         if (tween) {
             tween.unit = unit;
             tween.start = initialInUnit;
@@ -4535,7 +4451,6 @@ function adjustCSS(elem, prop, valueParts, tween) {
     }
     return adjusted;
 }
-
 
 var defaultDisplayMap = {};
 
@@ -4563,7 +4478,8 @@ function getDefaultDisplay(elem) {
 }
 
 function showHide(elements, show) {
-    var display, elem,
+    var display,
+        elem,
         values = [],
         index = 0,
         length = elements.length;
@@ -4577,7 +4493,6 @@ function showHide(elements, show) {
 
         display = elem.style.display;
         if (show) {
-
             // Since we force visibility upon cascade-hidden elements, an immediate (and slow)
             // check is required in this first loop unless we have a nonempty display value (either
             // inline or about-to-be-restored)
@@ -4629,18 +4544,16 @@ jQuery.fn.extend({
                 jQuery(this).hide();
             }
         });
-    }
+    },
 });
-var rcheckableType = (/^(?:checkbox|radio)$/i);
+var rcheckableType = /^(?:checkbox|radio)$/i;
 
-var rtagName = (/<([a-z][^\/\0>\x20\t\r\n\f]+)/i);
+var rtagName = /<([a-z][^\/\0>\x20\t\r\n\f]+)/i;
 
-var rscriptType = (/^$|^module$|\/(?:java|ecma)script/i);
-
+var rscriptType = /^$|^module$|\/(?:java|ecma)script/i;
 
 // We have to close these tags to support XHTML (#13200)
 var wrapMap = {
-
     // Support: IE <=9 only
     option: [1, "<select multiple='multiple'>", "</select>"],
 
@@ -4652,7 +4565,7 @@ var wrapMap = {
     tr: [2, "<table><tbody>", "</tbody></table>"],
     td: [3, "<table><tbody><tr>", "</tr></tbody></table>"],
 
-    _default: [0, "", ""]
+    _default: [0, "", ""],
 };
 
 // Support: IE <=9 only
@@ -4661,30 +4574,25 @@ wrapMap.optgroup = wrapMap.option;
 wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
 wrapMap.th = wrapMap.td;
 
-
 function getAll(context, tag) {
-
     // Support: IE <=9 - 11 only
     // Use typeof to avoid zero-argument method invocation on host objects (#15151)
     var ret;
 
     if (typeof context.getElementsByTagName !== "undefined") {
         ret = context.getElementsByTagName(tag || "*");
-
     } else if (typeof context.querySelectorAll !== "undefined") {
         ret = context.querySelectorAll(tag || "*");
-
     } else {
         ret = [];
     }
 
-    if (tag === undefined || tag && nodeName(context, tag)) {
+    if (tag === undefined || (tag && nodeName(context, tag))) {
         return jQuery.merge([context], ret);
     }
 
     return ret;
 }
-
 
 // Mark scripts as having already been evaluated
 function setGlobalEval(elems, refElements) {
@@ -4692,19 +4600,19 @@ function setGlobalEval(elems, refElements) {
         l = elems.length;
 
     for (; i < l; i++) {
-        dataPriv.set(
-            elems[i],
-            "globalEval",
-            !refElements || dataPriv.get(refElements[i], "globalEval")
-        );
+        dataPriv.set(elems[i], "globalEval", !refElements || dataPriv.get(refElements[i], "globalEval"));
     }
 }
-
 
 var rhtml = /<|&#?\w+;/;
 
 function buildFragment(elems, context, scripts, selection, ignored) {
-    var elem, tmp, tag, wrap, contains, j,
+    var elem,
+        tmp,
+        tag,
+        wrap,
+        contains,
+        j,
         fragment = context.createDocumentFragment(),
         nodes = [],
         i = 0,
@@ -4714,10 +4622,8 @@ function buildFragment(elems, context, scripts, selection, ignored) {
         elem = elems[i];
 
         if (elem || elem === 0) {
-
             // Add nodes directly
             if (toType(elem) === "object") {
-
                 // Support: Android <=4.0 only, PhantomJS 1 only
                 // push.apply(_, arraylike) throws on ancient WebKit
                 jQuery.merge(nodes, elem.nodeType ? [elem] : elem);
@@ -4759,7 +4665,6 @@ function buildFragment(elems, context, scripts, selection, ignored) {
 
     i = 0;
     while ((elem = nodes[i++])) {
-
         // Skip elements already in the context collection (trac-4087)
         if (selection && jQuery.inArray(elem, selection) > -1) {
             if (ignored) {
@@ -4792,7 +4697,6 @@ function buildFragment(elems, context, scripts, selection, ignored) {
     return fragment;
 }
 
-
 (function () {
     var fragment = document.createDocumentFragment(),
         div = fragment.appendChild(document.createElement("div")),
@@ -4819,9 +4723,7 @@ function buildFragment(elems, context, scripts, selection, ignored) {
 })();
 var documentElement = document.documentElement;
 
-
-var
-    rkeyEvent = /^key/,
+var rkeyEvent = /^key/,
     rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
     rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
 
@@ -4838,8 +4740,7 @@ function returnFalse() {
 function safeActiveElement() {
     try {
         return document.activeElement;
-    } catch (err) {
-    }
+    } catch (err) {}
 }
 
 function on(elem, types, selector, data, fn, one) {
@@ -4847,10 +4748,8 @@ function on(elem, types, selector, data, fn, one) {
 
     // Types can be a map of types/handlers
     if (typeof types === "object") {
-
         // ( types-Object, selector, data )
         if (typeof selector !== "string") {
-
             // ( types-Object, data )
             data = data || selector;
             selector = undefined;
@@ -4862,18 +4761,15 @@ function on(elem, types, selector, data, fn, one) {
     }
 
     if (data == null && fn == null) {
-
         // ( types, fn )
         fn = selector;
         data = selector = undefined;
     } else if (fn == null) {
         if (typeof selector === "string") {
-
             // ( types, selector, fn )
             fn = data;
             data = undefined;
         } else {
-
             // ( types, data, fn )
             fn = data;
             data = selector;
@@ -4889,7 +4785,6 @@ function on(elem, types, selector, data, fn, one) {
     if (one === 1) {
         origFn = fn;
         fn = function (event) {
-
             // Can use an empty set, since event contains the info
             jQuery().off(event);
             return origFn.apply(this, arguments);
@@ -4908,14 +4803,20 @@ function on(elem, types, selector, data, fn, one) {
  * Props to Dean Edwards' addEvent library for many of the ideas.
  */
 jQuery.event = {
-
     global: {},
 
     add: function (elem, types, handler, data, selector) {
-
-        var handleObjIn, eventHandle, tmp,
-            events, t, handleObj,
-            special, handlers, type, namespaces, origType,
+        var handleObjIn,
+            eventHandle,
+            tmp,
+            events,
+            t,
+            handleObj,
+            special,
+            handlers,
+            type,
+            namespaces,
+            origType,
             elemData = dataPriv.get(elem);
 
         // Don't attach events to noData or text/comment nodes (but allow plain objects)
@@ -4947,11 +4848,11 @@ jQuery.event = {
         }
         if (!(eventHandle = elemData.handle)) {
             eventHandle = elemData.handle = function (e) {
-
                 // Discard the second event of a jQuery.event.trigger() and
                 // when an event is called after a page has unloaded
-                return typeof jQuery !== "undefined" && jQuery.event.triggered !== e.type ?
-                    jQuery.event.dispatch.apply(elem, arguments) : undefined;
+                return typeof jQuery !== "undefined" && jQuery.event.triggered !== e.type
+                    ? jQuery.event.dispatch.apply(elem, arguments)
+                    : undefined;
             };
         }
 
@@ -4978,16 +4879,19 @@ jQuery.event = {
             special = jQuery.event.special[type] || {};
 
             // handleObj is passed to all event handlers
-            handleObj = jQuery.extend({
-                type: type,
-                origType: origType,
-                data: data,
-                handler: handler,
-                guid: handler.guid,
-                selector: selector,
-                needsContext: selector && jQuery.expr.match.needsContext.test(selector),
-                namespace: namespaces.join(".")
-            }, handleObjIn);
+            handleObj = jQuery.extend(
+                {
+                    type: type,
+                    origType: origType,
+                    data: data,
+                    handler: handler,
+                    guid: handler.guid,
+                    selector: selector,
+                    needsContext: selector && jQuery.expr.match.needsContext.test(selector),
+                    namespace: namespaces.join("."),
+                },
+                handleObjIn
+            );
 
             // Init the event handler queue if we're the first
             if (!(handlers = events[type])) {
@@ -4995,9 +4899,7 @@ jQuery.event = {
                 handlers.delegateCount = 0;
 
                 // Only use addEventListener if the special events handler returns false
-                if (!special.setup ||
-                    special.setup.call(elem, data, namespaces, eventHandle) === false) {
-
+                if (!special.setup || special.setup.call(elem, data, namespaces, eventHandle) === false) {
                     if (elem.addEventListener) {
                         elem.addEventListener(type, eventHandle);
                     }
@@ -5022,15 +4924,21 @@ jQuery.event = {
             // Keep track of which events have ever been used, for event optimization
             jQuery.event.global[type] = true;
         }
-
     },
 
     // Detach an event or set of events from an element
     remove: function (elem, types, handler, selector, mappedTypes) {
-
-        var j, origCount, tmp,
-            events, t, handleObj,
-            special, handlers, type, namespaces, origType,
+        var j,
+            origCount,
+            tmp,
+            events,
+            t,
+            handleObj,
+            special,
+            handlers,
+            type,
+            namespaces,
+            origType,
             elemData = dataPriv.hasData(elem) && dataPriv.get(elem);
 
         if (!elemData || !(events = elemData.events)) {
@@ -5056,19 +4964,19 @@ jQuery.event = {
             special = jQuery.event.special[type] || {};
             type = (selector ? special.delegateType : special.bindType) || type;
             handlers = events[type] || [];
-            tmp = tmp[2] &&
-                new RegExp("(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)");
+            tmp = tmp[2] && new RegExp("(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)");
 
             // Remove matching events
             origCount = j = handlers.length;
             while (j--) {
                 handleObj = handlers[j];
 
-                if ((mappedTypes || origType === handleObj.origType) &&
+                if (
+                    (mappedTypes || origType === handleObj.origType) &&
                     (!handler || handler.guid === handleObj.guid) &&
                     (!tmp || tmp.test(handleObj.namespace)) &&
-                    (!selector || selector === handleObj.selector ||
-                        selector === "**" && handleObj.selector)) {
+                    (!selector || selector === handleObj.selector || (selector === "**" && handleObj.selector))
+                ) {
                     handlers.splice(j, 1);
 
                     if (handleObj.selector) {
@@ -5083,9 +4991,7 @@ jQuery.event = {
             // Remove generic event handler if we removed something and no more handlers exist
             // (avoids potential for endless recursion during removal of special event handlers)
             if (origCount && !handlers.length) {
-                if (!special.teardown ||
-                    special.teardown.call(elem, namespaces, elemData.handle) === false) {
-
+                if (!special.teardown || special.teardown.call(elem, namespaces, elemData.handle) === false) {
                     jQuery.removeEvent(elem, type, elemData.handle);
                 }
 
@@ -5100,11 +5006,15 @@ jQuery.event = {
     },
 
     dispatch: function (nativeEvent) {
-
         // Make a writable jQuery.Event from the native event object
         var event = jQuery.event.fix(nativeEvent);
 
-        var i, j, ret, matched, handleObj, handlerQueue,
+        var i,
+            j,
+            ret,
+            matched,
+            handleObj,
+            handlerQueue,
             args = new Array(arguments.length),
             handlers = (dataPriv.get(this, "events") || {})[event.type] || [],
             special = jQuery.event.special[event.type] || {};
@@ -5132,18 +5042,17 @@ jQuery.event = {
             event.currentTarget = matched.elem;
 
             j = 0;
-            while ((handleObj = matched.handlers[j++]) &&
-            !event.isImmediatePropagationStopped()) {
-
+            while ((handleObj = matched.handlers[j++]) && !event.isImmediatePropagationStopped()) {
                 // Triggered event must either 1) have no namespace, or 2) have namespace(s)
                 // a subset or equal to those in the bound event (both can have no namespace).
                 if (!event.rnamespace || event.rnamespace.test(handleObj.namespace)) {
-
                     event.handleObj = handleObj;
                     event.data = handleObj.data;
 
-                    ret = ((jQuery.event.special[handleObj.origType] || {}).handle ||
-                        handleObj.handler).apply(matched.elem, args);
+                    ret = ((jQuery.event.special[handleObj.origType] || {}).handle || handleObj.handler).apply(
+                        matched.elem,
+                        args
+                    );
 
                     if (ret !== undefined) {
                         if ((event.result = ret) === false) {
@@ -5164,27 +5073,29 @@ jQuery.event = {
     },
 
     handlers: function (event, handlers) {
-        var i, handleObj, sel, matchedHandlers, matchedSelectors,
+        var i,
+            handleObj,
+            sel,
+            matchedHandlers,
+            matchedSelectors,
             handlerQueue = [],
             delegateCount = handlers.delegateCount,
             cur = event.target;
 
         // Find delegate handlers
-        if (delegateCount &&
-
+        if (
+            delegateCount &&
             // Support: IE <=9
             // Black-hole SVG <use> instance trees (trac-13180)
             cur.nodeType &&
-
             // Support: Firefox <=42
             // Suppress spec-violating clicks indicating a non-primary pointer button (trac-3861)
             // https://www.w3.org/TR/DOM-Level-3-Events/#event-type-click
             // Support: IE 11 only
             // ...but not arrow key "clicks" of radio inputs, which can have `button` -1 (gh-2343)
-            !(event.type === "click" && event.button >= 1)) {
-
+            !(event.type === "click" && event.button >= 1)
+        ) {
             for (; cur !== this; cur = cur.parentNode || this) {
-
                 // Don't check non-elements (#13208)
                 // Don't process clicks on disabled elements (#6911, #8165, #11382, #11764)
                 if (cur.nodeType === 1 && !(event.type === "click" && cur.disabled === true)) {
@@ -5197,16 +5108,16 @@ jQuery.event = {
                         sel = handleObj.selector + " ";
 
                         if (matchedSelectors[sel] === undefined) {
-                            matchedSelectors[sel] = handleObj.needsContext ?
-                                jQuery(sel, this).index(cur) > -1 :
-                                jQuery.find(sel, this, null, [cur]).length;
+                            matchedSelectors[sel] = handleObj.needsContext
+                                ? jQuery(sel, this).index(cur) > -1
+                                : jQuery.find(sel, this, null, [cur]).length;
                         }
                         if (matchedSelectors[sel]) {
                             matchedHandlers.push(handleObj);
                         }
                     }
                     if (matchedHandlers.length) {
-                        handlerQueue.push({elem: cur, handlers: matchedHandlers});
+                        handlerQueue.push({ elem: cur, handlers: matchedHandlers });
                     }
                 }
             }
@@ -5215,7 +5126,7 @@ jQuery.event = {
         // Add the remaining (directly-bound) handlers
         cur = this;
         if (delegateCount < handlers.length) {
-            handlerQueue.push({elem: cur, handlers: handlers.slice(delegateCount)});
+            handlerQueue.push({ elem: cur, handlers: handlers.slice(delegateCount) });
         }
 
         return handlerQueue;
@@ -5226,43 +5137,39 @@ jQuery.event = {
             enumerable: true,
             configurable: true,
 
-            get: isFunction(hook) ?
-                function () {
-                    if (this.originalEvent) {
-                        return hook(this.originalEvent);
-                    }
-                } :
-                function () {
-                    if (this.originalEvent) {
-                        return this.originalEvent[name];
-                    }
-                },
+            get: isFunction(hook)
+                ? function () {
+                      if (this.originalEvent) {
+                          return hook(this.originalEvent);
+                      }
+                  }
+                : function () {
+                      if (this.originalEvent) {
+                          return this.originalEvent[name];
+                      }
+                  },
 
             set: function (value) {
                 Object.defineProperty(this, name, {
                     enumerable: true,
                     configurable: true,
                     writable: true,
-                    value: value
+                    value: value,
                 });
-            }
+            },
         });
     },
 
     fix: function (originalEvent) {
-        return originalEvent[jQuery.expando] ?
-            originalEvent :
-            new jQuery.Event(originalEvent);
+        return originalEvent[jQuery.expando] ? originalEvent : new jQuery.Event(originalEvent);
     },
 
     special: {
         load: {
-
             // Prevent triggered image.load events from bubbling to window.load
-            noBubble: true
+            noBubble: true,
         },
         focus: {
-
             // Fire native event if possible so blur/focus sequence is correct
             trigger: function () {
                 if (this !== safeActiveElement() && this.focus) {
@@ -5270,7 +5177,7 @@ jQuery.event = {
                     return false;
                 }
             },
-            delegateType: "focusin"
+            delegateType: "focusin",
         },
         blur: {
             trigger: function () {
@@ -5279,10 +5186,9 @@ jQuery.event = {
                     return false;
                 }
             },
-            delegateType: "focusout"
+            delegateType: "focusout",
         },
         click: {
-
             // For checkbox, fire native event so checked state will be right
             trigger: function () {
                 if (this.type === "checkbox" && this.click && nodeName(this, "input")) {
@@ -5294,24 +5200,22 @@ jQuery.event = {
             // For cross-browser consistency, don't fire native .click() on links
             _default: function (event) {
                 return nodeName(event.target, "a");
-            }
+            },
         },
 
         beforeunload: {
             postDispatch: function (event) {
-
                 // Support: Firefox 20+
                 // Firefox doesn't alert if the returnValue field is not set.
                 if (event.result !== undefined && event.originalEvent) {
                     event.originalEvent.returnValue = event.result;
                 }
-            }
-        }
-    }
+            },
+        },
+    },
 };
 
 jQuery.removeEvent = function (elem, type, handle) {
-
     // This "if" is needed for plain objects
     if (elem.removeEventListener) {
         elem.removeEventListener(type, handle);
@@ -5319,7 +5223,6 @@ jQuery.removeEvent = function (elem, type, handle) {
 };
 
 jQuery.Event = function (src, props) {
-
     // Allow instantiation without the 'new' keyword
     if (!(this instanceof jQuery.Event)) {
         return new jQuery.Event(src, props);
@@ -5332,20 +5235,18 @@ jQuery.Event = function (src, props) {
 
         // Events bubbling up the document may have been marked as prevented
         // by a handler lower down the tree; reflect the correct value.
-        this.isDefaultPrevented = src.defaultPrevented ||
-        src.defaultPrevented === undefined &&
-
-        // Support: Android <=2.3 only
-        src.returnValue === false ?
-            returnTrue :
-            returnFalse;
+        this.isDefaultPrevented =
+            src.defaultPrevented ||
+            (src.defaultPrevented === undefined &&
+                // Support: Android <=2.3 only
+                src.returnValue === false)
+                ? returnTrue
+                : returnFalse;
 
         // Create target properties
         // Support: Safari <=6 - 7 only
         // Target should not be a text node (#504, #13143)
-        this.target = (src.target && src.target.nodeType === 3) ?
-            src.target.parentNode :
-            src.target;
+        this.target = src.target && src.target.nodeType === 3 ? src.target.parentNode : src.target;
 
         this.currentTarget = src.currentTarget;
         this.relatedTarget = src.relatedTarget;
@@ -5361,7 +5262,7 @@ jQuery.Event = function (src, props) {
     }
 
     // Create a timestamp if incoming event doesn't have one
-    this.timeStamp = src && src.timeStamp || Date.now();
+    this.timeStamp = (src && src.timeStamp) || Date.now();
 
     // Mark it as fixed
     this[jQuery.expando] = true;
@@ -5404,69 +5305,72 @@ jQuery.Event.prototype = {
         }
 
         this.stopPropagation();
-    }
+    },
 };
 
 // Includes all common event props including KeyEvent and MouseEvent specific props
-jQuery.each({
-    altKey: true,
-    bubbles: true,
-    cancelable: true,
-    changedTouches: true,
-    ctrlKey: true,
-    detail: true,
-    eventPhase: true,
-    metaKey: true,
-    pageX: true,
-    pageY: true,
-    shiftKey: true,
-    view: true,
-    "char": true,
-    charCode: true,
-    key: true,
-    keyCode: true,
-    button: true,
-    buttons: true,
-    clientX: true,
-    clientY: true,
-    offsetX: true,
-    offsetY: true,
-    pointerId: true,
-    pointerType: true,
-    screenX: true,
-    screenY: true,
-    targetTouches: true,
-    toElement: true,
-    touches: true,
+jQuery.each(
+    {
+        altKey: true,
+        bubbles: true,
+        cancelable: true,
+        changedTouches: true,
+        ctrlKey: true,
+        detail: true,
+        eventPhase: true,
+        metaKey: true,
+        pageX: true,
+        pageY: true,
+        shiftKey: true,
+        view: true,
+        char: true,
+        charCode: true,
+        key: true,
+        keyCode: true,
+        button: true,
+        buttons: true,
+        clientX: true,
+        clientY: true,
+        offsetX: true,
+        offsetY: true,
+        pointerId: true,
+        pointerType: true,
+        screenX: true,
+        screenY: true,
+        targetTouches: true,
+        toElement: true,
+        touches: true,
 
-    which: function (event) {
-        var button = event.button;
+        which: function (event) {
+            var button = event.button;
 
-        // Add which for key events
-        if (event.which == null && rkeyEvent.test(event.type)) {
-            return event.charCode != null ? event.charCode : event.keyCode;
-        }
-
-        // Add which for click: 1 === left; 2 === middle; 3 === right
-        if (!event.which && button !== undefined && rmouseEvent.test(event.type)) {
-            if (button & 1) {
-                return 1;
+            // Add which for key events
+            if (event.which == null && rkeyEvent.test(event.type)) {
+                return event.charCode != null ? event.charCode : event.keyCode;
             }
 
-            if (button & 2) {
-                return 3;
+            // Add which for click: 1 === left; 2 === middle; 3 === right
+            if (!event.which && button !== undefined && rmouseEvent.test(event.type)) {
+                if (button & 1) {
+                    return 1;
+                }
+
+                if (button & 2) {
+                    return 3;
+                }
+
+                if (button & 4) {
+                    return 2;
+                }
+
+                return 0;
             }
 
-            if (button & 4) {
-                return 2;
-            }
-
-            return 0;
-        }
-
-        return event.which;
-    }
-}, jQuery.event.addProp);
+            return event.which;
+        },
+    },
+    jQuery.event.addProp
+);
 
 // Create mouseenter/leave events using mouseover/out and event-time checks
 // so that event delegation works in jQuery.
@@ -5476,36 +5380,38 @@ jQuery.each({
 // Safari sends mouseenter too often; see:
 // https://bugs.chromium.org/p/chromium/issues/detail?id=470258
 // for the description of the bug (it existed in older Chrome versions as well).
-jQuery.each({
-    mouseenter: "mouseover",
-    mouseleave: "mouseout",
-    pointerenter: "pointerover",
-    pointerleave: "pointerout"
-}, function (orig, fix) {
-    jQuery.event.special[orig] = {
-        delegateType: fix,
-        bindType: fix,
+jQuery.each(
+    {
+        mouseenter: "mouseover",
+        mouseleave: "mouseout",
+        pointerenter: "pointerover",
+        pointerleave: "pointerout",
+    },
+    function (orig, fix) {
+        jQuery.event.special[orig] = {
+            delegateType: fix,
+            bindType: fix,
 
-        handle: function (event) {
-            var ret,
-                target = this,
-                related = event.relatedTarget,
-                handleObj = event.handleObj;
+            handle: function (event) {
+                var ret,
+                    target = this,
+                    related = event.relatedTarget,
+                    handleObj = event.handleObj;
 
-            // For mouseenter/leave call the handler if related is outside the target.
-            // NB: No relatedTarget if the mouse left/entered the browser window
-            if (!related || (related !== target && !jQuery.contains(target, related))) {
-                event.type = handleObj.origType;
-                ret = handleObj.handler.apply(this, arguments);
-                event.type = fix;
-            }
-            return ret;
-        }
-    };
-});
+                // For mouseenter/leave call the handler if related is outside the target.
+                // NB: No relatedTarget if the mouse left/entered the browser window
+                if (!related || (related !== target && !jQuery.contains(target, related))) {
+                    event.type = handleObj.origType;
+                    ret = handleObj.handler.apply(this, arguments);
+                    event.type = fix;
+                }
+                return ret;
+            },
+        };
+    }
+);
 
 jQuery.fn.extend({
-
     on: function (types, selector, data, fn) {
         return on(this, types, selector, data, fn);
     },
@@ -5515,20 +5421,16 @@ jQuery.fn.extend({
     off: function (types, selector, fn) {
         var handleObj, type;
         if (types && types.preventDefault && types.handleObj) {
-
             // ( event )  dispatched jQuery.Event
             handleObj = types.handleObj;
             jQuery(types.delegateTarget).off(
-                handleObj.namespace ?
-                    handleObj.origType + "." + handleObj.namespace :
-                    handleObj.origType,
+                handleObj.namespace ? handleObj.origType + "." + handleObj.namespace : handleObj.origType,
                 handleObj.selector,
                 handleObj.handler
             );
             return this;
         }
         if (typeof types === "object") {
-
             // ( types-object [, selector] )
             for (type in types) {
                 this.off(type, selector, types[type]);
@@ -5536,7 +5438,6 @@ jQuery.fn.extend({
             return this;
         }
         if (selector === false || typeof selector === "function") {
-
             // ( types [, fn] )
             fn = selector;
             selector = undefined;
@@ -5547,33 +5448,26 @@ jQuery.fn.extend({
         return this.each(function () {
             jQuery.event.remove(this, types, fn, selector);
         });
-    }
+    },
 });
 
-
-var
-
-    /* eslint-disable max-len */
+var /* eslint-disable max-len */
 
     // See https://github.com/eslint/eslint/issues/3229
     rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi,
-
     /* eslint-enable */
 
     // Support: IE <=10 - 11, Edge 12 - 13 only
     // In IE/Edge using regex groups here causes severe slowdowns.
     // See https://connect.microsoft.com/IE/feedback/details/1736512/
     rnoInnerhtml = /<script|<style|<link/i,
-
     // checked="checked" or checked
     rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
     rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
 // Prefer a tbody over its parent table for containing new rows
 function manipulationTarget(elem, content) {
-    if (nodeName(elem, "table") &&
-        nodeName(content.nodeType !== 11 ? content : content.firstChild, "tr")) {
-
+    if (nodeName(elem, "table") && nodeName(content.nodeType !== 11 ? content : content.firstChild, "tr")) {
         return jQuery(elem).children("tbody")[0] || elem;
     }
 
@@ -5645,11 +5539,15 @@ function fixInput(src, dest) {
 }
 
 function domManip(collection, args, callback, ignored) {
-
     // Flatten any nested arrays
     args = concat.apply([], args);
 
-    var fragment, first, scripts, hasScripts, node, doc,
+    var fragment,
+        first,
+        scripts,
+        hasScripts,
+        node,
+        doc,
         i = 0,
         l = collection.length,
         iNoClone = l - 1,
@@ -5657,9 +5555,7 @@ function domManip(collection, args, callback, ignored) {
         valueIsFunction = isFunction(value);
 
     // We can't cloneNode fragments that contain checked, in WebKit
-    if (valueIsFunction ||
-        (l > 1 && typeof value === "string" &&
-            !support.checkClone && rchecked.test(value))) {
+    if (valueIsFunction || (l > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value))) {
         return collection.each(function (index) {
             var self = collection.eq(index);
             if (valueIsFunction) {
@@ -5693,7 +5589,6 @@ function domManip(collection, args, callback, ignored) {
 
                     // Keep references to cloned scripts for later restoration
                     if (hasScripts) {
-
                         // Support: Android <=4.0 only, PhantomJS 1 only
                         // push.apply(_, arraylike) throws on ancient WebKit
                         jQuery.merge(scripts, getAll(node, "script"));
@@ -5712,12 +5607,12 @@ function domManip(collection, args, callback, ignored) {
                 // Evaluate executable scripts on first document insertion
                 for (i = 0; i < hasScripts; i++) {
                     node = scripts[i];
-                    if (rscriptType.test(node.type || "") &&
+                    if (
+                        rscriptType.test(node.type || "") &&
                         !dataPriv.access(node, "globalEval") &&
-                        jQuery.contains(doc, node)) {
-
+                        jQuery.contains(doc, node)
+                    ) {
                         if (node.src && (node.type || "").toLowerCase() !== "module") {
-
                             // Optional AJAX dependency, but won't run scripts if not present
                             if (jQuery._evalUrl) {
                                 jQuery._evalUrl(node.src);
@@ -5761,14 +5656,15 @@ jQuery.extend({
     },
 
     clone: function (elem, dataAndEvents, deepDataAndEvents) {
-        var i, l, srcElements, destElements,
+        var i,
+            l,
+            srcElements,
+            destElements,
             clone = elem.cloneNode(true),
             inPage = jQuery.contains(elem.ownerDocument, elem);
 
         // Fix IE cloning issues
-        if (!support.noCloneChecked && (elem.nodeType === 1 || elem.nodeType === 11) &&
-            !jQuery.isXMLDoc(elem)) {
-
+        if (!support.noCloneChecked && (elem.nodeType === 1 || elem.nodeType === 11) && !jQuery.isXMLDoc(elem)) {
             // We eschew Sizzle here for performance reasons: https://jsperf.com/getall-vs-sizzle/2
             destElements = getAll(clone);
             srcElements = getAll(elem);
@@ -5803,7 +5699,9 @@ jQuery.extend({
     },
 
     cleanData: function (elems) {
-        var data, elem, type,
+        var data,
+            elem,
+            type,
             special = jQuery.event.special,
             i = 0;
 
@@ -5827,14 +5725,13 @@ jQuery.extend({
                     elem[dataPriv.expando] = undefined;
                 }
                 if (elem[dataUser.expando]) {
-
                     // Support: Chrome <=35 - 45+
                     // Assign undefined instead of using delete, see Data#remove
                     elem[dataUser.expando] = undefined;
                 }
             }
         }
-    }
+    },
 });
 
 jQuery.fn.extend({
@@ -5847,15 +5744,21 @@ jQuery.fn.extend({
     },
 
     text: function (value) {
-        return access(this, function (value) {
-            return value === undefined ?
-                jQuery.text(this) :
-                this.empty().each(function () {
-                    if (this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9) {
-                        this.textContent = value;
-                    }
-                });
-        }, null, value, arguments.length);
+        return access(
+            this,
+            function (value) {
+                return value === undefined
+                    ? jQuery.text(this)
+                    : this.empty().each(function () {
+                          if (this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9) {
+                              this.textContent = value;
+                          }
+                      });
+            },
+            null,
+            value,
+            arguments.length
+        );
     },
 
     append: function () {
@@ -5898,7 +5801,6 @@ jQuery.fn.extend({
 
         for (; (elem = this[i]) != null; i++) {
             if (elem.nodeType === 1) {
-
                 // Prevent memory leaks
                 jQuery.cleanData(getAll(elem, false));
 
@@ -5920,94 +5822,108 @@ jQuery.fn.extend({
     },
 
     html: function (value) {
-        return access(this, function (value) {
-            var elem = this[0] || {},
-                i = 0,
-                l = this.length;
+        return access(
+            this,
+            function (value) {
+                var elem = this[0] || {},
+                    i = 0,
+                    l = this.length;
 
-            if (value === undefined && elem.nodeType === 1) {
-                return elem.innerHTML;
-            }
-
-            // See if we can take a shortcut and just use innerHTML
-            if (typeof value === "string" && !rnoInnerhtml.test(value) &&
-                !wrapMap[(rtagName.exec(value) || ["", ""])[1].toLowerCase()]) {
-
-                value = jQuery.htmlPrefilter(value);
-
-                try {
-                    for (; i < l; i++) {
-                        elem = this[i] || {};
-
-                        // Remove element nodes and prevent memory leaks
-                        if (elem.nodeType === 1) {
-                            jQuery.cleanData(getAll(elem, false));
-                            elem.innerHTML = value;
-                        }
-                    }
-
-                    elem = 0;
-
-                    // If using innerHTML throws an exception, use the fallback method
-                } catch (e) {
+                if (value === undefined && elem.nodeType === 1) {
+                    return elem.innerHTML;
                 }
-            }
 
-            if (elem) {
-                this.empty().append(value);
-            }
-        }, null, value, arguments.length);
+                // See if we can take a shortcut and just use innerHTML
+                if (
+                    typeof value === "string" &&
+                    !rnoInnerhtml.test(value) &&
+                    !wrapMap[(rtagName.exec(value) || ["", ""])[1].toLowerCase()]
+                ) {
+                    value = jQuery.htmlPrefilter(value);
+
+                    try {
+                        for (; i < l; i++) {
+                            elem = this[i] || {};
+
+                            // Remove element nodes and prevent memory leaks
+                            if (elem.nodeType === 1) {
+                                jQuery.cleanData(getAll(elem, false));
+                                elem.innerHTML = value;
+                            }
+                        }
+
+                        elem = 0;
+
+                        // If using innerHTML throws an exception, use the fallback method
+                    } catch (e) {}
+                }
+
+                if (elem) {
+                    this.empty().append(value);
+                }
+            },
+            null,
+            value,
+            arguments.length
+        );
     },
 
     replaceWith: function () {
         var ignored = [];
 
         // Make the changes, replacing each non-ignored context element with the new content
-        return domManip(this, arguments, function (elem) {
-            var parent = this.parentNode;
+        return domManip(
+            this,
+            arguments,
+            function (elem) {
+                var parent = this.parentNode;
 
-            if (jQuery.inArray(this, ignored) < 0) {
-                jQuery.cleanData(getAll(this));
-                if (parent) {
-                    parent.replaceChild(elem, this);
+                if (jQuery.inArray(this, ignored) < 0) {
+                    jQuery.cleanData(getAll(this));
+                    if (parent) {
+                        parent.replaceChild(elem, this);
+                    }
                 }
+
+                // Force callback invocation
+            },
+            ignored
+        );
+    },
+});
+
+jQuery.each(
+    {
+        appendTo: "append",
+        prependTo: "prepend",
+        insertBefore: "before",
+        insertAfter: "after",
+        replaceAll: "replaceWith",
+    },
+    function (name, original) {
+        jQuery.fn[name] = function (selector) {
+            var elems,
+                ret = [],
+                insert = jQuery(selector),
+                last = insert.length - 1,
+                i = 0;
+
+            for (; i <= last; i++) {
+                elems = i === last ? this : this.clone(true);
+                jQuery(insert[i])[original](elems);
+
+                // Support: Android <=4.0 only, PhantomJS 1 only
+                // .get() because push.apply(_, arraylike) throws on ancient WebKit
+                push.apply(ret, elems.get());
             }
 
-            // Force callback invocation
-        }, ignored);
+            return this.pushStack(ret);
+        };
     }
-});
-
-jQuery.each({
-    appendTo: "append",
-    prependTo: "prepend",
-    insertBefore: "before",
-    insertAfter: "after",
-    replaceAll: "replaceWith"
-}, function (name, original) {
-    jQuery.fn[name] = function (selector) {
-        var elems,
-            ret = [],
-            insert = jQuery(selector),
-            last = insert.length - 1,
-            i = 0;
-
-        for (; i <= last; i++) {
-            elems = i === last ? this : this.clone(true);
-            jQuery(insert[i])[original](elems);
-
-            // Support: Android <=4.0 only, PhantomJS 1 only
-            // .get() because push.apply(_, arraylike) throws on ancient WebKit
-            push.apply(ret, elems.get());
-        }
-
-        return this.pushStack(ret);
-    };
-});
+);
 var rnumnonpx = new RegExp("^(" + pnum + ")(?!px)[a-z%]+$", "i");
 
 var getStyles = function (elem) {
-
     // Support: IE <=11 only, Firefox <=30 (#15098, #14150)
     // IE throws on elements created in popups
     // FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
@@ -6022,20 +5938,16 @@ var getStyles = function (elem) {
 
 var rboxStyle = new RegExp(cssExpand.join("|"), "i");
 
-
 (function () {
-
     // Executing both pixelPosition & boxSizingReliable tests require only one layout
     // so they're executed at the same time to save the second computation.
     function computeStyleTests() {
-
         // This is a singleton, we need to execute it only once
         if (!div) {
             return;
         }
 
-        container.style.cssText = "position:absolute;left:-11111px;width:60px;" +
-            "margin-top:1px;padding:0;border:0";
+        container.style.cssText = "position:absolute;left:-11111px;width:60px;" + "margin-top:1px;padding:0;border:0";
         div.style.cssText =
             "position:relative;display:block;box-sizing:border-box;overflow:scroll;" +
             "margin:auto;border:1px;padding:1px;" +
@@ -6073,7 +5985,10 @@ var rboxStyle = new RegExp(cssExpand.join("|"), "i");
         return Math.round(parseFloat(measure));
     }
 
-    var pixelPositionVal, boxSizingReliableVal, scrollboxSizeVal, pixelBoxStylesVal,
+    var pixelPositionVal,
+        boxSizingReliableVal,
+        scrollboxSizeVal,
+        pixelBoxStylesVal,
         reliableMarginLeftVal,
         container = document.createElement("div"),
         div = document.createElement("div");
@@ -6109,14 +6024,15 @@ var rboxStyle = new RegExp(cssExpand.join("|"), "i");
         scrollboxSize: function () {
             computeStyleTests();
             return scrollboxSizeVal;
-        }
+        },
     });
 })();
 
-
 function curCSS(elem, name, computed) {
-    var width, minWidth, maxWidth, ret,
-
+    var width,
+        minWidth,
+        maxWidth,
+        ret,
         // Support: Firefox 51+
         // Retrieving style before computed somehow
         // fixes an issue with getting wrong values
@@ -6141,7 +6057,6 @@ function curCSS(elem, name, computed) {
         // This is against the CSSOM draft spec:
         // https://drafts.csswg.org/cssom/#resolved-values
         if (!support.pixelBoxStyles() && rnumnonpx.test(ret) && rboxStyle.test(name)) {
-
             // Remember the original values
             width = style.width;
             minWidth = style.minWidth;
@@ -6158,22 +6073,18 @@ function curCSS(elem, name, computed) {
         }
     }
 
-    return ret !== undefined ?
-
-        // Support: IE <=9 - 11 only
-        // IE returns zIndex value as an integer.
-        ret + "" :
-        ret;
+    return ret !== undefined
+        ? // Support: IE <=9 - 11 only
+          // IE returns zIndex value as an integer.
+          ret + ""
+        : ret;
 }
 
-
 function addGetHookIf(conditionFn, hookFn) {
-
     // Define the hook, we'll check on the first run if it's really needed.
     return {
         get: function () {
             if (conditionFn()) {
-
                 // Hook not needed (or it's not possible to use it due
                 // to missing dependency), remove it.
                 delete this.get;
@@ -6182,30 +6093,25 @@ function addGetHookIf(conditionFn, hookFn) {
 
             // Hook needed; redefine it so that the support test is not executed again.
             return (this.get = hookFn).apply(this, arguments);
-        }
+        },
     };
 }
 
-
-var
-
-    // Swappable if display is none or starts with table
+var // Swappable if display is none or starts with table
     // except "table", "table-cell", or "table-caption"
     // See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
     rdisplayswap = /^(none|table(?!-c[ea]).+)/,
     rcustomProp = /^--/,
-    cssShow = {position: "absolute", visibility: "hidden", display: "block"},
+    cssShow = { position: "absolute", visibility: "hidden", display: "block" },
     cssNormalTransform = {
         letterSpacing: "0",
-        fontWeight: "400"
+        fontWeight: "400",
     },
-
     cssPrefixes = ["Webkit", "Moz", "ms"],
     emptyStyle = document.createElement("div").style;
 
 // Return a css property mapped to a potentially vendor prefixed property
 function vendorPropName(name) {
-
     // Shortcut for names that are not vendor prefixed
     if (name in emptyStyle) {
         return name;
@@ -6234,15 +6140,13 @@ function finalPropName(name) {
 }
 
 function setPositiveNumber(elem, value, subtract) {
-
     // Any relative (+/-) values have already been
     // normalized at this point
     var matches = rcssNum.exec(value);
-    return matches ?
-
-        // Guard against undefined "subtract", e.g., when used as in cssHooks
-        Math.max(0, matches[2] - (subtract || 0)) + (matches[3] || "px") :
-        value;
+    return matches
+        ? // Guard against undefined "subtract", e.g., when used as in cssHooks
+          Math.max(0, matches[2] - (subtract || 0)) + (matches[3] || "px")
+        : value;
 }
 
 function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedVal) {
@@ -6256,7 +6160,6 @@ function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedV
     }
 
     for (; i < 4; i += 2) {
-
         // Both box models exclude margin
         if (box === "margin") {
             delta += jQuery.css(elem, box + cssExpand[i], true, styles);
@@ -6264,7 +6167,6 @@ function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedV
 
         // If we get here with a content-box, we're seeking "padding" or "border" or "margin"
         if (!isBorderBox) {
-
             // Add padding
             delta += jQuery.css(elem, "padding" + cssExpand[i], true, styles);
 
@@ -6280,7 +6182,6 @@ function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedV
             // If we get here with a border-box (content + padding + border), we're seeking "content" or
             // "padding" or "margin"
         } else {
-
             // For "content", subtract padding
             if (box === "content") {
                 delta -= jQuery.css(elem, "padding" + cssExpand[i], true, styles);
@@ -6295,23 +6196,20 @@ function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedV
 
     // Account for positive content-box scroll gutter when requested by providing computedVal
     if (!isBorderBox && computedVal >= 0) {
-
         // offsetWidth/offsetHeight is a rounded sum of content, padding, scroll gutter, and border
         // Assuming integer scroll gutter, subtract the rest and round down
-        delta += Math.max(0, Math.ceil(
-            elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] -
-            computedVal -
-            delta -
-            extra -
-            0.5
-        ));
+        delta += Math.max(
+            0,
+            Math.ceil(
+                elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] - computedVal - delta - extra - 0.5
+            )
+        );
     }
 
     return delta;
 }
 
 function getWidthOrHeight(elem, dimension, extra) {
-
     // Start with computed style
     var styles = getStyles(elem),
         val = curCSS(elem, dimension, styles),
@@ -6329,16 +6227,13 @@ function getWidthOrHeight(elem, dimension, extra) {
 
     // Check for style in case a browser which returns unreliable values
     // for getComputedStyle silently falls back to the reliable elem.style
-    valueIsBorderBox = valueIsBorderBox &&
-        (support.boxSizingReliable() || val === elem.style[dimension]);
+    valueIsBorderBox = valueIsBorderBox && (support.boxSizingReliable() || val === elem.style[dimension]);
 
     // Fall back to offsetWidth/offsetHeight when value is "auto"
     // This happens for inline elements with no explicit setting (gh-3571)
     // Support: Android <=4.1 - 4.3 only
     // Also use offsetWidth/offsetHeight for misreported inline dimensions (gh-3602)
-    if (val === "auto" ||
-        !parseFloat(val) && jQuery.css(elem, "display", false, styles) === "inline") {
-
+    if (val === "auto" || (!parseFloat(val) && jQuery.css(elem, "display", false, styles) === "inline")) {
         val = elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)];
 
         // offsetWidth/offsetHeight provide border-box values
@@ -6349,7 +6244,8 @@ function getWidthOrHeight(elem, dimension, extra) {
     val = parseFloat(val) || 0;
 
     // Adjust for the element's box model
-    return (val +
+    return (
+        val +
         boxModelAdjustment(
             elem,
             dimension,
@@ -6359,42 +6255,41 @@ function getWidthOrHeight(elem, dimension, extra) {
 
             // Provide the current computed size to request scroll gutter calculation (gh-3589)
             val
-        )
-    ) + "px";
+        ) +
+        "px"
+    );
 }
 
 jQuery.extend({
-
     // Add in style property hooks for overriding the default
     // behavior of getting and setting a style property
     cssHooks: {
         opacity: {
             get: function (elem, computed) {
                 if (computed) {
-
                     // We should always get a number back from opacity
                     var ret = curCSS(elem, "opacity");
                     return ret === "" ? "1" : ret;
                 }
-            }
-        }
+            },
+        },
     },
 
     // Don't automatically add "px" to these possibly-unitless properties
     cssNumber: {
-        "animationIterationCount": true,
-        "columnCount": true,
-        "fillOpacity": true,
-        "flexGrow": true,
-        "flexShrink": true,
-        "fontWeight": true,
-        "lineHeight": true,
-        "opacity": true,
-        "order": true,
-        "orphans": true,
-        "widows": true,
-        "zIndex": true,
-        "zoom": true
+        animationIterationCount: true,
+        columnCount: true,
+        fillOpacity: true,
+        flexGrow: true,
+        flexShrink: true,
+        fontWeight: true,
+        lineHeight: true,
+        opacity: true,
+        order: true,
+        orphans: true,
+        widows: true,
+        zIndex: true,
+        zoom: true,
     },
 
     // Add in properties whose names you wish to fix before
@@ -6403,14 +6298,15 @@ jQuery.extend({
 
     // Get and set the style property on a DOM Node
     style: function (elem, name, value, extra) {
-
         // Don't set styles on text and comment nodes
         if (!elem || elem.nodeType === 3 || elem.nodeType === 8 || !elem.style) {
             return;
         }
 
         // Make sure that we're working with the right name
-        var ret, type, hooks,
+        var ret,
+            type,
+            hooks,
             origName = camelCase(name),
             isCustomProp = rcustomProp.test(name),
             style = elem.style;
@@ -6444,7 +6340,7 @@ jQuery.extend({
 
             // If a number was passed in, add the unit (except for certain CSS properties)
             if (type === "number") {
-                value += ret && ret[3] || (jQuery.cssNumber[origName] ? "" : "px");
+                value += (ret && ret[3]) || (jQuery.cssNumber[origName] ? "" : "px");
             }
 
             // background-* props affect original clone's values
@@ -6453,22 +6349,16 @@ jQuery.extend({
             }
 
             // If a hook was provided, use that value, otherwise just set the specified value
-            if (!hooks || !("set" in hooks) ||
-                (value = hooks.set(elem, value, extra)) !== undefined) {
-
+            if (!hooks || !("set" in hooks) || (value = hooks.set(elem, value, extra)) !== undefined) {
                 if (isCustomProp) {
                     style.setProperty(name, value);
                 } else {
                     style[name] = value;
                 }
             }
-
         } else {
-
             // If a hook was provided get the non-computed value from there
-            if (hooks && "get" in hooks &&
-                (ret = hooks.get(elem, false, extra)) !== undefined) {
-
+            if (hooks && "get" in hooks && (ret = hooks.get(elem, false, extra)) !== undefined) {
                 return ret;
             }
 
@@ -6478,7 +6368,9 @@ jQuery.extend({
     },
 
     css: function (elem, name, extra, styles) {
-        var val, num, hooks,
+        var val,
+            num,
+            hooks,
             origName = camelCase(name),
             isCustomProp = rcustomProp.test(name);
 
@@ -6514,29 +6406,27 @@ jQuery.extend({
         }
 
         return val;
-    }
+    },
 });
 
 jQuery.each(["height", "width"], function (i, dimension) {
     jQuery.cssHooks[dimension] = {
         get: function (elem, computed, extra) {
             if (computed) {
-
                 // Certain elements can have dimension info if we invisibly show them
                 // but it must have a current display style that would benefit
                 return rdisplayswap.test(jQuery.css(elem, "display")) &&
-
-                // Support: Safari 8+
-                // Table columns in Safari have non-zero offsetWidth & zero
-                // getBoundingClientRect().width unless display is changed.
-                // Support: IE <=11 only
-                // Running getBoundingClientRect on a disconnected node
-                // in IE throws an error.
-                (!elem.getClientRects().length || !elem.getBoundingClientRect().width) ?
-                    swap(elem, cssShow, function () {
-                        return getWidthOrHeight(elem, dimension, extra);
-                    }) :
-                    getWidthOrHeight(elem, dimension, extra);
+                    // Support: Safari 8+
+                    // Table columns in Safari have non-zero offsetWidth & zero
+                    // getBoundingClientRect().width unless display is changed.
+                    // Support: IE <=11 only
+                    // Running getBoundingClientRect on a disconnected node
+                    // in IE throws an error.
+                    (!elem.getClientRects().length || !elem.getBoundingClientRect().width)
+                    ? swap(elem, cssShow, function () {
+                          return getWidthOrHeight(elem, dimension, extra);
+                      })
+                    : getWidthOrHeight(elem, dimension, extra);
             }
         },
 
@@ -6544,104 +6434,100 @@ jQuery.each(["height", "width"], function (i, dimension) {
             var matches,
                 styles = getStyles(elem),
                 isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box",
-                subtract = extra && boxModelAdjustment(
-                    elem,
-                    dimension,
-                    extra,
-                    isBorderBox,
-                    styles
-                );
+                subtract = extra && boxModelAdjustment(elem, dimension, extra, isBorderBox, styles);
 
             // Account for unreliable border-box dimensions by comparing offset* to computed and
             // faking a content-box to get border and padding (gh-3699)
             if (isBorderBox && support.scrollboxSize() === styles.position) {
                 subtract -= Math.ceil(
                     elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] -
-                    parseFloat(styles[dimension]) -
-                    boxModelAdjustment(elem, dimension, "border", false, styles) -
-                    0.5
+                        parseFloat(styles[dimension]) -
+                        boxModelAdjustment(elem, dimension, "border", false, styles) -
+                        0.5
                 );
             }
 
             // Convert to pixels if value adjustment is needed
-            if (subtract && (matches = rcssNum.exec(value)) &&
-                (matches[3] || "px") !== "px") {
-
+            if (subtract && (matches = rcssNum.exec(value)) && (matches[3] || "px") !== "px") {
                 elem.style[dimension] = value;
                 value = jQuery.css(elem, dimension);
             }
 
             return setPositiveNumber(elem, value, subtract);
-        }
+        },
     };
 });
 
-jQuery.cssHooks.marginLeft = addGetHookIf(support.reliableMarginLeft,
-    function (elem, computed) {
-        if (computed) {
-            return (parseFloat(curCSS(elem, "marginLeft")) ||
+jQuery.cssHooks.marginLeft = addGetHookIf(support.reliableMarginLeft, function (elem, computed) {
+    if (computed) {
+        return (
+            (parseFloat(curCSS(elem, "marginLeft")) ||
                 elem.getBoundingClientRect().left -
-                swap(elem, {marginLeft: 0}, function () {
-                    return elem.getBoundingClientRect().left;
-                })
-            ) + "px";
+                    swap(elem, { marginLeft: 0 }, function () {
+                        return elem.getBoundingClientRect().left;
+                    })) + "px"
+        );
+    }
+});
+
+// These hooks are used by animate to expand properties
+jQuery.each(
+    {
+        margin: "",
+        padding: "",
+        border: "Width",
+    },
+    function (prefix, suffix) {
+        jQuery.cssHooks[prefix + suffix] = {
+            expand: function (value) {
+                var i = 0,
+                    expanded = {},
+                    // Assumes a single number if not a string
+                    parts = typeof value === "string" ? value.split(" ") : [value];
+
+                for (; i < 4; i++) {
+                    expanded[prefix + cssExpand[i] + suffix] = parts[i] || parts[i - 2] || parts[0];
+                }
+
+                return expanded;
+            },
+        };
+
+        if (prefix !== "margin") {
+            jQuery.cssHooks[prefix + suffix].set = setPositiveNumber;
         }
     }
 );
 
-// These hooks are used by animate to expand properties
-jQuery.each({
-    margin: "",
-    padding: "",
-    border: "Width"
-}, function (prefix, suffix) {
-    jQuery.cssHooks[prefix + suffix] = {
-        expand: function (value) {
-            var i = 0,
-                expanded = {},
-
-                // Assumes a single number if not a string
-                parts = typeof value === "string" ? value.split(" ") : [value];
-
-            for (; i < 4; i++) {
-                expanded[prefix + cssExpand[i] + suffix] =
-                    parts[i] || parts[i - 2] || parts[0];
-            }
-
-            return expanded;
-        }
-    };
-
-    if (prefix !== "margin") {
-        jQuery.cssHooks[prefix + suffix].set = setPositiveNumber;
-    }
-});
-
 jQuery.fn.extend({
     css: function (name, value) {
-        return access(this, function (elem, name, value) {
-            var styles, len,
-                map = {},
-                i = 0;
+        return access(
+            this,
+            function (elem, name, value) {
+                var styles,
+                    len,
+                    map = {},
+                    i = 0;
 
-            if (Array.isArray(name)) {
-                styles = getStyles(elem);
-                len = name.length;
+                if (Array.isArray(name)) {
+                    styles = getStyles(elem);
+                    len = name.length;
 
-                for (; i < len; i++) {
-                    map[name[i]] = jQuery.css(elem, name[i], false, styles);
+                    for (; i < len; i++) {
+                        map[name[i]] = jQuery.css(elem, name[i], false, styles);
+                    }
+
+                    return map;
                 }
 
-                return map;
-            }
-
-            return value !== undefined ?
-                jQuery.style(elem, name, value) :
-                jQuery.css(elem, name);
-        }, name, value, arguments.length > 1);
-    }
+                return value !== undefined ? jQuery.style(elem, name, value) : jQuery.css(elem, name);
+            },
+            name,
+            value,
+            arguments.length > 1
+        );
+    },
 });
-
 
 // Based off of the plugin by Clint Helfers, with permission.
 // https://web.archive.org/web/20100324014747/http://blindsignals.com/index.php/2009/07/jquery-delay/
@@ -6656,7 +6542,6 @@ jQuery.fn.delay = function (time, type) {
         };
     });
 };
-
 
 (function () {
     var input = document.createElement("input"),
@@ -6681,7 +6566,6 @@ jQuery.fn.delay = function (time, type) {
     support.radioValue = input.value === "t";
 })();
 
-
 var boolHook,
     attrHandle = jQuery.expr.attrHandle;
 
@@ -6694,12 +6578,13 @@ jQuery.fn.extend({
         return this.each(function () {
             jQuery.removeAttr(this, name);
         });
-    }
+    },
 });
 
 jQuery.extend({
     attr: function (elem, name, value) {
-        var ret, hooks,
+        var ret,
+            hooks,
             nType = elem.nodeType;
 
         // Don't get/set attributes on text, comment and attribute nodes
@@ -6715,8 +6600,7 @@ jQuery.extend({
         // Attribute hooks are determined by the lowercase version
         // Grab necessary hook if one is defined
         if (nType !== 1 || !jQuery.isXMLDoc(elem)) {
-            hooks = jQuery.attrHooks[name.toLowerCase()] ||
-                (jQuery.expr.match.bool.test(name) ? boolHook : undefined);
+            hooks = jQuery.attrHooks[name.toLowerCase()] || (jQuery.expr.match.bool.test(name) ? boolHook : undefined);
         }
 
         if (value !== undefined) {
@@ -6725,8 +6609,7 @@ jQuery.extend({
                 return;
             }
 
-            if (hooks && "set" in hooks &&
-                (ret = hooks.set(elem, value, name)) !== undefined) {
+            if (hooks && "set" in hooks && (ret = hooks.set(elem, value, name)) !== undefined) {
                 return ret;
             }
 
@@ -6747,8 +6630,7 @@ jQuery.extend({
     attrHooks: {
         type: {
             set: function (elem, value) {
-                if (!support.radioValue && value === "radio" &&
-                    nodeName(elem, "input")) {
+                if (!support.radioValue && value === "radio" && nodeName(elem, "input")) {
                     var val = elem.value;
                     elem.setAttribute("type", value);
                     if (val) {
@@ -6756,14 +6638,13 @@ jQuery.extend({
                     }
                     return value;
                 }
-            }
-        }
+            },
+        },
     },
 
     removeAttr: function (elem, value) {
         var name,
             i = 0,
-
             // Attribute names can contain non-HTML whitespace characters
             // https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
             attrNames = value && value.match(rnothtmlwhite);
@@ -6773,44 +6654,40 @@ jQuery.extend({
                 elem.removeAttribute(name);
             }
         }
-    }
+    },
 });
 
 // Hooks for boolean attributes
 boolHook = {
     set: function (elem, value, name) {
         if (value === false) {
-
             // Remove boolean attributes when set to false
             jQuery.removeAttr(elem, name);
         } else {
             elem.setAttribute(name, name);
         }
         return name;
-    }
+    },
 };
 
 jQuery.each(jQuery.expr.match.bool.source.match(/\w+/g), function (i, name) {
     var getter = attrHandle[name] || jQuery.find.attr;
 
     attrHandle[name] = function (elem, name, isXML) {
-        var ret, handle,
+        var ret,
+            handle,
             lowercaseName = name.toLowerCase();
 
         if (!isXML) {
-
             // Avoid an infinite loop by temporarily removing this function from the getter
             handle = attrHandle[lowercaseName];
             attrHandle[lowercaseName] = ret;
-            ret = getter(elem, name, isXML) != null ?
-                lowercaseName :
-                null;
+            ret = getter(elem, name, isXML) != null ? lowercaseName : null;
             attrHandle[lowercaseName] = handle;
         }
         return ret;
     };
 });
-
 
 var rfocusable = /^(?:input|select|textarea|button)$/i,
     rclickable = /^(?:a|area)$/i;
@@ -6824,12 +6701,13 @@ jQuery.fn.extend({
         return this.each(function () {
             delete this[jQuery.propFix[name] || name];
         });
-    }
+    },
 });
 
 jQuery.extend({
     prop: function (elem, name, value) {
-        var ret, hooks,
+        var ret,
+            hooks,
             nType = elem.nodeType;
 
         // Don't get/set properties on text, comment and attribute nodes
@@ -6838,15 +6716,13 @@ jQuery.extend({
         }
 
         if (nType !== 1 || !jQuery.isXMLDoc(elem)) {
-
             // Fix name and attach hooks
             name = jQuery.propFix[name] || name;
             hooks = jQuery.propHooks[name];
         }
 
         if (value !== undefined) {
-            if (hooks && "set" in hooks &&
-                (ret = hooks.set(elem, value, name)) !== undefined) {
+            if (hooks && "set" in hooks && (ret = hooks.set(elem, value, name)) !== undefined) {
                 return ret;
             }
 
@@ -6863,7 +6739,6 @@ jQuery.extend({
     propHooks: {
         tabIndex: {
             get: function (elem) {
-
                 // Support: IE <=9 - 11 only
                 // elem.tabIndex doesn't always return the
                 // correct value when it hasn't been explicitly set
@@ -6875,23 +6750,19 @@ jQuery.extend({
                     return parseInt(tabindex, 10);
                 }
 
-                if (
-                    rfocusable.test(elem.nodeName) ||
-                    rclickable.test(elem.nodeName) &&
-                    elem.href
-                ) {
+                if (rfocusable.test(elem.nodeName) || (rclickable.test(elem.nodeName) && elem.href)) {
                     return 0;
                 }
 
                 return -1;
-            }
-        }
+            },
+        },
     },
 
     propFix: {
-        "for": "htmlFor",
-        "class": "className"
-    }
+        for: "htmlFor",
+        class: "className",
+    },
 });
 
 // Support: IE <=11 only
@@ -6905,7 +6776,6 @@ jQuery.extend({
 if (!support.optSelected) {
     jQuery.propHooks.selected = {
         get: function (elem) {
-
             /* eslint no-unused-expressions: "off" */
 
             var parent = elem.parentNode;
@@ -6915,7 +6785,6 @@ if (!support.optSelected) {
             return null;
         },
         set: function (elem) {
-
             /* eslint no-unused-expressions: "off" */
 
             var parent = elem.parentNode;
@@ -6926,25 +6795,27 @@ if (!support.optSelected) {
                     parent.parentNode.selectedIndex;
                 }
             }
-        }
+        },
     };
 }
 
-jQuery.each([
-    "tabIndex",
-    "readOnly",
-    "maxLength",
-    "cellSpacing",
-    "cellPadding",
-    "rowSpan",
-    "colSpan",
-    "useMap",
-    "frameBorder",
-    "contentEditable"
-], function () {
-    jQuery.propFix[this.toLowerCase()] = this;
-});
-
+jQuery.each(
+    [
+        "tabIndex",
+        "readOnly",
+        "maxLength",
+        "cellSpacing",
+        "cellPadding",
+        "rowSpan",
+        "colSpan",
+        "useMap",
+        "frameBorder",
+        "contentEditable",
+    ],
+    function () {
+        jQuery.propFix[this.toLowerCase()] = this;
+    }
+);
 
 // Strip and collapse whitespace according to HTML spec
 // https://infra.spec.whatwg.org/#strip-and-collapse-ascii-whitespace
@@ -6953,9 +6824,8 @@ function stripAndCollapse(value) {
     return tokens.join(" ");
 }
 
-
 function getClass(elem) {
-    return elem.getAttribute && elem.getAttribute("class") || "";
+    return (elem.getAttribute && elem.getAttribute("class")) || "";
 }
 
 function classesToArray(value) {
@@ -6970,7 +6840,13 @@ function classesToArray(value) {
 
 jQuery.fn.extend({
     addClass: function (value) {
-        var classes, elem, cur, curValue, clazz, j, finalValue,
+        var classes,
+            elem,
+            cur,
+            curValue,
+            clazz,
+            j,
+            finalValue,
             i = 0;
 
         if (isFunction(value)) {
@@ -6984,7 +6860,7 @@ jQuery.fn.extend({
         if (classes.length) {
             while ((elem = this[i++])) {
                 curValue = getClass(elem);
-                cur = elem.nodeType === 1 && (" " + stripAndCollapse(curValue) + " ");
+                cur = elem.nodeType === 1 && " " + stripAndCollapse(curValue) + " ";
 
                 if (cur) {
                     j = 0;
@@ -7007,7 +6883,13 @@ jQuery.fn.extend({
     },
 
     removeClass: function (value) {
-        var classes, elem, cur, curValue, clazz, j, finalValue,
+        var classes,
+            elem,
+            cur,
+            curValue,
+            clazz,
+            j,
+            finalValue,
             i = 0;
 
         if (isFunction(value)) {
@@ -7027,12 +6909,11 @@ jQuery.fn.extend({
                 curValue = getClass(elem);
 
                 // This expression is here for better compressibility (see addClass)
-                cur = elem.nodeType === 1 && (" " + stripAndCollapse(curValue) + " ");
+                cur = elem.nodeType === 1 && " " + stripAndCollapse(curValue) + " ";
 
                 if (cur) {
                     j = 0;
                     while ((clazz = classes[j++])) {
-
                         // Remove *all* instances
                         while (cur.indexOf(" " + clazz + " ") > -1) {
                             cur = cur.replace(" " + clazz + " ", " ");
@@ -7061,10 +6942,7 @@ jQuery.fn.extend({
 
         if (isFunction(value)) {
             return this.each(function (i) {
-                jQuery(this).toggleClass(
-                    value.call(this, i, getClass(this), stateVal),
-                    stateVal
-                );
+                jQuery(this).toggleClass(value.call(this, i, getClass(this), stateVal), stateVal);
             });
         }
 
@@ -7072,14 +6950,12 @@ jQuery.fn.extend({
             var className, i, self, classNames;
 
             if (isValidValue) {
-
                 // Toggle individual class names
                 i = 0;
                 self = jQuery(this);
                 classNames = classesToArray(value);
 
                 while ((className = classNames[i++])) {
-
                     // Check each className given, space separated list
                     if (self.hasClass(className)) {
                         self.removeClass(className);
@@ -7092,7 +6968,6 @@ jQuery.fn.extend({
             } else if (value === undefined || type === "boolean") {
                 className = getClass(this);
                 if (className) {
-
                     // Store className if set
                     dataPriv.set(this, "__className__", className);
                 }
@@ -7102,10 +6977,9 @@ jQuery.fn.extend({
                 // Otherwise bring back whatever was previously saved (if anything),
                 // falling back to the empty string if nothing was stored.
                 if (this.setAttribute) {
-                    this.setAttribute("class",
-                        className || value === false ?
-                            "" :
-                            dataPriv.get(this, "__className__") || ""
+                    this.setAttribute(
+                        "class",
+                        className || value === false ? "" : dataPriv.get(this, "__className__") || ""
                     );
                 }
             }
@@ -7113,38 +6987,35 @@ jQuery.fn.extend({
     },
 
     hasClass: function (selector) {
-        var className, elem,
+        var className,
+            elem,
             i = 0;
 
         className = " " + selector + " ";
         while ((elem = this[i++])) {
-            if (elem.nodeType === 1 &&
-                (" " + stripAndCollapse(getClass(elem)) + " ").indexOf(className) > -1) {
+            if (elem.nodeType === 1 && (" " + stripAndCollapse(getClass(elem)) + " ").indexOf(className) > -1) {
                 return true;
             }
         }
 
         return false;
-    }
+    },
 });
-
 
 var rreturn = /\r/g;
 
 jQuery.fn.extend({
     val: function (value) {
-        var hooks, ret, valueIsFunction,
+        var hooks,
+            ret,
+            valueIsFunction,
             elem = this[0];
 
         if (!arguments.length) {
             if (elem) {
-                hooks = jQuery.valHooks[elem.type] ||
-                    jQuery.valHooks[elem.nodeName.toLowerCase()];
+                hooks = jQuery.valHooks[elem.type] || jQuery.valHooks[elem.nodeName.toLowerCase()];
 
-                if (hooks &&
-                    "get" in hooks &&
-                    (ret = hooks.get(elem, "value")) !== undefined
-                ) {
+                if (hooks && "get" in hooks && (ret = hooks.get(elem, "value")) !== undefined) {
                     return ret;
                 }
 
@@ -7180,10 +7051,8 @@ jQuery.fn.extend({
             // Treat null/undefined as ""; convert numbers to string
             if (val == null) {
                 val = "";
-
             } else if (typeof val === "number") {
                 val += "";
-
             } else if (Array.isArray(val)) {
                 val = jQuery.map(val, function (value) {
                     return value == null ? "" : value + "";
@@ -7197,28 +7066,28 @@ jQuery.fn.extend({
                 this.value = val;
             }
         });
-    }
+    },
 });
 
 jQuery.extend({
     valHooks: {
         option: {
             get: function (elem) {
-
                 var val = jQuery.find.attr(elem, "value");
-                return val != null ?
-                    val :
-
-                    // Support: IE <=10 - 11 only
-                    // option.text throws exceptions (#14686, #14858)
-                    // Strip and collapse whitespace
-                    // https://html.spec.whatwg.org/#strip-and-collapse-whitespace
-                    stripAndCollapse(jQuery.text(elem));
-            }
+                return val != null
+                    ? val
+                    : // Support: IE <=10 - 11 only
+                      // option.text throws exceptions (#14686, #14858)
+                      // Strip and collapse whitespace
+                      // https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+                      stripAndCollapse(jQuery.text(elem));
+            },
         },
         select: {
             get: function (elem) {
-                var value, option, i,
+                var value,
+                    option,
+                    i,
                     options = elem.options,
                     index = elem.selectedIndex,
                     one = elem.type === "select-one",
@@ -7227,7 +7096,6 @@ jQuery.extend({
 
                 if (index < 0) {
                     i = max;
-
                 } else {
                     i = one ? index : 0;
                 }
@@ -7238,13 +7106,12 @@ jQuery.extend({
 
                     // Support: IE <=9 only
                     // IE8-9 doesn't update selected after form reset (#2551)
-                    if ((option.selected || i === index) &&
-
+                    if (
+                        (option.selected || i === index) &&
                         // Don't return options that are disabled or in a disabled optgroup
                         !option.disabled &&
-                        (!option.parentNode.disabled ||
-                            !nodeName(option.parentNode, "optgroup"))) {
-
+                        (!option.parentNode.disabled || !nodeName(option.parentNode, "optgroup"))
+                    ) {
                         // Get the specific value for the option
                         value = jQuery(option).val();
 
@@ -7262,7 +7129,8 @@ jQuery.extend({
             },
 
             set: function (elem, value) {
-                var optionSet, option,
+                var optionSet,
+                    option,
                     options = elem.options,
                     values = jQuery.makeArray(value),
                     i = options.length;
@@ -7272,9 +7140,7 @@ jQuery.extend({
 
                     /* eslint-disable no-cond-assign */
 
-                    if (option.selected =
-                        jQuery.inArray(jQuery.valHooks.option.get(option), values) > -1
-                    ) {
+                    if ((option.selected = jQuery.inArray(jQuery.valHooks.option.get(option), values) > -1)) {
                         optionSet = true;
                     }
 
@@ -7286,9 +7152,9 @@ jQuery.extend({
                     elem.selectedIndex = -1;
                 }
                 return values;
-            }
-        }
-    }
+            },
+        },
+    },
 });
 
 // Radios and checkboxes getter/setter
@@ -7298,7 +7164,7 @@ jQuery.each(["radio", "checkbox"], function () {
             if (Array.isArray(value)) {
                 return (elem.checked = jQuery.inArray(jQuery(elem).val(), value) > -1);
             }
-        }
+        },
     };
     if (!support.checkOn) {
         jQuery.valHooks[this].get = function (elem) {
@@ -7307,12 +7173,9 @@ jQuery.each(["radio", "checkbox"], function () {
     }
 });
 
-
 // Return jQuery for attributes-only inclusion
 
-
 support.focusin = "onfocusin" in window;
-
 
 var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
     stopPropagationCallback = function (e) {
@@ -7320,10 +7183,15 @@ var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
     };
 
 jQuery.extend(jQuery.event, {
-
     trigger: function (event, data, elem, onlyHandlers) {
-
-        var i, cur, tmp, bubbleType, ontype, handle, special, lastElement,
+        var i,
+            cur,
+            tmp,
+            bubbleType,
+            ontype,
+            handle,
+            special,
+            lastElement,
             eventPath = [elem || document],
             type = hasOwn.call(event, "type") ? event.type : event,
             namespaces = hasOwn.call(event, "namespace") ? event.namespace.split(".") : [];
@@ -7341,7 +7209,6 @@ jQuery.extend(jQuery.event, {
         }
 
         if (type.indexOf(".") > -1) {
-
             // Namespaced trigger; create a regexp to match event type in handle()
             namespaces = type.split(".");
             type = namespaces.shift();
@@ -7350,16 +7217,14 @@ jQuery.extend(jQuery.event, {
         ontype = type.indexOf(":") < 0 && "on" + type;
 
         // Caller can pass in a jQuery.Event object, Object, or just an event type string
-        event = event[jQuery.expando] ?
-            event :
-            new jQuery.Event(type, typeof event === "object" && event);
+        event = event[jQuery.expando] ? event : new jQuery.Event(type, typeof event === "object" && event);
 
         // Trigger bitmask: & 1 for native handlers; & 2 for jQuery (always true)
         event.isTrigger = onlyHandlers ? 2 : 3;
         event.namespace = namespaces.join(".");
-        event.rnamespace = event.namespace ?
-            new RegExp("(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)") :
-            null;
+        event.rnamespace = event.namespace
+            ? new RegExp("(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)")
+            : null;
 
         // Clean up the event in case it is being reused
         event.result = undefined;
@@ -7368,9 +7233,7 @@ jQuery.extend(jQuery.event, {
         }
 
         // Clone any incoming data and prepend the event, creating the handler arg list
-        data = data == null ?
-            [event] :
-            jQuery.makeArray(data, [event]);
+        data = data == null ? [event] : jQuery.makeArray(data, [event]);
 
         // Allow special events to draw outside the lines
         special = jQuery.event.special[type] || {};
@@ -7381,7 +7244,6 @@ jQuery.extend(jQuery.event, {
         // Determine event propagation path in advance, per W3C events spec (#9951)
         // Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
         if (!onlyHandlers && !special.noBubble && !isWindow(elem)) {
-
             bubbleType = special.delegateType || type;
             if (!rfocusMorph.test(bubbleType + type)) {
                 cur = cur.parentNode;
@@ -7401,13 +7263,10 @@ jQuery.extend(jQuery.event, {
         i = 0;
         while ((cur = eventPath[i++]) && !event.isPropagationStopped()) {
             lastElement = cur;
-            event.type = i > 1 ?
-                bubbleType :
-                special.bindType || type;
+            event.type = i > 1 ? bubbleType : special.bindType || type;
 
             // jQuery handler
-            handle = (dataPriv.get(cur, "events") || {})[event.type] &&
-                dataPriv.get(cur, "handle");
+            handle = (dataPriv.get(cur, "events") || {})[event.type] && dataPriv.get(cur, "handle");
             if (handle) {
                 handle.apply(cur, data);
             }
@@ -7425,15 +7284,10 @@ jQuery.extend(jQuery.event, {
 
         // If nobody prevented the default action, do it now
         if (!onlyHandlers && !event.isDefaultPrevented()) {
-
-            if ((!special._default ||
-                special._default.apply(eventPath.pop(), data) === false) &&
-                acceptData(elem)) {
-
+            if ((!special._default || special._default.apply(eventPath.pop(), data) === false) && acceptData(elem)) {
                 // Call a native DOM method on the target with the same name as the event.
                 // Don't do default actions on window, that's where global variables be (#6170)
                 if (ontype && isFunction(elem[type]) && !isWindow(elem)) {
-
                     // Don't re-trigger an onFOO event when we call its FOO() method
                     tmp = elem[ontype];
 
@@ -7469,22 +7323,16 @@ jQuery.extend(jQuery.event, {
     // Piggyback on a donor event to simulate a different one
     // Used only for `focus(in | out)` events
     simulate: function (type, elem, event) {
-        var e = jQuery.extend(
-            new jQuery.Event(),
-            event,
-            {
-                type: type,
-                isSimulated: true
-            }
-        );
+        var e = jQuery.extend(new jQuery.Event(), event, {
+            type: type,
+            isSimulated: true,
+        });
 
         jQuery.event.trigger(e, null, elem);
-    }
-
+    },
 });
 
 jQuery.fn.extend({
-
     trigger: function (type, data) {
         return this.each(function () {
             jQuery.event.trigger(type, data, this);
@@ -7495,9 +7343,8 @@ jQuery.fn.extend({
         if (elem) {
             return jQuery.event.trigger(type, data, elem, true);
         }
-    }
+    },
 });
-
 
 // Support: Firefox <=44
 // Firefox doesn't have focus(in | out) events
@@ -7508,8 +7355,7 @@ jQuery.fn.extend({
 // which is spec violation - http://www.w3.org/TR/DOM-Level-3-Events/#events-focusevent-event-order
 // Related ticket - https://bugs.chromium.org/p/chromium/issues/detail?id=449857
 if (!support.focusin) {
-    jQuery.each({focus: "focusin", blur: "focusout"}, function (orig, fix) {
-
+    jQuery.each({ focus: "focusin", blur: "focusout" }, function (orig, fix) {
         // Attach a single capturing handler on the document while someone wants focusin/focusout
         var handler = function (event) {
             jQuery.event.simulate(fix, event.target, jQuery.event.fix(event));
@@ -7532,18 +7378,15 @@ if (!support.focusin) {
                 if (!attaches) {
                     doc.removeEventListener(orig, handler, true);
                     dataPriv.remove(doc, fix);
-
                 } else {
                     dataPriv.access(doc, fix, attaches);
                 }
-            }
+            },
         };
     });
 }
 
-
-var
-    rbracket = /\[\]$/,
+var rbracket = /\[\]$/,
     rCRLF = /\r?\n/g,
     rsubmitterTypes = /^(?:submit|button|image|reset|file)$/i,
     rsubmittable = /^(?:input|select|textarea|keygen)/i;
@@ -7552,35 +7395,22 @@ function buildParams(prefix, obj, traditional, add) {
     var name;
 
     if (Array.isArray(obj)) {
-
         // Serialize array item.
         jQuery.each(obj, function (i, v) {
             if (traditional || rbracket.test(prefix)) {
-
                 // Treat each array item as a scalar.
                 add(prefix, v);
-
             } else {
-
                 // Item is non-scalar (array or object), encode its numeric index.
-                buildParams(
-                    prefix + "[" + (typeof v === "object" && v != null ? i : "") + "]",
-                    v,
-                    traditional,
-                    add
-                );
+                buildParams(prefix + "[" + (typeof v === "object" && v != null ? i : "") + "]", v, traditional, add);
             }
         });
-
     } else if (!traditional && toType(obj) === "object") {
-
         // Serialize object item.
         for (name in obj) {
             buildParams(prefix + "[" + name + "]", obj[name], traditional, add);
         }
-
     } else {
-
         // Serialize scalar item.
         add(prefix, obj);
     }
@@ -7592,26 +7422,19 @@ jQuery.param = function (a, traditional) {
     var prefix,
         s = [],
         add = function (key, valueOrFunction) {
-
             // If value is a function, invoke it and use its return value
-            var value = isFunction(valueOrFunction) ?
-                valueOrFunction() :
-                valueOrFunction;
+            var value = isFunction(valueOrFunction) ? valueOrFunction() : valueOrFunction;
 
-            s[s.length] = encodeURIComponent(key) + "=" +
-                encodeURIComponent(value == null ? "" : value);
+            s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value == null ? "" : value);
         };
 
     // If an array was passed in, assume that it is an array of form elements.
     if (Array.isArray(a) || (a.jquery && !jQuery.isPlainObject(a))) {
-
         // Serialize the form elements
         jQuery.each(a, function () {
             add(this.name, this.value);
         });
-
     } else {
-
         // If traditional, encode the "old" way (the way 1.3.2 or older
         // did it), otherwise encode params recursively.
         for (prefix in a) {
@@ -7629,7 +7452,6 @@ jQuery.fn.extend({
     },
     serializeArray: function () {
         return this.map(function () {
-
             // Can add propHook for "elements" to filter or add form elements
             var elements = jQuery.prop(this, "elements");
             return elements ? jQuery.makeArray(elements) : this;
@@ -7638,9 +7460,13 @@ jQuery.fn.extend({
                 var type = this.type;
 
                 // Use .is( ":disabled" ) so that fieldset[disabled] works
-                return this.name && !jQuery(this).is(":disabled") &&
-                    rsubmittable.test(this.nodeName) && !rsubmitterTypes.test(type) &&
-                    (this.checked || !rcheckableType.test(type));
+                return (
+                    this.name &&
+                    !jQuery(this).is(":disabled") &&
+                    rsubmittable.test(this.nodeName) &&
+                    !rsubmitterTypes.test(type) &&
+                    (this.checked || !rcheckableType.test(type))
+                );
             })
             .map(function (i, elem) {
                 var val = jQuery(this).val();
@@ -7651,15 +7477,15 @@ jQuery.fn.extend({
 
                 if (Array.isArray(val)) {
                     return jQuery.map(val, function (val) {
-                        return {name: elem.name, value: val.replace(rCRLF, "\r\n")};
+                        return { name: elem.name, value: val.replace(rCRLF, "\r\n") };
                     });
                 }
 
-                return {name: elem.name, value: val.replace(rCRLF, "\r\n")};
-            }).get();
-    }
+                return { name: elem.name, value: val.replace(rCRLF, "\r\n") };
+            })
+            .get();
+    },
 });
-
 
 jQuery.fn.extend({
     wrapAll: function (html) {
@@ -7704,7 +7530,6 @@ jQuery.fn.extend({
 
             if (contents.length) {
                 contents.wrapAll(html);
-
             } else {
                 self.append(html);
             }
@@ -7720,13 +7545,14 @@ jQuery.fn.extend({
     },
 
     unwrap: function (selector) {
-        this.parent(selector).not("body").each(function () {
-            jQuery(this).replaceWith(this.childNodes);
-        });
+        this.parent(selector)
+            .not("body")
+            .each(function () {
+                jQuery(this).replaceWith(this.childNodes);
+            });
         return this;
-    }
+    },
 });
-
 
 jQuery.expr.pseudos.hidden = function (elem) {
     return !jQuery.expr.pseudos.visible(elem);
@@ -7734,7 +7560,6 @@ jQuery.expr.pseudos.hidden = function (elem) {
 jQuery.expr.pseudos.visible = function (elem) {
     return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
 };
-
 
 // Support: Safari 8 only
 // In Safari 8 documents created via document.implementation.createHTMLDocument
@@ -7746,7 +7571,6 @@ support.createHTMLDocument = (function () {
     body.innerHTML = "<form></form><form></form>";
     return body.childNodes.length === 2;
 })();
-
 
 // Argument "data" should be string of html
 // context (optional): If specified, the fragment will be created in this context,
@@ -7764,7 +7588,6 @@ jQuery.parseHTML = function (data, context, keepScripts) {
     var base, parsed, scripts;
 
     if (!context) {
-
         // Stop scripts or inline event handlers from being executed immediately
         // by using document.implementation
         if (support.createHTMLDocument) {
@@ -7798,10 +7621,15 @@ jQuery.parseHTML = function (data, context, keepScripts) {
     return jQuery.merge([], parsed.childNodes);
 };
 
-
 jQuery.offset = {
     setOffset: function (elem, options, i) {
-        var curPosition, curLeft, curCSSTop, curTop, curOffset, curCSSLeft, calculatePosition,
+        var curPosition,
+            curLeft,
+            curCSSTop,
+            curTop,
+            curOffset,
+            curCSSLeft,
+            calculatePosition,
             position = jQuery.css(elem, "position"),
             curElem = jQuery(elem),
             props = {};
@@ -7814,8 +7642,8 @@ jQuery.offset = {
         curOffset = curElem.offset();
         curCSSTop = jQuery.css(elem, "top");
         curCSSLeft = jQuery.css(elem, "left");
-        calculatePosition = (position === "absolute" || position === "fixed") &&
-            (curCSSTop + curCSSLeft).indexOf("auto") > -1;
+        calculatePosition =
+            (position === "absolute" || position === "fixed") && (curCSSTop + curCSSLeft).indexOf("auto") > -1;
 
         // Need to be able to calculate position if either
         // top or left is auto and position is either absolute or fixed
@@ -7823,49 +7651,45 @@ jQuery.offset = {
             curPosition = curElem.position();
             curTop = curPosition.top;
             curLeft = curPosition.left;
-
         } else {
             curTop = parseFloat(curCSSTop) || 0;
             curLeft = parseFloat(curCSSLeft) || 0;
         }
 
         if (isFunction(options)) {
-
             // Use jQuery.extend here to allow modification of coordinates argument (gh-1848)
             options = options.call(elem, i, jQuery.extend({}, curOffset));
         }
 
         if (options.top != null) {
-            props.top = (options.top - curOffset.top) + curTop;
+            props.top = options.top - curOffset.top + curTop;
         }
         if (options.left != null) {
-            props.left = (options.left - curOffset.left) + curLeft;
+            props.left = options.left - curOffset.left + curLeft;
         }
 
         if ("using" in options) {
             options.using.call(elem, props);
-
         } else {
             curElem.css(props);
         }
-    }
+    },
 };
 
 jQuery.fn.extend({
-
     // offset() relates an element's border box to the document origin
     offset: function (options) {
-
         // Preserve chaining for setter
         if (arguments.length) {
-            return options === undefined ?
-                this :
-                this.each(function (i) {
-                    jQuery.offset.setOffset(this, options, i);
-                });
+            return options === undefined
+                ? this
+                : this.each(function (i) {
+                      jQuery.offset.setOffset(this, options, i);
+                  });
         }
 
-        var rect, win,
+        var rect,
+            win,
             elem = this[0];
 
         if (!elem) {
@@ -7877,7 +7701,7 @@ jQuery.fn.extend({
         // Running getBoundingClientRect on a
         // disconnected node in IE throws an error
         if (!elem.getClientRects().length) {
-            return {top: 0, left: 0};
+            return { top: 0, left: 0 };
         }
 
         // Get document-relative position by adding viewport scroll to viewport-relative gBCR
@@ -7885,7 +7709,7 @@ jQuery.fn.extend({
         win = elem.ownerDocument.defaultView;
         return {
             top: rect.top + win.pageYOffset,
-            left: rect.left + win.pageXOffset
+            left: rect.left + win.pageXOffset,
         };
     },
 
@@ -7896,16 +7720,16 @@ jQuery.fn.extend({
             return;
         }
 
-        var offsetParent, offset, doc,
+        var offsetParent,
+            offset,
+            doc,
             elem = this[0],
-            parentOffset = {top: 0, left: 0};
+            parentOffset = { top: 0, left: 0 };
 
         // position:fixed elements are offset from the viewport, which itself always has zero offset
         if (jQuery.css(elem, "position") === "fixed") {
-
             // Assume position:fixed implies availability of getBoundingClientRect
             offset = elem.getBoundingClientRect();
-
         } else {
             offset = this.offset();
 
@@ -7913,14 +7737,14 @@ jQuery.fn.extend({
             // when a statically positioned element is identified
             doc = elem.ownerDocument;
             offsetParent = elem.offsetParent || doc.documentElement;
-            while (offsetParent &&
-            (offsetParent === doc.body || offsetParent === doc.documentElement) &&
-            jQuery.css(offsetParent, "position") === "static") {
-
+            while (
+                offsetParent &&
+                (offsetParent === doc.body || offsetParent === doc.documentElement) &&
+                jQuery.css(offsetParent, "position") === "static"
+            ) {
                 offsetParent = offsetParent.parentNode;
             }
             if (offsetParent && offsetParent !== elem && offsetParent.nodeType === 1) {
-
                 // Incorporate borders into its offset, since they are outside its content origin
                 parentOffset = jQuery(offsetParent).offset();
                 parentOffset.top += jQuery.css(offsetParent, "borderTopWidth", true);
@@ -7931,7 +7755,7 @@ jQuery.fn.extend({
         // Subtract parent offsets and element margins
         return {
             top: offset.top - parentOffset.top - jQuery.css(elem, "marginTop", true),
-            left: offset.left - parentOffset.left - jQuery.css(elem, "marginLeft", true)
+            left: offset.left - parentOffset.left - jQuery.css(elem, "marginLeft", true),
         };
     },
 
@@ -7955,38 +7779,39 @@ jQuery.fn.extend({
 
             return offsetParent || documentElement;
         });
-    }
+    },
 });
 
 // Create scrollLeft and scrollTop methods
-jQuery.each({scrollLeft: "pageXOffset", scrollTop: "pageYOffset"}, function (method, prop) {
+jQuery.each({ scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function (method, prop) {
     var top = "pageYOffset" === prop;
 
     jQuery.fn[method] = function (val) {
-        return access(this, function (elem, method, val) {
+        return access(
+            this,
+            function (elem, method, val) {
+                // Coalesce documents and windows
+                var win;
+                if (isWindow(elem)) {
+                    win = elem;
+                } else if (elem.nodeType === 9) {
+                    win = elem.defaultView;
+                }
 
-            // Coalesce documents and windows
-            var win;
-            if (isWindow(elem)) {
-                win = elem;
-            } else if (elem.nodeType === 9) {
-                win = elem.defaultView;
-            }
+                if (val === undefined) {
+                    return win ? win[prop] : elem[method];
+                }
 
-            if (val === undefined) {
-                return win ? win[prop] : elem[method];
-            }
-
-            if (win) {
-                win.scrollTo(
-                    !top ? val : win.pageXOffset,
-                    top ? val : win.pageYOffset
-                );
-
-            } else {
-                elem[method] = val;
-            }
-        }, method, val, arguments.length);
+                if (win) {
+                    win.scrollTo(!top ? val : win.pageXOffset, top ? val : win.pageYOffset);
+                } else {
+                    elem[method] = val;
+                }
+            },
+            method,
+            val,
+            arguments.length
+        );
     };
 });
 
@@ -7997,40 +7822,34 @@ jQuery.each({scrollLeft: "pageXOffset", scrollTop: "pageYOffset"}, function (met
 // getComputedStyle returns percent when specified for top/left/bottom/right;
 // rather than make the css module depend on the offset module, just check for it here
 jQuery.each(["top", "left"], function (i, prop) {
-    jQuery.cssHooks[prop] = addGetHookIf(support.pixelPosition,
-        function (elem, computed) {
-            if (computed) {
-                computed = curCSS(elem, prop);
+    jQuery.cssHooks[prop] = addGetHookIf(support.pixelPosition, function (elem, computed) {
+        if (computed) {
+            computed = curCSS(elem, prop);
 
-                // If curCSS returns percentage, fallback to offset
-                return rnumnonpx.test(computed) ?
-                    jQuery(elem).position()[prop] + "px" :
-                    computed;
-            }
+            // If curCSS returns percentage, fallback to offset
+            return rnumnonpx.test(computed) ? jQuery(elem).position()[prop] + "px" : computed;
         }
-    );
+    });
 });
 
-
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
-jQuery.each({Height: "height", Width: "width"}, function (name, type) {
-    jQuery.each({padding: "inner" + name, content: type, "": "outer" + name},
-        function (defaultExtra, funcName) {
+jQuery.each({ Height: "height", Width: "width" }, function (name, type) {
+    jQuery.each({ padding: "inner" + name, content: type, "": "outer" + name }, function (defaultExtra, funcName) {
+        // Margin is only for outerHeight, outerWidth
+        jQuery.fn[funcName] = function (margin, value) {
+            var chainable = arguments.length && (defaultExtra || typeof margin !== "boolean"),
+                extra = defaultExtra || (margin === true || value === true ? "margin" : "border");
 
-            // Margin is only for outerHeight, outerWidth
-            jQuery.fn[funcName] = function (margin, value) {
-                var chainable = arguments.length && (defaultExtra || typeof margin !== "boolean"),
-                    extra = defaultExtra || (margin === true || value === true ? "margin" : "border");
-
-                return access(this, function (elem, type, value) {
+            return access(
+                this,
+                function (elem, type, value) {
                     var doc;
 
                     if (isWindow(elem)) {
-
                         // $( window ).outerWidth/Height return w/h including scrollbars (gh-1729)
-                        return funcName.indexOf("outer") === 0 ?
-                            elem["inner" + name] :
-                            elem.document.documentElement["client" + name];
+                        return funcName.indexOf("outer") === 0
+                            ? elem["inner" + name]
+                            : elem.document.documentElement["client" + name];
                     }
 
                     // Get document width or height
@@ -8040,47 +7859,49 @@ jQuery.each({Height: "height", Width: "width"}, function (name, type) {
                         // Either scroll[Width/Height] or offset[Width/Height] or client[Width/Height],
                         // whichever is greatest
                         return Math.max(
-                            elem.body["scroll" + name], doc["scroll" + name],
-                            elem.body["offset" + name], doc["offset" + name],
+                            elem.body["scroll" + name],
+                            doc["scroll" + name],
+                            elem.body["offset" + name],
+                            doc["offset" + name],
                             doc["client" + name]
                         );
                     }
 
-                    return value === undefined ?
-
-                        // Get width or height on the element, requesting but not forcing parseFloat
-                        jQuery.css(elem, type, extra) :
-
-                        // Set width or height on the element
-                        jQuery.style(elem, type, value, extra);
-                }, type, chainable ? margin : undefined, chainable);
-            };
-        });
-});
-
-
-jQuery.each(("blur focus focusin focusout resize scroll click dblclick " +
-    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-    "change select submit keydown keypress keyup contextmenu").split(" "),
-    function (i, name) {
-
-        // Handle event binding
-        jQuery.fn[name] = function (data, fn) {
-            return arguments.length > 0 ?
-                this.on(name, null, data, fn) :
-                this.trigger(name);
+                    return value === undefined
+                        ? // Get width or height on the element, requesting but not forcing parseFloat
+                          jQuery.css(elem, type, extra)
+                        : // Set width or height on the element
+                          jQuery.style(elem, type, value, extra);
+                },
+                type,
+                chainable ? margin : undefined,
+                chainable
+            );
         };
     });
+});
+
+jQuery.each(
+    (
+        "blur focus focusin focusout resize scroll click dblclick " +
+        "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
+        "change select submit keydown keypress keyup contextmenu"
+    ).split(" "),
+    function (i, name) {
+        // Handle event binding
+        jQuery.fn[name] = function (data, fn) {
+            return arguments.length > 0 ? this.on(name, null, data, fn) : this.trigger(name);
+        };
+    }
+);
 
 jQuery.fn.extend({
     hover: function (fnOver, fnOut) {
         return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
-    }
+    },
 });
 
-
 jQuery.fn.extend({
-
     bind: function (types, data, fn) {
         return this.on(types, null, data, fn);
     },
@@ -8092,12 +7913,9 @@ jQuery.fn.extend({
         return this.on(types, selector, data, fn);
     },
     undelegate: function (selector, types, fn) {
-
         // ( namespace ) or ( selector, types [, fn] )
-        return arguments.length === 1 ?
-            this.off(selector, "**") :
-            this.off(types, selector || "**", fn);
-    }
+        return arguments.length === 1 ? this.off(selector, "**") : this.off(types, selector || "**", fn);
+    },
 });
 
 // Bind a function to a context, optionally partially applying any
@@ -8149,17 +7967,17 @@ jQuery.type = toType;
 jQuery.now = Date.now;
 
 jQuery.isNumeric = function (obj) {
-
     // As of jQuery 3.0, isNumeric is limited to
     // strings and numbers (primitives or objects)
     // that can be coerced to finite numbers (gh-2662)
     var type = jQuery.type(obj);
-    return (type === "number" || type === "string") &&
-
+    return (
+        (type === "number" || type === "string") &&
         // parseFloat NaNs numeric-cast false positives ("")
         // ...but misinterprets leading-number strings, particularly hex literals ("0x...")
         // subtraction forces infinities to NaN
-        !isNaN(obj - parseFloat(obj));
+        !isNaN(obj - parseFloat(obj))
+    );
 };
 
 const $ = jQuery;
@@ -8189,20 +8007,17 @@ const $ = jQuery;
  * THE SOFTWARE.
  */
 
-const httpMessages =
-    {
-        "401": "Access unauthorized",
-        "403": "Access forbidden",
-        "404": "Not found"
-    };
-
+const httpMessages = {
+    "401": "Access unauthorized",
+    "403": "Access forbidden",
+    "404": "Not found",
+};
 
 const AlertDialog = function ($parent) {
-
     const self = this;
 
     // container
-    this.$container = $("<div>", {class: 'igv-alert-dialog-container'});
+    this.$container = $("<div>", { class: "igv-alert-dialog-container" });
     $parent.append(this.$container);
 
     // header
@@ -8210,11 +8025,11 @@ const AlertDialog = function ($parent) {
     this.$container.append($header);
 
     // body container
-    let $div = $("<div>", {id: 'igv-alert-dialog-body'});
+    let $div = $("<div>", { id: "igv-alert-dialog-body" });
     this.$container.append($div);
 
     // body copy
-    this.$body = $("<div>", {id: 'igv-alert-dialog-body-copy'});
+    this.$body = $("<div>", { id: "igv-alert-dialog-body-copy" });
     $div.append(this.$body);
 
     // ok container
@@ -8224,9 +8039,9 @@ const AlertDialog = function ($parent) {
     // ok
     this.$ok = $("<div>");
     $ok_container.append(this.$ok);
-    this.$ok.text('OK');
-    this.$ok.on('click', function () {
-        self.$body.html('');
+    this.$ok.text("OK");
+    this.$ok.on("click", function () {
+        self.$body.html("");
         self.$container.hide();
     });
 
@@ -8244,11 +8059,11 @@ AlertDialog.prototype.present = function (alert, callback) {
         string = httpMessages[string];
     }
     this.$body.html(string);
-    this.$ok.on('click', function () {
-        if(typeof callback === 'function') {
+    this.$ok.on("click", function () {
+        if (typeof callback === "function") {
             callback("OK");
         }
-        self.$body.html('');
+        self.$body.html("");
         self.$container.hide();
     });
     this.$container.show();
@@ -8304,14 +8119,11 @@ NIL.parent = NIL;
 NIL.left = NIL;
 NIL.right = NIL;
 
-
 const IntervalTree = function () {
     this.root = NIL;
 };
 
-
 IntervalTree.prototype.insert = function (start, end, value) {
-
     var interval = new Interval(start, end, value);
     var x = new Node(interval);
     this.treeInsert(x);
@@ -8354,7 +8166,6 @@ IntervalTree.prototype.insert = function (start, end, value) {
     this.root.color = BLACK;
 };
 
-
 /**
  *
  * @param start - query interval
@@ -8362,8 +8173,6 @@ IntervalTree.prototype.insert = function (start, end, value) {
  * @returns Array of all intervals overlapping the query region
  */
 IntervalTree.prototype.findOverlapping = function (start, end) {
-
-
     var searchInterval = new Interval(start, end, 0);
 
     if (this.root === NIL) return [];
@@ -8383,24 +8192,18 @@ IntervalTree.prototype.findOverlapping = function (start, end) {
  * Dump info on intervals to console.  For debugging.
  */
 IntervalTree.prototype.logIntervals = function () {
-
     logNode(this.root);
 
     function logNode(node, indent) {
-
         if (node.left !== NIL) logNode(node.left);
         if (node.right !== NIL) logNode(node.right);
     }
-
 };
 
-
 IntervalTree.prototype.mapIntervals = function (func) {
-
     applyInterval(this.root);
 
     function applyInterval(node) {
-
         func(node.interval);
 
         if (node.left !== NIL) applyInterval(node.left);
@@ -8409,7 +8212,6 @@ IntervalTree.prototype.mapIntervals = function (func) {
 };
 
 function searchAll(interval, node, results) {
-
     if (node.interval.overlaps(interval)) {
         results.push(node.interval);
     }
@@ -8449,7 +8251,6 @@ function leftRotate(x) {
     // of x, and will be touched by applyUpdate().
 }
 
-
 function rightRotate(x) {
     var y = x.left;
     x.left = y.right;
@@ -8469,12 +8270,10 @@ function rightRotate(x) {
     y.right = x;
     x.parent = y;
 
-
     applyUpdate.call(this, x);
     // no need to apply update on y, since it'll y is an ancestor
     // of x, and will be touched by applyUpdate().
 }
-
 
 /**
  * Note:  Does not maintain RB constraints,  this is done post insert
@@ -8508,7 +8307,6 @@ IntervalTree.prototype.treeInsert = function (x) {
     applyUpdate.call(this, x);
 };
 
-
 // Applies the statistic update on the node and its ancestors.
 function applyUpdate(node) {
     while (node !== NIL) {
@@ -8524,13 +8322,11 @@ function applyUpdate(node) {
     }
 }
 
-
 function Interval(low, high, value) {
     this.low = low;
     this.high = high;
     this.value = value;
 }
-
 
 Interval.prototype.equals = function (other) {
     if (!other) {
@@ -8539,22 +8335,15 @@ Interval.prototype.equals = function (other) {
     if (this === other) {
         return true;
     }
-    return (this.low === other.low &&
-        this.high === other.high);
-
+    return this.low === other.low && this.high === other.high;
 };
 
-
 Interval.prototype.compareTo = function (other) {
-    if (this.low < other.low)
-        return -1;
-    if (this.low > other.low)
-        return 1;
+    if (this.low < other.low) return -1;
+    if (this.low > other.low) return 1;
 
-    if (this.high < other.high)
-        return -1;
-    if (this.high > other.high)
-        return 1;
+    if (this.high < other.high) return -1;
+    if (this.high > other.high) return 1;
 
     return 0;
 };
@@ -8564,7 +8353,7 @@ Interval.prototype.compareTo = function (other) {
  */
 Interval.prototype.overlaps = function (other) {
     try {
-        return (this.low <= other.high && other.low <= this.high);
+        return this.low <= other.high && other.low <= this.high;
     } catch (e) {
         //alert(e);
         Alert.presentAlert(e, undefined);
@@ -8606,9 +8395,7 @@ function Node(interval) {
  */
 
 const FeatureUtils = {
-
     packFeatures: function (features, maxRows, sorted) {
-
         var start;
         var end;
 
@@ -8622,12 +8409,9 @@ const FeatureUtils = {
             });
         }
 
-
         if (features.length === 0) {
             return [];
-
         } else {
-
             var bucketList = [],
                 allocatedCount = 0,
                 lastAllocatedCount = 0,
@@ -8646,7 +8430,6 @@ const FeatureUtils = {
             nextStart = bucketStart;
 
             features.forEach(function (alignment) {
-
                 var buckListIndex = Math.max(0, alignment.start - bucketStart);
                 if (bucketList[buckListIndex] === undefined) {
                     bucketList[buckListIndex] = [];
@@ -8654,26 +8437,19 @@ const FeatureUtils = {
                 bucketList[buckListIndex].push(alignment);
             });
 
-
             row = 0;
 
-
             while (allocatedCount < features.length && row <= maxRows) {
-
-
                 while (nextStart <= end) {
-
                     bucket = undefined;
 
                     while (!bucket && nextStart <= end) {
-
                         index = nextStart - bucketStart;
                         if (bucketList[index] === undefined) {
-                            ++nextStart;                     // No buckets at this index
+                            ++nextStart; // No buckets at this index
                         } else {
                             bucket = bucketList[index];
                         }
-
                     } // while (bucket)
 
                     if (!bucket) {
@@ -8688,21 +8464,17 @@ const FeatureUtils = {
 
                     nextStart = feature.end + gap;
                     ++allocatedCount;
-
                 } // while (nextStart)
 
                 row++;
                 nextStart = bucketStart;
 
-                if (allocatedCount === lastAllocatedCount) break;   // Protect from infinite loops
+                if (allocatedCount === lastAllocatedCount) break; // Protect from infinite loops
 
                 lastAllocatedCount = allocatedCount;
-
             } // while (allocatedCount)
-
         }
     },
-
 
     /**
      * Find features overlapping the given interval.  It is assumed that all features share the same chromosome.
@@ -8714,7 +8486,6 @@ const FeatureUtils = {
      * @param end
      */
     findOverlapping: function (featureList, start, end) {
-
         if (!featureList || featureList.length === 0) {
             return [];
         } else {
@@ -8749,10 +8520,8 @@ const FeatureUtils = {
                 return featureList;
             }
         }
-
-    }
+    },
 };
-
 
 /**
  * Build an interval tree from the feature list for fast interval based queries.   We lump features in groups
@@ -8761,13 +8530,12 @@ const FeatureUtils = {
  * @param featureList
  */
 function buildIntervalTree(featureList) {
-
     const tree = new IntervalTree();
     const len = featureList.length;
     const chunkSize = Math.max(10, Math.round(len / 100));
 
     featureList.sort(function (f1, f2) {
-        return (f1.start === f2.start ? 0 : (f1.start > f2.start ? 1 : -1));
+        return f1.start === f2.start ? 0 : f1.start > f2.start ? 1 : -1;
     });
 
     for (let i = 0; i < len; i += chunkSize) {
@@ -8790,14 +8558,12 @@ function buildIntervalTree(featureList) {
  * @param path
  */
 
-function getFilename (path) {
-
+function getFilename(path) {
     var index, filename;
 
     if (path instanceof File) {
         return path.name;
-    }
-    else {
+    } else {
         index = path.lastIndexOf("/");
         filename = index < 0 ? path : path.substr(index + 1);
 
@@ -8810,8 +8576,8 @@ function getFilename (path) {
     }
 }
 
-function isFilePath (path) {
-    return (path instanceof File);
+function isFilePath(path) {
+    return path instanceof File;
 }
 
 /*
@@ -8840,7 +8606,6 @@ function isFilePath (path) {
  */
 
 const extend = function (parent, child) {
-
     child.prototype = Object.create(parent.prototype);
     child.prototype.constructor = child;
     child.prototype._super = Object.getPrototypeOf(child.prototype);
@@ -8857,16 +8622,15 @@ const extend = function (parent, child) {
 function isSimpleType(value) {
     const simpleTypes = new Set(["boolean", "number", "string", "symbol"]);
     const valueType = typeof value;
-    return (value !== undefined && (simpleTypes.has(valueType) || value.substring || value.toFixed))
+    return value !== undefined && (simpleTypes.has(valueType) || value.substring || value.toFixed);
 }
 
-function buildOptions (config, options) {
-
+function buildOptions(config, options) {
     var defaultOptions = {
         oauthToken: config.oauthToken,
         headers: config.headers,
         withCredentials: config.withCredentials,
-        filename: config.filename
+        filename: config.filename,
     };
 
     return Object.assign(defaultOptions, options);
@@ -8906,7 +8670,6 @@ function buildOptions (config, options) {
  * @constructor
  */
 const TrackBase = function (config, browser) {
-
     if (config.displayMode) {
         config.displayMode = config.displayMode.toUpperCase();
     }
@@ -8918,7 +8681,7 @@ const TrackBase = function (config, browser) {
     this.description = config.description;
     this.supportHiDPI = config.supportHiDPI === undefined ? true : config.supportHiDPI;
 
-    config.name = config.name || config.label;   // synonym for name, label is deprecated
+    config.name = config.name || config.label; // synonym for name, label is deprecated
     if (config.name) {
         this.name = config.name;
     } else {
@@ -8928,16 +8691,16 @@ const TrackBase = function (config, browser) {
 
     this.order = config.order;
 
-    if ("civic-ws" === config.sourceType) {    // Ugly proxy for specialized track type
+    if ("civic-ws" === config.sourceType) {
+        // Ugly proxy for specialized track type
         this.color = "rgb(155,20,20)";
     } else {
         this.color = config.color || config.defaultColor || "rgb(0,0,150)";
     }
 
-
     this.autoscaleGroup = config.autoscaleGroup;
 
-    this.removable = config.removable === undefined ? true : config.removable;      // Defaults to true
+    this.removable = config.removable === undefined ? true : config.removable; // Defaults to true
 
     this.height = config.height || 100;
     this.autoHeight = config.autoHeight;
@@ -8945,7 +8708,6 @@ const TrackBase = function (config, browser) {
     this.maxHeight = config.maxHeight || Math.max(1000, this.height);
 
     this.visibilityWindow = config.visibilityWindow;
-
 };
 
 /**
@@ -8954,7 +8716,6 @@ const TrackBase = function (config, browser) {
  * current state.  Only simple properties (string, number, boolean) are updated.
  */
 TrackBase.prototype.getState = function () {
-
     const config = Object.assign({}, this.config);
     const self = this;
 
@@ -8973,7 +8734,6 @@ TrackBase.prototype.supportsWholeGenome = function () {
 };
 
 TrackBase.prototype.clickedFeatures = function (clickState) {
-
     // We use the cached features rather than method to avoid async load.  If the
     // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
     const features = clickState.viewport.getCachedFeatures();
@@ -8985,10 +8745,10 @@ TrackBase.prototype.clickedFeatures = function (clickState) {
     const genomicLocation = clickState.genomicLocation;
 
     // When zoomed out we need some tolerance around genomicLocation
-    const tolerance = (clickState.referenceFrame.bpPerPixel > 0.2) ? 3 * clickState.referenceFrame.bpPerPixel : 0;
+    const tolerance = clickState.referenceFrame.bpPerPixel > 0.2 ? 3 * clickState.referenceFrame.bpPerPixel : 0;
     const ss = Math.floor(genomicLocation) - tolerance;
     const ee = Math.floor(genomicLocation) + tolerance;
-    return (FeatureUtils.findOverlapping(features, ss, ee));
+    return FeatureUtils.findOverlapping(features, ss, ee);
 };
 
 /**
@@ -9030,7 +8790,7 @@ TrackBase.prototype.setTrackProperties = function (properties) {
     }
 };
 
-TrackBase.prototype.getVisibilityWindow = function() {
+TrackBase.prototype.getVisibilityWindow = function () {
     return this.visibilityWindow;
 };
 
@@ -9040,19 +8800,15 @@ TrackBase.prototype.getVisibilityWindow = function() {
  * @returns {Array}
  */
 TrackBase.extractPopupData = function (feature, genomeId) {
-
-    const filteredProperties = new Set(['row', 'color']);
+    const filteredProperties = new Set(["row", "color"]);
     const data = [];
 
     let alleles, alleleFreqs;
     for (var property in feature) {
-
-        if (feature.hasOwnProperty(property) &&
-            !filteredProperties.has(property) &&
-            isSimpleType(feature[property])) {
+        if (feature.hasOwnProperty(property) && !filteredProperties.has(property) && isSimpleType(feature[property])) {
             let value = feature[property];
-            if("start" === property) value = value + 1;
-            data.push({name: property, value: value});
+            if ("start" === property) value = value + 1;
+            data.push({ name: property, value: value });
 
             if (property === "alleles") {
                 alleles = feature[property];
@@ -9064,7 +8820,6 @@ TrackBase.extractPopupData = function (feature, genomeId) {
 
     //const genomeId = this.getGenomeId()
     if (alleles && alleleFreqs) {
-
         if (alleles.endsWith(",")) {
             alleles = alleles.substr(0, alleles.length - 1);
         }
@@ -9077,10 +8832,10 @@ TrackBase.extractPopupData = function (feature, genomeId) {
         if (af.length > 1) {
             let b = [];
             for (let i = 0; i < af.length; i++) {
-                b.push({a: a[i], af: Number.parseFloat(af[i])});
+                b.push({ a: a[i], af: Number.parseFloat(af[i]) });
             }
             b.sort(function (x, y) {
-                return x.af - y.af
+                return x.af - y.af;
             });
 
             let ref = b[b.length - 1].a;
@@ -9099,32 +8854,41 @@ TrackBase.extractPopupData = function (feature, genomeId) {
         }
     }
 
-    if(feature.attributes) {
-        for(let key of Object.keys(feature.attributes)) {
-            data.push({name: key, value: feature.attributes[key]});
+    if (feature.attributes) {
+        for (let key of Object.keys(feature.attributes)) {
+            data.push({ name: key, value: feature.attributes[key] });
         }
     }
 
     return data;
-
-
 };
 
 TrackBase.prototype.getGenomeId = function () {
-    return this.browser.genome ? this.browser.genome.id : undefined
+    return this.browser.genome ? this.browser.genome.id : undefined;
 };
 
 TrackBase.getCravatLink = function (chr, position, ref, alt, genomeID) {
-
     if ("hg38" === genomeID || "GRCh38" === genomeID) {
-
         const cravatChr = chr.startsWith("chr") ? chr : "chr" + chr;
 
-        return "<a target='_blank' " +
+        return (
+            "<a target='_blank' " +
             "href='https://www.cravat.us/CRAVAT/variant.html?variant=" +
-            cravatChr + "_" + position + "_+_" + ref + "_" + alt + "'>Cravat " + ref + "->" + alt + "</a>"
+            cravatChr +
+            "_" +
+            position +
+            "_+_" +
+            ref +
+            "_" +
+            alt +
+            "'>Cravat " +
+            ref +
+            "->" +
+            alt +
+            "</a>"
+        );
     } else {
-        return undefined
+        return undefined;
     }
 };
 
@@ -9153,12 +8917,8 @@ TrackBase.getCravatLink = function (chr, position, ref, alt, genomeID) {
  * THE SOFTWARE.
  */
 
-
 const IGVGraphics = {
-
-
     setProperties: function (ctx, properties) {
-
         for (var key in properties) {
             if (properties.hasOwnProperty(key)) {
                 var value = properties[key];
@@ -9168,7 +8928,6 @@ const IGVGraphics = {
     },
 
     strokeLine: function (ctx, x1, y1, x2, y2, properties) {
-
         x1 = Math.floor(x1) + 0.5;
         y1 = Math.floor(y1) + 0.5;
         x2 = Math.floor(x2) + 0.5;
@@ -9222,7 +8981,6 @@ const IGVGraphics = {
     },
 
     fillText: function (ctx, text, x, y, properties, transforms) {
-
         if (properties || transforms) {
             ctx.save();
         }
@@ -9239,11 +8997,11 @@ const IGVGraphics = {
                 var value = transforms[transform];
 
                 // TODO: Add error checking for robustness
-                if (transform === 'translate') {
-                    ctx.translate(value['x'], value['y']);
+                if (transform === "translate") {
+                    ctx.translate(value["x"], value["y"]);
                 }
-                if (transform === 'rotate') {
-                    ctx.rotate(value['angle'] * Math.PI / 180);
+                if (transform === "rotate") {
+                    ctx.rotate((value["angle"] * Math.PI) / 180);
                 }
             }
 
@@ -9256,8 +9014,6 @@ const IGVGraphics = {
     },
 
     strokeText: function (ctx, text, x, y, properties, transforms) {
-
-
         if (properties || transforms) {
             ctx.save();
         }
@@ -9273,11 +9029,11 @@ const IGVGraphics = {
                 var value = transforms[transform];
 
                 // TODO: Add error checking for robustness
-                if (transform === 'translate') {
-                    ctx.translate(value['x'], value['y']);
+                if (transform === "translate") {
+                    ctx.translate(value["x"], value["y"]);
                 }
-                if (transform === 'rotate') {
-                    ctx.rotate(value['angle'] * Math.PI / 180);
+                if (transform === "rotate") {
+                    ctx.rotate((value["angle"] * Math.PI) / 180);
                 }
             }
 
@@ -9312,7 +9068,6 @@ const IGVGraphics = {
     },
 
     drawArrowhead: function (ctx, x, y, size, lineWidth) {
-
         ctx.save();
         if (!size) {
             size = 5;
@@ -9330,7 +9085,7 @@ const IGVGraphics = {
         ctx.restore();
     },
 
-    dashedLine: function (ctx, x1, y1, x2, y2, dashLen, properties={}) {
+    dashedLine: function (ctx, x1, y1, x2, y2, dashLen, properties = {}) {
         if (dashLen === undefined) dashLen = 2;
         ctx.setLineDash([dashLen, dashLen]);
         IGVGraphics.strokeLine(ctx, x1, y1, x2, y2, properties);
@@ -9338,7 +9093,6 @@ const IGVGraphics = {
     },
 
     roundRect: function (ctx, x, y, width, height, radius, fill, stroke) {
-
         if (typeof stroke == "undefined") {
             stroke = true;
         }
@@ -9364,7 +9118,6 @@ const IGVGraphics = {
         }
     },
     polygon: function (ctx, x, y, fill, stroke) {
-
         if (typeof stroke == "undefined") {
             stroke = true;
         }
@@ -9384,15 +9137,12 @@ const IGVGraphics = {
         if (fill) {
             ctx.fill();
         }
-    }
-
-
+    },
 };
 
 function doPath(ctx, x, y) {
-
-
-    var i, len = x.length;
+    var i,
+        len = x.length;
     for (i = 0; i < len; i++) {
         x[i] = Math.round(x[i]);
         y[i] = Math.round(y[i]);
@@ -9432,14 +9182,13 @@ function doPath(ctx, x, y) {
  * THE SOFTWARE.
  */
 const IGVMath = {
-
     lerp: (v0, v1, t) => {
         return (1 - t) * v0 + t * v1;
     },
 
     mean: function (array) {
-
-        var t = 0, n = 0,
+        var t = 0,
+            n = 0,
             i;
         for (i = 0; i < array.length; i++) {
             if (!isNaN(array[i])) {
@@ -9451,11 +9200,13 @@ const IGVMath = {
     },
 
     meanAndStdev: function (array) {
-
-        var v, t = 0, t2 = 0, n = 0, i;
+        var v,
+            t = 0,
+            t2 = 0,
+            n = 0,
+            i;
 
         for (i = 0; i < array.length; i++) {
-
             v = array[i];
 
             if (!isNaN(v)) {
@@ -9464,20 +9215,23 @@ const IGVMath = {
                 n++;
             }
         }
-        return n > 0 ? {mean: t / n, stdev: Math.sqrt(t2 - t * t / n)} : {mean: 0, stdev: 0};
+        return n > 0 ? { mean: t / n, stdev: Math.sqrt(t2 - (t * t) / n) } : { mean: 0, stdev: 0 };
     },
 
     median: function (numbers) {
         // median of [3, 5, 4, 4, 1, 1, 2, 3] = 3
-        var median = 0, numsLen = numbers.length;
+        var median = 0,
+            numsLen = numbers.length;
         numbers.sort();
 
         if (
-            numsLen % 2 === 0 // is even
+            numsLen % 2 ===
+            0 // is even
         ) {
             // average of two middle numbers
             median = (numbers[numsLen / 2 - 1] + numbers[numsLen / 2]) / 2;
-        } else { // is odd
+        } else {
+            // is odd
             // middle number only
             median = numbers[(numsLen - 1) / 2];
         }
@@ -9487,21 +9241,18 @@ const IGVMath = {
 
     // Fast percentile function for "p" near edges.  This needs profiled for p in middle (e.g. median)
     percentile: function (array, p) {
-
         if (array.length === 0) return undefined;
 
         var k = Math.floor(array.length * ((100 - p) / 100));
         if (k === 0) {
             array.sort(function (a, b) {
-                return b - a
+                return b - a;
             });
             return array[k];
         } else {
             return selectElement(array, k);
         }
-
     },
-
 
     clamp: function (value, min, max) {
         return Math.min(Math.max(value, min), max);
@@ -9509,18 +9260,15 @@ const IGVMath = {
 
     log2: function (x) {
         return Math.log(x) / Math.LN2;
-    }
-
+    },
 };
 
 function selectElement(array, k) {
-
     // Credit Steve Hanov http://stevehanov.ca/blog/index.php?id=122
     var heap = new BinaryHeap(),
         i;
 
     for (i = 0; i < array.length; i++) {
-
         var item = array[i];
 
         // If we have not yet found k items, or the current item is larger than
@@ -9536,7 +9284,6 @@ function selectElement(array, k) {
 
     return heap.content[0];
 }
-
 
 function BinaryHeap() {
     this.content = [];
@@ -9591,7 +9338,8 @@ BinaryHeap.prototype = {
 
     bubbleUp: function (n) {
         // Fetch the element that has to be moved.
-        var element = this.content[n], score = element;
+        var element = this.content[n],
+            score = element;
         // When at 0, an element can not go up any further.
         while (n > 0) {
             // Compute the parent element's index, and fetch it.
@@ -9599,8 +9347,7 @@ BinaryHeap.prototype = {
                 parent = this.content[parentN];
             // If the parent has a lesser score, things are in order and we
             // are done.
-            if (score >= parent)
-                break;
+            if (score >= parent) break;
 
             // Otherwise, swap the parent with the current element and
             // continue.
@@ -9618,7 +9365,8 @@ BinaryHeap.prototype = {
 
         while (true) {
             // Compute the indices of the child elements.
-            var child2N = (n + 1) * 2, child1N = child2N - 1;
+            var child2N = (n + 1) * 2,
+                child1N = child2N - 1;
             // This is used to store the new position of the element,
             // if any.
             var swap = null;
@@ -9628,15 +9376,13 @@ BinaryHeap.prototype = {
                 var child1 = this.content[child1N],
                     child1Score = child1;
                 // If the score is less than our element's, we need to swap.
-                if (child1Score < elemScore)
-                    swap = child1N;
+                if (child1Score < elemScore) swap = child1N;
             }
             // Do the same checks for the other child.
             if (child2N < length) {
                 var child2 = this.content[child2N],
                     child2Score = child2;
-                if (child2Score < (swap == null ? elemScore : child1Score))
-                    swap = child2N;
+                if (child2Score < (swap == null ? elemScore : child1Score)) swap = child2N;
             }
 
             // No need to swap further, we are done.
@@ -9647,7 +9393,7 @@ BinaryHeap.prototype = {
             this.content[swap] = element;
             n = swap;
         }
-    }
+    },
 };
 
 /*
@@ -9684,7 +9430,6 @@ BinaryHeap.prototype = {
  */
 
 const FeatureCache = function (featureList, genome, range) {
-
     this.treeMap = this.buildTreeMap(featureList, genome);
     this.range = range;
     this.count = featureList.length;
@@ -9692,11 +9437,10 @@ const FeatureCache = function (featureList, genome, range) {
 
 FeatureCache.prototype.containsRange = function (genomicRange) {
     // No range means cache contains all features
-    return (this.range === undefined || this.range.contains(genomicRange.chr, genomicRange.start, genomicRange.end));
+    return this.range === undefined || this.range.contains(genomicRange.chr, genomicRange.start, genomicRange.end);
 };
 
 FeatureCache.prototype.queryFeatures = function (chr, start, end) {
-
     const tree = this.treeMap[chr];
 
     if (!tree) return [];
@@ -9737,20 +9481,16 @@ FeatureCache.prototype.queryFeatures = function (chr, start, end) {
  * @returns {Array}
  */
 FeatureCache.prototype.getAllFeatures = function () {
-
     return this.allFeatures;
-
 };
 
 FeatureCache.prototype.buildTreeMap = function (featureList, genome) {
-
     const treeMap = {};
     const chromosomes = [];
     this.allFeatures = {};
 
     if (featureList) {
         for (let feature of featureList) {
-
             let chr = feature.chr;
             // Translate to "official" name
             if (genome) {
@@ -9766,12 +9506,11 @@ FeatureCache.prototype.buildTreeMap = function (featureList, genome) {
             geneList.push(feature);
         }
 
-
         // Now build interval tree for each chromosome
         for (let chr of chromosomes) {
             const chrFeatures = this.allFeatures[chr];
             chrFeatures.sort(function (f1, f2) {
-                return (f1.start === f2.start ? 0 : (f1.start > f2.start ? 1 : -1));
+                return f1.start === f2.start ? 0 : f1.start > f2.start ? 1 : -1;
             });
             treeMap[chr] = buildIntervalTree$1(chrFeatures);
         }
@@ -9787,7 +9526,6 @@ FeatureCache.prototype.buildTreeMap = function (featureList, genome) {
  * @param featureList
  */
 function buildIntervalTree$1(featureList) {
-
     const tree = new IntervalTree();
     const len = featureList.length;
     const chunkSize = Math.max(10, Math.round(len / 10));
@@ -9807,7 +9545,6 @@ function buildIntervalTree$1(featureList) {
     return tree;
 }
 
-
 class IndexRange {
     constructor(start, end) {
         this.start = start;
@@ -9823,15 +9560,11 @@ const GenomicInterval = function (chr, start, end, features) {
 };
 
 GenomicInterval.prototype.contains = function (chr, start, end) {
-    return this.chr === chr &&
-        this.start <= start &&
-        this.end >= end;
+    return this.chr === chr && this.start <= start && this.end >= end;
 };
 
 GenomicInterval.prototype.containsRange = function (range) {
-    return this.chr === range.chr &&
-        this.start <= range.start &&
-        this.end >= range.end;
+    return this.chr === range.chr && this.start <= range.start && this.end >= range.end;
 };
 
 /**
@@ -9840,14 +9573,13 @@ GenomicInterval.prototype.containsRange = function (range) {
  */
 const MenuUtils = {
     trackMenuItemList: function (trackView) {
-
-        const vizWindowTypes = new Set(['alignment', 'annotation', 'variant', 'eqtl', 'snp']);
+        const vizWindowTypes = new Set(["alignment", "annotation", "variant", "eqtl", "snp"]);
 
         const hasVizWindow = trackView.track.config && trackView.track.config.visibilityWindow !== undefined;
 
         let menuItems = [];
 
-        if (trackView.track.config.type !== 'sequence') {
+        if (trackView.track.config.type !== "sequence") {
             menuItems.push(trackRenameMenuItem(trackView));
             menuItems.push(trackHeightMenuItem(trackView));
         }
@@ -9861,12 +9593,12 @@ const MenuUtils = {
         }
 
         if (hasVizWindow || vizWindowTypes.has(trackView.track.config.type)) {
-            menuItems.push('<hr/>');
+            menuItems.push("<hr/>");
             menuItems.push(visibilityWindowMenuItem(trackView));
         }
 
         if (trackView.track.removable !== false) {
-            menuItems.push('<hr/>');
+            menuItems.push("<hr/>");
             menuItems.push(trackRemovalMenuItem(trackView));
         }
 
@@ -9874,98 +9606,86 @@ const MenuUtils = {
     },
 
     dataRangeMenuItem: function (trackView) {
+        var $e, clickHandler;
 
-        var $e,
-            clickHandler;
-
-        $e = $('<div>');
-        $e.text('Set data range');
+        $e = $("<div>");
+        $e.text("Set data range");
 
         clickHandler = function () {
-            trackView.browser.dataRangeDialog.configure({trackView: trackView});
+            trackView.browser.dataRangeDialog.configure({ trackView: trackView });
             trackView.browser.dataRangeDialog.present($(trackView.trackDiv));
         };
 
-        return {object: $e, click: clickHandler};
+        return { object: $e, click: clickHandler };
     },
 
-    trackMenuItemListHelper: function(itemList, $popover) {
+    trackMenuItemListHelper: function (itemList, $popover) {
+        var list = [];
 
-    var list = [];
+        if (itemList.length > 0) {
+            list = itemList.map(function (item, i) {
+                var $e;
 
-    if (itemList.length > 0) {
-
-        list = itemList.map(function (item, i) {
-            var $e;
-
-            // name and object fields checked for backward compatibility
-            if (item.name) {
-                $e = $('<div>');
-                $e.text(item.name);
-            } else if (item.object) {
-                $e = item.object;
-            } else if (typeof item.label === 'string') {
-                $e = $('<div>');
-                $e.html(item.label);
-            } else if (typeof item === 'string') {
-
-                if (item.startsWith("<")) {
-                    $e = $(item);
-                } else {
-                    $e = $("<div>" + item + "</div>");
+                // name and object fields checked for backward compatibility
+                if (item.name) {
+                    $e = $("<div>");
+                    $e.text(item.name);
+                } else if (item.object) {
+                    $e = item.object;
+                } else if (typeof item.label === "string") {
+                    $e = $("<div>");
+                    $e.html(item.label);
+                } else if (typeof item === "string") {
+                    if (item.startsWith("<")) {
+                        $e = $(item);
+                    } else {
+                        $e = $("<div>" + item + "</div>");
+                    }
                 }
-            }
 
-            if (0 === i) {
-                $e.addClass('igv-track-menu-border-top');
-            }
-
-            if (item.click) {
-                $e.on('click', handleClick);
-                $e.on('touchend', function (e) {
-                    handleClick(e);
-                });
-                $e.on('mouseup', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-
-                // eslint-disable-next-line no-inner-declarations
-                function handleClick(e) {
-                    item.click(e);
-                    $popover.hide();
-                    e.preventDefault();
-                    e.stopPropagation();
+                if (0 === i) {
+                    $e.addClass("igv-track-menu-border-top");
                 }
-            }
 
-            return {object: $e, init: (item.init || undefined)};
-        });
-    }
+                if (item.click) {
+                    $e.on("click", handleClick);
+                    $e.on("touchend", function (e) {
+                        handleClick(e);
+                    });
+                    $e.on("mouseup", function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
 
-    return list;
-}
+                    // eslint-disable-next-line no-inner-declarations
+                    function handleClick(e) {
+                        item.click(e);
+                        $popover.hide();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }
 
+                return { object: $e, init: item.init || undefined };
+            });
+        }
+
+        return list;
+    },
 };
 
 function doProvideColoSwatchWidget(track) {
     return (
-        "alignment" === track.type ||
-        "annotation" === track.type ||
-        "variant" === track.type ||
-        "wig" === track.type);
+        "alignment" === track.type || "annotation" === track.type || "variant" === track.type || "wig" === track.type
+    );
 }
 
-
 function visibilityWindowMenuItem(trackView) {
-
     const menuClickHandler = function () {
-
         const dialogClickHandler = function () {
-
             let value = trackView.browser.inputDialog.$input.val().trim();
 
-            if ('' === value || undefined === value) {
+            if ("" === value || undefined === value) {
                 value = -1;
             }
 
@@ -9978,45 +9698,37 @@ function visibilityWindowMenuItem(trackView) {
         };
 
         trackView.browser.inputDialog.configure({
-            label: 'Visibility Window',
-            input: (trackView.track.visibilityWindow),
-            click: dialogClickHandler
+            label: "Visibility Window",
+            input: trackView.track.visibilityWindow,
+            click: dialogClickHandler,
         });
         trackView.browser.inputDialog.present($(trackView.trackDiv));
-
     };
 
-    const $e = $('<div>');
-    $e.text('Set visibility window');
+    const $e = $("<div>");
+    $e.text("Set visibility window");
 
-    return {object: $e, click: menuClickHandler};
-
-
+    return { object: $e, click: menuClickHandler };
 }
 
 function trackRemovalMenuItem(trackView) {
+    var $e, menuClickHandler;
 
-    var $e,
-        menuClickHandler;
-
-    $e = $('<div>');
-    $e.text('Remove track');
+    $e = $("<div>");
+    $e.text("Remove track");
 
     menuClickHandler = function () {
         trackView.browser.removeTrack(trackView.track);
     };
 
-    return {object: $e, click: menuClickHandler};
-
+    return { object: $e, click: menuClickHandler };
 }
 
-
 function colorPickerMenuItem(trackView) {
-    var $e,
-        clickHandler;
+    var $e, clickHandler;
 
-    $e = $('<div>');
-    $e.text('Set track color');
+    $e = $("<div>");
+    $e.text("Set track color");
 
     clickHandler = function () {
         trackView.presentColorPicker();
@@ -10024,21 +9736,17 @@ function colorPickerMenuItem(trackView) {
 
     return {
         object: $e,
-        click: clickHandler
+        click: clickHandler,
     };
-
 }
 
 function trackRenameMenuItem(trackView) {
+    var $e, menuClickHandler;
 
-    var $e,
-        menuClickHandler;
-
-    $e = $('<div>');
-    $e.text('Set track name');
+    $e = $("<div>");
+    $e.text("Set track name");
 
     menuClickHandler = function () {
-
         var dialogClickHandler;
 
         dialogClickHandler = function () {
@@ -10046,45 +9754,37 @@ function trackRenameMenuItem(trackView) {
 
             value = trackView.browser.inputDialog.$input.val().trim();
 
-            value = ('' === value || undefined === value) ? 'untitled' : value;
+            value = "" === value || undefined === value ? "untitled" : value;
 
             trackView.browser.setTrackLabelName(trackView, value);
-
         };
 
         trackView.browser.inputDialog.configure({
-            label: 'Track Name',
-            input: (getTrackLabelText(trackView.track) || 'unnamed'),
-            click: dialogClickHandler
+            label: "Track Name",
+            input: getTrackLabelText(trackView.track) || "unnamed",
+            click: dialogClickHandler,
         });
         trackView.browser.inputDialog.present($(trackView.trackDiv));
-
     };
 
-    return {object: $e, click: menuClickHandler};
-
-
+    return { object: $e, click: menuClickHandler };
 }
 
 function trackHeightMenuItem(trackView) {
+    var $e, menuClickHandler;
 
-    var $e,
-        menuClickHandler;
-
-    $e = $('<div>');
-    $e.text('Set track height');
+    $e = $("<div>");
+    $e.text("Set track height");
 
     menuClickHandler = function () {
         var dialogClickHandler;
 
         dialogClickHandler = function () {
-
             var number;
 
             number = parseFloat(trackView.browser.inputDialog.$input.val(), 10);
 
             if (undefined !== number) {
-
                 // If explicitly setting the height adust min or max, if neccessary.
                 if (trackView.track.minHeight !== undefined && trackView.track.minHeight > number) {
                     trackView.track.minHeight = number;
@@ -10097,33 +9797,27 @@ function trackHeightMenuItem(trackView) {
                 // Explicitly setting track height turns off autoHeight
                 trackView.track.autoHeight = false;
             }
-
         };
 
         trackView.browser.inputDialog.configure({
-            label: 'Track Height',
+            label: "Track Height",
             input: trackView.trackDiv.clientHeight,
-            click: dialogClickHandler
+            click: dialogClickHandler,
         });
         trackView.browser.inputDialog.present($(trackView.trackDiv));
-
     };
 
-    return {object: $e, click: menuClickHandler};
-
-
+    return { object: $e, click: menuClickHandler };
 }
 
 function getTrackLabelText(track) {
-    var vp,
-        txt;
+    var vp, txt;
 
     vp = track.trackView.viewports[0];
     txt = vp.$trackLabel.text();
 
     return txt;
 }
-
 
 /**
  * Configure item list for contextual (right-click) track popup menu.
@@ -10153,7 +9847,6 @@ function getTrackLabelText(track) {
 //
 //     return menuItems;
 // };
-
 
 /**
  * Configure item for track "gear" menu.
@@ -10189,70 +9882,65 @@ function getTrackLabelText(track) {
 const ZLIB_STREAM_RAW_INFLATE_BUFFER_SIZE = 65000;
 
 var Zlib = {
-  Huffman: {},
-  Util: {},
-  CRC32: {}
+    Huffman: {},
+    Util: {},
+    CRC32: {},
 };
-
 
 /**
  * Compression Method
  * @enum {number}
  */
 Zlib.CompressionMethod = {
-  DEFLATE: 8,
-  RESERVED: 15
+    DEFLATE: 8,
+    RESERVED: 15,
 };
-
-
-
 
 /**
  * @param {Object=} opt_params options.
  * @constructor
  */
-Zlib.Zip = function(opt_params) {
-  opt_params = opt_params || {};
-  /** @type {Array.<{
-   *   buffer: !(Array.<number>|Uint8Array),
-   *   option: Object,
-   *   compressed: boolean,
-   *   encrypted: boolean,
-   *   size: number,
-   *   crc32: number
-   * }>} */
-  this.files = [];
-  /** @type {(Array.<number>|Uint8Array)} */
-  this.comment = opt_params['comment'];
-  /** @type {(Array.<number>|Uint8Array)} */
-  this.password;
+Zlib.Zip = function (opt_params) {
+    opt_params = opt_params || {};
+    /** @type {Array.<{
+     *   buffer: !(Array.<number>|Uint8Array),
+     *   option: Object,
+     *   compressed: boolean,
+     *   encrypted: boolean,
+     *   size: number,
+     *   crc32: number
+     * }>} */
+    this.files = [];
+    /** @type {(Array.<number>|Uint8Array)} */
+    this.comment = opt_params["comment"];
+    /** @type {(Array.<number>|Uint8Array)} */
+    this.password;
 };
-
 
 /**
  * @enum {number}
  */
 Zlib.Zip.CompressionMethod = {
-  STORE: 0,
-  DEFLATE: 8
+    STORE: 0,
+    DEFLATE: 8,
 };
 
 /**
  * @enum {number}
  */
 Zlib.Zip.OperatingSystem = {
-  MSDOS: 0,
-  UNIX: 3,
-  MACINTOSH: 7
+    MSDOS: 0,
+    UNIX: 3,
+    MACINTOSH: 7,
 };
 
 /**
  * @enum {number}
  */
 Zlib.Zip.Flags = {
-  ENCRYPT:    0x0001,
-  DESCRIPTOR: 0x0008,
-  UTF8:       0x0800
+    ENCRYPT: 0x0001,
+    DESCRIPTOR: 0x0008,
+    UTF8: 0x0800,
 };
 
 /**
@@ -10277,425 +9965,407 @@ Zlib.Zip.CentralDirectorySignature = [0x50, 0x4b, 0x05, 0x06];
  * @param {Array.<number>|Uint8Array} input
  * @param {Object=} opt_params options.
  */
-Zlib.Zip.prototype.addFile = function(input, opt_params) {
-  opt_params = opt_params || {};
-  /** @type {string} */
-  var filename =  opt_params['filename'];
-  /** @type {boolean} */
-  var compressed;
-  /** @type {number} */
-  var size = input.length;
-  /** @type {number} */
-  var crc32 = 0;
+Zlib.Zip.prototype.addFile = function (input, opt_params) {
+    opt_params = opt_params || {};
+    /** @type {string} */
+    var filename = opt_params["filename"];
+    /** @type {boolean} */
+    var compressed;
+    /** @type {number} */
+    var size = input.length;
+    /** @type {number} */
+    var crc32 = 0;
 
-  if ( input instanceof Array) {
-    input = new Uint8Array(input);
-  }
-
-  // default
-  if (typeof opt_params['compressionMethod'] !== 'number') {
-    opt_params['compressionMethod'] = Zlib.Zip.CompressionMethod.DEFLATE;
-  }
-
-  // その場で圧縮する場合
-  if (opt_params['compress']) {
-    switch (opt_params['compressionMethod']) {
-      case Zlib.Zip.CompressionMethod.STORE:
-        break;
-      case Zlib.Zip.CompressionMethod.DEFLATE:
-        crc32 = Zlib.CRC32.calc(input);
-        input = this.deflateWithOption(input, opt_params);
-        compressed = true;
-        break;
-      default:
-        throw new Error('unknown compression method:' + opt_params['compressionMethod']);
+    if (input instanceof Array) {
+        input = new Uint8Array(input);
     }
-  }
 
-  this.files.push({
-    buffer: input,
-    option: opt_params,
-    compressed: compressed,
-    encrypted: false,
-    size: size,
-    crc32: crc32
-  });
+    // default
+    if (typeof opt_params["compressionMethod"] !== "number") {
+        opt_params["compressionMethod"] = Zlib.Zip.CompressionMethod.DEFLATE;
+    }
+
+    // その場で圧縮する場合
+    if (opt_params["compress"]) {
+        switch (opt_params["compressionMethod"]) {
+            case Zlib.Zip.CompressionMethod.STORE:
+                break;
+            case Zlib.Zip.CompressionMethod.DEFLATE:
+                crc32 = Zlib.CRC32.calc(input);
+                input = this.deflateWithOption(input, opt_params);
+                compressed = true;
+                break;
+            default:
+                throw new Error("unknown compression method:" + opt_params["compressionMethod"]);
+        }
+    }
+
+    this.files.push({
+        buffer: input,
+        option: opt_params,
+        compressed: compressed,
+        encrypted: false,
+        size: size,
+        crc32: crc32,
+    });
 };
 
 /**
  * @param {(Array.<number>|Uint8Array)} password
  */
-Zlib.Zip.prototype.setPassword = function(password) {
-  this.password = password;
+Zlib.Zip.prototype.setPassword = function (password) {
+    this.password = password;
 };
 
-Zlib.Zip.prototype.compress = function() {
-  /** @type {Array.<{
-   *   buffer: !(Array.<number>|Uint8Array),
-   *   option: Object,
-   *   compressed: boolean,
-   *   encrypted: boolean,
-   *   size: number,
-   *   crc32: number
-   * }>} */
-  var files = this.files;
-  /** @type {{
-   *   buffer: !(Array.<number>|Uint8Array),
-   *   option: Object,
-   *   compressed: boolean,
-   *   encrypted: boolean,
-   *   size: number,
-   *   crc32: number
-   * }} */
-  var file;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var output;
-  /** @type {number} */
-  var op1;
-  /** @type {number} */
-  var op2;
-  /** @type {number} */
-  var op3;
-  /** @type {number} */
-  var localFileSize = 0;
-  /** @type {number} */
-  var centralDirectorySize = 0;
-  /** @type {number} */
-  var endOfCentralDirectorySize;
-  /** @type {number} */
-  var offset;
-  /** @type {number} */
-  var needVersion;
-  /** @type {number} */
-  var flags;
-  /** @type {Zlib.Zip.CompressionMethod} */
-  var compressionMethod;
-  /** @type {Date} */
-  var date;
-  /** @type {number} */
-  var crc32;
-  /** @type {number} */
-  var size;
-  /** @type {number} */
-  var plainSize;
-  /** @type {number} */
-  var filenameLength;
-  /** @type {number} */
-  var extraFieldLength;
-  /** @type {number} */
-  var commentLength;
-  /** @type {(Array.<number>|Uint8Array)} */
-  var filename;
-  /** @type {(Array.<number>|Uint8Array)} */
-  var extraField;
-  /** @type {(Array.<number>|Uint8Array)} */
-  var comment;
-  /** @type {(Array.<number>|Uint8Array)} */
-  var buffer;
-  /** @type {*} */
-  var tmp;
-  /** @type {Array.<number>|Uint32Array|Object} */
-  var key;
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
-  /** @type {number} */
-  var j;
-  /** @type {number} */
-  var jl;
+Zlib.Zip.prototype.compress = function () {
+    /** @type {Array.<{
+     *   buffer: !(Array.<number>|Uint8Array),
+     *   option: Object,
+     *   compressed: boolean,
+     *   encrypted: boolean,
+     *   size: number,
+     *   crc32: number
+     * }>} */
+    var files = this.files;
+    /** @type {{
+     *   buffer: !(Array.<number>|Uint8Array),
+     *   option: Object,
+     *   compressed: boolean,
+     *   encrypted: boolean,
+     *   size: number,
+     *   crc32: number
+     * }} */
+    var file;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var output;
+    /** @type {number} */
+    var op1;
+    /** @type {number} */
+    var op2;
+    /** @type {number} */
+    var op3;
+    /** @type {number} */
+    var localFileSize = 0;
+    /** @type {number} */
+    var centralDirectorySize = 0;
+    /** @type {number} */
+    var endOfCentralDirectorySize;
+    /** @type {number} */
+    var offset;
+    /** @type {number} */
+    var needVersion;
+    /** @type {number} */
+    var flags;
+    /** @type {Zlib.Zip.CompressionMethod} */
+    var compressionMethod;
+    /** @type {Date} */
+    var date;
+    /** @type {number} */
+    var crc32;
+    /** @type {number} */
+    var size;
+    /** @type {number} */
+    var plainSize;
+    /** @type {number} */
+    var filenameLength;
+    /** @type {number} */
+    var extraFieldLength;
+    /** @type {number} */
+    var commentLength;
+    /** @type {(Array.<number>|Uint8Array)} */
+    var filename;
+    /** @type {(Array.<number>|Uint8Array)} */
+    var extraField;
+    /** @type {(Array.<number>|Uint8Array)} */
+    var comment;
+    /** @type {(Array.<number>|Uint8Array)} */
+    var buffer;
+    /** @type {*} */
+    var tmp;
+    /** @type {Array.<number>|Uint32Array|Object} */
+    var key;
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
+    /** @type {number} */
+    var j;
+    /** @type {number} */
+    var jl;
 
-  // ファイルの圧縮
-  for (i = 0, il = files.length; i < il; ++i) {
-    file = files[i];
-    filenameLength =
-        (file.option['filename']) ? file.option['filename'].length : 0;
-    extraFieldLength =
-        (file.option['extraField']) ? file.option['extraField'].length : 0;
-    commentLength =
-        (file.option['comment']) ? file.option['comment'].length : 0;
+    // ファイルの圧縮
+    for (i = 0, il = files.length; i < il; ++i) {
+        file = files[i];
+        filenameLength = file.option["filename"] ? file.option["filename"].length : 0;
+        extraFieldLength = file.option["extraField"] ? file.option["extraField"].length : 0;
+        commentLength = file.option["comment"] ? file.option["comment"].length : 0;
 
-    // 圧縮されていなかったら圧縮
-    if (!file.compressed) {
-      // 圧縮前に CRC32 の計算をしておく
-      file.crc32 = Zlib.CRC32.calc(file.buffer);
+        // 圧縮されていなかったら圧縮
+        if (!file.compressed) {
+            // 圧縮前に CRC32 の計算をしておく
+            file.crc32 = Zlib.CRC32.calc(file.buffer);
 
-      switch (file.option['compressionMethod']) {
-        case Zlib.Zip.CompressionMethod.STORE:
-          break;
-        case Zlib.Zip.CompressionMethod.DEFLATE:
-          file.buffer = this.deflateWithOption(file.buffer, file.option);
-          file.compressed = true;
-          break;
-        default:
-          throw new Error('unknown compression method:' + file.option['compressionMethod']);
-      }
+            switch (file.option["compressionMethod"]) {
+                case Zlib.Zip.CompressionMethod.STORE:
+                    break;
+                case Zlib.Zip.CompressionMethod.DEFLATE:
+                    file.buffer = this.deflateWithOption(file.buffer, file.option);
+                    file.compressed = true;
+                    break;
+                default:
+                    throw new Error("unknown compression method:" + file.option["compressionMethod"]);
+            }
+        }
+
+        // encryption
+        if (file.option["password"] !== void 0 || this.password !== void 0) {
+            // init encryption
+            key = this.createEncryptionKey(file.option["password"] || this.password);
+
+            // add header
+            buffer = file.buffer;
+            {
+                tmp = new Uint8Array(buffer.length + 12);
+                tmp.set(buffer, 12);
+                buffer = tmp;
+            }
+
+            for (j = 0; j < 12; ++j) {
+                buffer[j] = this.encode(key, i === 11 ? file.crc32 & 0xff : (Math.random() * 256) | 0);
+            }
+
+            // data encryption
+            for (jl = buffer.length; j < jl; ++j) {
+                buffer[j] = this.encode(key, buffer[j]);
+            }
+            file.buffer = buffer;
+        }
+
+        // 必要バッファサイズの計算
+        localFileSize +=
+            // local file header
+            30 +
+            filenameLength +
+            // file data
+            file.buffer.length;
+
+        centralDirectorySize +=
+            // file header
+            46 + filenameLength + commentLength;
     }
 
-    // encryption
-    if (file.option['password'] !== void 0|| this.password !== void 0) {
-      // init encryption
-      key = this.createEncryptionKey(file.option['password'] || this.password);
+    // end of central directory
+    endOfCentralDirectorySize = 22 + (this.comment ? this.comment.length : 0);
+    output = new Uint8Array(localFileSize + centralDirectorySize + endOfCentralDirectorySize);
+    op1 = 0;
+    op2 = localFileSize;
+    op3 = op2 + centralDirectorySize;
 
-      // add header
-      buffer = file.buffer;
-      {
-        tmp = new Uint8Array(buffer.length + 12);
-        tmp.set(buffer, 12);
-        buffer = tmp;
-      }
+    // ファイルの圧縮
+    for (i = 0, il = files.length; i < il; ++i) {
+        file = files[i];
+        filenameLength = file.option["filename"] ? file.option["filename"].length : 0;
+        extraFieldLength = 0; // TODO
+        commentLength = file.option["comment"] ? file.option["comment"].length : 0;
 
-      for (j = 0; j < 12; ++j) {
-        buffer[j] = this.encode(
-            key,
-            i === 11 ? (file.crc32 & 0xff) : (Math.random() * 256 | 0)
-        );
-      }
+        //-------------------------------------------------------------------------
+        // local file header & file header
+        //-------------------------------------------------------------------------
 
-      // data encryption
-      for (jl = buffer.length; j < jl; ++j) {
-        buffer[j] = this.encode(key, buffer[j]);
-      }
-      file.buffer = buffer;
-    }
+        offset = op1;
 
-    // 必要バッファサイズの計算
-    localFileSize +=
+        // signature
         // local file header
-        30 + filenameLength +
-        // file data
-        file.buffer.length;
-
-    centralDirectorySize +=
+        output[op1++] = Zlib.Zip.LocalFileHeaderSignature[0];
+        output[op1++] = Zlib.Zip.LocalFileHeaderSignature[1];
+        output[op1++] = Zlib.Zip.LocalFileHeaderSignature[2];
+        output[op1++] = Zlib.Zip.LocalFileHeaderSignature[3];
         // file header
-        46 + filenameLength + commentLength;
-  }
+        output[op2++] = Zlib.Zip.FileHeaderSignature[0];
+        output[op2++] = Zlib.Zip.FileHeaderSignature[1];
+        output[op2++] = Zlib.Zip.FileHeaderSignature[2];
+        output[op2++] = Zlib.Zip.FileHeaderSignature[3];
 
-  // end of central directory
-  endOfCentralDirectorySize = 22 + (this.comment ? this.comment.length : 0);
-  output = new ( Uint8Array )(
-      localFileSize + centralDirectorySize + endOfCentralDirectorySize
-  );
-  op1 = 0;
-  op2 = localFileSize;
-  op3 = op2 + centralDirectorySize;
+        // compressor info
+        needVersion = 20;
+        output[op2++] = needVersion & 0xff;
+        output[op2++] =
+            /** @type {Zlib.Zip.OperatingSystem} */
+            (file.option["os"]) || Zlib.Zip.OperatingSystem.MSDOS;
 
-  // ファイルの圧縮
-  for (i = 0, il = files.length; i < il; ++i) {
-    file = files[i];
-    filenameLength =
-        file.option['filename'] ? file.option['filename'].length :  0;
-    extraFieldLength = 0; // TODO
-    commentLength =
-        file.option['comment'] ? file.option['comment'].length : 0;
+        // need version
+        output[op1++] = output[op2++] = needVersion & 0xff;
+        output[op1++] = output[op2++] = (needVersion >> 8) & 0xff;
+
+        // general purpose bit flag
+        flags = 0;
+        if (file.option["password"] || this.password) {
+            flags |= Zlib.Zip.Flags.ENCRYPT;
+        }
+        output[op1++] = output[op2++] = flags & 0xff;
+        output[op1++] = output[op2++] = (flags >> 8) & 0xff;
+
+        // compression method
+        compressionMethod =
+            /** @type {Zlib.Zip.CompressionMethod} */
+            (file.option["compressionMethod"]);
+        output[op1++] = output[op2++] = compressionMethod & 0xff;
+        output[op1++] = output[op2++] = (compressionMethod >> 8) & 0xff;
+
+        // date
+        date = /** @type {(Date|undefined)} */ (file.option["date"]) || new Date();
+        output[op1++] = output[op2++] = ((date.getMinutes() & 0x7) << 5) | ((date.getSeconds() / 2) | 0);
+        output[op1++] = output[op2++] = (date.getHours() << 3) | (date.getMinutes() >> 3);
+        //
+        output[op1++] = output[op2++] = (((date.getMonth() + 1) & 0x7) << 5) | date.getDate();
+        output[op1++] = output[op2++] = (((date.getFullYear() - 1980) & 0x7f) << 1) | ((date.getMonth() + 1) >> 3);
+
+        // CRC-32
+        crc32 = file.crc32;
+        output[op1++] = output[op2++] = crc32 & 0xff;
+        output[op1++] = output[op2++] = (crc32 >> 8) & 0xff;
+        output[op1++] = output[op2++] = (crc32 >> 16) & 0xff;
+        output[op1++] = output[op2++] = (crc32 >> 24) & 0xff;
+
+        // compressed size
+        size = file.buffer.length;
+        output[op1++] = output[op2++] = size & 0xff;
+        output[op1++] = output[op2++] = (size >> 8) & 0xff;
+        output[op1++] = output[op2++] = (size >> 16) & 0xff;
+        output[op1++] = output[op2++] = (size >> 24) & 0xff;
+
+        // uncompressed size
+        plainSize = file.size;
+        output[op1++] = output[op2++] = plainSize & 0xff;
+        output[op1++] = output[op2++] = (plainSize >> 8) & 0xff;
+        output[op1++] = output[op2++] = (plainSize >> 16) & 0xff;
+        output[op1++] = output[op2++] = (plainSize >> 24) & 0xff;
+
+        // filename length
+        output[op1++] = output[op2++] = filenameLength & 0xff;
+        output[op1++] = output[op2++] = (filenameLength >> 8) & 0xff;
+
+        // extra field length
+        output[op1++] = output[op2++] = extraFieldLength & 0xff;
+        output[op1++] = output[op2++] = (extraFieldLength >> 8) & 0xff;
+
+        // file comment length
+        output[op2++] = commentLength & 0xff;
+        output[op2++] = (commentLength >> 8) & 0xff;
+
+        // disk number start
+        output[op2++] = 0;
+        output[op2++] = 0;
+
+        // internal file attributes
+        output[op2++] = 0;
+        output[op2++] = 0;
+
+        // external file attributes
+        output[op2++] = 0;
+        output[op2++] = 0;
+        output[op2++] = 0;
+        output[op2++] = 0;
+
+        // relative offset of local header
+        output[op2++] = offset & 0xff;
+        output[op2++] = (offset >> 8) & 0xff;
+        output[op2++] = (offset >> 16) & 0xff;
+        output[op2++] = (offset >> 24) & 0xff;
+
+        // filename
+        filename = file.option["filename"];
+        if (filename) {
+            {
+                output.set(filename, op1);
+                output.set(filename, op2);
+                op1 += filenameLength;
+                op2 += filenameLength;
+            }
+        }
+
+        // extra field
+        extraField = file.option["extraField"];
+        if (extraField) {
+            {
+                output.set(extraField, op1);
+                output.set(extraField, op2);
+                op1 += extraFieldLength;
+                op2 += extraFieldLength;
+            }
+        }
+
+        // comment
+        comment = file.option["comment"];
+        if (comment) {
+            {
+                output.set(comment, op2);
+                op2 += commentLength;
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // file data
+        //-------------------------------------------------------------------------
+
+        {
+            output.set(file.buffer, op1);
+            op1 += file.buffer.length;
+        }
+    }
 
     //-------------------------------------------------------------------------
-    // local file header & file header
+    // end of central directory
     //-------------------------------------------------------------------------
-
-    offset = op1;
 
     // signature
-    // local file header
-    output[op1++] = Zlib.Zip.LocalFileHeaderSignature[0];
-    output[op1++] = Zlib.Zip.LocalFileHeaderSignature[1];
-    output[op1++] = Zlib.Zip.LocalFileHeaderSignature[2];
-    output[op1++] = Zlib.Zip.LocalFileHeaderSignature[3];
-    // file header
-    output[op2++] = Zlib.Zip.FileHeaderSignature[0];
-    output[op2++] = Zlib.Zip.FileHeaderSignature[1];
-    output[op2++] = Zlib.Zip.FileHeaderSignature[2];
-    output[op2++] = Zlib.Zip.FileHeaderSignature[3];
+    output[op3++] = Zlib.Zip.CentralDirectorySignature[0];
+    output[op3++] = Zlib.Zip.CentralDirectorySignature[1];
+    output[op3++] = Zlib.Zip.CentralDirectorySignature[2];
+    output[op3++] = Zlib.Zip.CentralDirectorySignature[3];
 
-    // compressor info
-    needVersion = 20;
-    output[op2++] = needVersion & 0xff;
-    output[op2++] =
-        /** @type {Zlib.Zip.OperatingSystem} */
-        (file.option['os']) ||
-        Zlib.Zip.OperatingSystem.MSDOS;
+    // number of this disk
+    output[op3++] = 0;
+    output[op3++] = 0;
 
-    // need version
-    output[op1++] = output[op2++] =  needVersion       & 0xff;
-    output[op1++] = output[op2++] = (needVersion >> 8) & 0xff;
+    // number of the disk with the start of the central directory
+    output[op3++] = 0;
+    output[op3++] = 0;
 
-    // general purpose bit flag
-    flags = 0;
-    if (file.option['password'] || this.password) {
-      flags |= Zlib.Zip.Flags.ENCRYPT;
-    }
-    output[op1++] = output[op2++] =  flags       & 0xff;
-    output[op1++] = output[op2++] = (flags >> 8) & 0xff;
+    // total number of entries in the central directory on this disk
+    output[op3++] = il & 0xff;
+    output[op3++] = (il >> 8) & 0xff;
 
-    // compression method
-    compressionMethod =
-        /** @type {Zlib.Zip.CompressionMethod} */
-        (file.option['compressionMethod']);
-    output[op1++] = output[op2++] =  compressionMethod       & 0xff;
-    output[op1++] = output[op2++] = (compressionMethod >> 8) & 0xff;
+    // total number of entries in the central directory
+    output[op3++] = il & 0xff;
+    output[op3++] = (il >> 8) & 0xff;
 
-    // date
-    date = /** @type {(Date|undefined)} */(file.option['date']) || new Date();
-    output[op1++] = output[op2++] =
-        ((date.getMinutes() & 0x7) << 5) |
-        (date.getSeconds() / 2 | 0);
-    output[op1++] = output[op2++] =
-        (date.getHours()   << 3) |
-        (date.getMinutes() >> 3);
-    //
-    output[op1++] = output[op2++] =
-        ((date.getMonth() + 1 & 0x7) << 5) |
-        (date.getDate());
-    output[op1++] = output[op2++] =
-        ((date.getFullYear() - 1980 & 0x7f) << 1) |
-        (date.getMonth() + 1 >> 3);
+    // size of the central directory
+    output[op3++] = centralDirectorySize & 0xff;
+    output[op3++] = (centralDirectorySize >> 8) & 0xff;
+    output[op3++] = (centralDirectorySize >> 16) & 0xff;
+    output[op3++] = (centralDirectorySize >> 24) & 0xff;
 
-    // CRC-32
-    crc32 = file.crc32;
-    output[op1++] = output[op2++] =  crc32        & 0xff;
-    output[op1++] = output[op2++] = (crc32 >>  8) & 0xff;
-    output[op1++] = output[op2++] = (crc32 >> 16) & 0xff;
-    output[op1++] = output[op2++] = (crc32 >> 24) & 0xff;
+    // offset of start of central directory with respect to the starting disk number
+    output[op3++] = localFileSize & 0xff;
+    output[op3++] = (localFileSize >> 8) & 0xff;
+    output[op3++] = (localFileSize >> 16) & 0xff;
+    output[op3++] = (localFileSize >> 24) & 0xff;
 
-    // compressed size
-    size = file.buffer.length;
-    output[op1++] = output[op2++] =  size        & 0xff;
-    output[op1++] = output[op2++] = (size >>  8) & 0xff;
-    output[op1++] = output[op2++] = (size >> 16) & 0xff;
-    output[op1++] = output[op2++] = (size >> 24) & 0xff;
+    // .ZIP file comment length
+    commentLength = this.comment ? this.comment.length : 0;
+    output[op3++] = commentLength & 0xff;
+    output[op3++] = (commentLength >> 8) & 0xff;
 
-    // uncompressed size
-    plainSize = file.size;
-    output[op1++] = output[op2++] =  plainSize        & 0xff;
-    output[op1++] = output[op2++] = (plainSize >>  8) & 0xff;
-    output[op1++] = output[op2++] = (plainSize >> 16) & 0xff;
-    output[op1++] = output[op2++] = (plainSize >> 24) & 0xff;
-
-    // filename length
-    output[op1++] = output[op2++] =  filenameLength       & 0xff;
-    output[op1++] = output[op2++] = (filenameLength >> 8) & 0xff;
-
-    // extra field length
-    output[op1++] = output[op2++] =  extraFieldLength       & 0xff;
-    output[op1++] = output[op2++] = (extraFieldLength >> 8) & 0xff;
-
-    // file comment length
-    output[op2++] =  commentLength       & 0xff;
-    output[op2++] = (commentLength >> 8) & 0xff;
-
-    // disk number start
-    output[op2++] = 0;
-    output[op2++] = 0;
-
-    // internal file attributes
-    output[op2++] = 0;
-    output[op2++] = 0;
-
-    // external file attributes
-    output[op2++] = 0;
-    output[op2++] = 0;
-    output[op2++] = 0;
-    output[op2++] = 0;
-
-    // relative offset of local header
-    output[op2++] =  offset        & 0xff;
-    output[op2++] = (offset >>  8) & 0xff;
-    output[op2++] = (offset >> 16) & 0xff;
-    output[op2++] = (offset >> 24) & 0xff;
-
-    // filename
-    filename = file.option['filename'];
-    if (filename) {
-      {
-        output.set(filename, op1);
-        output.set(filename, op2);
-        op1 += filenameLength;
-        op2 += filenameLength;
-      }
+    // .ZIP file comment
+    if (this.comment) {
+        {
+            output.set(this.comment, op3);
+            op3 += commentLength;
+        }
     }
 
-    // extra field
-    extraField = file.option['extraField'];
-    if (extraField) {
-      {
-        output.set(extraField, op1);
-        output.set(extraField, op2);
-        op1 += extraFieldLength;
-        op2 += extraFieldLength;
-      }
-    }
-
-    // comment
-    comment = file.option['comment'];
-    if (comment) {
-      {
-        output.set(comment, op2);
-        op2 += commentLength;
-      }
-    }
-
-    //-------------------------------------------------------------------------
-    // file data
-    //-------------------------------------------------------------------------
-
-    {
-      output.set(file.buffer, op1);
-      op1 += file.buffer.length;
-    }
-  }
-
-  //-------------------------------------------------------------------------
-  // end of central directory
-  //-------------------------------------------------------------------------
-
-  // signature
-  output[op3++] = Zlib.Zip.CentralDirectorySignature[0];
-  output[op3++] = Zlib.Zip.CentralDirectorySignature[1];
-  output[op3++] = Zlib.Zip.CentralDirectorySignature[2];
-  output[op3++] = Zlib.Zip.CentralDirectorySignature[3];
-
-  // number of this disk
-  output[op3++] = 0;
-  output[op3++] = 0;
-
-  // number of the disk with the start of the central directory
-  output[op3++] = 0;
-  output[op3++] = 0;
-
-  // total number of entries in the central directory on this disk
-  output[op3++] =  il       & 0xff;
-  output[op3++] = (il >> 8) & 0xff;
-
-  // total number of entries in the central directory
-  output[op3++] =  il       & 0xff;
-  output[op3++] = (il >> 8) & 0xff;
-
-  // size of the central directory
-  output[op3++] =  centralDirectorySize        & 0xff;
-  output[op3++] = (centralDirectorySize >>  8) & 0xff;
-  output[op3++] = (centralDirectorySize >> 16) & 0xff;
-  output[op3++] = (centralDirectorySize >> 24) & 0xff;
-
-  // offset of start of central directory with respect to the starting disk number
-  output[op3++] =  localFileSize        & 0xff;
-  output[op3++] = (localFileSize >>  8) & 0xff;
-  output[op3++] = (localFileSize >> 16) & 0xff;
-  output[op3++] = (localFileSize >> 24) & 0xff;
-
-  // .ZIP file comment length
-  commentLength = this.comment ? this.comment.length : 0;
-  output[op3++] =  commentLength       & 0xff;
-  output[op3++] = (commentLength >> 8) & 0xff;
-
-  // .ZIP file comment
-  if (this.comment) {
-    {
-      output.set(this.comment, op3);
-      op3 += commentLength;
-    }
-  }
-
-  return output;
+    return output;
 };
 
 /**
@@ -10703,22 +10373,22 @@ Zlib.Zip.prototype.compress = function() {
  * @param {Object=} opt_params options.
  * @return {!(Array.<number>|Uint8Array)}
  */
-Zlib.Zip.prototype.deflateWithOption = function(input, opt_params) {
-  /** @type {Zlib.RawDeflate} */
-  var deflator = new Zlib.RawDeflate(input, opt_params['deflateOption']);
+Zlib.Zip.prototype.deflateWithOption = function (input, opt_params) {
+    /** @type {Zlib.RawDeflate} */
+    var deflator = new Zlib.RawDeflate(input, opt_params["deflateOption"]);
 
-  return deflator.compress();
+    return deflator.compress();
 };
 
 /**
  * @param {(Array.<number>|Uint32Array)} key
  * @return {number}
  */
-Zlib.Zip.prototype.getByte = function(key) {
-  /** @type {number} */
-  var tmp = ((key[2] & 0xffff) | 2);
+Zlib.Zip.prototype.getByte = function (key) {
+    /** @type {number} */
+    var tmp = (key[2] & 0xffff) | 2;
 
-  return ((tmp * (tmp ^ 1)) >> 8) & 0xff;
+    return ((tmp * (tmp ^ 1)) >> 8) & 0xff;
 };
 
 /**
@@ -10726,136 +10396,130 @@ Zlib.Zip.prototype.getByte = function(key) {
  * @param {number} n
  * @return {number}
  */
-Zlib.Zip.prototype.encode = function(key, n) {
-  /** @type {number} */
-  var tmp = this.getByte(/** @type {(Array.<number>|Uint32Array)} */(key));
+Zlib.Zip.prototype.encode = function (key, n) {
+    /** @type {number} */
+    var tmp = this.getByte(/** @type {(Array.<number>|Uint32Array)} */ (key));
 
-  this.updateKeys(/** @type {(Array.<number>|Uint32Array)} */(key), n);
+    this.updateKeys(/** @type {(Array.<number>|Uint32Array)} */ (key), n);
 
-  return tmp ^ n;
+    return tmp ^ n;
 };
 
 /**
  * @param {(Array.<number>|Uint32Array)} key
  * @param {number} n
  */
-Zlib.Zip.prototype.updateKeys = function(key, n) {
-  key[0] = Zlib.CRC32.single(key[0], n);
-  key[1] =
-      (((((key[1] + (key[0] & 0xff)) * 20173 >>> 0) * 6681) >>> 0) + 1) >>> 0;
-  key[2] = Zlib.CRC32.single(key[2], key[1] >>> 24);
+Zlib.Zip.prototype.updateKeys = function (key, n) {
+    key[0] = Zlib.CRC32.single(key[0], n);
+    key[1] = ((((((key[1] + (key[0] & 0xff)) * 20173) >>> 0) * 6681) >>> 0) + 1) >>> 0;
+    key[2] = Zlib.CRC32.single(key[2], key[1] >>> 24);
 };
 
 /**
  * @param {(Array.<number>|Uint8Array)} password
  * @return {!(Array.<number>|Uint32Array|Object)}
  */
-Zlib.Zip.prototype.createEncryptionKey = function(password) {
-  /** @type {!(Array.<number>|Uint32Array)} */
-  var key = [305419896, 591751049, 878082192];
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
+Zlib.Zip.prototype.createEncryptionKey = function (password) {
+    /** @type {!(Array.<number>|Uint32Array)} */
+    var key = [305419896, 591751049, 878082192];
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
 
-  {
-    key = new Uint32Array(key);
-  }
+    {
+        key = new Uint32Array(key);
+    }
 
-  for (i = 0, il = password.length; i < il; ++i) {
-    this.updateKeys(key, password[i] & 0xff);
-  }
+    for (i = 0, il = password.length; i < il; ++i) {
+        this.updateKeys(key, password[i] & 0xff);
+    }
 
-  return key;
+    return key;
 };
-
-
 
 /**
  * build huffman table from length list.
  * @param {!(Array.<number>|Uint8Array)} lengths length list.
  * @return {!Array} huffman table.
  */
-Zlib.Huffman.buildHuffmanTable = function(lengths) {
-  /** @type {number} length list size. */
-  var listSize = lengths.length;
-  /** @type {number} max code length for table size. */
-  var maxCodeLength = 0;
-  /** @type {number} min code length for table size. */
-  var minCodeLength = Number.POSITIVE_INFINITY;
-  /** @type {number} table size. */
-  var size;
-  /** @type {!(Array|Uint8Array)} huffman code table. */
-  var table;
-  /** @type {number} bit length. */
-  var bitLength;
-  /** @type {number} huffman code. */
-  var code;
-  /**
-   * サイズが 2^maxlength 個のテーブルを埋めるためのスキップ長.
-   * @type {number} skip length for table filling.
-   */
-  var skip;
-  /** @type {number} reversed code. */
-  var reversed;
-  /** @type {number} reverse temp. */
-  var rtemp;
-  /** @type {number} loop counter. */
-  var i;
-  /** @type {number} loop limit. */
-  var il;
-  /** @type {number} loop counter. */
-  var j;
-  /** @type {number} table value. */
-  var value;
+Zlib.Huffman.buildHuffmanTable = function (lengths) {
+    /** @type {number} length list size. */
+    var listSize = lengths.length;
+    /** @type {number} max code length for table size. */
+    var maxCodeLength = 0;
+    /** @type {number} min code length for table size. */
+    var minCodeLength = Number.POSITIVE_INFINITY;
+    /** @type {number} table size. */
+    var size;
+    /** @type {!(Array|Uint8Array)} huffman code table. */
+    var table;
+    /** @type {number} bit length. */
+    var bitLength;
+    /** @type {number} huffman code. */
+    var code;
+    /**
+     * サイズが 2^maxlength 個のテーブルを埋めるためのスキップ長.
+     * @type {number} skip length for table filling.
+     */
+    var skip;
+    /** @type {number} reversed code. */
+    var reversed;
+    /** @type {number} reverse temp. */
+    var rtemp;
+    /** @type {number} loop counter. */
+    var i;
+    /** @type {number} loop limit. */
+    var il;
+    /** @type {number} loop counter. */
+    var j;
+    /** @type {number} table value. */
+    var value;
 
-  // Math.max は遅いので最長の値は for-loop で取得する
-  for (i = 0, il = listSize; i < il; ++i) {
-    if (lengths[i] > maxCodeLength) {
-      maxCodeLength = lengths[i];
+    // Math.max は遅いので最長の値は for-loop で取得する
+    for (i = 0, il = listSize; i < il; ++i) {
+        if (lengths[i] > maxCodeLength) {
+            maxCodeLength = lengths[i];
+        }
+        if (lengths[i] < minCodeLength) {
+            minCodeLength = lengths[i];
+        }
     }
-    if (lengths[i] < minCodeLength) {
-      minCodeLength = lengths[i];
-    }
-  }
 
-  size = 1 << maxCodeLength;
-  table = new ( Uint32Array )(size);
+    size = 1 << maxCodeLength;
+    table = new Uint32Array(size);
 
-  // ビット長の短い順からハフマン符号を割り当てる
-  for (bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength;) {
-    for (i = 0; i < listSize; ++i) {
-      if (lengths[i] === bitLength) {
-        // ビットオーダーが逆になるためビット長分並びを反転する
-        for (reversed = 0, rtemp = code, j = 0; j < bitLength; ++j) {
-          reversed = (reversed << 1) | (rtemp & 1);
-          rtemp >>= 1;
+    // ビット長の短い順からハフマン符号を割り当てる
+    for (bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength; ) {
+        for (i = 0; i < listSize; ++i) {
+            if (lengths[i] === bitLength) {
+                // ビットオーダーが逆になるためビット長分並びを反転する
+                for (reversed = 0, rtemp = code, j = 0; j < bitLength; ++j) {
+                    reversed = (reversed << 1) | (rtemp & 1);
+                    rtemp >>= 1;
+                }
+
+                // 最大ビット長をもとにテーブルを作るため、
+                // 最大ビット長以外では 0 / 1 どちらでも良い箇所ができる
+                // そのどちらでも良い場所は同じ値で埋めることで
+                // 本来のビット長以上のビット数取得しても問題が起こらないようにする
+                value = (bitLength << 16) | i;
+                for (j = reversed; j < size; j += skip) {
+                    table[j] = value;
+                }
+
+                ++code;
+            }
         }
 
-        // 最大ビット長をもとにテーブルを作るため、
-        // 最大ビット長以外では 0 / 1 どちらでも良い箇所ができる
-        // そのどちらでも良い場所は同じ値で埋めることで
-        // 本来のビット長以上のビット数取得しても問題が起こらないようにする
-        value = (bitLength << 16) | i;
-        for (j = reversed; j < size; j += skip) {
-          table[j] = value;
-        }
-
-        ++code;
-      }
+        // 次のビット長へ
+        ++bitLength;
+        code <<= 1;
+        skip <<= 1;
     }
 
-    // 次のビット長へ
-    ++bitLength;
-    code <<= 1;
-    skip <<= 1;
-  }
-
-  return [table, maxCodeLength, minCodeLength];
+    return [table, maxCodeLength, minCodeLength];
 };
-
-
-
 
 //-----------------------------------------------------------------------------
 
@@ -10863,7 +10527,6 @@ Zlib.Huffman.buildHuffmanTable = function(lengths) {
 var ZLIB_RAW_INFLATE_BUFFER_SIZE = 0x8000; // [ 0x8000 >= ZLIB_BUFFER_BLOCK_SIZE ]
 
 //-----------------------------------------------------------------------------
-
 
 var buildHuffmanTable = Zlib.Huffman.buildHuffmanTable;
 
@@ -10878,95 +10541,92 @@ var buildHuffmanTable = Zlib.Huffman.buildHuffmanTable;
  *   - bufferType: Zlib.RawInflate.BufferType の値によってバッファの管理方法を指定する.
  *   - resize: 確保したバッファが実際の大きさより大きかった場合に切り詰める.
  */
-Zlib.RawInflate = function(input, opt_params) {
-  /** @type {!(Array.<number>|Uint8Array)} inflated buffer */
-  this.buffer;
-  /** @type {!Array.<(Array.<number>|Uint8Array)>} */
-  this.blocks = [];
-  /** @type {number} block size. */
-  this.bufferSize = ZLIB_RAW_INFLATE_BUFFER_SIZE;
-  /** @type {!number} total output buffer pointer. */
-  this.totalpos = 0;
-  /** @type {!number} input buffer pointer. */
-  this.ip = 0;
-  /** @type {!number} bit stream reader buffer. */
-  this.bitsbuf = 0;
-  /** @type {!number} bit stream reader buffer size. */
-  this.bitsbuflen = 0;
-  /** @type {!(Array.<number>|Uint8Array)} input buffer. */
-  this.input =  new Uint8Array(input) ;
-  /** @type {!(Uint8Array|Array.<number>)} output buffer. */
-  this.output;
-  /** @type {!number} output buffer pointer. */
-  this.op;
-  /** @type {boolean} is final block flag. */
-  this.bfinal = false;
-  /** @type {Zlib.RawInflate.BufferType} buffer management. */
-  this.bufferType = Zlib.RawInflate.BufferType.ADAPTIVE;
-  /** @type {boolean} resize flag for memory size optimization. */
-  this.resize = false;
+Zlib.RawInflate = function (input, opt_params) {
+    /** @type {!(Array.<number>|Uint8Array)} inflated buffer */
+    this.buffer;
+    /** @type {!Array.<(Array.<number>|Uint8Array)>} */
+    this.blocks = [];
+    /** @type {number} block size. */
+    this.bufferSize = ZLIB_RAW_INFLATE_BUFFER_SIZE;
+    /** @type {!number} total output buffer pointer. */
+    this.totalpos = 0;
+    /** @type {!number} input buffer pointer. */
+    this.ip = 0;
+    /** @type {!number} bit stream reader buffer. */
+    this.bitsbuf = 0;
+    /** @type {!number} bit stream reader buffer size. */
+    this.bitsbuflen = 0;
+    /** @type {!(Array.<number>|Uint8Array)} input buffer. */
+    this.input = new Uint8Array(input);
+    /** @type {!(Uint8Array|Array.<number>)} output buffer. */
+    this.output;
+    /** @type {!number} output buffer pointer. */
+    this.op;
+    /** @type {boolean} is final block flag. */
+    this.bfinal = false;
+    /** @type {Zlib.RawInflate.BufferType} buffer management. */
+    this.bufferType = Zlib.RawInflate.BufferType.ADAPTIVE;
+    /** @type {boolean} resize flag for memory size optimization. */
+    this.resize = false;
 
-  // option parameters
-  if (opt_params || !(opt_params = {})) {
-    if (opt_params['index']) {
-      this.ip = opt_params['index'];
+    // option parameters
+    if (opt_params || !(opt_params = {})) {
+        if (opt_params["index"]) {
+            this.ip = opt_params["index"];
+        }
+        if (opt_params["bufferSize"]) {
+            this.bufferSize = opt_params["bufferSize"];
+        }
+        if (opt_params["bufferType"]) {
+            this.bufferType = opt_params["bufferType"];
+        }
+        if (opt_params["resize"]) {
+            this.resize = opt_params["resize"];
+        }
     }
-    if (opt_params['bufferSize']) {
-      this.bufferSize = opt_params['bufferSize'];
-    }
-    if (opt_params['bufferType']) {
-      this.bufferType = opt_params['bufferType'];
-    }
-    if (opt_params['resize']) {
-      this.resize = opt_params['resize'];
-    }
-  }
 
-  // initialize
-  switch (this.bufferType) {
-    case Zlib.RawInflate.BufferType.BLOCK:
-      this.op = Zlib.RawInflate.MaxBackwardLength;
-      this.output =
-          new ( Uint8Array )(
-              Zlib.RawInflate.MaxBackwardLength +
-              this.bufferSize +
-              Zlib.RawInflate.MaxCopyLength
-          );
-      break;
-    case Zlib.RawInflate.BufferType.ADAPTIVE:
-      this.op = 0;
-      this.output = new ( Uint8Array )(this.bufferSize);
-      break;
-    default:
-      throw new Error('invalid inflate mode');
-  }
+    // initialize
+    switch (this.bufferType) {
+        case Zlib.RawInflate.BufferType.BLOCK:
+            this.op = Zlib.RawInflate.MaxBackwardLength;
+            this.output = new Uint8Array(
+                Zlib.RawInflate.MaxBackwardLength + this.bufferSize + Zlib.RawInflate.MaxCopyLength
+            );
+            break;
+        case Zlib.RawInflate.BufferType.ADAPTIVE:
+            this.op = 0;
+            this.output = new Uint8Array(this.bufferSize);
+            break;
+        default:
+            throw new Error("invalid inflate mode");
+    }
 };
 
 /**
  * @enum {number}
  */
 Zlib.RawInflate.BufferType = {
-  BLOCK: 0,
-  ADAPTIVE: 1
+    BLOCK: 0,
+    ADAPTIVE: 1,
 };
 
 /**
  * decompress.
  * @return {!(Uint8Array|Array.<number>)} inflated buffer.
  */
-Zlib.RawInflate.prototype.decompress = function() {
-  while (!this.bfinal) {
-    this.parseBlock();
-  }
+Zlib.RawInflate.prototype.decompress = function () {
+    while (!this.bfinal) {
+        this.parseBlock();
+    }
 
-  switch (this.bufferType) {
-    case Zlib.RawInflate.BufferType.BLOCK:
-      return this.concatBufferBlock();
-    case Zlib.RawInflate.BufferType.ADAPTIVE:
-      return this.concatBufferDynamic();
-    default:
-      throw new Error('invalid inflate mode');
-  }
+    switch (this.bufferType) {
+        case Zlib.RawInflate.BufferType.BLOCK:
+            return this.concatBufferBlock();
+        case Zlib.RawInflate.BufferType.ADAPTIVE:
+            return this.concatBufferDynamic();
+        default:
+            throw new Error("invalid inflate mode");
+    }
 };
 
 /**
@@ -10986,8 +10646,8 @@ Zlib.RawInflate.MaxCopyLength = 258;
  * @const
  * @type {!(Array.<number>|Uint8Array)}
  */
-Zlib.RawInflate.Order = (function(table) {
-  return  new Uint16Array(table) ;
+Zlib.RawInflate.Order = (function (table) {
+    return new Uint16Array(table);
 })([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
 
 /**
@@ -10995,13 +10655,40 @@ Zlib.RawInflate.Order = (function(table) {
  * @const
  * @type {!(Array.<number>|Uint16Array)}
  */
-Zlib.RawInflate.LengthCodeTable = (function(table) {
-  return  new Uint16Array(table) ;
+Zlib.RawInflate.LengthCodeTable = (function (table) {
+    return new Uint16Array(table);
 })([
-  0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000a, 0x000b,
-  0x000d, 0x000f, 0x0011, 0x0013, 0x0017, 0x001b, 0x001f, 0x0023, 0x002b,
-  0x0033, 0x003b, 0x0043, 0x0053, 0x0063, 0x0073, 0x0083, 0x00a3, 0x00c3,
-  0x00e3, 0x0102, 0x0102, 0x0102
+    0x0003,
+    0x0004,
+    0x0005,
+    0x0006,
+    0x0007,
+    0x0008,
+    0x0009,
+    0x000a,
+    0x000b,
+    0x000d,
+    0x000f,
+    0x0011,
+    0x0013,
+    0x0017,
+    0x001b,
+    0x001f,
+    0x0023,
+    0x002b,
+    0x0033,
+    0x003b,
+    0x0043,
+    0x0053,
+    0x0063,
+    0x0073,
+    0x0083,
+    0x00a3,
+    0x00c3,
+    0x00e3,
+    0x0102,
+    0x0102,
+    0x0102,
 ]);
 
 /**
@@ -11009,25 +10696,48 @@ Zlib.RawInflate.LengthCodeTable = (function(table) {
  * @const
  * @type {!(Array.<number>|Uint8Array)}
  */
-Zlib.RawInflate.LengthExtraTable = (function(table) {
-  return  new Uint8Array(table) ;
-})([
-  0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5,
-  5, 5, 0, 0, 0
-]);
+Zlib.RawInflate.LengthExtraTable = (function (table) {
+    return new Uint8Array(table);
+})([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0]);
 
 /**
  * huffman dist code table.
  * @const
  * @type {!(Array.<number>|Uint16Array)}
  */
-Zlib.RawInflate.DistCodeTable = (function(table) {
-  return  new Uint16Array(table) ;
+Zlib.RawInflate.DistCodeTable = (function (table) {
+    return new Uint16Array(table);
 })([
-  0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0007, 0x0009, 0x000d, 0x0011,
-  0x0019, 0x0021, 0x0031, 0x0041, 0x0061, 0x0081, 0x00c1, 0x0101, 0x0181,
-  0x0201, 0x0301, 0x0401, 0x0601, 0x0801, 0x0c01, 0x1001, 0x1801, 0x2001,
-  0x3001, 0x4001, 0x6001
+    0x0001,
+    0x0002,
+    0x0003,
+    0x0004,
+    0x0005,
+    0x0007,
+    0x0009,
+    0x000d,
+    0x0011,
+    0x0019,
+    0x0021,
+    0x0031,
+    0x0041,
+    0x0061,
+    0x0081,
+    0x00c1,
+    0x0101,
+    0x0181,
+    0x0201,
+    0x0301,
+    0x0401,
+    0x0601,
+    0x0801,
+    0x0c01,
+    0x1001,
+    0x1801,
+    0x2001,
+    0x3001,
+    0x4001,
+    0x6001,
 ]);
 
 /**
@@ -11035,84 +10745,81 @@ Zlib.RawInflate.DistCodeTable = (function(table) {
  * @const
  * @type {!(Array.<number>|Uint8Array)}
  */
-Zlib.RawInflate.DistExtraTable = (function(table) {
-  return  new Uint8Array(table) ;
-})([
-  0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11,
-  11, 12, 12, 13, 13
-]);
+Zlib.RawInflate.DistExtraTable = (function (table) {
+    return new Uint8Array(table);
+})([0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13]);
 
 /**
  * fixed huffman length code table
  * @const
  * @type {!Array}
  */
-Zlib.RawInflate.FixedLiteralLengthTable = (function(table) {
-  return table;
-})((function() {
-  var lengths = new ( Uint8Array )(288);
-  var i, il;
+Zlib.RawInflate.FixedLiteralLengthTable = (function (table) {
+    return table;
+})(
+    (function () {
+        var lengths = new Uint8Array(288);
+        var i, il;
 
-  for (i = 0, il = lengths.length; i < il; ++i) {
-    lengths[i] =
-        (i <= 143) ? 8 :
-            (i <= 255) ? 9 :
-                (i <= 279) ? 7 :
-                    8;
-  }
+        for (i = 0, il = lengths.length; i < il; ++i) {
+            lengths[i] = i <= 143 ? 8 : i <= 255 ? 9 : i <= 279 ? 7 : 8;
+        }
 
-  return buildHuffmanTable(lengths);
-})());
+        return buildHuffmanTable(lengths);
+    })()
+);
 
 /**
  * fixed huffman distance code table
  * @const
  * @type {!Array}
  */
-Zlib.RawInflate.FixedDistanceTable = (function(table) {
-  return table;
-})((function() {
-  var lengths = new ( Uint8Array )(30);
-  var i, il;
+Zlib.RawInflate.FixedDistanceTable = (function (table) {
+    return table;
+})(
+    (function () {
+        var lengths = new Uint8Array(30);
+        var i, il;
 
-  for (i = 0, il = lengths.length; i < il; ++i) {
-    lengths[i] = 5;
-  }
+        for (i = 0, il = lengths.length; i < il; ++i) {
+            lengths[i] = 5;
+        }
 
-  return buildHuffmanTable(lengths);
-})());
+        return buildHuffmanTable(lengths);
+    })()
+);
 
 /**
  * parse deflated block.
  */
-Zlib.RawInflate.prototype.parseBlock = function() {
-  /** @type {number} header */
-  var hdr = this.readBits(3);
+Zlib.RawInflate.prototype.parseBlock = function () {
+    /** @type {number} header */
+    var hdr = this.readBits(3);
 
-  // BFINAL
-  if (hdr & 0x1) {
-    this.bfinal = true;
-  }
+    // BFINAL
+    if (hdr & 0x1) {
+        this.bfinal = true;
+    }
 
-  // BTYPE
-  hdr >>>= 1;
-  switch (hdr) {
-      // uncompressed
-    case 0:
-      this.parseUncompressedBlock();
-      break;
-      // fixed huffman
-    case 1:
-      this.parseFixedHuffmanBlock();
-      break;
-      // dynamic huffman
-    case 2:
-      this.parseDynamicHuffmanBlock();
-      break;
-      // reserved or other
-    default:
-      throw new Error('unknown BTYPE: ' + hdr);
-  }
+    // BTYPE
+    hdr >>>= 1;
+    switch (hdr) {
+        // uncompressed
+        case 0:
+            this.parseUncompressedBlock();
+            break;
+        // fixed huffman
+        case 1:
+            this.parseFixedHuffmanBlock();
+            break;
+        // dynamic huffman
+        case 2:
+            this.parseDynamicHuffmanBlock();
+            break;
+        // reserved or other
+        default:
+            throw new Error("unknown BTYPE: " + hdr);
+    }
 };
 
 /**
@@ -11120,38 +10827,38 @@ Zlib.RawInflate.prototype.parseBlock = function() {
  * @param {number} length bits length.
  * @return {number} read bits.
  */
-Zlib.RawInflate.prototype.readBits = function(length) {
-  var bitsbuf = this.bitsbuf;
-  var bitsbuflen = this.bitsbuflen;
-  var input = this.input;
-  var ip = this.ip;
+Zlib.RawInflate.prototype.readBits = function (length) {
+    var bitsbuf = this.bitsbuf;
+    var bitsbuflen = this.bitsbuflen;
+    var input = this.input;
+    var ip = this.ip;
 
-  /** @type {number} */
-  var inputLength = input.length;
-  /** @type {number} input and output byte. */
-  var octet;
+    /** @type {number} */
+    var inputLength = input.length;
+    /** @type {number} input and output byte. */
+    var octet;
 
-  // input byte
-  if (ip + ((length - bitsbuflen + 7) >> 3) >= inputLength) {
-    throw new Error('input buffer is broken');
-  }
+    // input byte
+    if (ip + ((length - bitsbuflen + 7) >> 3) >= inputLength) {
+        throw new Error("input buffer is broken");
+    }
 
-  // not enough buffer
-  while (bitsbuflen < length) {
-    bitsbuf |= input[ip++] << bitsbuflen;
-    bitsbuflen += 8;
-  }
+    // not enough buffer
+    while (bitsbuflen < length) {
+        bitsbuf |= input[ip++] << bitsbuflen;
+        bitsbuflen += 8;
+    }
 
-  // output byte
-  octet = bitsbuf & /* MASK */ ((1 << length) - 1);
-  bitsbuf >>>= length;
-  bitsbuflen -= length;
+    // output byte
+    octet = bitsbuf & /* MASK */ ((1 << length) - 1);
+    bitsbuf >>>= length;
+    bitsbuflen -= length;
 
-  this.bitsbuf = bitsbuf;
-  this.bitsbuflen = bitsbuflen;
-  this.ip = ip;
+    this.bitsbuf = bitsbuf;
+    this.bitsbuflen = bitsbuflen;
+    this.ip = ip;
 
-  return octet;
+    return octet;
 };
 
 /**
@@ -11159,230 +10866,229 @@ Zlib.RawInflate.prototype.readBits = function(length) {
  * @param {!(Array.<number>|Uint8Array|Uint16Array)} table huffman code table.
  * @return {number} huffman code.
  */
-Zlib.RawInflate.prototype.readCodeByTable = function(table) {
-  var bitsbuf = this.bitsbuf;
-  var bitsbuflen = this.bitsbuflen;
-  var input = this.input;
-  var ip = this.ip;
+Zlib.RawInflate.prototype.readCodeByTable = function (table) {
+    var bitsbuf = this.bitsbuf;
+    var bitsbuflen = this.bitsbuflen;
+    var input = this.input;
+    var ip = this.ip;
 
-  /** @type {number} */
-  var inputLength = input.length;
-  /** @type {!(Array.<number>|Uint8Array)} huffman code table */
-  var codeTable = table[0];
-  /** @type {number} */
-  var maxCodeLength = table[1];
-  /** @type {number} code length & code (16bit, 16bit) */
-  var codeWithLength;
-  /** @type {number} code bits length */
-  var codeLength;
+    /** @type {number} */
+    var inputLength = input.length;
+    /** @type {!(Array.<number>|Uint8Array)} huffman code table */
+    var codeTable = table[0];
+    /** @type {number} */
+    var maxCodeLength = table[1];
+    /** @type {number} code length & code (16bit, 16bit) */
+    var codeWithLength;
+    /** @type {number} code bits length */
+    var codeLength;
 
-  // not enough buffer
-  while (bitsbuflen < maxCodeLength) {
-    if (ip >= inputLength) {
-      break;
+    // not enough buffer
+    while (bitsbuflen < maxCodeLength) {
+        if (ip >= inputLength) {
+            break;
+        }
+        bitsbuf |= input[ip++] << bitsbuflen;
+        bitsbuflen += 8;
     }
-    bitsbuf |= input[ip++] << bitsbuflen;
-    bitsbuflen += 8;
-  }
 
-  // read max length
-  codeWithLength = codeTable[bitsbuf & ((1 << maxCodeLength) - 1)];
-  codeLength = codeWithLength >>> 16;
+    // read max length
+    codeWithLength = codeTable[bitsbuf & ((1 << maxCodeLength) - 1)];
+    codeLength = codeWithLength >>> 16;
 
-  if (codeLength > bitsbuflen) {
-    throw new Error('invalid code length: ' + codeLength);
-  }
+    if (codeLength > bitsbuflen) {
+        throw new Error("invalid code length: " + codeLength);
+    }
 
-  this.bitsbuf = bitsbuf >> codeLength;
-  this.bitsbuflen = bitsbuflen - codeLength;
-  this.ip = ip;
+    this.bitsbuf = bitsbuf >> codeLength;
+    this.bitsbuflen = bitsbuflen - codeLength;
+    this.ip = ip;
 
-  return codeWithLength & 0xffff;
+    return codeWithLength & 0xffff;
 };
 
 /**
  * parse uncompressed block.
  */
-Zlib.RawInflate.prototype.parseUncompressedBlock = function() {
-  var input = this.input;
-  var ip = this.ip;
-  var output = this.output;
-  var op = this.op;
+Zlib.RawInflate.prototype.parseUncompressedBlock = function () {
+    var input = this.input;
+    var ip = this.ip;
+    var output = this.output;
+    var op = this.op;
 
-  /** @type {number} */
-  var inputLength = input.length;
-  /** @type {number} block length */
-  var len;
-  /** @type {number} number for check block length */
-  var nlen;
-  /** @type {number} output buffer length */
-  var olength = output.length;
-  /** @type {number} copy counter */
-  var preCopy;
+    /** @type {number} */
+    var inputLength = input.length;
+    /** @type {number} block length */
+    var len;
+    /** @type {number} number for check block length */
+    var nlen;
+    /** @type {number} output buffer length */
+    var olength = output.length;
+    /** @type {number} copy counter */
+    var preCopy;
 
-  // skip buffered header bits
-  this.bitsbuf = 0;
-  this.bitsbuflen = 0;
+    // skip buffered header bits
+    this.bitsbuf = 0;
+    this.bitsbuflen = 0;
 
-  // len
-  if (ip + 1 >= inputLength) {
-    throw new Error('invalid uncompressed block header: LEN');
-  }
-  len = input[ip++] | (input[ip++] << 8);
+    // len
+    if (ip + 1 >= inputLength) {
+        throw new Error("invalid uncompressed block header: LEN");
+    }
+    len = input[ip++] | (input[ip++] << 8);
 
-  // nlen
-  if (ip + 1 >= inputLength) {
-    throw new Error('invalid uncompressed block header: NLEN');
-  }
-  nlen = input[ip++] | (input[ip++] << 8);
+    // nlen
+    if (ip + 1 >= inputLength) {
+        throw new Error("invalid uncompressed block header: NLEN");
+    }
+    nlen = input[ip++] | (input[ip++] << 8);
 
-  // check len & nlen
-  if (len === ~nlen) {
-    throw new Error('invalid uncompressed block header: length verify');
-  }
+    // check len & nlen
+    if (len === ~nlen) {
+        throw new Error("invalid uncompressed block header: length verify");
+    }
 
-  // check size
-  if (ip + len > input.length) { throw new Error('input buffer is broken'); }
+    // check size
+    if (ip + len > input.length) {
+        throw new Error("input buffer is broken");
+    }
 
-  // expand buffer
-  switch (this.bufferType) {
-    case Zlib.RawInflate.BufferType.BLOCK:
-      // pre copy
-      while (op + len > output.length) {
-        preCopy = olength - op;
-        len -= preCopy;
-        {
-          output.set(input.subarray(ip, ip + preCopy), op);
-          op += preCopy;
-          ip += preCopy;
-        }
-        this.op = op;
-        output = this.expandBufferBlock();
-        op = this.op;
-      }
-      break;
-    case Zlib.RawInflate.BufferType.ADAPTIVE:
-      while (op + len > output.length) {
-        output = this.expandBufferAdaptive({fixRatio: 2});
-      }
-      break;
-    default:
-      throw new Error('invalid inflate mode');
-  }
+    // expand buffer
+    switch (this.bufferType) {
+        case Zlib.RawInflate.BufferType.BLOCK:
+            // pre copy
+            while (op + len > output.length) {
+                preCopy = olength - op;
+                len -= preCopy;
+                {
+                    output.set(input.subarray(ip, ip + preCopy), op);
+                    op += preCopy;
+                    ip += preCopy;
+                }
+                this.op = op;
+                output = this.expandBufferBlock();
+                op = this.op;
+            }
+            break;
+        case Zlib.RawInflate.BufferType.ADAPTIVE:
+            while (op + len > output.length) {
+                output = this.expandBufferAdaptive({ fixRatio: 2 });
+            }
+            break;
+        default:
+            throw new Error("invalid inflate mode");
+    }
 
-  // copy
-  {
-    output.set(input.subarray(ip, ip + len), op);
-    op += len;
-    ip += len;
-  }
+    // copy
+    {
+        output.set(input.subarray(ip, ip + len), op);
+        op += len;
+        ip += len;
+    }
 
-  this.ip = ip;
-  this.op = op;
-  this.output = output;
+    this.ip = ip;
+    this.op = op;
+    this.output = output;
 };
 
 /**
  * parse fixed huffman block.
  */
-Zlib.RawInflate.prototype.parseFixedHuffmanBlock = function() {
-  switch (this.bufferType) {
-    case Zlib.RawInflate.BufferType.ADAPTIVE:
-      this.decodeHuffmanAdaptive(
-          Zlib.RawInflate.FixedLiteralLengthTable,
-          Zlib.RawInflate.FixedDistanceTable
-      );
-      break;
-    case Zlib.RawInflate.BufferType.BLOCK:
-      this.decodeHuffmanBlock(
-          Zlib.RawInflate.FixedLiteralLengthTable,
-          Zlib.RawInflate.FixedDistanceTable
-      );
-      break;
-    default:
-      throw new Error('invalid inflate mode');
-  }
+Zlib.RawInflate.prototype.parseFixedHuffmanBlock = function () {
+    switch (this.bufferType) {
+        case Zlib.RawInflate.BufferType.ADAPTIVE:
+            this.decodeHuffmanAdaptive(Zlib.RawInflate.FixedLiteralLengthTable, Zlib.RawInflate.FixedDistanceTable);
+            break;
+        case Zlib.RawInflate.BufferType.BLOCK:
+            this.decodeHuffmanBlock(Zlib.RawInflate.FixedLiteralLengthTable, Zlib.RawInflate.FixedDistanceTable);
+            break;
+        default:
+            throw new Error("invalid inflate mode");
+    }
 };
 
 /**
  * parse dynamic huffman block.
  */
-Zlib.RawInflate.prototype.parseDynamicHuffmanBlock = function() {
-  /** @type {number} number of literal and length codes. */
-  var hlit = this.readBits(5) + 257;
-  /** @type {number} number of distance codes. */
-  var hdist = this.readBits(5) + 1;
-  /** @type {number} number of code lengths. */
-  var hclen = this.readBits(4) + 4;
-  /** @type {!(Uint8Array|Array.<number>)} code lengths. */
-  var codeLengths =
-      new ( Uint8Array )(Zlib.RawInflate.Order.length);
-  /** @type {!Array} code lengths table. */
-  var codeLengthsTable;
-  /** @type {!(Uint8Array|Array.<number>)} literal and length code table. */
-  var litlenTable;
-  /** @type {!(Uint8Array|Array.<number>)} distance code table. */
-  var distTable;
-  /** @type {!(Uint8Array|Array.<number>)} code length table. */
-  var lengthTable;
-  /** @type {number} */
-  var code;
-  /** @type {number} */
-  var prev;
-  /** @type {number} */
-  var repeat;
-  /** @type {number} loop counter. */
-  var i;
-  /** @type {number} loop limit. */
-  var il;
+Zlib.RawInflate.prototype.parseDynamicHuffmanBlock = function () {
+    /** @type {number} number of literal and length codes. */
+    var hlit = this.readBits(5) + 257;
+    /** @type {number} number of distance codes. */
+    var hdist = this.readBits(5) + 1;
+    /** @type {number} number of code lengths. */
+    var hclen = this.readBits(4) + 4;
+    /** @type {!(Uint8Array|Array.<number>)} code lengths. */
+    var codeLengths = new Uint8Array(Zlib.RawInflate.Order.length);
+    /** @type {!Array} code lengths table. */
+    var codeLengthsTable;
+    /** @type {!(Uint8Array|Array.<number>)} literal and length code table. */
+    var litlenTable;
+    /** @type {!(Uint8Array|Array.<number>)} distance code table. */
+    var distTable;
+    /** @type {!(Uint8Array|Array.<number>)} code length table. */
+    var lengthTable;
+    /** @type {number} */
+    var code;
+    /** @type {number} */
+    var prev;
+    /** @type {number} */
+    var repeat;
+    /** @type {number} loop counter. */
+    var i;
+    /** @type {number} loop limit. */
+    var il;
 
-  // decode code lengths
-  for (i = 0; i < hclen; ++i) {
-    codeLengths[Zlib.RawInflate.Order[i]] = this.readBits(3);
-  }
-
-  // decode length table
-  codeLengthsTable = buildHuffmanTable(codeLengths);
-  lengthTable = new ( Uint8Array )(hlit + hdist);
-  for (i = 0, il = hlit + hdist; i < il;) {
-    code = this.readCodeByTable(codeLengthsTable);
-    switch (code) {
-      case 16:
-        repeat = 3 + this.readBits(2);
-        while (repeat--) { lengthTable[i++] = prev; }
-        break;
-      case 17:
-        repeat = 3 + this.readBits(3);
-        while (repeat--) { lengthTable[i++] = 0; }
-        prev = 0;
-        break;
-      case 18:
-        repeat = 11 + this.readBits(7);
-        while (repeat--) { lengthTable[i++] = 0; }
-        prev = 0;
-        break;
-      default:
-        lengthTable[i++] = code;
-        prev = code;
-        break;
+    // decode code lengths
+    for (i = 0; i < hclen; ++i) {
+        codeLengths[Zlib.RawInflate.Order[i]] = this.readBits(3);
     }
-  }
 
-  litlenTable =  buildHuffmanTable(lengthTable.subarray(0, hlit))
-      ;
-  distTable =  buildHuffmanTable(lengthTable.subarray(hlit))
-      ;
+    // decode length table
+    codeLengthsTable = buildHuffmanTable(codeLengths);
+    lengthTable = new Uint8Array(hlit + hdist);
+    for (i = 0, il = hlit + hdist; i < il; ) {
+        code = this.readCodeByTable(codeLengthsTable);
+        switch (code) {
+            case 16:
+                repeat = 3 + this.readBits(2);
+                while (repeat--) {
+                    lengthTable[i++] = prev;
+                }
+                break;
+            case 17:
+                repeat = 3 + this.readBits(3);
+                while (repeat--) {
+                    lengthTable[i++] = 0;
+                }
+                prev = 0;
+                break;
+            case 18:
+                repeat = 11 + this.readBits(7);
+                while (repeat--) {
+                    lengthTable[i++] = 0;
+                }
+                prev = 0;
+                break;
+            default:
+                lengthTable[i++] = code;
+                prev = code;
+                break;
+        }
+    }
 
-  switch (this.bufferType) {
-    case Zlib.RawInflate.BufferType.ADAPTIVE:
-      this.decodeHuffmanAdaptive(litlenTable, distTable);
-      break;
-    case Zlib.RawInflate.BufferType.BLOCK:
-      this.decodeHuffmanBlock(litlenTable, distTable);
-      break;
-    default:
-      throw new Error('invalid inflate mode');
-  }
+    litlenTable = buildHuffmanTable(lengthTable.subarray(0, hlit));
+    distTable = buildHuffmanTable(lengthTable.subarray(hlit));
+
+    switch (this.bufferType) {
+        case Zlib.RawInflate.BufferType.ADAPTIVE:
+            this.decodeHuffmanAdaptive(litlenTable, distTable);
+            break;
+        case Zlib.RawInflate.BufferType.BLOCK:
+            this.decodeHuffmanBlock(litlenTable, distTable);
+            break;
+        default:
+            throw new Error("invalid inflate mode");
+    }
 };
 
 /**
@@ -11390,71 +11096,71 @@ Zlib.RawInflate.prototype.parseDynamicHuffmanBlock = function() {
  * @param {!(Array.<number>|Uint16Array)} litlen literal and length code table.
  * @param {!(Array.<number>|Uint8Array)} dist distination code table.
  */
-Zlib.RawInflate.prototype.decodeHuffmanBlock = function(litlen, dist) {
-  var output = this.output;
-  var op = this.op;
+Zlib.RawInflate.prototype.decodeHuffmanBlock = function (litlen, dist) {
+    var output = this.output;
+    var op = this.op;
 
-  this.currentLitlenTable = litlen;
+    this.currentLitlenTable = litlen;
 
-  /** @type {number} output position limit. */
-  var olength = output.length - Zlib.RawInflate.MaxCopyLength;
-  /** @type {number} huffman code. */
-  var code;
-  /** @type {number} table index. */
-  var ti;
-  /** @type {number} huffman code distination. */
-  var codeDist;
-  /** @type {number} huffman code length. */
-  var codeLength;
+    /** @type {number} output position limit. */
+    var olength = output.length - Zlib.RawInflate.MaxCopyLength;
+    /** @type {number} huffman code. */
+    var code;
+    /** @type {number} table index. */
+    var ti;
+    /** @type {number} huffman code distination. */
+    var codeDist;
+    /** @type {number} huffman code length. */
+    var codeLength;
 
-  var lengthCodeTable = Zlib.RawInflate.LengthCodeTable;
-  var lengthExtraTable = Zlib.RawInflate.LengthExtraTable;
-  var distCodeTable = Zlib.RawInflate.DistCodeTable;
-  var distExtraTable = Zlib.RawInflate.DistExtraTable;
+    var lengthCodeTable = Zlib.RawInflate.LengthCodeTable;
+    var lengthExtraTable = Zlib.RawInflate.LengthExtraTable;
+    var distCodeTable = Zlib.RawInflate.DistCodeTable;
+    var distExtraTable = Zlib.RawInflate.DistExtraTable;
 
-  while ((code = this.readCodeByTable(litlen)) !== 256) {
-    // literal
-    if (code < 256) {
-      if (op >= olength) {
-        this.op = op;
-        output = this.expandBufferBlock();
-        op = this.op;
-      }
-      output[op++] = code;
+    while ((code = this.readCodeByTable(litlen)) !== 256) {
+        // literal
+        if (code < 256) {
+            if (op >= olength) {
+                this.op = op;
+                output = this.expandBufferBlock();
+                op = this.op;
+            }
+            output[op++] = code;
 
-      continue;
+            continue;
+        }
+
+        // length code
+        ti = code - 257;
+        codeLength = lengthCodeTable[ti];
+        if (lengthExtraTable[ti] > 0) {
+            codeLength += this.readBits(lengthExtraTable[ti]);
+        }
+
+        // dist code
+        code = this.readCodeByTable(dist);
+        codeDist = distCodeTable[code];
+        if (distExtraTable[code] > 0) {
+            codeDist += this.readBits(distExtraTable[code]);
+        }
+
+        // lz77 decode
+        if (op >= olength) {
+            this.op = op;
+            output = this.expandBufferBlock();
+            op = this.op;
+        }
+        while (codeLength--) {
+            output[op] = output[op++ - codeDist];
+        }
     }
 
-    // length code
-    ti = code - 257;
-    codeLength = lengthCodeTable[ti];
-    if (lengthExtraTable[ti] > 0) {
-      codeLength += this.readBits(lengthExtraTable[ti]);
+    while (this.bitsbuflen >= 8) {
+        this.bitsbuflen -= 8;
+        this.ip--;
     }
-
-    // dist code
-    code = this.readCodeByTable(dist);
-    codeDist = distCodeTable[code];
-    if (distExtraTable[code] > 0) {
-      codeDist += this.readBits(distExtraTable[code]);
-    }
-
-    // lz77 decode
-    if (op >= olength) {
-      this.op = op;
-      output = this.expandBufferBlock();
-      op = this.op;
-    }
-    while (codeLength--) {
-      output[op] = output[(op++) - codeDist];
-    }
-  }
-
-  while (this.bitsbuflen >= 8) {
-    this.bitsbuflen -= 8;
-    this.ip--;
-  }
-  this.op = op;
+    this.op = op;
 };
 
 /**
@@ -11462,69 +11168,69 @@ Zlib.RawInflate.prototype.decodeHuffmanBlock = function(litlen, dist) {
  * @param {!(Array.<number>|Uint16Array)} litlen literal and length code table.
  * @param {!(Array.<number>|Uint8Array)} dist distination code table.
  */
-Zlib.RawInflate.prototype.decodeHuffmanAdaptive = function(litlen, dist) {
-  var output = this.output;
-  var op = this.op;
+Zlib.RawInflate.prototype.decodeHuffmanAdaptive = function (litlen, dist) {
+    var output = this.output;
+    var op = this.op;
 
-  this.currentLitlenTable = litlen;
+    this.currentLitlenTable = litlen;
 
-  /** @type {number} output position limit. */
-  var olength = output.length;
-  /** @type {number} huffman code. */
-  var code;
-  /** @type {number} table index. */
-  var ti;
-  /** @type {number} huffman code distination. */
-  var codeDist;
-  /** @type {number} huffman code length. */
-  var codeLength;
+    /** @type {number} output position limit. */
+    var olength = output.length;
+    /** @type {number} huffman code. */
+    var code;
+    /** @type {number} table index. */
+    var ti;
+    /** @type {number} huffman code distination. */
+    var codeDist;
+    /** @type {number} huffman code length. */
+    var codeLength;
 
-  var lengthCodeTable = Zlib.RawInflate.LengthCodeTable;
-  var lengthExtraTable = Zlib.RawInflate.LengthExtraTable;
-  var distCodeTable = Zlib.RawInflate.DistCodeTable;
-  var distExtraTable = Zlib.RawInflate.DistExtraTable;
+    var lengthCodeTable = Zlib.RawInflate.LengthCodeTable;
+    var lengthExtraTable = Zlib.RawInflate.LengthExtraTable;
+    var distCodeTable = Zlib.RawInflate.DistCodeTable;
+    var distExtraTable = Zlib.RawInflate.DistExtraTable;
 
-  while ((code = this.readCodeByTable(litlen)) !== 256) {
-    // literal
-    if (code < 256) {
-      if (op >= olength) {
-        output = this.expandBufferAdaptive();
-        olength = output.length;
-      }
-      output[op++] = code;
+    while ((code = this.readCodeByTable(litlen)) !== 256) {
+        // literal
+        if (code < 256) {
+            if (op >= olength) {
+                output = this.expandBufferAdaptive();
+                olength = output.length;
+            }
+            output[op++] = code;
 
-      continue;
+            continue;
+        }
+
+        // length code
+        ti = code - 257;
+        codeLength = lengthCodeTable[ti];
+        if (lengthExtraTable[ti] > 0) {
+            codeLength += this.readBits(lengthExtraTable[ti]);
+        }
+
+        // dist code
+        code = this.readCodeByTable(dist);
+        codeDist = distCodeTable[code];
+        if (distExtraTable[code] > 0) {
+            codeDist += this.readBits(distExtraTable[code]);
+        }
+
+        // lz77 decode
+        if (op + codeLength > olength) {
+            output = this.expandBufferAdaptive();
+            olength = output.length;
+        }
+        while (codeLength--) {
+            output[op] = output[op++ - codeDist];
+        }
     }
 
-    // length code
-    ti = code - 257;
-    codeLength = lengthCodeTable[ti];
-    if (lengthExtraTable[ti] > 0) {
-      codeLength += this.readBits(lengthExtraTable[ti]);
+    while (this.bitsbuflen >= 8) {
+        this.bitsbuflen -= 8;
+        this.ip--;
     }
-
-    // dist code
-    code = this.readCodeByTable(dist);
-    codeDist = distCodeTable[code];
-    if (distExtraTable[code] > 0) {
-      codeDist += this.readBits(distExtraTable[code]);
-    }
-
-    // lz77 decode
-    if (op + codeLength > olength) {
-      output = this.expandBufferAdaptive();
-      olength = output.length;
-    }
-    while (codeLength--) {
-      output[op] = output[(op++) - codeDist];
-    }
-  }
-
-  while (this.bitsbuflen >= 8) {
-    this.bitsbuflen -= 8;
-    this.ip--;
-  }
-  this.op = op;
+    this.op = op;
 };
 
 /**
@@ -11532,35 +11238,30 @@ Zlib.RawInflate.prototype.decodeHuffmanAdaptive = function(litlen, dist) {
  * @param {Object=} opt_param option parameters.
  * @return {!(Array.<number>|Uint8Array)} output buffer.
  */
-Zlib.RawInflate.prototype.expandBufferBlock = function(opt_param) {
-  /** @type {!(Array.<number>|Uint8Array)} store buffer. */
-  var buffer =
-      new ( Uint8Array )(
-          this.op - Zlib.RawInflate.MaxBackwardLength
-      );
-  /** @type {number} backward base point */
-  var backward = this.op - Zlib.RawInflate.MaxBackwardLength;
+Zlib.RawInflate.prototype.expandBufferBlock = function (opt_param) {
+    /** @type {!(Array.<number>|Uint8Array)} store buffer. */
+    var buffer = new Uint8Array(this.op - Zlib.RawInflate.MaxBackwardLength);
+    /** @type {number} backward base point */
+    var backward = this.op - Zlib.RawInflate.MaxBackwardLength;
 
-  var output = this.output;
+    var output = this.output;
 
-  // copy to output buffer
-  {
-    buffer.set(output.subarray(Zlib.RawInflate.MaxBackwardLength, buffer.length));
-  }
+    // copy to output buffer
+    {
+        buffer.set(output.subarray(Zlib.RawInflate.MaxBackwardLength, buffer.length));
+    }
 
-  this.blocks.push(buffer);
-  this.totalpos += buffer.length;
+    this.blocks.push(buffer);
+    this.totalpos += buffer.length;
 
-  // copy to backward buffer
-  {
-    output.set(
-        output.subarray(backward, backward + Zlib.RawInflate.MaxBackwardLength)
-    );
-  }
+    // copy to backward buffer
+    {
+        output.set(output.subarray(backward, backward + Zlib.RawInflate.MaxBackwardLength));
+    }
 
-  this.op = Zlib.RawInflate.MaxBackwardLength;
+    this.op = Zlib.RawInflate.MaxBackwardLength;
 
-  return output;
+    return output;
 };
 
 /**
@@ -11568,128 +11269,122 @@ Zlib.RawInflate.prototype.expandBufferBlock = function(opt_param) {
  * @param {Object=} opt_param option parameters.
  * @return {!(Array.<number>|Uint8Array)} output buffer pointer.
  */
-Zlib.RawInflate.prototype.expandBufferAdaptive = function(opt_param) {
-  /** @type {!(Array.<number>|Uint8Array)} store buffer. */
-  var buffer;
-  /** @type {number} expantion ratio. */
-  var ratio = (this.input.length / this.ip + 1) | 0;
-  /** @type {number} maximum number of huffman code. */
-  var maxHuffCode;
-  /** @type {number} new output buffer size. */
-  var newSize;
-  /** @type {number} max inflate size. */
-  var maxInflateSize;
+Zlib.RawInflate.prototype.expandBufferAdaptive = function (opt_param) {
+    /** @type {!(Array.<number>|Uint8Array)} store buffer. */
+    var buffer;
+    /** @type {number} expantion ratio. */
+    var ratio = (this.input.length / this.ip + 1) | 0;
+    /** @type {number} maximum number of huffman code. */
+    var maxHuffCode;
+    /** @type {number} new output buffer size. */
+    var newSize;
+    /** @type {number} max inflate size. */
+    var maxInflateSize;
 
-  var input = this.input;
-  var output = this.output;
+    var input = this.input;
+    var output = this.output;
 
-  if (opt_param) {
-    if (typeof opt_param.fixRatio === 'number') {
-      ratio = opt_param.fixRatio;
+    if (opt_param) {
+        if (typeof opt_param.fixRatio === "number") {
+            ratio = opt_param.fixRatio;
+        }
+        if (typeof opt_param.addRatio === "number") {
+            ratio += opt_param.addRatio;
+        }
     }
-    if (typeof opt_param.addRatio === 'number') {
-      ratio += opt_param.addRatio;
+
+    // calculate new buffer size
+    if (ratio < 2) {
+        maxHuffCode = (input.length - this.ip) / this.currentLitlenTable[2];
+        maxInflateSize = ((maxHuffCode / 2) * 258) | 0;
+        newSize = maxInflateSize < output.length ? output.length + maxInflateSize : output.length << 1;
+    } else {
+        newSize = output.length * ratio;
     }
-  }
 
-  // calculate new buffer size
-  if (ratio < 2) {
-    maxHuffCode =
-        (input.length - this.ip) / this.currentLitlenTable[2];
-    maxInflateSize = (maxHuffCode / 2 * 258) | 0;
-    newSize = maxInflateSize < output.length ?
-        output.length + maxInflateSize :
-        output.length << 1;
-  } else {
-    newSize = output.length * ratio;
-  }
+    // buffer expantion
+    {
+        buffer = new Uint8Array(newSize);
+        buffer.set(output);
+    }
 
-  // buffer expantion
-  {
-    buffer = new Uint8Array(newSize);
-    buffer.set(output);
-  }
+    this.output = buffer;
 
-  this.output = buffer;
-
-  return this.output;
+    return this.output;
 };
 
 /**
  * concat output buffer.
  * @return {!(Array.<number>|Uint8Array)} output buffer.
  */
-Zlib.RawInflate.prototype.concatBufferBlock = function() {
-  /** @type {number} buffer pointer. */
-  var pos = 0;
-  /** @type {number} buffer pointer. */
-  var limit = this.totalpos + (this.op - Zlib.RawInflate.MaxBackwardLength);
-  /** @type {!(Array.<number>|Uint8Array)} output block array. */
-  var output = this.output;
-  /** @type {!Array} blocks array. */
-  var blocks = this.blocks;
-  /** @type {!(Array.<number>|Uint8Array)} output block array. */
-  var block;
-  /** @type {!(Array.<number>|Uint8Array)} output buffer. */
-  var buffer = new ( Uint8Array )(limit);
-  /** @type {number} loop counter. */
-  var i;
-  /** @type {number} loop limiter. */
-  var il;
-  /** @type {number} loop counter. */
-  var j;
-  /** @type {number} loop limiter. */
-  var jl;
+Zlib.RawInflate.prototype.concatBufferBlock = function () {
+    /** @type {number} buffer pointer. */
+    var pos = 0;
+    /** @type {number} buffer pointer. */
+    var limit = this.totalpos + (this.op - Zlib.RawInflate.MaxBackwardLength);
+    /** @type {!(Array.<number>|Uint8Array)} output block array. */
+    var output = this.output;
+    /** @type {!Array} blocks array. */
+    var blocks = this.blocks;
+    /** @type {!(Array.<number>|Uint8Array)} output block array. */
+    var block;
+    /** @type {!(Array.<number>|Uint8Array)} output buffer. */
+    var buffer = new Uint8Array(limit);
+    /** @type {number} loop counter. */
+    var i;
+    /** @type {number} loop limiter. */
+    var il;
+    /** @type {number} loop counter. */
+    var j;
+    /** @type {number} loop limiter. */
+    var jl;
 
-  // single buffer
-  if (blocks.length === 0) {
-    return         this.output.subarray(Zlib.RawInflate.MaxBackwardLength, this.op) ;
-  }
-
-  // copy to buffer
-  for (i = 0, il = blocks.length; i < il; ++i) {
-    block = blocks[i];
-    for (j = 0, jl = block.length; j < jl; ++j) {
-      buffer[pos++] = block[j];
+    // single buffer
+    if (blocks.length === 0) {
+        return this.output.subarray(Zlib.RawInflate.MaxBackwardLength, this.op);
     }
-  }
 
-  // current buffer
-  for (i = Zlib.RawInflate.MaxBackwardLength, il = this.op; i < il; ++i) {
-    buffer[pos++] = output[i];
-  }
+    // copy to buffer
+    for (i = 0, il = blocks.length; i < il; ++i) {
+        block = blocks[i];
+        for (j = 0, jl = block.length; j < jl; ++j) {
+            buffer[pos++] = block[j];
+        }
+    }
 
-  this.blocks = [];
-  this.buffer = buffer;
+    // current buffer
+    for (i = Zlib.RawInflate.MaxBackwardLength, il = this.op; i < il; ++i) {
+        buffer[pos++] = output[i];
+    }
 
-  return this.buffer;
+    this.blocks = [];
+    this.buffer = buffer;
+
+    return this.buffer;
 };
 
 /**
  * concat output buffer. (dynamic)
  * @return {!(Array.<number>|Uint8Array)} output buffer.
  */
-Zlib.RawInflate.prototype.concatBufferDynamic = function() {
-  /** @type {Array.<number>|Uint8Array} output buffer. */
-  var buffer;
-  var op = this.op;
+Zlib.RawInflate.prototype.concatBufferDynamic = function () {
+    /** @type {Array.<number>|Uint8Array} output buffer. */
+    var buffer;
+    var op = this.op;
 
-  {
-    if (this.resize) {
-      buffer = new Uint8Array(op);
-      buffer.set(this.output.subarray(0, op));
-    } else {
-      buffer = this.output.subarray(0, op);
+    {
+        if (this.resize) {
+            buffer = new Uint8Array(op);
+            buffer.set(this.output.subarray(0, op));
+        } else {
+            buffer = this.output.subarray(0, op);
+        }
     }
-  }
 
-  this.buffer = buffer;
+    this.buffer = buffer;
 
-  return this.buffer;
+    return this.buffer;
 };
-
-
-
 
 var buildHuffmanTable = Zlib.Huffman.buildHuffmanTable;
 
@@ -11699,149 +11394,148 @@ var buildHuffmanTable = Zlib.Huffman.buildHuffmanTable;
  * @param {number=} opt_buffersize buffer block size.
  * @constructor
  */
-Zlib.RawInflateStream = function(input, ip, opt_buffersize) {
-  /** @type {!Array.<(Array|Uint8Array)>} */
-  this.blocks = [];
-  /** @type {number} block size. */
-  this.bufferSize =
-      opt_buffersize ? opt_buffersize : ZLIB_STREAM_RAW_INFLATE_BUFFER_SIZE;
-  /** @type {!number} total output buffer pointer. */
-  this.totalpos = 0;
-  /** @type {!number} input buffer pointer. */
-  this.ip = ip === void 0 ? 0 : ip;
-  /** @type {!number} bit stream reader buffer. */
-  this.bitsbuf = 0;
-  /** @type {!number} bit stream reader buffer size. */
-  this.bitsbuflen = 0;
-  /** @type {!(Array|Uint8Array)} input buffer. */
-  this.input =  new Uint8Array(input) ;
-  /** @type {!(Uint8Array|Array)} output buffer. */
-  this.output = new ( Uint8Array )(this.bufferSize);
-  /** @type {!number} output buffer pointer. */
-  this.op = 0;
-  /** @type {boolean} is final block flag. */
-  this.bfinal = false;
-  /** @type {number} uncompressed block length. */
-  this.blockLength;
-  /** @type {boolean} resize flag for memory size optimization. */
-  this.resize = false;
-  /** @type {Array} */
-  this.litlenTable;
-  /** @type {Array} */
-  this.distTable;
-  /** @type {number} */
-  this.sp = 0; // stream pointer
-  /** @type {Zlib.RawInflateStream.Status} */
-  this.status = Zlib.RawInflateStream.Status.INITIALIZED;
+Zlib.RawInflateStream = function (input, ip, opt_buffersize) {
+    /** @type {!Array.<(Array|Uint8Array)>} */
+    this.blocks = [];
+    /** @type {number} block size. */
+    this.bufferSize = opt_buffersize ? opt_buffersize : ZLIB_STREAM_RAW_INFLATE_BUFFER_SIZE;
+    /** @type {!number} total output buffer pointer. */
+    this.totalpos = 0;
+    /** @type {!number} input buffer pointer. */
+    this.ip = ip === void 0 ? 0 : ip;
+    /** @type {!number} bit stream reader buffer. */
+    this.bitsbuf = 0;
+    /** @type {!number} bit stream reader buffer size. */
+    this.bitsbuflen = 0;
+    /** @type {!(Array|Uint8Array)} input buffer. */
+    this.input = new Uint8Array(input);
+    /** @type {!(Uint8Array|Array)} output buffer. */
+    this.output = new Uint8Array(this.bufferSize);
+    /** @type {!number} output buffer pointer. */
+    this.op = 0;
+    /** @type {boolean} is final block flag. */
+    this.bfinal = false;
+    /** @type {number} uncompressed block length. */
+    this.blockLength;
+    /** @type {boolean} resize flag for memory size optimization. */
+    this.resize = false;
+    /** @type {Array} */
+    this.litlenTable;
+    /** @type {Array} */
+    this.distTable;
+    /** @type {number} */
+    this.sp = 0; // stream pointer
+    /** @type {Zlib.RawInflateStream.Status} */
+    this.status = Zlib.RawInflateStream.Status.INITIALIZED;
 
-  //
-  // backup
-  //
-  /** @type {!number} */
-  this.ip_;
-  /** @type {!number} */
-  this.bitsbuflen_;
-  /** @type {!number} */
-  this.bitsbuf_;
+    //
+    // backup
+    //
+    /** @type {!number} */
+    this.ip_;
+    /** @type {!number} */
+    this.bitsbuflen_;
+    /** @type {!number} */
+    this.bitsbuf_;
 };
 
 /**
  * @enum {number}
  */
 Zlib.RawInflateStream.BlockType = {
-  UNCOMPRESSED: 0,
-  FIXED: 1,
-  DYNAMIC: 2
+    UNCOMPRESSED: 0,
+    FIXED: 1,
+    DYNAMIC: 2,
 };
 
 /**
  * @enum {number}
  */
 Zlib.RawInflateStream.Status = {
-  INITIALIZED: 0,
-  BLOCK_HEADER_START: 1,
-  BLOCK_HEADER_END: 2,
-  BLOCK_BODY_START: 3,
-  BLOCK_BODY_END: 4,
-  DECODE_BLOCK_START: 5,
-  DECODE_BLOCK_END: 6
+    INITIALIZED: 0,
+    BLOCK_HEADER_START: 1,
+    BLOCK_HEADER_END: 2,
+    BLOCK_BODY_START: 3,
+    BLOCK_BODY_END: 4,
+    DECODE_BLOCK_START: 5,
+    DECODE_BLOCK_END: 6,
 };
 
 /**
  * decompress.
  * @return {!(Uint8Array|Array)} inflated buffer.
  */
-Zlib.RawInflateStream.prototype.decompress = function(newInput, ip) {
-  /** @type {boolean} */
-  var stop = false;
+Zlib.RawInflateStream.prototype.decompress = function (newInput, ip) {
+    /** @type {boolean} */
+    var stop = false;
 
-  if (newInput !== void 0) {
-    this.input = newInput;
-  }
-
-  if (ip !== void 0) {
-    this.ip = ip;
-  }
-
-  // decompress
-  while (!stop) {
-    switch (this.status) {
-        // block header
-      case Zlib.RawInflateStream.Status.INITIALIZED:
-      case Zlib.RawInflateStream.Status.BLOCK_HEADER_START:
-        if (this.readBlockHeader() < 0) {
-          stop = true;
-        }
-        break;
-        // block body
-      case Zlib.RawInflateStream.Status.BLOCK_HEADER_END: /* FALLTHROUGH */
-      case Zlib.RawInflateStream.Status.BLOCK_BODY_START:
-        switch(this.currentBlockType) {
-          case Zlib.RawInflateStream.BlockType.UNCOMPRESSED:
-            if (this.readUncompressedBlockHeader() < 0) {
-              stop = true;
-            }
-            break;
-          case Zlib.RawInflateStream.BlockType.FIXED:
-            if (this.parseFixedHuffmanBlock() < 0) {
-              stop = true;
-            }
-            break;
-          case Zlib.RawInflateStream.BlockType.DYNAMIC:
-            if (this.parseDynamicHuffmanBlock() < 0) {
-              stop = true;
-            }
-            break;
-        }
-        break;
-        // decode data
-      case Zlib.RawInflateStream.Status.BLOCK_BODY_END:
-      case Zlib.RawInflateStream.Status.DECODE_BLOCK_START:
-        switch(this.currentBlockType) {
-          case Zlib.RawInflateStream.BlockType.UNCOMPRESSED:
-            if (this.parseUncompressedBlock() < 0) {
-              stop = true;
-            }
-            break;
-          case Zlib.RawInflateStream.BlockType.FIXED: /* FALLTHROUGH */
-          case Zlib.RawInflateStream.BlockType.DYNAMIC:
-            if (this.decodeHuffman() < 0) {
-              stop = true;
-            }
-            break;
-        }
-        break;
-      case Zlib.RawInflateStream.Status.DECODE_BLOCK_END:
-        if (this.bfinal) {
-          stop = true;
-        } else {
-          this.status = Zlib.RawInflateStream.Status.INITIALIZED;
-        }
-        break;
+    if (newInput !== void 0) {
+        this.input = newInput;
     }
-  }
 
-  return this.concatBuffer();
+    if (ip !== void 0) {
+        this.ip = ip;
+    }
+
+    // decompress
+    while (!stop) {
+        switch (this.status) {
+            // block header
+            case Zlib.RawInflateStream.Status.INITIALIZED:
+            case Zlib.RawInflateStream.Status.BLOCK_HEADER_START:
+                if (this.readBlockHeader() < 0) {
+                    stop = true;
+                }
+                break;
+            // block body
+            case Zlib.RawInflateStream.Status.BLOCK_HEADER_END: /* FALLTHROUGH */
+            case Zlib.RawInflateStream.Status.BLOCK_BODY_START:
+                switch (this.currentBlockType) {
+                    case Zlib.RawInflateStream.BlockType.UNCOMPRESSED:
+                        if (this.readUncompressedBlockHeader() < 0) {
+                            stop = true;
+                        }
+                        break;
+                    case Zlib.RawInflateStream.BlockType.FIXED:
+                        if (this.parseFixedHuffmanBlock() < 0) {
+                            stop = true;
+                        }
+                        break;
+                    case Zlib.RawInflateStream.BlockType.DYNAMIC:
+                        if (this.parseDynamicHuffmanBlock() < 0) {
+                            stop = true;
+                        }
+                        break;
+                }
+                break;
+            // decode data
+            case Zlib.RawInflateStream.Status.BLOCK_BODY_END:
+            case Zlib.RawInflateStream.Status.DECODE_BLOCK_START:
+                switch (this.currentBlockType) {
+                    case Zlib.RawInflateStream.BlockType.UNCOMPRESSED:
+                        if (this.parseUncompressedBlock() < 0) {
+                            stop = true;
+                        }
+                        break;
+                    case Zlib.RawInflateStream.BlockType.FIXED: /* FALLTHROUGH */
+                    case Zlib.RawInflateStream.BlockType.DYNAMIC:
+                        if (this.decodeHuffman() < 0) {
+                            stop = true;
+                        }
+                        break;
+                }
+                break;
+            case Zlib.RawInflateStream.Status.DECODE_BLOCK_END:
+                if (this.bfinal) {
+                    stop = true;
+                } else {
+                    this.status = Zlib.RawInflateStream.Status.INITIALIZED;
+                }
+                break;
+        }
+    }
+
+    return this.concatBuffer();
 };
 
 /**
@@ -11861,8 +11555,8 @@ Zlib.RawInflateStream.MaxCopyLength = 258;
  * @const
  * @type {!(Array.<number>|Uint8Array)}
  */
-Zlib.RawInflateStream.Order = (function(table) {
-  return  new Uint16Array(table) ;
+Zlib.RawInflateStream.Order = (function (table) {
+    return new Uint16Array(table);
 })([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
 
 /**
@@ -11870,13 +11564,40 @@ Zlib.RawInflateStream.Order = (function(table) {
  * @const
  * @type {!(Array.<number>|Uint16Array)}
  */
-Zlib.RawInflateStream.LengthCodeTable = (function(table) {
-  return  new Uint16Array(table) ;
+Zlib.RawInflateStream.LengthCodeTable = (function (table) {
+    return new Uint16Array(table);
 })([
-  0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000a, 0x000b,
-  0x000d, 0x000f, 0x0011, 0x0013, 0x0017, 0x001b, 0x001f, 0x0023, 0x002b,
-  0x0033, 0x003b, 0x0043, 0x0053, 0x0063, 0x0073, 0x0083, 0x00a3, 0x00c3,
-  0x00e3, 0x0102, 0x0102, 0x0102
+    0x0003,
+    0x0004,
+    0x0005,
+    0x0006,
+    0x0007,
+    0x0008,
+    0x0009,
+    0x000a,
+    0x000b,
+    0x000d,
+    0x000f,
+    0x0011,
+    0x0013,
+    0x0017,
+    0x001b,
+    0x001f,
+    0x0023,
+    0x002b,
+    0x0033,
+    0x003b,
+    0x0043,
+    0x0053,
+    0x0063,
+    0x0073,
+    0x0083,
+    0x00a3,
+    0x00c3,
+    0x00e3,
+    0x0102,
+    0x0102,
+    0x0102,
 ]);
 
 /**
@@ -11884,25 +11605,48 @@ Zlib.RawInflateStream.LengthCodeTable = (function(table) {
  * @const
  * @type {!(Array.<number>|Uint8Array)}
  */
-Zlib.RawInflateStream.LengthExtraTable = (function(table) {
-  return  new Uint8Array(table) ;
-})([
-  0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5,
-  5, 5, 0, 0, 0
-]);
+Zlib.RawInflateStream.LengthExtraTable = (function (table) {
+    return new Uint8Array(table);
+})([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0]);
 
 /**
  * huffman dist code table.
  * @const
  * @type {!(Array.<number>|Uint16Array)}
  */
-Zlib.RawInflateStream.DistCodeTable = (function(table) {
-  return  new Uint16Array(table) ;
+Zlib.RawInflateStream.DistCodeTable = (function (table) {
+    return new Uint16Array(table);
 })([
-  0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0007, 0x0009, 0x000d, 0x0011,
-  0x0019, 0x0021, 0x0031, 0x0041, 0x0061, 0x0081, 0x00c1, 0x0101, 0x0181,
-  0x0201, 0x0301, 0x0401, 0x0601, 0x0801, 0x0c01, 0x1001, 0x1801, 0x2001,
-  0x3001, 0x4001, 0x6001
+    0x0001,
+    0x0002,
+    0x0003,
+    0x0004,
+    0x0005,
+    0x0007,
+    0x0009,
+    0x000d,
+    0x0011,
+    0x0019,
+    0x0021,
+    0x0031,
+    0x0041,
+    0x0061,
+    0x0081,
+    0x00c1,
+    0x0101,
+    0x0181,
+    0x0201,
+    0x0301,
+    0x0401,
+    0x0601,
+    0x0801,
+    0x0c01,
+    0x1001,
+    0x1801,
+    0x2001,
+    0x3001,
+    0x4001,
+    0x6001,
 ]);
 
 /**
@@ -11910,90 +11654,88 @@ Zlib.RawInflateStream.DistCodeTable = (function(table) {
  * @const
  * @type {!(Array.<number>|Uint8Array)}
  */
-Zlib.RawInflateStream.DistExtraTable = (function(table) {
-  return  new Uint8Array(table) ;
-})([
-  0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11,
-  11, 12, 12, 13, 13
-]);
+Zlib.RawInflateStream.DistExtraTable = (function (table) {
+    return new Uint8Array(table);
+})([0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13]);
 
 /**
  * fixed huffman length code table
  * @const
  * @type {!Array}
  */
-Zlib.RawInflateStream.FixedLiteralLengthTable = (function(table) {
-  return table;
-})((function() {
-  var lengths = new ( Uint8Array )(288);
-  var i, il;
+Zlib.RawInflateStream.FixedLiteralLengthTable = (function (table) {
+    return table;
+})(
+    (function () {
+        var lengths = new Uint8Array(288);
+        var i, il;
 
-  for (i = 0, il = lengths.length; i < il; ++i) {
-    lengths[i] =
-        (i <= 143) ? 8 :
-            (i <= 255) ? 9 :
-                (i <= 279) ? 7 :
-                    8;
-  }
+        for (i = 0, il = lengths.length; i < il; ++i) {
+            lengths[i] = i <= 143 ? 8 : i <= 255 ? 9 : i <= 279 ? 7 : 8;
+        }
 
-  return buildHuffmanTable(lengths);
-})());
+        return buildHuffmanTable(lengths);
+    })()
+);
 
 /**
  * fixed huffman distance code table
  * @const
  * @type {!Array}
  */
-Zlib.RawInflateStream.FixedDistanceTable = (function(table) {
-  return table;
-})((function() {
-  var lengths = new ( Uint8Array )(30);
-  var i, il;
+Zlib.RawInflateStream.FixedDistanceTable = (function (table) {
+    return table;
+})(
+    (function () {
+        var lengths = new Uint8Array(30);
+        var i, il;
 
-  for (i = 0, il = lengths.length; i < il; ++i) {
-    lengths[i] = 5;
-  }
+        for (i = 0, il = lengths.length; i < il; ++i) {
+            lengths[i] = 5;
+        }
 
-  return buildHuffmanTable(lengths);
-})());
+        return buildHuffmanTable(lengths);
+    })()
+);
 
 /**
  * parse deflated block.
  */
-Zlib.RawInflateStream.prototype.readBlockHeader = function() {
-  /** @type {number} header */
-  var hdr;
+Zlib.RawInflateStream.prototype.readBlockHeader = function () {
+    /** @type {number} header */
+    var hdr;
 
-  this.status = Zlib.RawInflateStream.Status.BLOCK_HEADER_START;
+    this.status = Zlib.RawInflateStream.Status.BLOCK_HEADER_START;
 
-  this.save_();
-  if ((hdr = this.readBits(3)) < 0) {
-    this.restore_();
-    return -1;
-  }
+    this.save_();
+    if ((hdr = this.readBits(3)) < 0) {
+        this.restore_();
+        return -1;
+    }
 
-  // BFINAL
-  if (hdr & 0x1) {
-    this.bfinal = true;
-  }
+    // BFINAL
+    if (hdr & 0x1) {
+        this.bfinal = true;
+    }
 
-  // BTYPE
-  hdr >>>= 1;
-  switch (hdr) {
-    case 0: // uncompressed
-      this.currentBlockType = Zlib.RawInflateStream.BlockType.UNCOMPRESSED;
-      break;
-    case 1: // fixed huffman
-      this.currentBlockType = Zlib.RawInflateStream.BlockType.FIXED;
-      break;
-    case 2: // dynamic huffman
-      this.currentBlockType = Zlib.RawInflateStream.BlockType.DYNAMIC;
-      break;
-    default: // reserved or other
-      throw new Error('unknown BTYPE: ' + hdr);
-  }
+    // BTYPE
+    hdr >>>= 1;
+    switch (hdr) {
+        case 0: // uncompressed
+            this.currentBlockType = Zlib.RawInflateStream.BlockType.UNCOMPRESSED;
+            break;
+        case 1: // fixed huffman
+            this.currentBlockType = Zlib.RawInflateStream.BlockType.FIXED;
+            break;
+        case 2: // dynamic huffman
+            this.currentBlockType = Zlib.RawInflateStream.BlockType.DYNAMIC;
+            break;
+        default:
+            // reserved or other
+            throw new Error("unknown BTYPE: " + hdr);
+    }
 
-  this.status = Zlib.RawInflateStream.Status.BLOCK_HEADER_END;
+    this.status = Zlib.RawInflateStream.Status.BLOCK_HEADER_END;
 };
 
 /**
@@ -12001,38 +11743,38 @@ Zlib.RawInflateStream.prototype.readBlockHeader = function() {
  * @param {number} length bits length.
  * @return {number} read bits.
  */
-Zlib.RawInflateStream.prototype.readBits = function(length) {
-  var bitsbuf = this.bitsbuf;
-  var bitsbuflen = this.bitsbuflen;
-  var input = this.input;
-  var ip = this.ip;
+Zlib.RawInflateStream.prototype.readBits = function (length) {
+    var bitsbuf = this.bitsbuf;
+    var bitsbuflen = this.bitsbuflen;
+    var input = this.input;
+    var ip = this.ip;
 
-  /** @type {number} input and output byte. */
-  var octet;
+    /** @type {number} input and output byte. */
+    var octet;
 
-  // not enough buffer
-  while (bitsbuflen < length) {
-    // input byte
-    if (input.length <= ip) {
-      return -1;
+    // not enough buffer
+    while (bitsbuflen < length) {
+        // input byte
+        if (input.length <= ip) {
+            return -1;
+        }
+        octet = input[ip++];
+
+        // concat octet
+        bitsbuf |= octet << bitsbuflen;
+        bitsbuflen += 8;
     }
-    octet = input[ip++];
 
-    // concat octet
-    bitsbuf |= octet << bitsbuflen;
-    bitsbuflen += 8;
-  }
+    // output byte
+    octet = bitsbuf & /* MASK */ ((1 << length) - 1);
+    bitsbuf >>>= length;
+    bitsbuflen -= length;
 
-  // output byte
-  octet = bitsbuf & /* MASK */ ((1 << length) - 1);
-  bitsbuf >>>= length;
-  bitsbuflen -= length;
+    this.bitsbuf = bitsbuf;
+    this.bitsbuflen = bitsbuflen;
+    this.ip = ip;
 
-  this.bitsbuf = bitsbuf;
-  this.bitsbuflen = bitsbuflen;
-  this.ip = ip;
-
-  return octet;
+    return octet;
 };
 
 /**
@@ -12040,367 +11782,370 @@ Zlib.RawInflateStream.prototype.readBits = function(length) {
  * @param {Array} table huffman code table.
  * @return {number} huffman code.
  */
-Zlib.RawInflateStream.prototype.readCodeByTable = function(table) {
-  var bitsbuf = this.bitsbuf;
-  var bitsbuflen = this.bitsbuflen;
-  var input = this.input;
-  var ip = this.ip;
+Zlib.RawInflateStream.prototype.readCodeByTable = function (table) {
+    var bitsbuf = this.bitsbuf;
+    var bitsbuflen = this.bitsbuflen;
+    var input = this.input;
+    var ip = this.ip;
 
-  /** @type {!(Array|Uint8Array)} huffman code table */
-  var codeTable = table[0];
-  /** @type {number} */
-  var maxCodeLength = table[1];
-  /** @type {number} input byte */
-  var octet;
-  /** @type {number} code length & code (16bit, 16bit) */
-  var codeWithLength;
-  /** @type {number} code bits length */
-  var codeLength;
+    /** @type {!(Array|Uint8Array)} huffman code table */
+    var codeTable = table[0];
+    /** @type {number} */
+    var maxCodeLength = table[1];
+    /** @type {number} input byte */
+    var octet;
+    /** @type {number} code length & code (16bit, 16bit) */
+    var codeWithLength;
+    /** @type {number} code bits length */
+    var codeLength;
 
-  // not enough buffer
-  while (bitsbuflen < maxCodeLength) {
-    if (input.length <= ip) {
-      return -1;
+    // not enough buffer
+    while (bitsbuflen < maxCodeLength) {
+        if (input.length <= ip) {
+            return -1;
+        }
+        octet = input[ip++];
+        bitsbuf |= octet << bitsbuflen;
+        bitsbuflen += 8;
     }
-    octet = input[ip++];
-    bitsbuf |= octet << bitsbuflen;
-    bitsbuflen += 8;
-  }
 
-  // read max length
-  codeWithLength = codeTable[bitsbuf & ((1 << maxCodeLength) - 1)];
-  codeLength = codeWithLength >>> 16;
+    // read max length
+    codeWithLength = codeTable[bitsbuf & ((1 << maxCodeLength) - 1)];
+    codeLength = codeWithLength >>> 16;
 
-  if (codeLength > bitsbuflen) {
-    throw new Error('invalid code length: ' + codeLength);
-  }
+    if (codeLength > bitsbuflen) {
+        throw new Error("invalid code length: " + codeLength);
+    }
 
-  this.bitsbuf = bitsbuf >> codeLength;
-  this.bitsbuflen = bitsbuflen - codeLength;
-  this.ip = ip;
+    this.bitsbuf = bitsbuf >> codeLength;
+    this.bitsbuflen = bitsbuflen - codeLength;
+    this.ip = ip;
 
-  return codeWithLength & 0xffff;
+    return codeWithLength & 0xffff;
 };
 
 /**
  * read uncompressed block header
  */
-Zlib.RawInflateStream.prototype.readUncompressedBlockHeader = function() {
-  /** @type {number} block length */
-  var len;
-  /** @type {number} number for check block length */
-  var nlen;
+Zlib.RawInflateStream.prototype.readUncompressedBlockHeader = function () {
+    /** @type {number} block length */
+    var len;
+    /** @type {number} number for check block length */
+    var nlen;
 
-  var input = this.input;
-  var ip = this.ip;
+    var input = this.input;
+    var ip = this.ip;
 
-  this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_START;
+    this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_START;
 
-  if (ip + 4 >= input.length) {
-    return -1;
-  }
+    if (ip + 4 >= input.length) {
+        return -1;
+    }
 
-  len = input[ip++] | (input[ip++] << 8);
-  nlen = input[ip++] | (input[ip++] << 8);
+    len = input[ip++] | (input[ip++] << 8);
+    nlen = input[ip++] | (input[ip++] << 8);
 
-  // check len & nlen
-  if (len === ~nlen) {
-    throw new Error('invalid uncompressed block header: length verify');
-  }
+    // check len & nlen
+    if (len === ~nlen) {
+        throw new Error("invalid uncompressed block header: length verify");
+    }
 
-  // skip buffered header bits
-  this.bitsbuf = 0;
-  this.bitsbuflen = 0;
+    // skip buffered header bits
+    this.bitsbuf = 0;
+    this.bitsbuflen = 0;
 
-  this.ip = ip;
-  this.blockLength = len;
-  this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_END;
+    this.ip = ip;
+    this.blockLength = len;
+    this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_END;
 };
 
 /**
  * parse uncompressed block.
  */
-Zlib.RawInflateStream.prototype.parseUncompressedBlock = function() {
-  var input = this.input;
-  var ip = this.ip;
-  var output = this.output;
-  var op = this.op;
-  var len = this.blockLength;
+Zlib.RawInflateStream.prototype.parseUncompressedBlock = function () {
+    var input = this.input;
+    var ip = this.ip;
+    var output = this.output;
+    var op = this.op;
+    var len = this.blockLength;
 
-  this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_START;
+    this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_START;
 
-  // copy
-  // XXX: とりあえず素直にコピー
-  while (len--) {
-    if (op === output.length) {
-      output = this.expandBuffer({fixRatio: 2});
+    // copy
+    // XXX: とりあえず素直にコピー
+    while (len--) {
+        if (op === output.length) {
+            output = this.expandBuffer({ fixRatio: 2 });
+        }
+
+        // not enough input buffer
+        if (ip >= input.length) {
+            this.ip = ip;
+            this.op = op;
+            this.blockLength = len + 1; // コピーしてないので戻す
+            return -1;
+        }
+
+        output[op++] = input[ip++];
     }
 
-    // not enough input buffer
-    if (ip >= input.length) {
-      this.ip = ip;
-      this.op = op;
-      this.blockLength = len + 1; // コピーしてないので戻す
-      return -1;
+    if (len < 0) {
+        this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_END;
     }
 
-    output[op++] = input[ip++];
-  }
+    this.ip = ip;
+    this.op = op;
 
-  if (len < 0) {
-    this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_END;
-  }
-
-  this.ip = ip;
-  this.op = op;
-
-  return 0;
+    return 0;
 };
 
 /**
  * parse fixed huffman block.
  */
-Zlib.RawInflateStream.prototype.parseFixedHuffmanBlock = function() {
-  this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_START;
+Zlib.RawInflateStream.prototype.parseFixedHuffmanBlock = function () {
+    this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_START;
 
-  this.litlenTable = Zlib.RawInflateStream.FixedLiteralLengthTable;
-  this.distTable = Zlib.RawInflateStream.FixedDistanceTable;
+    this.litlenTable = Zlib.RawInflateStream.FixedLiteralLengthTable;
+    this.distTable = Zlib.RawInflateStream.FixedDistanceTable;
 
-  this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_END;
+    this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_END;
 
-  return 0;
+    return 0;
 };
 
 /**
  * オブジェクトのコンテキストを別のプロパティに退避する.
  * @private
  */
-Zlib.RawInflateStream.prototype.save_ = function() {
-  this.ip_ = this.ip;
-  this.bitsbuflen_ = this.bitsbuflen;
-  this.bitsbuf_ = this.bitsbuf;
+Zlib.RawInflateStream.prototype.save_ = function () {
+    this.ip_ = this.ip;
+    this.bitsbuflen_ = this.bitsbuflen;
+    this.bitsbuf_ = this.bitsbuf;
 };
 
 /**
  * 別のプロパティに退避したコンテキストを復元する.
  * @private
  */
-Zlib.RawInflateStream.prototype.restore_ = function() {
-  this.ip = this.ip_;
-  this.bitsbuflen = this.bitsbuflen_;
-  this.bitsbuf = this.bitsbuf_;
+Zlib.RawInflateStream.prototype.restore_ = function () {
+    this.ip = this.ip_;
+    this.bitsbuflen = this.bitsbuflen_;
+    this.bitsbuf = this.bitsbuf_;
 };
 
 /**
  * parse dynamic huffman block.
  */
-Zlib.RawInflateStream.prototype.parseDynamicHuffmanBlock = function() {
-  /** @type {number} number of literal and length codes. */
-  var hlit;
-  /** @type {number} number of distance codes. */
-  var hdist;
-  /** @type {number} number of code lengths. */
-  var hclen;
-  /** @type {!(Uint8Array|Array)} code lengths. */
-  var codeLengths =
-      new ( Uint8Array )(Zlib.RawInflateStream.Order.length);
-  /** @type {!Array} code lengths table. */
-  var codeLengthsTable;
+Zlib.RawInflateStream.prototype.parseDynamicHuffmanBlock = function () {
+    /** @type {number} number of literal and length codes. */
+    var hlit;
+    /** @type {number} number of distance codes. */
+    var hdist;
+    /** @type {number} number of code lengths. */
+    var hclen;
+    /** @type {!(Uint8Array|Array)} code lengths. */
+    var codeLengths = new Uint8Array(Zlib.RawInflateStream.Order.length);
+    /** @type {!Array} code lengths table. */
+    var codeLengthsTable;
 
-  this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_START;
+    this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_START;
 
-  this.save_();
-  hlit = this.readBits(5) + 257;
-  hdist = this.readBits(5) + 1;
-  hclen = this.readBits(4) + 4;
-  if (hlit < 0 || hdist < 0 || hclen < 0) {
-    this.restore_();
-    return -1;
-  }
-
-  try {
-    parseDynamicHuffmanBlockImpl.call(this);
-  } catch(e) {
-    this.restore_();
-    return -1;
-  }
-
-  function parseDynamicHuffmanBlockImpl() {
-    /** @type {number} */
-    var bits;
-    var code;
-    var prev = 0;
-    var repeat;
-    /** @type {!(Uint8Array|Array.<number>)} code length table. */
-    var lengthTable;
-    /** @type {number} loop counter. */
-    var i;
-    /** @type {number} loop limit. */
-    var il;
-
-    // decode code lengths
-    for (i = 0; i < hclen; ++i) {
-      if ((bits = this.readBits(3)) < 0) {
-        throw new Error('not enough input');
-      }
-      codeLengths[Zlib.RawInflateStream.Order[i]] = bits;
+    this.save_();
+    hlit = this.readBits(5) + 257;
+    hdist = this.readBits(5) + 1;
+    hclen = this.readBits(4) + 4;
+    if (hlit < 0 || hdist < 0 || hclen < 0) {
+        this.restore_();
+        return -1;
     }
 
-    // decode length table
-    codeLengthsTable = buildHuffmanTable(codeLengths);
-    lengthTable = new ( Uint8Array )(hlit + hdist);
-    for (i = 0, il = hlit + hdist; i < il;) {
-      code = this.readCodeByTable(codeLengthsTable);
-      if (code < 0) {
-        throw new Error('not enough input');
-      }
-      switch (code) {
-        case 16:
-          if ((bits = this.readBits(2)) < 0) {
-            throw new Error('not enough input');
-          }
-          repeat = 3 + bits;
-          while (repeat--) { lengthTable[i++] = prev; }
-          break;
-        case 17:
-          if ((bits = this.readBits(3)) < 0) {
-            throw new Error('not enough input');
-          }
-          repeat = 3 + bits;
-          while (repeat--) { lengthTable[i++] = 0; }
-          prev = 0;
-          break;
-        case 18:
-          if ((bits = this.readBits(7)) < 0) {
-            throw new Error('not enough input');
-          }
-          repeat = 11 + bits;
-          while (repeat--) { lengthTable[i++] = 0; }
-          prev = 0;
-          break;
-        default:
-          lengthTable[i++] = code;
-          prev = code;
-          break;
-      }
+    try {
+        parseDynamicHuffmanBlockImpl.call(this);
+    } catch (e) {
+        this.restore_();
+        return -1;
     }
 
-    this.litlenTable =  buildHuffmanTable(lengthTable.subarray(0, hlit))
-        ;
-    this.distTable =  buildHuffmanTable(lengthTable.subarray(hlit))
-        ;
-  }
+    function parseDynamicHuffmanBlockImpl() {
+        /** @type {number} */
+        var bits;
+        var code;
+        var prev = 0;
+        var repeat;
+        /** @type {!(Uint8Array|Array.<number>)} code length table. */
+        var lengthTable;
+        /** @type {number} loop counter. */
+        var i;
+        /** @type {number} loop limit. */
+        var il;
 
-  this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_END;
+        // decode code lengths
+        for (i = 0; i < hclen; ++i) {
+            if ((bits = this.readBits(3)) < 0) {
+                throw new Error("not enough input");
+            }
+            codeLengths[Zlib.RawInflateStream.Order[i]] = bits;
+        }
 
-  return 0;
+        // decode length table
+        codeLengthsTable = buildHuffmanTable(codeLengths);
+        lengthTable = new Uint8Array(hlit + hdist);
+        for (i = 0, il = hlit + hdist; i < il; ) {
+            code = this.readCodeByTable(codeLengthsTable);
+            if (code < 0) {
+                throw new Error("not enough input");
+            }
+            switch (code) {
+                case 16:
+                    if ((bits = this.readBits(2)) < 0) {
+                        throw new Error("not enough input");
+                    }
+                    repeat = 3 + bits;
+                    while (repeat--) {
+                        lengthTable[i++] = prev;
+                    }
+                    break;
+                case 17:
+                    if ((bits = this.readBits(3)) < 0) {
+                        throw new Error("not enough input");
+                    }
+                    repeat = 3 + bits;
+                    while (repeat--) {
+                        lengthTable[i++] = 0;
+                    }
+                    prev = 0;
+                    break;
+                case 18:
+                    if ((bits = this.readBits(7)) < 0) {
+                        throw new Error("not enough input");
+                    }
+                    repeat = 11 + bits;
+                    while (repeat--) {
+                        lengthTable[i++] = 0;
+                    }
+                    prev = 0;
+                    break;
+                default:
+                    lengthTable[i++] = code;
+                    prev = code;
+                    break;
+            }
+        }
+
+        this.litlenTable = buildHuffmanTable(lengthTable.subarray(0, hlit));
+        this.distTable = buildHuffmanTable(lengthTable.subarray(hlit));
+    }
+
+    this.status = Zlib.RawInflateStream.Status.BLOCK_BODY_END;
+
+    return 0;
 };
 
 /**
  * decode huffman code (dynamic)
  * @return {(number|undefined)} -1 is error.
  */
-Zlib.RawInflateStream.prototype.decodeHuffman = function() {
-  var output = this.output;
-  var op = this.op;
+Zlib.RawInflateStream.prototype.decodeHuffman = function () {
+    var output = this.output;
+    var op = this.op;
 
-  /** @type {number} huffman code. */
-  var code;
-  /** @type {number} table index. */
-  var ti;
-  /** @type {number} huffman code distination. */
-  var codeDist;
-  /** @type {number} huffman code length. */
-  var codeLength;
+    /** @type {number} huffman code. */
+    var code;
+    /** @type {number} table index. */
+    var ti;
+    /** @type {number} huffman code distination. */
+    var codeDist;
+    /** @type {number} huffman code length. */
+    var codeLength;
 
-  var litlen = this.litlenTable;
-  var dist = this.distTable;
+    var litlen = this.litlenTable;
+    var dist = this.distTable;
 
-  var olength = output.length;
-  var bits;
+    var olength = output.length;
+    var bits;
 
-  this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_START;
+    this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_START;
 
-  while (true) {
-    this.save_();
+    while (true) {
+        this.save_();
 
-    code = this.readCodeByTable(litlen);
-    if (code < 0) {
-      this.op = op;
-      this.restore_();
-      return -1;
+        code = this.readCodeByTable(litlen);
+        if (code < 0) {
+            this.op = op;
+            this.restore_();
+            return -1;
+        }
+
+        if (code === 256) {
+            break;
+        }
+
+        // literal
+        if (code < 256) {
+            if (op === olength) {
+                output = this.expandBuffer();
+                olength = output.length;
+            }
+            output[op++] = code;
+
+            continue;
+        }
+
+        // length code
+        ti = code - 257;
+        codeLength = Zlib.RawInflateStream.LengthCodeTable[ti];
+        if (Zlib.RawInflateStream.LengthExtraTable[ti] > 0) {
+            bits = this.readBits(Zlib.RawInflateStream.LengthExtraTable[ti]);
+            if (bits < 0) {
+                this.op = op;
+                this.restore_();
+                return -1;
+            }
+            codeLength += bits;
+        }
+
+        // dist code
+        code = this.readCodeByTable(dist);
+        if (code < 0) {
+            this.op = op;
+            this.restore_();
+            return -1;
+        }
+        codeDist = Zlib.RawInflateStream.DistCodeTable[code];
+        if (Zlib.RawInflateStream.DistExtraTable[code] > 0) {
+            bits = this.readBits(Zlib.RawInflateStream.DistExtraTable[code]);
+            if (bits < 0) {
+                this.op = op;
+                this.restore_();
+                return -1;
+            }
+            codeDist += bits;
+        }
+
+        // lz77 decode
+        if (op + codeLength >= olength) {
+            output = this.expandBuffer();
+            olength = output.length;
+        }
+
+        while (codeLength--) {
+            output[op] = output[op++ - codeDist];
+        }
+
+        // break
+        if (this.ip === this.input.length) {
+            this.op = op;
+            return -1;
+        }
     }
 
-    if (code === 256) {
-      break;
+    while (this.bitsbuflen >= 8) {
+        this.bitsbuflen -= 8;
+        this.ip--;
     }
 
-    // literal
-    if (code < 256) {
-      if (op === olength) {
-        output = this.expandBuffer();
-        olength = output.length;
-      }
-      output[op++] = code;
-
-      continue;
-    }
-
-    // length code
-    ti = code - 257;
-    codeLength = Zlib.RawInflateStream.LengthCodeTable[ti];
-    if (Zlib.RawInflateStream.LengthExtraTable[ti] > 0) {
-      bits = this.readBits(Zlib.RawInflateStream.LengthExtraTable[ti]);
-      if (bits < 0) {
-        this.op = op;
-        this.restore_();
-        return -1;
-      }
-      codeLength += bits;
-    }
-
-    // dist code
-    code = this.readCodeByTable(dist);
-    if (code < 0) {
-      this.op = op;
-      this.restore_();
-      return -1;
-    }
-    codeDist = Zlib.RawInflateStream.DistCodeTable[code];
-    if (Zlib.RawInflateStream.DistExtraTable[code] > 0) {
-      bits = this.readBits(Zlib.RawInflateStream.DistExtraTable[code]);
-      if (bits < 0) {
-        this.op = op;
-        this.restore_();
-        return -1;
-      }
-      codeDist += bits;
-    }
-
-    // lz77 decode
-    if (op + codeLength >= olength) {
-      output = this.expandBuffer();
-      olength = output.length;
-    }
-
-    while (codeLength--) {
-      output[op] = output[(op++) - codeDist];
-    }
-
-    // break
-    if (this.ip === this.input.length) {
-      this.op = op;
-      return -1;
-    }
-  }
-
-  while (this.bitsbuflen >= 8) {
-    this.bitsbuflen -= 8;
-    this.ip--;
-  }
-
-  this.op = op;
-  this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_END;
+    this.op = op;
+    this.status = Zlib.RawInflateStream.Status.DECODE_BLOCK_END;
 };
 
 /**
@@ -12408,89 +12153,84 @@ Zlib.RawInflateStream.prototype.decodeHuffman = function() {
  * @param {Object=} opt_param option parameters.
  * @return {!(Array|Uint8Array)} output buffer pointer.
  */
-Zlib.RawInflateStream.prototype.expandBuffer = function(opt_param) {
-  /** @type {!(Array|Uint8Array)} store buffer. */
-  var buffer;
-  /** @type {number} expantion ratio. */
-  var ratio = (this.input.length / this.ip + 1) | 0;
-  /** @type {number} maximum number of huffman code. */
-  var maxHuffCode;
-  /** @type {number} new output buffer size. */
-  var newSize;
-  /** @type {number} max inflate size. */
-  var maxInflateSize;
+Zlib.RawInflateStream.prototype.expandBuffer = function (opt_param) {
+    /** @type {!(Array|Uint8Array)} store buffer. */
+    var buffer;
+    /** @type {number} expantion ratio. */
+    var ratio = (this.input.length / this.ip + 1) | 0;
+    /** @type {number} maximum number of huffman code. */
+    var maxHuffCode;
+    /** @type {number} new output buffer size. */
+    var newSize;
+    /** @type {number} max inflate size. */
+    var maxInflateSize;
 
-  var input = this.input;
-  var output = this.output;
+    var input = this.input;
+    var output = this.output;
 
-  if (opt_param) {
-    if (typeof opt_param.fixRatio === 'number') {
-      ratio = opt_param.fixRatio;
+    if (opt_param) {
+        if (typeof opt_param.fixRatio === "number") {
+            ratio = opt_param.fixRatio;
+        }
+        if (typeof opt_param.addRatio === "number") {
+            ratio += opt_param.addRatio;
+        }
     }
-    if (typeof opt_param.addRatio === 'number') {
-      ratio += opt_param.addRatio;
+
+    // calculate new buffer size
+    if (ratio < 2) {
+        maxHuffCode = (input.length - this.ip) / this.litlenTable[2];
+        maxInflateSize = ((maxHuffCode / 2) * 258) | 0;
+        newSize = maxInflateSize < output.length ? output.length + maxInflateSize : output.length << 1;
+    } else {
+        newSize = output.length * ratio;
     }
-  }
 
-  // calculate new buffer size
-  if (ratio < 2) {
-    maxHuffCode =
-        (input.length - this.ip) / this.litlenTable[2];
-    maxInflateSize = (maxHuffCode / 2 * 258) | 0;
-    newSize = maxInflateSize < output.length ?
-        output.length + maxInflateSize :
-        output.length << 1;
-  } else {
-    newSize = output.length * ratio;
-  }
+    // buffer expantion
+    {
+        buffer = new Uint8Array(newSize);
+        buffer.set(output);
+    }
 
-  // buffer expantion
-  {
-    buffer = new Uint8Array(newSize);
-    buffer.set(output);
-  }
+    this.output = buffer;
 
-  this.output = buffer;
-
-  return this.output;
+    return this.output;
 };
 
 /**
  * concat output buffer. (dynamic)
  * @return {!(Array|Uint8Array)} output buffer.
  */
-Zlib.RawInflateStream.prototype.concatBuffer = function() {
-  /** @type {!(Array|Uint8Array)} output buffer. */
-  var buffer;
-  /** @type {number} */
-  var op = this.op;
-  /** @type {Uint8Array} */
-  var tmp;
+Zlib.RawInflateStream.prototype.concatBuffer = function () {
+    /** @type {!(Array|Uint8Array)} output buffer. */
+    var buffer;
+    /** @type {number} */
+    var op = this.op;
+    /** @type {Uint8Array} */
+    var tmp;
 
-  if (this.resize) {
-    {
-      buffer = new Uint8Array(this.output.subarray(this.sp, op));
+    if (this.resize) {
+        {
+            buffer = new Uint8Array(this.output.subarray(this.sp, op));
+        }
+    } else {
+        buffer = this.output.subarray(this.sp, op);
     }
-  } else {
-    buffer =
-         this.output.subarray(this.sp, op) ;
-  }
 
-  this.sp = op;
+    this.sp = op;
 
-  // compaction
-  if (op > Zlib.RawInflateStream.MaxBackwardLength + this.bufferSize) {
-    this.op = this.sp = Zlib.RawInflateStream.MaxBackwardLength;
-    {
-      tmp = /** @type {Uint8Array} */(this.output);
-      this.output = new Uint8Array(this.bufferSize + Zlib.RawInflateStream.MaxBackwardLength);
-      this.output.set(tmp.subarray(op - Zlib.RawInflateStream.MaxBackwardLength, op));
+    // compaction
+    if (op > Zlib.RawInflateStream.MaxBackwardLength + this.bufferSize) {
+        this.op = this.sp = Zlib.RawInflateStream.MaxBackwardLength;
+        {
+            tmp = /** @type {Uint8Array} */ (this.output);
+            this.output = new Uint8Array(this.bufferSize + Zlib.RawInflateStream.MaxBackwardLength);
+            this.output.set(tmp.subarray(op - Zlib.RawInflateStream.MaxBackwardLength, op));
+        }
     }
-  }
 
-  return buffer;
+    return buffer;
 };
-
 
 /**
  * @constructor
@@ -12504,61 +12244,61 @@ Zlib.RawInflateStream.prototype.concatBuffer = function() {
  *   - bufferType: Zlib.Inflate.BufferType の値によってバッファの管理方法を指定する.
  *       Zlib.Inflate.BufferType は Zlib.RawInflate.BufferType のエイリアス.
  */
-Zlib.Inflate = function(input, opt_params) {
-  /** @type {number} */
-  var cmf;
-  /** @type {number} */
-  var flg;
+Zlib.Inflate = function (input, opt_params) {
+    /** @type {number} */
+    var cmf;
+    /** @type {number} */
+    var flg;
 
-  /** @type {!(Uint8Array|Array)} */
-  this.input = input;
-  /** @type {number} */
-  this.ip = 0;
-  /** @type {Zlib.RawInflate} */
-  this.rawinflate;
-  /** @type {(boolean|undefined)} verify flag. */
-  this.verify;
+    /** @type {!(Uint8Array|Array)} */
+    this.input = input;
+    /** @type {number} */
+    this.ip = 0;
+    /** @type {Zlib.RawInflate} */
+    this.rawinflate;
+    /** @type {(boolean|undefined)} verify flag. */
+    this.verify;
 
-  // option parameters
-  if (opt_params || !(opt_params = {})) {
-    if (opt_params['index']) {
-      this.ip = opt_params['index'];
+    // option parameters
+    if (opt_params || !(opt_params = {})) {
+        if (opt_params["index"]) {
+            this.ip = opt_params["index"];
+        }
+        if (opt_params["verify"]) {
+            this.verify = opt_params["verify"];
+        }
     }
-    if (opt_params['verify']) {
-      this.verify = opt_params['verify'];
+
+    // Compression Method and Flags
+    cmf = input[this.ip++];
+    flg = input[this.ip++];
+
+    // compression method
+    switch (cmf & 0x0f) {
+        case Zlib.CompressionMethod.DEFLATE:
+            this.method = Zlib.CompressionMethod.DEFLATE;
+            break;
+        default:
+            throw new Error("unsupported compression method");
     }
-  }
 
-  // Compression Method and Flags
-  cmf = input[this.ip++];
-  flg = input[this.ip++];
+    // fcheck
+    if (((cmf << 8) + flg) % 31 !== 0) {
+        throw new Error("invalid fcheck flag:" + (((cmf << 8) + flg) % 31));
+    }
 
-  // compression method
-  switch (cmf & 0x0f) {
-    case Zlib.CompressionMethod.DEFLATE:
-      this.method = Zlib.CompressionMethod.DEFLATE;
-      break;
-    default:
-      throw new Error('unsupported compression method');
-  }
+    // fdict (not supported)
+    if (flg & 0x20) {
+        throw new Error("fdict flag is not supported");
+    }
 
-  // fcheck
-  if (((cmf << 8) + flg) % 31 !== 0) {
-    throw new Error('invalid fcheck flag:' + ((cmf << 8) + flg) % 31);
-  }
-
-  // fdict (not supported)
-  if (flg & 0x20) {
-    throw new Error('fdict flag is not supported');
-  }
-
-  // RawInflate
-  this.rawinflate = new Zlib.RawInflate(input, {
-    'index': this.ip,
-    'bufferSize': opt_params['bufferSize'],
-    'bufferType': opt_params['bufferType'],
-    'resize': opt_params['resize']
-  });
+    // RawInflate
+    this.rawinflate = new Zlib.RawInflate(input, {
+        index: this.ip,
+        bufferSize: opt_params["bufferSize"],
+        bufferType: opt_params["bufferType"],
+        resize: opt_params["resize"],
+    });
 };
 
 /**
@@ -12570,87 +12310,82 @@ Zlib.Inflate.BufferType = Zlib.RawInflate.BufferType;
  * decompress.
  * @return {!(Uint8Array|Array)} inflated buffer.
  */
-Zlib.Inflate.prototype.decompress = function() {
-  /** @type {!(Array|Uint8Array)} input buffer. */
-  var input = this.input;
-  /** @type {!(Uint8Array|Array)} inflated buffer. */
-  var buffer;
-  /** @type {number} adler-32 checksum */
-  var adler32;
+Zlib.Inflate.prototype.decompress = function () {
+    /** @type {!(Array|Uint8Array)} input buffer. */
+    var input = this.input;
+    /** @type {!(Uint8Array|Array)} inflated buffer. */
+    var buffer;
+    /** @type {number} adler-32 checksum */
+    var adler32;
 
-  buffer = this.rawinflate.decompress();
-  this.ip = this.rawinflate.ip;
+    buffer = this.rawinflate.decompress();
+    this.ip = this.rawinflate.ip;
 
-  // verify adler-32
-  if (this.verify) {
-    adler32 = (
-        input[this.ip++] << 24 | input[this.ip++] << 16 |
-        input[this.ip++] << 8 | input[this.ip++]
-    ) >>> 0;
+    // verify adler-32
+    if (this.verify) {
+        adler32 =
+            ((input[this.ip++] << 24) | (input[this.ip++] << 16) | (input[this.ip++] << 8) | input[this.ip++]) >>> 0;
 
-    if (adler32 !== Zlib.Adler32(buffer)) {
-      throw new Error('invalid adler-32 checksum');
+        if (adler32 !== Zlib.Adler32(buffer)) {
+            throw new Error("invalid adler-32 checksum");
+        }
     }
-  }
 
-  return buffer;
+    return buffer;
 };
 
-
 /* vim:set expandtab ts=2 sw=2 tw=80: */
-
 
 /**
  * @param {!(Uint8Array|Array)} input deflated buffer.
  * @constructor
  */
-Zlib.InflateStream = function(input) {
-  /** @type {!(Uint8Array|Array)} */
-  this.input = input === void 0 ? new ( Uint8Array )() : input;
-  /** @type {number} */
-  this.ip = 0;
-  /** @type {Zlib.RawInflateStream} */
-  this.rawinflate = new Zlib.RawInflateStream(this.input, this.ip);
-  /** @type {Zlib.CompressionMethod} */
-  this.method;
-  /** @type {!(Array|Uint8Array)} */
-  this.output = this.rawinflate.output;
+Zlib.InflateStream = function (input) {
+    /** @type {!(Uint8Array|Array)} */
+    this.input = input === void 0 ? new Uint8Array() : input;
+    /** @type {number} */
+    this.ip = 0;
+    /** @type {Zlib.RawInflateStream} */
+    this.rawinflate = new Zlib.RawInflateStream(this.input, this.ip);
+    /** @type {Zlib.CompressionMethod} */
+    this.method;
+    /** @type {!(Array|Uint8Array)} */
+    this.output = this.rawinflate.output;
 };
 
 /**
  * decompress.
  * @return {!(Uint8Array|Array)} inflated buffer.
  */
-Zlib.InflateStream.prototype.decompress = function(input) {
-  /** @type {!(Uint8Array|Array)} inflated buffer. */
-  var buffer;
+Zlib.InflateStream.prototype.decompress = function (input) {
+    /** @type {!(Uint8Array|Array)} inflated buffer. */
+    var buffer;
 
-  // 新しい入力を入力バッファに結合する
-  // XXX Array, Uint8Array のチェックを行うか確認する
-  if (input !== void 0) {
-    {
-      var tmp = new Uint8Array(this.input.length + input.length);
-      tmp.set(this.input, 0);
-      tmp.set(input, this.input.length);
-      this.input = tmp;
+    // 新しい入力を入力バッファに結合する
+    // XXX Array, Uint8Array のチェックを行うか確認する
+    if (input !== void 0) {
+        {
+            var tmp = new Uint8Array(this.input.length + input.length);
+            tmp.set(this.input, 0);
+            tmp.set(input, this.input.length);
+            this.input = tmp;
+        }
     }
-  }
 
-  if (this.method === void 0) {
-    if(this.readHeader() < 0) {
-      return new ( Uint8Array )();
+    if (this.method === void 0) {
+        if (this.readHeader() < 0) {
+            return new Uint8Array();
+        }
     }
-  }
 
-  buffer = this.rawinflate.decompress(this.input, this.ip);
-  if (this.rawinflate.ip !== 0) {
-    this.input = 
-        this.input.subarray(this.rawinflate.ip) ;
-    this.ip = 0;
-  }
+    buffer = this.rawinflate.decompress(this.input, this.ip);
+    if (this.rawinflate.ip !== 0) {
+        this.input = this.input.subarray(this.rawinflate.ip);
+        this.ip = 0;
+    }
 
-  // verify adler-32
-  /*
+    // verify adler-32
+    /*
   if (this.verify) {
     adler32 =
       input[this.ip++] << 24 | input[this.ip++] << 16 |
@@ -12662,43 +12397,42 @@ Zlib.InflateStream.prototype.decompress = function(input) {
   }
   */
 
-  return buffer;
+    return buffer;
 };
 
-Zlib.InflateStream.prototype.readHeader = function() {
-  var ip = this.ip;
-  var input = this.input;
+Zlib.InflateStream.prototype.readHeader = function () {
+    var ip = this.ip;
+    var input = this.input;
 
-  // Compression Method and Flags
-  var cmf = input[ip++];
-  var flg = input[ip++];
+    // Compression Method and Flags
+    var cmf = input[ip++];
+    var flg = input[ip++];
 
-  if (cmf === void 0 || flg === void 0) {
-    return -1;
-  }
+    if (cmf === void 0 || flg === void 0) {
+        return -1;
+    }
 
-  // compression method
-  switch (cmf & 0x0f) {
-    case Zlib.CompressionMethod.DEFLATE:
-      this.method = Zlib.CompressionMethod.DEFLATE;
-      break;
-    default:
-      throw new Error('unsupported compression method');
-  }
+    // compression method
+    switch (cmf & 0x0f) {
+        case Zlib.CompressionMethod.DEFLATE:
+            this.method = Zlib.CompressionMethod.DEFLATE;
+            break;
+        default:
+            throw new Error("unsupported compression method");
+    }
 
-  // fcheck
-  if (((cmf << 8) + flg) % 31 !== 0) {
-    throw new Error('invalid fcheck flag:' + ((cmf << 8) + flg) % 31);
-  }
+    // fcheck
+    if (((cmf << 8) + flg) % 31 !== 0) {
+        throw new Error("invalid fcheck flag:" + (((cmf << 8) + flg) % 31));
+    }
 
-  // fdict (not supported)
-  if (flg & 0x20) {
-    throw new Error('fdict flag is not supported');
-  }
+    // fdict (not supported)
+    if (flg & 0x20) {
+        throw new Error("fdict flag is not supported");
+    }
 
-  this.ip = ip;
+    this.ip = ip;
 };
-
 
 /**
  * @fileoverview GZIP (RFC1952) 展開コンテナ実装.
@@ -12709,264 +12443,258 @@ Zlib.InflateStream.prototype.readHeader = function() {
  * @param {!(Array|Uint8Array)} input input buffer.
  * @param {Object=} opt_params option parameters.
  */
-Zlib.Gunzip = function(input, opt_params) {
-  /** @type {!(Array.<number>|Uint8Array)} input buffer. */
-  this.input = input;
-  /** @type {number} input buffer pointer. */
-  this.ip = 0;
-  /** @type {Array.<Zlib.GunzipMember>} */
-  this.member = [];
-  /** @type {boolean} */
-  this.decompressed = false;
+Zlib.Gunzip = function (input, opt_params) {
+    /** @type {!(Array.<number>|Uint8Array)} input buffer. */
+    this.input = input;
+    /** @type {number} input buffer pointer. */
+    this.ip = 0;
+    /** @type {Array.<Zlib.GunzipMember>} */
+    this.member = [];
+    /** @type {boolean} */
+    this.decompressed = false;
 };
 
 /**
  * @return {Array.<Zlib.GunzipMember>}
  */
-Zlib.Gunzip.prototype.getMembers = function() {
-  if (!this.decompressed) {
-    this.decompress();
-  }
+Zlib.Gunzip.prototype.getMembers = function () {
+    if (!this.decompressed) {
+        this.decompress();
+    }
 
-  return this.member.slice();
+    return this.member.slice();
 };
 
 /**
  * inflate gzip data.
  * @return {!(Array.<number>|Uint8Array)} inflated buffer.
  */
-Zlib.Gunzip.prototype.decompress = function() {
-  /** @type {number} input length. */
-  var il = this.input.length;
+Zlib.Gunzip.prototype.decompress = function () {
+    /** @type {number} input length. */
+    var il = this.input.length;
 
-  while (this.ip < il) {
-    this.decodeMember();
-  }
+    while (this.ip < il) {
+        this.decodeMember();
+    }
 
-  this.decompressed = true;
+    this.decompressed = true;
 
-  return this.concatMember();
+    return this.concatMember();
 };
 
 /**
  * decode gzip member.
  */
-Zlib.Gunzip.prototype.decodeMember = function() {
-  /** @type {Zlib.GunzipMember} */
-  var member = new Zlib.GunzipMember();
-  /** @type {number} */
-  var isize;
-  /** @type {Zlib.RawInflate} RawInflate implementation. */
-  var rawinflate;
-  /** @type {!(Array.<number>|Uint8Array)} inflated data. */
-  var inflated;
-  /** @type {number} inflate size */
-  var inflen;
-  /** @type {number} character code */
-  var c;
-  /** @type {number} character index in string. */
-  var ci;
-  /** @type {Array.<string>} character array. */
-  var str;
-  /** @type {number} modification time. */
-  var mtime;
-  /** @type {number} */
-  var crc32;
+Zlib.Gunzip.prototype.decodeMember = function () {
+    /** @type {Zlib.GunzipMember} */
+    var member = new Zlib.GunzipMember();
+    /** @type {number} */
+    var isize;
+    /** @type {Zlib.RawInflate} RawInflate implementation. */
+    var rawinflate;
+    /** @type {!(Array.<number>|Uint8Array)} inflated data. */
+    var inflated;
+    /** @type {number} inflate size */
+    var inflen;
+    /** @type {number} character code */
+    var c;
+    /** @type {number} character index in string. */
+    var ci;
+    /** @type {Array.<string>} character array. */
+    var str;
+    /** @type {number} modification time. */
+    var mtime;
+    /** @type {number} */
+    var crc32;
 
-  var input = this.input;
-  var ip = this.ip;
+    var input = this.input;
+    var ip = this.ip;
 
-  member.id1 = input[ip++];
-  member.id2 = input[ip++];
+    member.id1 = input[ip++];
+    member.id2 = input[ip++];
 
-  // check signature
-  if (member.id1 !== 0x1f || member.id2 !== 0x8b) {
-    throw new Error('invalid file signature:' + member.id1 + ',' + member.id2);
-  }
-
-  // check compression method
-  member.cm = input[ip++];
-  switch (member.cm) {
-    case 8: /* XXX: use Zlib const */
-      break;
-    default:
-      throw new Error('unknown compression method: ' + member.cm);
-  }
-
-  // flags
-  member.flg = input[ip++];
-
-  // modification time
-  mtime = (input[ip++])       |
-      (input[ip++] << 8)  |
-      (input[ip++] << 16) |
-      (input[ip++] << 24);
-  member.mtime = new Date(mtime * 1000);
-
-  // extra flags
-  member.xfl = input[ip++];
-
-  // operating system
-  member.os = input[ip++];
-
-  // extra
-  if ((member.flg & Zlib.Gzip.FlagsMask.FEXTRA) > 0) {
-    member.xlen = input[ip++] | (input[ip++] << 8);
-    ip = this.decodeSubField(ip, member.xlen);
-  }
-
-  // fname
-  if ((member.flg & Zlib.Gzip.FlagsMask.FNAME) > 0) {
-    for(str = [], ci = 0; (c = input[ip++]) > 0;) {
-      str[ci++] = String.fromCharCode(c);
+    // check signature
+    if (member.id1 !== 0x1f || member.id2 !== 0x8b) {
+        throw new Error("invalid file signature:" + member.id1 + "," + member.id2);
     }
-    member.name = str.join('');
-  }
 
-  // fcomment
-  if ((member.flg & Zlib.Gzip.FlagsMask.FCOMMENT) > 0) {
-    for(str = [], ci = 0; (c = input[ip++]) > 0;) {
-      str[ci++] = String.fromCharCode(c);
+    // check compression method
+    member.cm = input[ip++];
+    switch (member.cm) {
+        case 8 /* XXX: use Zlib const */:
+            break;
+        default:
+            throw new Error("unknown compression method: " + member.cm);
     }
-    member.comment = str.join('');
-  }
 
-  // fhcrc
-  if ((member.flg & Zlib.Gzip.FlagsMask.FHCRC) > 0) {
-    member.crc16 = Zlib.CRC32.calc(input, 0, ip) & 0xffff;
-    if (member.crc16 !== (input[ip++] | (input[ip++] << 8))) {
-      throw new Error('invalid header crc16');
+    // flags
+    member.flg = input[ip++];
+
+    // modification time
+    mtime = input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24);
+    member.mtime = new Date(mtime * 1000);
+
+    // extra flags
+    member.xfl = input[ip++];
+
+    // operating system
+    member.os = input[ip++];
+
+    // extra
+    if ((member.flg & Zlib.Gzip.FlagsMask.FEXTRA) > 0) {
+        member.xlen = input[ip++] | (input[ip++] << 8);
+        ip = this.decodeSubField(ip, member.xlen);
     }
-  }
 
-  // isize を事前に取得すると展開後のサイズが分かるため、
-  // inflate処理のバッファサイズが事前に分かり、高速になる
-  isize = (input[input.length - 4])       | (input[input.length - 3] << 8) |
-      (input[input.length - 2] << 16) | (input[input.length - 1] << 24);
+    // fname
+    if ((member.flg & Zlib.Gzip.FlagsMask.FNAME) > 0) {
+        for (str = [], ci = 0; (c = input[ip++]) > 0; ) {
+            str[ci++] = String.fromCharCode(c);
+        }
+        member.name = str.join("");
+    }
 
-  // isize の妥当性チェック
-  // ハフマン符号では最小 2-bit のため、最大で 1/4 になる
-  // LZ77 符号では 長さと距離 2-Byte で最大 258-Byte を表現できるため、
-  // 1/128 になるとする
-  // ここから入力バッファの残りが isize の 512 倍以上だったら
-  // サイズ指定のバッファ確保は行わない事とする
-  if (input.length - ip - /* CRC-32 */4 - /* ISIZE */4 < isize * 512) {
-    inflen = isize;
-  }
+    // fcomment
+    if ((member.flg & Zlib.Gzip.FlagsMask.FCOMMENT) > 0) {
+        for (str = [], ci = 0; (c = input[ip++]) > 0; ) {
+            str[ci++] = String.fromCharCode(c);
+        }
+        member.comment = str.join("");
+    }
 
-  // compressed block
-  rawinflate = new Zlib.RawInflate(input, {'index': ip, 'bufferSize': inflen});
-  member.data = inflated = rawinflate.decompress();
-  ip = rawinflate.ip;
+    // fhcrc
+    if ((member.flg & Zlib.Gzip.FlagsMask.FHCRC) > 0) {
+        member.crc16 = Zlib.CRC32.calc(input, 0, ip) & 0xffff;
+        if (member.crc16 !== (input[ip++] | (input[ip++] << 8))) {
+            throw new Error("invalid header crc16");
+        }
+    }
 
-  // crc32
-  member.crc32 = crc32 =
-      ((input[ip++])       | (input[ip++] << 8) |
-          (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
-  if (Zlib.CRC32.calc(inflated) !== crc32) {
-    throw new Error('invalid CRC-32 checksum: 0x' +
-        Zlib.CRC32.calc(inflated).toString(16) + ' / 0x' + crc32.toString(16));
-  }
+    // isize を事前に取得すると展開後のサイズが分かるため、
+    // inflate処理のバッファサイズが事前に分かり、高速になる
+    isize =
+        input[input.length - 4] |
+        (input[input.length - 3] << 8) |
+        (input[input.length - 2] << 16) |
+        (input[input.length - 1] << 24);
 
-  // input size
-  member.isize = isize =
-      ((input[ip++])       | (input[ip++] << 8) |
-          (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
-  if ((inflated.length & 0xffffffff) !== isize) {
-    throw new Error('invalid input size: ' +
-        (inflated.length & 0xffffffff) + ' / ' + isize);
-  }
+    // isize の妥当性チェック
+    // ハフマン符号では最小 2-bit のため、最大で 1/4 になる
+    // LZ77 符号では 長さと距離 2-Byte で最大 258-Byte を表現できるため、
+    // 1/128 になるとする
+    // ここから入力バッファの残りが isize の 512 倍以上だったら
+    // サイズ指定のバッファ確保は行わない事とする
+    if (input.length - ip - /* CRC-32 */ 4 - /* ISIZE */ 4 < isize * 512) {
+        inflen = isize;
+    }
 
-  this.member.push(member);
-  this.ip = ip;
+    // compressed block
+    rawinflate = new Zlib.RawInflate(input, { index: ip, bufferSize: inflen });
+    member.data = inflated = rawinflate.decompress();
+    ip = rawinflate.ip;
+
+    // crc32
+    member.crc32 = crc32 = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+    if (Zlib.CRC32.calc(inflated) !== crc32) {
+        throw new Error(
+            "invalid CRC-32 checksum: 0x" + Zlib.CRC32.calc(inflated).toString(16) + " / 0x" + crc32.toString(16)
+        );
+    }
+
+    // input size
+    member.isize = isize = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+    if ((inflated.length & 0xffffffff) !== isize) {
+        throw new Error("invalid input size: " + (inflated.length & 0xffffffff) + " / " + isize);
+    }
+
+    this.member.push(member);
+    this.ip = ip;
 };
 
 /**
  * サブフィールドのデコード
  * XXX: 現在は何もせずスキップする
  */
-Zlib.Gunzip.prototype.decodeSubField = function(ip, length) {
-  return ip + length;
+Zlib.Gunzip.prototype.decodeSubField = function (ip, length) {
+    return ip + length;
 };
 
 /**
  * @return {!(Array.<number>|Uint8Array)}
  */
-Zlib.Gunzip.prototype.concatMember = function() {
-  /** @type {Array.<Zlib.GunzipMember>} */
-  var member = this.member;
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
-  /** @type {number} */
-  var p = 0;
-  /** @type {number} */
-  var size = 0;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var buffer;
+Zlib.Gunzip.prototype.concatMember = function () {
+    /** @type {Array.<Zlib.GunzipMember>} */
+    var member = this.member;
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
+    /** @type {number} */
+    var p = 0;
+    /** @type {number} */
+    var size = 0;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var buffer;
 
-  for (i = 0, il = member.length; i < il; ++i) {
-    size += member[i].data.length;
-  }
-
-  {
-    buffer = new Uint8Array(size);
-    for (i = 0; i < il; ++i) {
-      buffer.set(member[i].data, p);
-      p += member[i].data.length;
+    for (i = 0, il = member.length; i < il; ++i) {
+        size += member[i].data.length;
     }
-  }
 
-  return buffer;
+    {
+        buffer = new Uint8Array(size);
+        for (i = 0; i < il; ++i) {
+            buffer.set(member[i].data, p);
+            p += member[i].data.length;
+        }
+    }
+
+    return buffer;
 };
-
-
 
 /**
  * @constructor
  */
-Zlib.GunzipMember = function() {
-  /** @type {number} signature first byte. */
-  this.id1;
-  /** @type {number} signature second byte. */
-  this.id2;
-  /** @type {number} compression method. */
-  this.cm;
-  /** @type {number} flags. */
-  this.flg;
-  /** @type {Date} modification time. */
-  this.mtime;
-  /** @type {number} extra flags. */
-  this.xfl;
-  /** @type {number} operating system number. */
-  this.os;
-  /** @type {number} CRC-16 value for FHCRC flag. */
-  this.crc16;
-  /** @type {number} extra length. */
-  this.xlen;
-  /** @type {number} CRC-32 value for verification. */
-  this.crc32;
-  /** @type {number} input size modulo 32 value. */
-  this.isize;
-  /** @type {string} filename. */
-  this.name;
-  /** @type {string} comment. */
-  this.comment;
-  /** @type {!(Uint8Array|Array.<number>)} */
-  this.data;
+Zlib.GunzipMember = function () {
+    /** @type {number} signature first byte. */
+    this.id1;
+    /** @type {number} signature second byte. */
+    this.id2;
+    /** @type {number} compression method. */
+    this.cm;
+    /** @type {number} flags. */
+    this.flg;
+    /** @type {Date} modification time. */
+    this.mtime;
+    /** @type {number} extra flags. */
+    this.xfl;
+    /** @type {number} operating system number. */
+    this.os;
+    /** @type {number} CRC-16 value for FHCRC flag. */
+    this.crc16;
+    /** @type {number} extra length. */
+    this.xlen;
+    /** @type {number} CRC-32 value for verification. */
+    this.crc32;
+    /** @type {number} input size modulo 32 value. */
+    this.isize;
+    /** @type {string} filename. */
+    this.name;
+    /** @type {string} comment. */
+    this.comment;
+    /** @type {!(Uint8Array|Array.<number>)} */
+    this.data;
 };
 
-Zlib.GunzipMember.prototype.getName = function() {
-  return this.name;
+Zlib.GunzipMember.prototype.getName = function () {
+    return this.name;
 };
 
-Zlib.GunzipMember.prototype.getData = function() {
-  return this.data;
+Zlib.GunzipMember.prototype.getData = function () {
+    return this.data;
 };
 
-Zlib.GunzipMember.prototype.getMtime = function() {
-  return this.mtime;
+Zlib.GunzipMember.prototype.getMtime = function () {
+    return this.mtime;
 };
 
 /**
@@ -12978,43 +12706,43 @@ Zlib.GunzipMember.prototype.getMtime = function() {
  * @param {!(Array|Uint8Array)} input input buffer.
  * @param {Object=} opt_params option parameters.
  */
-Zlib.Gzip = function(input, opt_params) {
-  /** @type {!(Array.<number>|Uint8Array)} input buffer. */
-  this.input = input;
-  /** @type {number} input buffer pointer. */
-  this.ip = 0;
-  /** @type {!(Array.<number>|Uint8Array)} output buffer. */
-  this.output;
-  /** @type {number} output buffer. */
-  this.op = 0;
-  /** @type {!Object} flags option flags. */
-  this.flags = {};
-  /** @type {!string} filename. */
-  this.filename;
-  /** @type {!string} comment. */
-  this.comment;
-  /** @type {!Object} deflate options. */
-  this.deflateOptions;
+Zlib.Gzip = function (input, opt_params) {
+    /** @type {!(Array.<number>|Uint8Array)} input buffer. */
+    this.input = input;
+    /** @type {number} input buffer pointer. */
+    this.ip = 0;
+    /** @type {!(Array.<number>|Uint8Array)} output buffer. */
+    this.output;
+    /** @type {number} output buffer. */
+    this.op = 0;
+    /** @type {!Object} flags option flags. */
+    this.flags = {};
+    /** @type {!string} filename. */
+    this.filename;
+    /** @type {!string} comment. */
+    this.comment;
+    /** @type {!Object} deflate options. */
+    this.deflateOptions;
 
-  // option parameters
-  if (opt_params) {
-    if (opt_params['flags']) {
-      this.flags = opt_params['flags'];
+    // option parameters
+    if (opt_params) {
+        if (opt_params["flags"]) {
+            this.flags = opt_params["flags"];
+        }
+        if (typeof opt_params["filename"] === "string") {
+            this.filename = opt_params["filename"];
+        }
+        if (typeof opt_params["comment"] === "string") {
+            this.comment = opt_params["comment"];
+        }
+        if (opt_params["deflateOptions"]) {
+            this.deflateOptions = opt_params["deflateOptions"];
+        }
     }
-    if (typeof opt_params['filename'] === 'string') {
-      this.filename = opt_params['filename'];
-    }
-    if (typeof opt_params['comment'] === 'string') {
-      this.comment = opt_params['comment'];
-    }
-    if (opt_params['deflateOptions']) {
-      this.deflateOptions = opt_params['deflateOptions'];
-    }
-  }
 
-  if (!this.deflateOptions) {
-    this.deflateOptions = {};
-  }
+    if (!this.deflateOptions) {
+        this.deflateOptions = {};
+    }
 };
 
 /**
@@ -13027,164 +12755,166 @@ Zlib.Gzip.DefaultBufferSize = 0x8000;
  * encode gzip members.
  * @return {!(Array|Uint8Array)} gzip binary array.
  */
-Zlib.Gzip.prototype.compress = function() {
-  /** @type {number} flags. */
-  var flg;
-  /** @type {number} modification time. */
-  var mtime;
-  /** @type {number} CRC-16 value for FHCRC flag. */
-  var crc16;
-  /** @type {number} CRC-32 value for verification. */
-  var crc32;
-  /** @type {!Zlib.RawDeflate} raw deflate object. */
-  var rawdeflate;
-  /** @type {number} character code */
-  var c;
-  /** @type {number} loop counter. */
-  var i;
-  /** @type {number} loop limiter. */
-  var il;
-  /** @type {!(Array|Uint8Array)} output buffer. */
-  var output =
-      new ( Uint8Array )(Zlib.Gzip.DefaultBufferSize);
-  /** @type {number} output buffer pointer. */
-  var op = 0;
+Zlib.Gzip.prototype.compress = function () {
+    /** @type {number} flags. */
+    var flg;
+    /** @type {number} modification time. */
+    var mtime;
+    /** @type {number} CRC-16 value for FHCRC flag. */
+    var crc16;
+    /** @type {number} CRC-32 value for verification. */
+    var crc32;
+    /** @type {!Zlib.RawDeflate} raw deflate object. */
+    var rawdeflate;
+    /** @type {number} character code */
+    var c;
+    /** @type {number} loop counter. */
+    var i;
+    /** @type {number} loop limiter. */
+    var il;
+    /** @type {!(Array|Uint8Array)} output buffer. */
+    var output = new Uint8Array(Zlib.Gzip.DefaultBufferSize);
+    /** @type {number} output buffer pointer. */
+    var op = 0;
 
-  var input = this.input;
-  var ip = this.ip;
-  var filename = this.filename;
-  var comment = this.comment;
+    var input = this.input;
+    var ip = this.ip;
+    var filename = this.filename;
+    var comment = this.comment;
 
-  // check signature
-  output[op++] = 0x1f;
-  output[op++] = 0x8b;
+    // check signature
+    output[op++] = 0x1f;
+    output[op++] = 0x8b;
 
-  // check compression method
-  output[op++] = 8; /* XXX: use Zlib const */
+    // check compression method
+    output[op++] = 8; /* XXX: use Zlib const */
 
-  // flags
-  flg = 0;
-  if (this.flags['fname'])    flg |= Zlib.Gzip.FlagsMask.FNAME;
-  if (this.flags['fcomment']) flg |= Zlib.Gzip.FlagsMask.FCOMMENT;
-  if (this.flags['fhcrc'])    flg |= Zlib.Gzip.FlagsMask.FHCRC;
-  // XXX: FTEXT
-  // XXX: FEXTRA
-  output[op++] = flg;
+    // flags
+    flg = 0;
+    if (this.flags["fname"]) flg |= Zlib.Gzip.FlagsMask.FNAME;
+    if (this.flags["fcomment"]) flg |= Zlib.Gzip.FlagsMask.FCOMMENT;
+    if (this.flags["fhcrc"]) flg |= Zlib.Gzip.FlagsMask.FHCRC;
+    // XXX: FTEXT
+    // XXX: FEXTRA
+    output[op++] = flg;
 
-  // modification time
-  mtime = (Date.now ? Date.now() : +new Date()) / 1000 | 0;
-  output[op++] = mtime        & 0xff;
-  output[op++] = mtime >>>  8 & 0xff;
-  output[op++] = mtime >>> 16 & 0xff;
-  output[op++] = mtime >>> 24 & 0xff;
+    // modification time
+    mtime = ((Date.now ? Date.now() : +new Date()) / 1000) | 0;
+    output[op++] = mtime & 0xff;
+    output[op++] = (mtime >>> 8) & 0xff;
+    output[op++] = (mtime >>> 16) & 0xff;
+    output[op++] = (mtime >>> 24) & 0xff;
 
-  // extra flags
-  output[op++] = 0;
+    // extra flags
+    output[op++] = 0;
 
-  // operating system
-  output[op++] = Zlib.Gzip.OperatingSystem.UNKNOWN;
+    // operating system
+    output[op++] = Zlib.Gzip.OperatingSystem.UNKNOWN;
 
-  // extra
-  /* NOP */
+    // extra
+    /* NOP */
 
-  // fname
-  if (this.flags['fname'] !== void 0) {
-    for (i = 0, il = filename.length; i < il; ++i) {
-      c = filename.charCodeAt(i);
-      if (c > 0xff) { output[op++] = (c >>> 8) & 0xff; }
-      output[op++] = c & 0xff;
+    // fname
+    if (this.flags["fname"] !== void 0) {
+        for (i = 0, il = filename.length; i < il; ++i) {
+            c = filename.charCodeAt(i);
+            if (c > 0xff) {
+                output[op++] = (c >>> 8) & 0xff;
+            }
+            output[op++] = c & 0xff;
+        }
+        output[op++] = 0; // null termination
     }
-    output[op++] = 0; // null termination
-  }
 
-  // fcomment
-  if (this.flags['comment']) {
-    for (i = 0, il = comment.length; i < il; ++i) {
-      c = comment.charCodeAt(i);
-      if (c > 0xff) { output[op++] = (c >>> 8) & 0xff; }
-      output[op++] = c & 0xff;
+    // fcomment
+    if (this.flags["comment"]) {
+        for (i = 0, il = comment.length; i < il; ++i) {
+            c = comment.charCodeAt(i);
+            if (c > 0xff) {
+                output[op++] = (c >>> 8) & 0xff;
+            }
+            output[op++] = c & 0xff;
+        }
+        output[op++] = 0; // null termination
     }
-    output[op++] = 0; // null termination
-  }
 
-  // fhcrc
-  if (this.flags['fhcrc']) {
-    crc16 = Zlib.CRC32.calc(output, 0, op) & 0xffff;
-    output[op++] = (crc16      ) & 0xff;
-    output[op++] = (crc16 >>> 8) & 0xff;
-  }
-
-  // add compress option
-  this.deflateOptions['outputBuffer'] = output;
-  this.deflateOptions['outputIndex'] = op;
-
-  // compress
-  rawdeflate = new Zlib.RawDeflate(input, this.deflateOptions);
-  output = rawdeflate.compress();
-  op = rawdeflate.op;
-
-  // expand buffer
-  {
-    if (op + 8 > output.buffer.byteLength) {
-      this.output = new Uint8Array(op + 8);
-      this.output.set(new Uint8Array(output.buffer));
-      output = this.output;
-    } else {
-      output = new Uint8Array(output.buffer);
+    // fhcrc
+    if (this.flags["fhcrc"]) {
+        crc16 = Zlib.CRC32.calc(output, 0, op) & 0xffff;
+        output[op++] = crc16 & 0xff;
+        output[op++] = (crc16 >>> 8) & 0xff;
     }
-  }
 
-  // crc32
-  crc32 = Zlib.CRC32.calc(input);
-  output[op++] = (crc32       ) & 0xff;
-  output[op++] = (crc32 >>>  8) & 0xff;
-  output[op++] = (crc32 >>> 16) & 0xff;
-  output[op++] = (crc32 >>> 24) & 0xff;
+    // add compress option
+    this.deflateOptions["outputBuffer"] = output;
+    this.deflateOptions["outputIndex"] = op;
 
-  // input size
-  il = input.length;
-  output[op++] = (il       ) & 0xff;
-  output[op++] = (il >>>  8) & 0xff;
-  output[op++] = (il >>> 16) & 0xff;
-  output[op++] = (il >>> 24) & 0xff;
+    // compress
+    rawdeflate = new Zlib.RawDeflate(input, this.deflateOptions);
+    output = rawdeflate.compress();
+    op = rawdeflate.op;
 
-  this.ip = ip;
+    // expand buffer
+    {
+        if (op + 8 > output.buffer.byteLength) {
+            this.output = new Uint8Array(op + 8);
+            this.output.set(new Uint8Array(output.buffer));
+            output = this.output;
+        } else {
+            output = new Uint8Array(output.buffer);
+        }
+    }
 
-  if ( op < output.length) {
-    this.output = output = output.subarray(0, op);
-  }
+    // crc32
+    crc32 = Zlib.CRC32.calc(input);
+    output[op++] = crc32 & 0xff;
+    output[op++] = (crc32 >>> 8) & 0xff;
+    output[op++] = (crc32 >>> 16) & 0xff;
+    output[op++] = (crc32 >>> 24) & 0xff;
 
-  return output;
+    // input size
+    il = input.length;
+    output[op++] = il & 0xff;
+    output[op++] = (il >>> 8) & 0xff;
+    output[op++] = (il >>> 16) & 0xff;
+    output[op++] = (il >>> 24) & 0xff;
+
+    this.ip = ip;
+
+    if (op < output.length) {
+        this.output = output = output.subarray(0, op);
+    }
+
+    return output;
 };
 
 /** @enum {number} */
 Zlib.Gzip.OperatingSystem = {
-  FAT: 0,
-  AMIGA: 1,
-  VMS: 2,
-  UNIX: 3,
-  VM_CMS: 4,
-  ATARI_TOS: 5,
-  HPFS: 6,
-  MACINTOSH: 7,
-  Z_SYSTEM: 8,
-  CP_M: 9,
-  TOPS_20: 10,
-  NTFS: 11,
-  QDOS: 12,
-  ACORN_RISCOS: 13,
-  UNKNOWN: 255
+    FAT: 0,
+    AMIGA: 1,
+    VMS: 2,
+    UNIX: 3,
+    VM_CMS: 4,
+    ATARI_TOS: 5,
+    HPFS: 6,
+    MACINTOSH: 7,
+    Z_SYSTEM: 8,
+    CP_M: 9,
+    TOPS_20: 10,
+    NTFS: 11,
+    QDOS: 12,
+    ACORN_RISCOS: 13,
+    UNKNOWN: 255,
 };
 
 /** @enum {number} */
 Zlib.Gzip.FlagsMask = {
-  FTEXT: 0x01,
-  FHCRC: 0x02,
-  FEXTRA: 0x04,
-  FNAME: 0x08,
-  FCOMMENT: 0x10
+    FTEXT: 0x01,
+    FHCRC: 0x02,
+    FEXTRA: 0x04,
+    FNAME: 0x08,
+    FCOMMENT: 0x10,
 };
-
 
 /**
  * @fileoverview Heap Sort 実装. ハフマン符号化で使用する.
@@ -13195,9 +12925,9 @@ Zlib.Gzip.FlagsMask = {
  * @param {number} length ヒープサイズ.
  * @constructor
  */
-Zlib.Heap = function(length) {
-  this.buffer = new ( Uint16Array )(length * 2);
-  this.length = 0;
+Zlib.Heap = function (length) {
+    this.buffer = new Uint16Array(length * 2);
+    this.length = 0;
 };
 
 /**
@@ -13206,8 +12936,8 @@ Zlib.Heap = function(length) {
  * @return {number} 親ノードの index.
  *
  */
-Zlib.Heap.prototype.getParent = function(index) {
-  return ((index - 2) / 4 | 0) * 2;
+Zlib.Heap.prototype.getParent = function (index) {
+    return (((index - 2) / 4) | 0) * 2;
 };
 
 /**
@@ -13215,8 +12945,8 @@ Zlib.Heap.prototype.getParent = function(index) {
  * @param {number} index 親ノードの index.
  * @return {number} 子ノードの index.
  */
-Zlib.Heap.prototype.getChild = function(index) {
-  return 2 * index + 2;
+Zlib.Heap.prototype.getChild = function (index) {
+    return 2 * index + 2;
 };
 
 /**
@@ -13225,37 +12955,38 @@ Zlib.Heap.prototype.getChild = function(index) {
  * @param {number} value 値.
  * @return {number} 現在のヒープ長.
  */
-Zlib.Heap.prototype.push = function(index, value) {
-  var current, parent,
-      heap = this.buffer,
-      swap;
+Zlib.Heap.prototype.push = function (index, value) {
+    var current,
+        parent,
+        heap = this.buffer,
+        swap;
 
-  current = this.length;
-  heap[this.length++] = value;
-  heap[this.length++] = index;
+    current = this.length;
+    heap[this.length++] = value;
+    heap[this.length++] = index;
 
-  // ルートノードにたどり着くまで入れ替えを試みる
-  while (current > 0) {
-    parent = this.getParent(current);
+    // ルートノードにたどり着くまで入れ替えを試みる
+    while (current > 0) {
+        parent = this.getParent(current);
 
-    // 親ノードと比較して親の方が小さければ入れ替える
-    if (heap[current] > heap[parent]) {
-      swap = heap[current];
-      heap[current] = heap[parent];
-      heap[parent] = swap;
+        // 親ノードと比較して親の方が小さければ入れ替える
+        if (heap[current] > heap[parent]) {
+            swap = heap[current];
+            heap[current] = heap[parent];
+            heap[parent] = swap;
 
-      swap = heap[current + 1];
-      heap[current + 1] = heap[parent + 1];
-      heap[parent + 1] = swap;
+            swap = heap[current + 1];
+            heap[current + 1] = heap[parent + 1];
+            heap[parent + 1] = swap;
 
-      current = parent;
-      // 入れ替えが必要なくなったらそこで抜ける
-    } else {
-      break;
+            current = parent;
+            // 入れ替えが必要なくなったらそこで抜ける
+        } else {
+            break;
+        }
     }
-  }
 
-  return this.length;
+    return this.length;
 };
 
 /**
@@ -13263,60 +12994,61 @@ Zlib.Heap.prototype.push = function(index, value) {
  * @return {{index: number, value: number, length: number}} {index: キーindex,
  *     value: 値, length: ヒープ長} の Object.
  */
-Zlib.Heap.prototype.pop = function() {
-  var index, value,
-      heap = this.buffer, swap,
-      current, parent;
+Zlib.Heap.prototype.pop = function () {
+    var index,
+        value,
+        heap = this.buffer,
+        swap,
+        current,
+        parent;
 
-  value = heap[0];
-  index = heap[1];
+    value = heap[0];
+    index = heap[1];
 
-  // 後ろから値を取る
-  this.length -= 2;
-  heap[0] = heap[this.length];
-  heap[1] = heap[this.length + 1];
+    // 後ろから値を取る
+    this.length -= 2;
+    heap[0] = heap[this.length];
+    heap[1] = heap[this.length + 1];
 
-  parent = 0;
-  // ルートノードから下がっていく
-  while (true) {
-    current = this.getChild(parent);
+    parent = 0;
+    // ルートノードから下がっていく
+    while (true) {
+        current = this.getChild(parent);
 
-    // 範囲チェック
-    if (current >= this.length) {
-      break;
+        // 範囲チェック
+        if (current >= this.length) {
+            break;
+        }
+
+        // 隣のノードと比較して、隣の方が値が大きければ隣を現在ノードとして選択
+        if (current + 2 < this.length && heap[current + 2] > heap[current]) {
+            current += 2;
+        }
+
+        // 親ノードと比較して親の方が小さい場合は入れ替える
+        if (heap[current] > heap[parent]) {
+            swap = heap[parent];
+            heap[parent] = heap[current];
+            heap[current] = swap;
+
+            swap = heap[parent + 1];
+            heap[parent + 1] = heap[current + 1];
+            heap[current + 1] = swap;
+        } else {
+            break;
+        }
+
+        parent = current;
     }
 
-    // 隣のノードと比較して、隣の方が値が大きければ隣を現在ノードとして選択
-    if (current + 2 < this.length && heap[current + 2] > heap[current]) {
-      current += 2;
-    }
-
-    // 親ノードと比較して親の方が小さい場合は入れ替える
-    if (heap[current] > heap[parent]) {
-      swap = heap[parent];
-      heap[parent] = heap[current];
-      heap[current] = swap;
-
-      swap = heap[parent + 1];
-      heap[parent + 1] = heap[current + 1];
-      heap[current + 1] = swap;
-    } else {
-      break;
-    }
-
-    parent = current;
-  }
-
-  return {index: index, value: value, length: this.length};
+    return { index: index, value: value, length: this.length };
 };
-
 
 /* vim:set expandtab ts=2 sw=2 tw=80: */
 
 /**
  * @fileoverview Deflate (RFC1951) 符号化アルゴリズム実装.
  */
-
 
 /**
  * Raw Deflate 実装
@@ -13330,56 +13062,55 @@ Zlib.Heap.prototype.pop = function() {
  * 別のオブジェクトになるため出力バッファを参照している変数などは
  * 更新する必要があります.
  */
-Zlib.RawDeflate = function(input, opt_params) {
-  /** @type {Zlib.RawDeflate.CompressionType} */
-  this.compressionType = Zlib.RawDeflate.CompressionType.DYNAMIC;
-  /** @type {number} */
-  this.lazy = 0;
-  /** @type {!(Array.<number>|Uint32Array)} */
-  this.freqsLitLen;
-  /** @type {!(Array.<number>|Uint32Array)} */
-  this.freqsDist;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.input =
-      ( input instanceof Array) ? new Uint8Array(input) : input;
-  /** @type {!(Array.<number>|Uint8Array)} output output buffer. */
-  this.output;
-  /** @type {number} pos output buffer position. */
-  this.op = 0;
+Zlib.RawDeflate = function (input, opt_params) {
+    /** @type {Zlib.RawDeflate.CompressionType} */
+    this.compressionType = Zlib.RawDeflate.CompressionType.DYNAMIC;
+    /** @type {number} */
+    this.lazy = 0;
+    /** @type {!(Array.<number>|Uint32Array)} */
+    this.freqsLitLen;
+    /** @type {!(Array.<number>|Uint32Array)} */
+    this.freqsDist;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.input = input instanceof Array ? new Uint8Array(input) : input;
+    /** @type {!(Array.<number>|Uint8Array)} output output buffer. */
+    this.output;
+    /** @type {number} pos output buffer position. */
+    this.op = 0;
 
-  // option parameters
-  if (opt_params) {
-    if (opt_params['lazy']) {
-      this.lazy = opt_params['lazy'];
+    // option parameters
+    if (opt_params) {
+        if (opt_params["lazy"]) {
+            this.lazy = opt_params["lazy"];
+        }
+        if (typeof opt_params["compressionType"] === "number") {
+            this.compressionType = opt_params["compressionType"];
+        }
+        if (opt_params["outputBuffer"]) {
+            this.output =
+                opt_params["outputBuffer"] instanceof Array
+                    ? new Uint8Array(opt_params["outputBuffer"])
+                    : opt_params["outputBuffer"];
+        }
+        if (typeof opt_params["outputIndex"] === "number") {
+            this.op = opt_params["outputIndex"];
+        }
     }
-    if (typeof opt_params['compressionType'] === 'number') {
-      this.compressionType = opt_params['compressionType'];
-    }
-    if (opt_params['outputBuffer']) {
-      this.output =
-          ( opt_params['outputBuffer'] instanceof Array) ?
-              new Uint8Array(opt_params['outputBuffer']) : opt_params['outputBuffer'];
-    }
-    if (typeof opt_params['outputIndex'] === 'number') {
-      this.op = opt_params['outputIndex'];
-    }
-  }
 
-  if (!this.output) {
-    this.output = new ( Uint8Array )(0x8000);
-  }
+    if (!this.output) {
+        this.output = new Uint8Array(0x8000);
+    }
 };
 
 /**
  * @enum {number}
  */
 Zlib.RawDeflate.CompressionType = {
-  NONE: 0,
-  FIXED: 1,
-  DYNAMIC: 2,
-  RESERVED: 3
+    NONE: 0,
+    FIXED: 1,
+    DYNAMIC: 2,
+    RESERVED: 3,
 };
-
 
 /**
  * LZ77 の最小マッチ長
@@ -13421,61 +13152,69 @@ Zlib.RawDeflate.HUFMAX = 286;
  * @const
  * @type {Array.<Array.<number, number>>}
  */
-Zlib.RawDeflate.FixedHuffmanTable = (function() {
-  var table = [], i;
+Zlib.RawDeflate.FixedHuffmanTable = (function () {
+    var table = [],
+        i;
 
-  for (i = 0; i < 288; i++) {
-    switch (true) {
-      case (i <= 143): table.push([i       + 0x030, 8]); break;
-      case (i <= 255): table.push([i - 144 + 0x190, 9]); break;
-      case (i <= 279): table.push([i - 256 + 0x000, 7]); break;
-      case (i <= 287): table.push([i - 280 + 0x0C0, 8]); break;
-      default:
-        throw 'invalid literal: ' + i;
+    for (i = 0; i < 288; i++) {
+        switch (true) {
+            case i <= 143:
+                table.push([i + 0x030, 8]);
+                break;
+            case i <= 255:
+                table.push([i - 144 + 0x190, 9]);
+                break;
+            case i <= 279:
+                table.push([i - 256 + 0x000, 7]);
+                break;
+            case i <= 287:
+                table.push([i - 280 + 0x0c0, 8]);
+                break;
+            default:
+                throw "invalid literal: " + i;
+        }
     }
-  }
 
-  return table;
+    return table;
 })();
 
 /**
  * DEFLATE ブロックの作成
  * @return {!(Array.<number>|Uint8Array)} 圧縮済み byte array.
  */
-Zlib.RawDeflate.prototype.compress = function() {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var blockArray;
-  /** @type {number} */
-  var position;
-  /** @type {number} */
-  var length;
+Zlib.RawDeflate.prototype.compress = function () {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var blockArray;
+    /** @type {number} */
+    var position;
+    /** @type {number} */
+    var length;
 
-  var input = this.input;
+    var input = this.input;
 
-  // compression
-  switch (this.compressionType) {
-    case Zlib.RawDeflate.CompressionType.NONE:
-      // each 65535-Byte (length header: 16-bit)
-      for (position = 0, length = input.length; position < length;) {
-        blockArray = 
-            input.subarray(position, position + 0xffff) ;
-        position += blockArray.length;
-        this.makeNocompressBlock(blockArray, (position === length));
-      }
-      break;
-    case Zlib.RawDeflate.CompressionType.FIXED:
-      this.output = this.makeFixedHuffmanBlock(input, true);
-      this.op = this.output.length;
-      break;
-    case Zlib.RawDeflate.CompressionType.DYNAMIC:
-      this.output = this.makeDynamicHuffmanBlock(input, true);
-      this.op = this.output.length;
-      break;
-    default:
-      throw 'invalid compression type';
-  }
+    // compression
+    switch (this.compressionType) {
+        case Zlib.RawDeflate.CompressionType.NONE:
+            // each 65535-Byte (length header: 16-bit)
+            for (position = 0, length = input.length; position < length; ) {
+                blockArray = input.subarray(position, position + 0xffff);
+                position += blockArray.length;
+                this.makeNocompressBlock(blockArray, position === length);
+            }
+            break;
+        case Zlib.RawDeflate.CompressionType.FIXED:
+            this.output = this.makeFixedHuffmanBlock(input, true);
+            this.op = this.output.length;
+            break;
+        case Zlib.RawDeflate.CompressionType.DYNAMIC:
+            this.output = this.makeDynamicHuffmanBlock(input, true);
+            this.op = this.output.length;
+            break;
+        default:
+            throw "invalid compression type";
+    }
 
-  return this.output;
+    return this.output;
 };
 
 /**
@@ -13484,54 +13223,53 @@ Zlib.RawDeflate.prototype.compress = function() {
  * @param {!boolean} isFinalBlock 最後のブロックならばtrue.
  * @return {!(Array.<number>|Uint8Array)} 非圧縮ブロック byte array.
  */
-Zlib.RawDeflate.prototype.makeNocompressBlock =
-    function(blockArray, isFinalBlock) {
-      /** @type {number} */
-      var bfinal;
-      /** @type {Zlib.RawDeflate.CompressionType} */
-      var btype;
-      /** @type {number} */
-      var len;
-      /** @type {number} */
-      var nlen;
+Zlib.RawDeflate.prototype.makeNocompressBlock = function (blockArray, isFinalBlock) {
+    /** @type {number} */
+    var bfinal;
+    /** @type {Zlib.RawDeflate.CompressionType} */
+    var btype;
+    /** @type {number} */
+    var len;
+    /** @type {number} */
+    var nlen;
 
-      var output = this.output;
-      var op = this.op;
+    var output = this.output;
+    var op = this.op;
 
-      // expand buffer
-      {
+    // expand buffer
+    {
         output = new Uint8Array(this.output.buffer);
         while (output.length <= op + blockArray.length + 5) {
-          output = new Uint8Array(output.length << 1);
+            output = new Uint8Array(output.length << 1);
         }
         output.set(this.output);
-      }
+    }
 
-      // header
-      bfinal = isFinalBlock ? 1 : 0;
-      btype = Zlib.RawDeflate.CompressionType.NONE;
-      output[op++] = (bfinal) | (btype << 1);
+    // header
+    bfinal = isFinalBlock ? 1 : 0;
+    btype = Zlib.RawDeflate.CompressionType.NONE;
+    output[op++] = bfinal | (btype << 1);
 
-      // length
-      len = blockArray.length;
-      nlen = (~len + 0x10000) & 0xffff;
-      output[op++] =          len & 0xff;
-      output[op++] =  (len >>> 8) & 0xff;
-      output[op++] =         nlen & 0xff;
-      output[op++] = (nlen >>> 8) & 0xff;
+    // length
+    len = blockArray.length;
+    nlen = (~len + 0x10000) & 0xffff;
+    output[op++] = len & 0xff;
+    output[op++] = (len >>> 8) & 0xff;
+    output[op++] = nlen & 0xff;
+    output[op++] = (nlen >>> 8) & 0xff;
 
-      // copy buffer
-      {
+    // copy buffer
+    {
         output.set(blockArray, op);
         op += blockArray.length;
         output = output.subarray(0, op);
-      }
+    }
 
-      this.op = op;
-      this.output = output;
+    this.op = op;
+    this.output = output;
 
-      return output;
-    };
+    return output;
+};
 
 /**
  * 固定ハフマンブロックの作成
@@ -13539,30 +13277,28 @@ Zlib.RawDeflate.prototype.makeNocompressBlock =
  * @param {!boolean} isFinalBlock 最後のブロックならばtrue.
  * @return {!(Array.<number>|Uint8Array)} 固定ハフマン符号化ブロック byte array.
  */
-Zlib.RawDeflate.prototype.makeFixedHuffmanBlock =
-    function(blockArray, isFinalBlock) {
-      /** @type {Zlib.BitStream} */
-      var stream = new Zlib.BitStream(
-          new Uint8Array(this.output.buffer) , this.op);
-      /** @type {number} */
-      var bfinal;
-      /** @type {Zlib.RawDeflate.CompressionType} */
-      var btype;
-      /** @type {!(Array.<number>|Uint16Array)} */
-      var data;
+Zlib.RawDeflate.prototype.makeFixedHuffmanBlock = function (blockArray, isFinalBlock) {
+    /** @type {Zlib.BitStream} */
+    var stream = new Zlib.BitStream(new Uint8Array(this.output.buffer), this.op);
+    /** @type {number} */
+    var bfinal;
+    /** @type {Zlib.RawDeflate.CompressionType} */
+    var btype;
+    /** @type {!(Array.<number>|Uint16Array)} */
+    var data;
 
-      // header
-      bfinal = isFinalBlock ? 1 : 0;
-      btype = Zlib.RawDeflate.CompressionType.FIXED;
+    // header
+    bfinal = isFinalBlock ? 1 : 0;
+    btype = Zlib.RawDeflate.CompressionType.FIXED;
 
-      stream.writeBits(bfinal, 1, true);
-      stream.writeBits(btype, 2, true);
+    stream.writeBits(bfinal, 1, true);
+    stream.writeBits(btype, 2, true);
 
-      data = this.lz77(blockArray);
-      this.fixedHuffman(data, stream);
+    data = this.lz77(blockArray);
+    this.fixedHuffman(data, stream);
 
-      return stream.finish();
-    };
+    return stream.finish();
+};
 
 /**
  * 動的ハフマンブロックの作成
@@ -13570,123 +13306,119 @@ Zlib.RawDeflate.prototype.makeFixedHuffmanBlock =
  * @param {!boolean} isFinalBlock 最後のブロックならばtrue.
  * @return {!(Array.<number>|Uint8Array)} 動的ハフマン符号ブロック byte array.
  */
-Zlib.RawDeflate.prototype.makeDynamicHuffmanBlock =
-    function(blockArray, isFinalBlock) {
-      /** @type {Zlib.BitStream} */
-      var stream = new Zlib.BitStream(
-          new Uint8Array(this.output.buffer) , this.op);
-      /** @type {number} */
-      var bfinal;
-      /** @type {Zlib.RawDeflate.CompressionType} */
-      var btype;
-      /** @type {!(Array.<number>|Uint16Array)} */
-      var data;
-      /** @type {number} */
-      var hlit;
-      /** @type {number} */
-      var hdist;
-      /** @type {number} */
-      var hclen;
-      /** @const @type {Array.<number>} */
-      var hclenOrder =
-          [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
-      /** @type {!(Array.<number>|Uint8Array)} */
-      var litLenLengths;
-      /** @type {!(Array.<number>|Uint16Array)} */
-      var litLenCodes;
-      /** @type {!(Array.<number>|Uint8Array)} */
-      var distLengths;
-      /** @type {!(Array.<number>|Uint16Array)} */
-      var distCodes;
-      /** @type {{
-       *   codes: !(Array.<number>|Uint32Array),
-       *   freqs: !(Array.<number>|Uint8Array)
-       * }} */
-      var treeSymbols;
-      /** @type {!(Array.<number>|Uint8Array)} */
-      var treeLengths;
-      /** @type {Array} */
-      var transLengths = new Array(19);
-      /** @type {!(Array.<number>|Uint16Array)} */
-      var treeCodes;
-      /** @type {number} */
-      var code;
-      /** @type {number} */
-      var bitlen;
-      /** @type {number} */
-      var i;
-      /** @type {number} */
-      var il;
+Zlib.RawDeflate.prototype.makeDynamicHuffmanBlock = function (blockArray, isFinalBlock) {
+    /** @type {Zlib.BitStream} */
+    var stream = new Zlib.BitStream(new Uint8Array(this.output.buffer), this.op);
+    /** @type {number} */
+    var bfinal;
+    /** @type {Zlib.RawDeflate.CompressionType} */
+    var btype;
+    /** @type {!(Array.<number>|Uint16Array)} */
+    var data;
+    /** @type {number} */
+    var hlit;
+    /** @type {number} */
+    var hdist;
+    /** @type {number} */
+    var hclen;
+    /** @const @type {Array.<number>} */
+    var hclenOrder = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var litLenLengths;
+    /** @type {!(Array.<number>|Uint16Array)} */
+    var litLenCodes;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var distLengths;
+    /** @type {!(Array.<number>|Uint16Array)} */
+    var distCodes;
+    /** @type {{
+     *   codes: !(Array.<number>|Uint32Array),
+     *   freqs: !(Array.<number>|Uint8Array)
+     * }} */
+    var treeSymbols;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var treeLengths;
+    /** @type {Array} */
+    var transLengths = new Array(19);
+    /** @type {!(Array.<number>|Uint16Array)} */
+    var treeCodes;
+    /** @type {number} */
+    var code;
+    /** @type {number} */
+    var bitlen;
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
 
-      // header
-      bfinal = isFinalBlock ? 1 : 0;
-      btype = Zlib.RawDeflate.CompressionType.DYNAMIC;
+    // header
+    bfinal = isFinalBlock ? 1 : 0;
+    btype = Zlib.RawDeflate.CompressionType.DYNAMIC;
 
-      stream.writeBits(bfinal, 1, true);
-      stream.writeBits(btype, 2, true);
+    stream.writeBits(bfinal, 1, true);
+    stream.writeBits(btype, 2, true);
 
-      data = this.lz77(blockArray);
+    data = this.lz77(blockArray);
 
-      // リテラル・長さ, 距離のハフマン符号と符号長の算出
-      litLenLengths = this.getLengths_(this.freqsLitLen, 15);
-      litLenCodes = this.getCodesFromLengths_(litLenLengths);
-      distLengths = this.getLengths_(this.freqsDist, 7);
-      distCodes = this.getCodesFromLengths_(distLengths);
+    // リテラル・長さ, 距離のハフマン符号と符号長の算出
+    litLenLengths = this.getLengths_(this.freqsLitLen, 15);
+    litLenCodes = this.getCodesFromLengths_(litLenLengths);
+    distLengths = this.getLengths_(this.freqsDist, 7);
+    distCodes = this.getCodesFromLengths_(distLengths);
 
-      // HLIT, HDIST の決定
-      for (hlit = 286; hlit > 257 && litLenLengths[hlit - 1] === 0; hlit--) {}
-      for (hdist = 30; hdist > 1 && distLengths[hdist - 1] === 0; hdist--) {}
+    // HLIT, HDIST の決定
+    for (hlit = 286; hlit > 257 && litLenLengths[hlit - 1] === 0; hlit--) {}
+    for (hdist = 30; hdist > 1 && distLengths[hdist - 1] === 0; hdist--) {}
 
-      // HCLEN
-      treeSymbols =
-          this.getTreeSymbols_(hlit, litLenLengths, hdist, distLengths);
-      treeLengths = this.getLengths_(treeSymbols.freqs, 7);
-      for (i = 0; i < 19; i++) {
+    // HCLEN
+    treeSymbols = this.getTreeSymbols_(hlit, litLenLengths, hdist, distLengths);
+    treeLengths = this.getLengths_(treeSymbols.freqs, 7);
+    for (i = 0; i < 19; i++) {
         transLengths[i] = treeLengths[hclenOrder[i]];
-      }
-      for (hclen = 19; hclen > 4 && transLengths[hclen - 1] === 0; hclen--) {}
+    }
+    for (hclen = 19; hclen > 4 && transLengths[hclen - 1] === 0; hclen--) {}
 
-      treeCodes = this.getCodesFromLengths_(treeLengths);
+    treeCodes = this.getCodesFromLengths_(treeLengths);
 
-      // 出力
-      stream.writeBits(hlit - 257, 5, true);
-      stream.writeBits(hdist - 1, 5, true);
-      stream.writeBits(hclen - 4, 4, true);
-      for (i = 0; i < hclen; i++) {
+    // 出力
+    stream.writeBits(hlit - 257, 5, true);
+    stream.writeBits(hdist - 1, 5, true);
+    stream.writeBits(hclen - 4, 4, true);
+    for (i = 0; i < hclen; i++) {
         stream.writeBits(transLengths[i], 3, true);
-      }
+    }
 
-      // ツリーの出力
-      for (i = 0, il = treeSymbols.codes.length; i < il; i++) {
+    // ツリーの出力
+    for (i = 0, il = treeSymbols.codes.length; i < il; i++) {
         code = treeSymbols.codes[i];
 
         stream.writeBits(treeCodes[code], treeLengths[code], true);
 
         // extra bits
         if (code >= 16) {
-          i++;
-          switch (code) {
-            case 16: bitlen = 2; break;
-            case 17: bitlen = 3; break;
-            case 18: bitlen = 7; break;
-            default:
-              throw 'invalid code: ' + code;
-          }
+            i++;
+            switch (code) {
+                case 16:
+                    bitlen = 2;
+                    break;
+                case 17:
+                    bitlen = 3;
+                    break;
+                case 18:
+                    bitlen = 7;
+                    break;
+                default:
+                    throw "invalid code: " + code;
+            }
 
-          stream.writeBits(treeSymbols.codes[i], bitlen, true);
+            stream.writeBits(treeSymbols.codes[i], bitlen, true);
         }
-      }
+    }
 
-      this.dynamicHuffman(
-          data,
-          [litLenCodes, litLenLengths],
-          [distCodes, distLengths],
-          stream
-      );
+    this.dynamicHuffman(data, [litLenCodes, litLenLengths], [distCodes, distLengths], stream);
 
-      return stream.finish();
-    };
-
+    return stream.finish();
+};
 
 /**
  * 動的ハフマン符号化(カスタムハフマンテーブル)
@@ -13694,32 +13426,31 @@ Zlib.RawDeflate.prototype.makeDynamicHuffmanBlock =
  * @param {!Zlib.BitStream} stream 書き込み用ビットストリーム.
  * @return {!Zlib.BitStream} ハフマン符号化済みビットストリームオブジェクト.
  */
-Zlib.RawDeflate.prototype.dynamicHuffman =
-    function(dataArray, litLen, dist, stream) {
-      /** @type {number} */
-      var index;
-      /** @type {number} */
-      var length;
-      /** @type {number} */
-      var literal;
-      /** @type {number} */
-      var code;
-      /** @type {number} */
-      var litLenCodes;
-      /** @type {number} */
-      var litLenLengths;
-      /** @type {number} */
-      var distCodes;
-      /** @type {number} */
-      var distLengths;
+Zlib.RawDeflate.prototype.dynamicHuffman = function (dataArray, litLen, dist, stream) {
+    /** @type {number} */
+    var index;
+    /** @type {number} */
+    var length;
+    /** @type {number} */
+    var literal;
+    /** @type {number} */
+    var code;
+    /** @type {number} */
+    var litLenCodes;
+    /** @type {number} */
+    var litLenLengths;
+    /** @type {number} */
+    var distCodes;
+    /** @type {number} */
+    var distLengths;
 
-      litLenCodes = litLen[0];
-      litLenLengths = litLen[1];
-      distCodes = dist[0];
-      distLengths = dist[1];
+    litLenCodes = litLen[0];
+    litLenLengths = litLen[1];
+    distCodes = dist[0];
+    distLengths = dist[1];
 
-      // 符号を BitStream に書き込んでいく
-      for (index = 0, length = dataArray.length; index < length; ++index) {
+    // 符号を BitStream に書き込んでいく
+    for (index = 0, length = dataArray.length; index < length; ++index) {
         literal = dataArray[index];
 
         // literal or length
@@ -13727,21 +13458,21 @@ Zlib.RawDeflate.prototype.dynamicHuffman =
 
         // 長さ・距離符号
         if (literal > 256) {
-          // length extra
-          stream.writeBits(dataArray[++index], dataArray[++index], true);
-          // distance
-          code = dataArray[++index];
-          stream.writeBits(distCodes[code], distLengths[code], true);
-          // distance extra
-          stream.writeBits(dataArray[++index], dataArray[++index], true);
-          // 終端
+            // length extra
+            stream.writeBits(dataArray[++index], dataArray[++index], true);
+            // distance
+            code = dataArray[++index];
+            stream.writeBits(distCodes[code], distLengths[code], true);
+            // distance extra
+            stream.writeBits(dataArray[++index], dataArray[++index], true);
+            // 終端
         } else if (literal === 256) {
-          break;
+            break;
         }
-      }
+    }
 
-      return stream;
-    };
+    return stream;
+};
 
 /**
  * 固定ハフマン符号化
@@ -13749,39 +13480,36 @@ Zlib.RawDeflate.prototype.dynamicHuffman =
  * @param {!Zlib.BitStream} stream 書き込み用ビットストリーム.
  * @return {!Zlib.BitStream} ハフマン符号化済みビットストリームオブジェクト.
  */
-Zlib.RawDeflate.prototype.fixedHuffman = function(dataArray, stream) {
-  /** @type {number} */
-  var index;
-  /** @type {number} */
-  var length;
-  /** @type {number} */
-  var literal;
+Zlib.RawDeflate.prototype.fixedHuffman = function (dataArray, stream) {
+    /** @type {number} */
+    var index;
+    /** @type {number} */
+    var length;
+    /** @type {number} */
+    var literal;
 
-  // 符号を BitStream に書き込んでいく
-  for (index = 0, length = dataArray.length; index < length; index++) {
-    literal = dataArray[index];
+    // 符号を BitStream に書き込んでいく
+    for (index = 0, length = dataArray.length; index < length; index++) {
+        literal = dataArray[index];
 
-    // 符号の書き込み
-    Zlib.BitStream.prototype.writeBits.apply(
-        stream,
-        Zlib.RawDeflate.FixedHuffmanTable[literal]
-    );
+        // 符号の書き込み
+        Zlib.BitStream.prototype.writeBits.apply(stream, Zlib.RawDeflate.FixedHuffmanTable[literal]);
 
-    // 長さ・距離符号
-    if (literal > 0x100) {
-      // length extra
-      stream.writeBits(dataArray[++index], dataArray[++index], true);
-      // distance
-      stream.writeBits(dataArray[++index], 5);
-      // distance extra
-      stream.writeBits(dataArray[++index], dataArray[++index], true);
-      // 終端
-    } else if (literal === 0x100) {
-      break;
+        // 長さ・距離符号
+        if (literal > 0x100) {
+            // length extra
+            stream.writeBits(dataArray[++index], dataArray[++index], true);
+            // distance
+            stream.writeBits(dataArray[++index], 5);
+            // distance extra
+            stream.writeBits(dataArray[++index], dataArray[++index], true);
+            // 終端
+        } else if (literal === 0x100) {
+            break;
+        }
     }
-  }
 
-  return stream;
+    return stream;
 };
 
 /**
@@ -13790,11 +13518,11 @@ Zlib.RawDeflate.prototype.fixedHuffman = function(dataArray, stream) {
  * @param {!number} backwardDistance マッチ位置との距離.
  * @constructor
  */
-Zlib.RawDeflate.Lz77Match = function(length, backwardDistance) {
-  /** @type {number} match length. */
-  this.length = length;
-  /** @type {number} backward distance. */
-  this.backwardDistance = backwardDistance;
+Zlib.RawDeflate.Lz77Match = function (length, backwardDistance) {
+    /** @type {number} match length. */
+    this.length = length;
+    /** @type {number} backward distance. */
+    this.backwardDistance = backwardDistance;
 };
 
 /**
@@ -13803,33 +13531,94 @@ Zlib.RawDeflate.Lz77Match = function(length, backwardDistance) {
  * @const
  * @type {!(Array.<number>|Uint32Array)}
  */
-Zlib.RawDeflate.Lz77Match.LengthCodeTable = (function(table) {
-  return  new Uint32Array(table) ;
-})((function() {
-  /** @type {!Array} */
-  var table = [];
-  /** @type {number} */
-  var i;
-  /** @type {!Array.<number>} */
-  var c;
+Zlib.RawDeflate.Lz77Match.LengthCodeTable = (function (table) {
+    return new Uint32Array(table);
+})(
+    (function () {
+        /** @type {!Array} */
+        var table = [];
+        /** @type {number} */
+        var i;
+        /** @type {!Array.<number>} */
+        var c;
 
-  for (i = 3; i <= 258; i++) {
-    c = code(i);
-    table[i] = (c[2] << 24) | (c[1] << 16) | c[0];
-  }
+        for (i = 3; i <= 258; i++) {
+            c = code(i);
+            table[i] = (c[2] << 24) | (c[1] << 16) | c[0];
+        }
 
-  /**
-   * @param {number} length lz77 length.
-   * @return {!Array.<number>} lz77 codes.
-   */
-  function code(length) {
-    switch (true) {
-      case (length === 3): return [257, length - 3, 0];      case (length === 4): return [258, length - 4, 0];      case (length === 5): return [259, length - 5, 0];      case (length === 6): return [260, length - 6, 0];      case (length === 7): return [261, length - 7, 0];      case (length === 8): return [262, length - 8, 0];      case (length === 9): return [263, length - 9, 0];      case (length === 10): return [264, length - 10, 0];      case (length <= 12): return [265, length - 11, 1];      case (length <= 14): return [266, length - 13, 1];      case (length <= 16): return [267, length - 15, 1];      case (length <= 18): return [268, length - 17, 1];      case (length <= 22): return [269, length - 19, 2];      case (length <= 26): return [270, length - 23, 2];      case (length <= 30): return [271, length - 27, 2];      case (length <= 34): return [272, length - 31, 2];      case (length <= 42): return [273, length - 35, 3];      case (length <= 50): return [274, length - 43, 3];      case (length <= 58): return [275, length - 51, 3];      case (length <= 66): return [276, length - 59, 3];      case (length <= 82): return [277, length - 67, 4];      case (length <= 98): return [278, length - 83, 4];      case (length <= 114): return [279, length - 99, 4];      case (length <= 130): return [280, length - 115, 4];      case (length <= 162): return [281, length - 131, 5];      case (length <= 194): return [282, length - 163, 5];      case (length <= 226): return [283, length - 195, 5];      case (length <= 257): return [284, length - 227, 5];      case (length === 258): return [285, length - 258, 0];      default: throw 'invalid length: ' + length;
-    }
-  }
+        /**
+         * @param {number} length lz77 length.
+         * @return {!Array.<number>} lz77 codes.
+         */
+        function code(length) {
+            switch (true) {
+                case length === 3:
+                    return [257, length - 3, 0];
+                case length === 4:
+                    return [258, length - 4, 0];
+                case length === 5:
+                    return [259, length - 5, 0];
+                case length === 6:
+                    return [260, length - 6, 0];
+                case length === 7:
+                    return [261, length - 7, 0];
+                case length === 8:
+                    return [262, length - 8, 0];
+                case length === 9:
+                    return [263, length - 9, 0];
+                case length === 10:
+                    return [264, length - 10, 0];
+                case length <= 12:
+                    return [265, length - 11, 1];
+                case length <= 14:
+                    return [266, length - 13, 1];
+                case length <= 16:
+                    return [267, length - 15, 1];
+                case length <= 18:
+                    return [268, length - 17, 1];
+                case length <= 22:
+                    return [269, length - 19, 2];
+                case length <= 26:
+                    return [270, length - 23, 2];
+                case length <= 30:
+                    return [271, length - 27, 2];
+                case length <= 34:
+                    return [272, length - 31, 2];
+                case length <= 42:
+                    return [273, length - 35, 3];
+                case length <= 50:
+                    return [274, length - 43, 3];
+                case length <= 58:
+                    return [275, length - 51, 3];
+                case length <= 66:
+                    return [276, length - 59, 3];
+                case length <= 82:
+                    return [277, length - 67, 4];
+                case length <= 98:
+                    return [278, length - 83, 4];
+                case length <= 114:
+                    return [279, length - 99, 4];
+                case length <= 130:
+                    return [280, length - 115, 4];
+                case length <= 162:
+                    return [281, length - 131, 5];
+                case length <= 194:
+                    return [282, length - 163, 5];
+                case length <= 226:
+                    return [283, length - 195, 5];
+                case length <= 257:
+                    return [284, length - 227, 5];
+                case length === 258:
+                    return [285, length - 258, 0];
+                default:
+                    throw "invalid length: " + length;
+            }
+        }
 
-  return table;
-})());
+        return table;
+    })()
+);
 
 /**
  * 距離符号テーブル
@@ -13837,45 +13626,106 @@ Zlib.RawDeflate.Lz77Match.LengthCodeTable = (function(table) {
  * @return {!Array.<number>} コード、拡張ビット、拡張ビット長の配列.
  * @private
  */
-Zlib.RawDeflate.Lz77Match.prototype.getDistanceCode_ = function(dist) {
-  /** @type {!Array.<number>} distance code table. */
-  var r;
+Zlib.RawDeflate.Lz77Match.prototype.getDistanceCode_ = function (dist) {
+    /** @type {!Array.<number>} distance code table. */
+    var r;
 
-  switch (true) {
-    case (dist === 1): r = [0, dist - 1, 0]; break;
-    case (dist === 2): r = [1, dist - 2, 0]; break;
-    case (dist === 3): r = [2, dist - 3, 0]; break;
-    case (dist === 4): r = [3, dist - 4, 0]; break;
-    case (dist <= 6): r = [4, dist - 5, 1]; break;
-    case (dist <= 8): r = [5, dist - 7, 1]; break;
-    case (dist <= 12): r = [6, dist - 9, 2]; break;
-    case (dist <= 16): r = [7, dist - 13, 2]; break;
-    case (dist <= 24): r = [8, dist - 17, 3]; break;
-    case (dist <= 32): r = [9, dist - 25, 3]; break;
-    case (dist <= 48): r = [10, dist - 33, 4]; break;
-    case (dist <= 64): r = [11, dist - 49, 4]; break;
-    case (dist <= 96): r = [12, dist - 65, 5]; break;
-    case (dist <= 128): r = [13, dist - 97, 5]; break;
-    case (dist <= 192): r = [14, dist - 129, 6]; break;
-    case (dist <= 256): r = [15, dist - 193, 6]; break;
-    case (dist <= 384): r = [16, dist - 257, 7]; break;
-    case (dist <= 512): r = [17, dist - 385, 7]; break;
-    case (dist <= 768): r = [18, dist - 513, 8]; break;
-    case (dist <= 1024): r = [19, dist - 769, 8]; break;
-    case (dist <= 1536): r = [20, dist - 1025, 9]; break;
-    case (dist <= 2048): r = [21, dist - 1537, 9]; break;
-    case (dist <= 3072): r = [22, dist - 2049, 10]; break;
-    case (dist <= 4096): r = [23, dist - 3073, 10]; break;
-    case (dist <= 6144): r = [24, dist - 4097, 11]; break;
-    case (dist <= 8192): r = [25, dist - 6145, 11]; break;
-    case (dist <= 12288): r = [26, dist - 8193, 12]; break;
-    case (dist <= 16384): r = [27, dist - 12289, 12]; break;
-    case (dist <= 24576): r = [28, dist - 16385, 13]; break;
-    case (dist <= 32768): r = [29, dist - 24577, 13]; break;
-    default: throw 'invalid distance';
-  }
+    switch (true) {
+        case dist === 1:
+            r = [0, dist - 1, 0];
+            break;
+        case dist === 2:
+            r = [1, dist - 2, 0];
+            break;
+        case dist === 3:
+            r = [2, dist - 3, 0];
+            break;
+        case dist === 4:
+            r = [3, dist - 4, 0];
+            break;
+        case dist <= 6:
+            r = [4, dist - 5, 1];
+            break;
+        case dist <= 8:
+            r = [5, dist - 7, 1];
+            break;
+        case dist <= 12:
+            r = [6, dist - 9, 2];
+            break;
+        case dist <= 16:
+            r = [7, dist - 13, 2];
+            break;
+        case dist <= 24:
+            r = [8, dist - 17, 3];
+            break;
+        case dist <= 32:
+            r = [9, dist - 25, 3];
+            break;
+        case dist <= 48:
+            r = [10, dist - 33, 4];
+            break;
+        case dist <= 64:
+            r = [11, dist - 49, 4];
+            break;
+        case dist <= 96:
+            r = [12, dist - 65, 5];
+            break;
+        case dist <= 128:
+            r = [13, dist - 97, 5];
+            break;
+        case dist <= 192:
+            r = [14, dist - 129, 6];
+            break;
+        case dist <= 256:
+            r = [15, dist - 193, 6];
+            break;
+        case dist <= 384:
+            r = [16, dist - 257, 7];
+            break;
+        case dist <= 512:
+            r = [17, dist - 385, 7];
+            break;
+        case dist <= 768:
+            r = [18, dist - 513, 8];
+            break;
+        case dist <= 1024:
+            r = [19, dist - 769, 8];
+            break;
+        case dist <= 1536:
+            r = [20, dist - 1025, 9];
+            break;
+        case dist <= 2048:
+            r = [21, dist - 1537, 9];
+            break;
+        case dist <= 3072:
+            r = [22, dist - 2049, 10];
+            break;
+        case dist <= 4096:
+            r = [23, dist - 3073, 10];
+            break;
+        case dist <= 6144:
+            r = [24, dist - 4097, 11];
+            break;
+        case dist <= 8192:
+            r = [25, dist - 6145, 11];
+            break;
+        case dist <= 12288:
+            r = [26, dist - 8193, 12];
+            break;
+        case dist <= 16384:
+            r = [27, dist - 12289, 12];
+            break;
+        case dist <= 24576:
+            r = [28, dist - 16385, 13];
+            break;
+        case dist <= 32768:
+            r = [29, dist - 24577, 13];
+            break;
+        default:
+            throw "invalid distance";
+    }
 
-  return r;
+    return r;
 };
 
 /**
@@ -13884,31 +13734,31 @@ Zlib.RawDeflate.Lz77Match.prototype.getDistanceCode_ = function(dist) {
  * [ CODE, EXTRA-BIT-LEN, EXTRA, CODE, EXTRA-BIT-LEN, EXTRA ]
  * @return {!Array.<number>} LZ77 符号化 byte array.
  */
-Zlib.RawDeflate.Lz77Match.prototype.toLz77Array = function() {
-  /** @type {number} */
-  var length = this.length;
-  /** @type {number} */
-  var dist = this.backwardDistance;
-  /** @type {Array} */
-  var codeArray = [];
-  /** @type {number} */
-  var pos = 0;
-  /** @type {!Array.<number>} */
-  var code;
+Zlib.RawDeflate.Lz77Match.prototype.toLz77Array = function () {
+    /** @type {number} */
+    var length = this.length;
+    /** @type {number} */
+    var dist = this.backwardDistance;
+    /** @type {Array} */
+    var codeArray = [];
+    /** @type {number} */
+    var pos = 0;
+    /** @type {!Array.<number>} */
+    var code;
 
-  // length
-  code = Zlib.RawDeflate.Lz77Match.LengthCodeTable[length];
-  codeArray[pos++] = code & 0xffff;
-  codeArray[pos++] = (code >> 16) & 0xff;
-  codeArray[pos++] = code >> 24;
+    // length
+    code = Zlib.RawDeflate.Lz77Match.LengthCodeTable[length];
+    codeArray[pos++] = code & 0xffff;
+    codeArray[pos++] = (code >> 16) & 0xff;
+    codeArray[pos++] = code >> 24;
 
-  // distance
-  code = this.getDistanceCode_(dist);
-  codeArray[pos++] = code[0];
-  codeArray[pos++] = code[1];
-  codeArray[pos++] = code[2];
+    // distance
+    code = this.getDistanceCode_(dist);
+    codeArray[pos++] = code[0];
+    codeArray[pos++] = code[1];
+    codeArray[pos++] = code[2];
 
-  return codeArray;
+    return codeArray;
 };
 
 /**
@@ -13916,150 +13766,149 @@ Zlib.RawDeflate.Lz77Match.prototype.toLz77Array = function() {
  * @param {!(Array.<number>|Uint8Array)} dataArray LZ77 符号化するバイト配列.
  * @return {!(Array.<number>|Uint16Array)} LZ77 符号化した配列.
  */
-Zlib.RawDeflate.prototype.lz77 = function(dataArray) {
-  /** @type {number} input position */
-  var position;
-  /** @type {number} input length */
-  var length;
-  /** @type {number} loop counter */
-  var i;
-  /** @type {number} loop limiter */
-  var il;
-  /** @type {number} chained-hash-table key */
-  var matchKey;
-  /** @type {Object.<number, Array.<number>>} chained-hash-table */
-  var table = {};
-  /** @const @type {number} */
-  var windowSize = Zlib.RawDeflate.WindowSize;
-  /** @type {Array.<number>} match list */
-  var matchList;
-  /** @type {Zlib.RawDeflate.Lz77Match} longest match */
-  var longestMatch;
-  /** @type {Zlib.RawDeflate.Lz77Match} previous longest match */
-  var prevMatch;
-  /** @type {!(Array.<number>|Uint16Array)} lz77 buffer */
-  var lz77buf = 
-      new Uint16Array(dataArray.length * 2) ;
-  /** @type {number} lz77 output buffer pointer */
-  var pos = 0;
-  /** @type {number} lz77 skip length */
-  var skipLength = 0;
-  /** @type {!(Array.<number>|Uint32Array)} */
-  var freqsLitLen = new ( Uint32Array )(286);
-  /** @type {!(Array.<number>|Uint32Array)} */
-  var freqsDist = new ( Uint32Array )(30);
-  /** @type {number} */
-  var lazy = this.lazy;
-  /** @type {*} temporary variable */
-  var tmp;
-  freqsLitLen[256] = 1; // EOB の最低出現回数は 1
-
-  /**
-   * マッチデータの書き込み
-   * @param {Zlib.RawDeflate.Lz77Match} match LZ77 Match data.
-   * @param {!number} offset スキップ開始位置(相対指定).
-   * @private
-   */
-  function writeMatch(match, offset) {
-    /** @type {Array.<number>} */
-    var lz77Array = match.toLz77Array();
-    /** @type {number} */
+Zlib.RawDeflate.prototype.lz77 = function (dataArray) {
+    /** @type {number} input position */
+    var position;
+    /** @type {number} input length */
+    var length;
+    /** @type {number} loop counter */
     var i;
-    /** @type {number} */
+    /** @type {number} loop limiter */
     var il;
+    /** @type {number} chained-hash-table key */
+    var matchKey;
+    /** @type {Object.<number, Array.<number>>} chained-hash-table */
+    var table = {};
+    /** @const @type {number} */
+    var windowSize = Zlib.RawDeflate.WindowSize;
+    /** @type {Array.<number>} match list */
+    var matchList;
+    /** @type {Zlib.RawDeflate.Lz77Match} longest match */
+    var longestMatch;
+    /** @type {Zlib.RawDeflate.Lz77Match} previous longest match */
+    var prevMatch;
+    /** @type {!(Array.<number>|Uint16Array)} lz77 buffer */
+    var lz77buf = new Uint16Array(dataArray.length * 2);
+    /** @type {number} lz77 output buffer pointer */
+    var pos = 0;
+    /** @type {number} lz77 skip length */
+    var skipLength = 0;
+    /** @type {!(Array.<number>|Uint32Array)} */
+    var freqsLitLen = new Uint32Array(286);
+    /** @type {!(Array.<number>|Uint32Array)} */
+    var freqsDist = new Uint32Array(30);
+    /** @type {number} */
+    var lazy = this.lazy;
+    /** @type {*} temporary variable */
+    var tmp;
+    freqsLitLen[256] = 1; // EOB の最低出現回数は 1
 
-    for (i = 0, il = lz77Array.length; i < il; ++i) {
-      lz77buf[pos++] = lz77Array[i];
-    }
-    freqsLitLen[lz77Array[0]]++;
-    freqsDist[lz77Array[3]]++;
-    skipLength = match.length + offset - 1;
-    prevMatch = null;
-  }
+    /**
+     * マッチデータの書き込み
+     * @param {Zlib.RawDeflate.Lz77Match} match LZ77 Match data.
+     * @param {!number} offset スキップ開始位置(相対指定).
+     * @private
+     */
+    function writeMatch(match, offset) {
+        /** @type {Array.<number>} */
+        var lz77Array = match.toLz77Array();
+        /** @type {number} */
+        var i;
+        /** @type {number} */
+        var il;
 
-  // LZ77 符号化
-  for (position = 0, length = dataArray.length; position < length; ++position) {
-    // ハッシュキーの作成
-    for (matchKey = 0, i = 0, il = Zlib.RawDeflate.Lz77MinLength; i < il; ++i) {
-      if (position + i === length) {
-        break;
-      }
-      matchKey = (matchKey << 8) | dataArray[position + i];
-    }
-
-    // テーブルが未定義だったら作成する
-    if (table[matchKey] === void 0) { table[matchKey] = []; }
-    matchList = table[matchKey];
-
-    // skip
-    if (skipLength-- > 0) {
-      matchList.push(position);
-      continue;
-    }
-
-    // マッチテーブルの更新 (最大戻り距離を超えているものを削除する)
-    while (matchList.length > 0 && position - matchList[0] > windowSize) {
-      matchList.shift();
-    }
-
-    // データ末尾でマッチしようがない場合はそのまま流しこむ
-    if (position + Zlib.RawDeflate.Lz77MinLength >= length) {
-      if (prevMatch) {
-        writeMatch(prevMatch, -1);
-      }
-
-      for (i = 0, il = length - position; i < il; ++i) {
-        tmp = dataArray[position + i];
-        lz77buf[pos++] = tmp;
-        ++freqsLitLen[tmp];
-      }
-      break;
-    }
-
-    // マッチ候補から最長のものを探す
-    if (matchList.length > 0) {
-      longestMatch = this.searchLongestMatch_(dataArray, position, matchList);
-
-      if (prevMatch) {
-        // 現在のマッチの方が前回のマッチよりも長い
-        if (prevMatch.length < longestMatch.length) {
-          // write previous literal
-          tmp = dataArray[position - 1];
-          lz77buf[pos++] = tmp;
-          ++freqsLitLen[tmp];
-
-          // write current match
-          writeMatch(longestMatch, 0);
-        } else {
-          // write previous match
-          writeMatch(prevMatch, -1);
+        for (i = 0, il = lz77Array.length; i < il; ++i) {
+            lz77buf[pos++] = lz77Array[i];
         }
-      } else if (longestMatch.length < lazy) {
-        prevMatch = longestMatch;
-      } else {
-        writeMatch(longestMatch, 0);
-      }
-      // 前回マッチしていて今回マッチがなかったら前回のを採用
-    } else if (prevMatch) {
-      writeMatch(prevMatch, -1);
-    } else {
-      tmp = dataArray[position];
-      lz77buf[pos++] = tmp;
-      ++freqsLitLen[tmp];
+        freqsLitLen[lz77Array[0]]++;
+        freqsDist[lz77Array[3]]++;
+        skipLength = match.length + offset - 1;
+        prevMatch = null;
     }
 
-    matchList.push(position); // マッチテーブルに現在の位置を保存
-  }
+    // LZ77 符号化
+    for (position = 0, length = dataArray.length; position < length; ++position) {
+        // ハッシュキーの作成
+        for (matchKey = 0, i = 0, il = Zlib.RawDeflate.Lz77MinLength; i < il; ++i) {
+            if (position + i === length) {
+                break;
+            }
+            matchKey = (matchKey << 8) | dataArray[position + i];
+        }
 
-  // 終端処理
-  lz77buf[pos++] = 256;
-  freqsLitLen[256]++;
-  this.freqsLitLen = freqsLitLen;
-  this.freqsDist = freqsDist;
+        // テーブルが未定義だったら作成する
+        if (table[matchKey] === void 0) {
+            table[matchKey] = [];
+        }
+        matchList = table[matchKey];
 
-  return /** @type {!(Uint16Array|Array.<number>)} */ (
-        lz77buf.subarray(0, pos) 
-  );
+        // skip
+        if (skipLength-- > 0) {
+            matchList.push(position);
+            continue;
+        }
+
+        // マッチテーブルの更新 (最大戻り距離を超えているものを削除する)
+        while (matchList.length > 0 && position - matchList[0] > windowSize) {
+            matchList.shift();
+        }
+
+        // データ末尾でマッチしようがない場合はそのまま流しこむ
+        if (position + Zlib.RawDeflate.Lz77MinLength >= length) {
+            if (prevMatch) {
+                writeMatch(prevMatch, -1);
+            }
+
+            for (i = 0, il = length - position; i < il; ++i) {
+                tmp = dataArray[position + i];
+                lz77buf[pos++] = tmp;
+                ++freqsLitLen[tmp];
+            }
+            break;
+        }
+
+        // マッチ候補から最長のものを探す
+        if (matchList.length > 0) {
+            longestMatch = this.searchLongestMatch_(dataArray, position, matchList);
+
+            if (prevMatch) {
+                // 現在のマッチの方が前回のマッチよりも長い
+                if (prevMatch.length < longestMatch.length) {
+                    // write previous literal
+                    tmp = dataArray[position - 1];
+                    lz77buf[pos++] = tmp;
+                    ++freqsLitLen[tmp];
+
+                    // write current match
+                    writeMatch(longestMatch, 0);
+                } else {
+                    // write previous match
+                    writeMatch(prevMatch, -1);
+                }
+            } else if (longestMatch.length < lazy) {
+                prevMatch = longestMatch;
+            } else {
+                writeMatch(longestMatch, 0);
+            }
+            // 前回マッチしていて今回マッチがなかったら前回のを採用
+        } else if (prevMatch) {
+            writeMatch(prevMatch, -1);
+        } else {
+            tmp = dataArray[position];
+            lz77buf[pos++] = tmp;
+            ++freqsLitLen[tmp];
+        }
+
+        matchList.push(position); // マッチテーブルに現在の位置を保存
+    }
+
+    // 終端処理
+    lz77buf[pos++] = 256;
+    freqsLitLen[256]++;
+    this.freqsLitLen = freqsLitLen;
+    this.freqsDist = freqsDist;
+
+    return /** @type {!(Uint16Array|Array.<number>)} */ (lz77buf.subarray(0, pos));
 };
 
 /**
@@ -14070,50 +13919,54 @@ Zlib.RawDeflate.prototype.lz77 = function(dataArray) {
  * @return {!Zlib.RawDeflate.Lz77Match} 最長かつ最短距離のマッチオブジェクト.
  * @private
  */
-Zlib.RawDeflate.prototype.searchLongestMatch_ =
-    function(data, position, matchList) {
-      var match,
-          currentMatch,
-          matchMax = 0, matchLength,
-          i, j, l, dl = data.length;
+Zlib.RawDeflate.prototype.searchLongestMatch_ = function (data, position, matchList) {
+    var match,
+        currentMatch,
+        matchMax = 0,
+        matchLength,
+        i,
+        j,
+        l,
+        dl = data.length;
 
-      // 候補を後ろから 1 つずつ絞り込んでゆく
-      permatch:
-          for (i = 0, l = matchList.length; i < l; i++) {
-            match = matchList[l - i - 1];
-            matchLength = Zlib.RawDeflate.Lz77MinLength;
+    // 候補を後ろから 1 つずつ絞り込んでゆく
+    permatch: for (i = 0, l = matchList.length; i < l; i++) {
+        match = matchList[l - i - 1];
+        matchLength = Zlib.RawDeflate.Lz77MinLength;
 
-            // 前回までの最長一致を末尾から一致検索する
-            if (matchMax > Zlib.RawDeflate.Lz77MinLength) {
-              for (j = matchMax; j > Zlib.RawDeflate.Lz77MinLength; j--) {
+        // 前回までの最長一致を末尾から一致検索する
+        if (matchMax > Zlib.RawDeflate.Lz77MinLength) {
+            for (j = matchMax; j > Zlib.RawDeflate.Lz77MinLength; j--) {
                 if (data[match + j - 1] !== data[position + j - 1]) {
-                  continue permatch;
+                    continue permatch;
                 }
-              }
-              matchLength = matchMax;
             }
+            matchLength = matchMax;
+        }
 
-            // 最長一致探索
-            while (matchLength < Zlib.RawDeflate.Lz77MaxLength &&
+        // 最長一致探索
+        while (
+            matchLength < Zlib.RawDeflate.Lz77MaxLength &&
             position + matchLength < dl &&
-            data[match + matchLength] === data[position + matchLength]) {
-              ++matchLength;
-            }
+            data[match + matchLength] === data[position + matchLength]
+        ) {
+            ++matchLength;
+        }
 
-            // マッチ長が同じ場合は後方を優先
-            if (matchLength > matchMax) {
-              currentMatch = match;
-              matchMax = matchLength;
-            }
+        // マッチ長が同じ場合は後方を優先
+        if (matchLength > matchMax) {
+            currentMatch = match;
+            matchMax = matchLength;
+        }
 
-            // 最長が確定したら後の処理は省略
-            if (matchLength === Zlib.RawDeflate.Lz77MaxLength) {
-              break;
-            }
-          }
+        // 最長が確定したら後の処理は省略
+        if (matchLength === Zlib.RawDeflate.Lz77MaxLength) {
+            break;
+        }
+    }
 
-      return new Zlib.RawDeflate.Lz77Match(matchMax, position - currentMatch);
-    };
+    return new Zlib.RawDeflate.Lz77Match(matchMax, position - currentMatch);
+};
 
 /**
  * Tree-Transmit Symbols の算出
@@ -14127,99 +13980,100 @@ Zlib.RawDeflate.prototype.searchLongestMatch_ =
  *   freqs: !(Array.<number>|Uint8Array)
  * }} Tree-Transmit Symbols.
  */
-Zlib.RawDeflate.prototype.getTreeSymbols_ =
-    function(hlit, litlenLengths, hdist, distLengths) {
-      var src = new ( Uint32Array )(hlit + hdist),
-          i, j, runLength, l,
-          result = new ( Uint32Array )(286 + 30),
-          nResult,
-          rpt,
-          freqs = new ( Uint8Array )(19);
+Zlib.RawDeflate.prototype.getTreeSymbols_ = function (hlit, litlenLengths, hdist, distLengths) {
+    var src = new Uint32Array(hlit + hdist),
+        i,
+        j,
+        runLength,
+        l,
+        result = new Uint32Array(286 + 30),
+        nResult,
+        rpt,
+        freqs = new Uint8Array(19);
 
-      j = 0;
-      for (i = 0; i < hlit; i++) {
+    j = 0;
+    for (i = 0; i < hlit; i++) {
         src[j++] = litlenLengths[i];
-      }
-      for (i = 0; i < hdist; i++) {
+    }
+    for (i = 0; i < hdist; i++) {
         src[j++] = distLengths[i];
-      }
+    }
 
-      // 符号化
-      nResult = 0;
-      for (i = 0, l = src.length; i < l; i += j) {
+    // 符号��
+    nResult = 0;
+    for (i = 0, l = src.length; i < l; i += j) {
         // Run Length Encoding
         for (j = 1; i + j < l && src[i + j] === src[i]; ++j) {}
 
         runLength = j;
 
         if (src[i] === 0) {
-          // 0 の繰り返しが 3 回未満ならばそのまま
-          if (runLength < 3) {
-            while (runLength-- > 0) {
-              result[nResult++] = 0;
-              freqs[0]++;
+            // 0 の繰り返しが 3 回未満ならばそのまま
+            if (runLength < 3) {
+                while (runLength-- > 0) {
+                    result[nResult++] = 0;
+                    freqs[0]++;
+                }
+            } else {
+                while (runLength > 0) {
+                    // 繰り返しは最大 138 までなので切り詰める
+                    rpt = runLength < 138 ? runLength : 138;
+
+                    if (rpt > runLength - 3 && rpt < runLength) {
+                        rpt = runLength - 3;
+                    }
+
+                    // 3-10 回 -> 17
+                    if (rpt <= 10) {
+                        result[nResult++] = 17;
+                        result[nResult++] = rpt - 3;
+                        freqs[17]++;
+                        // 11-138 回 -> 18
+                    } else {
+                        result[nResult++] = 18;
+                        result[nResult++] = rpt - 11;
+                        freqs[18]++;
+                    }
+
+                    runLength -= rpt;
+                }
             }
-          } else {
-            while (runLength > 0) {
-              // 繰り返しは最大 138 までなので切り詰める
-              rpt = (runLength < 138 ? runLength : 138);
-
-              if (rpt > runLength - 3 && rpt < runLength) {
-                rpt = runLength - 3;
-              }
-
-              // 3-10 回 -> 17
-              if (rpt <= 10) {
-                result[nResult++] = 17;
-                result[nResult++] = rpt - 3;
-                freqs[17]++;
-                // 11-138 回 -> 18
-              } else {
-                result[nResult++] = 18;
-                result[nResult++] = rpt - 11;
-                freqs[18]++;
-              }
-
-              runLength -= rpt;
-            }
-          }
         } else {
-          result[nResult++] = src[i];
-          freqs[src[i]]++;
-          runLength--;
+            result[nResult++] = src[i];
+            freqs[src[i]]++;
+            runLength--;
 
-          // 繰り返し回数が3回未満ならばランレングス符号は要らない
-          if (runLength < 3) {
-            while (runLength-- > 0) {
-              result[nResult++] = src[i];
-              freqs[src[i]]++;
+            // 繰り返し回数が3回未満ならばランレングス符号は要らない
+            if (runLength < 3) {
+                while (runLength-- > 0) {
+                    result[nResult++] = src[i];
+                    freqs[src[i]]++;
+                }
+                // 3 回以上ならばランレングス符号化
+            } else {
+                while (runLength > 0) {
+                    // runLengthを 3-6 で分割
+                    rpt = runLength < 6 ? runLength : 6;
+
+                    if (rpt > runLength - 3 && rpt < runLength) {
+                        rpt = runLength - 3;
+                    }
+
+                    result[nResult++] = 16;
+                    result[nResult++] = rpt - 3;
+                    freqs[16]++;
+
+                    runLength -= rpt;
+                }
             }
-            // 3 回以上ならばランレングス符号化
-          } else {
-            while (runLength > 0) {
-              // runLengthを 3-6 で分割
-              rpt = (runLength < 6 ? runLength : 6);
-
-              if (rpt > runLength - 3 && rpt < runLength) {
-                rpt = runLength - 3;
-              }
-
-              result[nResult++] = 16;
-              result[nResult++] = rpt - 3;
-              freqs[16]++;
-
-              runLength -= rpt;
-            }
-          }
         }
-      }
+    }
 
-      return {
-        codes:
-             result.subarray(0, nResult) ,
-        freqs: freqs
-      };
+    return {
+        codes: result.subarray(0, nResult),
+        freqs: freqs,
     };
+};
 
 /**
  * ハフマン符号の長さを取得する
@@ -14228,51 +14082,51 @@ Zlib.RawDeflate.prototype.getTreeSymbols_ =
  * @return {!(Array.<number>|Uint8Array)} 符号長配列.
  * @private
  */
-Zlib.RawDeflate.prototype.getLengths_ = function(freqs, limit) {
-  /** @type {number} */
-  var nSymbols = freqs.length;
-  /** @type {Zlib.Heap} */
-  var heap = new Zlib.Heap(2 * Zlib.RawDeflate.HUFMAX);
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var length = new ( Uint8Array )(nSymbols);
-  /** @type {Array} */
-  var nodes;
-  /** @type {!(Array.<number>|Uint32Array)} */
-  var values;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var codeLength;
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
+Zlib.RawDeflate.prototype.getLengths_ = function (freqs, limit) {
+    /** @type {number} */
+    var nSymbols = freqs.length;
+    /** @type {Zlib.Heap} */
+    var heap = new Zlib.Heap(2 * Zlib.RawDeflate.HUFMAX);
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var length = new Uint8Array(nSymbols);
+    /** @type {Array} */
+    var nodes;
+    /** @type {!(Array.<number>|Uint32Array)} */
+    var values;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var codeLength;
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
 
-  // ヒープの構築
-  for (i = 0; i < nSymbols; ++i) {
-    if (freqs[i] > 0) {
-      heap.push(i, freqs[i]);
+    // ヒープの構築
+    for (i = 0; i < nSymbols; ++i) {
+        if (freqs[i] > 0) {
+            heap.push(i, freqs[i]);
+        }
     }
-  }
-  nodes = new Array(heap.length / 2);
-  values = new ( Uint32Array )(heap.length / 2);
+    nodes = new Array(heap.length / 2);
+    values = new Uint32Array(heap.length / 2);
 
-  // 非 0 の要素が一つだけだった場合は、そのシンボルに符号長 1 を割り当てて終了
-  if (nodes.length === 1) {
-    length[heap.pop().index] = 1;
+    // 非 0 の要素が一つだけだった場合は、そのシンボルに符号長 1 を割り当てて終了
+    if (nodes.length === 1) {
+        length[heap.pop().index] = 1;
+        return length;
+    }
+
+    // Reverse Package Merge Algorithm による Canonical Huffman Code の符号長決定
+    for (i = 0, il = heap.length / 2; i < il; ++i) {
+        nodes[i] = heap.pop();
+        values[i] = nodes[i].value;
+    }
+    codeLength = this.reversePackageMerge_(values, values.length, limit);
+
+    for (i = 0, il = nodes.length; i < il; ++i) {
+        length[nodes[i].index] = codeLength[i];
+    }
+
     return length;
-  }
-
-  // Reverse Package Merge Algorithm による Canonical Huffman Code の符号長決定
-  for (i = 0, il = heap.length / 2; i < il; ++i) {
-    nodes[i] = heap.pop();
-    values[i] = nodes[i].value;
-  }
-  codeLength = this.reversePackageMerge_(values, values.length, limit);
-
-  for (i = 0, il = nodes.length; i < il; ++i) {
-    length[nodes[i].index] = codeLength[i];
-  }
-
-  return length;
 };
 
 /**
@@ -14282,118 +14136,118 @@ Zlib.RawDeflate.prototype.getLengths_ = function(freqs, limit) {
  * @param {number} limit code length limit.
  * @return {!(Array.<number>|Uint8Array)} code lengths.
  */
-Zlib.RawDeflate.prototype.reversePackageMerge_ = function(freqs, symbols, limit) {
-  /** @type {!(Array.<number>|Uint16Array)} */
-  var minimumCost = new ( Uint16Array )(limit);
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var flag = new ( Uint8Array )(limit);
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var codeLength = new ( Uint8Array )(symbols);
-  /** @type {Array} */
-  var value = new Array(limit);
-  /** @type {Array} */
-  var type  = new Array(limit);
-  /** @type {Array.<number>} */
-  var currentPosition = new Array(limit);
-  /** @type {number} */
-  var excess = (1 << limit) - symbols;
-  /** @type {number} */
-  var half = (1 << (limit - 1));
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var j;
-  /** @type {number} */
-  var t;
-  /** @type {number} */
-  var weight;
-  /** @type {number} */
-  var next;
-
-  /**
-   * @param {number} j
-   */
-  function takePackage(j) {
+Zlib.RawDeflate.prototype.reversePackageMerge_ = function (freqs, symbols, limit) {
+    /** @type {!(Array.<number>|Uint16Array)} */
+    var minimumCost = new Uint16Array(limit);
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var flag = new Uint8Array(limit);
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var codeLength = new Uint8Array(symbols);
+    /** @type {Array} */
+    var value = new Array(limit);
+    /** @type {Array} */
+    var type = new Array(limit);
+    /** @type {Array.<number>} */
+    var currentPosition = new Array(limit);
     /** @type {number} */
-    var x = type[j][currentPosition[j]];
+    var excess = (1 << limit) - symbols;
+    /** @type {number} */
+    var half = 1 << (limit - 1);
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var j;
+    /** @type {number} */
+    var t;
+    /** @type {number} */
+    var weight;
+    /** @type {number} */
+    var next;
 
-    if (x === symbols) {
-      takePackage(j+1);
-      takePackage(j+1);
-    } else {
-      --codeLength[x];
+    /**
+     * @param {number} j
+     */
+    function takePackage(j) {
+        /** @type {number} */
+        var x = type[j][currentPosition[j]];
+
+        if (x === symbols) {
+            takePackage(j + 1);
+            takePackage(j + 1);
+        } else {
+            --codeLength[x];
+        }
+
+        ++currentPosition[j];
     }
 
-    ++currentPosition[j];
-  }
+    minimumCost[limit - 1] = symbols;
 
-  minimumCost[limit-1] = symbols;
-
-  for (j = 0; j < limit; ++j) {
-    if (excess < half) {
-      flag[j] = 0;
-    } else {
-      flag[j] = 1;
-      excess -= half;
+    for (j = 0; j < limit; ++j) {
+        if (excess < half) {
+            flag[j] = 0;
+        } else {
+            flag[j] = 1;
+            excess -= half;
+        }
+        excess <<= 1;
+        minimumCost[limit - 2 - j] = ((minimumCost[limit - 1 - j] / 2) | 0) + symbols;
     }
-    excess <<= 1;
-    minimumCost[limit-2-j] = (minimumCost[limit-1-j] / 2 | 0) + symbols;
-  }
-  minimumCost[0] = flag[0];
+    minimumCost[0] = flag[0];
 
-  value[0] = new Array(minimumCost[0]);
-  type[0]  = new Array(minimumCost[0]);
-  for (j = 1; j < limit; ++j) {
-    if (minimumCost[j] > 2 * minimumCost[j-1] + flag[j]) {
-      minimumCost[j] = 2 * minimumCost[j-1] + flag[j];
-    }
-    value[j] = new Array(minimumCost[j]);
-    type[j]  = new Array(minimumCost[j]);
-  }
-
-  for (i = 0; i < symbols; ++i) {
-    codeLength[i] = limit;
-  }
-
-  for (t = 0; t < minimumCost[limit-1]; ++t) {
-    value[limit-1][t] = freqs[t];
-    type[limit-1][t]  = t;
-  }
-
-  for (i = 0; i < limit; ++i) {
-    currentPosition[i] = 0;
-  }
-  if (flag[limit-1] === 1) {
-    --codeLength[0];
-    ++currentPosition[limit-1];
-  }
-
-  for (j = limit-2; j >= 0; --j) {
-    i = 0;
-    weight = 0;
-    next = currentPosition[j+1];
-
-    for (t = 0; t < minimumCost[j]; t++) {
-      weight = value[j+1][next] + value[j+1][next+1];
-
-      if (weight > freqs[i]) {
-        value[j][t] = weight;
-        type[j][t] = symbols;
-        next += 2;
-      } else {
-        value[j][t] = freqs[i];
-        type[j][t] = i;
-        ++i;
-      }
+    value[0] = new Array(minimumCost[0]);
+    type[0] = new Array(minimumCost[0]);
+    for (j = 1; j < limit; ++j) {
+        if (minimumCost[j] > 2 * minimumCost[j - 1] + flag[j]) {
+            minimumCost[j] = 2 * minimumCost[j - 1] + flag[j];
+        }
+        value[j] = new Array(minimumCost[j]);
+        type[j] = new Array(minimumCost[j]);
     }
 
-    currentPosition[j] = 0;
-    if (flag[j] === 1) {
-      takePackage(j);
+    for (i = 0; i < symbols; ++i) {
+        codeLength[i] = limit;
     }
-  }
 
-  return codeLength;
+    for (t = 0; t < minimumCost[limit - 1]; ++t) {
+        value[limit - 1][t] = freqs[t];
+        type[limit - 1][t] = t;
+    }
+
+    for (i = 0; i < limit; ++i) {
+        currentPosition[i] = 0;
+    }
+    if (flag[limit - 1] === 1) {
+        --codeLength[0];
+        ++currentPosition[limit - 1];
+    }
+
+    for (j = limit - 2; j >= 0; --j) {
+        i = 0;
+        weight = 0;
+        next = currentPosition[j + 1];
+
+        for (t = 0; t < minimumCost[j]; t++) {
+            weight = value[j + 1][next] + value[j + 1][next + 1];
+
+            if (weight > freqs[i]) {
+                value[j][t] = weight;
+                type[j][t] = symbols;
+                next += 2;
+            } else {
+                value[j][t] = freqs[i];
+                type[j][t] = i;
+                ++i;
+            }
+        }
+
+        currentPosition[j] = 0;
+        if (flag[j] === 1) {
+            takePackage(j);
+        }
+    }
+
+    return codeLength;
 };
 
 /**
@@ -14403,79 +14257,80 @@ Zlib.RawDeflate.prototype.reversePackageMerge_ = function(freqs, symbols, limit)
  * @return {!(Array.<number>|Uint16Array)} ハフマン符号配列.
  * @private
  */
-Zlib.RawDeflate.prototype.getCodesFromLengths_ = function(lengths) {
-  var codes = new ( Uint16Array )(lengths.length),
-      count = [],
-      startCode = [],
-      code = 0, i, il, j, m;
+Zlib.RawDeflate.prototype.getCodesFromLengths_ = function (lengths) {
+    var codes = new Uint16Array(lengths.length),
+        count = [],
+        startCode = [],
+        code = 0,
+        i,
+        il,
+        j,
+        m;
 
-  // Count the codes of each length.
-  for (i = 0, il = lengths.length; i < il; i++) {
-    count[lengths[i]] = (count[lengths[i]] | 0) + 1;
-  }
-
-  // Determine the starting code for each length block.
-  for (i = 1, il = Zlib.RawDeflate.MaxCodeLength; i <= il; i++) {
-    startCode[i] = code;
-    code += count[i] | 0;
-    code <<= 1;
-  }
-
-  // Determine the code for each symbol. Mirrored, of course.
-  for (i = 0, il = lengths.length; i < il; i++) {
-    code = startCode[lengths[i]];
-    startCode[lengths[i]] += 1;
-    codes[i] = 0;
-
-    for (j = 0, m = lengths[i]; j < m; j++) {
-      codes[i] = (codes[i] << 1) | (code & 1);
-      code >>>= 1;
+    // Count the codes of each length.
+    for (i = 0, il = lengths.length; i < il; i++) {
+        count[lengths[i]] = (count[lengths[i]] | 0) + 1;
     }
-  }
 
-  return codes;
+    // Determine the starting code for each length block.
+    for (i = 1, il = Zlib.RawDeflate.MaxCodeLength; i <= il; i++) {
+        startCode[i] = code;
+        code += count[i] | 0;
+        code <<= 1;
+    }
+
+    // Determine the code for each symbol. Mirrored, of course.
+    for (i = 0, il = lengths.length; i < il; i++) {
+        code = startCode[lengths[i]];
+        startCode[lengths[i]] += 1;
+        codes[i] = 0;
+
+        for (j = 0, m = lengths[i]; j < m; j++) {
+            codes[i] = (codes[i] << 1) | (code & 1);
+            code >>>= 1;
+        }
+    }
+
+    return codes;
 };
-
 
 /**
  * @param {!(Array.<number>|Uint8Array)} input input buffer.
  * @param {Object=} opt_params options.
  * @constructor
  */
-Zlib.Unzip = function(input, opt_params) {
-  opt_params = opt_params || {};
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.input =
-      ( (input instanceof Array)) ?
-          new Uint8Array(input) : input;
-  /** @type {number} */
-  this.ip = 0;
-  /** @type {number} */
-  this.eocdrOffset;
-  /** @type {number} */
-  this.numberOfThisDisk;
-  /** @type {number} */
-  this.startDisk;
-  /** @type {number} */
-  this.totalEntriesThisDisk;
-  /** @type {number} */
-  this.totalEntries;
-  /** @type {number} */
-  this.centralDirectorySize;
-  /** @type {number} */
-  this.centralDirectoryOffset;
-  /** @type {number} */
-  this.commentLength;
-  /** @type {(Array.<number>|Uint8Array)} */
-  this.comment;
-  /** @type {Array.<Zlib.Unzip.FileHeader>} */
-  this.fileHeaderList;
-  /** @type {Object.<string, number>} */
-  this.filenameToIndex;
-  /** @type {boolean} */
-  this.verify = opt_params['verify'] || false;
-  /** @type {(Array.<number>|Uint8Array)} */
-  this.password = opt_params['password'];
+Zlib.Unzip = function (input, opt_params) {
+    opt_params = opt_params || {};
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.input = input instanceof Array ? new Uint8Array(input) : input;
+    /** @type {number} */
+    this.ip = 0;
+    /** @type {number} */
+    this.eocdrOffset;
+    /** @type {number} */
+    this.numberOfThisDisk;
+    /** @type {number} */
+    this.startDisk;
+    /** @type {number} */
+    this.totalEntriesThisDisk;
+    /** @type {number} */
+    this.totalEntries;
+    /** @type {number} */
+    this.centralDirectorySize;
+    /** @type {number} */
+    this.centralDirectoryOffset;
+    /** @type {number} */
+    this.commentLength;
+    /** @type {(Array.<number>|Uint8Array)} */
+    this.comment;
+    /** @type {Array.<Zlib.Unzip.FileHeader>} */
+    this.fileHeaderList;
+    /** @type {Object.<string, number>} */
+    this.filenameToIndex;
+    /** @type {boolean} */
+    this.verify = opt_params["verify"] || false;
+    /** @type {(Array.<number>|Uint8Array)} */
+    this.password = opt_params["password"];
 };
 
 Zlib.Unzip.CompressionMethod = Zlib.Zip.CompressionMethod;
@@ -14503,146 +14358,130 @@ Zlib.Unzip.CentralDirectorySignature = Zlib.Zip.CentralDirectorySignature;
  * @param {number} ip input position.
  * @constructor
  */
-Zlib.Unzip.FileHeader = function(input, ip) {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.input = input;
-  /** @type {number} */
-  this.offset = ip;
-  /** @type {number} */
-  this.length;
-  /** @type {number} */
-  this.version;
-  /** @type {number} */
-  this.os;
-  /** @type {number} */
-  this.needVersion;
-  /** @type {number} */
-  this.flags;
-  /** @type {number} */
-  this.compression;
-  /** @type {number} */
-  this.time;
-  /** @type {number} */
-  this.date;
-  /** @type {number} */
-  this.crc32;
-  /** @type {number} */
-  this.compressedSize;
-  /** @type {number} */
-  this.plainSize;
-  /** @type {number} */
-  this.fileNameLength;
-  /** @type {number} */
-  this.extraFieldLength;
-  /** @type {number} */
-  this.fileCommentLength;
-  /** @type {number} */
-  this.diskNumberStart;
-  /** @type {number} */
-  this.internalFileAttributes;
-  /** @type {number} */
-  this.externalFileAttributes;
-  /** @type {number} */
-  this.relativeOffset;
-  /** @type {string} */
-  this.filename;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.extraField;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.comment;
+Zlib.Unzip.FileHeader = function (input, ip) {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.input = input;
+    /** @type {number} */
+    this.offset = ip;
+    /** @type {number} */
+    this.length;
+    /** @type {number} */
+    this.version;
+    /** @type {number} */
+    this.os;
+    /** @type {number} */
+    this.needVersion;
+    /** @type {number} */
+    this.flags;
+    /** @type {number} */
+    this.compression;
+    /** @type {number} */
+    this.time;
+    /** @type {number} */
+    this.date;
+    /** @type {number} */
+    this.crc32;
+    /** @type {number} */
+    this.compressedSize;
+    /** @type {number} */
+    this.plainSize;
+    /** @type {number} */
+    this.fileNameLength;
+    /** @type {number} */
+    this.extraFieldLength;
+    /** @type {number} */
+    this.fileCommentLength;
+    /** @type {number} */
+    this.diskNumberStart;
+    /** @type {number} */
+    this.internalFileAttributes;
+    /** @type {number} */
+    this.externalFileAttributes;
+    /** @type {number} */
+    this.relativeOffset;
+    /** @type {string} */
+    this.filename;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.extraField;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.comment;
 };
 
-Zlib.Unzip.FileHeader.prototype.parse = function() {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var input = this.input;
-  /** @type {number} */
-  var ip = this.offset;
+Zlib.Unzip.FileHeader.prototype.parse = function () {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var input = this.input;
+    /** @type {number} */
+    var ip = this.offset;
 
-  // central file header signature
-  if (input[ip++] !== Zlib.Unzip.FileHeaderSignature[0] ||
-      input[ip++] !== Zlib.Unzip.FileHeaderSignature[1] ||
-      input[ip++] !== Zlib.Unzip.FileHeaderSignature[2] ||
-      input[ip++] !== Zlib.Unzip.FileHeaderSignature[3]) {
-    throw new Error('invalid file header signature');
-  }
+    // central file header signature
+    if (
+        input[ip++] !== Zlib.Unzip.FileHeaderSignature[0] ||
+        input[ip++] !== Zlib.Unzip.FileHeaderSignature[1] ||
+        input[ip++] !== Zlib.Unzip.FileHeaderSignature[2] ||
+        input[ip++] !== Zlib.Unzip.FileHeaderSignature[3]
+    ) {
+        throw new Error("invalid file header signature");
+    }
 
-  // version made by
-  this.version = input[ip++];
-  this.os = input[ip++];
+    // version made by
+    this.version = input[ip++];
+    this.os = input[ip++];
 
-  // version needed to extract
-  this.needVersion = input[ip++] | (input[ip++] << 8);
+    // version needed to extract
+    this.needVersion = input[ip++] | (input[ip++] << 8);
 
-  // general purpose bit flag
-  this.flags = input[ip++] | (input[ip++] << 8);
+    // general purpose bit flag
+    this.flags = input[ip++] | (input[ip++] << 8);
 
-  // compression method
-  this.compression = input[ip++] | (input[ip++] << 8);
+    // compression method
+    this.compression = input[ip++] | (input[ip++] << 8);
 
-  // last mod file time
-  this.time = input[ip++] | (input[ip++] << 8);
+    // last mod file time
+    this.time = input[ip++] | (input[ip++] << 8);
 
-  //last mod file date
-  this.date = input[ip++] | (input[ip++] << 8);
+    //last mod file date
+    this.date = input[ip++] | (input[ip++] << 8);
 
-  // crc-32
-  this.crc32 = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
+    // crc-32
+    this.crc32 = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
 
-  // compressed size
-  this.compressedSize = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
+    // compressed size
+    this.compressedSize = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
 
-  // uncompressed size
-  this.plainSize = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
+    // uncompressed size
+    this.plainSize = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
 
-  // file name length
-  this.fileNameLength = input[ip++] | (input[ip++] << 8);
+    // file name length
+    this.fileNameLength = input[ip++] | (input[ip++] << 8);
 
-  // extra field length
-  this.extraFieldLength = input[ip++] | (input[ip++] << 8);
+    // extra field length
+    this.extraFieldLength = input[ip++] | (input[ip++] << 8);
 
-  // file comment length
-  this.fileCommentLength = input[ip++] | (input[ip++] << 8);
+    // file comment length
+    this.fileCommentLength = input[ip++] | (input[ip++] << 8);
 
-  // disk number start
-  this.diskNumberStart = input[ip++] | (input[ip++] << 8);
+    // disk number start
+    this.diskNumberStart = input[ip++] | (input[ip++] << 8);
 
-  // internal file attributes
-  this.internalFileAttributes = input[ip++] | (input[ip++] << 8);
+    // internal file attributes
+    this.internalFileAttributes = input[ip++] | (input[ip++] << 8);
 
-  // external file attributes
-  this.externalFileAttributes =
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24);
+    // external file attributes
+    this.externalFileAttributes = input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24);
 
-  // relative offset of local header
-  this.relativeOffset = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
+    // relative offset of local header
+    this.relativeOffset = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
 
-  // file name
-  this.filename = String.fromCharCode.apply(null, 
-      input.subarray(ip, ip += this.fileNameLength) 
-  );
+    // file name
+    this.filename = String.fromCharCode.apply(null, input.subarray(ip, (ip += this.fileNameLength)));
 
-  // extra field
-  this.extraField = 
-      input.subarray(ip, ip += this.extraFieldLength) ;
+    // extra field
+    this.extraField = input.subarray(ip, (ip += this.extraFieldLength));
 
-  // file comment
-  this.comment = 
-      input.subarray(ip, ip + this.fileCommentLength) ;
+    // file comment
+    this.comment = input.subarray(ip, ip + this.fileCommentLength);
 
-  this.length = ip - this.offset;
+    this.length = ip - this.offset;
 };
 
 /**
@@ -14650,214 +14489,200 @@ Zlib.Unzip.FileHeader.prototype.parse = function() {
  * @param {number} ip input position.
  * @constructor
  */
-Zlib.Unzip.LocalFileHeader = function(input, ip) {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.input = input;
-  /** @type {number} */
-  this.offset = ip;
-  /** @type {number} */
-  this.length;
-  /** @type {number} */
-  this.needVersion;
-  /** @type {number} */
-  this.flags;
-  /** @type {number} */
-  this.compression;
-  /** @type {number} */
-  this.time;
-  /** @type {number} */
-  this.date;
-  /** @type {number} */
-  this.crc32;
-  /** @type {number} */
-  this.compressedSize;
-  /** @type {number} */
-  this.plainSize;
-  /** @type {number} */
-  this.fileNameLength;
-  /** @type {number} */
-  this.extraFieldLength;
-  /** @type {string} */
-  this.filename;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  this.extraField;
+Zlib.Unzip.LocalFileHeader = function (input, ip) {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.input = input;
+    /** @type {number} */
+    this.offset = ip;
+    /** @type {number} */
+    this.length;
+    /** @type {number} */
+    this.needVersion;
+    /** @type {number} */
+    this.flags;
+    /** @type {number} */
+    this.compression;
+    /** @type {number} */
+    this.time;
+    /** @type {number} */
+    this.date;
+    /** @type {number} */
+    this.crc32;
+    /** @type {number} */
+    this.compressedSize;
+    /** @type {number} */
+    this.plainSize;
+    /** @type {number} */
+    this.fileNameLength;
+    /** @type {number} */
+    this.extraFieldLength;
+    /** @type {string} */
+    this.filename;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    this.extraField;
 };
 
 Zlib.Unzip.LocalFileHeader.Flags = Zlib.Zip.Flags;
 
-Zlib.Unzip.LocalFileHeader.prototype.parse = function() {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var input = this.input;
-  /** @type {number} */
-  var ip = this.offset;
+Zlib.Unzip.LocalFileHeader.prototype.parse = function () {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var input = this.input;
+    /** @type {number} */
+    var ip = this.offset;
 
-  // local file header signature
-  if (input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[0] ||
-      input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[1] ||
-      input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[2] ||
-      input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[3]) {
-    throw new Error('invalid local file header signature');
-  }
-
-  // version needed to extract
-  this.needVersion = input[ip++] | (input[ip++] << 8);
-
-  // general purpose bit flag
-  this.flags = input[ip++] | (input[ip++] << 8);
-
-  // compression method
-  this.compression = input[ip++] | (input[ip++] << 8);
-
-  // last mod file time
-  this.time = input[ip++] | (input[ip++] << 8);
-
-  //last mod file date
-  this.date = input[ip++] | (input[ip++] << 8);
-
-  // crc-32
-  this.crc32 = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
-
-  // compressed size
-  this.compressedSize = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
-
-  // uncompressed size
-  this.plainSize = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
-
-  // file name length
-  this.fileNameLength = input[ip++] | (input[ip++] << 8);
-
-  // extra field length
-  this.extraFieldLength = input[ip++] | (input[ip++] << 8);
-
-  // file name
-  this.filename = String.fromCharCode.apply(null, 
-      input.subarray(ip, ip += this.fileNameLength) 
-  );
-
-  // extra field
-  this.extraField = 
-      input.subarray(ip, ip += this.extraFieldLength) ;
-
-  this.length = ip - this.offset;
-};
-
-
-Zlib.Unzip.prototype.searchEndOfCentralDirectoryRecord = function() {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var input = this.input;
-  /** @type {number} */
-  var ip;
-
-  for (ip = input.length - 12; ip > 0; --ip) {
-    if (input[ip  ] === Zlib.Unzip.CentralDirectorySignature[0] &&
-        input[ip+1] === Zlib.Unzip.CentralDirectorySignature[1] &&
-        input[ip+2] === Zlib.Unzip.CentralDirectorySignature[2] &&
-        input[ip+3] === Zlib.Unzip.CentralDirectorySignature[3]) {
-      this.eocdrOffset = ip;
-      return;
+    // local file header signature
+    if (
+        input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[0] ||
+        input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[1] ||
+        input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[2] ||
+        input[ip++] !== Zlib.Unzip.LocalFileHeaderSignature[3]
+    ) {
+        throw new Error("invalid local file header signature");
     }
-  }
 
-  throw new Error('End of Central Directory Record not found');
+    // version needed to extract
+    this.needVersion = input[ip++] | (input[ip++] << 8);
+
+    // general purpose bit flag
+    this.flags = input[ip++] | (input[ip++] << 8);
+
+    // compression method
+    this.compression = input[ip++] | (input[ip++] << 8);
+
+    // last mod file time
+    this.time = input[ip++] | (input[ip++] << 8);
+
+    //last mod file date
+    this.date = input[ip++] | (input[ip++] << 8);
+
+    // crc-32
+    this.crc32 = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+
+    // compressed size
+    this.compressedSize = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+
+    // uncompressed size
+    this.plainSize = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+
+    // file name length
+    this.fileNameLength = input[ip++] | (input[ip++] << 8);
+
+    // extra field length
+    this.extraFieldLength = input[ip++] | (input[ip++] << 8);
+
+    // file name
+    this.filename = String.fromCharCode.apply(null, input.subarray(ip, (ip += this.fileNameLength)));
+
+    // extra field
+    this.extraField = input.subarray(ip, (ip += this.extraFieldLength));
+
+    this.length = ip - this.offset;
 };
 
-Zlib.Unzip.prototype.parseEndOfCentralDirectoryRecord = function() {
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var input = this.input;
-  /** @type {number} */
-  var ip;
+Zlib.Unzip.prototype.searchEndOfCentralDirectoryRecord = function () {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var input = this.input;
+    /** @type {number} */
+    var ip;
 
-  if (!this.eocdrOffset) {
-    this.searchEndOfCentralDirectoryRecord();
-  }
-  ip = this.eocdrOffset;
+    for (ip = input.length - 12; ip > 0; --ip) {
+        if (
+            input[ip] === Zlib.Unzip.CentralDirectorySignature[0] &&
+            input[ip + 1] === Zlib.Unzip.CentralDirectorySignature[1] &&
+            input[ip + 2] === Zlib.Unzip.CentralDirectorySignature[2] &&
+            input[ip + 3] === Zlib.Unzip.CentralDirectorySignature[3]
+        ) {
+            this.eocdrOffset = ip;
+            return;
+        }
+    }
 
-  // signature
-  if (input[ip++] !== Zlib.Unzip.CentralDirectorySignature[0] ||
-      input[ip++] !== Zlib.Unzip.CentralDirectorySignature[1] ||
-      input[ip++] !== Zlib.Unzip.CentralDirectorySignature[2] ||
-      input[ip++] !== Zlib.Unzip.CentralDirectorySignature[3]) {
-    throw new Error('invalid signature');
-  }
-
-  // number of this disk
-  this.numberOfThisDisk = input[ip++] | (input[ip++] << 8);
-
-  // number of the disk with the start of the central directory
-  this.startDisk = input[ip++] | (input[ip++] << 8);
-
-  // total number of entries in the central directory on this disk
-  this.totalEntriesThisDisk = input[ip++] | (input[ip++] << 8);
-
-  // total number of entries in the central directory
-  this.totalEntries = input[ip++] | (input[ip++] << 8);
-
-  // size of the central directory
-  this.centralDirectorySize = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
-
-  // offset of start of central directory with respect to the starting disk number
-  this.centralDirectoryOffset = (
-      (input[ip++]      ) | (input[ip++] <<  8) |
-      (input[ip++] << 16) | (input[ip++] << 24)
-  ) >>> 0;
-
-  // .ZIP file comment length
-  this.commentLength = input[ip++] | (input[ip++] << 8);
-
-  // .ZIP file comment
-  this.comment = 
-      input.subarray(ip, ip + this.commentLength) ;
+    throw new Error("End of Central Directory Record not found");
 };
 
-Zlib.Unzip.prototype.parseFileHeader = function() {
-  /** @type {Array.<Zlib.Unzip.FileHeader>} */
-  var filelist = [];
-  /** @type {Object.<string, number>} */
-  var filetable = {};
-  /** @type {number} */
-  var ip;
-  /** @type {Zlib.Unzip.FileHeader} */
-  var fileHeader;
-  /*: @type {number} */
-  var i;
-  /*: @type {number} */
-  var il;
+Zlib.Unzip.prototype.parseEndOfCentralDirectoryRecord = function () {
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var input = this.input;
+    /** @type {number} */
+    var ip;
 
-  if (this.fileHeaderList) {
-    return;
-  }
+    if (!this.eocdrOffset) {
+        this.searchEndOfCentralDirectoryRecord();
+    }
+    ip = this.eocdrOffset;
 
-  if (this.centralDirectoryOffset === void 0) {
-    this.parseEndOfCentralDirectoryRecord();
-  }
-  ip = this.centralDirectoryOffset;
+    // signature
+    if (
+        input[ip++] !== Zlib.Unzip.CentralDirectorySignature[0] ||
+        input[ip++] !== Zlib.Unzip.CentralDirectorySignature[1] ||
+        input[ip++] !== Zlib.Unzip.CentralDirectorySignature[2] ||
+        input[ip++] !== Zlib.Unzip.CentralDirectorySignature[3]
+    ) {
+        throw new Error("invalid signature");
+    }
 
-  for (i = 0, il = this.totalEntries; i < il; ++i) {
-    fileHeader = new Zlib.Unzip.FileHeader(this.input, ip);
-    fileHeader.parse();
-    ip += fileHeader.length;
-    filelist[i] = fileHeader;
-    filetable[fileHeader.filename] = i;
-  }
+    // number of this disk
+    this.numberOfThisDisk = input[ip++] | (input[ip++] << 8);
 
-  if (this.centralDirectorySize < ip - this.centralDirectoryOffset) {
-    throw new Error('invalid file header size');
-  }
+    // number of the disk with the start of the central directory
+    this.startDisk = input[ip++] | (input[ip++] << 8);
 
-  this.fileHeaderList = filelist;
-  this.filenameToIndex = filetable;
+    // total number of entries in the central directory on this disk
+    this.totalEntriesThisDisk = input[ip++] | (input[ip++] << 8);
+
+    // total number of entries in the central directory
+    this.totalEntries = input[ip++] | (input[ip++] << 8);
+
+    // size of the central directory
+    this.centralDirectorySize = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+
+    // offset of start of central directory with respect to the starting disk number
+    this.centralDirectoryOffset = (input[ip++] | (input[ip++] << 8) | (input[ip++] << 16) | (input[ip++] << 24)) >>> 0;
+
+    // .ZIP file comment length
+    this.commentLength = input[ip++] | (input[ip++] << 8);
+
+    // .ZIP file comment
+    this.comment = input.subarray(ip, ip + this.commentLength);
+};
+
+Zlib.Unzip.prototype.parseFileHeader = function () {
+    /** @type {Array.<Zlib.Unzip.FileHeader>} */
+    var filelist = [];
+    /** @type {Object.<string, number>} */
+    var filetable = {};
+    /** @type {number} */
+    var ip;
+    /** @type {Zlib.Unzip.FileHeader} */
+    var fileHeader;
+    /*: @type {number} */
+    var i;
+    /*: @type {number} */
+    var il;
+
+    if (this.fileHeaderList) {
+        return;
+    }
+
+    if (this.centralDirectoryOffset === void 0) {
+        this.parseEndOfCentralDirectoryRecord();
+    }
+    ip = this.centralDirectoryOffset;
+
+    for (i = 0, il = this.totalEntries; i < il; ++i) {
+        fileHeader = new Zlib.Unzip.FileHeader(this.input, ip);
+        fileHeader.parse();
+        ip += fileHeader.length;
+        filelist[i] = fileHeader;
+        filetable[fileHeader.filename] = i;
+    }
+
+    if (this.centralDirectorySize < ip - this.centralDirectoryOffset) {
+        throw new Error("invalid file header size");
+    }
+
+    this.fileHeaderList = filelist;
+    this.filenameToIndex = filetable;
 };
 
 /**
@@ -14865,114 +14690,112 @@ Zlib.Unzip.prototype.parseFileHeader = function() {
  * @param {Object=} opt_params
  * @return {!(Array.<number>|Uint8Array)} file data.
  */
-Zlib.Unzip.prototype.getFileData = function(index, opt_params) {
-  opt_params = opt_params || {};
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var input = this.input;
-  /** @type {Array.<Zlib.Unzip.FileHeader>} */
-  var fileHeaderList = this.fileHeaderList;
-  /** @type {Zlib.Unzip.LocalFileHeader} */
-  var localFileHeader;
-  /** @type {number} */
-  var offset;
-  /** @type {number} */
-  var length;
-  /** @type {!(Array.<number>|Uint8Array)} */
-  var buffer;
-  /** @type {number} */
-  var crc32;
-  /** @type {Array.<number>|Uint32Array|Object} */
-  var key;
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
+Zlib.Unzip.prototype.getFileData = function (index, opt_params) {
+    opt_params = opt_params || {};
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var input = this.input;
+    /** @type {Array.<Zlib.Unzip.FileHeader>} */
+    var fileHeaderList = this.fileHeaderList;
+    /** @type {Zlib.Unzip.LocalFileHeader} */
+    var localFileHeader;
+    /** @type {number} */
+    var offset;
+    /** @type {number} */
+    var length;
+    /** @type {!(Array.<number>|Uint8Array)} */
+    var buffer;
+    /** @type {number} */
+    var crc32;
+    /** @type {Array.<number>|Uint32Array|Object} */
+    var key;
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
 
-  if (!fileHeaderList) {
-    this.parseFileHeader();
-  }
-
-  if (fileHeaderList[index] === void 0) {
-    throw new Error('wrong index');
-  }
-
-  offset = fileHeaderList[index].relativeOffset;
-  localFileHeader = new Zlib.Unzip.LocalFileHeader(this.input, offset);
-  localFileHeader.parse();
-  offset += localFileHeader.length;
-  length = localFileHeader.compressedSize;
-
-  // decryption
-  if ((localFileHeader.flags & Zlib.Unzip.LocalFileHeader.Flags.ENCRYPT) !== 0) {
-    if (!(opt_params['password'] || this.password)) {
-      throw new Error('please set password');
+    if (!fileHeaderList) {
+        this.parseFileHeader();
     }
-    key =  this.createDecryptionKey(opt_params['password'] || this.password);
 
-    // encryption header
-    for(i = offset, il = offset + 12; i < il; ++i) {
-      this.decode(key, input[i]);
+    if (fileHeaderList[index] === void 0) {
+        throw new Error("wrong index");
     }
-    offset += 12;
-    length -= 12;
+
+    offset = fileHeaderList[index].relativeOffset;
+    localFileHeader = new Zlib.Unzip.LocalFileHeader(this.input, offset);
+    localFileHeader.parse();
+    offset += localFileHeader.length;
+    length = localFileHeader.compressedSize;
 
     // decryption
-    for (i = offset, il = offset + length; i < il; ++i) {
-      input[i] = this.decode(key, input[i]);
+    if ((localFileHeader.flags & Zlib.Unzip.LocalFileHeader.Flags.ENCRYPT) !== 0) {
+        if (!(opt_params["password"] || this.password)) {
+            throw new Error("please set password");
+        }
+        key = this.createDecryptionKey(opt_params["password"] || this.password);
+
+        // encryption header
+        for (i = offset, il = offset + 12; i < il; ++i) {
+            this.decode(key, input[i]);
+        }
+        offset += 12;
+        length -= 12;
+
+        // decryption
+        for (i = offset, il = offset + length; i < il; ++i) {
+            input[i] = this.decode(key, input[i]);
+        }
     }
-  }
 
-  switch (localFileHeader.compression) {
-    case Zlib.Unzip.CompressionMethod.STORE:
-      buffer = 
-          this.input.subarray(offset, offset + length) ;
-      break;
-    case Zlib.Unzip.CompressionMethod.DEFLATE:
-      buffer = new Zlib.RawInflate(this.input, {
-        'index': offset,
-        'bufferSize': localFileHeader.plainSize
-      }).decompress();
-      break;
-    default:
-      throw new Error('unknown compression type');
-  }
-
-  if (this.verify) {
-    crc32 = Zlib.CRC32.calc(buffer);
-    if (localFileHeader.crc32 !== crc32) {
-      throw new Error(
-          'wrong crc: file=0x' + localFileHeader.crc32.toString(16) +
-          ', data=0x' + crc32.toString(16)
-      );
+    switch (localFileHeader.compression) {
+        case Zlib.Unzip.CompressionMethod.STORE:
+            buffer = this.input.subarray(offset, offset + length);
+            break;
+        case Zlib.Unzip.CompressionMethod.DEFLATE:
+            buffer = new Zlib.RawInflate(this.input, {
+                index: offset,
+                bufferSize: localFileHeader.plainSize,
+            }).decompress();
+            break;
+        default:
+            throw new Error("unknown compression type");
     }
-  }
 
-  return buffer;
+    if (this.verify) {
+        crc32 = Zlib.CRC32.calc(buffer);
+        if (localFileHeader.crc32 !== crc32) {
+            throw new Error(
+                "wrong crc: file=0x" + localFileHeader.crc32.toString(16) + ", data=0x" + crc32.toString(16)
+            );
+        }
+    }
+
+    return buffer;
 };
 
 /**
  * @return {Array.<string>}
  */
-Zlib.Unzip.prototype.getFilenames = function() {
-  /** @type {Array.<string>} */
-  var filenameList = [];
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
-  /** @type {Array.<Zlib.Unzip.FileHeader>} */
-  var fileHeaderList;
+Zlib.Unzip.prototype.getFilenames = function () {
+    /** @type {Array.<string>} */
+    var filenameList = [];
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
+    /** @type {Array.<Zlib.Unzip.FileHeader>} */
+    var fileHeaderList;
 
-  if (!this.fileHeaderList) {
-    this.parseFileHeader();
-  }
-  fileHeaderList = this.fileHeaderList;
+    if (!this.fileHeaderList) {
+        this.parseFileHeader();
+    }
+    fileHeaderList = this.fileHeaderList;
 
-  for (i = 0, il = fileHeaderList.length; i < il; ++i) {
-    filenameList[i] = fileHeaderList[i].filename;
-  }
+    for (i = 0, il = fileHeaderList.length; i < il; ++i) {
+        filenameList[i] = fileHeaderList[i].filename;
+    }
 
-  return filenameList;
+    return filenameList;
 };
 
 /**
@@ -14980,27 +14803,27 @@ Zlib.Unzip.prototype.getFilenames = function() {
  * @param {Object=} opt_params
  * @return {!(Array.<number>|Uint8Array)} decompressed data.
  */
-Zlib.Unzip.prototype.decompress = function(filename, opt_params) {
-  /** @type {number} */
-  var index;
+Zlib.Unzip.prototype.decompress = function (filename, opt_params) {
+    /** @type {number} */
+    var index;
 
-  if (!this.filenameToIndex) {
-    this.parseFileHeader();
-  }
-  index = this.filenameToIndex[filename];
+    if (!this.filenameToIndex) {
+        this.parseFileHeader();
+    }
+    index = this.filenameToIndex[filename];
 
-  if (index === void 0) {
-    throw new Error(filename + ' not found');
-  }
+    if (index === void 0) {
+        throw new Error(filename + " not found");
+    }
 
-  return this.getFileData(index, opt_params);
+    return this.getFileData(index, opt_params);
 };
 
 /**
  * @param {(Array.<number>|Uint8Array)} password
  */
-Zlib.Unzip.prototype.setPassword = function(password) {
-  this.password = password;
+Zlib.Unzip.prototype.setPassword = function (password) {
+    this.password = password;
 };
 
 /**
@@ -15008,11 +14831,11 @@ Zlib.Unzip.prototype.setPassword = function(password) {
  * @param {number} n
  * @return {number}
  */
-Zlib.Unzip.prototype.decode = function(key, n) {
-  n ^= this.getByte(/** @type {(Array.<number>|Uint32Array)} */(key));
-  this.updateKeys(/** @type {(Array.<number>|Uint32Array)} */(key), n);
+Zlib.Unzip.prototype.decode = function (key, n) {
+    n ^= this.getByte(/** @type {(Array.<number>|Uint32Array)} */ (key));
+    this.updateKeys(/** @type {(Array.<number>|Uint32Array)} */ (key), n);
 
-  return n;
+    return n;
 };
 
 // common method
@@ -15024,43 +14847,40 @@ Zlib.Unzip.prototype.getByte = Zlib.Zip.prototype.getByte;
  * @fileoverview 雑多な関数群をまとめたモジュール実装.
  */
 
-
 /**
  * Byte String から Byte Array に変換.
  * @param {!string} str byte string.
  * @return {!Array.<number>} byte array.
  */
-Zlib.Util.stringToByteArray = function(str) {
-  /** @type {!Array.<(string|number)>} */
-  var tmp = str.split('');
-  /** @type {number} */
-  var i;
-  /** @type {number} */
-  var il;
+Zlib.Util.stringToByteArray = function (str) {
+    /** @type {!Array.<(string|number)>} */
+    var tmp = str.split("");
+    /** @type {number} */
+    var i;
+    /** @type {number} */
+    var il;
 
-  for (i = 0, il = tmp.length; i < il; i++) {
-    tmp[i] = (tmp[i].charCodeAt(0) & 0xff) >>> 0;
-  }
+    for (i = 0, il = tmp.length; i < il; i++) {
+        tmp[i] = (tmp[i].charCodeAt(0) & 0xff) >>> 0;
+    }
 
-  return tmp;
+    return tmp;
 };
-
 
 /**
  * @fileoverview Adler32 checksum 実装.
  */
-
 
 /**
  * Adler32 ハッシュ値の作成
  * @param {!(Array|Uint8Array|string)} array 算出に使用する byte array.
  * @return {number} Adler32 ハッシュ値.
  */
-Zlib.Adler32 = function(array) {
-  if (typeof(array) === 'string') {
-    array = Zlib.Util.stringToByteArray(array);
-  }
-  return Zlib.Adler32.update(1, array);
+Zlib.Adler32 = function (array) {
+    if (typeof array === "string") {
+        array = Zlib.Util.stringToByteArray(array);
+    }
+    return Zlib.Adler32.update(1, array);
 };
 
 /**
@@ -15069,32 +14889,31 @@ Zlib.Adler32 = function(array) {
  * @param {!(Array|Uint8Array)} array 更新に使用する byte array.
  * @return {number} Adler32 ハッシュ値.
  */
-Zlib.Adler32.update = function(adler, array) {
-  /** @type {number} */
-  var s1 = adler & 0xffff;
-  /** @type {number} */
-  var s2 = (adler >>> 16) & 0xffff;
-  /** @type {number} array length */
-  var len = array.length;
-  /** @type {number} loop length (don't overflow) */
-  var tlen;
-  /** @type {number} array index */
-  var i = 0;
+Zlib.Adler32.update = function (adler, array) {
+    /** @type {number} */
+    var s1 = adler & 0xffff;
+    /** @type {number} */
+    var s2 = (adler >>> 16) & 0xffff;
+    /** @type {number} array length */
+    var len = array.length;
+    /** @type {number} loop length (don't overflow) */
+    var tlen;
+    /** @type {number} array index */
+    var i = 0;
 
-  while (len > 0) {
-    tlen = len > Zlib.Adler32.OptimizationParameter ?
-        Zlib.Adler32.OptimizationParameter : len;
-    len -= tlen;
-    do {
-      s1 += array[i++];
-      s2 += s1;
-    } while (--tlen);
+    while (len > 0) {
+        tlen = len > Zlib.Adler32.OptimizationParameter ? Zlib.Adler32.OptimizationParameter : len;
+        len -= tlen;
+        do {
+            s1 += array[i++];
+            s2 += s1;
+        } while (--tlen);
 
-    s1 %= 65521;
-    s2 %= 65521;
-  }
+        s1 %= 65521;
+        s2 %= 65521;
+    }
 
-  return ((s2 << 16) | s1) >>> 0;
+    return ((s2 << 16) | s1) >>> 0;
 };
 
 /**
@@ -15105,31 +14924,26 @@ Zlib.Adler32.update = function(adler, array) {
  */
 Zlib.Adler32.OptimizationParameter = 1024;
 
-
-
-
 /**
  * ビットストリーム
  * @constructor
  * @param {!(Array|Uint8Array)=} buffer output buffer.
  * @param {number=} bufferPosition start buffer pointer.
  */
-Zlib.BitStream = function(buffer, bufferPosition) {
-  /** @type {number} buffer index. */
-  this.index = typeof bufferPosition === 'number' ? bufferPosition : 0;
-  /** @type {number} bit index. */
-  this.bitindex = 0;
-  /** @type {!(Array|Uint8Array)} bit-stream output buffer. */
-  this.buffer = buffer instanceof ( Uint8Array ) ?
-      buffer :
-      new ( Uint8Array )(Zlib.BitStream.DefaultBlockSize);
+Zlib.BitStream = function (buffer, bufferPosition) {
+    /** @type {number} buffer index. */
+    this.index = typeof bufferPosition === "number" ? bufferPosition : 0;
+    /** @type {number} bit index. */
+    this.bitindex = 0;
+    /** @type {!(Array|Uint8Array)} bit-stream output buffer. */
+    this.buffer = buffer instanceof Uint8Array ? buffer : new Uint8Array(Zlib.BitStream.DefaultBlockSize);
 
-  // 入力された index が足りなかったら拡張するが、倍にしてもダメなら不正とする
-  if (this.buffer.length * 2 <= this.index) {
-    throw new Error("invalid index");
-  } else if (this.buffer.length <= this.index) {
-    this.expandBuffer();
-  }
+    // 入力された index が足りなかったら拡張するが、倍にしてもダメなら不正とする
+    if (this.buffer.length * 2 <= this.index) {
+        throw new Error("invalid index");
+    } else if (this.buffer.length <= this.index) {
+        this.expandBuffer();
+    }
 };
 
 /**
@@ -15143,23 +14957,21 @@ Zlib.BitStream.DefaultBlockSize = 0x8000;
  * expand buffer.
  * @return {!(Array|Uint8Array)} new buffer.
  */
-Zlib.BitStream.prototype.expandBuffer = function() {
-  /** @type {!(Array|Uint8Array)} old buffer. */
-  var oldbuf = this.buffer;
-  /** @type {number} loop limiter. */
-  var il = oldbuf.length;
-  /** @type {!(Array|Uint8Array)} new buffer. */
-  var buffer =
-      new ( Uint8Array )(il << 1);
+Zlib.BitStream.prototype.expandBuffer = function () {
+    /** @type {!(Array|Uint8Array)} old buffer. */
+    var oldbuf = this.buffer;
+    /** @type {number} loop limiter. */
+    var il = oldbuf.length;
+    /** @type {!(Array|Uint8Array)} new buffer. */
+    var buffer = new Uint8Array(il << 1);
 
-  // copy buffer
-  {
-    buffer.set(oldbuf);
-  }
+    // copy buffer
+    {
+        buffer.set(oldbuf);
+    }
 
-  return (this.buffer = buffer);
+    return (this.buffer = buffer);
 };
-
 
 /**
  * 数値をビットで指定した数だけ書き込む.
@@ -15167,89 +14979,88 @@ Zlib.BitStream.prototype.expandBuffer = function() {
  * @param {number} n 書き込むビット数.
  * @param {boolean=} reverse 逆順に書き込むならば true.
  */
-Zlib.BitStream.prototype.writeBits = function(number, n, reverse) {
-  var buffer = this.buffer;
-  var index = this.index;
-  var bitindex = this.bitindex;
+Zlib.BitStream.prototype.writeBits = function (number, n, reverse) {
+    var buffer = this.buffer;
+    var index = this.index;
+    var bitindex = this.bitindex;
 
-  /** @type {number} current octet. */
-  var current = buffer[index];
-  /** @type {number} loop counter. */
-  var i;
+    /** @type {number} current octet. */
+    var current = buffer[index];
+    /** @type {number} loop counter. */
+    var i;
 
-  /**
-   * 32-bit 整数のビット順を逆にする
-   * @param {number} n 32-bit integer.
-   * @return {number} reversed 32-bit integer.
-   * @private
-   */
-  function rev32_(n) {
-    return (Zlib.BitStream.ReverseTable[n & 0xFF] << 24) |
-        (Zlib.BitStream.ReverseTable[n >>> 8 & 0xFF] << 16) |
-        (Zlib.BitStream.ReverseTable[n >>> 16 & 0xFF] << 8) |
-        Zlib.BitStream.ReverseTable[n >>> 24 & 0xFF];
-  }
-
-  if (reverse && n > 1) {
-    number = n > 8 ?
-        rev32_(number) >> (32 - n) :
-        Zlib.BitStream.ReverseTable[number] >> (8 - n);
-  }
-
-  // Byte 境界を超えないとき
-  if (n + bitindex < 8) {
-    current = (current << n) | number;
-    bitindex += n;
-    // Byte 境界を超えるとき
-  } else {
-    for (i = 0; i < n; ++i) {
-      current = (current << 1) | ((number >> n - i - 1) & 1);
-
-      // next byte
-      if (++bitindex === 8) {
-        bitindex = 0;
-        buffer[index++] = Zlib.BitStream.ReverseTable[current];
-        current = 0;
-
-        // expand
-        if (index === buffer.length) {
-          buffer = this.expandBuffer();
-        }
-      }
+    /**
+     * 32-bit 整数のビット順を逆にする
+     * @param {number} n 32-bit integer.
+     * @return {number} reversed 32-bit integer.
+     * @private
+     */
+    function rev32_(n) {
+        return (
+            (Zlib.BitStream.ReverseTable[n & 0xff] << 24) |
+            (Zlib.BitStream.ReverseTable[(n >>> 8) & 0xff] << 16) |
+            (Zlib.BitStream.ReverseTable[(n >>> 16) & 0xff] << 8) |
+            Zlib.BitStream.ReverseTable[(n >>> 24) & 0xff]
+        );
     }
-  }
-  buffer[index] = current;
 
-  this.buffer = buffer;
-  this.bitindex = bitindex;
-  this.index = index;
+    if (reverse && n > 1) {
+        number = n > 8 ? rev32_(number) >> (32 - n) : Zlib.BitStream.ReverseTable[number] >> (8 - n);
+    }
+
+    // Byte 境界を超えないとき
+    if (n + bitindex < 8) {
+        current = (current << n) | number;
+        bitindex += n;
+        // Byte 境界を超えるとき
+    } else {
+        for (i = 0; i < n; ++i) {
+            current = (current << 1) | ((number >> (n - i - 1)) & 1);
+
+            // next byte
+            if (++bitindex === 8) {
+                bitindex = 0;
+                buffer[index++] = Zlib.BitStream.ReverseTable[current];
+                current = 0;
+
+                // expand
+                if (index === buffer.length) {
+                    buffer = this.expandBuffer();
+                }
+            }
+        }
+    }
+    buffer[index] = current;
+
+    this.buffer = buffer;
+    this.bitindex = bitindex;
+    this.index = index;
 };
-
 
 /**
  * ストリームの終端処理を行う
  * @return {!(Array|Uint8Array)} 終端処理後のバッファを byte array で返す.
  */
-Zlib.BitStream.prototype.finish = function() {
-  var buffer = this.buffer;
-  var index = this.index;
+Zlib.BitStream.prototype.finish = function () {
+    var buffer = this.buffer;
+    var index = this.index;
 
-  /** @type {!(Array|Uint8Array)} output buffer. */
-  var output;
+    /** @type {!(Array|Uint8Array)} output buffer. */
+    var output;
 
-  // bitindex が 0 の時は余分に index が進んでいる状態
-  if (this.bitindex > 0) {
-    buffer[index] <<= 8 - this.bitindex;
-    buffer[index] = Zlib.BitStream.ReverseTable[buffer[index]];
-    index++;
-  }
+    // bitindex が 0 の時は余分に index が進んでいる状態
+    if (this.bitindex > 0) {
+        buffer[index] <<= 8 - this.bitindex;
+        buffer[index] = Zlib.BitStream.ReverseTable[buffer[index]];
+        index++;
+    }
 
-  // array truncation
-  {
-    output = buffer.subarray(0, index);
-  }
+    // array truncation
+    {
+        output = buffer.subarray(0, index);
+    }
 
-  return output;
+    return output;
 };
 
 /**
@@ -15257,32 +15068,34 @@ Zlib.BitStream.prototype.finish = function() {
  * @const
  * @type {!(Uint8Array|Array.<number>)}
  */
-Zlib.BitStream.ReverseTable = (function(table) {
-  return table;
-})((function() {
-  /** @type {!(Array|Uint8Array)} reverse table. */
-  var table = new ( Uint8Array )(256);
-  /** @type {number} loop counter. */
-  var i;
+Zlib.BitStream.ReverseTable = (function (table) {
+    return table;
+})(
+    (function () {
+        /** @type {!(Array|Uint8Array)} reverse table. */
+        var table = new Uint8Array(256);
+        /** @type {number} loop counter. */
+        var i;
 
-  // generate
-  for (i = 0; i < 256; ++i) {
-    table[i] = (function(n) {
-      var r = n;
-      var s = 7;
+        // generate
+        for (i = 0; i < 256; ++i) {
+            table[i] = (function (n) {
+                var r = n;
+                var s = 7;
 
-      for (n >>>= 1; n; n >>>= 1) {
-        r <<= 1;
-        r |= n & 1;
-        --s;
-      }
+                for (n >>>= 1; n; n >>>= 1) {
+                    r <<= 1;
+                    r |= n & 1;
+                    --s;
+                }
 
-      return (r << s & 0xff) >>> 0;
-    })(i);
-  }
+                return ((r << s) & 0xff) >>> 0;
+            })(i);
+        }
 
-  return table;
-})());
+        return table;
+    })()
+);
 
 /**
  * CRC32 ハッシュ値を取得
@@ -15291,8 +15104,8 @@ Zlib.BitStream.ReverseTable = (function(table) {
  * @param {number=} length data length.
  * @return {number} CRC32.
  */
-Zlib.CRC32.calc = function(data, pos, length) {
-  return Zlib.CRC32.update(data, 0, pos, length);
+Zlib.CRC32.calc = function (data, pos, length) {
+    return Zlib.CRC32.update(data, 0, pos, length);
 };
 
 /**
@@ -15303,29 +15116,29 @@ Zlib.CRC32.calc = function(data, pos, length) {
  * @param {number=} length data length.
  * @return {number} CRC32.
  */
-Zlib.CRC32.update = function(data, crc, pos, length) {
-  var table = Zlib.CRC32.Table;
-  var i = (typeof pos === 'number') ? pos : (pos = 0);
-  var il = (typeof length === 'number') ? length : data.length;
+Zlib.CRC32.update = function (data, crc, pos, length) {
+    var table = Zlib.CRC32.Table;
+    var i = typeof pos === "number" ? pos : (pos = 0);
+    var il = typeof length === "number" ? length : data.length;
 
-  crc ^= 0xffffffff;
+    crc ^= 0xffffffff;
 
-  // loop unrolling for performance
-  for (i = il & 7; i--; ++pos) {
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos]) & 0xff];
-  }
-  for (i = il >> 3; i--; pos += 8) {
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos    ]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 1]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 2]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 3]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 4]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 5]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 6]) & 0xff];
-    crc = (crc >>> 8) ^ table[(crc ^ data[pos + 7]) & 0xff];
-  }
+    // loop unrolling for performance
+    for (i = il & 7; i--; ++pos) {
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos]) & 0xff];
+    }
+    for (i = il >> 3; i--; pos += 8) {
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 1]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 2]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 3]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 4]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 5]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 6]) & 0xff];
+        crc = (crc >>> 8) ^ table[(crc ^ data[pos + 7]) & 0xff];
+    }
 
-  return (crc ^ 0xffffffff) >>> 0;
+    return (crc ^ 0xffffffff) >>> 0;
 };
 
 /**
@@ -15333,8 +15146,8 @@ Zlib.CRC32.update = function(data, crc, pos, length) {
  * @param {number} crc
  * @returns {number}
  */
-Zlib.CRC32.single = function(num, crc) {
-  return (Zlib.CRC32.Table[(num ^ crc) & 0xff] ^ (num >>> 8)) >>> 0;
+Zlib.CRC32.single = function (num, crc) {
+    return (Zlib.CRC32.Table[(num ^ crc) & 0xff] ^ (num >>> 8)) >>> 0;
 };
 
 /**
@@ -15343,56 +15156,269 @@ Zlib.CRC32.single = function(num, crc) {
  * @private
  */
 Zlib.CRC32.Table_ = [
-  0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
-  0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
-  0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
-  0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
-  0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9,
-  0xfa0f3d63, 0x8d080df5, 0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172,
-  0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b, 0x35b5a8fa, 0x42b2986c,
-  0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
-  0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423,
-  0xcfba9599, 0xb8bda50f, 0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924,
-  0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d, 0x76dc4190, 0x01db7106,
-  0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
-  0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d,
-  0x91646c97, 0xe6635c01, 0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e,
-  0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457, 0x65b0d9c6, 0x12b7e950,
-  0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
-  0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7,
-  0xa4d1c46d, 0xd3d6f4fb, 0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0,
-  0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9, 0x5005713c, 0x270241aa,
-  0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
-  0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81,
-  0xb7bd5c3b, 0xc0ba6cad, 0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a,
-  0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683, 0xe3630b12, 0x94643b84,
-  0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
-  0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb,
-  0x196c3671, 0x6e6b06e7, 0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc,
-  0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5, 0xd6d6a3e8, 0xa1d1937e,
-  0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
-  0xd80d2bda, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55,
-  0x316e8eef, 0x4669be79, 0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236,
-  0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f, 0xc5ba3bbe, 0xb2bd0b28,
-  0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
-  0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f,
-  0x72076785, 0x05005713, 0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38,
-  0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21, 0x86d3d2d4, 0xf1d4e242,
-  0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
-  0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69,
-  0x616bffd3, 0x166ccf45, 0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2,
-  0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db, 0xaed16a4a, 0xd9d65adc,
-  0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
-  0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693,
-  0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
-  0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
+    0x00000000,
+    0x77073096,
+    0xee0e612c,
+    0x990951ba,
+    0x076dc419,
+    0x706af48f,
+    0xe963a535,
+    0x9e6495a3,
+    0x0edb8832,
+    0x79dcb8a4,
+    0xe0d5e91e,
+    0x97d2d988,
+    0x09b64c2b,
+    0x7eb17cbd,
+    0xe7b82d07,
+    0x90bf1d91,
+    0x1db71064,
+    0x6ab020f2,
+    0xf3b97148,
+    0x84be41de,
+    0x1adad47d,
+    0x6ddde4eb,
+    0xf4d4b551,
+    0x83d385c7,
+    0x136c9856,
+    0x646ba8c0,
+    0xfd62f97a,
+    0x8a65c9ec,
+    0x14015c4f,
+    0x63066cd9,
+    0xfa0f3d63,
+    0x8d080df5,
+    0x3b6e20c8,
+    0x4c69105e,
+    0xd56041e4,
+    0xa2677172,
+    0x3c03e4d1,
+    0x4b04d447,
+    0xd20d85fd,
+    0xa50ab56b,
+    0x35b5a8fa,
+    0x42b2986c,
+    0xdbbbc9d6,
+    0xacbcf940,
+    0x32d86ce3,
+    0x45df5c75,
+    0xdcd60dcf,
+    0xabd13d59,
+    0x26d930ac,
+    0x51de003a,
+    0xc8d75180,
+    0xbfd06116,
+    0x21b4f4b5,
+    0x56b3c423,
+    0xcfba9599,
+    0xb8bda50f,
+    0x2802b89e,
+    0x5f058808,
+    0xc60cd9b2,
+    0xb10be924,
+    0x2f6f7c87,
+    0x58684c11,
+    0xc1611dab,
+    0xb6662d3d,
+    0x76dc4190,
+    0x01db7106,
+    0x98d220bc,
+    0xefd5102a,
+    0x71b18589,
+    0x06b6b51f,
+    0x9fbfe4a5,
+    0xe8b8d433,
+    0x7807c9a2,
+    0x0f00f934,
+    0x9609a88e,
+    0xe10e9818,
+    0x7f6a0dbb,
+    0x086d3d2d,
+    0x91646c97,
+    0xe6635c01,
+    0x6b6b51f4,
+    0x1c6c6162,
+    0x856530d8,
+    0xf262004e,
+    0x6c0695ed,
+    0x1b01a57b,
+    0x8208f4c1,
+    0xf50fc457,
+    0x65b0d9c6,
+    0x12b7e950,
+    0x8bbeb8ea,
+    0xfcb9887c,
+    0x62dd1ddf,
+    0x15da2d49,
+    0x8cd37cf3,
+    0xfbd44c65,
+    0x4db26158,
+    0x3ab551ce,
+    0xa3bc0074,
+    0xd4bb30e2,
+    0x4adfa541,
+    0x3dd895d7,
+    0xa4d1c46d,
+    0xd3d6f4fb,
+    0x4369e96a,
+    0x346ed9fc,
+    0xad678846,
+    0xda60b8d0,
+    0x44042d73,
+    0x33031de5,
+    0xaa0a4c5f,
+    0xdd0d7cc9,
+    0x5005713c,
+    0x270241aa,
+    0xbe0b1010,
+    0xc90c2086,
+    0x5768b525,
+    0x206f85b3,
+    0xb966d409,
+    0xce61e49f,
+    0x5edef90e,
+    0x29d9c998,
+    0xb0d09822,
+    0xc7d7a8b4,
+    0x59b33d17,
+    0x2eb40d81,
+    0xb7bd5c3b,
+    0xc0ba6cad,
+    0xedb88320,
+    0x9abfb3b6,
+    0x03b6e20c,
+    0x74b1d29a,
+    0xead54739,
+    0x9dd277af,
+    0x04db2615,
+    0x73dc1683,
+    0xe3630b12,
+    0x94643b84,
+    0x0d6d6a3e,
+    0x7a6a5aa8,
+    0xe40ecf0b,
+    0x9309ff9d,
+    0x0a00ae27,
+    0x7d079eb1,
+    0xf00f9344,
+    0x8708a3d2,
+    0x1e01f268,
+    0x6906c2fe,
+    0xf762575d,
+    0x806567cb,
+    0x196c3671,
+    0x6e6b06e7,
+    0xfed41b76,
+    0x89d32be0,
+    0x10da7a5a,
+    0x67dd4acc,
+    0xf9b9df6f,
+    0x8ebeeff9,
+    0x17b7be43,
+    0x60b08ed5,
+    0xd6d6a3e8,
+    0xa1d1937e,
+    0x38d8c2c4,
+    0x4fdff252,
+    0xd1bb67f1,
+    0xa6bc5767,
+    0x3fb506dd,
+    0x48b2364b,
+    0xd80d2bda,
+    0xaf0a1b4c,
+    0x36034af6,
+    0x41047a60,
+    0xdf60efc3,
+    0xa867df55,
+    0x316e8eef,
+    0x4669be79,
+    0xcb61b38c,
+    0xbc66831a,
+    0x256fd2a0,
+    0x5268e236,
+    0xcc0c7795,
+    0xbb0b4703,
+    0x220216b9,
+    0x5505262f,
+    0xc5ba3bbe,
+    0xb2bd0b28,
+    0x2bb45a92,
+    0x5cb36a04,
+    0xc2d7ffa7,
+    0xb5d0cf31,
+    0x2cd99e8b,
+    0x5bdeae1d,
+    0x9b64c2b0,
+    0xec63f226,
+    0x756aa39c,
+    0x026d930a,
+    0x9c0906a9,
+    0xeb0e363f,
+    0x72076785,
+    0x05005713,
+    0x95bf4a82,
+    0xe2b87a14,
+    0x7bb12bae,
+    0x0cb61b38,
+    0x92d28e9b,
+    0xe5d5be0d,
+    0x7cdcefb7,
+    0x0bdbdf21,
+    0x86d3d2d4,
+    0xf1d4e242,
+    0x68ddb3f8,
+    0x1fda836e,
+    0x81be16cd,
+    0xf6b9265b,
+    0x6fb077e1,
+    0x18b74777,
+    0x88085ae6,
+    0xff0f6a70,
+    0x66063bca,
+    0x11010b5c,
+    0x8f659eff,
+    0xf862ae69,
+    0x616bffd3,
+    0x166ccf45,
+    0xa00ae278,
+    0xd70dd2ee,
+    0x4e048354,
+    0x3903b3c2,
+    0xa7672661,
+    0xd06016f7,
+    0x4969474d,
+    0x3e6e77db,
+    0xaed16a4a,
+    0xd9d65adc,
+    0x40df0b66,
+    0x37d83bf0,
+    0xa9bcae53,
+    0xdebb9ec5,
+    0x47b2cf7f,
+    0x30b5ffe9,
+    0xbdbdf21c,
+    0xcabac28a,
+    0x53b39330,
+    0x24b4a3a6,
+    0xbad03605,
+    0xcdd70693,
+    0x54de5729,
+    0x23d967bf,
+    0xb3667a2e,
+    0xc4614ab8,
+    0x5d681b02,
+    0x2a6f2b94,
+    0xb40bbe37,
+    0xc30c8ea1,
+    0x5a05df1b,
+    0x2d02ef8d,
 ];
 
 /**
  * @type {!(Array.<number>|Uint32Array)} CRC-32 Table.
  * @const
  */
-Zlib.CRC32.Table =   new Uint32Array(Zlib.CRC32.Table_) ;
+Zlib.CRC32.Table = new Uint32Array(Zlib.CRC32.Table_);
 
 /**
  * @fileoverview Deflate (RFC1951) 実装.
@@ -15405,37 +15431,36 @@ Zlib.CRC32.Table =   new Uint32Array(Zlib.CRC32.Table_) ;
  * @param {!(Array|Uint8Array)} input 符号化する対象の byte array.
  * @param {Object=} opt_params option parameters.
  */
-Zlib.Deflate = function(input, opt_params) {
-  /** @type {!(Array|Uint8Array)} */
-  this.input = input;
-  /** @type {!(Array|Uint8Array)} */
-  this.output =
-      new ( Uint8Array )(Zlib.Deflate.DefaultBufferSize);
-  /** @type {Zlib.Deflate.CompressionType} */
-  this.compressionType = Zlib.Deflate.CompressionType.DYNAMIC;
-  /** @type {Zlib.RawDeflate} */
-  this.rawDeflate;
-  /** @type {Object} */
-  var rawDeflateOption = {};
-  /** @type {string} */
-  var prop;
+Zlib.Deflate = function (input, opt_params) {
+    /** @type {!(Array|Uint8Array)} */
+    this.input = input;
+    /** @type {!(Array|Uint8Array)} */
+    this.output = new Uint8Array(Zlib.Deflate.DefaultBufferSize);
+    /** @type {Zlib.Deflate.CompressionType} */
+    this.compressionType = Zlib.Deflate.CompressionType.DYNAMIC;
+    /** @type {Zlib.RawDeflate} */
+    this.rawDeflate;
+    /** @type {Object} */
+    var rawDeflateOption = {};
+    /** @type {string} */
+    var prop;
 
-  // option parameters
-  if (opt_params || !(opt_params = {})) {
-    if (typeof opt_params['compressionType'] === 'number') {
-      this.compressionType = opt_params['compressionType'];
+    // option parameters
+    if (opt_params || !(opt_params = {})) {
+        if (typeof opt_params["compressionType"] === "number") {
+            this.compressionType = opt_params["compressionType"];
+        }
     }
-  }
 
-  // copy options
-  for (prop in opt_params) {
-    rawDeflateOption[prop] = opt_params[prop];
-  }
+    // copy options
+    for (prop in opt_params) {
+        rawDeflateOption[prop] = opt_params[prop];
+    }
 
-  // set raw-deflate output buffer
-  rawDeflateOption['outputBuffer'] = this.output;
+    // set raw-deflate output buffer
+    rawDeflateOption["outputBuffer"] = this.output;
 
-  this.rawDeflate = new Zlib.RawDeflate(this.input, rawDeflateOption);
+    this.rawDeflate = new Zlib.RawDeflate(this.input, rawDeflateOption);
 };
 
 /**
@@ -15455,95 +15480,102 @@ Zlib.Deflate.CompressionType = Zlib.RawDeflate.CompressionType;
  * @param {Object=} opt_params option parameters.
  * @return {!(Array|Uint8Array)} compressed data byte array.
  */
-Zlib.Deflate.compress = function(input, opt_params) {
-  return (new Zlib.Deflate(input, opt_params)).compress();
+Zlib.Deflate.compress = function (input, opt_params) {
+    return new Zlib.Deflate(input, opt_params).compress();
 };
 
 /**
  * Deflate Compression.
  * @return {!(Array|Uint8Array)} compressed data byte array.
  */
-Zlib.Deflate.prototype.compress = function() {
-  /** @type {Zlib.CompressionMethod} */
-  var cm;
-  /** @type {number} */
-  var cinfo;
-  /** @type {number} */
-  var cmf;
-  /** @type {number} */
-  var flg;
-  /** @type {number} */
-  var fcheck;
-  /** @type {number} */
-  var fdict;
-  /** @type {number} */
-  var flevel;
-  /** @type {number} */
-  var adler;
-  /** @type {!(Array|Uint8Array)} */
-  var output;
-  /** @type {number} */
-  var pos = 0;
+Zlib.Deflate.prototype.compress = function () {
+    /** @type {Zlib.CompressionMethod} */
+    var cm;
+    /** @type {number} */
+    var cinfo;
+    /** @type {number} */
+    var cmf;
+    /** @type {number} */
+    var flg;
+    /** @type {number} */
+    var fcheck;
+    /** @type {number} */
+    var fdict;
+    /** @type {number} */
+    var flevel;
+    /** @type {number} */
+    var adler;
+    /** @type {!(Array|Uint8Array)} */
+    var output;
+    /** @type {number} */
+    var pos = 0;
 
-  output = this.output;
+    output = this.output;
 
-  // Compression Method and Flags
-  cm = Zlib.CompressionMethod.DEFLATE;
-  switch (cm) {
-    case Zlib.CompressionMethod.DEFLATE:
-      cinfo = Math.LOG2E * Math.log(Zlib.RawDeflate.WindowSize) - 8;
-      break;
-    default:
-      throw new Error('invalid compression method');
-  }
-  cmf = (cinfo << 4) | cm;
-  output[pos++] = cmf;
-
-  // Flags
-  fdict = 0;
-  switch (cm) {
-    case Zlib.CompressionMethod.DEFLATE:
-      switch (this.compressionType) {
-        case Zlib.Deflate.CompressionType.NONE: flevel = 0; break;
-        case Zlib.Deflate.CompressionType.FIXED: flevel = 1; break;
-        case Zlib.Deflate.CompressionType.DYNAMIC: flevel = 2; break;
-        default: throw new Error('unsupported compression type');
-      }
-      break;
-    default:
-      throw new Error('invalid compression method');
-  }
-  flg = (flevel << 6) | (fdict << 5);
-  fcheck = 31 - (cmf * 256 + flg) % 31;
-  flg |= fcheck;
-  output[pos++] = flg;
-
-  // Adler-32 checksum
-  adler = Zlib.Adler32(this.input);
-
-  this.rawDeflate.op = pos;
-  output = this.rawDeflate.compress();
-  pos = output.length;
-
-  {
-    // subarray 分を元にもどす
-    output = new Uint8Array(output.buffer);
-    // expand buffer
-    if (output.length <= pos + 4) {
-      this.output = new Uint8Array(output.length + 4);
-      this.output.set(output);
-      output = this.output;
+    // Compression Method and Flags
+    cm = Zlib.CompressionMethod.DEFLATE;
+    switch (cm) {
+        case Zlib.CompressionMethod.DEFLATE:
+            cinfo = Math.LOG2E * Math.log(Zlib.RawDeflate.WindowSize) - 8;
+            break;
+        default:
+            throw new Error("invalid compression method");
     }
-    output = output.subarray(0, pos + 4);
-  }
+    cmf = (cinfo << 4) | cm;
+    output[pos++] = cmf;
 
-  // adler32
-  output[pos++] = (adler >> 24) & 0xff;
-  output[pos++] = (adler >> 16) & 0xff;
-  output[pos++] = (adler >>  8) & 0xff;
-  output[pos++] = (adler      ) & 0xff;
+    // Flags
+    fdict = 0;
+    switch (cm) {
+        case Zlib.CompressionMethod.DEFLATE:
+            switch (this.compressionType) {
+                case Zlib.Deflate.CompressionType.NONE:
+                    flevel = 0;
+                    break;
+                case Zlib.Deflate.CompressionType.FIXED:
+                    flevel = 1;
+                    break;
+                case Zlib.Deflate.CompressionType.DYNAMIC:
+                    flevel = 2;
+                    break;
+                default:
+                    throw new Error("unsupported compression type");
+            }
+            break;
+        default:
+            throw new Error("invalid compression method");
+    }
+    flg = (flevel << 6) | (fdict << 5);
+    fcheck = 31 - ((cmf * 256 + flg) % 31);
+    flg |= fcheck;
+    output[pos++] = flg;
 
-  return output;
+    // Adler-32 checksum
+    adler = Zlib.Adler32(this.input);
+
+    this.rawDeflate.op = pos;
+    output = this.rawDeflate.compress();
+    pos = output.length;
+
+    {
+        // subarray 分を元にもどす
+        output = new Uint8Array(output.buffer);
+        // expand buffer
+        if (output.length <= pos + 4) {
+            this.output = new Uint8Array(output.length + 4);
+            this.output.set(output);
+            output = this.output;
+        }
+        output = output.subarray(0, pos + 4);
+    }
+
+    // adler32
+    output[pos++] = (adler >> 24) & 0xff;
+    output[pos++] = (adler >> 16) & 0xff;
+    output[pos++] = (adler >> 8) & 0xff;
+    output[pos++] = adler & 0xff;
+
+    return output;
 };
 
 /*
@@ -15572,29 +15604,32 @@ Zlib.Deflate.prototype.compress = function() {
  */
 
 const google = {
-
     fileInfoCache: {},
 
     // Crude test, this is conservative, nothing bad happens for a false positive
     isGoogleURL: function (url) {
-        return (url.includes("googleapis") && !url.includes("urlshortener")) ||
+        return (
+            (url.includes("googleapis") && !url.includes("urlshortener")) ||
             this.isGoogleCloudURL(url) ||
             this.isGoogleStorageURL(url) ||
             this.isGoogleDrive(url)
+        );
     },
 
     isGoogleStorageURL: function (url) {
-        return url.startsWith("https://www.googleapis.com/storage") ||
+        return (
+            url.startsWith("https://www.googleapis.com/storage") ||
             url.startsWith("https://storage.cloud.google.com") ||
-            url.startsWith("https://storage.googleapis.com");
+            url.startsWith("https://storage.googleapis.com")
+        );
     },
 
     isGoogleCloudURL: function (url) {
-        return url.startsWith("gs://")
+        return url.startsWith("gs://");
     },
 
     isGoogleDrive: function (url) {
-        return url.indexOf("drive.google.com") >= 0 || url.indexOf("www.googleapis.com/drive") > 0
+        return url.indexOf("drive.google.com") >= 0 || url.indexOf("www.googleapis.com/drive") > 0;
     },
 
     setApiKey: function (key) {
@@ -15602,11 +15637,10 @@ const google = {
     },
 
     translateGoogleCloudURL: function (gsUrl) {
-
         var i, bucket, object, qIdx, objectString, paramString;
 
-        i = gsUrl.indexOf('/', 5);
-        qIdx = gsUrl.indexOf('?');
+        i = gsUrl.indexOf("/", 5);
+        qIdx = gsUrl.indexOf("?");
 
         if (i < 0) {
             return gsUrl;
@@ -15614,16 +15648,20 @@ const google = {
 
         bucket = gsUrl.substring(5, i);
 
-        objectString = (qIdx < 0) ? gsUrl.substring(i + 1) : gsUrl.substring(i + 1, qIdx);
+        objectString = qIdx < 0 ? gsUrl.substring(i + 1) : gsUrl.substring(i + 1, qIdx);
         object = encodeURIComponent(objectString);
 
         if (qIdx > 0) {
             paramString = gsUrl.substring(qIdx);
         }
 
-        return "https://www.googleapis.com/storage/v1/b/" + bucket + "/o/" + object +
-            (paramString ? paramString + "&alt=media" : "?alt=media");
-
+        return (
+            "https://www.googleapis.com/storage/v1/b/" +
+            bucket +
+            "/o/" +
+            object +
+            (paramString ? paramString + "&alt=media" : "?alt=media")
+        );
     },
 
     addApiKey: function (url) {
@@ -15650,10 +15688,10 @@ const google = {
     },
 
     loadGoogleProperties: function (propertiesURL) {
-
         const self = this;
 
-        return igvxhr.loadArrayBuffer(propertiesURL)
+        return igvxhr
+            .loadArrayBuffer(propertiesURL)
 
             .then(function (arrayBuffer) {
                 var inflate, plain, str;
@@ -15667,13 +15705,11 @@ const google = {
 
                 self.properties = properties;
                 return properties;
-
-            })
-    }
+            });
+    },
 };
 
 function getGoogleDriveFileID(link) {
-
     //https://drive.google.com/file/d/1_FC4kCeO8E3V4dJ1yIW7A0sn1yURKIX-/view?usp=sharing
     var i1, i2;
 
@@ -15681,11 +15717,10 @@ function getGoogleDriveFileID(link) {
         i1 = link.indexOf("/open?id=") + 9;
         i2 = link.indexOf("&");
         if (i1 > 0 && i2 > i1) {
-            return link.substring(i1, i2)
+            return link.substring(i1, i2);
         } else if (i1 > 0) {
             return link.substring(i1);
         }
-
     } else if (link.includes("/file/d/")) {
         i1 = link.indexOf("/file/d/") + 8;
         i2 = link.lastIndexOf("/");
@@ -15719,21 +15754,17 @@ function getGoogleDriveFileID(link) {
  */
 
 const oauth = {
-
     oauthTokens: {},
 
     setToken: function (token, host) {
-
         if (!host) {
             this.google.access_token = token;
         } else {
             this.oauthTokens[host] = token;
         }
-
     },
 
     getToken: function (host) {
-
         let token;
 
         if (!host) {
@@ -15749,16 +15780,13 @@ const oauth = {
         }
 
         return token;
-
     },
 
     removeToken: function (host) {
-
         if (!host) {
             delete oauth.google["access_token"];
         } else {
             delete this.oauthTokens[host];
-
         }
     },
 
@@ -15766,10 +15794,9 @@ const oauth = {
     google: {
         setToken: function (token) {
             this.access_token = token;
-        }
-    }
+        },
+    },
 };
-
 
 /**
  * Creates a RegExp from the given string, converting asterisks to .* expressions,
@@ -15778,7 +15805,7 @@ const oauth = {
  * credit https://gist.github.com/donmccurdy/6d073ce2c6f3951312dfa45da14a420f
  */
 function wildcardToRegExp(s) {
-    return new RegExp('^' + s.split(/\*+/).map(regExpEscape).join('.*') + '$');
+    return new RegExp("^" + s.split(/\*+/).map(regExpEscape).join(".*") + "$");
 }
 
 /**
@@ -15787,12 +15814,11 @@ function wildcardToRegExp(s) {
  * credit https://gist.github.com/donmccurdy/6d073ce2c6f3951312dfa45da14a420f
  */
 function regExpEscape(s) {
-    return s.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+    return s.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&");
 }
 
 // Uncompress data,  assumed to be series of bgzipped blocks
 function unbgzf(data, lim) {
-
     const oBlockList = [];
     let ptr = 0;
     let totalSize = 0;
@@ -15802,12 +15828,12 @@ function unbgzf(data, lim) {
     while (ptr < lim) {
         try {
             const ba = new Uint8Array(data, ptr, 18);
-            const xlen = (ba[11] << 8) | (ba[10]);
+            const xlen = (ba[11] << 8) | ba[10];
             const si1 = ba[12];
             const si2 = ba[13];
-            const slen = (ba[15] << 8) | (ba[14]);
-            const bsize = ((ba[17] << 8) | (ba[16])) + 1;
-            const start = 12 + xlen + ptr;    // Start of CDATA
+            const slen = (ba[15] << 8) | ba[14];
+            const bsize = ((ba[17] << 8) | ba[16]) + 1;
+            const start = 12 + xlen + ptr; // Start of CDATA
             const bytesLeft = data.byteLength - start;
             const cDataSize = bsize - xlen - 19;
             if (bytesLeft < cDataSize) break;
@@ -15843,7 +15869,7 @@ function unbgzf(data, lim) {
 // From Thomas Down's zlib implementation
 
 const testArray = new Uint8Array(1);
-const hasSubarray = (typeof testArray.subarray === 'function');
+const hasSubarray = typeof testArray.subarray === "function";
 
 function arrayCopy(src, srcOffset, dest, destOffset, count) {
     if (count === 0) {
@@ -15875,9 +15901,9 @@ function arrayCopy_fast(src, dest, destOffset) {
     dest.set(src, destOffset);
 }
 
-if (typeof process === 'object' && typeof window === 'undefined') {
+if (typeof process === "object" && typeof window === "undefined") {
     global.atob = function (str) {
-        return Buffer.from(str, 'base64').toString('binary');
+        return Buffer.from(str, "base64").toString("binary");
     };
 }
 
@@ -15886,15 +15912,14 @@ if (typeof process === 'object' && typeof window === 'undefined') {
  * @returns {Array<number>|Uint8Array}
  */
 function decodeDataURI(dataURI) {
-
-    const split = dataURI.split(',');
-    const info = split[0].split(':')[1];
+    const split = dataURI.split(",");
+    const info = split[0].split(":")[1];
     let dataString = split[1];
 
-    if (info.indexOf('base64') >= 0) {
+    if (info.indexOf("base64") >= 0) {
         dataString = atob(dataString);
     } else {
-        dataString = decodeURI(dataString);      // URL encoded string -- not currently used of tested
+        dataString = decodeURI(dataString); // URL encoded string -- not currently used of tested
     }
     const bytes = new Uint8Array(dataString.length);
     for (let i = 0; i < dataString.length; i++) {
@@ -15902,19 +15927,18 @@ function decodeDataURI(dataURI) {
     }
 
     let plain;
-    if (info.indexOf('gzip') > 0) {
+    if (info.indexOf("gzip") > 0) {
         const inflate = new Zlib.Gunzip(bytes);
         plain = inflate.decompress();
     } else {
         plain = bytes;
     }
-    return plain
+    return plain;
 }
 
 function parseUri(str) {
-
     var o = options,
-        m = o.parser[ "loose"].exec(str),
+        m = o.parser["loose"].exec(str),
         uri = {},
         i = 14;
 
@@ -15930,15 +15954,30 @@ function parseUri(str) {
 
 const options = {
     strictMode: false,
-    key: ["source", "protocol", "authority", "userInfo", "user", "password", "host", "port", "relative", "path", "directory", "file", "query", "anchor"],
+    key: [
+        "source",
+        "protocol",
+        "authority",
+        "userInfo",
+        "user",
+        "password",
+        "host",
+        "port",
+        "relative",
+        "path",
+        "directory",
+        "file",
+        "query",
+        "anchor",
+    ],
     q: {
         name: "queryKey",
-        parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+        parser: /(?:^|&)([^&=]*)=?([^&]*)/g,
     },
     parser: {
         strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
-        loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
-    }
+        loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/,
+    },
 };
 
 // The MIT License (MIT)
@@ -15964,16 +16003,16 @@ function PromiseThrottle(options) {
  * @param {number} options.weight A "weight" of each operation resolving by array of promises
  * @return {Promise} A promise
  */
-PromiseThrottle.prototype.add = function(promise, options) {
+PromiseThrottle.prototype.add = function (promise, options) {
     var self = this;
     var opt = options || {};
-    return new self.promiseImplementation(function(resolve, reject) {
+    return new self.promiseImplementation(function (resolve, reject) {
         self.queued.push({
             resolve: resolve,
             reject: reject,
             promise: promise,
             weight: opt.weight || 1,
-            signal: opt.signal
+            signal: opt.signal,
         });
 
         self.dequeue();
@@ -15988,10 +16027,12 @@ PromiseThrottle.prototype.add = function(promise, options) {
  * @param {number} options.weight A "weight" of each operation resolving by array of promises
  * @return {Promise} A promise that succeeds when all the promises passed as options do
  */
-PromiseThrottle.prototype.addAll = function(promises, options) {
-    var addedPromises = promises.map(function(promise) {
-        return this.add(promise, options);
-    }.bind(this));
+PromiseThrottle.prototype.addAll = function (promises, options) {
+    var addedPromises = promises.map(
+        function (promise) {
+            return this.add(promise, options);
+        }.bind(this)
+    );
 
     return Promise.all(addedPromises);
 };
@@ -16000,7 +16041,7 @@ PromiseThrottle.prototype.addAll = function(promises, options) {
  * Dequeues a promise
  * @return {void}
  */
-PromiseThrottle.prototype.dequeue = function() {
+PromiseThrottle.prototype.dequeue = function () {
     if (this.queued.length > 0) {
         var now = new Date(),
             weight = this.queued[0].weight,
@@ -16011,9 +16052,12 @@ PromiseThrottle.prototype.dequeue = function() {
             this._execute();
         } else {
             // we have reached the limit, schedule a dequeue operation
-            setTimeout(function() {
-                this.dequeue();
-            }.bind(this), inc - elapsed);
+            setTimeout(
+                function () {
+                    this.dequeue();
+                }.bind(this),
+                inc - elapsed
+            );
         }
     }
 };
@@ -16023,18 +16067,21 @@ PromiseThrottle.prototype.dequeue = function() {
  * @private
  * @return {void}
  */
-PromiseThrottle.prototype._execute = function() {
+PromiseThrottle.prototype._execute = function () {
     this.lastStartTime = new Date();
     var candidate = this.queued.shift();
     var aborted = candidate.signal && candidate.signal.aborted;
     if (aborted) {
-        candidate.reject(new DOMException('', 'AbortError'));
+        candidate.reject(new DOMException("", "AbortError"));
     } else {
-        candidate.promise().then(function(r) {
-            candidate.resolve(r);
-        }).catch(function(r) {
-            candidate.reject(r);
-        });
+        candidate
+            .promise()
+            .then(function (r) {
+                candidate.resolve(r);
+            })
+            .catch(function (r) {
+                candidate.reject(r);
+            });
     }
 };
 
@@ -16071,25 +16118,23 @@ let RANGE_WARNING_GIVEN = false;
 
 const promiseThrottle = new PromiseThrottle({
     requestsPerSecond: 10,
-    promiseImplementation: Promise
+    promiseImplementation: Promise,
 });
 
 const igvxhr = {
-
     load: async function (url, options) {
-
         options = options || {};
 
         if (url instanceof Promise) {
             const resolvedValue = await url;
             return this.load(resolvedValue, options);
-        } else if (typeof url === 'function') {
+        } else if (typeof url === "function") {
             return this.load(url(), options);
         } else if (url instanceof File) {
             return loadFileSlice(url, options);
         } else {
             if (url.startsWith("data:")) {
-                return decodeDataURI(url)
+                return decodeDataURI(url);
             } else {
                 if (url.startsWith("https://drive.google.com")) {
                     url = google.driveDownloadURL(url);
@@ -16098,8 +16143,8 @@ const igvxhr = {
                     const accessToken = await getGoogleAccessToken();
                     options.oauthToken = accessToken;
                     return promiseThrottle.add(function () {
-                        return loadURL(url, options)
-                        })
+                        return loadURL(url, options);
+                    });
                 } else {
                     return loadURL(url, options);
                 }
@@ -16109,7 +16154,7 @@ const igvxhr = {
 
     loadArrayBuffer: function (url, options) {
         options = options || {};
-        if(!options.responseType) options.responseType = "arraybuffer";
+        if (!options.responseType) options.responseType = "arraybuffer";
 
         if (url instanceof File) {
             return loadFileSlice(url, options);
@@ -16125,7 +16170,8 @@ const igvxhr = {
 
         if (method === "POST") options.contentType = "application/json";
 
-        return igvxhr.load(url, options)
+        return igvxhr
+            .load(url, options)
 
             .then(function (result) {
                 if (result) {
@@ -16146,7 +16192,7 @@ const igvxhr = {
         }
     },
 
-    startup: startup
+    startup: startup,
 };
 
 async function loadURL(url, options) {
@@ -16155,24 +16201,23 @@ async function loadURL(url, options) {
     options = options || {};
 
     let oauthToken = options.oauthToken;
-    if (typeof oauthToken === 'function') {
+    if (typeof oauthToken === "function") {
         oauthToken = oauthToken();
     } else if (oauthToken instanceof Promise) {
         oauthToken = await oauthToken;
     }
     if (!oauthToken) {
-        oauthToken = getOauthToken(url);  // cached tokens per host
+        oauthToken = getOauthToken(url); // cached tokens per host
     }
 
     return new Promise(function (resolve, reject) {
-
         // Various Google tansformations
         if (google.isGoogleURL(url)) {
             if (url.startsWith("gs://")) {
                 url = google.translateGoogleCloudURL(url);
             } else if (google.isGoogleStorageURL(url)) {
                 if (!url.includes("altMedia=")) {
-                    url += (url.includes("?") ? "&altMedia=true" : "?altMedia=true");
+                    url += url.includes("?") ? "&altMedia=true" : "?altMedia=true";
                 }
             }
         }
@@ -16182,7 +16227,7 @@ async function loadURL(url, options) {
             addOauthHeaders(headers, oauthToken);
         }
         const range = options.range;
-        const isChrome = navigator.userAgent.indexOf('Chrome') > -1;
+        const isChrome = navigator.userAgent.indexOf("Chrome") > -1;
         const isSafari = navigator.vendor.indexOf("Apple") === 0 && /\sSafari\//.test(navigator.userAgent);
 
         if (range && isChrome && !isAmazonV4Signed(url)) {
@@ -16234,18 +16279,20 @@ async function loadURL(url, options) {
                     // Provide just the slice we asked for, throw out the rest quietly
                     // If file is large warn user
                     if (xhr.response.length > 100000 && !RANGE_WARNING_GIVEN) {
-                        Alert.presentAlert(`Warning: Range header ignored for URL: ${url}.  This can have performance impacts.`);
+                        Alert.presentAlert(
+                            `Warning: Range header ignored for URL: ${url}.  This can have performance impacts.`
+                        );
                     }
                     resolve(xhr.response.slice(range.start, range.start + range.size));
-
                 } else {
                     resolve(xhr.response);
                 }
-            } else if ((typeof gapi !== "undefined") &&
-                ((xhr.status === 404 || xhr.status === 401) &&
-                    google.isGoogleURL(url)) &&
-                !options.retries) {
-
+            } else if (
+                typeof gapi !== "undefined" &&
+                (xhr.status === 404 || xhr.status === 401) &&
+                google.isGoogleURL(url) &&
+                !options.retries
+            ) {
                 try {
                     options.retries = 1;
                     const accessToken = await getGoogleAccessToken();
@@ -16271,7 +16318,6 @@ async function loadURL(url, options) {
             handleError("Error accessing resource: " + url + " Status: " + xhr.status);
         };
 
-
         xhr.ontimeout = function (event) {
             handleError("Timed out");
         };
@@ -16286,7 +16332,6 @@ async function loadURL(url, options) {
             reject(e);
         }
 
-
         function handleError(message) {
             if (reject) {
                 reject(new Error(message));
@@ -16294,8 +16339,7 @@ async function loadURL(url, options) {
                 throw new Error(message);
             }
         }
-    })
-
+    });
 }
 
 function loadFileSlice(localfile, options) {
@@ -16328,13 +16372,13 @@ function loadFileSlice(localfile, options) {
 }
 
 function loadStringFromFile(localfile, options) {
-
     options = options || {};
 
-    let blob = options.range ? localfile.slice(options.range.start, options.range.start + options.range.size) : localfile;
+    let blob = options.range
+        ? localfile.slice(options.range.start, options.range.start + options.range.size)
+        : localfile;
 
     return new Promise(function (resolve, reject) {
-
         var fileReader = new FileReader();
         var compression = NONE;
         if (options.bgz || localfile.name.endsWith(".bgz")) {
@@ -16362,7 +16406,6 @@ function loadStringFromFile(localfile, options) {
             fileReader.readAsArrayBuffer(blob);
         }
     });
-
 }
 
 async function loadStringFromUrl(url, options) {
@@ -16378,11 +16421,9 @@ async function loadStringFromUrl(url, options) {
     }
 
     options.responseType = "arraybuffer";
-    return igvxhr.load(url, options)
-        .then(function (data) {
-            return arrayBufferToString(data, compression);
-        });
-
+    return igvxhr.load(url, options).then(function (data) {
+        return arrayBufferToString(data, compression);
+    });
 }
 
 function isAmazonV4Signed(url) {
@@ -16411,7 +16452,6 @@ function addOauthHeaders(headers, acToken) {
  * @param url
  */
 function mapUrl(url) {
-
     if (url.includes("//www.dropbox.com")) {
         return url.replace("//www.dropbox.com", "//dl.dropboxusercontent.com");
     } else if (url.includes("//drive.google.com")) {
@@ -16419,14 +16459,13 @@ function mapUrl(url) {
     } else if (url.includes("//www.broadinstitute.org/igvdata")) {
         return url.replace("//www.broadinstitute.org/igvdata", "//data.broadinstitute.org/igvdata");
     } else if (url.includes("//igvdata.broadinstitute.org")) {
-        return url.replace("//igvdata.broadinstitute.org", "https://dn7ywbm9isq8j.cloudfront.net")
+        return url.replace("//igvdata.broadinstitute.org", "https://dn7ywbm9isq8j.cloudfront.net");
     } else if (url.startsWith("ftp://ftp.ncbi.nlm.nih.gov/geo")) {
-        return url.replace("ftp://", "https://")
+        return url.replace("ftp://", "https://");
     } else {
         return url;
     }
 }
-
 
 function arrayBufferToString(arraybuffer, compression) {
     if (compression === UNKNOWN && arraybuffer.byteLength > 2) {
@@ -16446,7 +16485,7 @@ function arrayBufferToString(arraybuffer, compression) {
         plain = new Uint8Array(arraybuffer);
     }
 
-    if ('TextDecoder' in getGlobalObject()) {
+    if ("TextDecoder" in getGlobalObject()) {
         return new TextDecoder().decode(plain);
     } else {
         return decodeUTF8(plain);
@@ -16465,12 +16504,13 @@ let expiresAt;
 let currentUser;
 async function getGoogleAccessToken() {
     if (oauth.google.access_token) {
-        if(expiresAt && Date.now() > expiresAt && currentUser) {
-           // const authInstance = gapi.auth2.getAuthInstance();
+        if (expiresAt && Date.now() > expiresAt && currentUser) {
+            // const authInstance = gapi.auth2.getAuthInstance();
             const googleUser = currentUser; //authInstance.currentUser.get();
             const authResponse = await googleUser.reloadAuthResponse();
             oauth.google.access_token = authResponse.access_token;
-            expiresAt = authResponse["expires_at"];        }
+            expiresAt = authResponse["expires_at"];
+        }
         return oauth.google.access_token;
     }
     if (oauthPromise) {
@@ -16483,17 +16523,22 @@ async function getGoogleAccessToken() {
 
     const authInstance = gapi.auth2.getAuthInstance();
     if (!authInstance) {
-        Alert.presentAlert("Authorization is required, but Google oAuth has not been initalized.  Contact your site administrator for assistance.");
+        Alert.presentAlert(
+            "Authorization is required, but Google oAuth has not been initalized.  Contact your site administrator for assistance."
+        );
         return undefined;
     }
 
-    const scope = "https://www.googleapis.com/auth/devstorage.read_only https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.readonly";
+    const scope =
+        "https://www.googleapis.com/auth/devstorage.read_only https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.readonly";
     const options = new gapi.auth2.SigninOptionsBuilder();
-    options.setPrompt('select_account');
+    options.setPrompt("select_account");
     options.setScope(scope);
     oauthPromise = new Promise(function (resolve, reject) {
         Alert.presentAlert("Google Login required", function () {
-            gapi.auth2.getAuthInstance().signIn(options)
+            gapi.auth2
+                .getAuthInstance()
+                .signIn(options)
                 .then(function (user) {
                     currentUser = user;
                     const authResponse = user.getAuthResponse();
@@ -16512,13 +16557,11 @@ async function getGoogleAccessToken() {
     return oauthPromise;
 }
 
-
 //Increments an anonymous usage count.  Count is anonymous, needed for our continued funding.  Please don't delete
 
 let startupCalls = 0;
 
 function startup() {
-
     const href = window.document.location.href;
     const host = parseUri(href).host;
 
@@ -16526,13 +16569,12 @@ function startup() {
         startupCalls++;
 
         var url = "https://data.broadinstitute.org/igv/projects/current/counter_igvjs.php?version=" + "0";
-        igvxhr.load(url).then(function (ignore) {
-        }).catch(function (error) {
-        });
-
+        igvxhr
+            .load(url)
+            .then(function (ignore) {})
+            .catch(function (error) {});
     }
 }
-
 
 /**
  * Use when TextDecoder is not available (primarily IE).
@@ -16549,16 +16591,16 @@ function decodeUTF8(octets) {
         var octet = octets[i];
         var bytesNeeded = 0;
         var codePoint = 0;
-        if (octet <= 0x7F) {
+        if (octet <= 0x7f) {
             bytesNeeded = 0;
-            codePoint = octet & 0xFF;
-        } else if (octet <= 0xDF) {
+            codePoint = octet & 0xff;
+        } else if (octet <= 0xdf) {
             bytesNeeded = 1;
-            codePoint = octet & 0x1F;
-        } else if (octet <= 0xEF) {
+            codePoint = octet & 0x1f;
+        } else if (octet <= 0xef) {
             bytesNeeded = 2;
-            codePoint = octet & 0x0F;
-        } else if (octet <= 0xF4) {
+            codePoint = octet & 0x0f;
+        } else if (octet <= 0xf4) {
             bytesNeeded = 3;
             codePoint = octet & 0x07;
         }
@@ -16566,25 +16608,24 @@ function decodeUTF8(octets) {
             var k = 0;
             while (k < bytesNeeded) {
                 octet = octets[i + k + 1];
-                codePoint = (codePoint << 6) | (octet & 0x3F);
+                codePoint = (codePoint << 6) | (octet & 0x3f);
                 k += 1;
             }
         } else {
-            codePoint = 0xFFFD;
+            codePoint = 0xfffd;
             bytesNeeded = octets.length - i;
         }
         string += String.fromCodePoint(codePoint);
         i += bytesNeeded + 1;
     }
-    return string
+    return string;
 }
 
-
 function getGlobalObject() {
-    if (typeof self !== 'undefined') {
+    if (typeof self !== "undefined") {
         return self;
     }
-    if (typeof global !== 'undefined') {
+    if (typeof global !== "undefined") {
         return global;
     } else {
         return window;
@@ -16592,52 +16633,41 @@ function getGlobalObject() {
 }
 
 const NiagadsGwasReader = function (config) {
-  this.config = config;
-  this.url = config.url;
-  this.indexed = false;
+    this.config = config;
+    this.url = config.url;
+    this.indexed = false;
 };
 
 //required function
-NiagadsGwasReader.prototype.readFeatures = async function (
-  chr,
-  bpStart,
-  bpEnd
-) {
-  let self = this,
-    queryChr = chr.startsWith("chr") ? chr : "chr" + chr,
-    queryStart = Math.floor(bpStart),
-    queryEnd = Math.ceil(bpEnd),
-    queryURL =
-      //note that url should already contain partial query string (for now?)
-       this.url +
-      "&chromosome=" +
-      queryChr +
-      "&start=" +
-      queryStart +
-      "&end=" +
-      queryEnd;
-  const json = await igvxhr.loadJson(queryURL, {
-    withCredentials: self.config.withCredentials,
-  });
-  if (json && json.data) {
-    return json.data.map((item) => {
-      const pos = item.record_pk.split(":")[1];
-      return {
-        ...item,
-        start: pos - 1,
-        end: pos,
-        chr, //needed by cache
-      };
+NiagadsGwasReader.prototype.readFeatures = async function (chr, bpStart, bpEnd) {
+    let self = this,
+        queryChr = chr.startsWith("chr") ? chr : "chr" + chr,
+        queryStart = Math.floor(bpStart),
+        queryEnd = Math.ceil(bpEnd),
+        queryURL =
+            //note that url should already contain partial query string from config
+            this.url + "&chromosome=" + queryChr + "&start=" + queryStart + "&end=" + queryEnd;
+    const json = await igvxhr.loadJson(queryURL, {
+        withCredentials: self.config.withCredentials,
     });
-  } else {
-    return undefined;
-  }
+    if (json && json.data) {
+        return json.data.map((item) => {
+            const pos = item.record_pk.split(":")[1];
+            return {
+                ...item,
+                start: pos - 1,
+                end: pos,
+                chr, //needed by cache
+            };
+        });
+    } else {
+        return undefined;
+    }
 };
 
 // Assigns a row # to each feature.  If the feature does not fit in any row and #rows == maxRows no
 // row number is assigned.
 function pack(featureList, maxRows) {
-
     maxRows = maxRows || Number.MAX_SAFE_INTEGER;
     const rows = [];
     featureList.sort(function (a, b) {
@@ -16688,442 +16718,641 @@ function pack(featureList, maxRows) {
 const dataRangeMenuItem = MenuUtils.dataRangeMenuItem;
 
 const NiagadsGWASTrack = extend(
-  TrackBase,
+    TrackBase,
 
-  function (config, browser) {
-    var url = config.url,
-      label = config.name;
+    function (config, browser) {
+        var url = config.url,
+            label = config.name;
 
-    this.config = config;
-    this.url = url;
-    this.name = label;
-    this.pValueField = config.pValueField || "pValue";
-    this.geneField = config.geneField || "geneSymbol";
-    this.snpField = config.snpField || "snp";
+        this.config = config;
+        this.url = url;
+        this.name = label;
+        this.pValueField = config.pValueField || "pValue";
+        this.geneField = config.geneField || "geneSymbol";
+        this.snpField = config.snpField || "snp";
 
-    const min = config.minLogP || config.min;
-    const max = config.maxLogP || config.max;
-    this.dataRange = {
-      min: min || 1,
-      max: max || 25,
-    };
+        const min = config.minLogP || config.min;
+        const max = config.maxLogP || config.max;
+        this.dataRange = {
+            min: min || 1,
+            max: max || 25,
+        };
 
-    if (!max) {
-      this.autoscale = true;
-    } else {
-      this.autoscale = config.autoscale;
+        if (!max) {
+            this.autoscale = true;
+        } else {
+            this.autoscale = config.autoscale;
+        }
+        this.autoscalePercentile = config.autoscalePercentile === undefined ? 98 : config.autoscalePercentile;
+
+        this.background = config.background; // No default
+        this.divider = config.divider || "rgb(225,225,225)";
+        this.dotSize = config.dotSize || 2;
+        this.height = config.height || 100;
+        //FIXME --> turning on autoheight forces fetch and drag stop on every drag
+        //it does this because it sets tile.invalid on the call to setContentHeight() on the viewport object, not sure why, but maybe doesn't matter
+        this.autoHeight = false;
+        this.disableButtons = config.disableButtons;
+
+        // Limit visibility window to 2 mb,  gtex server gets flaky beyond that
+        this.visibilityWindow =
+            config.visibilityWindow === undefined
+                ? 2000000
+                : config.visibilityWindow >= 0
+                ? Math.min(2000000, config.visibilityWindow)
+                : 2000000;
+
+        this.featureSource = new NiagadsGWASFeatureSource(config, browser.genome);
     }
-    this.autoscalePercentile =
-      config.autoscalePercentile === undefined
-        ? 98
-        : config.autoscalePercentile;
-
-    this.background = config.background; // No default
-    this.divider = config.divider || "rgb(225,225,225)";
-    this.dotSize = config.dotSize || 2;
-    this.height = config.height || 100;
-    //FIXME --> turning on autoheight forces fetch and drag stop on every drag
-    //it does this because it sets tile.invalid on the call to setContentHeight() on the viewport object, not sure why, but maybe doesn't matter
-    this.autoHeight = false;
-    this.disableButtons = config.disableButtons;
-
-    // Limit visibility window to 2 mb,  gtex server gets flaky beyond that
-    this.visibilityWindow =
-      config.visibilityWindow === undefined
-        ? 2000000
-        : config.visibilityWindow >= 0
-        ? Math.min(2000000, config.visibilityWindow)
-        : 2000000;
-
-    this.featureSource = new NiagadsGWASFeatureSource(config, browser.genome);
-  }
 );
 
 NiagadsGWASTrack.prototype.paintAxis = function (ctx, pixelWidth, pixelHeight) {
-  var track = this,
-    yScale = (track.dataRange.max - track.dataRange.min) / pixelHeight;
+    var track = this,
+        yScale = (track.dataRange.max - track.dataRange.min) / pixelHeight;
 
-  var font = {
-    font: "normal 10px Arial",
-    textAlign: "right",
-    strokeStyle: "black",
-  };
+    var font = {
+        font: "normal 10px Arial",
+        textAlign: "right",
+        strokeStyle: "black",
+    };
 
-  IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {
-    fillStyle: "rgb(255, 255, 255)",
-  });
+    IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {
+        fillStyle: "rgb(255, 255, 255)",
+    });
 
-  // Determine a tick spacing such that there is at least 10 pixels between ticks
+    // Determine a tick spacing such that there is at least 10 pixels between ticks
 
-  var n = Math.ceil(
-    ((this.dataRange.max - this.dataRange.min) * 10) / pixelHeight
-  );
+    var n = Math.ceil(((this.dataRange.max - this.dataRange.min) * 10) / pixelHeight);
 
-  for (var p = 4; p <= track.dataRange.max; p += n) {
-    var x1, x2, y1, y2, ref;
+    for (var p = 4; p <= track.dataRange.max; p += n) {
+        var x1, x2, y1, y2, ref;
 
-    // TODO: Dashes may not actually line up with correct scale. Ask Jim about this
+        // TODO: Dashes may not actually line up with correct scale. Ask Jim about this
 
-    ref = 0.85 * pixelWidth;
-    x1 = ref - 5;
-    x2 = ref;
+        ref = 0.85 * pixelWidth;
+        x1 = ref - 5;
+        x2 = ref;
 
-    y1 = y2 = pixelHeight - Math.round((p - track.dataRange.min) / yScale);
+        y1 = y2 = pixelHeight - Math.round((p - track.dataRange.min) / yScale);
 
-    IGVGraphics.strokeLine(ctx, x1, y1, x2, y2, font); // Offset dashes up by 2 pixel
+        IGVGraphics.strokeLine(ctx, x1, y1, x2, y2, font); // Offset dashes up by 2 pixel
 
-    if (y1 > 8) {
-      IGVGraphics.fillText(ctx, p, x1 - 1, y1 + 2, font);
-    } // Offset numbers down by 2 pixels;
-  }
+        if (y1 > 8) {
+            IGVGraphics.fillText(ctx, p, x1 - 1, y1 + 2, font);
+        } // Offset numbers down by 2 pixels;
+    }
 
-  font["textAlign"] = "center";
+    font["textAlign"] = "center";
 
-  IGVGraphics.fillText(
-    ctx,
-    "-log10(pvalue)",
-    pixelWidth / 4,
-    pixelHeight / 2,
-    font,
-    { rotate: { angle: -90 } }
-  );
+    IGVGraphics.fillText(ctx, "-log10(pvalue)", pixelWidth / 4, pixelHeight / 2, font, { rotate: { angle: -90 } });
 };
 
 NiagadsGWASTrack.prototype.getFeatures = function (chr, bpStart, bpEnd) {
-  const pValueField = this.pValueField;
+    const pValueField = this.pValueField;
 
-  return this.featureSource
-    .getFeatures(chr, bpStart, bpEnd)
-    .then(function (features) {
-      features.forEach(function (f) {
-        f.value = f[pValueField];
-      });
-      return features;
+    return this.featureSource.getFeatures(chr, bpStart, bpEnd).then(function (features) {
+        features.forEach(function (f) {
+            f.value = f[pValueField];
+        });
+        return features;
     });
 };
 
 NiagadsGWASTrack.prototype.draw = function (options) {
-  var self = this,
-    featureList = options.features,
-    ctx = options.context,
-    bpPerPixel = options.bpPerPixel,
-    bpStart = options.bpStart,
-    pixelWidth = options.pixelWidth,
-    pixelHeight = options.pixelHeight,
-    yScale = (self.dataRange.max - self.dataRange.min) / pixelHeight,
-    selection = options.genomicState.selection;
+    var self = this,
+        featureList = options.features,
+        ctx = options.context,
+        bpPerPixel = options.bpPerPixel,
+        bpStart = options.bpStart,
+        pixelWidth = options.pixelWidth,
+        pixelHeight = options.pixelHeight,
+        yScale = (self.dataRange.max - self.dataRange.min) / pixelHeight,
+        selection = options.genomicState.selection;
 
-  // Background
-  if (this.background)
-    IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {
-      fillStyle: this.background,
+    // Background
+    if (this.background)
+        IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {
+            fillStyle: this.background,
+        });
+    IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, {
+        strokeStyle: this.divider,
     });
-  IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, {
-    strokeStyle: this.divider,
-  });
 
-  if (ctx) {
-    var len = featureList.length;
+    if (ctx) {
+        var len = featureList.length;
 
-    ctx.save();
+        ctx.save();
 
-    // Draw in two passes, with "selected" eqtls drawn last
-    drawNiagadsGwas(false);
-    drawNiagadsGwas(true);
+        // Draw in two passes, with "selected" eqtls drawn last
+        drawNiagadsGwas(false);
+        drawNiagadsGwas(true);
 
-    ctx.restore();
-  }
-
-  function drawNiagadsGwas(drawSelected) {
-    var radius = drawSelected ? 2 * self.dotSize : self.dotSize,
-      datum,
-      i,
-      px,
-      py,
-      color,
-      snp,
-      geneName,
-      capped;
-
-    for (i = 0; i < len; i++) {
-      datum = featureList[i];
-
-      datum.position = datum.record_pk.split(":")[1];
-
-      px = Math.round(datum.position - bpStart + 0.5) / bpPerPixel;
-      if (px < 0) continue;
-      else if (px > pixelWidth) break;
-
-      snp = datum.variant;
-
-      if (!drawSelected) {
-        let mLogP = datum.neg_log10_pvalue;
-        if (mLogP >= self.dataRange.min) {
-          if (mLogP > self.dataRange.max) {
-            mLogP = self.dataRange.max;
-            capped = true;
-          } else {
-            capped = false;
-          }
-
-          py = Math.max(
-            0 + radius,
-            pixelHeight - Math.round((mLogP - self.dataRange.min) / yScale)
-          );
-          datum.px = px;
-          datum.py = py;
-
-          //todo: color by pValue, not selection/gene --> bin zero to 24, then 25+ is for capped
-          //also: max is cap
-          if (drawSelected && selection) {
-            color = selection.colorForGene(geneName);
-            IGVGraphics.setProperties(ctx, {
-              fillStyle: color,
-              strokeStyle: "black",
-            });
-          } else {
-            color =
-              mLogP < 1.3
-                ? "rgb(180, 180, 180)"
-                : capped
-                ? /* blue */ "rgb(16, 151, 230)"
-                : getColor(mLogP);
-            IGVGraphics.setProperties(ctx, {
-              fillStyle: color,
-              strokeStyle: color,
-            });
-          }
-
-          IGVGraphics.fillCircle(ctx, px, py, radius);
-          IGVGraphics.strokeCircle(ctx, px, py, radius);
-        }
-      }
+        ctx.restore();
     }
-  }
+
+    function drawNiagadsGwas(drawSelected) {
+        var radius = drawSelected ? 2 * self.dotSize : self.dotSize,
+            datum,
+            i,
+            px,
+            py,
+            color,
+            snp,
+            geneName,
+            capped;
+
+        for (i = 0; i < len; i++) {
+            datum = featureList[i];
+
+            datum.position = datum.record_pk.split(":")[1];
+
+            px = Math.round(datum.position - bpStart + 0.5) / bpPerPixel;
+            if (px < 0) continue;
+            else if (px > pixelWidth) break;
+
+            snp = datum.variant;
+
+            if (!drawSelected) {
+                let mLogP = datum.neg_log10_pvalue;
+                if (mLogP >= self.dataRange.min) {
+                    if (mLogP > self.dataRange.max) {
+                        mLogP = self.dataRange.max;
+                        capped = true;
+                    } else {
+                        capped = false;
+                    }
+
+                    py = Math.max(0 + radius, pixelHeight - Math.round((mLogP - self.dataRange.min) / yScale));
+                    datum.px = px;
+                    datum.py = py;
+
+                   
+                    if (drawSelected && selection) {
+                        color = selection.colorForGene(geneName);
+                        IGVGraphics.setProperties(ctx, {
+                            fillStyle: color,
+                            strokeStyle: "black",
+                        });
+                    } else {
+                        color =
+                            mLogP < 1.3
+                                ? "rgb(180, 180, 180)"
+                                : capped
+                                ? /* blue */ "rgb(16, 151, 230)"
+                                : getColor(mLogP, self.dataRange.max);
+                        IGVGraphics.setProperties(ctx, {
+                            fillStyle: color,
+                            strokeStyle: color,
+                        });
+                    }
+
+                    IGVGraphics.fillCircle(ctx, px, py, radius);
+                    IGVGraphics.strokeCircle(ctx, px, py, radius);
+                }
+            }
+        }
+    }
 };
 
-const getColor = (mlogP) => {
-  const index = Math.floor(mlogP) - 1;
-  return scale[index] || "rgb(180, 180, 180)";
+const getColor = (mLogP, maxVal) => {
+    const bucketSize = maxVal / scale.length;
+
+    const mScale = new Array(scale.length).fill(0).map((v, i) => i * bucketSize);
+
+    let index;
+
+    for (let i = 0; i < mScale.length; i++) {
+        if (mScale[i] < mLogP) {
+            continue;
+        } else {
+            index = i;
+            break;
+        }
+    }
+    return scale[index] || "rgb(180, 180, 180)";
 };
 
 const scale = [
-  "#ff1300",
-  "#fb2113",
-  "#f62b20",
-  "#f1322b",
-  "#ed3935",
-  "#e83e3e",
-  "#e34347",
-  "#dd4850",
-  "#d84c59",
-  "#d25062",
-  "#cc546a",
-  "#c65773",
-  "#bf5b7c",
-  "#b85e85",
-  "#b0618d",
-  "#a86396",
-  "#9f669f",
-  "#9569a8",
-  "#8a6bb1",
-  "#7d6eba",
-  "#6e70c3",
-  "#5b72cc",
-  "#4175d5",
-  "#0077de",
+    "#a50026",
+    "#a70226",
+    "#a90426",
+    "#ab0626",
+    "#ad0826",
+    "#af0926",
+    "#b10b26",
+    "#b30d26",
+    "#b50f26",
+    "#b61127",
+    "#b81327",
+    "#ba1527",
+    "#bc1727",
+    "#be1927",
+    "#c01b27",
+    "#c21d28",
+    "#c41f28",
+    "#c52128",
+    "#c72328",
+    "#c92529",
+    "#cb2729",
+    "#cc2929",
+    "#ce2b2a",
+    "#d02d2a",
+    "#d12f2b",
+    "#d3312b",
+    "#d4332c",
+    "#d6352c",
+    "#d7382d",
+    "#d93a2e",
+    "#da3c2e",
+    "#dc3e2f",
+    "#dd4030",
+    "#de4331",
+    "#e04532",
+    "#e14733",
+    "#e24a33",
+    "#e34c34",
+    "#e44e35",
+    "#e55136",
+    "#e75337",
+    "#e85538",
+    "#e95839",
+    "#ea5a3a",
+    "#eb5d3c",
+    "#ec5f3d",
+    "#ed613e",
+    "#ed643f",
+    "#ee6640",
+    "#ef6941",
+    "#f06b42",
+    "#f16e43",
+    "#f17044",
+    "#f27346",
+    "#f37547",
+    "#f37848",
+    "#f47a49",
+    "#f57d4a",
+    "#f57f4b",
+    "#f6824d",
+    "#f6844e",
+    "#f7864f",
+    "#f78950",
+    "#f88b51",
+    "#f88e53",
+    "#f89054",
+    "#f99355",
+    "#f99556",
+    "#f99858",
+    "#fa9a59",
+    "#fa9c5a",
+    "#fa9f5b",
+    "#fba15d",
+    "#fba35e",
+    "#fba660",
+    "#fba861",
+    "#fcaa62",
+    "#fcad64",
+    "#fcaf65",
+    "#fcb167",
+    "#fcb368",
+    "#fcb56a",
+    "#fdb86b",
+    "#fdba6d",
+    "#fdbc6e",
+    "#fdbe70",
+    "#fdc071",
+    "#fdc273",
+    "#fdc474",
+    "#fdc676",
+    "#fdc878",
+    "#fdca79",
+    "#fecc7b",
+    "#fecd7d",
+    "#fecf7e",
+    "#fed180",
+    "#fed382",
+    "#fed584",
+    "#fed685",
+    "#fed887",
+    "#feda89",
+    "#fedb8b",
+    "#fedd8d",
+    "#fede8f",
+    "#fee090",
+    "#fee192",
+    "#fee394",
+    "#fee496",
+    "#fee698",
+    "#fee79a",
+    "#fee89b",
+    "#feea9d",
+    "#feeb9f",
+    "#feeca0",
+    "#feeda2",
+    "#feeea3",
+    "#fdefa5",
+    "#fdf0a6",
+    "#fdf1a7",
+    "#fdf2a9",
+    "#fcf3aa",
+    "#fcf4ab",
+    "#fcf5ab",
+    "#fbf5ac",
+    "#fbf6ad",
+    "#faf6ad",
+    "#faf7ad",
+    "#f9f7ae",
+    "#f8f7ae",
+    "#f7f8ad",
+    "#f7f8ad",
+    "#f6f8ad",
+    "#f5f8ac",
+    "#f4f8ab",
+    "#f3f8ab",
+    "#f1f8aa",
+    "#f0f7a9",
+    "#eff7a8",
+    "#eef7a6",
+    "#edf6a5",
+    "#ebf6a4",
+    "#eaf6a2",
+    "#e8f5a1",
+    "#e7f59f",
+    "#e6f49d",
+    "#e4f39c",
+    "#e2f39a",
+    "#e1f298",
+    "#dff297",
+    "#def195",
+    "#dcf093",
+    "#daef92",
+    "#d9ef90",
+    "#d7ee8e",
+    "#d5ed8d",
+    "#d3ec8b",
+    "#d2ec89",
+    "#d0eb88",
+    "#ceea86",
+    "#cce985",
+    "#cae983",
+    "#c8e882",
+    "#c6e780",
+    "#c4e67f",
+    "#c2e57e",
+    "#c0e47c",
+    "#bee47b",
+    "#bce37a",
+    "#bae279",
+    "#b8e178",
+    "#b6e076",
+    "#b4df75",
+    "#b2de74",
+    "#b0dd73",
+    "#aedc72",
+    "#acdb71",
+    "#a9da70",
+    "#a7d970",
+    "#a5d86f",
+    "#a3d86e",
+    "#a0d76d",
+    "#9ed66c",
+    "#9cd56c",
+    "#99d36b",
+    "#97d26b",
+    "#95d16a",
+    "#92d069",
+    "#90cf69",
+    "#8ece68",
+    "#8bcd68",
+    "#89cc67",
+    "#86cb67",
+    "#84ca66",
+    "#81c966",
+    "#7fc866",
+    "#7cc665",
+    "#79c565",
+    "#77c464",
+    "#74c364",
+    "#71c263",
+    "#6fc063",
+    "#6cbf62",
+    "#69be62",
+    "#67bd62",
+    "#64bc61",
+    "#61ba60",
+    "#5eb960",
+    "#5cb85f",
+    "#59b65f",
+    "#56b55e",
+    "#53b45e",
+    "#51b25d",
+    "#4eb15c",
+    "#4baf5c",
+    "#48ae5b",
+    "#46ad5a",
+    "#43ab5a",
+    "#40aa59",
+    "#3da858",
+    "#3ba757",
+    "#38a557",
+    "#36a456",
+    "#33a255",
+    "#31a154",
+    "#2e9f54",
+    "#2c9d53",
+    "#2a9c52",
+    "#289a51",
+    "#259950",
+    "#23974f",
+    "#21954f",
+    "#1f944e",
+    "#1e924d",
+    "#1c904c",
+    "#1a8f4b",
+    "#188d4a",
+    "#178b49",
+    "#158948",
+    "#148747",
+    "#128646",
+    "#118446",
+    "#108245",
+    "#0e8044",
+    "#0d7e43",
+    "#0c7d42",
+    "#0b7b41",
+    "#0a7940",
+    "#08773f",
+    "#07753e",
+    "#06733d",
+    "#05713c",
+    "#04703b",
+    "#036e3a",
+    "#026c39",
+    "#016a38",
+    "#006837",
 ];
-
 /**
  * Return "popup data" for feature @ genomic location.  Data is an array of key-value pairs
  */
 NiagadsGWASTrack.prototype.popupData = function (config) {
-  let features = config.viewport.getCachedFeatures();
-  if (!features || features.length === 0) return [];
+    let features = config.viewport.getCachedFeatures();
+    if (!features || features.length === 0) return [];
 
-  let genomicLocation = config.genomicLocation,
-    xOffset = config.x,
-    yOffset = config.y,
-    referenceFrame = config.viewport.genomicState.referenceFrame,
-    tolerance = 2 * this.dotSize * referenceFrame.bpPerPixel,
-    dotSize = this.dotSize,
-    track = this.name,
-    popupData = [];
+    let genomicLocation = config.genomicLocation,
+        xOffset = config.x,
+        yOffset = config.y,
+        referenceFrame = config.viewport.genomicState.referenceFrame,
+        tolerance = 2 * this.dotSize * referenceFrame.bpPerPixel,
+        dotSize = this.dotSize,
+        track = this.name,
+        popupData = [];
 
-  features.forEach(function (feature) {
-    if (
-      feature.end >= genomicLocation - tolerance &&
-      feature.start <= genomicLocation + tolerance &&
-      feature.py - yOffset < 2 * dotSize
-    ) {
-      if (popupData.length > 0) {
-        popupData.push("<hr>");
-      }
+    features.forEach(function (feature) {
+        if (
+            feature.end >= genomicLocation - tolerance &&
+            feature.start <= genomicLocation + tolerance &&
+            feature.py - yOffset < 2 * dotSize
+        ) {
+            if (popupData.length > 0) {
+                popupData.push("<hr>");
+            }
 
-      popupData.push(
-        { name: "variant", value: feature.variant },
-        { name: "p value", value: feature.pvalue },
-        { name: "track", value: track }
-      );
-    }
-  });
-  return popupData;
+            popupData.push(
+                { name: "variant", value: feature.variant },
+                { name: "p value", value: feature.pvalue },
+                { name: "track", value: track }
+            );
+        }
+    });
+    return popupData;
 };
 
 NiagadsGWASTrack.prototype.menuItemList = function () {
-  var menuItems = [];
+    var menuItems = [];
 
-  menuItems.push(dataRangeMenuItem(this.trackView));
+    menuItems.push(dataRangeMenuItem(this.trackView));
 
-  return menuItems;
+    return menuItems;
 };
 
 NiagadsGWASTrack.prototype.doAutoscale = function (featureList) {
-  if (featureList.length > 0) {
-    var values = featureList.map(function (datum) {
-      return datum.neg_log10_pvalue;
-    });
+    if (featureList.length > 0) {
+        var values = featureList.map(function (datum) {
+            return datum.neg_log10_pvalue;
+        });
 
-    this.dataRange.max = IGVMath.percentile(values, this.autoscalePercentile);
-  } else {
-    // No features -- default
-    const max = this.config.maxLogP || this.config.max;
-    this.dataRange.max = max || 25;
-  }
+        this.dataRange.max = IGVMath.percentile(values, this.autoscalePercentile);
+    } else {
+        // No features -- default
+        const max = this.config.maxLogP || this.config.max;
+        this.dataRange.max = max || 25;
+    }
 
-  return this.dataRange;
+    return this.dataRange;
 };
 
 class NiagadsGWASFeatureSource {
-  constructor(config, genome) {
-    this.config = config || {};
-    this.genome = genome;
+    constructor(config, genome) {
+        this.config = config || {};
+        this.genome = genome;
 
-    this.reader = new NiagadsGwasReader(config);
-    this.queryable = true;
-    this.expandQuery = config.expandQuery ? true : false;
-  }
-
-  async getFeatures(chr, bpStart, bpEnd, _, visibilityWindow) {
-    const reader = this.reader;
-    const genome = this.genome;
-    const queryChr = genome ? genome.getChromosomeName(chr) : chr;
-    const featureCache = await getFeatureCache.call(this);
-    const isQueryable = this.queryable;
-
-    if ("all" === chr.toLowerCase()) {
-      // queryable sources don't support whole genome view
-      return [];
-    } else {
-      return featureCache.queryFeatures(queryChr, bpStart, bpEnd);
+        this.reader = new NiagadsGwasReader(config);
+        this.queryable = true;
+        this.expandQuery = config.expandQuery ? true : false;
     }
 
-    async function getFeatureCache() {
-      let intervalStart = bpStart;
-      let intervalEnd = bpEnd;
-      let genomicInterval = new GenomicInterval(
-        queryChr,
-        intervalStart,
-        intervalEnd
-      );
+    async getFeatures(chr, bpStart, bpEnd, _, visibilityWindow) {
+        const reader = this.reader;
+        const genome = this.genome;
+        const queryChr = genome ? genome.getChromosomeName(chr) : chr;
+        const featureCache = await getFeatureCache.call(this);
+        const isQueryable = this.queryable;
 
-      if (
-        this.featureCache &&
-        (this.static ||
-          this.featureCache.containsRange(genomicInterval) ||
-          "all" === chr.toLowerCase())
-      ) {
-        return this.featureCache;
-      } else {
-        // Use visibility window to potentially expand query interval.
-        // This can save re-queries as we zoom out.  Visibility window <= 0 is a special case
-        // indicating whole chromosome should be read at once.
-        if (
-          (!visibilityWindow || visibilityWindow <= 0) &&
-          this.expandQuery !== false
-        ) {
-          // Whole chromosome
-          intervalStart = 0;
-          intervalEnd = Number.MAX_SAFE_INTEGER;
-        } else if (
-          visibilityWindow > bpEnd - bpStart &&
-          this.expandQuery !== false
-        ) {
-          const expansionWindow = Math.min(
-            4.1 * (bpEnd - bpStart),
-            visibilityWindow
-          );
-          intervalStart = Math.max(0, (bpStart + bpEnd - expansionWindow) / 2);
-          intervalEnd = bpStart + expansionWindow;
-        }
-        genomicInterval = new GenomicInterval(
-          queryChr,
-          intervalStart,
-          intervalEnd
-        );
-
-        let featureList = await reader.readFeatures(
-          queryChr,
-          genomicInterval.start,
-          genomicInterval.end
-        );
-        if (this.queryable === undefined) {
-          this.queryable = reader.indexed;
-        }
-
-        if (featureList) {
-          this.ingestFeatures(featureList, genomicInterval);
+        if ("all" === chr.toLowerCase()) {
+            // queryable sources don't support whole genome view
+            return [];
         } else {
-          this.featureCache = new FeatureCache(); // Empty cache
+            return featureCache.queryFeatures(queryChr, bpStart, bpEnd);
         }
-        return this.featureCache;
-      }
-    }
-  }
 
-  ingestFeatures(featureList, genomicInterval) {
-    // Assign overlapping features to rows
-    if (this.config.format !== "wig" && this.config.type !== "junctions") {
-      const maxRows = this.config.maxRows || 500;
-      packFeatures(featureList, maxRows);
+        async function getFeatureCache() {
+            let intervalStart = bpStart;
+            let intervalEnd = bpEnd;
+            let genomicInterval = new GenomicInterval(queryChr, intervalStart, intervalEnd);
+
+            if (
+                this.featureCache &&
+                (this.static || this.featureCache.containsRange(genomicInterval) || "all" === chr.toLowerCase())
+            ) {
+                return this.featureCache;
+            } else {
+                // Use visibility window to potentially expand query interval.
+                // This can save re-queries as we zoom out.  Visibility window <= 0 is a special case
+                // indicating whole chromosome should be read at once.
+                if ((!visibilityWindow || visibilityWindow <= 0) && this.expandQuery !== false) {
+                    // Whole chromosome
+                    intervalStart = 0;
+                    intervalEnd = Number.MAX_SAFE_INTEGER;
+                } else if (visibilityWindow > bpEnd - bpStart && this.expandQuery !== false) {
+                    const expansionWindow = Math.min(4.1 * (bpEnd - bpStart), visibilityWindow);
+                    intervalStart = Math.max(0, (bpStart + bpEnd - expansionWindow) / 2);
+                    intervalEnd = bpStart + expansionWindow;
+                }
+                genomicInterval = new GenomicInterval(queryChr, intervalStart, intervalEnd);
+
+                let featureList = await reader.readFeatures(queryChr, genomicInterval.start, genomicInterval.end);
+                if (this.queryable === undefined) {
+                    this.queryable = reader.indexed;
+                }
+
+                if (featureList) {
+                    this.ingestFeatures(featureList, genomicInterval);
+                } else {
+                    this.featureCache = new FeatureCache(); // Empty cache
+                }
+                return this.featureCache;
+            }
+        }
     }
 
-    //i think building this tree is what's causing problems
-    this.featureCache = new FeatureCache(
-      featureList,
-      this.genome,
-      genomicInterval
-    );
-  }
+    ingestFeatures(featureList, genomicInterval) {
+        // Assign overlapping features to rows
+        if (this.config.format !== "wig" && this.config.type !== "junctions") {
+            const maxRows = this.config.maxRows || 500;
+            packFeatures(featureList, maxRows);
+        }
+
+        //i think building this tree is what's causing problems
+        this.featureCache = new FeatureCache(featureList, this.genome, genomicInterval);
+    }
 }
 
 function packFeatures(features, maxRows) {
-  maxRows = maxRows || 1000;
-  if (features == null || features.length === 0) {
-    return;
-  }
-
-  // Segregate by chromosome
-  var chrFeatureMap = {},
-    chrs = [];
-  features.forEach(function (feature) {
-    var chr = feature.chr,
-      flist = chrFeatureMap[chr];
-
-    if (!flist) {
-      flist = [];
-      chrFeatureMap[chr] = flist;
-      chrs.push(chr);
+    maxRows = maxRows || 1000;
+    if (features == null || features.length === 0) {
+        return;
     }
 
-    flist.push(feature);
-  });
+    // Segregate by chromosome
+    var chrFeatureMap = {},
+        chrs = [];
+    features.forEach(function (feature) {
+        var chr = feature.chr,
+            flist = chrFeatureMap[chr];
 
-  // Loop through chrosomosomes and pack features;
+        if (!flist) {
+            flist = [];
+            chrFeatureMap[chr] = flist;
+            chrs.push(chr);
+        }
 
-  chrs.forEach(function (chr) {
-    pack(chrFeatureMap[chr], maxRows);
-  });
+        flist.push(feature);
+    });
+
+    // Loop through chrosomosomes and pack features;
+
+    chrs.forEach(function (chr) {
+        pack(chrFeatureMap[chr], maxRows);
+    });
 }
 
 export default NiagadsGWASTrack;

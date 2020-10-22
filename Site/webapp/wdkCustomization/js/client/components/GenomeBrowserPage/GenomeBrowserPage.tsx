@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
 import { theme } from "./../Visualizations/Igv/mui-theme";
-import tempTrackList from "./../Visualizations/Igv/tempTracklist";
 import TrackBrowser from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
 import NiagadsGWASTrack from "./../../../lib/igv/niagadsTrack";
@@ -27,8 +26,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { get, flow } from "lodash";
+import { WdkServiceContext } from "wdk-client/Service/WdkService";
 
-const useDemoStyles = makeStyles((theme) =>
+const useBrowserStyles = makeStyles((theme) =>
     createStyles({
         root: {},
         AppBar: {
@@ -39,6 +39,9 @@ const useDemoStyles = makeStyles((theme) =>
         },
         AccordionDetails: {
             flexDirection: "column",
+        },
+        BrowseButton: {
+            marginTop: "5px",
         },
         Container: {
             marginTop: "5px",
@@ -65,16 +68,29 @@ const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(IGVBrowser);
 
 interface GenomeBrowserPage {
+    //connected
     webAppUrl: string;
+    serviceUrl: string;
 }
 
-const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ webAppUrl }) => {
-    const classes = useDemoStyles(),
+const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
+    const wdkService = useContext(WdkServiceContext);
+
+    useEffect(() => {
+        wdkService
+            ._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`)
+            .then((res) =>
+                setTrackList(res.map((res) => transformRawNiagadsTrack(res, serviceUrl)).concat(_getFilerTracks()))
+            );
+    }, [wdkService, serviceUrl]);
+
+    const classes = useBrowserStyles(),
         [Browser, setBrowser] = useState<any>(),
-        [loadingTrack, setLoadingTrack] = useState<string>(),
         [drawerOpen, setDrawerOpen] = useState(false),
         [listVisible, setListVisible] = useState(false),
-        [reloadKey, setReloadKey] = useState(makeReloadKey());
+        [loadingTrack, setLoadingTrack] = useState<string>(),
+        [reloadKey, setReloadKey] = useState(makeReloadKey()),
+        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>();
 
     const location = useLocation();
 
@@ -107,7 +123,13 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ webAppUrl }) => {
     return (
         <Container maxWidth="xl">
             <ThemeProvider theme={theme}>
-                <Button variant="outlined" color="primary" onClick={() => setDrawerOpen(!drawerOpen)}>
+                <Button
+                    className={classes.BrowseButton}
+                    color="primary"
+                    disabled={!!!trackList}
+                    onClick={() => setDrawerOpen(!drawerOpen)}
+                    variant="outlined"
+                >
                     <LibraryBooksIcon />
                     Browse Tracks
                 </Button>
@@ -253,14 +275,17 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ webAppUrl }) => {
                     isOpen={listVisible}
                     loadingTrack={loadingTrack}
                     toggleTracks={toggleTracks}
-                    tracks={tempTrackList}
+                    trackList={trackList}
                 />
             </ThemeProvider>
         </Container>
     );
 };
 
-export default connect((state: any) => ({ webAppUrl: state.globalData.siteConfig.webAppUrl }))(GenomeBrowserPage);
+export default connect((state: any) => ({
+    webAppUrl: state.globalData.siteConfig.webAppUrl,
+    serviceUrl: `${window.location.origin}${state.globalData.siteConfig.endpoint}`,
+}))(GenomeBrowserPage);
 
 export interface TrackConfig {
     name: string;
@@ -282,13 +307,6 @@ const getGeneTrackChoices = (): TrackConfig[] => [
 ];
 
 const getNiagadsGwasChoices = () => [
-    /* {
-        name: "NG00027 stage 12",
-        displayMode: "EXPANDED",
-        url: "http://localhost:3009/NG00027_STAGE12.bed.gz",
-        indexURL: "http://localhost:3009/NG00027_STAGE12.bed.gz.tbi",
-        visibilityWindow: 1000000,
-    }, */
     {
         name: "NG00027 stage 1",
         type: "niagadsgwas",
@@ -304,3 +322,75 @@ const getNiagadsGwasChoices = () => [
 /* note that id is unreliable, not necessarily passed from config to trackView.track, at least */
 const getLoadedTracks = (browser: any): string[] =>
     get(browser, "trackViews", []).map((view: any) => view.track.name || view.track.id);
+
+const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig, serviceUrl: string): NiagadsBrowserTrackConfig => {
+    const { phenotypes, ...rest } = track,
+        ret = { url: "unknown", trackType: "unknown", ...rest } as NiagadsBrowserTrackConfig;
+    if (track.source === "NIAGADS" && track.type.includes("gwas")) {
+        ret.trackType = "niagadsgwas";
+        ret.url = `${serviceUrl}/track/gwas?track=${ret.track}`;
+    }
+
+    ret.phenotypes = (phenotypes || []).reduce(
+        (a, c) => a + "\n" + Object.keys(c)[0].toUpperCase() + " : " + Object.values(c)[0],
+        ""
+    );
+
+    return ret;
+};
+
+interface NiagadsBaseTrackConfig {
+    description: string;
+    label: string;
+    name: string;
+    record: string;
+    source: string;
+    track: string;
+    type: string;
+}
+
+interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
+    phenotypes: { [key: string]: string }[];
+}
+
+export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
+    format?: string;
+    phenotypes: string;
+    trackType: string;
+    url: string;
+}
+
+/* 
+
+    temp, for screenshots only
+
+*/
+
+const _getFilerTracks = (): NiagadsBrowserTrackConfig[] => [
+    /* {
+        label: "DNase-seq on human HA-h",
+        description: "foo",
+        name: "DNase-seq on human HA-h",
+        record: "foo",
+        source: "FILER",
+        track: "ENCFF835DIK",
+        phenotypes: "foo",
+        trackType: "bed",
+        type: "bed",
+        url:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg19/1/ENCFF835DIK.bed.gz",
+    } ,*/
+    {
+        label: "DNase-seq on human HA-h",
+        description: "foo",
+        name: "DNase-seq on human HA-h",
+        record: "foo",
+        source: "FILER",
+        track: "ENCFF316JVA",
+        phenotypes: "foo",
+        trackType: "bed",
+        type: "bed",
+        url:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg19/1/ENCFF316JVA.bed.gz",
+    },
+];
