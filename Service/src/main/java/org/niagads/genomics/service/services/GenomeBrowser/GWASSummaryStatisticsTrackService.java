@@ -97,13 +97,13 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
             + "variants AS (SELECT jsonb_build_object(" + NL
             + "'neg_log10_pvalue', neg_log10_pvalue," + NL
             + "'pvalue', pvalue_display," + NL
-            + "'record_pk', CASE WHEN source_id IS NOT NULL THEN metaseq_id || '_' ||  source_id ELSE metaseq_id END," + NL
-            + "'variant', CASE WHEN source_id IS NOT NULL THEN source_id ELSE metaseq_id END" + NL
+            + "'record_pk', r.variant_record_primary_key," + NL
+            + "'variant', split_part(r.variant_record_primary_key, '_', 1)" + NL
             + ") AS rjson" + NL
             + "FROM Results.VariantGWAS r, dataset, bin" + NL 
             + "WHERE r.protocol_app_node_id = dataset.protocol_app_node_id" + NL
             + "AND r.bin_index <@ bin.bin" + NL
-            + "AND int8range(?, ?) @> split_part(r.metaseq_id, ':', 2)::bigint)";
+            + "AND int8range(?, ?) @> split_part(r.variant_record_primary_key, ':', 2)::bigint)";
 
         String querySql = cteSql + NL
             + "SELECT jsonb_agg(rjson)::text AS result FROM variants";
