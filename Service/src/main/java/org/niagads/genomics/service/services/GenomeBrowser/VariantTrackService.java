@@ -121,18 +121,19 @@ public class VariantTrackService extends AbstractWdkService {
             + "vcfRows AS (" + NL
             + ROW_CTE_SQL + NL;
     
-        if (track == ADSP_TRACK) {
+        if (track.equals(ADSP_TRACK)) {
             cteSql += ADSP_VARIANT_FILTER_SQL + NL;
         }
-        else if (track == ADSP_WES_TRACK) {
+        else if (track.equals(ADSP_WES_TRACK)) {
             cteSql += ADSP_WES_VARIANT_FILTER_SQL + NL;
         }
-        else if (track == DBSNP_COMMON_TRACK) {
+        else if (track.equals(DBSNP_COMMON_TRACK)) {
             cteSql += DBSNP_COMMON_VARIANT_FILTER_SQL + NL;
         }
 
         cteSql += ")";
 
+        LOG.debug(cteSql);
 
         String querySql = cteSql + NL
             + "SELECT jsonb_agg(row_json)::text AS result FROM vcfRows";
