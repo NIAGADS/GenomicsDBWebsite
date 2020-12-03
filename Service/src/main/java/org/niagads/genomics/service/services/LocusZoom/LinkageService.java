@@ -69,7 +69,7 @@ public class LinkageService extends AbstractWdkService {
             // query database for ld
             response = fetchLinkage(variant, population);
             LOG.debug("query result: " + response);
-            // return result
+            if (response == null) { response = "{}";}
         }
 
         catch(WdkRuntimeException ex) {
@@ -91,6 +91,9 @@ public class LinkageService extends AbstractWdkService {
         runner.executeQuery(new Object[] {variant, population}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return null;
+        }
         return (String) results.get(0).get("result_json");
     }
 
