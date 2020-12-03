@@ -3,13 +3,14 @@ import * as gr from './../../../../types';
 import { resolveJsonInput, isJson } from './../../../../../../util/jsonParse';
 import { ImpactIndicator } from '../../../Shared/index';
 
-interface MostSeverConsequencesSection {
+interface MSConsequencesSection {
 	attributes: gr.VariantRecordAttributes
 }
-const MostSeverConsequencesSection: React.SFC<MostSeverConsequencesSection> = props => {
+const MostSevereConsequencesSection: React.SFC<MSConsequencesSection> = props => {
 	const { attributes } = props;
 	return <div>
-		<p><span className='label'><strong>Most Severe Consequence:&nbsp;</strong></span>
+		{/*<p><span className='label'><strong>Most Severe Consequence:&nbsp;</strong></span></p>*/}
+		<p>
 			{attributes.most_severe_consequence}&nbsp;
 			{attributes.msc_impact &&
 				<ImpactIndicator impact={attributes.msc_impact} />
@@ -26,5 +27,5 @@ const MostSeverConsequencesSection: React.SFC<MostSeverConsequencesSection> = pr
 	</div>
 }
 
-export default MostSeverConsequencesSection;
+export default MostSevereConsequencesSection;
 
