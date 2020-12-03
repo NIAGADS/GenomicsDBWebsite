@@ -38,16 +38,22 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = (p
                                 : attributes.display_metaseq_id}
                         </strong>
                     </h2>
-                    <h5 className="mb-2">{attributes.ref_snp_id && attributes.ref_snp_id}</h5>
-                    <div className="record-subtitle-container">
-                        <p>
-                            Has this variant been flagged by the ADSP?&nbsp;
+
+                    {attributes.ref_snp_id && <div className="record-subtitle-container"><h3>{attributes.ref_snp_id}</h3></div>}
+
+                    <div className="record-detail-container bordered mb-2 pb-2">
+                        <h6>
+                            Has this variant been flagged by the ADSP?&nbsp;&nbsp;&nbsp;
                             {attributes.is_adsp_variant ? <strong><span className="fa fa-check red">&nbsp;Yes</span></strong> : <strong>No</strong>}
-                        </p>
+                        </h6>
                         <ADSPQCDisplay attributes={record.attributes} />
-                        {attributes.most_severe_consequence && (
-                            <MostSevereConsequencesSection attributes={attributes} />
-                        )}
+                    </div>
+
+                    {attributes.most_severe_consequence && (
+                        <MostSevereConsequencesSection attributes={attributes} />
+                    )}
+
+                    <div className="record-detail-container bordered mb-2 pb-2">
                         <p>
                             <span className="label">
                                 <strong>Allele:&nbsp;</strong>
@@ -66,27 +72,26 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = (p
                             </p>
                         )}
                     </div>
-                    <div className="record-detail-container">
-                        {attributes.alternative_variants && (
-                            <div className="related-variants-container">
-                                <AlternativeVariants altVars={attributes.alternative_variants} />
-                            </div>
-                        )}
-                        {attributes.colocated_variants && (
-                            <div className="colocated-variants-container">
-                                <ColocatedVariants
-                                    position={attributes.position}
-                                    chromosome={attributes.chromosome}
-                                    colVars={attributes.colocated_variants}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    {(attributes.alternative_variants || attributes.colocated_variants) && (
+                        <div className="record-detail-container bordered pb-2">
+                            {attributes.alternative_variants && (
+                                <div className="related-variants-container">
+                                    <AlternativeVariants altVars={attributes.alternative_variants} />
+                                </div>
+                            )}
+                            {attributes.colocated_variants && (
+                                <div className="colocated-variants-container">
+                                    <ColocatedVariants
+                                        position={attributes.position}
+                                        chromosome={attributes.chromosome}
+                                        colVars={attributes.colocated_variants}
+                                    />
+                                </div>
+                            )}
+                        </div>)}
                 </div>
             </div>
             <div className="col">
-
-
                 {record.attributes.gws_datasets_summary_plot && (
                     <div className="header-summary-plot-title">
                         Summary of AD/ADRD associations for this variant: &nbsp;&nbsp;&nbsp;
@@ -103,7 +108,7 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = (p
                     />
                 )}
             </div>
-        </React.Fragment>
+        </React.Fragment >
     );
 };
 

@@ -138,3 +138,5 @@ EMBL_EXPRESSION_ATLAS_URL=https://www.ebi.ac.uk/gxa/search?exactMatch=true&_exac
 UCSC_BROWSER_URL_GRCh37=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=
 
 HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
+
+EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/

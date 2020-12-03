@@ -187,7 +187,7 @@
 		 msc->>'gene_id' AS msc_impacted_gene,
 		 msc->>'gene_symbol' AS msc_impacted_gene_symbol,
 		 build_link_attribute(msc->>'gene_symbol', '/record/gene/', msc->>'gene_id', 'view gene annotations')::text AS msc_impacted_gene_link,
-		 lower(msc->>'impact') AS msc_impact,
+		 msc->>'impact' AS msc_impact,
 		 build_icon_attribute('Coding', 'fa-check', 'green', NULL, msc->>'consequence_is_coding') AS msc_is_coding,
 
 		 replace(replace(msc_impacted_transcript(msc->>'transcript_id', '@PROJECT_ID@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh38+', 

@@ -208,6 +208,9 @@
 	<propertyList name="type">
 	  <value>default</value>
 	</propertyList>
+	<propertyList name="defaultOpen">
+	  <value>true</value>
+	</propertyList>
 
       </table>
 
@@ -302,6 +305,10 @@
 	  <value>track_name</value>
 	</propertyList>
 
+	<propertyList name="defaultOpen">
+	  <value>true</value>
+	</propertyList>
+
 	<description>
 	  <![CDATA[
 		   <p>Associations for this variant to Alzheimer's disease identified in a NIAGADS GWAS summary statistics dataset.<br/>
@@ -345,6 +352,7 @@
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
 	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
 	<columnAttribute name="trait" displayName="Trait" type="string" />
+	<columnAttribute name="mapped_efo_trait" displayName="EFO Mapped Trait" help="mapping to Experimental Factor Ontology" type="string" />
 	<columnAttribute name="pubmed_id"  displayName="PubMed ID" type="json_link" />
 	<columnAttribute name="study" displayName="Study" type="json_text" />
 	<columnAttribute name="sample" displayName="Sample" type="string" />
@@ -352,6 +360,9 @@
 
        	<propertyList name="type">
 	  <value>default</value>
+	</propertyList>
+	<propertyList name="defaultOpen">
+	  <value>true</value>
 	</propertyList>
 
 	<description>
@@ -370,6 +381,7 @@
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
 	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
 	<columnAttribute name="trait" displayName="Trait" type="string" />
+	<columnAttribute name="mapped_efo_trait" displayName="EFO Mapped Trait" help="mapping to Experimental Factor Ontology" type="string" />
 	<columnAttribute name="pubmed_id"  displayName="PubMed ID" type="json_link" />
 	<columnAttribute name="study" displayName="Study" type="json_text" />
 	<columnAttribute name="sample" displayName="Sample" type="string" />

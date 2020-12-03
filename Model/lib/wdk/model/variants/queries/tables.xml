@@ -21,7 +21,8 @@
 		 FROM Study.ProtocolAppNode pan,
 		 Results.VariantGWAS r, id
 		 WHERE r.variant_record_primary_key = id.source_id
-		 AND pan.protocol_app_node_id = r.protocol_app_node_id)
+		 AND pan.protocol_app_node_id = r.protocol_app_node_id
+		 AND r.neg_log10_pvalue > 3)
 
 		 SELECT id.source_id,
 		 NULLIF(jsonb_agg(dataset_json ORDER BY dataset_source_id)::text, '[null]') AS dataset_list
@@ -263,42 +264,41 @@
       <column name="sample"/>
       <column name="replicate_sample"/>
       <column name="trait"/>
+      <column name="mapped_efo_trait"/>
 
       <sql>
 	<![CDATA[
-		 SELECT source_id, source, pvalue, allele, frequency,
-		 pubmed_id, study, sample, replicate_sample,  string_agg(DISTINCT trait, '//' ORDER BY trait) AS trait FROM (
-		 WITH Variant AS (
-		 SELECT id.source_id::text, v.variant_id
-		 FROM NIAGADS.Variant v,
-		 (##WDK_ID_SQL##) id
-		 WHERE id.source_id = v.record_pk)
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 tracks AS (
+		 SELECT ta.track, ta.protocol_app_node_id, 'NHGRI-EBI' AS datasource
+		 FROM NIAGADS.TrackAttributes ta
+		 WHERE track = 'NHGRI_GWAS_CATALOG')
 		 
-		 SELECT v.source_id,
-		 CASE WHEN ta.track LIKE 'NHGRI%' THEN 'NHGRI' ELSE 'NIAGADS' END AS source,	
-		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		 SELECT id.source_id,
+		 t.datasource AS source,
 		 r.allele,
+		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
 		 r.frequency,
-		 ot.name AS trait,
-		 build_link_attribute(r.evidence->>'PUBMEDID', '@PUBMED_URL@', null, null) AS pubmed_id,
-		 build_text_attribute(CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN LEFT(r.evidence->>'STUDY', 50) || ' ...' ELSE r.evidence->>'STUDY' END,
-		 CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN  r.evidence->>'STUDY' ELSE NULL END, NULL) AS study,
-		 evidence->>'INITIAL SAMPLE SIZE' AS sample,
-		 CASE WHEN evidence->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL ELSE evidence->>'REPLICATION SAMPLE SIZE' END AS replicate_sample
+		 r.restricted_stats->>'STUDY' AS study,
 
-FROM Variant v,
-Results.VariantCatalog r,
-SRes.OntologyTerm ot,
-NIAGADS.TrackAttributes ta
+		 build_link_attribute(replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), 
+		 '@PUBMED_URL@', replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), NULL) AS pubmed_id,
 
-WHERE ta.track LIKE '%CATALOG%'
-AND ta.protocol_app_node_id = r.protocol_app_node_id
-AND ot.ontology_term_id = r.ontology_term_id
-AND (ot.name ILIKE '%Alzh%' AND ot.name NOT LIKE '%biomarker%' AND ot.name NOT LIKE '%measurement%')
-AND r.variant_id = v.variant_id 
+		 r.restricted_stats->>'INITIAL SAMPLE SIZE' AS sample,
 
-ORDER BY r.neg_log10_pvalue DESC) a
-GROUP BY  source_id, source, pvalue, allele, frequency, pubmed_id, study, sample, replicate_sample
+		 CASE WHEN r.restricted_stats->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL 
+		 ELSE r.restricted_stats->>'REPLICATION SAMPLE SIZE' END  AS replicate_sample,
+
+		 r.restricted_stats->>'DISEASE/TRAIT' AS trait,
+
+		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
+		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
+
+		 FROM Results.VariantGWAS r, tracks t, id
+		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
+		 AND r.variant_record_primary_key = id.source_id
+		 AND r.restricted_stats->>'DISEASE/TRAIT' ILIKE '%Alzheimer%'
 	]]>
       </sql>
     </sqlQuery>
@@ -319,42 +319,41 @@ GROUP BY  source_id, source, pvalue, allele, frequency, pubmed_id, study, sample
       <column name="sample"/>
       <column name="replicate_sample"/>
       <column name="trait"/>
+      <column name="mapped_efo_trait"/>
 
       <sql>
 	<![CDATA[
-		 SELECT source_id, source, pvalue, allele, frequency,
-		 pubmed_id, study, sample, replicate_sample,  string_agg(DISTINCT trait, '//' ORDER BY trait) AS trait FROM (
-		 WITH Variant AS (
-		 SELECT id.source_id::text, v.variant_id
-		 FROM NIAGADS.Variant v,
-		 (##WDK_ID_SQL##) id
-		 WHERE id.source_id = v.record_pk)
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 tracks AS (
+		 SELECT ta.track, ta.protocol_app_node_id, 'NHGRI-EBI' AS datasource
+		 FROM NIAGADS.TrackAttributes ta
+		 WHERE track = 'NHGRI_GWAS_CATALOG')
 		 
-		 SELECT v.source_id,
-		 CASE WHEN ta.track LIKE 'NHGRI%' THEN 'NHGRI' ELSE 'NIAGADS' END AS source,	
-		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		 SELECT id.source_id,
+		 t.datasource AS source,
 		 r.allele,
+		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
 		 r.frequency,
-		 ot.name AS trait,
-		 build_link_attribute(r.evidence->>'PUBMEDID', '@PUBMED_URL@', null, null) AS pubmed_id,
-		 build_text_attribute(CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN LEFT(r.evidence->>'STUDY', 50) || ' ...' ELSE r.evidence->>'STUDY' END,
-		 CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN  r.evidence->>'STUDY' ELSE NULL END, NULL) AS study,
-		 evidence->>'INITIAL SAMPLE SIZE' AS sample,
-		 CASE WHEN evidence->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL ELSE evidence->>'REPLICATION SAMPLE SIZE' END AS replicate_sample
+		 r.restricted_stats->>'STUDY' AS study,
 
-FROM Variant v,
-Results.VariantCatalog r,
-SRes.OntologyTerm ot,
-NIAGADS.TrackAttributes ta
+		 build_link_attribute(replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), 
+		 '@PUBMED_URL@', replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), NULL) AS pubmed_id,
 
-WHERE ta.track LIKE '%CATALOG%'
-AND ta.protocol_app_node_id = r.protocol_app_node_id
-AND ot.ontology_term_id = r.ontology_term_id
-AND (ot.name NOT ILIKE '%Alzh%' OR ot.name LIKE '%biomarker%' OR ot.name LIKE '%measurement%')
-AND r.variant_id = v.variant_id 
+		 r.restricted_stats->>'INITIAL SAMPLE SIZE' AS sample,
 
-ORDER BY r.neg_log10_pvalue DESC) a
-GROUP BY  source_id, source, pvalue, allele, frequency, pubmed_id, study, sample, replicate_sample
+		 CASE WHEN r.restricted_stats->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL 
+		 ELSE r.restricted_stats->>'REPLICATION SAMPLE SIZE' END  AS replicate_sample,
+
+		 r.restricted_stats->>'DISEASE/TRAIT' AS trait,
+
+		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
+		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
+
+		 FROM Results.VariantGWAS r, tracks t, id
+		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
+		 AND r.variant_record_primary_key = id.source_id
+		 AND r.restricted_stats->>'DISEASE/TRAIT' NOT ILIKE '%Alzheimer%'
 	]]>
       </sql>
     </sqlQuery>
