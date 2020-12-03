@@ -407,20 +407,18 @@
 		 
 		 colocv AS (
 		 SELECT flags.source_id,
-		 CASE WHEN split_part(flags.source_id, '_', 2) != split_part(cv.record_primary_key, '_', 2) THEN 
-		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.source_id || ')', ''), 
-		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100))
-		 ELSE NULL END AS colocated_variants
-		 FROM flags, cv WHERE cv.source_id = flags.source_id),
+		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
+		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS colocated_variants
+		 FROM flags, cv WHERE cv.source_id = flags.source_id
+		 AND split_part(flags.source_id, '_', 2) != split_part(cv.record_primary_key, '_', 2)),
 		 
 		 altv AS (
-		 SELECT flags.source_id,
-		 CASE WHEN split_part(flags.source_id, '_', 2) = split_part(cv.record_primary_key, '_', 2) THEN 
+		 SELECT DISTINCT flags.source_id, 
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
-		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100))
-		 ELSE NULL  END AS alternative_variants
-		 FROM flags, cv WHERE cv.source_id = flags.source_id),
-		 
+		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS alternative_variants
+		 FROM flags, cv WHERE cv.source_id = flags.source_id
+		 AND split_part(flags.source_id, '_', 2) = split_part(cv.record_primary_key, '_', 2)),
+
 		 result AS (
 		 SELECT flags.source_id,
 		 flags.num_colocated_variants,

@@ -499,7 +499,7 @@
 
 		 conseq->>'rank' AS rank,
 		 conseq->>'impact' AS impact,		
-		 replace(array_to_string(json_array_cast_to_text((conseq->'consequence_terms')::json), ','), '_', '') AS consequence
+		 replace(array_to_string(json_array_cast_to_text((conseq->'consequence_terms')::json), ','), '_', ' ') AS consequence
 		 FROM cjson
 		 ORDER BY rank
 	]]>
