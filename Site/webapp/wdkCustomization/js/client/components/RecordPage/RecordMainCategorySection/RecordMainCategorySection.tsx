@@ -6,7 +6,8 @@ import * as GR from "../types";
 import { IdeogramPlot, HighchartsPlot } from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { isEmpty } from "lodash";
-import { VariantTranscriptConsequencesSummary, GeneGeneticVariationSummary, VariantLzPlot } from "./SectionSummaries";
+// import { VariantTranscriptConsequencesSummary, GeneGeneticVariationSummary, VariantLzPlot } from "./SectionSummaries";
+import { GeneGeneticVariationSummary, VariantLzPlot } from "./SectionSummaries";
 
 interface RecordMainCategorySection {
     category: any;
@@ -204,14 +205,14 @@ const SectionSummaryText: React.SFC<SectionSummaryText> = (props) => {
             }
             break;
         //todo: which is current?
-        case "function-analysis":
+        {/*case "function-analysis":
         case "category:function-analysis":
             switch (props.record.recordClassName) {
                 case "VariantRecordClasses.VariantRecordClass":
                     Element = <VariantTranscriptConsequencesSummary record={record as GR.VariantRecord} />;
                     break;
             }
-            break;
+        break; */}
     }
     return <div className="section-summary-text">{Element}</div>;
 };

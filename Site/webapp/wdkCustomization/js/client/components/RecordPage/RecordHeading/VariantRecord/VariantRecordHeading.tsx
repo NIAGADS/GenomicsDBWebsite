@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Tooltip } from "wdk-client/Components";
+import { Tooltip, HelpIcon } from "wdk-client/Components";
 import { MostSevereConsequencesSection } from "./Components/index";
 import { HeaderRecordActions, RecordOutLink } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
@@ -21,40 +21,48 @@ const enhance = connect<StoreProps, any, gr.VariantRecordSummary>((state: any) =
 
 const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = (props) => {
     const { record, headerActions, recordClass, externalUrls } = props,
-        { attributes } = record,
-        sequence = (
-            <React.Fragment>
-                <span>{attributes.downstream_sequence}</span>
-                {resolveJsonInput(attributes.sequence_allele)}
-                <span>{attributes.upstream_sequence}</span>
-            </React.Fragment>
-        );
+        { attributes } = record;
+
     return (
         <React.Fragment>
             {/* ensure that header doesn't bleed into neighboring component but only grows to fit content */}
-            <div className="col flex-grow-0">
+            <div className="col col-3">
                 <div className="record-summary-container variant-record-summary-container">
                     <div>
                         <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
                     </div>
-                    <h2 className="mb-2">
+                    <h2>
                         <strong>
                             {isJson(attributes.display_metaseq_id)
                                 ? resolveJsonInput(attributes.display_metaseq_id)
                                 : attributes.display_metaseq_id}
-                            {attributes.ref_snp_id && " (" + attributes.ref_snp_id + ")"}
                         </strong>
                     </h2>
-                    <div className="record-subtitle-container">
+
+                    {attributes.ref_snp_id && <div className="record-subtitle-container"><h3>{attributes.ref_snp_id}</h3></div>}
+
+                    <div className="record-detail-container bordered mb-2 pb-2">
+                        <h6>
+                            Has this variant been flagged by the ADSP?&nbsp;&nbsp;&nbsp;
+                            {attributes.is_adsp_variant ? <strong><span className="fa fa-check red">&nbsp;Yes</span></strong> : <strong>No</strong>}
+                        </h6>
+                        <ADSPQCDisplay attributes={record.attributes} />
+                    </div>
+
+                    {attributes.most_severe_consequence && (
+                        <MostSevereConsequencesSection attributes={attributes} />
+                    )}
+
+                    <div className="record-detail-container bordered mb-2 pb-2">
                         <p>
-                            <strong>{sequence}</strong>
+                            <span className="label">
+                                <strong>Allele:&nbsp;</strong>
+                            </span>
+                            {attributes.display_allele}
                         </p>
                         <p>
-                            <strong>{attributes.variant_class}</strong>
+                            {attributes.variant_class}
                         </p>
-                        {attributes.most_severe_consequence && (
-                            <MostSevereConsequencesSection attributes={attributes} />
-                        )}
                         {attributes.location && (
                             <p>
                                 <span className="label">
@@ -63,57 +71,31 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = (p
                                 {attributes.location}
                             </p>
                         )}
-                        <p>
-                            <span className="label">
-                                <strong>Allele:&nbsp;</strong>
-                            </span>
-                            {attributes.display_allele}
-                        </p>
                     </div>
-                    <div className="record-detail-container">
-                        <div className="reversed-info-container">
-                            {isTrue(attributes.is_reversed) && (
-                                <p>
-                                    This variant is on the
-                                    <Tooltip content="The variant is reported by dbSNP as being on the reverse strand. All sequences displayed in the GenomicsDB and mappings to variant annotations are on the forward strand.">
-                                        <span className="wdk-tooltip">&nbsp;reverse strand</span>
-                                    </Tooltip>
-                                    .
-                                </p>
+                    {(attributes.alternative_variants || attributes.colocated_variants) && (
+                        <div className="record-detail-container bordered pb-2">
+                            {attributes.alternative_variants && (
+                                <div className="related-variants-container">
+                                    <AlternativeVariants altVars={attributes.alternative_variants} />
+                                </div>
                             )}
-                        </div>
-                        {attributes.alternative_variants && (
-                            <div className="related-variants-container">
-                                <AlternativeVariants altVars={attributes.alternative_variants} />
-                            </div>
-                        )}
-                        {attributes.colocated_variants && (
-                            <div className="colocated-variants-container">
-                                <ColocatedVariants
-                                    position={attributes.position}
-                                    chromosome={attributes.chromosome}
-                                    colVars={attributes.colocated_variants}
-                                />
-                            </div>
-                        )}
-                    </div>
+                            {attributes.colocated_variants && (
+                                <div className="colocated-variants-container">
+                                    <ColocatedVariants
+                                        position={attributes.position}
+                                        chromosome={attributes.chromosome}
+                                        colVars={attributes.colocated_variants}
+                                    />
+                                </div>
+                            )}
+                        </div>)}
                 </div>
             </div>
             <div className="col">
-                <div className="header-summary-plot-title">
-                    Has this variant been flagged by the <a href={`${externalUrls.ADSP_URL}`}>ADSP</a>?
-                </div>
-                {record.attributes.is_adsp_variant ? (
-                    <ADSPQCDisplay attributes={record.attributes} />
-                ) : (
-                    <span className="none-adsp-variant">No</span>
-                )}
-
                 {record.attributes.gws_datasets_summary_plot && (
                     <div className="header-summary-plot-title">
-                        With which AD-related dementias, neuropathologies, or biomarkers has this variant been
-                        associated? &nbsp;&nbsp;&nbsp;
-                        <a href="#ad_variants_from_gwas">
+                        Summary of AD/ADRD associations for this variant: &nbsp;&nbsp;&nbsp;
+                        <a href="#category:phenomics">
                             Browse the association evidence <i className="fa fa-level-down"></i>
                         </a>
                     </div>
@@ -126,28 +108,27 @@ const VariantRecordSummary: React.SFC<gr.VariantRecordSummary & StoreProps> = (p
                     />
                 )}
             </div>
-        </React.Fragment>
+        </React.Fragment >
     );
 };
 
 const ADSPQCDisplay: React.SFC<{ attributes: gr.VariantRecordAttributes }> = (props) => {
     const { attributes } = props;
     return (
-        (attributes.adsp_wgs_qc_filter_status_display || attributes.adsp_wes_qc_filter_status_display) && (
+        (attributes.adsp_wgs_qc_filter_status || attributes.adsp_wes_qc_filter_status) && (
             <div className="adsp-variant-info-container">
-                {attributes.is_adsp_variant && <strong>{resolveJsonInput(attributes.is_adsp_variant)}&nbsp;</strong>}
-                {attributes.is_adsp_wes && (
-                    <div className="mb-2">
-                        {resolveJsonInput(attributes.is_adsp_wes)}{" "}
-                        <strong>{resolveJsonInput(attributes.adsp_wes_qc_filter_status_display)}</strong>
-                    </div>
-                )}
-                {attributes.is_adsp_wgs && (
-                    <div>
-                        {resolveJsonInput(attributes.is_adsp_wgs)}{" "}
-                        <strong>{resolveJsonInput(attributes.adsp_wgs_qc_filter_status_display)}</strong>
-                    </div>
-                )}
+                {attributes.adsp_wes_qc_filter_status &&
+                    (attributes.is_adsp_wes
+                        ? <div className="mb-2">{" "}<span className="small badge red">WES</span>{" "}{attributes.adsp_wes_qc_filter_status}</div>
+                        : <div className="mb-2">{" "}<span className="small badge black">WES</span>{" "}{attributes.adsp_wes_qc_filter_status}</div>
+                    )
+                }
+                {attributes.adsp_wgs_qc_filter_status &&
+                    (attributes.is_adsp_wgs
+                        ? <div className="mb-2">{" "}<span className="small badge red">WGS</span>{" "}{attributes.adsp_wgs_qc_filter_status}</div>
+                        : <div className="mb-2">{" "}<span className="small badge black">WGS</span>{" "}{attributes.adsp_wgs_qc_filter_status}</div>
+                    )
+                }
             </div>
         )
     );
@@ -179,7 +160,7 @@ const ColocatedVariants: React.SFC<{ colVars: string; position: string; chromoso
             <i className="fa fa-exclamation-triangle"></i>This position ({positionString}) coincides with&nbsp;
             <Tooltip
                 content={
-                    "use the links below to view annotations for additional dbSNP refSNP IDs assigned to this variant or alterantive variant types (e.g., indel vs SNV) that overlap the variant position"
+                    "use the links below to view annotations for co-located/overlapping variants (e.g., indels, structural variants, co-located SNVs not annotated by dbSNP)"
                 }
             >
                 <span className="wdk-tooltip">additional variants:</span>
