@@ -25,18 +25,40 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-@Path("track/gwas")
-public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
-    private static final Logger LOG = Logger.getLogger(GWASSummaryStatisticsTrackService.class);
+@Path("track/variant")
+public class VariantTrackService extends AbstractWdkService {
+    private static final Logger LOG = Logger.getLogger(VariantTrackService.class);
+
+    private static final String DBSNP_TRACK="dbSNP";
+    private static final String DBSNP_COMMON_TRACK="dbSNP_COMMON";
+    private static final String ADSP_TRACK="ADSP";
+    private static final String ADSP_WES_TRACK="ADSP_WES";
 
     private static final String CHROMOSOME_PARAM = "chromosome";
     private static final String TRACK_PARAM = "track";
     private static final String LOCATION_START_PARAM = "start";
     private static final String LOCATION_END_PARAM = "end";
 
-    private static final String TRACK_INTERNAL_ID_CTE = "SELECT protocol_app_node_id FROM Study.ProtocolAppNode WHERE source_id = ?";
-    private static final String BIN_INDEX_CTE = "SELECT find_bin_index(?, ?, ?) AS bin";
-    private String DATA_QUERY = buildDataQuery();
+    private static final String BIN_INDEX_CTE_SQL = "SELECT find_bin_index(?, ?, ?) AS bin_index";
+
+    private static final String ROW_CTE_SQL = "SELECT jsonb_build_object(" + NL
+        + "'chrom', chromosome," + NL 
+        + "'pos', location," + NL
+        + "'id', v.record_primary_key," + NL
+        + "'ref', split_part(metaseq_id, ':', 3)," + NL
+        + "'alt', split_part(metaseq_id, ':', 4)," + NL
+        + "'qual', '.'::text," + NL
+        + "'filter', (cadd_scores->>'CADD_phred')::numeric," + NL
+        + "'info', 'record=' || v.record_primary_key || ';consequence=' || v.adsp_ms_consequence || ';impact=' || (v.adsp_most_severe_consequence->>'impact')::text" + NL
+        + ") AS row_json" + NL
+        + "FROM AnnotatedVDB.Variant v, bin b" + NL
+        + "WHERE b.bin_index @> v.bin_index" + NL
+        + "AND int8range(?, ?, '[]') @> v.location" + NL
+        + "AND v.chromosome = ?";
+
+    private static final String DBSNP_COMMON_VARIANT_FILTER_SQL = "AND (vep_output->'input'->'info'->'COMMON')::integer::boolean";
+    private static final String ADSP_VARIANT_FILTER_SQL = "AND is_adsp_variant";
+    private static final String ADSP_WES_VARIANT_FILTER_SQL = "AND is_adsp_variant AND (other_annotation->>'GenomicsDB')::jsonb @> '[" + '"' + "ADSP_WES" + '"' + "]'";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -46,7 +68,7 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
             @QueryParam(CHROMOSOME_PARAM) String chromosome,
             @QueryParam(LOCATION_START_PARAM) Long locationStart,
             @QueryParam(LOCATION_END_PARAM) Long locationEnd) throws WdkModelException {
-        LOG.info("Starting 'GWAS Summary Statistics Track' Service");
+        LOG.info("Starting 'Variant Track' Service");
 
         JSONObject response = new JSONObject();
         response.put("track", track);
@@ -71,10 +93,12 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
+        String sql = buildDataQuery(track);
+
         //LOG.debug(DATA_QUERY);
         //LOG.debug("track = " + track + " // chr = " + chromosome + " // start = " + locationStart.toString() + " // end = " + locationEnd.toString());
-        SQLRunner runner = new SQLRunner(ds, DATA_QUERY, "track-gwas-summary-stats-data-query");
-        runner.executeQuery(new Object[] { track, chromosome, locationStart, locationEnd, locationStart, locationEnd }, handler);
+        SQLRunner runner = new SQLRunner(ds, sql, "track-variant-data-query");
+        runner.executeQuery(new Object[] { chromosome, locationStart, locationEnd, locationStart, locationEnd, chromosome }, handler);
         
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
@@ -91,22 +115,28 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
     }
 
 
-    private String buildDataQuery() {
-        String cteSql = "WITH dataset AS (" + TRACK_INTERNAL_ID_CTE + ")," + NL
-            + "bin AS (" + BIN_INDEX_CTE + ")," + NL
-            + "variants AS (SELECT jsonb_build_object(" + NL
-            + "'neg_log10_pvalue', neg_log10_pvalue," + NL
-            + "'pvalue', pvalue_display," + NL
-            + "'record_pk', r.variant_record_primary_key," + NL
-            + "'variant', split_part(r.variant_record_primary_key, '_', 1)" + NL
-            + ") AS rjson" + NL
-            + "FROM Results.VariantGWAS r, dataset, bin" + NL 
-            + "WHERE r.protocol_app_node_id = dataset.protocol_app_node_id" + NL
-            + "AND r.bin_index <@ bin.bin" + NL
-            + "AND int8range(?, ?) @> split_part(r.variant_record_primary_key, ':', 2)::bigint)";
+    private String buildDataQuery(String track) {
+
+        String cteSql = "WITH bin AS (" + BIN_INDEX_CTE_SQL + ")," + NL
+            + "vcfRows AS (" + NL
+            + ROW_CTE_SQL + NL;
+    
+        if (track.equals(ADSP_TRACK)) {
+            cteSql += ADSP_VARIANT_FILTER_SQL + NL;
+        }
+        else if (track.equals(ADSP_WES_TRACK)) {
+            cteSql += ADSP_WES_VARIANT_FILTER_SQL + NL;
+        }
+        else if (track.equals(DBSNP_COMMON_TRACK)) {
+            cteSql += DBSNP_COMMON_VARIANT_FILTER_SQL + NL;
+        }
+
+        cteSql += ")";
+
+        LOG.debug(cteSql);
 
         String querySql = cteSql + NL
-            + "SELECT jsonb_agg(rjson)::text AS result FROM variants";
+            + "SELECT jsonb_agg(row_json)::text AS result FROM vcfRows";
 
         return querySql;
     }

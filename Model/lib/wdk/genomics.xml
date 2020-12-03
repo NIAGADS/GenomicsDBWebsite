@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <constant name="releaseDate" includeProjects="GRCh37,GRCh38">10 October 2020 00:00</constant>
+  <constant name="releaseVersion37"
+	    includeProjects="GRCh37">3.5</constant>
+  <constant name="releaseVersion38" includeProjects="GRCh38">1.0</constant>
+  <constant name="buildNumber37" includeProjects="GRCh37">GRCh37.p13/hg19</constant>
+  <constant name="buildNumber38" includeProjects="GRCh38">GRCh38.p10</constant>
+  
+  <constant name="fullReporterDisplayName">Text: choose from columns and/or tables</constant>
+  <constant name="attributesReporterDisplayName">Search Result Table</constant>
+  <constant name="tableReporterDisplayName">Additional Tabular Data</constant>
+  
+  <constant name="attributesReporterDescription">Choose columns from search result to download as a tab-delimited text or EXCEL file.</constant>
+  <constant name="tableReporterDescription">Choose tabular data not displayed in search results (e.g., proteomics, transcriptomics, functional annotation) to download as a tab-delimited text or EXCEL file.</constant>
+  
+  <constant name="defaultGene">ABCA7</constant>
+  <constant name="defaultTextExpression">*beta-amyloid*</constant>
+  
+  <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB" 
+	     version="%%releaseVersion37%%"
+	     releaseDate="%%releaseDate%%"
+	     buildNumber="%%buildNumber37%%" />
+
+  <modelName includeProjects="GRCh38" displayName="model Alzheimer's GenomicsDB" 
+	     version="%%releaseVersion38%%"
+	     releaseDate="%%releaseDate%%"
+	     buildNumber="%%buildNumber38%%" />
+
+ 
+
+    <!-- order is the order in strategies/favorites tables -->
+   
+    <!-- VARIANTS -->
+    <import file="model/variants/record.xml" /> 
+    <import file="model/variants/queries/attributes.xml" />
+    <import file="model/variants/queries/tables.xml" />
+    <!-- <import file="model/variants/queries/filters.xml" /> -->
+    <import file="model/variants/questions.xml" />
+    <import file="model/variants/queries/questions.xml" />
+    <import file="model/variants/params.xml" /> 
+    <!-- <import file="model/variants/queries/vocab.xml"/> -->
+   
+    <!-- GENES  -->
+    <import file="model/genes/record.xml" />
+    <import file="model/genes/queries/attributes.xml" />
+    <import file="model/genes/queries/tables.xml" />
+    <!-- <import file="model/genes/queries/filters.xml" /> -->
+    <import file="model/genes/questions.xml" /> 
+    <import file="model/genes/queries/questions.xml" /> 
+    <import file="model/genes/params.xml" /> 
+    <import file="model/genes/queries/vocab.xml"/>
+
+    <!-- SPANS -->
+    <!-- <import file="model/spans/record.xml" /> -->
+    <!-- <import file="model/spans/queries/attributes.xml" /> -->
+    <!-- <import file="model/spans/queries/tables.xml" /> -->
+    <!-- <!-\- <import file="model/spans/queries/recordFilters.xml" /> -\-> -->
+    <!-- <import file="model/spans/questions.xml" /> -->
+    <!-- <import file="model/spans/queries/questions.xml" /> -->
+    <!-- <import file="model/spans/params.xml" /> -->
+    <!-- <import file="model/spans/queries/vocab.xml"/> -->
+
+    <!-- RESOURCE/DATASETS -->
+    <import file="model/datasets/record.xml" /> 
+    <import file="model/datasets/queries/resource_attributes.xml" /> 
+    <import file="model/datasets/queries/niagads_accession_attributes.xml" /> 
+    <import file="model/datasets/queries/gwas_summary_attributes.xml" /> 
+    <import file="model/datasets/queries/gwas_summary_tables.xml" /> 
+    <import file="model/datasets/queries/inferno_attributes.xml" /> 
+    <!-- <import file="model/resources/queries/recordFilters.xml" /> -->
+    <import file="model/datasets/questions.xml" /> 
+    <import file="model/datasets/queries/questions.xml" /> 
+    <import file="model/datasets/params.xml" />
+    <import file="model/datasets/queries/vocab.xml"/>
+    
+    <!-- SHARED/COMMON -->
+    <import file="model/shared/params.xml"/> 
+    <import file="model/shared/queries/vocab.xml" />
+
+    <!-- XML Records -->
+    <!-- <import file="model/xml/records.xml" /> -->
+    <!-- <import file="model/xml/questions.xml" /> -->
+
+    <!-- SPAN LOGIC -->
+    <!-- <import file="CBIL/span_logic/questions.xml" /> -->
+    <!-- <import file="CBIL/span_logic/queries/queries.xml" /> -->
+    <!-- <import file="CBIL/span_logic/params.xml" /> -->
+
+
+     <!-- Step Analysis Plugins -->
+    <import file="model/step_analysis/stepAnalysisPlugins.xml"/> 
+    <import file="model/step_analysis/stepAnalysisParams.xml"/> 
+    <import file="model/step_analysis/stepAnalysisVocabQueries.xml"/> 
+
+    <stepAnalysisPlugins>
+      <executionConfig fileStoreDirectory="@STEP_ANALYSIS_JOB_DIR@"/>
+    </stepAnalysisPlugins>
+
+    <!-- import common pieces -->
+    <import file="model/categories.xml"/>
+    <import file="model/shared/parameterGroups.xml"/>
+  
+    <!-- UTILITIES for heartbeat/etc -->
+    <!-- <import file="model/utility/record.xml"/>  -->
+    <!-- <import file="model/utility/queries/attributes.xml"/> -->
+
+
+</wdkModel>

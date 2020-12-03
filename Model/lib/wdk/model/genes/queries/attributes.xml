@@ -159,22 +159,7 @@
     <!-- Genomic Location -->
     <!-- =============================================================== -->
 
-    <sqlQuery name="ColocatedVariantCount">
-      <column name="source_id"/>
-      <column name="num_colocated_variants"/>
-      <column name="num_unique_colocated_variants"/>
-      <sql>
-        <![CDATA[
-                  SELECT ga.source_id, build_badge_attribute(count(v.record_pk)::text, '@VARIANTS_BY_FEATURE_SEARCH@', ga.source_id, 'run a search to retrieve the full list') AS num_colocated_variants,
-                  count(DISTINCT split_part(v.record_pk, ':', 2)) AS num_unique_colocated_variants
-                  FROM CBIL.GeneAttributes ga,
-                  NIAGADS.Variant v
-                  WHERE  ga.bin_index @> v.bin_index
-                  AND numrange(ga.location_start, ga.location_end, '[]') @> v.location_start::numeric
-                  GROUP BY ga.source_id
-                ]]>
-      </sql>
-    </sqlQuery>
+  
 
 
     <!-- =============================================================== -->
