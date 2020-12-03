@@ -209,6 +209,7 @@
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key
 		 AND r.neg_log10_pvalue > 3
+		 AND r.neg_log10_pvalue != 'NaN'
 		 ORDER BY neg_log10_pvalue DESC
 	]]>
       </sql>
@@ -242,6 +243,7 @@
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key
 		 AND r.neg_log10_pvalue > 3
+		 AND r.neg_log10_pvalue != 'NaN'
 		 ORDER BY neg_log10_pvalue DESC
 	]]>
       </sql>
