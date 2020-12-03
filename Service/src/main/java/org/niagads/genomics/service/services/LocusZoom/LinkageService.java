@@ -26,36 +26,35 @@ public class LinkageService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(LinkageService.class);
 
     private static final String REFERENCE_VARIANT_PARAM = "variant";
-    private static final String RANGE_START_PARAM = "start";
-    private static final String RANGE_END_PARAM = "end";
     private static final String POPULATION_PARAM = "population";
     private static final String SCORE_PARAM = "score";
 
-    private static final String SCORE_DPRIME = "dprime";
-    private static final String SCORE_RSQUARED = "r2";
 
-    private static final String LINKAGE_QUERY = "WITH linkage AS (" + NL
-        + "SELECT unnest(ld.variants) AS variant_id, r_squared" + NL
-        + "FROM Results.VariantLD ld," + NL
-        + "Study.ProtocolAppNode pan," + NL
-        + "NIAGADS.Variant v" + NL
-        + "WHERE v.record_pk = ?" + NL
-        + "AND ld.variants @> ARRAY[v.variant_id::integer]" + NL
-	+ "AND ld.chromosome = ? " + NL
-        + "AND pan.source_id = '1000GenomesLD_' || ?" + NL
-        + "AND ld.protocol_app_node_id = pan.protocol_app_node_id)," + NL
-        + "Result AS (" + NL
-        + "SELECT v.record_pk AS variant, l.r_squared" + NL 
-        + "FROM linkage l," + NL
-        + "NIAGADS.Variant v" + NL
-        + "WHERE v.variant_id = l.variant_id" + NL
-        + "AND v.record_pk != ?" + NL
+    private static final String LINKAGE_QUERY = "WITH id AS (SELECT ?::text AS source_id)," + NL
+        + "variant AS (SELECT source_id," + NL
+        + "'chr' || split_part(source_id, ':', 1)::text AS chromosome," + NL
+        + "CASE WHEN split_part(source_id, '_', 2) IS NULL THEN split_part(source_id, '_', 1)" + NL
+        + "ELSE split_part(source_id, '_', 2) END AS pattern," + NL
+        + "split_part(source_id, '_', 2) AS ref_snp_id" + NL
+        + "FROM id)," + NL
+        + "LDResult AS (" + NL
+        + "SELECT CASE WHEN v.pattern = r.variants[1]" + NL
+        + "THEN find_variant_primary_key(r.variants[2])" + NL
+        + "ELSE find_variant_primary_key(r.variants[1])" + NL
+        + "END AS variant, r.r_squared" + NL
+        + "FROM Results.VariantLD r," + NL
+        + "variant v," + NL
+        + "Study.ProtocolAppNode pan" + NL
+        + "WHERE r.variants @> ARRAY[v.pattern]" + NL
+        + "AND r.chromosome = v.chromosome" + NL
+        + "AND pan.protocol_app_node_id = r.population_protocol_app_node_id" + NL
+        + "AND pan.source_id = '1000GenomesLD_' || ?::text" + NL
         + "UNION" + NL
-        + "SELECT ? AS variant, 1.0 AS r_squared)" + NL
+        + "SELECT id.source_id AS variant, 1.0 AS r_squared FROM id)" + NL
         + "SELECT jsonb_build_object('data'," + NL
-        + "jsonb_build_object('id2', jsonb_agg(variant ORDER BY variant)) ||" + NL
+        + "jsonb_build_object('id2', jsonb_agg(variant ORDER BY variant)) || " + NL
         + "jsonb_build_object('value', jsonb_agg(r_squared ORDER BY variant)))::text AS result_json" + NL
-        + "FROM result";
+        + "FROM LDResult";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,8 +62,7 @@ public class LinkageService extends AbstractWdkService {
     public Response buildResponse(String body, @QueryParam(REFERENCE_VARIANT_PARAM) String variant, 
                                  /*@QueryParam(RANGE_START_PARAM) int start, 
                                  @QueryParam(RANGE_END_PARAM) int end,*/
-                                 @QueryParam(POPULATION_PARAM) String population,
-                                 @QueryParam(SCORE_PARAM) String scoreType) throws WdkModelException {
+                                 @QueryParam(POPULATION_PARAM) String population) throws WdkModelException {
         LOG.info("Starting 'Locus Zoom Linkage' Service");
         String response = "{}";
         try {
@@ -89,11 +87,8 @@ public class LinkageService extends AbstractWdkService {
         
         LOG.debug("Fetching linkage for variant:" + variant + "; population: " + population);
 
-	String[] vDetails = variant.split(":", 2);
-	String chromosome = "chr" + vDetails[0];
-
         SQLRunner runner = new SQLRunner(ds, LINKAGE_QUERY, "linkage-query");
-        runner.executeQuery(new Object[] {variant, chromosome, population, variant, variant}, handler);
+        runner.executeQuery(new Object[] {variant, population}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
         return (String) results.get(0).get("result_json");
