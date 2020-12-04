@@ -102,6 +102,7 @@ ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=c
 ENSEMBL_TRANSCRIPT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
 ENSEMBL_VARIANT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
 ENSEMBL_REGULATORY_FEATURE_URL_GRCh37=https://grch37.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
+ENSEMBL_MOTIF_FEATURE_URL_GRCh37=https://grch37.ensembl.org/motifWidget.htm?id=
 
 VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
 OMIM_URL=http://omim.org/entry/
@@ -137,3 +138,5 @@ EMBL_EXPRESSION_ATLAS_URL=https://www.ebi.ac.uk/gxa/search?exactMatch=true&_exac
 UCSC_BROWSER_URL_GRCh37=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=
 
 HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
+
+EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/

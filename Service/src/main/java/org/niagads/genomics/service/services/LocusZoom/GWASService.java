@@ -36,25 +36,26 @@ public class GWASService extends AbstractWdkService {
     private static final String DATASET_QUERY = "SELECT protocol_app_node_id" + NL
             + "FROM Study.ProtocolAppNode WHERE source_id = ?";
 
-    private static final String GWAS_QUERY = "SELECT jsonb_build_object(" + NL
-            + "  'chr', jsonb_agg(replace(chromosome, 'chr', ''))" + NL
-            + ", 'position', jsonb_agg(position ORDER BY v.variant_id)" + NL
-            + ", 'id', jsonb_agg(record_pk ORDER BY v.variant_id)" + NL
-            + ", 'pvalue', jsonb_agg(pvalue_display ORDER BY v.variant_id)" + NL
-            + ", 'neg_log10_pvalue', jsonb_agg(neg_log10_pvalue ORDER BY v.variant_id)" + NL
-            + ", 'testAllele', jsonb_agg(allele ORDER BY v.variant_id))::text AS result_json" + NL
-            + "FROM" + NL
-            + "(SELECT chromosome, variant_id, record_pk, position" + NL
-            + "FROM NIAGADS.Variant" + NL
-            + "WHERE bin_index <@ (SELECT find_bin_index(?, ?, ?))" + NL 
-            + "AND position BETWEEN ? AND ?) v" + NL
-            + "LEFT JOIN LATERAL" + NL
-            + "(SELECT variant_id, pvalue_display, allele, neg_log10_pvalue FROM Results.VariantGWAS" + NL
-            + "WHERE protocol_app_node_id = ? AND variant_id = v.variant_id) g" + NL
-            + "ON TRUE" + NL
-            + "WHERE pvalue_display IS NOT NULL";
-
-
+    private static final String GWAS_QUERY = "WITH gwas AS (" + NL
+        + "SELECT variant_gwas_id, variant_record_primary_key," + NL
+        + "split_part(variant_record_primary_key, ':', 1)::text AS chromosome," + NL
+        + "split_part(variant_record_primary_key, ':', 2)::bigint AS position," + NL
+        + "pvalue_display, allele AS test_allele, neg_log10_pvalue" + NL
+        + "FROM Results.VariantGWAS" + NL
+        + "WHERE protocol_app_node_id = ?" + NL
+        + "AND neg_log10_pvalue != 'NaN'" + NL
+        + "AND bin_index <@ (SELECT find_bin_index(?, ?, ?))" + NL
+        + "AND 'chr' || split_part(variant_record_primary_key, ':', 1)::text = ?" + NL
+        + "AND split_part(variant_record_primary_key, ':', 2)::bigint" + NL
+        + "<@ int8range(?, ?))" + NL
+        + "SELECT jsonb_build_object('chromosome', jsonb_agg(chromosome)," + NL
+        + "'position', jsonb_agg(position ORDER BY variant_gwas_id)," + NL
+        + "'id', jsonb_agg(variant_record_primary_key ORDER BY variant_gwas_id)," + NL
+        + "'pvalue', jsonb_agg(pvalue_display ORDER BY variant_gwas_id)," + NL
+        + "'neg_log10_pvalue', jsonb_agg(neg_log10_pvalue ORDER BY variant_gwas_id)," + NL
+        + "'testAllele', jsonb_agg(test_allele ORDER BY variant_gwas_id))::text AS result_json" + NL
+        + "FROM gwas";
+  
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.locuszoom.linkage.get-response")
@@ -66,7 +67,6 @@ public class GWASService extends AbstractWdkService {
 
         try {
             // query database for ld
-
             Long protocolAppNodeId = getProtocolAppNodeId(dataset);
             if (protocolAppNodeId < 0) {
                 response = new JSONObject().put("message", "No dataset associated with id: " + dataset + ".")
@@ -74,8 +74,8 @@ public class GWASService extends AbstractWdkService {
             }
          
             response = fetchGWAS(protocolAppNodeId, chromosome, locStart, locEnd);
+            if (response == null) { response = "{}";}
             LOG.debug("query result: " + response);
-            // return result
         }
 
         catch (WdkRuntimeException ex) {
@@ -109,9 +109,12 @@ public class GWASService extends AbstractWdkService {
 
 
         SQLRunner runner = new SQLRunner(ds, GWAS_QUERY, "gwas-query");
-        runner.executeQuery(new Object[] {chromosome, locStart, locEnd, locStart, locEnd, protocolAppNodeId }, handler);
+        runner.executeQuery(new Object[] {protocolAppNodeId, chromosome, locStart, locEnd, chromosome, locStart, locEnd }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return null;
+        }
         return (String) results.get(0).get("result_json");
     }
 

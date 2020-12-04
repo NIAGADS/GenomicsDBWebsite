@@ -11,10 +11,10 @@ import { isTrue } from '../util/util';
 
 const RecordUI = (DefaultComponent: React.ComponentType) => {
 	return (props: any) => {
-		const ResolvedComponent =
-			isVariantRecord(props.record) && !isTrue(props.record.attributes.is_annotated)
+		const ResolvedComponent = DefaultComponent;
+			{/*isVariantRecord(props.record) && !isTrue(props.record.attributes.is_annotated)
 				? UnannotatedVariantHeading
-				: DefaultComponent;
+			: */} 
 		return <ResolvedComponent {...props} />;
 	};
 };

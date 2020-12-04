@@ -13,6 +13,10 @@ ul {
         color: white;
         background-color: red;
     }
+    &.black {
+        color: white;
+        background-color: black;
+    }
     &.small {
         padding: 5px;
     }
