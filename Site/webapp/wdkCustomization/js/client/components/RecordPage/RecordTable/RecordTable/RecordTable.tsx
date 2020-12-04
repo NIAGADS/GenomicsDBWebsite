@@ -9,7 +9,6 @@ import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
-import { toString } from "lodash";
 
 const SelectTable = SelectTableHOC(ReactTable);
 
@@ -123,7 +122,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         className: canShrink ? "shrink" : "",
         defaultSortMethod: NiagadsTableSort,
         onLoad,
-        showPagination: value.length > 20,
+        showPagination: true,
         resizable: true,
         expanderDefaults: { width: 200 },
         resolveData,
@@ -236,16 +235,6 @@ const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFun
             return (row: { [key: string]: any }) => {
                 const content: string = isObject(row[key]) ? resolveObjectInput(row[key]) : row[key];
                 return content;
-                /*  display =
-            get(content, "length", 0) > 35
-              ? withTooltip(
-                  <span>{`${content.slice(0, 35)}...`}</span>,
-                  content,
-                  "",
-                  { my: "top left", at: "top left" }
-                )
-              : content;
-        return display; */
             };
 
         case "integer":
