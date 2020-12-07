@@ -280,7 +280,7 @@
 		 SELECT id.source_id,
 		 t.datasource AS source,
 		 r.allele,
-		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
 		 r.frequency,
 		 r.restricted_stats->>'STUDY' AS study,
 
@@ -335,7 +335,7 @@
 		 SELECT id.source_id,
 		 t.datasource AS source,
 		 r.allele,
-		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
 		 r.frequency,
 		 r.restricted_stats->>'STUDY' AS study,
 
