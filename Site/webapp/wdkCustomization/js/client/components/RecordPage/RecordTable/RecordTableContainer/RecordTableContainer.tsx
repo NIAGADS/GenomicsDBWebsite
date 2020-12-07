@@ -19,11 +19,10 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
     const defaultPVal = 5e-8;
 
     useEffect(() => {
-        setFiltered(
-            [{ id: "all", value: "" as any }].concat(
-                get(table, "properties.type[0]") === "chart_filter" ? [{ id: "pvalue", value: defaultPVal }] : []
-            )
+        const filter = [{ id: "all", value: "" as any }].concat(
+            get(table, "properties.type[0]") === "chart_filter" ? [{ id: "pvalue", value: defaultPVal }] : []
         );
+        setFiltered(filter);
     }, [table]);
 
     const updateFilter = (id: string, value: any) =>
@@ -42,9 +41,17 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
 
     const getHasPValFilter = (table: rt.Table) => !!tableInstance && table.properties.type[0] === "chart_filter";
 
-    const getPValFilteredResultsEmpty = () =>
-        getHasPValFilter(table) && !tableInstance.getResolvedState().sortedData.length;
-
+    const getPValFilteredResultsEmpty = () => {
+        //table instance check is unreliable b/c this function might fire after filter update but before table state has been resolved
+        //so we have to check 'raw' data outside of instance
+        const filter = (filtered || []).find((f) => f.id == "pvalue");
+        return (
+            getHasPValFilter(table) &&
+            get(value, "length") &&
+            value.every((v) => Number(get(v, "pvalue")) >= Number(get(filter, "value", defaultPVal)))
+        );
+    };
+    
     const handleSearchFilterChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
         setFilterVal(e.currentTarget.value);
         updateFilter("all", e.currentTarget.value);
@@ -128,17 +135,19 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
                             )}
                         </div>
                     </div>
-                    <NiagadsRecordTable
-                        visible={!getPValFilteredResultsEmpty()}
-                        table={table}
-                        value={value}
-                        attributes={attributes}
-                        filtered={filtered}
-                        onLoad={onTableLoaded}
-                        onSelectionToggled={toggleSelection}
-                        isSelected={isSelected}
-                        canShrink={get(table, "properties.canShrink[0]", false)}
-                    />
+                    {
+                        <NiagadsRecordTable
+                            visible={!getPValFilteredResultsEmpty()}
+                            table={table}
+                            value={value}
+                            attributes={attributes}
+                            filtered={filtered}
+                            onLoad={onTableLoaded}
+                            onSelectionToggled={toggleSelection}
+                            isSelected={isSelected}
+                            canShrink={get(table, "properties.canShrink[0]", false)}
+                        />
+                    }
                     {getPValFilteredResultsEmpty() && (
                         <p style={{ textAlign: "center" }}>
                             No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-

@@ -115,19 +115,19 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         : {};
 
     const tableProps = {
+        chartProperties,
+        className: canShrink ? "shrink" : "",
         columns,
         data: _setKeyCol(value),
-        minRows: 0,
-        filtered,
-        className: canShrink ? "shrink" : "",
         defaultSortMethod: NiagadsTableSort,
-        onLoad,
-        showPagination: true,
-        resizable: true,
         expanderDefaults: { width: 200 },
-        resolveData,
-        chartProperties,
+        filtered,
+        minRows: 0,
+        onLoad,
         PaginationComponent,
+        resizable: true,
+        resolveData,
+        showPagination: true,
         style: { display: visible ? "inherit" : "none" },
         ...subComponent,
     };
@@ -258,7 +258,7 @@ const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFun
 
 const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
-        return forIn(datum, (v: string, k: React.ReactText, o: { [x: string]: any }) => {
+        return forIn(datum, (v: string, k: string, o: { [x: string]: any }) => {
             if (isJson(v)) {
                 o[k] = JSON.parse(v);
             }

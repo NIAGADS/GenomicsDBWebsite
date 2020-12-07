@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import d3, { DragEvent } from "d3";
-import { chain, debounce, groupBy } from "lodash";
+import { chain, debounce } from "lodash";
 
 interface PvalFilterProps {
     defaultPVal: number;
@@ -29,15 +29,15 @@ const canvasSpec: CanvasSpec = {
 const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, selectClass, values }) => {
     useEffect(() => {
         const data = _transformData(values),
+            maxP = data[data.length - 1].pValueLog10,
             svg = _drawFrame(selectClass, canvasSpec),
-            xScale = _buildXScale(canvasSpec.width, minP),
-            unXScale = _buildUnXScale(canvasSpec.width, minP),
+            xScale = _buildXScale(canvasSpec.width, minP, maxP),
             yScale = _buildYScale(data, canvasSpec.height),
             area = _buildAreaFunc(canvasSpec.height, xScale, yScale);
         _drawArea(svg, data, area);
-        _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale, minP), _buildYAxis(yScale));
+        _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec);
-        _drawSlider(svg, xScale, unXScale, data[data.length - 1].pValueLog10, defaultPVal, canvasSpec, setMaxPvalue);
+        _drawSlider(svg, xScale, defaultPVal, canvasSpec, setMaxPvalue);
         //this component is uncontrolled and holds its own state after initialization; it never rerenders
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
@@ -68,12 +68,13 @@ const formatNumber = (n: number) => {
     } else return String(n);
 };
 
-const _buildXAxis = (xScale: d3.scale.Linear<number, number>, minP: number) =>
+const _buildXAxis = (xScale: d3.scale.Linear<number, number>) =>
     d3.svg
         .axis()
         .scale(xScale)
-        .ticks(+String(minP).slice(-2) - 1)
-        .tickFormat((tick) => (+tick === Math.log10(minP) ? tick + "+" : tick))
+        .tickFormat((tick) => {
+            return +tick == xScale.domain()[1] ? Math.abs(tick) + "+" : String(Math.abs(tick));
+        })
         .orient("bottom");
 
 interface ChartDatum {
@@ -81,17 +82,13 @@ interface ChartDatum {
     count: number;
 }
 
-const _buildXScale = (width: number, minP: number) =>
-    d3.scale
-        .linear()
-        .range([0, width])
-        .domain([1, Math.log10(Number(minP))]);
-
-const _buildUnXScale = (width: number, minP: number) => {
+const _buildXScale = (width: number, minP: number, maxP: number) => {
+    console.log("MinP: " + Math.log10(minP));
+    console.log("MaxP: " + maxP);
     return d3.scale
         .linear()
-        .domain([0, width])
-        .range([1, Math.log10(Number(minP))]);
+        .range([0, width])
+        .domain([Math.ceil(maxP + 0.5), Math.log10(Number(minP))]);
 };
 
 const _buildYScale = (data: ChartDatum[], height: number) => {
@@ -155,24 +152,17 @@ const _drawRectangle = (
         .attr("transform", "translate(" + xStart + ",0)");
 };
 
-function _buildDrag(
-    this: any,
-    xScale: d3.scale.Linear<number, number>,
-    unXScale: d3.scale.Linear<number, number>,
-    sizerClass: string,
-    maxExtantP: number,
-    cb: (val: number) => void
-) {
+function _buildDrag(this: any, xScale: d3.scale.Linear<number, number>, sizerClass: string, cb: (val: number) => void) {
     return d3.behavior.drag().on("drag", function (this: any) {
         const event = d3.event as DragEvent;
-        if (event.x > xScale(maxExtantP) && event.x < xScale.range()[1]) {
+        if (event.x >= xScale.range()[0] && event.x <= xScale.range()[1]) {
             //move slider
             d3.select(this).attr("cx", event.x);
             //shift rectangle
             d3.select("." + sizerClass)
                 .attr("width", xScale.range()[1] - event.x)
                 .attr("transform", "translate(" + event.x + ",0)");
-            debounce(() => cb(Math.pow(10, unXScale(event.x))), 100)();
+            debounce(() => cb(Math.pow(10, xScale.invert(event.x))), 100)();
         }
     });
 }
@@ -197,14 +187,12 @@ const _drawCircle = (
 const _drawSlider = (
     svg: d3.Selection<any>,
     xScale: d3.scale.Linear<number, number>,
-    unXScale: d3.scale.Linear<number, number>,
-    maxRepresentedP: number,
     defaultP: number,
     cs: CanvasSpec,
     cb: (val: number) => void
 ) => {
     const sizerClass = "sizer-" + Math.random().toString(36).slice(3),
-        drag = _buildDrag(xScale, unXScale, sizerClass, maxRepresentedP, cb);
+        drag = _buildDrag(xScale, sizerClass, cb);
     _drawRectangle(svg, xScale, defaultP, cs.height, sizerClass);
     _drawCircle(svg, xScale, defaultP, cs.height, drag);
 };
@@ -213,7 +201,7 @@ const _drawLabels = (svg: d3.Selection<null>, cs: CanvasSpec) => {
     svg.select(".x.axis")
         .append("g")
         .append("text")
-        .text("P-Value (log 10)")
+        .text("P-Value (-log 10)")
         .attr("x", cs.width / 2)
         .attr("text-anchor", "middle")
         .attr("transform", "translate(0,30)");
