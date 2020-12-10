@@ -6,7 +6,6 @@ import * as GR from "../types";
 import { IdeogramPlot, HighchartsPlot } from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { isEmpty } from "lodash";
-// import { VariantTranscriptConsequencesSummary, GeneGeneticVariationSummary, VariantLzPlot } from "./SectionSummaries";
 import { GeneGeneticVariationSummary, VariantLzPlot } from "./SectionSummaries";
 
 interface RecordMainCategorySection {
@@ -70,7 +69,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                             <div className="d-flex justify-between align-items-baseline">
                                 <p className="mb-0">{category.wdkReference.displayName}</p>
                                 {category.wdkReference.description && (
-                                    <HelpIcon children={safeHtml(category.wdkReference.description)}></HelpIcon>
+                                    <HelpIcon>{safeHtml(category.wdkReference.description)}</HelpIcon>
                                 )}
                             </div>
                         }
@@ -94,7 +93,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                         {(record.tables as any)[category.wdkReference.name] && (
                             <VariantLzPlot
                                 selectClass={"lz-plot"}
-                                chromosome={record.attributes.chromosome}
+                                chromosome={(record as GR.VariantRecord).attributes.chromosome}
                                 populationChoices={[
                                     { EUR: "EUR: European" },
                                     { AFR: "AFR: African/African American" },
@@ -120,7 +119,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                             <div className="d-flex justify-between align-items-baseline">
                                 <p>{category.wdkReference.displayName}</p>
                                 {category.wdkReference.description && (
-                                    <HelpIcon children={safeHtml(category.wdkReference.description)}></HelpIcon>
+                                    <HelpIcon>{safeHtml(category.wdkReference.description)}</HelpIcon>
                                 )}
                             </div>
                         }
@@ -192,27 +191,17 @@ interface SectionSummaryText {
     categoryId: string;
 }
 
-const SectionSummaryText: React.SFC<SectionSummaryText> = (props) => {
-    const { record } = props;
+const SectionSummaryText: React.FC<SectionSummaryText> = ({ categoryId, record }) => {
     let Element: React.ReactElement<any> = null;
-    switch (props.categoryId) {
+    switch (categoryId) {
         case "category:genetic-variation":
-            switch (props.record.recordClassName) {
+            switch (record.recordClassName) {
                 case "GeneRecordClasses.GeneRecordClass":
                     const geneRec = record as GR.GeneRecord;
                     Element = <GeneGeneticVariationSummary record={geneRec} />;
                     break;
             }
             break;
-        //todo: which is current?
-        {/*case "function-analysis":
-        case "category:function-analysis":
-            switch (props.record.recordClassName) {
-                case "VariantRecordClasses.VariantRecordClass":
-                    Element = <VariantTranscriptConsequencesSummary record={record as GR.VariantRecord} />;
-                    break;
-            }
-        break; */}
     }
     return <div className="section-summary-text">{Element}</div>;
 };

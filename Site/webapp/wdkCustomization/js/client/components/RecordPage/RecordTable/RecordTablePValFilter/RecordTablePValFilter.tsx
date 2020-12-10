@@ -83,8 +83,6 @@ interface ChartDatum {
 }
 
 const _buildXScale = (width: number, minP: number, maxP: number) => {
-    console.log("MinP: " + Math.log10(minP));
-    console.log("MaxP: " + maxP);
     return d3.scale
         .linear()
         .range([0, width])

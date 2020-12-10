@@ -111,7 +111,6 @@ export interface VariantRecordAttributes {
     ref_snp_id: string;
     ref_allele: string;
     sequence_allele: string;
-    transcript_consequence_summary: string; //json -- EGA this needs to be removed
     upstream_sequence: string;
     variant_class: string;
     variant_class_abbrev: string;
@@ -150,7 +149,7 @@ export interface NIAGADSDatasetRecordAttributes {
     is_adsp: string;
 }
 
-export interface IRecordTable {
+export interface RecordTable {
     //todo: other record types, likely need to use generic: IRecordTable<GeneRecord>
     record: BaseRecord;
     recordClass: RecordClass;
@@ -224,8 +223,6 @@ export interface HeaderActions {
     onClick: any;
     label: string;
 }
-
-//typeguards
 
 export const isVariantRecord = (item: VariantRecord | any): item is VariantRecord => {
     return (item as VariantRecord).recordClassName === "VariantRecordClasses.VariantRecordClass";

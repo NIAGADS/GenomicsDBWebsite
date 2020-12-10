@@ -8,7 +8,7 @@ import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
 import { Filter, Instance } from "react-table";
 
-const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
+const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
     const [tableInstance, setTableInstance] = useState<Instance>(),
         [filtered, setFiltered] = useState<Filter[]>([]),
         [filterVal, setFilterVal] = useState(""),
@@ -51,7 +51,7 @@ const NiagadsTableContainer: React.FC<rt.IRecordTable> = ({ table, value }) => {
             value.every((v) => Number(get(v, "pvalue")) >= Number(get(filter, "value", defaultPVal)))
         );
     };
-    
+
     const handleSearchFilterChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
         setFilterVal(e.currentTarget.value);
         updateFilter("all", e.currentTarget.value);
