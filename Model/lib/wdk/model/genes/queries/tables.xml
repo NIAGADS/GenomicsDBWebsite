@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-	<querySet name="GeneTables" queryType="table" isCacheable="false">
+  <querySet name="GeneTables" queryType="table" isCacheable="false">
 
-		<!-- =============================================================== -->
-		<!-- Link Outs -->
-		<!-- =============================================================== -->
+    <!-- =============================================================== -->
+    <!-- Link Outs -->
+    <!-- =============================================================== -->
 
-		<sqlQuery name="DbRefs_Gene">
-			<column name="source_id"/>
-			<column name="external_links"/>
-			<column name="external_id"/>
-			<sql>
-				<![CDATA[
+    <sqlQuery name="DbRefs_Gene">
+      <column name="source_id"/>
+      <column name="external_links"/>
+      <column name="external_id"/>
+      <sql>
+	<![CDATA[
 		 SELECT ga.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 a.external_id,
@@ -25,17 +25,17 @@
 		 AND drl.resource_type = 'gene'
 		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
 		 ORDER BY ga.source_id, a.external_id
-			]]>
-			</sql>
+	]]>
+      </sql>
 
-		</sqlQuery>
+    </sqlQuery>
 
-		<sqlQuery name="DbRefs_Clinical">
-			<column name="source_id"/>
-			<column name="external_links"/>
-			<column name="external_id"/>
-			<sql>
-				<![CDATA[
+    <sqlQuery name="DbRefs_Clinical">
+      <column name="source_id"/>
+      <column name="external_links"/>
+      <column name="external_id"/>
+      <sql>
+	<![CDATA[
 		 SELECT ga.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 a.external_id,
@@ -50,15 +50,15 @@
 		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
 		 ORDER BY ga.source_id, a.external_id
 	]]>
-			</sql>
-		</sqlQuery>
+      </sql>
+    </sqlQuery>
 
-		<sqlQuery name="DbRefs_NSeq">
-			<column name="source_id"/>
-			<column name="external_links"/>
-			<column name="external_id"/>
-			<sql>
-				<![CDATA[
+    <sqlQuery name="DbRefs_NSeq">
+      <column name="source_id"/>
+      <column name="external_links"/>
+      <column name="external_id"/>
+      <sql>
+	<![CDATA[
 		 SELECT ga.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 a.external_id,
@@ -73,15 +73,15 @@
 		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
 		 ORDER BY ga.source_id, a.external_id
 	]]>
-			</sql>
-		</sqlQuery>
+      </sql>
+    </sqlQuery>
 
-		<sqlQuery name="DbRefs_Proteins">
-			<column name="source_id"/>
-			<column name="external_links"/>
-			<column name="external_id"/>
-			<sql>
-				<![CDATA[
+    <sqlQuery name="DbRefs_Proteins">
+      <column name="source_id"/>
+      <column name="external_links"/>
+      <column name="external_id"/>
+      <sql>
+	<![CDATA[
 		 SELECT ga.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 a.external_id,
@@ -96,477 +96,490 @@
 		 GROUP BY ga.source_id, a.external_id, '@PROJECT_ID@'::text
 		 ORDER BY ga.source_id, a.external_id
 	]]>
-			</sql>
-		</sqlQuery>
+      </sql>
+    </sqlQuery>
 
-		<!-- =============================================================== -->
-		<!-- Genomic Location -->
-		<!-- =============================================================== -->
+    <!-- =============================================================== -->
+    <!-- Genomic Location -->
+    <!-- =============================================================== -->
 
-		<sqlQuery name="Transcripts">
-			<column name="source_id"/>
-			<column name="project_id"/>
-			<column name="transcript_name"/>
-			<column name="transcript_accession_link"/>
-			<column name="location_start"/>
-			<column name="location_end"/>
-			<column name="num_variants"/>
+    <sqlQuery name="Transcripts">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="transcript_name"/>
+      <column name="transcript_accession_link"/>
+      <column name="location_start"/>
+      <column name="location_end"/>
 
-			<sql>
-				<![CDATA[
-					SELECT gene_source_id AS source_id,
-					transcript_name,
-					build_link_attribute(transcript_source_id,
-					CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_TRANSCRIPT_URL_GRCh37@' ELSE '@ENSEMBL_TRANSCRIPT_URL_GRCh38@' END, NULL, NULL) AS transcript_accession_link,
-					ta.location_start,
-					ta.location_end,
-					build_link_attribute(count(v.variant_id)::text, '@VARIANTS_BY_FEATURE_SEARCH@', transcript_source_id, NULL) AS num_variants
-					FROM NIAGADS.TranscriptAttributes ta,
-					NIAGADS.Variant v
-					WHERE ta.bin_index @> v.bin_index
-					AND numrange(ta.location_start, ta.location_end, '[]') @> v.location_start::numeric
-					GROUP BY gene_source_id, transcript_name, transcript_source_id, ta.location_start, ta.location_end
-					ORDER BY transcript_name
-				]]>
-			</sql>
-		</sqlQuery>
+      <sql>
+	<![CDATA[
+		 SELECT gene_source_id AS source_id,
+		 transcript_name,
+		 build_link_attribute(transcript_source_id,
+		 CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_TRANSCRIPT_URL_GRCh37@' 
+		 ELSE '@ENSEMBL_TRANSCRIPT_URL_GRCh38@' END, NULL, NULL) AS transcript_accession_link,
+		 ta.location_start,
+		 ta.location_end
+		 FROM NIAGADS.TranscriptAttributes ta
+		 ORDER BY transcript_name
+	]]>
+      </sql>
+    </sqlQuery>
 
-		<!-- =============================================================== -->
-		<!-- Genetic Variation -->
-		<!-- =============================================================== -->
-		<sqlQuery name="GeneEvidence">
-			<column name="source_id"/>
+    <!-- =============================================================== -->
+    <!-- Genetic Variation -->
+    <!-- =============================================================== -->
+    <sqlQuery name="GeneEvidence">
+      <column name="source_id"/>
+      <column name="track_name"/>
+      <column name="p_value"/>
+      <column name="rho"/>
+      <column name="is_significant"/>
+      <column name="is_significant_relaxed_stringency"/>
+      <column name="cumulative_maf"/>
+      <column name="cumulative_mac"/>
+      <column name="num_snps"/>
+      <column name="filter_function"/>
+      <column name="population"/>
+      <column name="covariates"/>
+      <column name="warning"/>
+      <column name="error"/>
+      <sql>
+	<![CDATA[
+		 SELECT g.source_id, 
+		 to_char(ga.p_value, '9.99EEEE') AS p_value, 
+		 ga.rho::numeric,
+		 ga.num_snps, 
+		 ga.cumulative_mac::numeric, 
 
-			<column name="resource_accession"/>
-			<column name="track"/>
-			<column name="track_name"/>
-			<column name="track_description"/>
-
-			<column name="p_value_display" sortingColumn="p_value"/>
-			<column name="p_value"/>
-			<column name="rho"/>
-			<column name="cumulative_maf"/>
-			<column name="cumulative_mac"/>
-			<column name="cumulative_display" sortingColumn="cumulative_maf"/>
-			<column name="num_snps"/>
-			<column name="filter_function"/>
-			<column name="population"/>
-			<column name="covariates"/>
-			<column name="warning"/>
-			<column name="error"/>
-			<sql>
-				<![CDATA[
-				]]>
-			</sql>
-
-		</sqlQuery>
+		 CASE WHEN ga.cumulative_maf < 0.0001 THEN to_char(ga.cumulative_maf, '9.99EEEE') 
+		 ELSE round(ga.cumulative_maf::numeric, 4)::text END AS cumulative_maf,
 
 
-		<sqlQuery name="ADVariantsFromGWAS">
-			<column name="source_id"/>
-			<column name="project_id"/>
-			<column name="variant"/>
-			<column name="ref_snp_id"/>
-			<column name="allele"/>
+		 CASE WHEN ga.p_value <= gac.moderate_significance_threshold 
+		 THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') 
+		 ELSE NULL END AS is_significant_relaxed_strigency,
 
-			<column name="relative_position"/>
-			<column name="track_name"/>
-			<column name="pvalue"/>
-			<column name="accession_link"/>
-			<column name="adsp_variant_flag"/>
+		 CASE WHEN ga.p_value <= gac.high_significance_threshold 
+		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
+		 ELSE NULL END AS is_significant,
 
-			<sql>
-				<![CDATA[
-				WITH track AS (
-				SELECT  DISTINCT t.protocol_app_node_id, 
-				build_link_attribute(t.name, '/record/gwas_summary/', t.track, t.description) AS track_name,
-				build_link_attribute(da.accession, '/record/dataset/', NULL, 'view accession details') AS accession_link									
-				FROM NIAGADS.TrackAttributes t,
-				NIAGADS.DatasetAttributes da,
-				Study.Characteristic c,
-				SRes.OntologyTerm ot,
-				SRes.OntologyTerm qot
-				WHERE t.dataset_accession = da.accession
-				AND subcategory = 'GWAS summary statistics'
-				AND dataset_accession NOT LIKE '%CATALOG%'
-				AND c.protocol_app_node_id = t.protocol_app_node_id
-				AND c.ontology_term_id = ot.ontology_term_id
-				AND ot.name ILIKE '%Alzh%'
-				AND qot.ontology_term_id = c.qualifier_id
-				AND qot.name = 'diagnosis'
-				),
-				
-				Variants AS (
-				SELECT ga.source_id, v.variant_id,
-				CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id ELSE NULL END AS ref_snp_id,
-				build_link_attribute(
-				CASE 
-				WHEN length(v.metaseq_id) > 30 THEN substr(v.metaseq_id, 0, 27) 
-				ELSE v.metaseq_id END, 
-				'../variant/', v.record_pk, 
-				CASE 
-				WHEN length(v.metaseq_id) > 30 THEN v.metaseq_id ELSE NULL END
-				) || jsonb_build_object ('primary_key', v.record_pk) AS variant,		 
-				CASE WHEN is_adsp_variant THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') ELSE NULL END AS adsp_variant_flag,
-				CASE
-				WHEN v.location_start < ga.location_start THEN build_text_attribute('upstream', NULL, 'red')::text
-				WHEN v.location_start > ga.location_end THEN build_text_attribute('downstream', NULL, 'green')::text
-				ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position
-				FROM
-				CBIL.GeneAttributes ga,
-				NIAGADS.Variant v,
-				(##WDK_ID_SQL##) ids
-				WHERE ga.source_id = ids.source_id
-				AND (SELECT find_bin_index(ga.chromosome, ga.location_start - 100000, ga.location_end + 100000)) @> v.bin_index
-				AND numrange(ga.location_start - 100000, ga.location_end + 100000, '[]') @> v.location_start::NUMERIC
-				)
-				
-				SELECT
-				v.*,		
-				ta.track_name,
-				ta.accession_link,
-				to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
-				r.allele
-				FROM
-				Results.VariantGWAS r,
-				track ta,
-				Variants v	
-				WHERE ta.protocol_app_node_id = r.protocol_app_node_id
-				AND r.neg_log10_pvalue >= 3.0
+		 CASE WHEN caveat->>'flag_cMAC' IS NOT NULL AND (caveat->>'flag_cMAC')::integer != 0 THEN
+		 build_icon_attribute(NULL, 'fa-exclamation-triangle', 'yellow', 'estimated cumulative MAC <10', 'estimated cumulative MAC <10')
+		 ELSE NULL END AS warning,
 
-				AND r.variant_id = v.variant_id 
-				ORDER BY
-				r.neg_log10_pvalue DESC
-			]]>
-			</sql>
-		</sqlQuery>
+		 CASE WHEN caveat->>'flag_seqMetaErr' IS NOT NULL AND (caveat->>'flag_seqMetaErr')::integer != 0 THEN
+		 build_icon_attribute(NULL, 'fa-exclamation-circle', 'red', 'possible p-value calculation error', 'possible p-value calculation error')
+		 ELSE NULL END AS error,
 
-		<sqlQuery name="OtherVariantsFromGWAS">
-			<column name="source_id"/>
-			<column name="project_id"/>
-			<column name="variant"/>
-			<column name="ref_snp_id"/>
-			<column name="allele"/>
+		 CASE WHEN ta.name LIKE '%Meta%'
+		 THEN build_text_attribute('Meta-analysis', 'meta-analysis of European and Caribbean Hispanic ancestry', NULL)::text
+		 WHEN ta.name LIKE 'European' THEN 'European'
 
-			<column name="relative_position"/>
-			<column name="track_name"/>
-			<column name="pvalue"/>
-			<column name="accession_link"/>
-			<column name="adsp_variant_flag"/>
+		 ELSE 'Caribbean Hispanic' END AS population,
+		 ffunction.characteristic AS filter_function,
+		 trim(covariates.characteristic) AS covariates,
+		 build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
+		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS resource_accession
 
-			<sql>
-				<![CDATA[
-					WITH track AS (
-					SELECT  DISTINCT t.protocol_app_node_id, 
-					build_link_attribute(t.name, '/record/gwas_summary/', t.track, t.description) AS track_name,
-					build_link_attribute(da.accession, '/record/dataset/', NULL, 'view accession details') AS accession_link					
-					FROM NIAGADS.TrackAttributes t,
-					NIAGADS.DatasetAttributes da,
-					Study.Characteristic c,
-					SRes.OntologyTerm ot,
-					SRes.OntologyTerm qot
-					WHERE t.dataset_accession = da.accession
-					AND subcategory = 'GWAS summary statistics'
-					AND dataset_accession NOT LIKE '%CATALOG%'
-					AND c.protocol_app_node_id = t.protocol_app_node_id
-					AND c.ontology_term_id = ot.ontology_term_id
-					AND ot.name NOT ILIKE '%Alzh%'
-					AND qot.ontology_term_id = c.qualifier_id
-					AND qot.name = 'diagnosis'
-					),
-					
-					Variants AS (
-					SELECT ga.source_id, v.variant_id,
-					CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id ELSE NULL END AS ref_snp_id,
-					build_link_attribute(
-					CASE 
-					WHEN length(v.metaseq_id) > 30 THEN substr(v.metaseq_id, 0, 27) 
-					ELSE v.metaseq_id END, 
-					'../variant/', v.record_pk, 
-					CASE 
-					WHEN length(v.metaseq_id) > 30 THEN v.metaseq_id ELSE NULL END
-					) || jsonb_build_object ('primary_key', v.record_pk) AS variant,		 
-					CASE WHEN is_adsp_variant THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') ELSE NULL END AS adsp_variant_flag,
-					CASE
-					WHEN v.location_start < ga.location_start THEN build_text_attribute('upstream', NULL, 'red')::text
-					WHEN v.location_start > ga.location_end THEN build_text_attribute('downstream', NULL, 'green')::text
-					ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position
-					FROM
-					CBIL.GeneAttributes ga,
-					NIAGADS.Variant v,
-					(##WDK_ID_SQL##) ids
-					WHERE ga.source_id = ids.source_id
-					AND (SELECT find_bin_index(ga.chromosome, ga.location_start - 100000, ga.location_end + 100000)) @> v.bin_index
-					AND numrange(ga.location_start - 100000, ga.location_end + 100000, '[]') @> v.location_start::NUMERIC
-					)
-					
-					SELECT
-					v.*,		
-					ta.track_name,
-					ta.accession_link,
-					to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
-					r.allele
-					FROM
-					Results.VariantGWAS r,
-					track ta,
-					Variants v	
-					WHERE ta.protocol_app_node_id = r.protocol_app_node_id
-					AND r.neg_log10_pvalue >= 3.0
+		 FROM Results.GeneAssociation ga,
+		 NIAGADS.GeneAssociationCorrection gac,
+		 CBIL.GeneAttributes g,
+		 NIAGADS.TrackAttributes ta,
+		 NIAGADS.ProtocolAppNodeCharacteristic ffunction,
+		 NIAGADS.ProtocolAppNodeCharacteristic covariates
 
-					AND r.variant_id = v.variant_id 
-					ORDER BY
-					r.neg_log10_pvalue DESC	
-				]]>
-			</sql>
-		</sqlQuery>
+		 WHERE ga.protocol_app_node_id = gac.protocol_app_node_id
+		 AND g.gene_id = ga.gene_id
+		 AND ta.protocol_app_node_id = ga.protocol_app_node_id
+		 AND ta.protocol_app_node_id = ffunction.protocol_app_node_id
+		 AND ta.protocol_app_node_id = covariates.protocol_app_node_id
+		 AND covariates.characteristic_type = 'covariate_list'
+		 AND ffunction.characteristic_type = 'filter function'
+		 ORDER BY ga.p_value ASC
+	]]>
+      </sql>
+
+    </sqlQuery>
 
 
-		<sqlQuery name="ADVariantsFromCatalog">
-			<column name="source_id"/>
-			<column name="project_id"/>
-			<column name="variant"/>
-			<column name="ref_snp_id"/>
-			<column name="allele"/>
-			<column name="frequency"/>
+    <sqlQuery name="ADVariantsFromGWAS">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="variant"/>
+      <column name="ref_snp_id"/>
+      <column name="allele"/>
 
-			<column name="relative_position"/>
-			<column name="track_name"/>
-			<column name="pvalue"/>
-			<column name="adsp_variant_flag"/>
+      <column name="relative_position"/>
+      <column name="track_name"/>
+      <column name="pvalue"/>
+      <column name="accession_link"/>
+      <column name="adsp_variant_flag"/>
 
-			<column name="source"/>
-			<column name="pubmed_id"/>
-			<column name="study"/>
-			<column name="sample"/>
-			<column name="replicate_sample"/>
-			<column name="trait"/>
-			<sql>
-				<![CDATA[
-					SELECT source_id, variant_id, ref_snp_id, variant, relative_position, adsp_variant_flag, source, pvalue, allele, frequency,
-					pubmed_id, study, sample, replicate_sample,  string_agg(DISTINCT trait, '//' ORDER BY trait) AS trait FROM (
-					WITH Variants AS (
-					SELECT ga.source_id,
-					v.variant_id,
+      <sql>
+	<![CDATA[
+		WITH id AS (##WDK_ID_SQL##),
 
-					CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id ELSE NULL END AS ref_snp_id,
-					build_link_attribute(
-					CASE WHEN length(v.metaseq_id) > 30 THEN substr(v.metaseq_id, 0, 27) 
-					ELSE v.metaseq_id END, 
-					'../variant/', v.record_pk, 
-					CASE WHEN length(v.metaseq_id) > 30 THEN v.metaseq_id ELSE NULL END
-					) || jsonb_build_object ('primary_key', v.record_pk) AS variant,
+		tracks AS (
+		SELECT DISTINCT ta.track, ta.protocol_app_node_id,
+		build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
+		build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
+		FROM NIAGADS.TrackAttributes ta,
+		NIAGADS.ProtocolAppNodeCharacteristic c
+		WHERE ta.protocol_app_node_id = c.protocol_app_node_id
+		AND ta.subcategory = 'GWAS summary statistics'
+		AND ta.dataset_accession NOT LIKE '%CATALOG%'
+		AND c.characteristic_type = 'diagnosis'
+		AND c.characteristic LIKE '%Alzh%'),
 
-					CASE WHEN v.location_start < ga.location_start THEN build_text_attribute('upstream', NULL, 'red')::text
-					WHEN v.location_start > ga.location_end THEN build_text_attribute('downstream', NULL, 'green')::text
-					ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,     
+		Result AS (
+		SELECT id.source_id,
+		r.protocol_app_node_id,
 
-					CASE WHEN is_adsp_variant THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') ELSE NULL END AS adsp_variant_flag
-					
-					
-					FROM CBIL.GeneAttributes ga, 
-					(##WDK_ID_SQL##) ids,
-					NIAGADS.Variant v
+		build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
+		'/record/variant/', r.variant_record_primary_key,
+		CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
+		THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+		
+		CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+		
+		adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		
+		CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
+		THEN build_text_attribute('upstream', NULL, 'red')::text
+		WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
+		THEN build_text_attribute('downstream', NULL, 'green')::text
+		ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		
+		r.allele, 
+		to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		neg_log10_pvalue,
 
-					WHERE ga.source_id = ids.source_id
-					AND (SELECT find_bin_index(ga.chromosome, ga.location_start - @FLANKING_REGION@, ga.location_end + @FLANKING_REGION@)) @> v.bin_index
-					AND numrange(ga.location_start - @FLANKING_REGION@, ga.location_end + @FLANKING_REGION@, '[]') @> v.position::NUMERIC)
-					
-					SELECT v.*,
-					CASE WHEN ta.track LIKE 'NHGRI%' THEN 'NHGRI' ELSE 'NIAGADS' END AS source,
-					
-					to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
-					r.allele,
-					r.frequency,
-					ot.name AS trait,
-					build_link_attribute(r.evidence->>'PUBMEDID', '@PUBMED_URL@', null, null) AS pubmed_id,
-					build_text_attribute(CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN LEFT(r.evidence->>'STUDY', 50) || ' ...' ELSE r.evidence->>'STUDY' END,
-					CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN  r.evidence->>'STUDY' ELSE NULL END, NULL) AS study,
-					evidence->>'INITIAL SAMPLE SIZE' AS sample,
-					CASE WHEN evidence->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL ELSE evidence->>'REPLICATION SAMPLE SIZE' END AS replicate_sample
-					FROM
-					
-					Variants v,
-					Results.VariantCatalog r,
-					SRes.OntologyTerm ot,
-					NIAGADS.TrackAttributes ta
-					WHERE ta.track LIKE '%CATALOG%'
-					AND ta.protocol_app_node_id = r.protocol_app_node_id
-					AND ot.ontology_term_id = r.ontology_term_id
-					AND (ot.name ILIKE '%Alzh%' AND ot.name NOT ILIKE '%biomarker%' AND ot.name NOT ILIKE '%measurement%')
-					AND r.variant_id = v.variant_id 
-					
-					ORDER BY
-					r.neg_log10_pvalue DESC) a
-					GROUP BY  source_id, variant_id, ref_snp_id, variant, relative_position, adsp_variant_flag, source, pvalue, allele, frequency,
-					pubmed_id, study, sample, replicate_sample
-				]]>
-			</sql>
-		</sqlQuery>
+		t.*
 
-		<sqlQuery name="OtherVariantsFromCatalog">
-			<column name="source_id"/>
-			<column name="project_id"/>
-			<column name="variant"/>
-			<column name="ref_snp_id"/>
-			<column name="allele"/>
-			<column name="frequency"/>
+		FROM id, Results.VariantGWAS r, tracks t, CBIL.GeneAttributes ga
+		WHERE id.source_id = ga.source_id
+		AND ga.bin_index_100kb_flank @> r.bin_index
+		AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
+		@> split_part(variant_record_primary_key, ':', 2)::bigint
+		AND t.protocol_app_node_id = r.protocol_app_node_id
+		AND r.neg_log10_pvalue > 3)
 
-			<column name="relative_position"/>
-			<column name="track_name"/>
-			<column name="pvalue"/>
+		SELECT * FROM result 
+		WHERE neg_log10_pvalue != 'NaN'
+		ORDER BY neg_log10_pvalue DESC
+	]]>
+      </sql>
+    </sqlQuery>
 
-			<column name="adsp_variant_flag"/>
-			<column name="source"/>
-			<column name="pubmed_id"/>
-			<column name="study"/>
-			<column name="sample"/>
-			<column name="replicate_sample"/>
-			<column name="trait"/>
+    <sqlQuery name="OtherVariantsFromGWAS">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="variant"/>
+      <column name="ref_snp_id"/>
+      <column name="allele"/>
 
-			<sql>
-				<![CDATA[
-					SELECT source_id, variant_id, ref_snp_id, variant, relative_position, adsp_variant_flag, source, pvalue, allele, frequency,
-					pubmed_id, study, sample, replicate_sample,  string_agg(DISTINCT trait, '//' ORDER BY trait) AS trait FROM (
-					WITH Variants AS (
-					SELECT ga.source_id,
-					v.variant_id,
+      <column name="relative_position"/>
+      <column name="track_name"/>
+      <column name="pvalue"/>
+      <column name="accession_link"/>
+      <column name="adsp_variant_flag"/>
 
-					CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id ELSE NULL END AS ref_snp_id,
-					build_link_attribute(
-					CASE WHEN length(v.metaseq_id) > 30 THEN substr(v.metaseq_id, 0, 27) 
-					ELSE v.metaseq_id END, 
-					'../variant/', v.record_pk, 
-					CASE WHEN length(v.metaseq_id) > 30 THEN v.metaseq_id ELSE NULL END
-					) || jsonb_build_object ('primary_key', v.record_pk) AS variant,
+      <sql>
+	<![CDATA[
+		 WITH id AS (##WDK_ID_SQL##),
 
-					CASE WHEN v.location_start < ga.location_start THEN build_text_attribute('upstream', NULL, 'red')::text
-					WHEN v.location_start > ga.location_end THEN build_text_attribute('downstream', NULL, 'green')::text
-					ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,     
+		 tracks AS (
+		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
+		 build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
+		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
+		 FROM NIAGADS.TrackAttributes ta,
+		 NIAGADS.ProtocolAppNodeCharacteristic c
+		 WHERE ta.protocol_app_node_id = c.protocol_app_node_id
+		 AND ta.subcategory = 'GWAS summary statistics'
+		 AND ta.dataset_accession NOT LIKE '%CATALOG%'
+		 AND c.characteristic_type = 'full_list'
+		 AND c.characteristic NOT ILIKE '%Alzh%'),
 
-					CASE WHEN is_adsp_variant THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') ELSE NULL END AS adsp_variant_flag
-					
-					
-					FROM CBIL.GeneAttributes ga, 
-					(##WDK_ID_SQL##) ids,
-					NIAGADS.Variant v
-
-					WHERE ga.source_id = ids.source_id
-					AND (SELECT find_bin_index(ga.chromosome, ga.location_start - @FLANKING_REGION@, ga.location_end + @FLANKING_REGION@)) @> v.bin_index
-					AND numrange(ga.location_start - @FLANKING_REGION@, ga.location_end + @FLANKING_REGION@, '[]') @> v.position::NUMERIC)
-					
-					SELECT v.*,
-					CASE WHEN ta.track LIKE 'NHGRI%' THEN 'NHGRI' ELSE 'NIAGADS' END AS source,
-					
-					to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
-					r.allele,
-					r.frequency,
-					ot.name AS trait,
-					build_link_attribute(r.evidence->>'PUBMEDID', '@PUBMED_URL@', null, null) AS pubmed_id,
-					build_text_attribute(CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN LEFT(r.evidence->>'STUDY', 50) || ' ...' ELSE r.evidence->>'STUDY' END,
-					CASE WHEN LENGTH(r.evidence->>'STUDY') > 50 THEN  r.evidence->>'STUDY' ELSE NULL END, NULL) AS study,
-					evidence->>'INITIAL SAMPLE SIZE' AS sample,
-					CASE WHEN evidence->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL ELSE evidence->>'REPLICATION SAMPLE SIZE' END AS replicate_sample
-					FROM
-					
-					Variants v,
-					Results.VariantCatalog r,
-					SRes.OntologyTerm ot,
-					NIAGADS.TrackAttributes ta
-					WHERE ta.track LIKE '%CATALOG%'
-					AND ta.protocol_app_node_id = r.protocol_app_node_id
-					AND ot.ontology_term_id = r.ontology_term_id
-					AND (ot.name NOT ILIKE '%Alzh%' OR ot.name LIKE '%biomarker%' OR ot.name LIKE '%measurement%')
-					AND r.variant_id = v.variant_id 
-					
-					ORDER BY
-					r.neg_log10_pvalue DESC) a
-					GROUP BY  source_id, variant_id, ref_snp_id, variant, relative_position, adsp_variant_flag, source, pvalue, allele, frequency,
-					pubmed_id, study, sample, replicate_sample
-				]]>
-			</sql>
-		</sqlQuery>
+		 Result AS (
+		 SELECT id.source_id,
+		 r.protocol_app_node_id,
+		 
+		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
+		 '/record/variant/', r.variant_record_primary_key,
+		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
+		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+		 
+		 CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+		 
+		 adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		 
+		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
+		 THEN build_text_attribute('upstream', NULL, 'red')::text
+		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
+		 THEN build_text_attribute('downstream', NULL, 'green')::text
+		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		 
+		 r.allele, 
+		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		 neg_log10_pvalue,
+		 
+		 t.*
+		 
+		 FROM id, Results.VariantGWAS r, tracks t, CBIL.GeneAttributes ga
+		 WHERE id.source_id = ga.source_id
+		 AND ga.bin_index_100kb_flank @> r.bin_index
+		 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
+		 @> split_part(variant_record_primary_key, ':', 2)::bigint
+		 AND t.protocol_app_node_id = r.protocol_app_node_id
+		 AND r.neg_log10_pvalue > 3)
+		 
+		 SELECT * FROM result 
+		 WHERE neg_log10_pvalue != 'NaN'
+		 ORDER BY neg_log10_pvalue DESC
+	]]>
+      </sql>
+    </sqlQuery>
 
 
-		<!-- =============================================================== -->
-		<!-- Functional Genomics -->
-		<!-- =============================================================== -->
+    <sqlQuery name="ADVariantsFromCatalog">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="variant"/>
+      <column name="ref_snp_id"/>
+      <column name="allele"/>
+      <column name="frequency"/>
+
+      <column name="relative_position"/>
+      <column name="track_name"/>
+      <column name="pvalue"/>
+      <column name="adsp_variant_flag"/>
+
+      <column name="source"/>
+      <column name="pubmed_id"/>
+      <column name="study"/>
+      <column name="sample"/>
+      <column name="replicate_sample"/>
+      <column name="trait"/>
+      <sql>
+	<![CDATA[
+
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 tracks AS (
+		 SELECT ta.track, ta.protocol_app_node_id, 'NHGRI-EBI' AS datasource
+		 FROM NIAGADS.TrackAttributes ta
+		 WHERE track = 'NHGRI_GWAS_CATALOG')
+		 
+		 SELECT id.source_id,
+		 t.datasource AS source,
+		 r.allele,
+		 
+		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),'/record/variant/', 
+		 r.variant_record_primary_key,
+		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
+		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+
+		 CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+
+		 adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		 
+		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
+		 THEN build_text_attribute('upstream', NULL, 'red')::text
+		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
+		 THEN build_text_attribute('downstream', NULL, 'green')::text
+		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		 
+		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
+		 r.frequency,
+		 r.restricted_stats->>'STUDY' AS study,
+		 
+		 build_link_attribute(replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), 
+		 '@PUBMED_URL@', replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), NULL) AS pubmed_id,
+		 
+		 r.restricted_stats->>'INITIAL SAMPLE SIZE' AS sample,
+		 
+		 CASE WHEN r.restricted_stats->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL 
+		 ELSE r.restricted_stats->>'REPLICATION SAMPLE SIZE' END  AS replicate_sample,
+		 
+		 r.restricted_stats->>'DISEASE/TRAIT' AS trait,
+		 
+		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
+		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
+		 
+		 FROM Results.VariantGWAS r, tracks t, id, CBIL.GeneAttributes ga
+		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
+		 AND r.restricted_stats->>'DISEASE/TRAIT' ILIKE '%Alzheimer%'
+                 AND id.source_id = ga.source_id
+                 AND ga.bin_index_100kb_flank @> r.bin_index
+                 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]') @> split_part(variant_record_primary_key, ':', 2)::bigint
+		 ORDER BY neg_log10_pvalue DESC
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="OtherVariantsFromCatalog">
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="variant"/>
+      <column name="ref_snp_id"/>
+      <column name="allele"/>
+      <column name="frequency"/>
+
+      <column name="relative_position"/>
+      <column name="track_name"/>
+      <column name="pvalue"/>
+
+      <column name="adsp_variant_flag"/>
+      <column name="source"/>
+      <column name="pubmed_id"/>
+      <column name="study"/>
+      <column name="sample"/>
+      <column name="replicate_sample"/>
+      <column name="trait"/>
+
+      <sql>
+	<![CDATA[
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 tracks AS (
+		 SELECT ta.track, ta.protocol_app_node_id, 'NHGRI-EBI' AS datasource
+		 FROM NIAGADS.TrackAttributes ta
+		 WHERE track = 'NHGRI_GWAS_CATALOG')
+		 
+		 SELECT id.source_id,
+		 t.datasource AS source,
+		 r.allele,
+		 
+		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),'/record/variant/', 
+		 r.variant_record_primary_key,
+		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
+		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+
+		 CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+
+		 adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		 
+		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
+		 THEN build_text_attribute('upstream', NULL, 'red')::text
+		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
+		 THEN build_text_attribute('downstream', NULL, 'green')::text
+		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		 
+		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
+		 r.frequency,
+		 r.restricted_stats->>'STUDY' AS study,
+		 
+		 build_link_attribute(replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), 
+		 '@PUBMED_URL@', replace(r.restricted_stats->>'LINK', 'www.ncbi.nlm.nih.gov/pubmed/', ''), NULL) AS pubmed_id,
+		 
+		 r.restricted_stats->>'INITIAL SAMPLE SIZE' AS sample,
+		 
+		 CASE WHEN r.restricted_stats->>'REPLICATION SAMPLE SIZE' = 'NA' THEN NULL 
+		 ELSE r.restricted_stats->>'REPLICATION SAMPLE SIZE' END  AS replicate_sample,
+		 
+		 r.restricted_stats->>'DISEASE/TRAIT' AS trait,
+		 
+		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
+		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
+		 
+		 FROM Results.VariantGWAS r, tracks t, id, CBIL.GeneAttributes ga
+		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
+		 AND r.restricted_stats->>'DISEASE/TRAIT' NOT ILIKE '%Alzheimer%'
+                 AND id.source_id = ga.source_id
+                 AND ga.bin_index_100kb_flank @> r.bin_index
+                 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]') @> split_part(variant_record_primary_key, ':', 2)::bigint
+		 ORDER BY neg_log10_pvalue DESC
+	]]>
+      </sql>
+    </sqlQuery>
+
+
+    <!-- =============================================================== -->
+    <!-- Functional Genomics -->
+    <!-- =============================================================== -->
 
 
 
-		<!-- =============================================================== -->
-		<!-- Functional Annotation -->
-		<!-- =============================================================== -->
+    <!-- =============================================================== -->
+    <!-- Functional Annotation -->
+    <!-- =============================================================== -->
 
-		<sqlQuery name="GoTerms">
-			<column name="source_id"/>
-			<column name="ontology"/>
-			<column name="go_accession"/>
-			<column name="term"/>
-			<column name="go_evidence_code"/>
-			<column name="evidence_table_dropdown"/>
-			<sql>
-				<![CDATA[
-					SELECT source_id,
-					ontology,
-					go_evidence_code,
-					replace(go_accession::text, '+AMIGO_URL+', '@AMIGO_URL@')::jsonb AS go_accession,
-					term,
-					multi_replace(evidence_table_dropdown::text, ARRAY['+PUBMED_URL+', '+REACTOME_PATHWAY_URL+', '+DOI_URL+'], ARRAY['@PUBMED_URL@', '@REACTOME_PATHWAY_URL@', '@DOI_URL@'])::jsonb AS evidence_table_dropdown
-					FROM CBIL.GoAssociationEvidence
-					ORDER BY ontology, term->>'value'
-       			 ]]>
-			</sql>
-		</sqlQuery>
+    <sqlQuery name="GoTerms">
+      <column name="source_id"/>
+      <column name="ontology"/>
+      <column name="go_accession"/>
+      <column name="term"/>
+      <column name="go_evidence_code"/>
+      <column name="evidence_table_dropdown"/>
+      <sql>
+	<![CDATA[
+		 SELECT source_id,
+		 ontology,
+		 go_evidence_code,
+		 replace(go_accession::text, '+AMIGO_URL+', '@AMIGO_URL@')::jsonb AS go_accession,
+		 term,
+		 multi_replace(evidence_table_dropdown::text, ARRAY['+PUBMED_URL+', '+REACTOME_PATHWAY_URL+', '+DOI_URL+'], 
+		 ARRAY['@PUBMED_URL@', '@REACTOME_PATHWAY_URL@', '@DOI_URL@'])::jsonb AS evidence_table_dropdown
+		 FROM CBIL.GoAssociationEvidence
+		 ORDER BY ontology, term->>'value'
+       	]]>
+      </sql>
+    </sqlQuery>
 
-		<sqlQuery name="Pathways">
-			<column name="source_id"/>
-			<column name="source"/>
-			<column name="accession"/>
-			<column name="pathway_name"/>
-			<column name="pathway_image"/>
-			<sql>
-				<![CDATA[
-					SELECT ga.source_id,
-					'@PROJECT_ID@'::text AS project_id,
-					p.name AS pathway_name, 
-					build_link_attribute(p.source_id, '@KEGG_PATHWAY_LINK_URL@', null, null) AS accession,
-					'KEGG'::text AS source,
-					CASE WHEN ga.annotation->'entrez_id' IS NULL THEN NULL
-					ELSE 
-					build_link_attribute('thumbnail pathway image for: ' || p.source_id, '@KEGG_COLORED_BY_GENE_IMG_URL@',p.source_id || '.png+' || (ga.annotation->>'entrez_id')::text, 'click to view gene highlighted in the pathway on the KEGG website') 
-					|| '{"type":"thumbnail_link"}'::jsonb || ('{"img_url":"' || '@KEGG_IMG_URL@' || p.source_id || '.png"}')::jsonb 
-					END AS pathway_image
+    <sqlQuery name="Pathways">
+      <column name="source_id"/>
+      <column name="source"/>
+      <column name="accession"/>
+      <column name="pathway_name"/>
+      <column name="pathway_image"/>
+      <sql>
+	<![CDATA[
+		 SELECT ga.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 p.name AS pathway_name, 
+		 build_link_attribute(p.source_id, '@KEGG_PATHWAY_LINK_URL@', null, null) AS accession,
+		 'KEGG'::text AS source,
+		 CASE WHEN ga.annotation->'entrez_id' IS NULL THEN NULL
+		 ELSE 
+		 build_link_attribute('thumbnail pathway image for: ' || p.source_id, '@KEGG_COLORED_BY_GENE_IMG_URL@',p.source_id || '.png+' || (ga.annotation->>'entrez_id')::text, 'click to view gene highlighted in the pathway on the KEGG website') 
+		 || '{"type":"thumbnail_link"}'::jsonb || ('{"img_url":"' || '@KEGG_IMG_URL@' || p.source_id || '.png"}')::jsonb 
+		 END AS pathway_image
 
-					FROM
-					SRes.Pathway p,
-					SRes.PathwayNode pn,
-					CBIL.GeneAttributes ga,
-					(##WDK_ID_SQL##) id
-					WHERE id.source_id = ga.source_id
-					AND ga.gene_id = pn.row_id
-					AND p.pathway_id = pn.pathway_id
-					AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'KEGG')
+FROM
+SRes.Pathway p,
+SRes.PathwayNode pn,
+CBIL.GeneAttributes ga,
+(##WDK_ID_SQL##) id
+WHERE id.source_id = ga.source_id
+AND ga.gene_id = pn.row_id
+AND p.pathway_id = pn.pathway_id
+AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'KEGG')
 
-					UNION ALL 
+UNION ALL 
 
-					SELECT ga.source_id,
-					'@PROJECT_ID@'::text AS project_id,
-					p.name AS pathway_name, 
-					build_link_attribute(p.source_id, '@REACTOME_PATHWAY_URL@', null, null) AS accession,
-					'Reactome'::text AS source,
-					NULL AS pathway_image
+SELECT ga.source_id,
+'@PROJECT_ID@'::text AS project_id,
+p.name AS pathway_name, 
+build_link_attribute(p.source_id, '@REACTOME_PATHWAY_URL@', null, null) AS accession,
+'Reactome'::text AS source,
+NULL AS pathway_image
 
-					FROM
-					SRes.Pathway p,
-					SRes.PathwayNode pn,
-					CBIL.GeneAttributes ga,
-					(##WDK_ID_SQL##) id
-					WHERE id.source_id = ga.source_id
-					AND ga.gene_id = pn.row_id
-					AND p.pathway_id = pn.pathway_id
-					AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'REACTOME')
-				]]>
-			</sql>
-		</sqlQuery>
-	</querySet>
+FROM
+SRes.Pathway p,
+SRes.PathwayNode pn,
+CBIL.GeneAttributes ga,
+(##WDK_ID_SQL##) id
+WHERE id.source_id = ga.source_id
+AND ga.gene_id = pn.row_id
+AND p.pathway_id = pn.pathway_id
+AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'REACTOME')
+	]]>
+      </sql>
+    </sqlQuery>
+  </querySet>
 </wdkModel>

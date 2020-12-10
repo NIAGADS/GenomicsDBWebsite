@@ -1,354 +1,359 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-	<recordClassSet name="GeneRecordClasses">
-		<recordClass name="GeneRecordClass" displayName="Gene" displayNamePlural="Genes" shortDisplayName="Gene" useBasket="true" urlName="gene">
-			<!-- =================================================================== -->
-			<!-- Primary Key -->
-			<!-- =================================================================== -->
-			<primaryKey aliasQueryRef="GeneAttributes.GeneAlias">
-				<columnRef>
-					source_id
-				</columnRef>
-			</primaryKey>
+  <recordClassSet name="GeneRecordClasses">
+    <recordClass name="GeneRecordClass" displayName="Gene"
+		 displayNamePlural="Genes" shortDisplayName="Gene"
+		 useBasket="true" urlName="gene">
+      <!-- =================================================================== -->
+      <!-- Primary Key -->
+      <!-- =================================================================== -->
+      <primaryKey aliasQueryRef="GeneAttributes.GeneAlias">
+	<columnRef>
+	  source_id
+	</columnRef>
+      </primaryKey>
 
-			<idAttribute name="primary_key" displayName="Gene">
-				<text>
-					<![CDATA[$$gene_symbol$$]]>
-				</text>
-			</idAttribute>
+      <idAttribute name="primary_key" displayName="Gene">
+	<text>
+	  <![CDATA[$$gene_symbol$$]]>
+	</text>
+      </idAttribute>
 
-			<testParamValues>
-				<paramValue name="source_id">
-					ENSG00000130203
-				</paramValue>
-			</testParamValues>
+      <testParamValues>
+	<paramValue name="source_id">
+	  ENSG00000130203
+	</paramValue>
+      </testParamValues>
 
-			<!-- =================================================================== -->
-			<!-- Reporters -->
-			<!-- =================================================================== -->
-			<reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+      <!-- =================================================================== -->
+      <!-- Reporters -->
+      <!-- =================================================================== -->
+      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
-			<reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-				<description>
-					%%attributesReporterDescription%%
-				</description>
-				<property name="page_size">
-					1000000
-				</property>
-			</reporter>
+      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%"
+		scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+	<description>
+	  %%attributesReporterDescription%%
+	</description>
+	<property name="page_size">
+	  1000000
+	</property>
+      </reporter>
 
-			<reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-				<description>
-					%%tableReporterDescription%%
-				</description>
-				<property name="page_size">
-					1000000
-				</property>
-			</reporter>
+      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%"
+		scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+	<description>
+	  %%tableReporterDescription%%
+	</description>
+	<property name="page_size">
+	  1000000
+	</property>
+      </reporter>
 
-			<reporter name="xml" displayName="XML: choose from columns
-					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
-			</reporter>
+      <reporter name="xml" displayName="XML: choose from columns
+					and/or tables" scopes=""
+		implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
+      </reporter>
 
-			<reporter name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-			</reporter>
-
-
-			<!-- =============================================================== -->
-			<!-- Step Analysis Plugins -->
-			<!-- =============================================================== -->
-			<stepAnalysisRef name="custom-go-enrichment" />
-			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
-
-			<!-- =============================================================== -->
-			<!-- Summary and record views -->
-			<!-- =============================================================== -->
-			<summaryView name="_default" display="Gene Results">
-                 <description>
-                     <![CDATA[View gene details.]]>
-                 </description>
-             </summaryView>
-
-			<summaryView name="ideogram" display="Genome View">
-                 <description>
-                     <![CDATA[View your results mapped against the genome.]]>
-                 </description>
-             </summaryView>
-
-			<reporter name="genomeViewReporter" displayName="Ideogram"  scopes=""
-                    	implementation="org.niagads.genomics.model.report.summaryview.genomeview.GeneGenomeViewReporter" />
-
-			<!-- =============================================================== -->
-			<!-- Annotation and Link Outs -->
-			<!-- =============================================================== -->
-			<attributeQueryRef ref="GeneAttributes.BasicAttributes">
-				<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
-				<columnAttribute name="gene_type" displayName="Type" type="string" />
-				<columnAttribute name="chromosome" displayName="Chromsome" type="string" />
-				<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
-				<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
-				<columnAttribute name="strand" displayName="Strand" type="string" />
-				<columnAttribute name="full_jbrowse_link" internal="true" inReportMaker="false" type="json_link" />
-				<columnAttribute name="jbrowse_source_url" internal="true" inReportMaker="false" type="string" />
-				<columnAttribute name="is_reversed" internal="true" inReportMaker="false" type="boolean" />
-				<columnAttribute name="gene_name" displayName="Product" type="string" />
-				<columnAttribute name="synonyms" displayName="Synonyms" type="string" />
-				<columnAttribute name="gene_symbol" displayName="Symbol" type="string" />
-				<columnAttribute name="hgnc_id" displayName="HGNC ID" type="string" />
-				<columnAttribute name="omim_id" displayName="OMIM ID" type="string" />
-				<columnAttribute name="ucsc_id" displayName="UCSC ID" type="string" />
-				<columnAttribute name="vega_id" displayName="VEGA ID" type="string" />
-				<columnAttribute name="uniprot_id" displayName="UniProt ID(s)" type="string" />
-				<columnAttribute name="entrez_id" displayName="NCBI Gene (Entrez) ID" type="string" />
-				<columnAttribute name="ensembl_id" displayName="Ensembl ID" type="string" />
-				<columnAttribute name="span" displayName="Location" type="string" />
-				<columnAttribute name="cytogenetic_location" displayName="Cytogenetic Location" type="string" />
-			</attributeQueryRef>
-
-			<table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">
-				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
-				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-					<propertyList name="type">
-					<value>default</value>
-				</propertyList>
-				<propertyList name="canShrink">
-					<value>true</value>
-				</propertyList>
-			</table>
-
-			<table name="sequence_link_outs" displayName="Nucleotide Sequences" inReportMaker="false" queryRef="GeneTables.DbRefs_NSeq">
-				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
-				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-					<propertyList name="type">
-					<value>default</value>
-				</propertyList>
-				<propertyList name="canShrink">
-					<value>true</value>
-				</propertyList>
-			</table>
-
-			<table name="protein_link_outs" displayName="Proteins" inReportMaker="false" queryRef="GeneTables.DbRefs_Proteins">
-				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
-				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-					<propertyList name="type">
-					<value>default</value>
-				</propertyList>
-				<propertyList name="canShrink">
-					<value>true</value>
-				</propertyList>
-			</table>
-
-			<table name="clinical_link_outs" displayName="Clinical" inReportMaker="false" queryRef="GeneTables.DbRefs_Clinical">
-				<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
-				<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-				<propertyList name="type">
-					<value>default</value>
-				</propertyList>
-				<propertyList name="canShrink">
-					<value>true</value>
-				</propertyList>
-			</table>
-
-			<table name="transcript_link_outs" displayName="Transcripts" queryRef="GeneTables.Transcripts">
-				<columnAttribute name="transcript_name" displayName="Transcript" type="string" />
-				<columnAttribute name="transcript_accession_link" displayName="Ensembl Transcript" type="json_link" />
-				<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
-				<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
-				<propertyList name="type">
-					<value>default</value>
-				</propertyList>
-				<propertyList name="canShrink">
-					<value>true</value>
-				</propertyList>
-			</table>
-
-			<!-- =============================================================== -->
-			<!-- Genetic Variation -->
-			<!-- =============================================================== -->
-
-			<attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
-				<columnAttribute name="gws_variants_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
-				<propertyList name="chartProperties">
-					<value>
-					{"type": "gene_gws_summary"}
-					</value>
-				</propertyList>
-				</columnAttribute>
-			</attributeQueryRef>
-			
-			<attributeQueryRef ref="GeneAttributes.ADEvidenceFlag">
-				<columnAttribute name="has_ad_evidence" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" internal="true" inReportMaker="true" type="string" />
-				<columnAttribute name="ad_evidence_flag" internal="false" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" inReportMaker="false" type="json_icon" />
-			</attributeQueryRef>
+      <reporter name="json" displayName="JSON: choose from columns
+					 and/or tables"
+		scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+      </reporter>
 
 
-			<!-- GWAS -->
-			<table name="ad_variants_from_gwas" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromGWAS">
-				<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-				<columnAttribute name="variant" displayName="Variant" type="json_link" />
-				<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-				<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
-				<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
-				<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-				<columnAttribute name="track_name" displayName="Track" type="json_text" />
-				<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
+      <!-- =============================================================== -->
+      <!-- Step Analysis Plugins -->
+      <!-- =============================================================== -->
+      <stepAnalysisRef name="custom-go-enrichment" />
+      <!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
-				<propertyList name="type">
-					<value>chart_filter</value>
-				</propertyList>
-				<propertyList name="filter_field">
-					<value>pvalue</value>
-				</propertyList>
+      <!-- =============================================================== -->
+      <!-- Summary and record views -->
+      <!-- =============================================================== -->
+      <summaryView name="_default" display="Gene Results">
+        <description>
+          <![CDATA[View gene details.]]>
+        </description>
+      </summaryView>
 
-				<propertyList name="defaultOpen">
-					<value>true</value>
-				</propertyList>
+      <summaryView name="ideogram" display="Genome View">
+        <description>
+          <![CDATA[View your results mapped against the genome.]]>
+        </description>
+      </summaryView>
 
-				<description>
-					<![CDATA[
-					        <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for Alzheimer's disease.<br/>
-					        This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the AD risk-associated
-							variants co-located with this gene.<br/>
-					        By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-					        Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
-					]]>
-				</description>
-			</table>
+      <reporter name="genomeViewReporter" displayName="Ideogram"  scopes=""
+                implementation="org.niagads.genomics.model.report.summaryview.genomeview.GeneGenomeViewReporter" />
 
-			<table name="other_variants_from_gwas" displayName="AD-related neuropathologies and biomarkers" queryRef="GeneTables.OtherVariantsFromGWAS">
-				<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-				<columnAttribute name="variant" displayName="Variant" type="json_link" />
-				<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-				<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
-				<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
-				<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-				<columnAttribute name="track_name" displayName="Track" type="json_text" />
-				<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
+      <!-- =============================================================== -->
+      <!-- Annotation and Link Outs -->
+      <!-- =============================================================== -->
+      <attributeQueryRef ref="GeneAttributes.BasicAttributes">
+	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
+	<columnAttribute name="gene_type" displayName="Type" type="string" />
+	<columnAttribute name="chromosome" displayName="Chromsome" type="string" />
+	<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
+	<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
+	<columnAttribute name="strand" displayName="Strand" type="string" />
+	<columnAttribute name="is_reversed" internal="true" inReportMaker="false" type="boolean" />
+	<columnAttribute name="gene_name" displayName="Product" type="string" />
+	<columnAttribute name="synonyms" displayName="Synonyms" type="string" />
+	<columnAttribute name="gene_symbol" displayName="Symbol" type="string" />
+	<columnAttribute name="hgnc_id" displayName="HGNC ID" type="string" />
+	<columnAttribute name="omim_id" displayName="OMIM ID" type="string" />
+	<columnAttribute name="ucsc_id" displayName="UCSC ID" type="string" />
+	<columnAttribute name="vega_id" displayName="VEGA ID" type="string" />
+	<columnAttribute name="uniprot_id" displayName="UniProt ID(s)" type="string" />
+	<columnAttribute name="entrez_id" displayName="NCBI Gene (Entrez) ID" type="string" />
+	<columnAttribute name="ensembl_id" displayName="Ensembl ID" type="string" />
+	<columnAttribute name="span" displayName="Location" type="string" />
+	<columnAttribute name="cytogenetic_location" displayName="Cytogenetic Location" type="string" />
+      </attributeQueryRef>
 
-        <propertyList name="type">
-					<value>chart_filter</value>
-				</propertyList>
-				<propertyList name="filter_field">
-					<value>pvalue</value>
-				</propertyList>
+      <table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">
+	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+	<propertyList name="canShrink">
+	  <value>true</value>
+	</propertyList>
+      </table>
 
-				<description>
-					<![CDATA[
-					     <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for an AD-related disease or neuropathology.<br/>
-					        This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the AD risk-associated
-							variants co-located with this gene.<br/>
-					        By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-					        Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
-					]]>
-				</description>
-			</table>
+      <table name="sequence_link_outs" displayName="Nucleotide Sequences" inReportMaker="false" queryRef="GeneTables.DbRefs_NSeq">
+	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+	<propertyList name="canShrink">
+	  <value>true</value>
+	</propertyList>
+      </table>
 
-			<table name="ad_variants_from_catalog" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromCatalog">
-				<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
-				<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-				<columnAttribute name="variant" displayName="Variant" type="json_link" />
-				<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-				<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
-				<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
-				<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-				<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
-				<columnAttribute name="trait" displayName="Trait" type="string" />
-				<columnAttribute name="pubmed_id" displayName="PubMed ID" type="json_link" />
-				<columnAttribute name="study"  displayName="Study" type="json_text" />
-				<columnAttribute name="sample" displayName="Sample" type="string" />
-				<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
+      <table name="protein_link_outs" displayName="Proteins" inReportMaker="false" queryRef="GeneTables.DbRefs_Proteins">
+	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+	<propertyList name="canShrink">
+	  <value>true</value>
+	</propertyList>
+      </table>
 
-        		<propertyList name="type">
-					<value>default</value>
-				</propertyList>
+      <table name="clinical_link_outs" displayName="Clinical" inReportMaker="false" queryRef="GeneTables.DbRefs_Clinical">
+	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
+	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+	<propertyList name="canShrink">
+	  <value>true</value>
+	</propertyList>
+      </table>
 
-				<description>
-					<![CDATA[    
-                  			<p>Variants contained within &plusmn;10kb of this gene from curated collections (NHGRI or NIAGADS) of SNPs 
-							   identified as significantly associated with Alzheimer's disease in published 
-                      		   genome-wide association studies (GWAS).</p>
-         		 ]]>
-				</description>
-			</table>
+      <table name="transcript_link_outs" displayName="Transcripts" queryRef="GeneTables.Transcripts">
+	<columnAttribute name="transcript_name" displayName="Transcript" type="string" />
+	<columnAttribute name="transcript_accession_link" displayName="Ensembl Transcript" type="json_link" />
+	<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
+	<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+	<propertyList name="canShrink">
+	  <value>true</value>
+	</propertyList>
+      </table>
+
+      <!-- =============================================================== -->
+      <!-- Genetic Variation -->
+      <!-- =============================================================== -->
+
+      <attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
+	<columnAttribute name="gws_variants_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
+	  <propertyList name="chartProperties">
+	    <value>
+	      {"type": "gene_gws_summary"}
+	    </value>
+	  </propertyList>
+	</columnAttribute>
+      </attributeQueryRef>
+      
+      <attributeQueryRef ref="GeneAttributes.ADEvidenceFlag">
+	<columnAttribute name="has_genetic_evidence_for_ad_risk_display" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" internal="true" inReportMaker="false" type="string" />
+	<columnAttribute name="has_genetic_evidence_for_ad_risk" displayName="Genetic Evidence for AD?" help="Genetic evidence from exonic rare-variant aggregation tests of association to AD have been reported for this gene by the ADSP" internal="true" inReportMaker="true" type="string" />
+
+      </attributeQueryRef>
 
 
-			<table name="other_variants_from_catalog" displayName="Other Traits (incl. related neuropathologies and AD biomarkers)" queryRef="GeneTables.OtherVariantsFromCatalog">
-				<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
-				<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-				<columnAttribute name="variant" displayName="Variant" type="json_link" />
-				<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-				<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
-				<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
-				<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-				<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
-				<columnAttribute name="trait" displayName="Trait" type="string" />
-				<columnAttribute name="pubmed_id" displayName="PubMed ID" type="json_link" />
-				<columnAttribute name="study"  displayName="Study" type="json_text" />
-				<columnAttribute name="sample" displayName="Sample" type="string" />
-				<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
+      <!-- GWAS -->
+      <table name="ad_variants_from_gwas" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromGWAS">
+	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
+	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="track_name" displayName="Track" type="json_text" />
+	<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
 
-       			 <propertyList name="type">
-					<value>default</value>
-				</propertyList>
+	<propertyList name="type">
+	  <value>chart_filter</value>
+	</propertyList>
+	<propertyList name="filter_field">
+	  <value>pvalue</value>
+	</propertyList>
 
-				<description>
-					<![CDATA[   
-                  			 <p>Variants contained within &plusmn;10kb of this gene from curated collections (NHGRI or NIAGADS) of SNPs identified 
-				 			  as significantly associated with any disease/trait, including AD-related neuropathologies and AD biomarkers in published
-                 			  genome-wide association studies (GWAS)</p>   
-                   ]]>
-				</description>
+	<propertyList name="defaultOpen">
+	  <value>true</value>
+	</propertyList>
 
-			</table>
-			<!-- =============================================================== -->
-			<!-- Functional Annotation -->
-			<!-- =============================================================== -->
-			<table name="go_terms" displayName="Gene Ontology" queryRef="GeneTables.GoTerms">
-				<columnAttribute displayName="Association" name="evidence_table_dropdown" help="click on links to reveal supporting evidence for this association" type="json_table" />
-				<columnAttribute displayName="Term" name="term" type="json_text" />
-				<columnAttribute displayName="GO Accession" name="go_accession" help="follow link for more information from AmIGO" type="json_link" />
-				<columnAttribute displayName="Evidence Code" name="go_evidence_code" type="string" />
-				<columnAttribute displayName="Ontology" name="ontology" type="string" />
+	<description>
+	  <![CDATA[
+		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for Alzheimer's disease.<br/>
+		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the AD risk-associated
+		   variants co-located with this gene.<br/>
+		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
+		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
+	  ]]>
+	</description>
+      </table>
+
+      <table name="other_variants_from_gwas" displayName="AD-related neuropathologies and biomarkers" queryRef="GeneTables.OtherVariantsFromGWAS">
+	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
+	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="track_name" displayName="Track" type="json_text" />
+	<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
 
         <propertyList name="type">
-					<value>subtable</value>
-				</propertyList>
-				<propertyList name="subtable_field">
-					<value>evidence_table_dropdown</value>
-				</propertyList>
+	  <value>chart_filter</value>
+	</propertyList>
+	<propertyList name="filter_field">
+	  <value>pvalue</value>
+	</propertyList>
 
-				<description>
-					<![CDATA[
-                  <p>Annotations of gene function from the Gene Ontology Consortium.<br/>
-                  Mouse over term names to view a full definition.<br/>
-                  Click on the <span class="blue">GO Accession</sp> link to view the term in the GO hierarchy on the AMIGO website.<br/>
-                  Click on the <i class="fa fa-caret-down"></i> icon in the <span class="blue">Association</sp> field to view details about the evidence used to define the GO-gene association.</p>
-					]]>
-				</description>		
-			</table>
+	<description>
+	  <![CDATA[
+		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for an AD-related disease or neuropathology.<br/>
+		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the AD risk-associated
+		   variants co-located with this gene.<br/>
+		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
+		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
+	  ]]>
+	</description>
+      </table>
 
-			<table name="pathways" displayName="Pathways" queryRef="GeneTables.Pathways">
-				<columnAttribute name="pathway_name" displayName="Pathway" type="string" />
-				<columnAttribute name="accession" displayName="Accession" truncateTo="5000" type="json_link" help="view pathway details at KEGG or Reactome" />
-				<!--
-				<columnAttribute name="pathway_image" displayName="Graph" truncateTo="5000"
-				type="json_thumbnail_link" help="click image thumbnail to view gene highlighted in the pathway on the KEGG or Reactome website"/>
-				-->
-				<columnAttribute name="source" displayName="Resource" type="string" />
+      <table name="ad_variants_from_catalog" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromCatalog">
+	<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
+	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
+	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
+	<columnAttribute name="trait" displayName="Trait" type="string" />
+	<columnAttribute name="pubmed_id" displayName="PubMed ID" type="json_link" />
+	<columnAttribute name="study"  displayName="Study" type="json_text" />
+	<columnAttribute name="sample" displayName="Sample" type="string" />
+	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-		    <propertyList name="type">
-					<value>default</value>
-				</propertyList>
+        <propertyList name="type">
+	  <value>default</value>
+	</propertyList>
 
-				<description>
-					<![CDATA[
-					<p>Gene-pathway membership from KEGG and Reactome.</p>
-					<p>Click on the <span class="blue">Pathway Accession</sp> link to view more information about the pathway on the KEGG or Reactome website.</p>
-					]]>
-				</description>
-			</table>
+	<description>
+	  <![CDATA[    
+                   <p>Variants contained within &plusmn;10kb of this gene from curated collections (NHGRI or NIAGADS) of SNPs 
+		   identified as significantly associated with Alzheimer's disease in published 
+                   genome-wide association studies (GWAS).</p>
+          ]]>
+	</description>
+      </table>
 
-		</recordClass>
-	</recordClassSet>
+
+      <table name="other_variants_from_catalog" displayName="Other Traits (incl. related neuropathologies and AD biomarkers)" queryRef="GeneTables.OtherVariantsFromCatalog">
+	<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
+	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
+	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
+	<columnAttribute name="trait" displayName="Trait" type="string" />
+	<columnAttribute name="pubmed_id" displayName="PubMed ID" type="json_link" />
+	<columnAttribute name="study"  displayName="Study" type="json_text" />
+	<columnAttribute name="sample" displayName="Sample" type="string" />
+	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
+
+       	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+
+	<description>
+	  <![CDATA[   
+                   <p>Variants contained within &plusmn;10kb of this gene from curated collections (NHGRI or NIAGADS) of SNPs identified 
+		   as significantly associated with any disease/trait, including AD-related neuropathologies and AD biomarkers in published
+                   genome-wide association studies (GWAS)</p>   
+          ]]>
+	</description>
+
+      </table>
+      <!-- =============================================================== -->
+      <!-- Functional Annotation -->
+      <!-- =============================================================== -->
+      <table name="go_terms" displayName="Gene Ontology" queryRef="GeneTables.GoTerms">
+	<columnAttribute displayName="Association" name="evidence_table_dropdown" help="click on links to reveal supporting evidence for this association" type="json_table" />
+	<columnAttribute displayName="Term" name="term" type="json_text" />
+	<columnAttribute displayName="GO Accession" name="go_accession" help="follow link for more information from AmIGO" type="json_link" />
+	<columnAttribute displayName="Evidence Code" name="go_evidence_code" type="string" />
+	<columnAttribute displayName="Ontology" name="ontology" type="string" />
+
+        <propertyList name="type">
+	  <value>subtable</value>
+	</propertyList>
+	<propertyList name="subtable_field">
+	  <value>evidence_table_dropdown</value>
+	</propertyList>
+
+	<description>
+	  <![CDATA[
+                   <p>Annotations of gene function from the Gene Ontology Consortium.<br/>
+                   Mouse over term names to view a full definition.<br/>
+                   Click on the <span class="blue">GO Accession</sp> link to view the term in the GO hierarchy on the AMIGO website.<br/>
+                   Click on the <i class="fa fa-caret-down"></i> icon in the <span class="blue">Association</sp> field to view details about the evidence used to define the GO-gene association.</p>
+	  ]]>
+	</description>		
+      </table>
+
+      <table name="pathways" displayName="Pathways" queryRef="GeneTables.Pathways">
+	<columnAttribute name="pathway_name" displayName="Pathway" type="string" />
+	<columnAttribute name="accession" displayName="Accession" truncateTo="5000" type="json_link" help="view pathway details at KEGG or Reactome" />
+	<!--
+	    <columnAttribute name="pathway_image" displayName="Graph" truncateTo="5000"
+	    type="json_thumbnail_link" help="click image thumbnail to view gene highlighted in the pathway on the KEGG or Reactome website"/>
+	-->
+	<columnAttribute name="source" displayName="Resource" type="string" />
+
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+
+	<description>
+	  <![CDATA[
+		   <p>Gene-pathway membership from KEGG and Reactome.</p>
+		   <p>Click on the <span class="blue">Pathway Accession</sp> link to view more information about the pathway on the KEGG or Reactome website.</p>
+	  ]]>
+	</description>
+      </table>
+
+    </recordClass>
+  </recordClassSet>
 </wdkModel>

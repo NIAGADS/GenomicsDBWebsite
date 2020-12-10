@@ -281,6 +281,7 @@
 		 t.datasource AS source,
 		 r.allele,
 		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
+		 r.neg_log10_pvalue,
 		 r.frequency,
 		 r.restricted_stats->>'STUDY' AS study,
 
@@ -301,6 +302,7 @@
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND r.variant_record_primary_key = id.source_id
 		 AND r.restricted_stats->>'DISEASE/TRAIT' ILIKE '%Alzheimer%'
+		 ORDER BY r.neg_log10_pvalue DESC
 	]]>
       </sql>
     </sqlQuery>
@@ -356,6 +358,7 @@
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND r.variant_record_primary_key = id.source_id
 		 AND r.restricted_stats->>'DISEASE/TRAIT' NOT ILIKE '%Alzheimer%'
+		 ORDER BY r.neg_log10_pvalue DESC
 	]]>
       </sql>
     </sqlQuery>

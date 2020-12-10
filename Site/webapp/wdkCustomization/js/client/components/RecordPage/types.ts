@@ -45,7 +45,8 @@ interface GeneRecordTableType {
 }
 
 export interface GeneRecordAttributes {
-    ad_evidence_flag: string;
+    has_genetic_evidence_for_ad_risk_display: string; // json
+    has_genetic_evidence_for_ad_risk: string;
     chromosome: string;
     ensembl_id: string;
     entrez_id: string;
@@ -55,7 +56,6 @@ export interface GeneRecordAttributes {
     gws_variants_summary_plot: string;
     has_ad_evidence: "true" | "false";
     hgnc_id: string;
-    jbrowse_source_url: string;
     location_end: string;
     location_start: string;
     cytogenetic_location: string;
