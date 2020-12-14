@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import d3, { DragEvent } from "d3";
-import { chain, debounce } from "lodash";
+import { chain, throttle } from "lodash";
 
 interface PvalFilterProps {
     defaultPVal: number;
@@ -27,6 +27,7 @@ const canvasSpec: CanvasSpec = {
 };
 
 const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, selectClass, values }) => {
+    const defaultPLog10 = Math.log10(defaultPVal);
     useEffect(() => {
         const data = _transformData(values),
             maxP = data[data.length - 1].pValueLog10,
@@ -37,7 +38,7 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, sele
         _drawArea(svg, data, area);
         _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec);
-        _drawSlider(svg, xScale, defaultPVal, canvasSpec, setMaxPvalue);
+        _drawSlider(svg, xScale, defaultPLog10, canvasSpec, setMaxPvalue);
         //this component is uncontrolled and holds its own state after initialization; it never rerenders
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
@@ -139,7 +140,7 @@ const _drawRectangle = (
     height: number,
     classname = ""
 ) => {
-    const xStart = xScale(Math.log10(defaultPvalue));
+    const xStart = xScale(defaultPvalue);
     svg.append("g")
         .append("rect")
         .attr("width", xScale.range()[1] - xStart)
@@ -160,7 +161,7 @@ function _buildDrag(this: any, xScale: d3.scale.Linear<number, number>, sizerCla
             d3.select("." + sizerClass)
                 .attr("width", xScale.range()[1] - event.x)
                 .attr("transform", "translate(" + event.x + ",0)");
-            debounce(() => cb(Math.pow(10, xScale.invert(event.x))), 100)();
+            throttle(() => cb(Math.pow(10, xScale.invert(event.x))), 100)();
         }
     });
 }
@@ -171,16 +172,16 @@ const _drawCircle = (
     defaultP: number,
     height: number,
     drag: any
-) => {
-    svg.append("g")
+) =>
+    svg
+        .append("g")
         .append("circle")
         .attr("fill", "orange")
         .attr("r", 7)
         .attr("opacity", 0.5)
-        .attr("cx", xScale(Math.log10(defaultP)))
+        .attr("cx", xScale(defaultP))
         .attr("cy", height)
         .call(drag);
-};
 
 const _drawSlider = (
     svg: d3.Selection<any>,

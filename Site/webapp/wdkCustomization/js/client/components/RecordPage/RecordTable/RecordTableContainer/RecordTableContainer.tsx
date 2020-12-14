@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as rt from "../../types";
 //@ts-ignore
 import { CSVLink } from "react-csv";
-import { cloneDeep, findIndex, forIn, get, isEmpty, kebabCase, pickBy, round } from "lodash";
+import { cloneDeep, findIndex, forIn, get, isEmpty, kebabCase, maxBy, pickBy, round } from "lodash";
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
@@ -16,14 +16,21 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
         [pValueFilterVisible, setPValueFilterVisible] = useState(false),
         [csvData, setCsvData] = useState<any[]>([]);
 
-    const defaultPVal = 5e-8;
+    const defaultPVal = useMemo(() => {
+        //make sure default p is within the range of values, otherwise, default to max pval in data
+        const observedMax = +get(
+            maxBy(value, (v) => +v.pvalue),
+            "pvalue"
+        );
+        return Math.min(observedMax, 5e-8);
+    }, [value]);
 
     useEffect(() => {
         const filter = [{ id: "all", value: "" as any }].concat(
             get(table, "properties.type[0]") === "chart_filter" ? [{ id: "pvalue", value: defaultPVal }] : []
         );
         setFiltered(filter);
-    }, [table]);
+    }, [defaultPVal, table]);
 
     const updateFilter = (id: string, value: any) =>
         //we're wrapping setFiltered here b/c useState function returns reliable state, which is important b/c we're binding to
@@ -114,12 +121,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                             {/* todo: extract to its own component with maxPvalue as internal state */}
                             {getHasPValFilter(table) && (
                                 <PvalFilterControls
-                                    defaultPValue={
-                                        get(
-                                            filtered.find((f) => f.id === "pvalue"),
-                                            "value"
-                                        ) || defaultPVal
-                                    }
+                                    defaultPValue={defaultPVal}
                                     filterPVal={
                                         get(
                                             filtered.find((f) => f.id === "pvalue"),
