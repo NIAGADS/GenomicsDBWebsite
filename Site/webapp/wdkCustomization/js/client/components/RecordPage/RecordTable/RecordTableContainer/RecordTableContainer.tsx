@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import * as rt from "../../types";
 //@ts-ignore
 import { CSVLink } from "react-csv";
-import { cloneDeep, findIndex, forIn, get, isEmpty, kebabCase, maxBy, pickBy, round } from "lodash";
+import { cloneDeep, intersection, findIndex, forIn, get, isEmpty, kebabCase, maxBy, pickBy, round } from "lodash";
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
@@ -48,14 +48,34 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
 
     const getHasPValFilter = (table: rt.Table) => !!tableInstance && table.properties.type[0] === "chart_filter";
 
+    const filterString = (value: string, rows: any[]) => {
+        //https://github.com/benjamingr/RegExp.escape/blob/master/polyfill.js
+        const re = new RegExp(value.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "i");
+        return rows.filter((row) => {
+            const rowString = Object.entries(row)
+                //filter out falsey vals and internal react-table properties marked by leading _
+                .filter(([k, v]) => !(!v || /^_.+/.test(k)))
+                .map(([_, v]: any) => extractDisplayText(v))
+                .join("");
+            return re.test(rowString);
+        });
+    };
+
     const getPValFilteredResultsEmpty = () => {
         //table instance check is unreliable b/c this function might fire after filter update but before table state has been resolved
         //so we have to check 'raw' data outside of instance
-        const filter = (filtered || []).find((f) => f.id == "pvalue");
+
+        const data = value || [],
+            pValFilter = (filtered || []).find((f) => f.id == "pvalue"),
+            stringFiltered = filterString(filterVal, data),
+            pFiltered = data.filter(
+                (v: any) => Number(get(v, "pvalue")) <= Number(get(pValFilter, "value", defaultPVal))
+            );
+
         return (
             getHasPValFilter(table) &&
             get(value, "length") &&
-            value.every((v) => Number(get(v, "pvalue")) >= Number(get(filter, "value", defaultPVal)))
+            (pFiltered.length === 0 || (stringFiltered.length && !intersection(stringFiltered, pFiltered).length))
         );
     };
 
@@ -139,18 +159,19 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                     </div>
                     {
                         <NiagadsRecordTable
-                            visible={!getPValFilteredResultsEmpty()}
-                            table={table}
-                            value={value}
                             attributes={attributes}
+                            canShrink={get(table, "properties.canShrink[0]", false)}
+                            isSelected={isSelected}
                             filtered={filtered}
                             onLoad={onTableLoaded}
                             onSelectionToggled={toggleSelection}
-                            isSelected={isSelected}
-                            canShrink={get(table, "properties.canShrink[0]", false)}
+                            stringFilterMethod={filterString}
+                            table={table}
+                            value={value}
+                            visible={!getPValFilteredResultsEmpty()}
                         />
                     }
-                    {getPValFilteredResultsEmpty() && (
+                    {!!getPValFilteredResultsEmpty() && (
                         <p style={{ textAlign: "center" }}>
                             No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-
                             {defaultPVal}). To see more results, please adjust the p-value limit with the{" "}

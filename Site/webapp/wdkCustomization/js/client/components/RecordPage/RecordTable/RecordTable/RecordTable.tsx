@@ -13,35 +13,48 @@ import PaginationComponent from "./PaginationComponent/PaginationComponent";
 const SelectTable = SelectTableHOC(ReactTable);
 
 interface NiagadsRecordTable {
-    table: rt.Table;
-    value: { [key: string]: any }[];
     attributes: rt.TableAttribute[];
+    canShrink?: boolean;
+    chartProperties?: any;
     filtered: Filter[];
+    isSelected: any;
     onLoad: (ref: React.MutableRefObject<Instance>) => void;
     onSelectionToggled: any;
-    isSelected: any;
-    canShrink?: boolean;
+    stringFilterMethod: (val: string, rows: any[]) => any[];
+    table: rt.Table;
+    value: { [key: string]: any }[];
     visible?: boolean;
-    chartProperties?: any;
 }
 
 const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     attributes,
     canShrink,
+    chartProperties,
     filtered,
     isSelected,
     onLoad,
     onSelectionToggled,
+    stringFilterMethod,
     table,
     value,
     visible,
-    chartProperties,
 }) => {
     const instance = useRef<Instance>();
 
     useEffect(() => {
         onLoad(instance);
     }, [onLoad]);
+
+    const hiddenFilterCol = {
+        Header: () => <span />,
+        id: "all",
+        width: 0,
+        resizable: false,
+        sortable: false,
+        Filter: (): null => null,
+        filterMethod: (filter: Filter, rows: any[]) => stringFilterMethod(filter.value, rows),
+        filterAll: true,
+    };
 
     const subCompKey = table.properties.subtable_field ? table.properties.subtable_field[0] : null,
         columns: Column[] =
@@ -203,28 +216,6 @@ const SortIconGroup: React.SFC = () => (
         <i className="icon-inactive fa fa-sort"></i>
     </span>
 );
-
-const hiddenFilterCol = {
-    Header: () => <span />,
-    id: "all",
-    width: 0,
-    resizable: false,
-    sortable: false,
-    Filter: (): null => null,
-    filterMethod: (filter: Filter, rows: any[]) => {
-        //https://github.com/benjamingr/RegExp.escape/blob/master/polyfill.js
-        const re = new RegExp(filter.value.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "i");
-        return rows.filter((row) => {
-            const rowString = Object.entries(row)
-                //filter out falsey vals and internal react-table properties marked by leading _
-                .filter(([k, v]) => !(!v || /^_.+/.test(k)))
-                .map(([_, v]: any) => extractDisplayText(v))
-                .join("");
-            return re.test(rowString);
-        });
-    },
-    filterAll: true,
-};
 
 const pValFilter = (filter: Filter, row: any) => +row.pvalue <= +filter.value;
 
