@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import d3, { DragEvent } from "d3";
-import { chain, throttle } from "lodash";
+import { chain, debounce } from "lodash";
 
 interface PvalFilterProps {
     defaultPVal: number;
@@ -161,7 +161,7 @@ function _buildDrag(this: any, xScale: d3.scale.Linear<number, number>, sizerCla
             d3.select("." + sizerClass)
                 .attr("width", xScale.range()[1] - event.x)
                 .attr("transform", "translate(" + event.x + ",0)");
-            throttle(() => cb(Math.pow(10, xScale.invert(event.x))), 100)();
+            debounce(() => cb(Math.pow(10, xScale.invert(event.x))), 100)();
         }
     });
 }

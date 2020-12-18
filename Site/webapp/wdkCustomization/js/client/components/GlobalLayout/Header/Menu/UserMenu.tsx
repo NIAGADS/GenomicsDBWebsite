@@ -15,13 +15,13 @@ interface User {
     };
 }
 
-const UserSection: React.SFC<{ user: User; webAppUrl: string }> = ({ user, webAppUrl }) => (
+const UserSection: React.FC<{ user: User; webAppUrl: string }> = ({ user, webAppUrl }) => (
     <div className="user-menu">
         {get(user, "isGuest", true) ? <GuestUserMenu webAppUrl={webAppUrl} /> : <RegisteredUserMenu user={user} />}
     </div>
 );
 
-const GuestUserMenu: React.SFC<{ webAppUrl: string }> = (props) => {
+const GuestUserMenu: React.FC<{ webAppUrl: string }> = (props) => {
     const { webAppUrl } = props;
     return (
         <div className="guest-user-menu mr-2">
@@ -33,7 +33,7 @@ const GuestUserMenu: React.SFC<{ webAppUrl: string }> = (props) => {
     );
 };
 
-const RegisteredUserMenu: React.SFC<{ user: User }> = ({ user }) => {
+const RegisteredUserMenu: React.FC<{ user: User }> = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false),
         userName = user ? "Welcome, " + user.properties.firstName + " " + user.properties.lastName : "Welcome, Guest",
         containerRef = useRef<any>();

@@ -209,7 +209,7 @@ const NiagadsTableSort = (a: string, b: string) => {
     return 0;
 };
 
-const SortIconGroup: React.SFC = () => (
+const SortIconGroup: React.FC = () => (
     <span className="sort-icons">
         <i className="icon-asc fa fa-sort-asc"></i>
         <i className="icon-desc fa fa-sort-desc"></i>

@@ -64,7 +64,6 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
     const getPValFilteredResultsEmpty = () => {
         //table instance check is unreliable b/c this function might fire after filter update but before table state has been resolved
         //so we have to check 'raw' data outside of instance
-
         const data = value || [],
             pValFilter = (filtered || []).find((f) => f.id == "pvalue"),
             stringFiltered = filterString(filterVal, data),
@@ -75,6 +74,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
         return (
             getHasPValFilter(table) &&
             get(value, "length") &&
+            //return true if pval filter is masking everything, or if it's masking
             (pFiltered.length === 0 || (stringFiltered.length && !intersection(stringFiltered, pFiltered).length))
         );
     };

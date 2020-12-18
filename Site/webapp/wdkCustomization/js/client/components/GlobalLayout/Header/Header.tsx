@@ -32,7 +32,7 @@ interface BuildInfo {
     buildNumber: string;
 }
 
-const BuildInfo: React.SFC<BuildInfo> = (props) => {
+const BuildInfo: React.FC<BuildInfo> = (props) => {
     const { buildNumber } = props;
     return <span className="build-info ml-2">Build Number: {buildNumber}</span>;
 };
