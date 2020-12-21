@@ -26,34 +26,32 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
         <ThemeProvider theme={theme}>
             <Grid container className="p-2">
                 <Hidden mdDown>
-                    <Grid container item md={6}>
+                    <Grid container alignItems="center" item md={6}>
                         <Typography color="primary" variant="h4">
                             <Box fontWeight={"fontWeightBold"}>GenomicsDB</Box>
                         </Typography>
                     </Grid>
                 </Hidden>
                 <Grid item spacing={2} direction="column" container xs={12} md={6}>
-                    <Grid item container>
-                        <Grid item container justify="flex-end" alignItems="center">
-                            <Grid item className="mr-2" alignItems="center">
-                                <Typography>
-                                    <strong>Build Number: GRCh37.p13/hg19</strong>
-                                    <span className="m-3">|</span>
-                                    <span>Welcome, Guest</span>
-                                </Typography>
-                            </Grid>
-                            <Grid item>
-                                <PrimaryActionButton>User Login</PrimaryActionButton>
-                            </Grid>
+                    <Grid direction="row" wrap="nowrap" item container justify="flex-end" alignItems="center">
+                        <Grid item className="mr-2" container alignItems="center" justify="flex-end">
+                            <Typography>
+                                <strong>Build Number: GRCh37.p13/hg19</strong>
+                                <span className="m-3">|</span>
+                                <span>Welcome, Guest</span>
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <PrimaryActionButton>User Login</PrimaryActionButton>
                         </Grid>
                     </Grid>
-                    <Grid item justify="flex-end" container>
-                        <Grid container item xs={12} xl={9} justify="space-evenly">
+                    <Grid direction="row" item justify="flex-end" container>
+                        <Grid container item xs={12} xl={9} wrap="nowrap" justify="space-evenly">
                             {menuConfig.map((conf, i) => (
-                                <>
-                                    <MenuElement key={i} {...conf} />
+                                <React.Fragment key={i}>
+                                    <MenuElement {...conf} />
                                     {i === menuConfig.length - 1 ? null : "|"}
-                                </>
+                                </React.Fragment>
                             ))}
                         </Grid>
                     </Grid>
@@ -124,6 +122,9 @@ const MenuTitleStyles = (Theme: typeof theme) => ({
         fontWeight: Theme.typography.fontWeightLight,
         opacity: 0.7,
         cursor: "pointer",
+        "&:hover": {
+            opacity: 1.0,
+        },
     },
 });
 

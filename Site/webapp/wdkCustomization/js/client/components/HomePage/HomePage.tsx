@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import AutoCompleteSearch from "../../components/AutoCompleteSearch/AutoCompleteSearch";
+//import AutoCompleteSearch from "../../components/AutoCompleteSearch/AutoCompleteSearch";
+import { MultiSearch } from "../../components/Shared";
 import { Link } from "wdk-client/Components";
 import FeatureItem from "./FeatureItem/FeatureItem";
 
@@ -9,7 +10,7 @@ interface SectionProps {
     webAppUrl: string;
 }
 
-const SearchHero: React.SFC<SectionProps> = (props) => {
+const SearchHero: React.FC<SectionProps> = (props) => {
     const { webAppUrl } = props;
 
     return (
@@ -32,7 +33,7 @@ const SearchHero: React.SFC<SectionProps> = (props) => {
             <div className="row justify-content-md-center">
                 <div className="col-sm-6 search-panel quick-search-container-main">
                     <div className="quick-search-container-main">
-                        <AutoCompleteSearch />
+                        <MultiSearch selected={null} setSelected={(arg: any) => console.log(arg)} />
                         <div className="search-examples mt-1">
                             <p>
                                 Examples - Gene: <Link to={"record/gene/ENSG00000130203"}> APOE</Link> - Variant by
@@ -47,7 +48,7 @@ const SearchHero: React.SFC<SectionProps> = (props) => {
     );
 };
 
-const Features: React.SFC<SectionProps> = (props) => {
+const Features: React.FC<SectionProps> = (props) => {
     const { webAppUrl } = props;
     return (
         <div className="container-fluid feature-highlight">

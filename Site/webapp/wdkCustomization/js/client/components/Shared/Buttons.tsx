@@ -4,15 +4,23 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import Theme from "./../../theme";
 
 //base override of wdk input[type=button]
-const BaseStyles = (theme: typeof Theme) => ({
-    root: {
-        backgroundImage: "none",
-        color: theme.palette.primary.contrastText,
-        "&:hover": {
-            backgroundColor: theme.palette.primary.dark,
+const BaseStyles = (theme: typeof Theme) =>
+    createStyles({
+        root: {
+            backgroundImage: "none",
+            color: theme.palette.primary.contrastText,
+            "&:hover": {
+                backgroundColor: theme.palette.primary.dark,
+                backgroundImage: "none",
+            },
+            "&:focus, &:visited ": {
+                backgroundImage: "none",
+            },
         },
-    },
-});
+        label: {
+            whiteSpace: "nowrap",
+        },
+    });
 
 const BaseButton = withStyles(BaseStyles)(Button);
 
