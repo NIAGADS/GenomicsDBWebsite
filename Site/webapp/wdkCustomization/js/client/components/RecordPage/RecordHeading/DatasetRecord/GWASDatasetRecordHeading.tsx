@@ -204,16 +204,7 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
           <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
         </div>
       </div>
-      <div className="col-sm-9 mt-5">
-        {record.attributes.has_manhattan_plot && (
-          <HighchartsManhattan
-            track={record.id[0].value}
-            properties={JSON.parse(
-              getAttributeChartProperties(recordClass, "has_manhattan_plot")
-            )}
-          ></HighchartsManhattan>
-        )}
-      </div>
+      
     </React.Fragment>
   );
 };
