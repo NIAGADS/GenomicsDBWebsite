@@ -57,7 +57,7 @@ const HomePage: React.FC<SectionProps> = (props) => {
     return (
         <Grid justify="center" container item classes={{ root: classes.root }}>
             <Grid container direction="column" item xs={12} md={6} lg={4}>
-                <Box pt={5} pb={4}>
+                <Box p={1} pt={5} pb={4}>
                     <Grid item>
                         <MainText>
                             NIAGADS <br /> Alzheimer's Genomics Database
@@ -77,9 +77,9 @@ const HomePage: React.FC<SectionProps> = (props) => {
                         <MultiSearch
                             onSelect={(result: SearchResult & { searchTerm: string }) =>
                                 goto(
-                                    result.primary_key
-                                        ? buildRouteFromResult(result)
-                                        : buildSummaryRoute(result.searchTerm)
+                                    result.type == "summary"
+                                        ? buildSummaryRoute(result.searchTerm)
+                                        : buildRouteFromResult(result)
                                 )
                             }
                         />
@@ -127,6 +127,7 @@ const HomePage: React.FC<SectionProps> = (props) => {
                             <PrimaryActionButton onClick={goto.bind(null, `/visualizations/browser`)}>
                                 Full Browser View
                             </PrimaryActionButton>
+                            <Box m={1} />
                         </Grid>
                     </Grid>
                 </WhiteBackgroundBox>
@@ -135,13 +136,13 @@ const HomePage: React.FC<SectionProps> = (props) => {
                 <GreyBackgroundBox p={2}>
                     <Grid container direction="row" item justify="center" alignItems="center">
                         <Grid container item xs={12} md={4} lg={3}>
-                            <IconCard title="Explore" text="lorem ipsum" Icon={Explore} />
+                            <IconCard title="Explore" text="lorem ipsum lorem ipsum lorem ipsum" Icon={Explore} />
                         </Grid>
                         <Grid container item xs={12} md={4} lg={3}>
-                            <IconCard title="Analyze" text="lorem ipsum" Icon={Analyze} />
+                            <IconCard title="Analyze" text="lorem ipsum lorem ipsum lorem ipsum" Icon={Analyze} />
                         </Grid>
                         <Grid container item xs={12} md={4} lg={3}>
-                            <IconCard title="Share" text="lorem ipsum" Icon={Share} />
+                            <IconCard title="Share" text="lorem ipsum lorem ipsum lorem ipsum" Icon={Share} />
                         </Grid>
                     </Grid>
                 </GreyBackgroundBox>
@@ -184,6 +185,7 @@ const DarkContrastCaption = withStyles((theme) =>
             color: theme.palette.primary.contrastText,
             opacity: ".7",
             fontSize: "16px",
+            fontWeight: 300,
         },
     })
 )((props: TypographyProps) => <Typography variant="caption" {...props} />);
@@ -194,6 +196,7 @@ const SmallDarkContrastCaption = withStyles((theme) =>
             color: theme.palette.primary.contrastText,
             opacity: ".8",
             fontSize: "14px",
+            fontWeight: 200,
         },
     })
 )((props: TypographyProps) => <Typography variant="caption" {...props} />);
@@ -203,6 +206,7 @@ const LightContrastCaption = withStyles((theme) =>
         caption: {
             color: theme.palette.grey[600],
             fontSize: "16px",
+            fontWeight: 300,
         },
     })
 )((props: TypographyProps) => <Typography variant="caption" {...props} />);
@@ -217,7 +221,7 @@ const IconCard: React.FC<IconCard> = ({ Icon, text, title }) => {
     const theme = useTheme();
 
     return (
-        <Box p={3}>
+        <Box p={3} flexGrow={1}>
             <Grid container item>
                 <Grid item container alignItems="center" xs={4}>
                     <Icon style={{ color: theme.palette.primary.light, fontSize: "124px" }} />

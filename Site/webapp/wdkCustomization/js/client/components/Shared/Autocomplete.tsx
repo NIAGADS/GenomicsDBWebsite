@@ -36,7 +36,25 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                 ._fetchJson<SearchResult[]>("get", `/search/site?term=${inputValue}`)
                 .then((res) => {
                     setSearchInProgress(false);
-                    setOptions(isEmpty(res) ? [] : res);
+                    setOptions(
+                        isEmpty(res)
+                            ? []
+                            : res.slice(0, 10).concat(
+                                  res.length > 10
+                                      ? [
+                                            {
+                                                type: "summary",
+                                                match_rank: 0,
+                                                matched_term: "click to view full results",
+                                                record_type: "dummy",
+                                                description: "dummy",
+                                                display: `...and ${res.length - 10} more`,
+                                                primary_key: "dummy",
+                                            },
+                                        ]
+                                      : []
+                              )
+                    );
                 })
                 .catch(() => {
                     setSearchInProgress(false);
@@ -51,6 +69,9 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
         <Autocomplete
             autoComplete
             clearOnEscape
+            //we're filtering on the server, so no need to filter here
+            //also, we don't want our summary option filtered
+            filterOptions={(results) => results}
             freeSolo
             fullWidth={canGrow}
             getOptionSelected={(option, value) => option.primary_key === value.primary_key}
@@ -86,7 +107,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
             }}
             renderOption={(option) => (
                 <span>
-                    {option.display}&nbsp;
+                    {option.type === "summary" ? <strong>{option.display}</strong> : option.display}&nbsp;
                     <small>
                         <em>{_truncateMatch(option.matched_term, inputValue)}</em>
                     </small>
