@@ -10,13 +10,22 @@ interface IgvBrowser {
 }
 
 export interface TrackConfig {
-    name: string;
+    autoscale?: boolean;
+    displayMode?: string;
+    filename?: string;
+    filterTypes?: string[];
     format?: string;
-    displayMode: string;
     height?: number;
-    url: string;
     indexURL?: string;
-    visibilityWindow: number;
+    maxLogP?: number;
+    maxRows?: number;
+    name: string;
+    order?: string;
+    snpField?: string;
+    sourceType?: string;
+    type?: string;
+    url: string;
+    visibilityWindow?: number;
 }
 
 const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad, searchUrl }) => {
@@ -24,7 +33,16 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
             options = {
-                genome: "hg19",
+                reference: {
+                    id: "hg19",
+                    name: "Human (CRCh37/hg19)",
+                    fastaURL:
+                        "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta",
+                    indexURL:
+                        "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta.fai",
+                    cytobandURL:
+                        "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/cytoBand.txt",
+                },
                 locus: defaultSpan,
                 tracks: defaultTracks || [],
                 search: {

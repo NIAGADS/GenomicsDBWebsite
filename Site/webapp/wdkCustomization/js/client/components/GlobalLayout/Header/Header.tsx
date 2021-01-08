@@ -1,98 +1,135 @@
-import React, { useRef, useState } from "react";
-import { connect } from "react-redux";
-import { UserActions } from "wdk-client/Actions";
-import { makeMenuItems } from "ebrc-client/util/menuItems";
-import AutoCompleteSearch from "../../AutoCompleteSearch/AutoCompleteSearch";
-import ResponsiveMenu from "./Menu/ResponsiveMenu";
-import UserSection from "./Menu/UserMenu";
+import React, { useState } from "react";
+import { Box, Grid, Hidden, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/styles";
+import theme from "../../../theme";
+import { useGoto } from "../../../hooks";
+import { PrimaryActionButton } from "../../Shared";
 
-interface StoreProps {
-    isPartOfEuPathDB?: boolean;
-    location?: any;
-    user?: any;
-    siteConfig?: {
-        announcements: any;
-        buildNumber: string;
-        projectId: string;
-        releaseDate: string;
-        webAppUrl: string;
-    };
+interface Header {
+    isLoggedIn: boolean;
 }
 
-interface HeaderProps {
-    showLoginWarning: any;
-    showLoginForm: any;
-    showLogoutWarning: any;
-    makeSmallMenuItems: any;
-    loadBasketCounts: any;
-    makeMainMenuItems: any;
-}
+const menuConfig: MenuElement[] = [
+    { title: "Home", target: "/" },
+    { title: "Search Datasets", target: "/search/gwas_summary/browse" },
+    { title: "Workspace", target: "/workspace/strategies" },
+    {
+        title: "Tools",
+        items: [{ title: "Genome Browser", target: "/visualizations/browser" }],
+    },
+    { title: "Documentation", target: "#" },
+    { title: "News", target: "#" },
+];
 
-interface BuildInfo {
-    buildNumber: string;
-}
-
-const BuildInfo: React.FC<BuildInfo> = (props) => {
-    const { buildNumber } = props;
-    return <span className="build-info ml-2">Build Number: {buildNumber}</span>;
+const Header: React.FC<Header> = ({ isLoggedIn }) => {
+    return (
+        <ThemeProvider theme={theme}>
+            <Box borderBottom={1} borderColor="grey.500">
+                <Grid container className="p-2">
+                    <Hidden mdDown>
+                        <Grid container alignItems="center" item md={6}>
+                            <Typography color="primary" variant="h4">
+                                <Box fontWeight={"fontWeightBold"}>GenomicsDB</Box>
+                            </Typography>
+                        </Grid>
+                    </Hidden>
+                    <Grid item spacing={2} direction="column" container xs={12} md={6}>
+                        <Grid direction="row" wrap="nowrap" item container justify="flex-end" alignItems="center">
+                            <Grid item className="mr-2" container alignItems="center" justify="flex-end">
+                                <Typography>
+                                    <strong>Build Number: GRCh37.p13/hg19</strong>
+                                    <span className="m-3">|</span>
+                                    <span>Welcome, Guest</span>
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <PrimaryActionButton>User Login</PrimaryActionButton>
+                            </Grid>
+                        </Grid>
+                        <Grid direction="row" item justify="flex-end" container>
+                            <Grid container item xs={12} xl={9} wrap="nowrap" justify="space-evenly">
+                                {menuConfig.map((conf, i) => (
+                                    <React.Fragment key={i}>
+                                        <MenuElement {...conf} />
+                                        {i === menuConfig.length - 1 ? null : "|"}
+                                    </React.Fragment>
+                                ))}
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Box>
+        </ThemeProvider>
+    );
 };
 
-const Header: React.FC<HeaderProps & StoreProps> = (props) => {
-    const [responsiveMenuToggled, setResponsiveMenuToggled] = useState(false);
+interface MenuElement {
+    items?: MenuItemConfig[];
+    target?: string;
+    title: string;
+}
 
-    const autoCompleteContainerRef = useRef();
+interface MenuItemConfig {
+    title: string;
+    target: string;
+}
 
-    const { siteConfig, user, showLoginWarning, makeMainMenuItems } = props,
-        { buildNumber, projectId, webAppUrl } = siteConfig,
-        menuItems = makeMenuItems(props),
-        mainMenuItems = makeMainMenuItems && makeMainMenuItems(props, menuItems);
+const MenuElement: React.FC<MenuElement> = ({ items, target, title }) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null),
+        goto = useGoto(),
+        onClick = items
+            ? (e: React.MouseEvent<HTMLSpanElement>) => setAnchorEl(e.currentTarget)
+            : goto.bind(null, target);
 
     return (
-        <div className="container-fluid" id="header">
-            <div className="row justify-content-between mt-2 no-gutters">
-                <div className="col-sm-6">
-                    <BuildInfo buildNumber={buildNumber} />
-                </div>
-                <div className="col-sm-6 d-flex justify-content-end">
-                    <UserSection user={user} webAppUrl={webAppUrl} />
-                </div>
-            </div>
-            <div className="row no-gutters menu-outer-container mt-2">
-                <div className="col-sm-12 menu-container" ref={autoCompleteContainerRef}>
-                    <div className="menu-inner-container">
-                        <HamburgerToggle
-                            className="d-md-none"
-                            onToggle={setResponsiveMenuToggled.bind(null, !responsiveMenuToggled)}
-                        />
-                        <ResponsiveMenu
-                            responsiveMenuToggled={responsiveMenuToggled}
-                            webAppUrl={webAppUrl}
-                            projectId={projectId}
-                            showLoginWarning={showLoginWarning}
-                            isGuest={user ? user.isGuest : true}
-                            items={mainMenuItems}
-                        />
-                        <AutoCompleteSearch canGrow={true} />
-                    </div>
-                </div>
-            </div>
+        <div>
+            <MenuTitle onClick={onClick}>
+                {title}
+                {items ? (
+                    <>
+                        &nbsp;
+                        <span className={anchorEl ? "fa fa-caret-down" : "fa fa-caret-up"} />
+                    </>
+                ) : null}
+            </MenuTitle>
+            {items && (
+                <Menu
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                    getContentAnchorEl={null}
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={!!anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                >
+                    {items.map((i) => (
+                        <MenuItem key={i.target} onClick={goto.bind(null, i.target)}>
+                            {i.title}
+                        </MenuItem>
+                    ))}
+                </Menu>
+            )}
         </div>
     );
 };
 
-interface HamburgerToggle {
-    onToggle: { (): void };
-    className: string;
-}
+const MenuTitleStyles = (Theme: typeof theme) => ({
+    root: {
+        fontWeight: Theme.typography.fontWeightLight,
+        opacity: 0.7,
+        cursor: "pointer",
+        "&:hover": {
+            opacity: 1.0,
+        },
+    },
+});
 
-const HamburgerToggle: React.SFC<HamburgerToggle> = (props) => {
-    return (
-        <a className={"hamburger " + props.className} onClick={props.onToggle}>
-            <i className="fa fa-2x fa-bars" />
-        </a>
-    );
-};
+const MenuTitle = withStyles(MenuTitleStyles)(Typography);
 
-export default connect((state: any) => state.globalData, {
-    ...UserActions,
-})(Header);
+export default Header;

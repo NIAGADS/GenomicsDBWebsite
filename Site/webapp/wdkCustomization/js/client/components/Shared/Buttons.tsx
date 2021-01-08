@@ -11,10 +11,13 @@ const BaseStyles = (theme: typeof Theme) =>
             color: theme.palette.primary.contrastText,
             "&:hover": {
                 backgroundColor: theme.palette.primary.dark,
+            },
+            "&:focus, &:visited, &:active, &:hover": {
                 backgroundImage: "none",
             },
-            "&:focus, &:visited ": {
-                backgroundImage: "none",
+            "&:focus": {
+                backgroundColor: theme.palette.primary.light,
+                outline: "none",
             },
         },
         label: {
@@ -26,7 +29,7 @@ const BaseButton = withStyles(BaseStyles)(Button);
 
 const useButtonStyles = makeStyles((theme: typeof Theme) =>
     createStyles({
-        PrimaryActionButton: {
+        root: {
             backgroundColor: theme.palette.primary.light,
         },
     })
@@ -35,7 +38,7 @@ const useButtonStyles = makeStyles((theme: typeof Theme) =>
 export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, disabled }) => {
     const classes = useButtonStyles();
     return (
-        <BaseButton className={classes.PrimaryActionButton} disabled={disabled} onClick={onClick} variant="contained">
+        <BaseButton classes={classes} disabled={disabled} onClick={onClick} variant="contained">
             {children}
         </BaseButton>
     );

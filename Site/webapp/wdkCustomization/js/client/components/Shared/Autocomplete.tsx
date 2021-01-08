@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { StandardTextField } from "./../Shared";
+import React, { useContext, useEffect, useState } from "react";
+import { UnlabeledTextField } from "./../Shared";
 import { Autocomplete } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { get, isEmpty } from "lodash";
+import Search from "@material-ui/icons/Search";
+import { isEmpty } from "lodash";
 import { WdkServiceContext } from "wdk-client/Service/WdkService";
+import { useTheme } from "@material-ui/core";
 
 export interface SearchResult {
     type?: "result" | "summary";
@@ -17,13 +19,12 @@ export interface SearchResult {
 
 interface MultiSearch {
     canGrow?: boolean;
-    selected: SearchResult;
-    setSelected: (result: SearchResult) => void;
+    onSelect: (result: SearchResult & { searchTerm: string }) => void;
 }
 
-export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, selected, setSelected }) => {
-    const [open, setOpen] = useState(false),
-        [options, setOptions] = useState<SearchResult[]>([]),
+export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
+    const [options, setOptions] = useState<SearchResult[]>([]),
+        [selected, setSelected] = useState<SearchResult>(),
         [inputValue, setInputValue] = useState<string>(),
         [searchInProgress, setSearchInProgress] = useState(false),
         wdkService = useContext(WdkServiceContext);
@@ -44,39 +45,65 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, selected, setSelec
         }
     }, [inputValue, wdkService]);
 
+    const theme = useTheme();
+
     return (
         <Autocomplete
             autoComplete
-            autoSelect
-            onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
+            clearOnEscape
             freeSolo
+            fullWidth={canGrow}
             getOptionSelected={(option, value) => option.primary_key === value.primary_key}
-            getOptionLabel={(option) => get(option, "primary_key", "")}
+            //todo: try separating renderOption and renderTags
+            getOptionLabel={(option) => option.matched_term}
+            includeInputInList={true}
+            noOptionsText="No Results"
             options={options}
             loading={searchInProgress}
-            onChange={(event, newValue: any) => {
-                setOptions(newValue ? [newValue, ...options] : options);
-                setSelected(newValue);
+            onInputChange={(event, newInputValue) => {
+                //prevent requery on select
+                if (!options.map((o) => o.display).includes(newInputValue)) {
+                    setInputValue(newInputValue);
+                }
             }}
-            open={open}
-            value={selected}
-            renderInput={(params) => (
-                <StandardTextField
-                    {...params}
-                    label="Search"
-                    InputProps={{
-                        ...params.InputProps,
-                        placeholder: "Search",
-                        endAdornment: (
-                            <React.Fragment>
-                                {searchInProgress ? <CircularProgress color="inherit" size={20} /> : null}
-                            </React.Fragment>
-                        ),
-                    }}
-                />
+            onChange={(event: any, newValue: any) => {
+                //seems simpler to hold onto internal state
+                //controlling b/c we might want to format differently than getOptionLabel() would have us, which is the default for uncontrolled
+                setSelected(newValue);
+                onSelect({ ...newValue, searchTerm: inputValue });
+            }}
+            renderInput={(params) => {
+                const { InputLabelProps, InputProps, ...rest } = params;
+                return (
+                    <UnlabeledTextField
+                        placeholder="Enter a gene or variant identifier"
+                        {...rest}
+                        {...InputProps}
+                        startAdornment={<Search fontSize={"small"} htmlColor={theme.palette.grey[600]} />}
+                        endAdornment={searchInProgress ? <CircularProgress size={16} /> : null}
+                    />
+                );
+            }}
+            renderOption={(option) => (
+                <span>
+                    {option.display}&nbsp;
+                    <small>
+                        <em>{_truncateMatch(option.matched_term, inputValue)}</em>
+                    </small>
+                </span>
             )}
+            value={selected}
         />
     );
+};
+
+const _truncateMatch = (matchedTerm: string, searchTerm: string) => {
+    const offset = matchedTerm.toLowerCase().indexOf(searchTerm.toLowerCase()),
+        start = offset > 25 ? offset - 25 : 0,
+        length = searchTerm.length,
+        end = offset + length + 25 <= matchedTerm.length ? offset + length + 25 : matchedTerm.length,
+        openingEllipsis = start === 0 ? "" : "...",
+        closingEllipsis = end <= matchedTerm.length - 4 ? "..." : "";
+
+    return `${openingEllipsis}${matchedTerm.slice(start, end)}${closingEllipsis}`;
 };
