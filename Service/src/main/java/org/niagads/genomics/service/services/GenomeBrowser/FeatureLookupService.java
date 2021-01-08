@@ -27,12 +27,20 @@ public class FeatureLookupService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(FeatureLookupService.class);
     private static final String ID_PARAM = "id";
 
-    private static final String LOOKUP_SQL = "SELECT jsonb_agg(location)::text AS result" + NL
+    /*private static final String LOOKUP_SQL = "SELECT jsonb_agg(location)::text AS result" + NL
             + "FROM (" + NL
             + "SELECT DISTINCT jsonb_build_object('chromosome', chromosome," + NL 
             + "'start', location_start, 'end', location_end) AS location" + NL
             + "FROM NIAGADS.Variant WHERE source_id = ?" + NL
             + "UNION" + NL
+            + "SELECT jsonb_build_object('chromosome', chromosome," + NL 
+            + "'start', location_start, 'end', location_end) AS location" + NL
+            + "FROM CBIL.GeneAttributes" + NL
+            + "WHERE gene_symbol = ? OR source_id = ? OR annotation->>'entrez_id' = ?) a"; */
+
+    // TODO add variant lookup back in
+    private static final String LOOKUP_SQL = "SELECT jsonb_agg(location)::text AS result" + NL
+            + "FROM (" + NL
             + "SELECT jsonb_build_object('chromosome', chromosome," + NL 
             + "'start', location_start, 'end', location_end) AS location" + NL
             + "FROM CBIL.GeneAttributes" + NL
@@ -66,7 +74,8 @@ public class FeatureLookupService extends AbstractWdkService {
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
         SQLRunner runner = new SQLRunner(ds, LOOKUP_SQL, "track-feature-lookup-query");
-        runner.executeQuery(new Object[] {id, id, id, id}, handler);
+        //runner.executeQuery(new Object[] {id, id, id, id}, handler);
+        runner.executeQuery(new Object[] {id, id, id}, handler);
         
         List <Map <String, Object>> results = handler.getResults();
         if (!results.isEmpty())
