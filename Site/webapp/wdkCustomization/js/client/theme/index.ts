@@ -11,4 +11,19 @@ export default createMuiTheme({
             main: "#ffc665",
         },
     },
+    typography: {
+        fontFamily: [
+            "Lato",
+            "Roboto",
+            "BlinkMacSystemFont",
+            '"Segoe UI"',
+            "-apple-system",
+            '"Helvetica Neue"',
+            "Arial",
+            "sans-serif",
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(","),
+    },
 });
