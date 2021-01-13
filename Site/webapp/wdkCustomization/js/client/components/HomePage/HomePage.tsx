@@ -25,11 +25,10 @@ import NiagadsGWASTrack from "../../../lib/igv/niagadsTrack";
 
 interface SectionProps {
     webAppUrl: string;
+    endpoint: string;
 }
 
-const HomePage: React.FC<SectionProps> = (props) => {
-    const { webAppUrl } = props;
-
+const HomePage: React.FC<SectionProps> = ({ endpoint, webAppUrl }) => {
     const useBackgroundStyles = makeStyles((theme) =>
         createStyles({
             root: {
@@ -47,7 +46,7 @@ const HomePage: React.FC<SectionProps> = (props) => {
         b.loadTrack({
             name: "NG00075 Stage 1",
             type: "niagadsgwas",
-            url: "http://localhost:8080/genomics_gus_4/service/track/gwas?track=NG00075_STAGE1",
+            url: `${endpoint}/track/gwas?track=NG00075_STAGE1`,
             maxLogP: 25,
             autoscale: false,
             displayMode: "EXPANDED",
@@ -287,8 +286,9 @@ const HomePage: React.FC<SectionProps> = (props) => {
 export const buildRouteFromResult = (result: SearchResult) => `/record/${result.record_type}/${result.primary_key}`,
     buildSummaryRoute = (searchTerm: string) => `/searchResults?searchTerm=${searchTerm}`;
 
-export default connect<{ webAppUrl: string }, any, {}>((state: any) => ({
+export default connect<{ webAppUrl: string; endpoint: string }, any, {}>((state: any) => ({
     webAppUrl: state.globalData.siteConfig.webAppUrl,
+    endpoint: state.globalData.siteConfig.endpoint,
 }))(HomePage);
 
 const MainText = withStyles({
