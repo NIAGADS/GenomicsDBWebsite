@@ -7,6 +7,8 @@ const useBaseInputStyles = makeStyles({
     root: {
         backgroundColor: "white!important",
         "&:hover": { backgroundColor: "white!important" },
+        padding: "2px",
+        borderRadius: "2px",
     },
     input: {
         padding: "6px 0 7px 4px!important",
