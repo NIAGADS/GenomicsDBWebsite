@@ -1,1 +1,2 @@
-declare module "igv/dist/igv.esm";
+declare module "igv";
+declare module "igv/dist/igv.min";

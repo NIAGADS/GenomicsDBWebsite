@@ -6,7 +6,7 @@ import Container from "@material-ui/core/Container";
 import { theme } from "./../Visualizations/Igv/mui-theme";
 import TrackBrowser from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
-import NiagadsGWASTrack from "./../../../lib/igv/niagadsTrack";
+import { NiagadsGwasTrack } from "./../../../lib/igv/NiagadsTracks";
 import { ThemeProvider, makeStyles, createStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -116,7 +116,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
         },
         getTrackIsLoading = (name: string) => loadingTrack === name,
         buildBrowser = useCallback((b: any) => {
-            b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGWASTrack(config, browser));
+            b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGwasTrack(config, browser));
             setBrowser(b);
         }, []);
 

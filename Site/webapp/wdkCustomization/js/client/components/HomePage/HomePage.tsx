@@ -22,18 +22,18 @@ import {
 } from "@material-ui/core";
 
 import Browser from "./../Visualizations/Igv/IgvBrowser";
-import NiagadsGWASTrack from "../../../lib/igv/niagadsTrack";
+import { NiagadsGwasTrack } from "../../../lib/igv/NiagadsTracks";
 
-interface SectionProps {
+interface HomePage {
     webAppUrl: string;
     endpoint: string;
 }
 
-const HomePage: React.FC<SectionProps> = ({ endpoint, webAppUrl }) => {
+const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
     const goto = useGoto();
 
     const buildBrowser = (b: any) => {
-        b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGWASTrack(config, browser));
+        b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGwasTrack(config, browser));
         b.loadTrack({
             name: "NG00075 Stage 1",
             type: "niagadsgwas",

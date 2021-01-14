@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from "react";
-import igv from "../../../../lib/igv/igv";
+import igv from "igv/dist/igv.min";
 import { noop } from "lodash";
 
 interface IgvBrowser {
