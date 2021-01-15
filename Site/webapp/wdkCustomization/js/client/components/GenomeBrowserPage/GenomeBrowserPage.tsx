@@ -261,9 +261,10 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                         </Box>
                     </Drawer>
                     <MemoBroswer
-                        onBrowserLoad={buildBrowser}
                         defaultSpan={defaultSpan}
+                        onBrowserLoad={buildBrowser}
                         searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
+                        serviceUrl={serviceUrl}
                     />
                 </Grid>
                 <TrackBrowser

@@ -1,12 +1,14 @@
 import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.min";
 import { noop } from "lodash";
+import { NiagadsGeneReader } from "../../../../lib/igv/NiagadsTracks";
 
 interface IgvBrowser {
     defaultSpan: string;
     defaultTracks?: TrackConfig[];
     onBrowserLoad?: (Browser: any) => void;
     searchUrl: string;
+    serviceUrl: string;
 }
 
 export interface TrackConfig {
@@ -28,20 +30,31 @@ export interface TrackConfig {
     visibilityWindow?: number;
 }
 
-const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad, searchUrl }) => {
+const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad, searchUrl, serviceUrl }) => {
     useLayoutEffect(() => {
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
             options = {
                 reference: {
                     id: "hg19",
-                    name: "Human (CRCh37/hg19)",
+                    name: "Human (GRCh37/hg19)",
                     fastaURL:
                         "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta",
                     indexURL:
                         "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta.fai",
                     cytobandURL:
                         "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/cytoBand.txt",
+                    tracks: [
+                        {
+                            name: "Niagads gene track",
+                            displayMode: "expanded",
+                            visibilityWindow: 100000000,
+                            format: "refgene",
+                            //queryable: true,
+                            reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                            url: `${serviceUrl}/track/gene`,
+                        },
+                    ],
                 },
                 locus: defaultSpan,
                 tracks: defaultTracks || [],

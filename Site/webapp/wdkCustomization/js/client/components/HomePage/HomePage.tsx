@@ -119,6 +119,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
                                     defaultSpan="ABCA7"
                                     onBrowserLoad={buildBrowser}
+                                    serviceUrl={endpoint}
                                 />
                             </Grid>
                         </Grid>
