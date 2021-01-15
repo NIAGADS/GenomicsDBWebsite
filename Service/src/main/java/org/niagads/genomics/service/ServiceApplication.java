@@ -23,6 +23,7 @@ import org.niagads.genomics.service.services.GenomeBrowser.GWASSummaryStatistics
 import org.niagads.genomics.service.services.GenomeBrowser.TrackConfigService;
 import org.niagads.genomics.service.services.GenomeBrowser.FeatureLookupService;
 import org.niagads.genomics.service.services.GenomeBrowser.VariantTrackService;
+import org.niagads.genomics.service.services.GenomeBrowser.GeneTrackService;
 
 // import static org.gusdb.fgputil.functional.Functions.filter;
 import org.gusdb.fgputil.SetBuilder;
@@ -56,6 +57,7 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(VariantTrackService.class)
     .add(TrackConfigService.class)
     .add(FeatureLookupService.class)
+    .add(GeneTrackService.class)
     
     .toSet();
   }
