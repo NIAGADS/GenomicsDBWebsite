@@ -7,7 +7,7 @@ import {
     PrimaryLink,
     SearchResult,
     SecondaryLink,
-    BoldBody2PrimaryLink,
+    BoldPrimaryLink,
 } from "../../components/Shared";
 import { useGoto } from "../../hooks";
 import DownArrow from "@material-ui/icons/ArrowDropDown";
@@ -22,7 +22,6 @@ import {
     Hidden,
     makeStyles,
     SvgIconProps,
-    Theme,
     Typography,
     TypographyProps,
     useTheme,
@@ -31,6 +30,14 @@ import {
 
 import Browser from "./../Visualizations/Igv/IgvBrowser";
 import { NiagadsGwasTrack } from "../../../lib/igv/NiagadsTracks";
+import {
+    DarkContrastText,
+    LightContrastCaptionTextItalic,
+    LightContrastText,
+    LightContrastTextBold,
+    LightContrastTextHeading,
+    LightContrastTextSubheading,
+} from "../Shared/Typography";
 
 interface HomePage {
     webAppUrl: string;
@@ -236,9 +243,11 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         <LightContrastText>
                             The GenomicsDB provides access to summary statistics from the following ADSP meta-analyses:
                         </LightContrastText>
-
+                        <Box mt={1}></Box>
                         <Box display="flex">
-                            <BoldBody2PrimaryLink to="#">NG00065:&nbsp;</BoldBody2PrimaryLink>
+                            <Typography>
+                                <BoldPrimaryLink to="#">NG00065:&nbsp;</BoldPrimaryLink>
+                            </Typography>
                             <LightContrastTextBold>
                                 ADSP Discovery Case/Control Association Results{" "}
                             </LightContrastTextBold>
@@ -423,82 +432,6 @@ const WiderWidthRow = (props: GridProps) => (
     </Grid>
 );
 
-/* dark contrast typography */
-
-const DarkContrastText = withStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.primary.contrastText,
-        },
-    })
-)((props: TypographyProps) => <Typography variant="body1" {...props} />);
-
-/* light contrast typography */
-
-const baseGrey = 600;
-
-const LightContrastText = withStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.grey[baseGrey],
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="body1" />);
-
-const LightContrastTextSmall = withStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.grey[baseGrey],
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="body2" />);
-
-const LightContrastTextBold = withStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.grey[baseGrey],
-            fontWeight: theme.typography.fontWeightBold,
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="body1" />);
-
-const LightContrastTextHeading = withStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.grey[baseGrey],
-            paddingTop: theme.spacing(3),
-            paddingBottom: theme.spacing(3),
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="h4" />);
-
-const LightContrastTextSubheading = withStyles((theme) =>
-    createStyles({
-        root: {
-            paddingTop: theme.spacing(2),
-            paddingBottom: theme.spacing(2),
-            color: theme.palette.grey[baseGrey],
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="h5" />);
-
-const LightContrastCaptionTextStyle = (theme: Theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.grey[baseGrey],
-            fontStyle: "italic",
-        },
-    });
-
-const LightContrastCaptionTextItalic = withStyles((theme) =>
-    createStyles({
-        root: {
-            ...LightContrastCaptionTextStyle(theme).root,
-            fontStyle: "italic",
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="caption" />);
-
 interface IconCard {
     Icon: React.ComponentType<SvgIconProps>;
     text: string;
@@ -581,7 +514,7 @@ const NewsItem: React.FC<NewsItem> = ({ content, date, target, title }) => {
                     <LightContrastTextSubheading>{title}</LightContrastTextSubheading>
                 </Grid>
                 <Grid item>
-                    <LightContrastTextSmall>{content}</LightContrastTextSmall>
+                    <LightContrastText variant="body2">{content}</LightContrastText>
                 </Grid>
             </Grid>
             <Box pl={1} pr={1} pt={5} pb={5}>
