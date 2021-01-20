@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
-import { theme } from "./../Visualizations/Igv/mui-theme";
+import theme from "./../../theme";
 import TrackBrowser from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
 import { NiagadsGwasTrack } from "./../../../lib/igv/NiagadsTracks";

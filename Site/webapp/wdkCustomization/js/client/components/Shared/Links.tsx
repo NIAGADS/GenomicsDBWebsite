@@ -1,6 +1,6 @@
 import React from "react";
-import { LinkProps, Link } from "react-router-dom";
-import { createStyles, makeStyles } from "@material-ui/core";
+import { LinkProps as RouterLinkProps, Link as RouterLink } from "react-router-dom";
+import { createStyles, makeStyles, Link, withStyles, Theme } from "@material-ui/core";
 
 const useSecondaryLinkStyles = makeStyles((theme) =>
     createStyles({
@@ -13,23 +13,41 @@ const useSecondaryLinkStyles = makeStyles((theme) =>
     })
 );
 
-const usePrimaryLinkStyles = makeStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.primary.light,
-            "&:hover": {
-                color: theme.palette.primary.dark,
-            },
+const primaryLinkStyles = (theme?: Theme) => ({
+    root: {
+        color: theme.palette.primary.light,
+        "&:hover": {
+            color: theme.palette.primary.dark,
         },
-    })
-);
+    },
+});
 
-export const SecondaryLink: React.FC<LinkProps> = (props) => {
+const BoldBody2ExternalLinkStyles = (theme: Theme) => ({
+    root: {
+        ...primaryLinkStyles(theme).root,
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: theme.typography.fontWeightBold,
+    },
+});
+
+const usePrimaryLinkStyles = makeStyles(primaryLinkStyles),
+    useBoldBody2PrimaryLinkStyles = makeStyles(BoldBody2ExternalLinkStyles);
+
+export const PrimaryExternalLink = withStyles(primaryLinkStyles)(Link);
+
+export const BoldBody2ExternalLink = withStyles(BoldBody2ExternalLinkStyles)(Link);
+
+export const SecondaryLink: React.FC<RouterLinkProps> = (props) => {
     const classes = useSecondaryLinkStyles();
-    return <Link {...props} className={classes.root} />;
+    return <RouterLink {...props} className={classes.root} />;
 };
 
-export const PrimaryLink: React.FC<LinkProps> = (props) => {
+export const PrimaryLink: React.FC<RouterLinkProps> = (props) => {
     const classes = usePrimaryLinkStyles();
-    return <Link {...props} className={classes.root} />;
+    return <RouterLink {...props} className={classes.root} />;
+};
+
+export const BoldBody2PrimaryLink: React.FC<RouterLinkProps> = (props) => {
+    const classes = useBoldBody2PrimaryLinkStyles();
+    return <RouterLink {...props} className={classes.root} />;
 };

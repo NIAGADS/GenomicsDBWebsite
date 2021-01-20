@@ -47,7 +47,15 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                             </Grid>
                         </Grid>
                         <Grid direction="row" item justify="flex-end" container>
-                            <Grid container item xs={12} xl={9} wrap="nowrap" justify="space-evenly">
+                            <Grid
+                                alignItems="center"
+                                container
+                                item
+                                xs={12}
+                                xl={9}
+                                wrap="nowrap"
+                                justify="space-evenly"
+                            >
                                 {menuConfig.map((conf, i) => (
                                     <React.Fragment key={i}>
                                         <MenuElement {...conf} />

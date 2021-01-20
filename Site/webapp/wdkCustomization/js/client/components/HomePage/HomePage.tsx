@@ -1,6 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { MultiSearch, PrimaryActionButton, PrimaryLink, SearchResult, SecondaryLink } from "../../components/Shared";
+import {
+    PrimaryExternalLink,
+    MultiSearch,
+    PrimaryActionButton,
+    PrimaryLink,
+    SearchResult,
+    SecondaryLink,
+    BoldBody2PrimaryLink,
+} from "../../components/Shared";
 import { useGoto } from "../../hooks";
 import DownArrow from "@material-ui/icons/ArrowDropDown";
 import Explore from "@material-ui/icons/FindReplace";
@@ -12,9 +20,9 @@ import {
     Grid,
     GridProps,
     Hidden,
-    List,
     makeStyles,
     SvgIconProps,
+    Theme,
     Typography,
     TypographyProps,
     useTheme,
@@ -83,7 +91,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <SmallDarkContrastText>
+                                    <DarkContrastText variant="caption">
                                         Examples - Gene:{" "}
                                         <SecondaryLink to={"record/gene/ENSG00000130203"}> APOE</SecondaryLink> -
                                         Variant by RefSNP:{" "}
@@ -92,7 +100,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                         <SecondaryLink to="record/variant/19:45411941:T:C_rs429358">
                                             19:45411941:T:C
                                         </SecondaryLink>
-                                    </SmallDarkContrastText>
+                                    </DarkContrastText>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -111,10 +119,11 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
             </BlueBackgroundSection>
             {/* genome browser section */}
             <WhiteBackgroundSection>
-                <NarrowerWidthRow>
+                <WiderWidthRow>
                     <Grid container alignItems="center" item direction="column" spacing={6}>
-                        <Grid item container direction="row">
-                            <Grid item xs={12}>
+                        <LightContrastTextHeading>Explore the genomic context of AD variants</LightContrastTextHeading>
+                        <Grid item container spacing={4} direction="row">
+                            <Grid item xs={12} md={8}>
                                 <MemoBrowser
                                     searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
                                     defaultSpan="ABCA7"
@@ -122,21 +131,126 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     serviceUrl={endpoint}
                                 />
                             </Grid>
+                            <Grid container item xs={12} md={4} alignContent="space-between" justify="center">
+                                <LightContrastText>
+                                    The NIAGADS genome browser enables researchers to visually inspect and browse GWAS
+                                    summary statistics datasets in a broader genomic context. Our genome browser can
+                                    also be used to compare NIAGADS GWAS summary statistics tracks to each other,
+                                    against annotated gene or variant tracks, or to the more than &gt;50,000 functional
+                                    genomics tracks from the NIAGADS <PrimaryLink to="#">FILER</PrimaryLink> functional
+                                    genomics repository.
+                                </LightContrastText>
+                                <PrimaryActionButton onClick={goto.bind(null, `/visualizations/browser`)}>
+                                    Full Browser View
+                                </PrimaryActionButton>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </WiderWidthRow>
+            </WhiteBackgroundSection>
+            <GreyBackgroundSection>
+                <NarrowerWidthRow>
+                    <Grid container item justify="center">
+                        <LightContrastTextHeading>About the Project</LightContrastTextHeading>
+                        <LightContrastText>
+                            The Genomics Database is developed by a team of researchers at the University of
+                            Pennsylvania as part of the{" "}
+                            <PrimaryExternalLink href="https://www.niagads.org/">
+                                National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site
+                            </PrimaryExternalLink>{" "}
+                            (NIAGADS), a national genetics repository created by NIA to facilitate access to genotypic
+                            data for the study of the genetics of late-onset Alzheimer's disease. We welcome the
+                            involvement of interested researchers.{" "}
+                            <PrimaryExternalLink href="#">Click here to learn more</PrimaryExternalLink> about
+                            contributing data or making formal data access requests. Or{" "}
+                            <PrimaryExternalLink href="#">contact us</PrimaryExternalLink> for more information. The
+                            GenomicsDB is a collaboration among the following organizations which may also provide
+                            funding or governance:
+                        </LightContrastText>
+                    </Grid>
+                    <Grid container item spacing={4} direction="row" justify="center" alignItems="center">
+                        <Grid item>
+                            <img height="30px" src={`${webAppUrl}/images/nih-logo.svg`} />
                         </Grid>
                         <Grid item>
+                            <img height="30px" src={`${webAppUrl}/images/psom_logo_blue.png`} />
+                        </Grid>
+                        <Grid item>
+                            <img height="50px" src={`${webAppUrl}/images/adsp-logo.svg`} />
+                        </Grid>
+                    </Grid>
+                </NarrowerWidthRow>
+            </GreyBackgroundSection>
+            <WhiteBackgroundSection>
+                <NarrowerWidthRow>
+                    <Grid item container justify="center">
+                        <LightContrastTextHeading>ADSP Collaboration</LightContrastTextHeading>
+                        <LightContrastText>
+                            The NIAGADS Genomics Database has an ongoing collaboration with the{" "}
+                            <PrimaryExternalLink href="#">Alzheimer's Disease Sequencing Project</PrimaryExternalLink>{" "}
+                            (ADSP). The GenomicsDB allows browsing, searching, and analysis of variants and genes linked
+                            to the risk of developing late-onset Alzheimer's disease that were identified through the
+                            ADSP's sequencing efforts and downstream meta-analyses.
+                        </LightContrastText>
+                    </Grid>
+                    <Grid container item direction="row" justify="flex-start">
+                        <Grid item xs={12}>
+                            <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
+                        </Grid>
+                        <Grid container item spacing={5} direction="row">
+                            <Grid item xs={12} sm={6}>
+                                <LightContrastText>
+                                    Annotated variants in the NIAGADS GenomicsDB include SNPs and short-indels
+                                    identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome
+                                    sequencing (WES) efforts. These variants are highlighted in variant and dataset
+                                    reports and their quality control status is provided. Annotated tracks are available
+                                    for both the WES and WGS variants on the genome browser.
+                                </LightContrastText>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Grid item container direction="column" wrap="nowrap">
+                                    <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
+                                    <LightContrastCaptionTextItalic>
+                                        From Butkiewicz et al. (2018) Functional annotation of genomic variants in
+                                        studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
+                                        (after Table 1). PMID:{" "}
+                                        <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
+                                    </LightContrastCaptionTextItalic>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid container item direction="row" justify="flex-start">
+                        <LightContrastTextSubheading>ADSP Annotation</LightContrastTextSubheading>
+                        <LightContrastText>
+                            As part of their sequencing effort, the ADSP developed an annotation pipeline that
+                            efficiently integrates standard annotations and ranks potential variant impacts according to
+                            predicted effect (such as codon changes, loss of function, and potential deleteriousness)
+                            (PMID: <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
+                            GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants are
+                            annotated in real-time.
+                        </LightContrastText>
+                    </Grid>
+                    <Grid container item direction="column">
+                        <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
+                        <LightContrastText>
+                            The GenomicsDB provides access to summary statistics from the following ADSP meta-analyses:
+                        </LightContrastText>
+
+                        <Box display="flex">
+                            <BoldBody2PrimaryLink to="#">NG00065:&nbsp;</BoldBody2PrimaryLink>
+                            <LightContrastTextBold>
+                                ADSP Discovery Case/Control Association Results{" "}
+                            </LightContrastTextBold>
+                        </Box>
+                        <Box>
                             <LightContrastText>
-                                The NIAGADS genome browser enables researchers to visually inspect and browse GWAS
-                                summary statistics datasets in a broader genomic context. Our genome browser can also be
-                                used to compare NIAGADS GWAS summary statistics tracks to each other, against annotated
-                                gene or variant tracks, or to the more than &gt;50,000 functional genomics tracks from
-                                the NIAGADS <PrimaryLink to="#">FILER</PrimaryLink> functional genomics repository.
+                                These datasets contain results from <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
+                                <PrimaryLink to="#">gene-based rare variant</PrimaryLink>
+                                aggregation tests, performed separately by ancestry (European ancestry, Caribbean
+                                Hispanic) and meta-analyzed.
                             </LightContrastText>
-                        </Grid>
-                        <Grid item>
-                            <PrimaryActionButton onClick={goto.bind(null, `/visualizations/browser`)}>
-                                Full Browser View
-                            </PrimaryActionButton>
-                        </Grid>
+                        </Box>
                     </Grid>
                 </NarrowerWidthRow>
             </WhiteBackgroundSection>
@@ -160,7 +274,6 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             <Grid item container spacing={3} xs={12}>
                                 <Grid item>
                                     <QuickStat
-                                        title="yielding"
                                         type="variants"
                                         mainText="250+ million"
                                         captionText="annotated by AD/ADRD GWAS summary statistics"
@@ -189,83 +302,11 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 </NarrowerWidthRow>
             </GreyBackgroundSection>
             <WhiteBackgroundSection>
-                <NarrowerWidthRow>
-                    <Grid container direction="row" justify="center">
-                        <Box p={3}>
-                            <LightContrastTextSubheading>
-                                Alzheimer's Disease Sequencing Project
-                            </LightContrastTextSubheading>
-                        </Box>
-                    </Grid>
-                    <Grid item container spacing={4} direction="row" justify="center">
-                        <Grid container item alignContent="flex-start" xs={12} md={6}>
-                            <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
-                            <LightContrastText>
-                                Variants in the NIAGADS GenomicsDB include the >29 million SNPs and ~50,000 short-indels
-                                identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome sequencing
-                                (WES) efforts (PMID: 29590295). These variants are highlighted in variant and dataset
-                                reports and their quality control status is provided. Annotated tracks are available for
-                                both the WES and WGS variants on the genome browser.
-                            </LightContrastText>
-                        </Grid>
-                        <Grid
-                            container
-                            item
-                            alignContent="flex-start"
-                            justify="space-between"
-                            direction="row"
-                            xs={12}
-                            md={6}
-                        >
-                            <LightContrastTextSubheading>Annotation</LightContrastTextSubheading>
-                            <LightContrastText>
-                                Variants in the NIAGADS GenomicsDB include the >29 million SNPs and ~50,000 short-indels
-                                identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome sequencing
-                                (WES) efforts (PMID: 29590295). These variants are highlighted in variant and dataset
-                                reports and their quality control status is provided. Annotated tracks are available for
-                                both the WES and WGS variants on the genome browser.
-                            </LightContrastText>
-                            <Box>
-                                <LightContrastTextBold>GenomicsDB&nbsp;</LightContrastTextBold>
-                                <LightContrastText>
-                                    provides access to the following ADSP meta-analysis summary statistics datasets:
-                                </LightContrastText>
-                                <Box ml={1}>
-                                    <List>
-                                        <LightContrastTextBold>NG00065:&nbsp;</LightContrastTextBold>
-                                        <LightContrastText>
-                                            Gene-level genetic evidence for AD based on analysis of exonic ADSP variants
-                                        </LightContrastText>
-                                    </List>
-                                    <List>
-                                        <LightContrastTextBold>NG00065:&nbsp;</LightContrastTextBold>
-                                        <LightContrastText>
-                                            Single-variant analysis for AD-risk association using exonic ADSP variants
-                                        </LightContrastText>
-                                    </List>
-                                </Box>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    {/* image row */}
-                    <Grid container item direction="row" justify="center">
-                        <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
-                        <LightContrastText>
-                            Overview of variants annotated from the Discovery Phase of the ADSP. 578 individuals from
-                            111 families were whole-genome sequenced (WES), and 10,913 unrelated cases and controls were
-                            whole-exome (WES) sequenced. From Butkiewicz et al. (2018) Functional annotation of genomic
-                            variants in studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
-                            (after Table 1). PMID: 29590295
-                        </LightContrastText>
-                    </Grid>
-                </NarrowerWidthRow>
-            </WhiteBackgroundSection>
-            <GreyBackgroundSection>
                 <WiderWidthRow>
                     <Grid direction="column" alignItems="center" container>
                         <Grid item>
                             <Box p={3}>
-                                <LightContrastTextSubheading>Latest News</LightContrastTextSubheading>
+                                <LightContrastTextHeading>Latest Updates</LightContrastTextHeading>
                             </Box>
                         </Grid>
                         <Grid item container spacing={10} justify="center" direction="row">
@@ -296,7 +337,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         </Grid>
                     </Grid>
                 </WiderWidthRow>
-            </GreyBackgroundSection>
+            </WhiteBackgroundSection>
         </Grid>
     );
 };
@@ -371,49 +412,26 @@ const BlueBackgroundSection = withStyles((theme) => ({
 }))(Section);
 
 const NarrowerWidthRow = (props: GridProps) => (
-    <Grid {...props} spacing={2} container direction="row" item alignItems="center" justify="center" xs={12} md={10}>
+    <Grid {...props} spacing={3} container direction="row" item alignItems="center" justify="center" xs={12} md={10}>
         {props.children}
     </Grid>
 );
 
 const WiderWidthRow = (props: GridProps) => (
-    <Grid {...props} spacing={2} container direction="row" item alignItems="center" justify="center" xs={12} md={12}>
+    <Grid {...props} spacing={3} container direction="row" item alignItems="center" justify="center" xs={12} md={12}>
         {props.children}
     </Grid>
 );
-
-const fontSizes = {
-    small: "14px",
-    medium: "16px",
-    large: "20px",
-};
-
-const fontWeights = {
-    bold: 700,
-    regular: 400,
-};
 
 /* dark contrast typography */
 
 const DarkContrastText = withStyles((theme) =>
     createStyles({
-        caption: {
+        root: {
             color: theme.palette.primary.contrastText,
-            fontSize: fontSizes.medium,
-            fontWeight: fontWeights.regular,
         },
     })
-)((props: TypographyProps) => <Typography variant="caption" {...props} />);
-
-const SmallDarkContrastText = withStyles((theme) =>
-    createStyles({
-        caption: {
-            color: theme.palette.primary.contrastText,
-            fontWeight: fontWeights.regular,
-            size: fontSizes.small,
-        },
-    })
-)((props: TypographyProps) => <Typography variant="caption" {...props} />);
+)((props: TypographyProps) => <Typography variant="body1" {...props} />);
 
 /* light contrast typography */
 
@@ -421,33 +439,65 @@ const baseGrey = 600;
 
 const LightContrastText = withStyles((theme) =>
     createStyles({
-        caption: {
+        root: {
             color: theme.palette.grey[baseGrey],
-            fontSize: fontSizes.medium,
-            fontWeight: fontWeights.regular,
         },
     })
-)((props: TypographyProps) => <Typography variant="caption" {...props} />);
+)((props: TypographyProps) => <Typography {...props} variant="body1" />);
+
+const LightContrastTextSmall = withStyles((theme) =>
+    createStyles({
+        root: {
+            color: theme.palette.grey[baseGrey],
+        },
+    })
+)((props: TypographyProps) => <Typography {...props} variant="body2" />);
 
 const LightContrastTextBold = withStyles((theme) =>
     createStyles({
-        caption: {
+        root: {
             color: theme.palette.grey[baseGrey],
-            fontSize: fontSizes.medium,
-            fontWeight: fontWeights.bold,
+            fontWeight: theme.typography.fontWeightBold,
         },
     })
-)((props: TypographyProps) => <Typography variant="caption" {...props} />);
+)((props: TypographyProps) => <Typography {...props} variant="body1" />);
+
+const LightContrastTextHeading = withStyles((theme) =>
+    createStyles({
+        root: {
+            color: theme.palette.grey[baseGrey],
+            paddingTop: theme.spacing(3),
+            paddingBottom: theme.spacing(3),
+        },
+    })
+)((props: TypographyProps) => <Typography {...props} variant="h4" />);
 
 const LightContrastTextSubheading = withStyles((theme) =>
     createStyles({
-        caption: {
+        root: {
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(2),
             color: theme.palette.grey[baseGrey],
-            fontSize: fontSizes.large,
-            fontWeight: fontWeights.bold,
         },
     })
-)((props: TypographyProps) => <Typography variant="caption" {...props} />);
+)((props: TypographyProps) => <Typography {...props} variant="h5" />);
+
+const LightContrastCaptionTextStyle = (theme: Theme) =>
+    createStyles({
+        root: {
+            color: theme.palette.grey[baseGrey],
+            fontStyle: "italic",
+        },
+    });
+
+const LightContrastCaptionTextItalic = withStyles((theme) =>
+    createStyles({
+        root: {
+            ...LightContrastCaptionTextStyle(theme).root,
+            fontStyle: "italic",
+        },
+    })
+)((props: TypographyProps) => <Typography {...props} variant="caption" />);
 
 interface IconCard {
     Icon: React.ComponentType<SvgIconProps>;
@@ -486,12 +536,12 @@ const IconCardIcon: React.FC<{ Icon: React.ComponentType<SvgIconProps> }> = ({ I
 interface QuickStat {
     captionText: string;
     mainText: string;
-    title: string;
+    title?: string;
     type: "variants";
 }
 
 const QuickStat: React.FC<QuickStat> = ({ captionText, mainText, title, type }) => (
-    <Box p={1}>
+    <Box>
         <LightContrastText>{title}</LightContrastText>
         <QuickStatMainText>{mainText}</QuickStatMainText>
         <Box>
@@ -531,10 +581,10 @@ const NewsItem: React.FC<NewsItem> = ({ content, date, target, title }) => {
                     <LightContrastTextSubheading>{title}</LightContrastTextSubheading>
                 </Grid>
                 <Grid item>
-                    <LightContrastText>{content}</LightContrastText>
+                    <LightContrastTextSmall>{content}</LightContrastTextSmall>
                 </Grid>
             </Grid>
-            <Box pl={1} pr={1} pt={6} pb={6}>
+            <Box pl={1} pr={1} pt={5} pb={5}>
                 <PrimaryActionButton onClick={goto.bind(null, target)}>Learn More</PrimaryActionButton>
             </Box>
         </Grid>

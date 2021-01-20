@@ -25,5 +25,24 @@ export default createMuiTheme({
             '"Segoe UI Emoji"',
             '"Segoe UI Symbol"',
         ].join(","),
+        //these are mostly default fontsizes, but listing here for reference
+        caption: {
+            fontSize: "14px",
+        },
+        body2: {
+            fontSize: "16px",
+        },
+        body1: {
+            fontSize: "18px",
+        },
+        h6: {
+            fontSize: "20px",
+        },
+        h5: {
+            fontSize: "24px",
+        },
+        h4: {
+            fontSize: "34px",
+        },
     },
 });
