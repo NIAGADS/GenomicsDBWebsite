@@ -29,7 +29,7 @@ import com.google.common.base.Enums;
 @Path("track/config")
 public class TrackConfigService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(TrackConfigService.class);
-    private static final String TYPE_PARAM = "type";
+    private static final String TYPE_PARAM = "feature_type";
     private static final String TRACK_PARAM = "track"; 
     private static final String DATASOURCE_PARAM = "source";
 
@@ -37,7 +37,8 @@ public class TrackConfigService extends AbstractWdkService {
         + "SELECT 'GENCODE_V19_GENE'::text AS track, 'gene'::text AS track_type, 'GENCODE|ENSEMBL'::text AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', 'ENSEMBL_GENE'," + NL
-        + "'type', 'refgene'," + NL
+        + "'feature_type', 'gene'," + NL
+        + "'track_type', 'refgene'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/gene'," + NL
         + "'label', 'Ensembl Genes'," + NL
         + "'source', 'GENCODE|ENSEMBL'," + NL
@@ -49,7 +50,8 @@ public class TrackConfigService extends AbstractWdkService {
         + "SELECT track, 'variant'::text AS track_type, CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', track," + NL
-        + "'type', 'variant'," + NL
+        + "'feature_type', 'variant'," + NL
+        + "'track_type', 'niagadsvariant'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
         + "'label', track_name," +  NL
         + "'name', track_name," +  NL
@@ -73,6 +75,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "SELECT track, characteristic_type, characteristic" + NL
         + "FROM NIAGADS.ProtocolAppNodeCharacteristic" + NL
         + "WHERE characteristic_type != 'covariate specification'" + NL
+        + "AND characteristic_type != 'covariate_list'" + NL
         + "AND characteristic_type != 'full_list')";
 
     private static final String GWAS_TRACK_SQL = GWAS_TRACK_PHENOTYPE_CTE + ", GwasTracks AS (" + NL 
@@ -80,7 +83,8 @@ public class TrackConfigService extends AbstractWdkService {
         + "jsonb_build_object(" + NL
         + "'track', ta.track," + NL
         + "'label', ta.name," + NL
-        + "'type', 'gwas_summary_statistics'," + NL
+        + "'feature_type', 'gwas'," + NL
+        + "'track_type', 'niagadsgwas'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/gwas'," + NL
         + "'source', 'NIAGADS'," + NL
         + "'description', ta.description," + NL
@@ -106,10 +110,11 @@ public class TrackConfigService extends AbstractWdkService {
         + "jsonb_build_object(" + NL
         + "'track', ta.track," + NL
         + "'label', ta.name," + NL
-        + "'type', 'annotation'," + NL
+        + "'track_type', 'annotation'," + NL
+        + "'feature_type', 'enhancer'," + NL
         + "'path', '@FILER_TRACK_URL@' || '/' || pan.uri,"  + NL
         + "'source', 'ROADMAP|FILER'," + NL
-        + "'name', ta.name," + NL
+        + "'name', replace(ta.name,'ChromHMM 15-state model for', 'Roadmap Enhancers:')," + NL
         + "'phenotypes', json_agg(jsonb_build_object(p.characteristic_type, p.characteristic))) AS track_config" + NL
         + "FROM NIAGADS.TrackAttributes ta, Phenotypes p, Phenotypes enhancers," + NL
         + "Study.ProtocolAppNode pan" + NL
@@ -263,38 +268,6 @@ public class TrackConfigService extends AbstractWdkService {
         
         return Response.ok(response).build();
     }
-
-
-    private JSONObject validateTrackTypes(String trackTypes) {
-        JSONArray valid = new JSONArray();
-        JSONArray invalid = new JSONArray();
-        if (dataSources != null) {
-            List<String> sources = Arrays.asList(dataSources.split(","));
-            for (String s:sources) {
-                if (isValidDataSource(s.toUpperCase())) {
-                    valid.put(s.toUpperCase());
-                }
-                else {
-                    invalid.put(s);
-                }
-            }
-
-            JSONObject result = new JSONObject();
-            if (valid.length() > 0) {
-                result.put("valid_string", buildDataSourceString(valid));
-            }
-
-            result.put("valid", valid); 
-            result.put("invalid", invalid); // for error reporting
-            result.put("valid_count", valid.length());
-            result.put("invalid_count", invalid.length());
-            LOG.debug("Datasource Validation Result: " + result.toString());
-            return result;
-        }
-    
-        return null;
-    }
-
 
     private JSONObject validateDataSources(String dataSources) {
         JSONArray valid = new JSONArray();
