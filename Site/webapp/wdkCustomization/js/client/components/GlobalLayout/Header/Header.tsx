@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Box, Grid, Hidden, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
+import { Box, Grid, Hidden, Menu, MenuItem, Typography, TypographyProps, withStyles } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "../../../theme";
 import { useGoto } from "../../../hooks";
 import { PrimaryActionButton } from "../../Shared";
+import { Home } from "@material-ui/icons";
 
 interface Header {
     isLoggedIn: boolean;
@@ -28,9 +29,7 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                 <Grid container className="p-2">
                     <Hidden mdDown>
                         <Grid container alignItems="center" item md={6}>
-                            <Typography color="primary" variant="h4">
-                                <Box fontWeight={"fontWeightBold"}>GenomicsDB</Box>
-                            </Typography>
+                            <SiteTitle>GenomicsDB</SiteTitle>
                         </Grid>
                     </Hidden>
                     <Grid item spacing={2} direction="column" container xs={12} md={6}>
@@ -92,6 +91,7 @@ const MenuElement: React.FC<MenuElement> = ({ items, target, title }) => {
     return (
         <div>
             <MenuTitle onClick={onClick}>
+                {title === "Home" && <Home />}
                 {title}
                 {items ? (
                     <>
@@ -118,7 +118,7 @@ const MenuElement: React.FC<MenuElement> = ({ items, target, title }) => {
                 >
                     {items.map((i) => (
                         <MenuItem key={i.target} onClick={goto.bind(null, i.target)}>
-                            {i.title}
+                            <MenuTitle>{i.title}</MenuTitle>
                         </MenuItem>
                     ))}
                 </Menu>
@@ -130,14 +130,22 @@ const MenuElement: React.FC<MenuElement> = ({ items, target, title }) => {
 const MenuTitleStyles = (Theme: typeof theme) => ({
     root: {
         fontWeight: Theme.typography.fontWeightLight,
-        opacity: 0.7,
         cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
         "&:hover": {
-            opacity: 1.0,
+            color: theme.palette.grey[500],
         },
     },
 });
 
 const MenuTitle = withStyles(MenuTitleStyles)(Typography);
+
+const SiteTitle = withStyles((theme) => ({
+    root: { cursor: "pointer", fontWeight: theme.typography.fontWeightBold },
+}))((props: TypographyProps) => {
+    const goto = useGoto();
+    return <Typography {...props} color="primary" onClick={goto.bind(null, "/")} variant="h4" />;
+});
 
 export default Header;

@@ -71,8 +71,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                 if (!popoverData || !popoverData.length) {
                     return false;
                 }
-
-                //if we're on a niagads gwas track, transform
+                //todo: abstract this away, and use type, not name
                 const ppd =
                     track.config.name === "NG00027 stage 12"
                         ? [
