@@ -327,7 +327,7 @@ const getLoadedTracks = (browser: any): string[] =>
 const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig, serviceUrl: string): NiagadsBrowserTrackConfig => {
     const { phenotypes, ...rest } = track,
         ret = { url: "unknown", trackType: "unknown", ...rest } as NiagadsBrowserTrackConfig;
-    if (track.source === "NIAGADS" && track.type.includes("gwas")) {
+    if (track.source === "NIAGADS" && track.featureType.includes("gwas")) {
         ret.trackType = "niagadsgwas";
         ret.url = `${serviceUrl}/track/gwas?track=${ret.track}`;
     }
@@ -341,17 +341,20 @@ const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig, serviceUrl: stri
 };
 
 interface NiagadsBaseTrackConfig {
-    description: string;
-    label: string;
-    name: string;
+    description?: string; //for browser
+    endpoint?: string; //for async tracks only
+    featureType: string; //gene, variant, enhancer, etc
+    label: string; // for track popover
+    path?: string; //for filer -- this is the path to the file, rather than url
+    name: string; //for display in track browser
     record: string;
     source: string;
-    track: string;
-    type: string;
+    track: string; //unique id (pass to backend for async)
+    trackType: string; //igv track type
 }
 
 interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
-    phenotypes: { [key: string]: string }[];
+    phenotypes: { [key: string]: string }[]; //for browser filter
 }
 
 export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
@@ -360,38 +363,3 @@ export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
     trackType: string;
     url: string;
 }
-
-/* 
-
-    temp, for screenshots only
-
-*/
-
-const _getFilerTracks = (): NiagadsBrowserTrackConfig[] => [
-    /* {
-        label: "DNase-seq on human HA-h",
-        description: "foo",
-        name: "DNase-seq on human HA-h",
-        record: "foo",
-        source: "FILER",
-        track: "ENCFF835DIK",
-        phenotypes: "foo",
-        trackType: "bed",
-        type: "bed",
-        url:
-            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg19/1/ENCFF835DIK.bed.gz",
-    } ,*/
-    {
-        label: "DNase-seq on human HA-h",
-        description: "foo",
-        name: "DNase-seq on human HA-h",
-        record: "foo",
-        source: "FILER",
-        track: "ENCFF316JVA",
-        phenotypes: "foo",
-        trackType: "bed",
-        type: "bed",
-        url:
-            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg19/1/ENCFF316JVA.bed.gz",
-    },
-];

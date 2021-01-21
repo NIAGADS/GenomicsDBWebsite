@@ -53,6 +53,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                             //queryable: true,
                             reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
                             url: `${serviceUrl}/track/gene`,
+                            id: "foo",
                         },
                     ],
                 },
@@ -72,6 +73,28 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                     return false;
                 }
                 //todo: abstract this away, and use type, not name
+
+                //replace old ppd with new for some tracks
+
+                /* 
+
+                customPopOverConfig : [
+                    {
+                        trackType: 'foo',
+                        replace: false,
+                        fields: {
+                            name: 'variant',
+                            type: 'externalLink'
+                            value: {
+                                name: (ppd) => 'foo',
+                                target: (ppd) => 'bar'
+                            }
+                        }
+                    }
+                ]
+
+*/
+
                 const ppd =
                     track.config.name === "NG00027 stage 12"
                         ? [
@@ -91,23 +114,24 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                           ]
                         : popoverData;
 
-                ppd.forEach((nameValue: { name: string; value: string }) => {
-                    if (nameValue.name) {
+                //alter existing ppd for some tracks
+                ppd.forEach((config: { name: string; value: string }) => {
+                    if (config.name) {
                         const value =
-                            nameValue.name.toLowerCase() === "gene_id"
+                            config.name.toLowerCase() === "gene_id"
                                 ? '<a href="https://beta.niagads.org/genomics/app/record/gene/' +
                                   //ens ids have dot incrememnts, stripping for now
-                                  nameValue.value.replace(/\..+/, "") +
+                                  config.value.replace(/\..+/, "") +
                                   '">' +
-                                  nameValue.value +
+                                  config.value +
                                   "</a>"
-                                : nameValue.value;
+                                : config.value;
 
                         markup +=
                             '<tr><td class="igv-popover-td">' +
                             '<div class="igv-popover-name-value">' +
                             '<span class="igv-popover-name">' +
-                            nameValue.name +
+                            config.name +
                             "</span>" +
                             '<span class="igv-popover-value">' +
                             value +
@@ -116,7 +140,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                             "</td></tr>";
                     } else {
                         // not a name/value pair
-                        markup += "<tr><td>" + nameValue.toString() + "</td></tr>";
+                        markup += "<tr><td>" + config.toString() + "</td></tr>";
                     }
                 });
 

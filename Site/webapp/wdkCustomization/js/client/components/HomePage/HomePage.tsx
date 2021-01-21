@@ -255,9 +255,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         <Box>
                             <LightContrastText>
                                 These datasets contain results from <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
-                                <PrimaryLink to="#">gene-based rare variant</PrimaryLink>
-                                aggregation tests, performed separately by ancestry (European ancestry, Caribbean
-                                Hispanic) and meta-analyzed.
+                                <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation tests,
+                                performed separately by ancestry (European ancestry, Caribbean Hispanic) and
+                                meta-analyzed.
                             </LightContrastText>
                         </Box>
                     </Grid>
