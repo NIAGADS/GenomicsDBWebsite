@@ -263,7 +263,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                     <MemoBroswer
                         defaultSpan={defaultSpan}
                         onBrowserLoad={buildBrowser}
-                        searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
+                        searchUrl={`${serviceUrl}/track/feature?id=`}
                         serviceUrl={serviceUrl}
                     />
                 </Grid>
@@ -285,7 +285,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
 
 export default connect((state: any) => ({
     webAppUrl: state.globalData.siteConfig.webAppUrl,
-    serviceUrl: `${window.location.origin}${state.globalData.siteConfig.endpoint}`,
+    serviceUrl: state.globalData.siteConfig.endpoint,
 }))(GenomeBrowserPage);
 
 export interface TrackConfig {

@@ -147,7 +147,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     genomics tracks from the NIAGADS <PrimaryLink to="#">FILER</PrimaryLink> functional
                                     genomics repository.
                                 </LightContrastText>
-                                <PrimaryActionButton onClick={goto.bind(null, `/visualizations/browser`)}>
+                                <PrimaryActionButton onClick={goto.bind(null, `/visualizations/browser?locus=ABCA7`)}>
                                     Full Browser View
                                 </PrimaryActionButton>
                             </Grid>
