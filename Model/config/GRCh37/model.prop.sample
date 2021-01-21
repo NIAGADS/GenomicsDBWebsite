@@ -14,6 +14,10 @@ DONT_EMAIL_NEW_USER=true
 WDK_VERSION=API_BLD_42
 JBROWSE_VERSION=1.11.6
 
+GENOME_BUILD=GRCh37.p13
+GENCODE_VERSION=v19
+dbSNP_VERSION=151
+
 SITE_ADMIN_EMAIL=
 
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
@@ -140,3 +144,5 @@ UCSC_BROWSER_URL_GRCh37=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&positio
 HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
 
 EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
+
+FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB
