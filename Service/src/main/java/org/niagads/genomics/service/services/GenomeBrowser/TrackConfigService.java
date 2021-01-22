@@ -111,6 +111,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "'track', ta.track," + NL
         + "'name', ta.name," + NL
         + "'track_type', 'annotation'," + NL
+        + "'format', 'bed'," + NL
         + "'feature_type', 'enhancer'," + NL
         + "'path', '@FILER_TRACK_URL@' || '/' || pan.uri,"  + NL
         + "'source', 'ROADMAP|FILER'," + NL
