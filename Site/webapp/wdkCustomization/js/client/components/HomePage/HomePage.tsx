@@ -29,7 +29,6 @@ import {
 } from "@material-ui/core";
 
 import Browser from "./../Visualizations/Igv/IgvBrowser";
-import { NiagadsGwasTrack } from "../../../lib/igv/NiagadsTracks";
 import {
     DarkContrastText,
     LightContrastCaptionTextItalic,
@@ -48,7 +47,6 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
     const goto = useGoto();
 
     const buildBrowser = (b: any) => {
-        b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGwasTrack(config, browser));
         b.loadTrack({
             name: "NG00075 Stage 1",
             type: "niagadsgwas",

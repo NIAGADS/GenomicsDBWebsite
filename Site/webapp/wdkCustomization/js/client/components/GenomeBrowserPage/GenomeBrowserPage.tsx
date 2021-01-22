@@ -342,6 +342,7 @@ interface NiagadsBaseTrackConfig {
     description?: string; //for browser
     endpoint?: string; //for async tracks only
     feature_type: string; //gene, variant, enhancer, etc
+    format?: string;
     label: string; // for track popover
     path?: string; //for filer -- this is the path to the file, rather than url
     name: string; //for display in track browser
@@ -356,7 +357,6 @@ interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
 }
 
 export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
-    format?: string;
     phenotypes: string;
     trackType: string;
     url: string;

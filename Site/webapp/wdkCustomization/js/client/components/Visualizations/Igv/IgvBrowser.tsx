@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.min";
 import { noop } from "lodash";
-import { NiagadsGeneReader } from "../../../../lib/igv/NiagadsTracks";
+import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
 
 interface IgvBrowser {
     defaultSpan: string;
@@ -65,6 +65,15 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
             };
 
         igv.createBrowser(igvDiv, options).then((browser: any) => {
+            browser.addTrackToFactory(
+                "niagadsgwas",
+                (config: any, browser: any) => new NiagadsGwasTrack(config, browser)
+            );
+            browser.addTrackToFactory(
+                "niagadsvariant",
+                (config: any, browser: any) => new NiagadsVariantTrack(config, browser)
+            );
+
             browser.on("trackclick", (track: any, popoverData: any) => {
                 let markup = '<table class="igv-popover-table">';
 
@@ -149,6 +158,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                 return markup;
             });
 
+            //todo: wrap this, or add new tracks
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
     }, [defaultSpan, defaultTracks, onBrowserLoad]);
