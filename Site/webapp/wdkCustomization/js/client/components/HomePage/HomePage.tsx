@@ -155,6 +155,77 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
             </WhiteBackgroundSection>
             <GreyBackgroundSection>
                 <NarrowerWidthRow>
+                    <Grid item container direction="row" spacing={4}>
+                        <Grid container item justify="center" xs={12} md={6}>
+                            <Grid item container spacing={3} xs={12}>
+                                <Grid item>
+                                    <QuickStat
+                                        type="variants"
+                                        mainText="250+ million"
+                                        captionText="annotated by AD/ADRD GWAS summary statistics"
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <QuickStat
+                                        title="including"
+                                        type="variants"
+                                        mainText="29+ million"
+                                        captionText="flagged by the Alzheimer’s Disease Sequencing Project (ADSP)"
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container alignItems="center" item xs={12} md={6}>
+                            <LightContrastText>
+                                As of December 2020, the GenomicsDB provides unrestricted access to genome-wide summary
+                                statistics p-values from >70 GWAS and ADSP meta-analysis. Variants in these datasets are
+                                consistently annotated using the ADSP Annotation pipeline and linked to gene and
+                                functional genomics data to help not only make these data accessible, but also
+                                interpretable in the broader genomic context.
+                            </LightContrastText>
+                        </Grid>
+                    </Grid>
+                </NarrowerWidthRow>
+            </GreyBackgroundSection>
+            <WhiteBackgroundSection>
+                <WiderWidthRow>
+                    <Grid direction="column" alignItems="center" container>
+                        <Grid item>
+                            <Box p={3}>
+                                <LightContrastTextHeading>Latest Updates</LightContrastTextHeading>
+                            </Box>
+                        </Grid>
+                        <Grid item container spacing={10} justify="center" direction="row">
+                            <Grid container item xs={12} md={4}>
+                                <NewsItem
+                                    date="January 1 2021"
+                                    title="News #1"
+                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
+                                    target="#"
+                                />
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <NewsItem
+                                    date="January 1 2021"
+                                    title="News #2"
+                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
+                                    target="#"
+                                />
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <NewsItem
+                                    date="January 1 2021"
+                                    title="News #3"
+                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
+                                    target="#"
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </WiderWidthRow>
+            </WhiteBackgroundSection>
+            <GreyBackgroundSection>
+                <NarrowerWidthRow>
                     <Grid container item justify="center">
                         <LightContrastTextHeading>About the Project</LightContrastTextHeading>
                         <LightContrastText>
@@ -274,77 +345,6 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     </Grid>
                 </Grid>
             </GreyBackgroundSection> */}
-            <GreyBackgroundSection>
-                <NarrowerWidthRow>
-                    <Grid item container direction="row" spacing={4}>
-                        <Grid container item justify="center" xs={12} md={6}>
-                            <Grid item container spacing={3} xs={12}>
-                                <Grid item>
-                                    <QuickStat
-                                        type="variants"
-                                        mainText="250+ million"
-                                        captionText="annotated by AD/ADRD GWAS summary statistics"
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <QuickStat
-                                        title="including"
-                                        type="variants"
-                                        mainText="29+ million"
-                                        captionText="flagged by the Alzheimer’s Disease Sequencing Project (ADSP)"
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" item xs={12} md={6}>
-                            <LightContrastText>
-                                As of December 2020, the GenomicsDB provides unrestricted access to genome-wide summary
-                                statistics p-values from >70 GWAS and ADSP meta-analysis. Variants in these datasets are
-                                consistently annotated using the ADSP Annotation pipeline and linked to gene and
-                                functional genomics data to help not only make these data accessible, but also
-                                interpretable in the broader genomic context.
-                            </LightContrastText>
-                        </Grid>
-                    </Grid>
-                </NarrowerWidthRow>
-            </GreyBackgroundSection>
-            <WhiteBackgroundSection>
-                <WiderWidthRow>
-                    <Grid direction="column" alignItems="center" container>
-                        <Grid item>
-                            <Box p={3}>
-                                <LightContrastTextHeading>Latest Updates</LightContrastTextHeading>
-                            </Box>
-                        </Grid>
-                        <Grid item container spacing={10} justify="center" direction="row">
-                            <Grid container item xs={12} md={4}>
-                                <NewsItem
-                                    date="January 1 2021"
-                                    title="News #1"
-                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
-                                    target="#"
-                                />
-                            </Grid>
-                            <Grid container item xs={12} md={4}>
-                                <NewsItem
-                                    date="January 1 2021"
-                                    title="News #2"
-                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
-                                    target="#"
-                                />
-                            </Grid>
-                            <Grid container item xs={12} md={4}>
-                                <NewsItem
-                                    date="January 1 2021"
-                                    title="News #3"
-                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
-                                    target="#"
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </WiderWidthRow>
-            </WhiteBackgroundSection>
         </Grid>
     );
 };
