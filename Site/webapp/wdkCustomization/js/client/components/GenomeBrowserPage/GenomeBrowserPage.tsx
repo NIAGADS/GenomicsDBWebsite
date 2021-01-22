@@ -263,6 +263,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                         onBrowserLoad={buildBrowser}
                         searchUrl={`${serviceUrl}/track/feature?id=`}
                         serviceUrl={serviceUrl}
+                        webappUrl={webAppUrl}
                     />
                 </Grid>
                 <TrackBrowser
@@ -357,6 +358,7 @@ interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
 }
 
 export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
+    id: string; //should be same as 'type'
     phenotypes: string;
     trackType: string;
     url: string;

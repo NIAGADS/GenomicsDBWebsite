@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.min";
 import { noop } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
+import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
 
 interface IgvBrowser {
     defaultSpan: string;
@@ -9,6 +10,7 @@ interface IgvBrowser {
     onBrowserLoad?: (Browser: any) => void;
     searchUrl: string;
     serviceUrl: string;
+    webappUrl: string;
 }
 
 export interface TrackConfig {
@@ -30,7 +32,14 @@ export interface TrackConfig {
     visibilityWindow?: number;
 }
 
-const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowserLoad, searchUrl, serviceUrl }) => {
+const IgvBrowser: React.FC<IgvBrowser> = ({
+    defaultSpan,
+    defaultTracks,
+    onBrowserLoad,
+    searchUrl,
+    serviceUrl,
+    webappUrl,
+}) => {
     useLayoutEffect(() => {
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
@@ -53,7 +62,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
                             //queryable: true,
                             reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
                             url: `${serviceUrl}/track/gene`,
-                            id: "foo",
+                            id: "niagadsgenetrack",
                         },
                     ],
                 },
@@ -75,90 +84,56 @@ const IgvBrowser: React.FC<IgvBrowser> = ({ defaultSpan, defaultTracks, onBrowse
             );
 
             browser.on("trackclick", (track: any, popoverData: any) => {
-                let markup = '<table class="igv-popover-table">';
-
                 // Don't show a pop-over when there's no data.
                 if (!popoverData || !popoverData.length) {
                     return false;
                 }
-                //todo: abstract this away, and use type, not name
 
-                //replace old ppd with new for some tracks
-
-                /* 
-
-                customPopOverConfig : [
+                const customPopOverConfig = [
                     {
-                        trackType: 'foo',
-                        replace: false,
-                        fields: {
-                            name: 'variant',
-                            type: 'externalLink'
-                            value: {
-                                name: (ppd) => 'foo',
-                                target: (ppd) => 'bar'
-                            }
-                        }
-                    }
-                ]
-
-*/
-
-                const ppd =
-                    track.config.name === "NG00027 stage 12"
-                        ? [
-                              {
-                                  name: "variant",
-                                  value:
-                                      "<a href='https://beta.niagads.org/genomics/app/record/variant/" +
-                                      popoverData.find((pd: any) => pd.name === "strand").value.split("//")[0] +
-                                      "'>" +
-                                      popoverData.find((pd: any) => pd.name === "name").value +
-                                      "</a>",
-                              },
-                              {
-                                  name: "p-value",
-                                  value: popoverData.find((pd: any) => pd.name === "strand").value.split("//")[1],
-                              },
-                          ]
-                        : popoverData;
-
-                //alter existing ppd for some tracks
-                ppd.forEach((config: { name: string; value: string }) => {
-                    if (config.name) {
-                        const value =
-                            config.name.toLowerCase() === "gene_id"
-                                ? '<a href="https://beta.niagads.org/genomics/app/record/gene/' +
-                                  //ens ids have dot incrememnts, stripping for now
-                                  config.value.replace(/\..+/, "") +
-                                  '">' +
-                                  config.value +
-                                  "</a>"
-                                : config.value;
-
-                        markup +=
-                            '<tr><td class="igv-popover-td">' +
-                            '<div class="igv-popover-name-value">' +
-                            '<span class="igv-popover-name">' +
-                            config.name +
-                            "</span>" +
-                            '<span class="igv-popover-value">' +
-                            value +
-                            "</span>" +
-                            "</div>" +
-                            "</td></tr>";
-                    } else {
-                        // not a name/value pair
-                        markup += "<tr><td>" + config.toString() + "</td></tr>";
-                    }
-                });
-
-                markup += "</table>";
-
-                return markup;
+                        trackType: "niagadsgwas",
+                        fields: [
+                            {
+                                name: "variant",
+                                type: "link" as "link",
+                                value: {
+                                    name: (ppd: PopUpData[]) => ppd.find((p) => p.name === "variant").value,
+                                    target: (ppd: PopUpData[]) =>
+                                        `${webappUrl}/record/variant/${ppd.find((pd) => pd.name === "variant").value}`,
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        trackType: "niagadsgenetrack",
+                        fields: [
+                            {
+                                name: "Gene ID",
+                                type: "link" as "link",
+                                value: {
+                                    name: (ppd: PopUpData[]) =>
+                                        ppd
+                                            .find((ppd) => ppd.name === "AttributeString")
+                                            .value.split(";")
+                                            .filter((p) => p.startsWith("gene_id"))[0]
+                                            .split("=")[1],
+                                    target: (ppd: PopUpData[]) =>
+                                        `${webappUrl}/app/record/gene/${
+                                            ppd
+                                                .find((ppd) => ppd.name === "AttributeString")
+                                                .value.split(";")
+                                                .filter((p) => p.startsWith("gene_id"))[0]
+                                                .split("=")[1]
+                                        }`,
+                                },
+                            },
+                        ],
+                        remove: ["Delim", "AttributeString"],
+                    },
+                ];
+                return transformConfigToHtml(customPopOverConfig, popoverData, track);
             });
 
-            //todo: wrap this, or add new tracks
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
     }, [defaultSpan, defaultTracks, onBrowserLoad]);

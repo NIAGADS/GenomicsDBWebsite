@@ -50,6 +50,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
         b.loadTrack({
             name: "NG00075 Stage 1",
             type: "niagadsgwas",
+            id: "niagadsgwas",
             url: `${endpoint}/track/gwas?track=NG00075_STAGE1`,
             maxLogP: 25,
             autoscale: false,
@@ -134,6 +135,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     defaultSpan="ABCA7"
                                     onBrowserLoad={buildBrowser}
                                     serviceUrl={endpoint}
+                                    webappUrl={webAppUrl}
                                 />
                             </Grid>
                             <Grid container item xs={12} md={4} alignContent="space-between" justify="center">
