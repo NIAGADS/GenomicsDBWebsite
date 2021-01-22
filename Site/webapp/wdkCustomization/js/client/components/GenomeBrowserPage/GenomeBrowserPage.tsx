@@ -79,9 +79,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
     useEffect(() => {
         wdkService
             ._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`)
-            .then((res) =>
-                setTrackList(res.map((res) => transformRawNiagadsTrack(res, serviceUrl)).concat(_getFilerTracks()))
-            );
+            .then((res) => setTrackList(res.map((res) => transformRawNiagadsTrack(res, serviceUrl))));
     }, [wdkService, serviceUrl]);
 
     const classes = useBrowserStyles(),
@@ -327,7 +325,7 @@ const getLoadedTracks = (browser: any): string[] =>
 const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig, serviceUrl: string): NiagadsBrowserTrackConfig => {
     const { phenotypes, ...rest } = track,
         ret = { url: "unknown", trackType: "unknown", ...rest } as NiagadsBrowserTrackConfig;
-    if (track.source === "NIAGADS" && track.featureType.includes("gwas")) {
+    if (track.source === "NIAGADS" && track.feature_type.includes("gwas")) {
         ret.trackType = "niagadsgwas";
         ret.url = `${serviceUrl}/track/gwas?track=${ret.track}`;
     }
@@ -343,14 +341,14 @@ const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig, serviceUrl: stri
 interface NiagadsBaseTrackConfig {
     description?: string; //for browser
     endpoint?: string; //for async tracks only
-    featureType: string; //gene, variant, enhancer, etc
+    feature_type: string; //gene, variant, enhancer, etc
     label: string; // for track popover
     path?: string; //for filer -- this is the path to the file, rather than url
     name: string; //for display in track browser
     record: string;
     source: string;
     track: string; //unique id (pass to backend for async)
-    trackType: string; //igv track type
+    track_type: string; //igv track type
 }
 
 interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {

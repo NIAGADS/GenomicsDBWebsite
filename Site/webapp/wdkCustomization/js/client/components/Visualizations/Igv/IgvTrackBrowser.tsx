@@ -106,7 +106,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                 format: track.format,
                 indexURL: `${track.url}.tbi`,
                 name: track.name,
-                type: track.trackType,
+                type: track.track_type,
                 url: track.url,
                 visibilityWindow: -1,
             }));
@@ -185,7 +185,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </AccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <List>
-                                        {unique(trackList.map((t) => t.type)).map((a: string) => (
+                                        {unique(trackList.map((t) => t.track_type)).map((a: string) => (
                                             <ListItem key={a}>
                                                 <Checkbox
                                                     color="primary"
@@ -224,7 +224,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                         .filter((t) => {
                                             if (
                                                 sources.includes(t.source) ||
-                                                types.includes(t.type) ||
+                                                types.includes(t.track_type) ||
                                                 (!sources.length && !types.length)
                                             ) {
                                                 return true;
@@ -297,7 +297,7 @@ const getTableHeadings = memoize((trackList: NiagadsBrowserTrackConfig[]) =>
     unique(flatMap(trackList, (t) => Object.keys(t)))
 );
 
-const transformTableContent = (el: string) => <ShowMore str={_truncateLongStrings(el)} />;
+const transformTableContent = (el: string) => <ShowMore str={el ? _truncateLongStrings(el) : ""} />;
 
 const ShowMore: React.FC<{ str: string }> = ({ str }) => {
     const [fullStringVisible, setFullStringVisible] = useState(false);
