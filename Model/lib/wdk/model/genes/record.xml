@@ -306,9 +306,38 @@
 	</description>
 
       </table>
+
+      <!-- =============================================================== -->
+      <!-- Functional Genomics -->
+      <!-- =============================================================== -->
+      <table name="functional_genomics_enhancers"
+	     displayName="Overlapping and Proximal Expressed Enhancers (+/-50kb)"
+	     queryRef="GeneTables.FG_Enhancers">
+	<columnAttribute name="track" displayName="FILER Accession" type="string"/>
+	<columnAttribute name="track_name" displayName="Track" type="string"/>
+	<columnAttribute name="data_source" displayName="Data Source" type="string"/>
+	<columnAttribute name="relative_position" displayName="Relative Position" help="position relative to the gene (in the gene, upstream, downstream, etc)" type="string"/>
+	<columnAttribute name="feature" displayName="Location" help="list of more of more spans defining peaks" type="string"/>
+	<columnAttribute name="feature_type" displayName="Chromatin State" help="active or bivalent (poised) chromatin state" type="string"/>
+	<columnAttribute name="technology_type" displayName="Assay" type="string"/>
+	<columnAttribute name="classification" displayName="FILER Cell/Tissue Classification" help="generalized biosample classification from FILER" type="string"/>
+	<columnAttribute name="cell" displayName="Cell" help="cell or cultured cell type; standardized using OBO foundary ontologies" type="string"/>
+	<columnAttribute name="cell_line" displayName="Cell Line" type="string"/>
+	<columnAttribute name="tissue" displayName="Tissue"  help="tissues; standardized using OBO foundary ontologies"  type="string"/>
+
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+	
+	<propertyList name="defaultOpen">
+	  <value>true</value>
+	</propertyList>
+      </table>
+      
       <!-- =============================================================== -->
       <!-- Functional Annotation -->
       <!-- =============================================================== -->
+      
       <table name="go_terms" displayName="Gene Ontology" queryRef="GeneTables.GoTerms">
 	<columnAttribute displayName="Association" name="evidence_table_dropdown" help="click on links to reveal supporting evidence for this association" type="json_table" />
 	<columnAttribute displayName="Term" name="term" type="json_text" />

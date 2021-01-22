@@ -109,12 +109,13 @@ public class TrackConfigService extends AbstractWdkService {
         + "ta.dataset_accession AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', ta.track," + NL
-        + "'label', ta.name," + NL
+        + "'name', ta.name," + NL
         + "'track_type', 'annotation'," + NL
+        + "'format', 'bed'," + NL
         + "'feature_type', 'enhancer'," + NL
         + "'path', '@FILER_TRACK_URL@' || '/' || pan.uri,"  + NL
         + "'source', 'ROADMAP|FILER'," + NL
-        + "'name', replace(ta.name,'ChromHMM 15-state model for', 'Roadmap Enhancers:')," + NL
+        + "'label', replace(ta.name,'ChromHMM 15-state model for', 'Roadmap Enhancers:')," + NL
         + "'phenotypes', json_agg(jsonb_build_object(p.characteristic_type, p.characteristic))) AS track_config" + NL
         + "FROM NIAGADS.TrackAttributes ta, Phenotypes p, Phenotypes enhancers," + NL
         + "Study.ProtocolAppNode pan" + NL

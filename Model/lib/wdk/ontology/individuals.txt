@@ -56,7 +56,8 @@ GeneRecordClasses.GeneRecordClass.sequence_link_outs	http://edamontology.org/top
 GeneRecordClasses.GeneRecordClass.protein_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	protein_link_outs				gene	3		record	download
 GeneRecordClasses.GeneRecordClass.clinical_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	clinical_link_outs				gene	2		record	download
 GeneRecordClasses.GeneRecordClass.transcript_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	transcript_link_outs				gene	5		record	download
-GeneRecordClasses.GeneRecordClass.gws_variants_summary_plot	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_plot							record-internal	
+GeneRecordClasses.GeneRecordClass.gws_variants_summary_plot	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_plot				gene			record-internal	
+GeneRecordClasses.GeneRecordClass.functional_genomics_enhancers	http://edamontology.org/topic_0749	Transcription factors and regulatory sites	GeneRecordClasses.GeneRecordClass	table	functional_genomics_enhancers				gene			record	download
 													
 ## Variant Questions  ##													
 													
