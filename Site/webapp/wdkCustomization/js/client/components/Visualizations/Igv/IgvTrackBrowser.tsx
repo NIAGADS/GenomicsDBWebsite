@@ -1,44 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slide from "@material-ui/core/Slide";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
+import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Table from "@material-ui/core/Table";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import TableBody from "@material-ui/core/TableBody";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Dialog from "@material-ui/core/Dialog";
 import Checkbox from "@material-ui/core/Checkbox";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { TableCell, Typography } from "@material-ui/core";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
-import { flatMap, get, memoize, startCase, truncate, uniq as unique } from "lodash";
+import { Typography } from "@material-ui/core";
+import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
+import { startCase, truncate, uniq as unique } from "lodash";
 import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
 import { BaseIconButton, UnlabeledTextField } from "../../Shared";
+import ReactTable, { Column } from "react-table";
+import PaginationComponent from "./../../RecordPage/RecordTable/RecordTable/PaginationComponent/PaginationComponent";
 
-const useBrowserStyles = makeStyles((theme) =>
+const useBrowserStyles = makeStyles(() =>
     createStyles({
         Accordion: {
             flexGrow: 1,
+            padding: "0px",
         },
         AccordionDetails: {
+            padding: "0px",
             flexDirection: "column",
         },
         DialogContent: {
             display: "flex",
-        },
-        TableContainer: {
-            height: "65vh", //sticky header needs fixed height, this jibes best w/ out of the box mui style
         },
     })
 );
@@ -65,12 +59,44 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
     isOpen,
     loadingTrack,
     toggleTracks,
-    trackList,
+    trackList: _trackList,
 }) => {
     const [searchTerm, setSearchTerm] = useState(""),
         [sources, setSources] = useState<string[]>([]),
         [types, setTypes] = useState<string[]>([]),
-        classes = useBrowserStyles(),
+        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
+        classes = useBrowserStyles();
+
+    useEffect(() => {
+        const st = searchTerm.toLowerCase();
+        if (_trackList) {
+            setTrackList(
+                _trackList
+                    .filter(
+                        (t) =>
+                            t.url.toLowerCase().includes(st) ||
+                            (t.description || "").toLowerCase().includes(st) ||
+                            (t.name || "").toLowerCase().includes(st) ||
+                            (t.source || "").toLowerCase().includes(st)
+                    )
+                    .filter(
+                        (t) =>
+                            !!(
+                                sources.includes(t.source) ||
+                                types.includes(t.trackType) ||
+                                (!sources.length && !types.length)
+                            )
+                    )
+            );
+        }
+    }, [searchTerm, _trackList, sources, types]);
+
+    const closeSelf = () => {
+            setSearchTerm("");
+            setSources([]);
+            setTypes([]);
+            handleClose();
+        },
         toggleSource = (source: string) => {
             if (sources.includes(source)) {
                 setSources(sources.filter((s) => s != source));
@@ -100,14 +126,14 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
 
     return trackList ? (
         <Dialog
-            onBackdropClick={handleClose}
-            onEscapeKeyDown={handleClose}
+            onBackdropClick={closeSelf}
+            onEscapeKeyDown={closeSelf}
             maxWidth={false}
             fullWidth={true}
             open={isOpen}
             TransitionComponent={Transition}
             keepMounted
-            onClose={handleClose}
+            onClose={closeSelf}
         >
             <DialogContent className={classes.DialogContent}>
                 <Grid container alignItems="flex-start" direction="row" spacing={3}>
@@ -120,53 +146,53 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                         </Grid>
                         <Grid item>
                             <Accordion className={classes.Accordion}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Loaded Tracks</Typography>
-                                </AccordionSummary>
+                                </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
-                                    <List>
+                                    <FilterList>
                                         {activeTracks.map((a) => (
-                                            <ListItem key={a}>{startCase(a)}</ListItem>
+                                            <UnpaddedListItem key={a}>{startCase(a)}</UnpaddedListItem>
                                         ))}
-                                    </List>
+                                    </FilterList>
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion className={classes.Accordion}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Source</Typography>
-                                </AccordionSummary>
+                                </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
-                                    <List>
+                                    <FilterList>
                                         {unique(trackList.map((t) => t.source)).map((a: string) => (
-                                            <ListItem key={a}>
-                                                <Checkbox
+                                            <UnpaddedListItem key={a}>
+                                                <UnpaddedCheckbox
                                                     color="primary"
                                                     checked={sources.includes(a)}
                                                     onChange={toggleSource.bind(null, a)}
                                                 />{" "}
                                                 {a}
-                                            </ListItem>
+                                            </UnpaddedListItem>
                                         ))}
-                                    </List>
+                                    </FilterList>
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion className={classes.Accordion}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Type</Typography>
-                                </AccordionSummary>
+                                </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
-                                    <List>
+                                    <FilterList>
                                         {unique(trackList.map((t) => t.trackType)).map((a: string) => (
-                                            <ListItem key={a}>
-                                                <Checkbox
+                                            <UnpaddedListItem key={a}>
+                                                <UnpaddedCheckbox
                                                     color="primary"
                                                     checked={types.includes(a)}
                                                     onChange={toggleType.bind(null, a)}
                                                 />{" "}
                                                 {a}
-                                            </ListItem>
+                                            </UnpaddedListItem>
                                         ))}
-                                    </List>
+                                    </FilterList>
                                 </AccordionDetails>
                             </Accordion>
                         </Grid>
@@ -175,83 +201,60 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                         <Grid item container direction="row" wrap="nowrap" alignItems="center">
                             <UnlabeledTextField
                                 fullWidth={false}
-                                onChange={(e) => setSearchTerm(e.currentTarget.value.toLowerCase())}
+                                onChange={(e) => setSearchTerm(e.currentTarget.value)}
                                 placeholder="Search for a track"
                                 startAdornment={<SearchIcon />}
                                 value={searchTerm}
                             />
                             <Grid container item justify="flex-end">
-                                <BaseIconButton onClick={handleClose} size={"small"}>
+                                <BaseIconButton onClick={closeSelf} size={"small"}>
                                     <CloseIcon />
                                 </BaseIconButton>
                             </Grid>
                         </Grid>
-                        <TableContainer className={classes.TableContainer}>
-                            <Table stickyHeader>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            <Typography>Select</Typography>
-                                        </TableCell>
-                                        {getTableHeadings().map((t) => (
-                                            <TableCell key={t}>{startCase(t)}</TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {trackList
-                                        .filter(
-                                            (t) =>
-                                                t.url.toLowerCase().includes(searchTerm) ||
-                                                (t.description || "").toLowerCase().includes(searchTerm) ||
-                                                (t.name || "").toLowerCase().includes(searchTerm)
-                                        )
-                                        .filter((t) => {
-                                            if (
-                                                sources.includes(t.source) ||
-                                                types.includes(t.trackType) ||
-                                                (!sources.length && !types.length)
-                                            ) {
-                                                return true;
-                                            } else {
-                                                return false;
-                                            }
-                                        })
-                                        .map((t, i) => (
-                                            <TableRow key={i}>
-                                                <TableCell>
-                                                    {loadingTrack === t.track ? (
-                                                        <CircularProgress size={25} />
-                                                    ) : (
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={activeTracks.includes(t.name)}
-                                                            onChange={toggleTracks.bind(
-                                                                null,
-                                                                tracksToTrackConfigs([t])
-                                                            )}
-                                                            disabled={!!loadingTrack}
-                                                        />
-                                                    )}
-                                                </TableCell>
-                                                {getTableHeadings().map((h) => {
-                                                    const v =
-                                                        h in t
-                                                            ? transformTableContent(
-                                                                  t[h as keyof NiagadsBrowserTrackConfig]
-                                                              )
-                                                            : null;
-                                                    return <TableCell key={`${h}${i}`}>{v}</TableCell>;
-                                                })}
-                                            </TableRow>
-                                        ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        <ReactTable
+                            style={{
+                                maxHeight: "500px", // This will force the table body to overflow and scroll, since there is not enough room
+                            }}
+                            columns={[
+                                {
+                                    id: "select",
+                                    accessor: (row: any) => {
+                                        return (
+                                            <UnpaddedCheckbox
+                                                color="primary"
+                                                checked={activeTracks.includes(row.name)}
+                                                onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]))}
+                                                disabled={!!loadingTrack}
+                                            />
+                                        );
+                                    },
+                                    Header: () => "Select",
+                                    width: 50,
+                                } as Column,
+                            ].concat(
+                                getTableHeadings().map((r) => {
+                                    const ret: Column = {};
+                                    ret.id = r;
+                                    ret.Header = () => startCase(r);
+                                    ret.accessor = (row: any) => {
+                                        if (r === "description") {
+                                            return <ShowMore str={row[r] ? _truncateLongStrings(row[r]) : ""} />;
+                                        } else {
+                                            return row[r];
+                                        }
+                                    };
+                                    return ret;
+                                })
+                            )}
+                            data={trackList}
+                            PaginationComponent={PaginationComponent}
+                            minRows={0}
+                            pageSize={25}
+                        />
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions></DialogActions>
         </Dialog>
     ) : null;
 };
@@ -274,11 +277,7 @@ export interface IgvTrackConfig {
     visibilityWindow: number;
 }
 
-/* todo: reduce table size */
-
 const getTableHeadings = () => ["name", "source", "featureType", "description"];
-
-const transformTableContent = (el: string) => <ShowMore str={el ? _truncateLongStrings(el) : ""} />;
 
 const ShowMore: React.FC<{ str: string }> = ({ str }) => {
     const [fullStringVisible, setFullStringVisible] = useState(false);
@@ -301,3 +300,45 @@ const ShowMore: React.FC<{ str: string }> = ({ str }) => {
         </span>
     );
 };
+
+const UnpaddedCheckbox = withStyles(() => ({
+    root: {
+        padding: "0px",
+    },
+}))(Checkbox);
+
+const FilterList = withStyles((theme) => ({
+    root: {
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+    },
+}))(List);
+
+//typescript flaw in material ui prevents this from working
+//const UnpaddedListItem = stripPadding(ListItem);
+// @ts-ignore
+const UnpaddedListItem = (props: ListItemProps) => <ListItem {...props} style={{ padding: "0px" }} />;
+
+const FilterAccordionSummary = withStyles(() => ({
+    root: {
+        "&$expanded": {
+            minHeight: "50px",
+        },
+    },
+    content: {
+        "&$expanded": {
+            paddingTop: "0px",
+            paddingBottom: "0px",
+            marginTop: "0px",
+            marginBottom: "0px",
+        },
+    },
+    expanded: {
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        marginTop: "0px",
+        marginBottom: "0px",
+    },
+}))(AccordionSummary);

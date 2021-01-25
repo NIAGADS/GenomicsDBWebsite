@@ -1,12 +1,7 @@
 import React from "react";
 import * as PT from "./types";
 import { get } from "lodash";
-
-const DefaultButton = (props: any) => (
-    <button type="button" {...props} className="-btn">
-        {props.children}
-    </button>
-);
+import { PrimaryActionButton } from "../../../../Shared";
 
 export default class ReactTablePagination extends React.Component<PT.PaginationProps, PT.PaginationState> {
     private rowMin: number;
@@ -14,8 +9,8 @@ export default class ReactTablePagination extends React.Component<PT.PaginationP
     private rowCount: number;
 
     static defaultProps = {
-        PreviousComponent: DefaultButton,
-        NextComponent: DefaultButton,
+        PreviousComponent: PrimaryActionButton,
+        NextComponent: PrimaryActionButton,
         renderPageJump: ({ onChange, value, onBlur, onKeyPress, inputType, pageJumpText }: PT.RenderPageJumpProps) => (
             <div className="-pageJump">
                 <input

@@ -7,13 +7,14 @@ import theme from "./../../theme";
 import TrackBrowser from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
 import { NiagadsGwasTrack } from "./../../../lib/igv/NiagadsTracks";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import { get } from "lodash";
 import { WdkServiceContext } from "wdk-client/Service/WdkService";
 import { PrimaryActionButton } from "../Shared";
+import { CheckBox } from "@material-ui/icons";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
@@ -169,3 +170,4 @@ export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
     trackType: string;
     url: string;
 }
+
