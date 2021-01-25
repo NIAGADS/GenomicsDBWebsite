@@ -19,7 +19,7 @@ const useBaseInputStyles = makeStyles({
 });
 
 const useBaseFormControlStyles = makeStyles({
-    root: (props: InputStyleProps) => ({ width: props.fullWidth ? "100%" : "inherit" }),
+    root: (props: InputStyleProps) => ({ width: props.fullWidth ? "100%" : "auto" }),
 });
 
 interface InputStyleProps {

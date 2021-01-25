@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import Slide from "@material-ui/core/Slide";
-import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
-import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
@@ -20,28 +18,16 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { TableCell, Typography } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import { flatMap, memoize, startCase, truncate, uniq as unique } from "lodash";
+import { flatMap, get, memoize, startCase, truncate, uniq as unique } from "lodash";
 import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
+import { BaseIconButton, UnlabeledTextField } from "../../Shared";
 
 const useBrowserStyles = makeStyles((theme) =>
     createStyles({
-        root: {},
-        input: {
-            marginLeft: theme.spacing(1),
-            flexGrow: 1,
-        },
-        canGrow: {
-            flexGrow: 1,
-        },
-        CheckBoxCell: {
-            textAlign: "center",
-        },
         Accordion: {
             flexGrow: 1,
         },
@@ -54,7 +40,6 @@ const useBrowserStyles = makeStyles((theme) =>
         TableContainer: {
             height: "65vh", //sticky header needs fixed height, this jibes best w/ out of the box mui style
         },
-        DialogPaper: {},
     })
 );
 
@@ -104,10 +89,11 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
             return tracks.map((track) => ({
                 displayMode: "expanded",
                 format: track.format,
+                url: track.url,
                 indexURL: `${track.url}.tbi`,
                 name: track.name,
-                type: track.track_type,
-                url: track.url,
+                type: track.trackType,
+                id: track.trackType,
                 visibilityWindow: -1,
             }));
         };
@@ -122,32 +108,17 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
             TransitionComponent={Transition}
             keepMounted
             onClose={handleClose}
-            classes={{ paper: classes.DialogPaper }}
         >
-            <DialogTitle disableTypography>
-                <Grid container justify="space-between">
-                    <Typography variant="h4">Browse Tracks</Typography>
-                    <IconButton onClick={handleClose}>
-                        <CloseIcon />
-                    </IconButton>
-                </Grid>
-            </DialogTitle>
-
             <DialogContent className={classes.DialogContent}>
-                <Grid container alignItems="flex-start" spacing={1}>
-                    <Grid item container direction="column" wrap="nowrap" spacing={2} xs={2}>
-                        <Grid container alignItems="center" item xs={12}>
-                            <SearchIcon />
-                            <Input
-                                className={classes.input}
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.currentTarget.value.toLowerCase())}
-                            />
+                <Grid container alignItems="flex-start" direction="row" spacing={3}>
+                    <Grid item container direction="column" spacing={2} xs={2}>
+                        <Grid container>
+                            <Typography variant="h4">Browse Tracks</Typography>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item>
                             <Typography variant="h5">Filters</Typography>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item>
                             <Accordion className={classes.Accordion}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Loaded Tracks</Typography>
@@ -185,7 +156,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </AccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <List>
-                                        {unique(trackList.map((t) => t.track_type)).map((a: string) => (
+                                        {unique(trackList.map((t) => t.trackType)).map((a: string) => (
                                             <ListItem key={a}>
                                                 <Checkbox
                                                     color="primary"
@@ -200,7 +171,21 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                             </Accordion>
                         </Grid>
                     </Grid>
-                    <Grid item container xs={10}>
+                    <Grid item container direction="column" xs={10} spacing={2}>
+                        <Grid item container direction="row" wrap="nowrap" alignItems="center">
+                            <UnlabeledTextField
+                                fullWidth={false}
+                                onChange={(e) => setSearchTerm(e.currentTarget.value.toLowerCase())}
+                                placeholder="Search for a track"
+                                startAdornment={<SearchIcon />}
+                                value={searchTerm}
+                            />
+                            <Grid container item justify="flex-end">
+                                <BaseIconButton onClick={handleClose} size={"small"}>
+                                    <CloseIcon />
+                                </BaseIconButton>
+                            </Grid>
+                        </Grid>
                         <TableContainer className={classes.TableContainer}>
                             <Table stickyHeader>
                                 <TableHead>
@@ -208,7 +193,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                         <TableCell>
                                             <Typography>Select</Typography>
                                         </TableCell>
-                                        {getTableHeadings(trackList).map((t) => (
+                                        {getTableHeadings().map((t) => (
                                             <TableCell key={t}>{startCase(t)}</TableCell>
                                         ))}
                                     </TableRow>
@@ -217,14 +202,14 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                     {trackList
                                         .filter(
                                             (t) =>
-                                                t.track.toLowerCase().includes(searchTerm) ||
-                                                t.description.toLowerCase().includes(searchTerm) ||
-                                                t.name.toLowerCase().includes(searchTerm)
+                                                t.url.toLowerCase().includes(searchTerm) ||
+                                                (t.description || "").toLowerCase().includes(searchTerm) ||
+                                                (t.name || "").toLowerCase().includes(searchTerm)
                                         )
                                         .filter((t) => {
                                             if (
                                                 sources.includes(t.source) ||
-                                                types.includes(t.track_type) ||
+                                                types.includes(t.trackType) ||
                                                 (!sources.length && !types.length)
                                             ) {
                                                 return true;
@@ -234,7 +219,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                         })
                                         .map((t, i) => (
                                             <TableRow key={i}>
-                                                <TableCell className={classes.CheckBoxCell}>
+                                                <TableCell>
                                                     {loadingTrack === t.track ? (
                                                         <CircularProgress size={25} />
                                                     ) : (
@@ -249,7 +234,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                                         />
                                                     )}
                                                 </TableCell>
-                                                {getTableHeadings(trackList).map((h) => {
+                                                {getTableHeadings().map((h) => {
                                                     const v =
                                                         h in t
                                                             ? transformTableContent(
@@ -266,11 +251,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Dismiss
-                </Button>
-            </DialogActions>
+            <DialogActions></DialogActions>
         </Dialog>
     ) : null;
 };
@@ -293,9 +274,9 @@ export interface IgvTrackConfig {
     visibilityWindow: number;
 }
 
-const getTableHeadings = memoize((trackList: NiagadsBrowserTrackConfig[]) =>
-    unique(flatMap(trackList, (t) => Object.keys(t)))
-);
+/* todo: reduce table size */
+
+const getTableHeadings = () => ["name", "source", "featureType", "description"];
 
 const transformTableContent = (el: string) => <ShowMore str={el ? _truncateLongStrings(el) : ""} />;
 
