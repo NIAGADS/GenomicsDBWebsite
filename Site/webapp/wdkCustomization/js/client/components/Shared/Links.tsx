@@ -34,6 +34,15 @@ const useSecondaryLinkStyles = makeStyles(secondaryLinkStyles);
 const usePrimaryLinkStyles = makeStyles(primaryLinkStyles),
     useBoldPrimaryLinkStyles = makeStyles(BoldExternalLinkStyles);
 
+export const WhiteExternalLink = withStyles((theme) => ({
+    root: {
+        color: theme.palette.primary.contrastText,
+        "&:hover": {
+            color: theme.palette.grey[200],
+        },
+    },
+}))(Link);
+
 export const PrimaryExternalLink = withStyles(primaryLinkStyles)(Link);
 
 export const SecondaryExternalLink = withStyles(secondaryLinkStyles)(Link);

@@ -1,9 +1,9 @@
 import React from "react";
 import { webAppUrl } from "ebrc-client/config";
-import { Box, Grid, ThemeProvider, Typography, withStyles } from "@material-ui/core";
+import { Box, Grid, ThemeProvider, withStyles } from "@material-ui/core";
 import theme from "./../../../theme";
 import { DarkContrastGreyText, DarkContrastText } from "../../Shared/Typography";
-import { LightSecondaryExternalLink } from "../../Shared";
+import { WhiteExternalLink } from "../../Shared";
 
 const Footer: React.FC = () => {
     return (
@@ -11,23 +11,21 @@ const Footer: React.FC = () => {
             <FooterWrapper spacing={3} container alignItems="center" direction="column">
                 <Grid item container justify="center" alignItems="center">
                     <Box pl={3} pr={3}>
-                        <Typography variant="body2">
-                            <LightSecondaryExternalLink href="https://www.niagads.org/privacy-policy">
+                        <DarkContrastText variant="body2">
+                            <WhiteExternalLink href="https://www.niagads.org/privacy-policy">
                                 Privacy policy
-                            </LightSecondaryExternalLink>{" "}
-                        </Typography>
+                            </WhiteExternalLink>{" "}
+                        </DarkContrastText>
                     </Box>
                     <Box pl={3} pr={3}>
-                        <Typography variant="body2" color="secondary">
+                        <DarkContrastText variant="body2" color="secondary">
                             |
-                        </Typography>
+                        </DarkContrastText>
                     </Box>
                     <Box pl={3} pr={3}>
-                        <Typography variant="body2">
-                            <LightSecondaryExternalLink href="https://www.niagads.org/contact">
-                                Contact
-                            </LightSecondaryExternalLink>
-                        </Typography>
+                        <DarkContrastText variant="body2">
+                            <WhiteExternalLink href="https://www.niagads.org/contact">Contact</WhiteExternalLink>
+                        </DarkContrastText>
                     </Box>
                 </Grid>
                 <Grid item container direction="column" alignItems="center">

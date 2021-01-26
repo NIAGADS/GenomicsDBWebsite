@@ -5,6 +5,7 @@ import theme from "../../../theme";
 import { useGoto } from "../../../hooks";
 import { PrimaryActionButton } from "../../Shared";
 import { Home } from "@material-ui/icons";
+import { LightContrastText } from "../../Shared/Typography";
 
 interface Header {
     isLoggedIn: boolean;
@@ -35,11 +36,11 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                     <Grid item spacing={2} direction="column" container xs={12} md={6}>
                         <Grid direction="row" wrap="nowrap" item container justify="flex-end" alignItems="center">
                             <Grid item className="mr-2" container alignItems="center" justify="flex-end">
-                                <Typography>
+                                <LightContrastText variant="body2">
                                     <strong>Build Number: GRCh37.p13/hg19</strong>
                                     <span className="m-3">|</span>
                                     <span>Welcome, Guest</span>
-                                </Typography>
+                                </LightContrastText>
                             </Grid>
                             <Grid item>
                                 <PrimaryActionButton>User Login</PrimaryActionButton>
@@ -58,7 +59,7 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                                 {menuConfig.map((conf, i) => (
                                     <React.Fragment key={i}>
                                         <MenuElement {...conf} />
-                                        {i === menuConfig.length - 1 ? null : "|"}
+                                        {/*                                         {i === menuConfig.length - 1 ? null : "|"} */}
                                     </React.Fragment>
                                 ))}
                             </Grid>

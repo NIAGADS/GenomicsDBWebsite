@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme, darken, lighten, } from "@material-ui/core/styles";
 
 export default createMuiTheme({
     palette: {
@@ -26,6 +26,9 @@ export default createMuiTheme({
             '"Segoe UI Symbol"',
         ].join(","),
         //these are mostly default fontsizes, but listing here for reference
+        allVariants: {
+            color: "#444444"
+        },
         caption: {
             fontSize: "14px",
         },

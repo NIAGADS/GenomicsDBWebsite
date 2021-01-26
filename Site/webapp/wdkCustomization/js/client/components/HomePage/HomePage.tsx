@@ -70,7 +70,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     {/* chart and search bar */}
                     <Grid item container spacing={10} direction="row">
                         {/* heading and search bar column */}
-                        <Grid item direction="row" container xs={12} md={6}>
+                        <Grid item direction="row" container xs={12} sm={6}>
                             <Grid item container spacing={2} direction="column">
                                 <Grid item>
                                     <MainText>
@@ -129,16 +129,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid container alignItems="center" item direction="column" spacing={6}>
                         <LightContrastTextHeading>Explore the genomic context of AD variants</LightContrastTextHeading>
                         <Grid item container spacing={4} direction="row">
-                            <Grid item xs={12} md={8}>
-                                <MemoBrowser
-                                    searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
-                                    defaultSpan="ABCA7"
-                                    onBrowserLoad={buildBrowser}
-                                    serviceUrl={endpoint}
-                                    webappUrl={webAppUrl}
-                                />
-                            </Grid>
-                            <Grid container item xs={12} md={4} alignContent="space-between" justify="center">
+                            <Grid container item xs={12} sm={6} alignContent="space-between" justify="center">
                                 <LightContrastText>
                                     The NIAGADS genome browser enables researchers to visually inspect and browse GWAS
                                     summary statistics datasets in a broader genomic context. Our genome browser can
@@ -147,9 +138,22 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     genomics tracks from the NIAGADS <PrimaryLink to="#">FILER</PrimaryLink> functional
                                     genomics repository.
                                 </LightContrastText>
-                                <PrimaryActionButton onClick={goto.bind(null, `/visualizations/browser?locus=ABCA7`)}>
-                                    Full Browser View
-                                </PrimaryActionButton>
+                                <Grid item container direction="row" justify="flex-start">
+                                    <PrimaryActionButton
+                                        onClick={goto.bind(null, `/visualizations/browser?locus=ABCA7`)}
+                                    >
+                                        Full Browser View
+                                    </PrimaryActionButton>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <MemoBrowser
+                                    searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
+                                    defaultSpan="ABCA7"
+                                    onBrowserLoad={buildBrowser}
+                                    serviceUrl={endpoint}
+                                    webappUrl={webAppUrl}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -158,7 +162,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
             <GreyBackgroundSection>
                 <NarrowerWidthRow>
                     <Grid item container direction="row" spacing={4}>
-                        <Grid container item justify="center" xs={12} md={6}>
+                        <Grid container item justify="center" xs={12} sm={6}>
                             <Grid item container spacing={3} xs={12}>
                                 <Grid item>
                                     <QuickStat
@@ -177,7 +181,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container alignItems="center" item xs={12} md={6}>
+                        <Grid container alignItems="center" item xs={12} sm={6}>
                             <LightContrastText>
                                 As of December 2020, the GenomicsDB provides unrestricted access to genome-wide summary
                                 statistics p-values from >70 GWAS and ADSP meta-analysis. Variants in these datasets are
@@ -198,7 +202,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             </Box>
                         </Grid>
                         <Grid item container spacing={10} justify="center" direction="row">
-                            <Grid container item xs={12} md={4}>
+                            <Grid container item xs={12} sm={4}>
                                 <NewsItem
                                     date="January 1 2021"
                                     title="News #1"
@@ -206,7 +210,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     target="#"
                                 />
                             </Grid>
-                            <Grid container item xs={12} md={4}>
+                            <Grid container item xs={12} sm={4}>
                                 <NewsItem
                                     date="January 1 2021"
                                     title="News #2"
@@ -214,7 +218,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     target="#"
                                 />
                             </Grid>
-                            <Grid container item xs={12} md={4}>
+                            <Grid container item xs={12} sm={4}>
                                 <NewsItem
                                     date="January 1 2021"
                                     title="News #3"
@@ -230,7 +234,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 <NarrowerWidthRow>
                     <Grid container item justify="center">
                         <LightContrastTextHeading>About the Project</LightContrastTextHeading>
-                        <LightContrastText>
+                        <LightContrastText align="center">
                             The Genomics Database is developed by a team of researchers at the University of
                             Pennsylvania as part of the{" "}
                             <PrimaryExternalLink href="https://www.niagads.org/">
@@ -246,15 +250,15 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             funding or governance:
                         </LightContrastText>
                     </Grid>
-                    <Grid container item spacing={4} direction="row" justify="center" alignItems="center">
+                    <Grid container item spacing={4} direction="row" justify="space-between" alignItems="center">
                         <Grid item>
-                            <img height="30px" src={`${webAppUrl}/images/nih-logo.svg`} />
+                            <img height="50px" src={`${webAppUrl}/images/nih-logo.svg`} />
                         </Grid>
                         <Grid item>
-                            <img height="30px" src={`${webAppUrl}/images/psom_logo_blue.png`} />
+                            <img height="70px" src={`${webAppUrl}/images/adsp-logo.svg`} />
                         </Grid>
                         <Grid item>
-                            <img height="50px" src={`${webAppUrl}/images/adsp-logo.svg`} />
+                            <img height="50px" src={`${webAppUrl}/images/psom_logo_blue.png`} />
                         </Grid>
                     </Grid>
                 </NarrowerWidthRow>
@@ -263,7 +267,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 <NarrowerWidthRow>
                     <Grid item container justify="center">
                         <LightContrastTextHeading>ADSP Collaboration</LightContrastTextHeading>
-                        <LightContrastText>
+                        <LightContrastText align="center">
                             The NIAGADS Genomics Database has an ongoing collaboration with the{" "}
                             <PrimaryExternalLink href="#">Alzheimer's Disease Sequencing Project</PrimaryExternalLink>{" "}
                             (ADSP). The GenomicsDB allows browsing, searching, and analysis of variants and genes linked
@@ -271,66 +275,73 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             ADSP's sequencing efforts and downstream meta-analyses.
                         </LightContrastText>
                     </Grid>
-                    <Grid container item direction="row" justify="flex-start">
-                        <Grid item xs={12}>
-                            <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
-                        </Grid>
-                        <Grid container item spacing={5} direction="row">
-                            <Grid item xs={12} sm={6}>
-                                <LightContrastText>
-                                    Annotated variants in the NIAGADS GenomicsDB include SNPs and short-indels
-                                    identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome
-                                    sequencing (WES) efforts. These variants are highlighted in variant and dataset
-                                    reports and their quality control status is provided. Annotated tracks are available
-                                    for both the WES and WGS variants on the genome browser.
-                                </LightContrastText>
+                    <Grid container item direction="column" spacing={2}>
+                        <Grid container item xs={12} direction="row">
+                            <Grid item xs={12}>
+                                <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Grid item container direction="column" wrap="nowrap">
-                                    <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
-                                    <LightContrastCaptionTextItalic>
-                                        From Butkiewicz et al. (2018) Functional annotation of genomic variants in
-                                        studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
-                                        (after Table 1). PMID:{" "}
-                                        <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
-                                    </LightContrastCaptionTextItalic>
+                            <Grid container direction="row" spacing={4} item xs={12}>
+                                <Grid item xs={12} sm={6}>
+                                    <LightContrastText>
+                                        Annotated variants in the NIAGADS GenomicsDB include SNPs and short-indels
+                                        identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome
+                                        sequencing (WES) efforts. These variants are highlighted in variant and dataset
+                                        reports and their quality control status is provided. Annotated tracks are
+                                        available for both the WES and WGS variants on the genome browser.
+                                    </LightContrastText>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Grid item container direction="column" wrap="nowrap">
+                                        <img width={"100%"} src={`${webAppUrl}/images/table-lato-outlines-big.svg`} />
+                                        <LightContrastCaptionTextItalic>
+                                            From Butkiewicz et al. (2018) Functional annotation of genomic variants in
+                                            studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
+                                            (after Table 1). PMID:{" "}
+                                            <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
+                                        </LightContrastCaptionTextItalic>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container item direction="row" justify="flex-start">
-                        <LightContrastTextSubheading>ADSP Annotation</LightContrastTextSubheading>
-                        <LightContrastText>
-                            As part of their sequencing effort, the ADSP developed an annotation pipeline that
-                            efficiently integrates standard annotations and ranks potential variant impacts according to
-                            predicted effect (such as codon changes, loss of function, and potential deleteriousness)
-                            (PMID: <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
-                            GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants are
-                            annotated in real-time.
-                        </LightContrastText>
-                    </Grid>
-                    <Grid container item direction="column">
-                        <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
-                        <LightContrastText>
-                            The GenomicsDB provides access to summary statistics from the following ADSP meta-analyses:
-                        </LightContrastText>
-                        <Box mt={1}></Box>
-                        <Box display="flex">
-                            <Typography>
-                                <BoldPrimaryLink to="#">NG00065:&nbsp;</BoldPrimaryLink>
-                            </Typography>
-                            <LightContrastTextBold>
-                                ADSP Discovery Case/Control Association Results{" "}
-                            </LightContrastTextBold>
-                        </Box>
-                        <Box>
-                            <LightContrastText>
-                                These datasets contain results from <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
-                                <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation tests,
-                                performed separately by ancestry (European ancestry, Caribbean Hispanic) and
-                                meta-analyzed.
-                            </LightContrastText>
-                        </Box>
+                        <Grid container item direction="row" spacing={4}>
+                            <Grid container xs={12} sm={6} item direction="row" justify="flex-start">
+                                <LightContrastTextSubheading>ADSP Annotation</LightContrastTextSubheading>
+                                <LightContrastText>
+                                    As part of their sequencing effort, the ADSP developed an annotation pipeline that
+                                    efficiently integrates standard annotations and ranks potential variant impacts
+                                    according to predicted effect (such as codon changes, loss of function, and
+                                    potential deleteriousness) (PMID:{" "}
+                                    <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
+                                    GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants
+                                    are annotated in real-time.
+                                </LightContrastText>
+                            </Grid>
+                            <Grid container item xs={12} sm={6} direction="column">
+                                <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
+                                <LightContrastText>
+                                    The GenomicsDB provides access to summary statistics from the following ADSP
+                                    meta-analyses:
+                                </LightContrastText>
+                                <Box mt={1}></Box>
+                                <Box display="flex">
+                                    <Typography>
+                                        <BoldPrimaryLink to="#">NG00065:&nbsp;</BoldPrimaryLink>
+                                    </Typography>
+                                    <LightContrastTextBold>
+                                        ADSP Discovery Case/Control Association Results{" "}
+                                    </LightContrastTextBold>
+                                </Box>
+                                <Box>
+                                    <LightContrastText>
+                                        These datasets contain results from{" "}
+                                        <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
+                                        <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation
+                                        tests, performed separately by ancestry (European ancestry, Caribbean Hispanic)
+                                        and meta-analyzed.
+                                    </LightContrastText>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </NarrowerWidthRow>
             </WhiteBackgroundSection>

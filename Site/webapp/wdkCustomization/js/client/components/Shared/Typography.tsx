@@ -1,8 +1,5 @@
-import { createStyles, Theme, Typography, TypographyProps, withStyles } from "@material-ui/core";
+import { createStyles, lighten, Typography, TypographyProps, withStyles } from "@material-ui/core";
 import React from "react";
-
-const baseGrey = 600,
-    lightGrey = 400;
 
 export const LightSecondaryText = withStyles((theme) =>
     createStyles({
@@ -25,25 +22,18 @@ export const DarkContrastText = withStyles((theme) =>
 export const DarkContrastGreyText = withStyles((theme) =>
     createStyles({
         root: {
-            color: theme.palette.grey[lightGrey],
+            color: lighten(theme.palette.text.primary, 0.2),
         },
     })
 )((props: TypographyProps) => <Typography variant="body1" {...props} />);
 
 /* light contrast typography */
 
-export const LightContrastText = withStyles((theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.grey[baseGrey],
-        },
-    })
-)((props: TypographyProps) => <Typography variant="body1" {...props} />);
+export const LightContrastText = (props: TypographyProps) => <Typography variant="body1" {...props} />;
 
 export const LightContrastTextBold = withStyles((theme) =>
     createStyles({
         root: {
-            color: theme.palette.grey[baseGrey],
             fontWeight: theme.typography.fontWeightBold,
         },
     })
@@ -52,7 +42,6 @@ export const LightContrastTextBold = withStyles((theme) =>
 export const LightContrastTextHeading = withStyles((theme) =>
     createStyles({
         root: {
-            color: theme.palette.grey[baseGrey],
             paddingTop: theme.spacing(3),
             paddingBottom: theme.spacing(3),
         },
@@ -64,23 +53,13 @@ export const LightContrastTextSubheading = withStyles((theme) =>
         root: {
             paddingTop: theme.spacing(2),
             paddingBottom: theme.spacing(2),
-            color: theme.palette.grey[baseGrey],
         },
     })
 )((props: TypographyProps) => <Typography {...props} variant="h5" />);
 
-export const LightContrastCaptionTextStyle = (theme: Theme) =>
+export const LightContrastCaptionTextItalic = withStyles(() =>
     createStyles({
         root: {
-            color: theme.palette.grey[baseGrey],
-            fontStyle: "italic",
-        },
-    });
-
-export const LightContrastCaptionTextItalic = withStyles((theme) =>
-    createStyles({
-        root: {
-            ...LightContrastCaptionTextStyle(theme).root,
             fontStyle: "italic",
         },
     })
