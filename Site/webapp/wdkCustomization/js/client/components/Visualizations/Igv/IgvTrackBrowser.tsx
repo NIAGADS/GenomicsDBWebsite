@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Slide from "@material-ui/core/Slide";
 import DialogContent from "@material-ui/core/DialogContent";
 import SearchIcon from "@material-ui/icons/Search";
@@ -65,7 +65,9 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
         [sources, setSources] = useState<string[]>([]),
         [types, setTypes] = useState<string[]>([]),
         [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
-        classes = useBrowserStyles();
+        classes = useBrowserStyles(),
+        sourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
+        typeList = useMemo(() => unique((_trackList || []).map((t) => t.trackType)), [_trackList]);
 
     useEffect(() => {
         const st = searchTerm.toLowerCase();
@@ -163,7 +165,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <FilterList>
-                                        {unique(trackList.map((t) => t.source)).map((a: string) => (
+                                        {sourceList.map((a: string) => (
                                             <UnpaddedListItem key={a}>
                                                 <UnpaddedCheckbox
                                                     color="primary"
@@ -182,7 +184,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <FilterList>
-                                        {unique(trackList.map((t) => t.trackType)).map((a: string) => (
+                                        {typeList.map((a: string) => (
                                             <UnpaddedListItem key={a}>
                                                 <UnpaddedCheckbox
                                                     color="primary"
