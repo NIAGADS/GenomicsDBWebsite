@@ -22,7 +22,7 @@ export const DarkContrastText = withStyles((theme) =>
 export const DarkContrastGreyText = withStyles((theme) =>
     createStyles({
         root: {
-            color: lighten(theme.palette.text.primary, 0.2),
+            color: theme.palette.grey[400],
         },
     })
 )((props: TypographyProps) => <Typography variant="body1" {...props} />);
@@ -43,7 +43,7 @@ export const LightContrastTextHeading = withStyles((theme) =>
     createStyles({
         root: {
             paddingTop: theme.spacing(3),
-            paddingBottom: theme.spacing(3),
+            paddingBottom: theme.spacing(4),
         },
     })
 )((props: TypographyProps) => <Typography {...props} variant="h4" />);

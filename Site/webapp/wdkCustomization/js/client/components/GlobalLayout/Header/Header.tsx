@@ -16,11 +16,11 @@ const menuConfig: MenuElement[] = [
     { title: "Search Datasets", target: "/search/gwas_summary/browse" },
     { title: "Workspace", target: "/workspace/strategies" },
     {
-        title: "Tools",
-        items: [{ title: "Genome Browser", target: "/visualizations/browser" }],
+        title: "Genome Browser",
+        target: "/visualizations/browser",
     },
-    { title: "Documentation", target: "#" },
-    { title: "News", target: "#" },
+    { title: "Documentation", target: "#" }, //this could also be a dropdown with various kinds of documentation
+    { title: "About", target: "#" },
 ];
 
 const Header: React.FC<Header> = ({ isLoggedIn }) => {

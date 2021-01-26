@@ -16,6 +16,7 @@ import Analyze from "@material-ui/icons/ScatterPlot";
 import Share from "@material-ui/icons/GetApp";
 import {
     Box,
+    Container,
     createStyles,
     Grid,
     GridProps,
@@ -63,12 +64,13 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
     const MemoBrowser = React.memo(Browser);
 
     return (
-        <Grid justify="center" container item>
+        <Grid justify="center" container>
             {/* header */}
             <BlueBackgroundSection>
-                <WiderWidthRow>
+                <NarrowerWidthRow spacing={0}>
                     {/* chart and search bar */}
-                    <Grid item container spacing={10} direction="row">
+                    {/* should be 6 ems of padding here total... */}
+                    <Grid item container direction="row">
                         {/* heading and search bar column */}
                         <Grid item direction="row" container xs={12} sm={6}>
                             <Grid item container spacing={2} direction="column">
@@ -113,19 +115,21 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         {/* chart column */}
                         <Hidden mdDown>
                             <Grid item justify="center" alignItems="center" container md={6}>
-                                <img height={300} src={`${webAppUrl}/images/genomicsdb-tally-donut.svg`} />
+                                <img height={300} src={`${webAppUrl}/images/home_page/genomicsdb-tally-donut.svg`} />
                             </Grid>
                         </Hidden>
                     </Grid>
-                    {/* down arrow row */}
+
+                    <Box padding={4} />
                     <Grid direction="row" container item xs={12} justify="center">
                         <DownArrow style={{ fontSize: 65 }} color="secondary" />
                     </Grid>
-                </WiderWidthRow>
+                    {/* minimal padding here */}
+                </NarrowerWidthRow>
             </BlueBackgroundSection>
             {/* genome browser section */}
             <WhiteBackgroundSection>
-                <WiderWidthRow>
+                <NarrowerWidthRow>
                     <Grid container alignItems="center" item direction="column" spacing={6}>
                         <LightContrastTextHeading>Explore the genomic context of AD variants</LightContrastTextHeading>
                         <Grid item container spacing={4} direction="row">
@@ -157,28 +161,26 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             </Grid>
                         </Grid>
                     </Grid>
-                </WiderWidthRow>
+                </NarrowerWidthRow>
             </WhiteBackgroundSection>
             <GreyBackgroundSection>
                 <NarrowerWidthRow>
                     <Grid item container direction="row" spacing={4}>
-                        <Grid container item justify="center" xs={12} sm={6}>
-                            <Grid item container spacing={3} xs={12}>
-                                <Grid item>
-                                    <QuickStat
-                                        type="variants"
-                                        mainText="250+ million"
-                                        captionText="annotated by AD/ADRD GWAS summary statistics"
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <QuickStat
-                                        title="including"
-                                        type="variants"
-                                        mainText="29+ million"
-                                        captionText="flagged by the Alzheimer’s Disease Sequencing Project (ADSP)"
-                                    />
-                                </Grid>
+                        <Grid item container direction="column" spacing={3} xs={12} sm={6}>
+                            <Grid item>
+                                <QuickStat
+                                    type="variants"
+                                    mainText="250+ million"
+                                    captionText="annotated by AD/ADRD GWAS summary statistics"
+                                />
+                            </Grid>
+                            <Grid item>
+                                <QuickStat
+                                    title="including"
+                                    type="variants"
+                                    mainText="29+ million"
+                                    captionText="flagged by the Alzheimer’s Disease Sequencing Project (ADSP)"
+                                />
                             </Grid>
                         </Grid>
                         <Grid container alignItems="center" item xs={12} sm={6}>
@@ -194,7 +196,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 </NarrowerWidthRow>
             </GreyBackgroundSection>
             <WhiteBackgroundSection>
-                <WiderWidthRow>
+                <NarrowerWidthRow>
                     <Grid direction="column" alignItems="center" container>
                         <Grid item>
                             <Box p={3}>
@@ -228,13 +230,13 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             </Grid>
                         </Grid>
                     </Grid>
-                </WiderWidthRow>
+                </NarrowerWidthRow>
             </WhiteBackgroundSection>
             <GreyBackgroundSection>
                 <NarrowerWidthRow>
                     <Grid container item justify="center">
                         <LightContrastTextHeading>About the Project</LightContrastTextHeading>
-                        <LightContrastText align="center">
+                        <LightContrastText>
                             The Genomics Database is developed by a team of researchers at the University of
                             Pennsylvania as part of the{" "}
                             <PrimaryExternalLink href="https://www.niagads.org/">
@@ -252,13 +254,13 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     </Grid>
                     <Grid container item spacing={4} direction="row" justify="space-between" alignItems="center">
                         <Grid item>
-                            <img height="50px" src={`${webAppUrl}/images/nih-logo.svg`} />
+                            <img width="210" src={`${webAppUrl}/images/home_page/nih-logo.svg`} />
                         </Grid>
                         <Grid item>
-                            <img height="70px" src={`${webAppUrl}/images/adsp-logo.svg`} />
+                            <img width="145px" src={`${webAppUrl}/images/home_page/adsp-logo.svg`} />
                         </Grid>
                         <Grid item>
-                            <img height="50px" src={`${webAppUrl}/images/psom_logo_blue.png`} />
+                            <img width="210px" src={`${webAppUrl}/images/home_page/psom_logo_blue.png`} />
                         </Grid>
                     </Grid>
                 </NarrowerWidthRow>
@@ -267,7 +269,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 <NarrowerWidthRow>
                     <Grid item container justify="center">
                         <LightContrastTextHeading>ADSP Collaboration</LightContrastTextHeading>
-                        <LightContrastText align="center">
+                        <LightContrastText>
                             The NIAGADS Genomics Database has an ongoing collaboration with the{" "}
                             <PrimaryExternalLink href="#">Alzheimer's Disease Sequencing Project</PrimaryExternalLink>{" "}
                             (ADSP). The GenomicsDB allows browsing, searching, and analysis of variants and genes linked
@@ -292,7 +294,10 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Grid item container direction="column" wrap="nowrap">
-                                        <img width={"100%"} src={`${webAppUrl}/images/table-lato-outlines-big.svg`} />
+                                        <img
+                                            width={"100%"}
+                                            src={`${webAppUrl}/images/home_page/adsp-variant-table.svg`}
+                                        />
                                         <LightContrastCaptionTextItalic>
                                             From Butkiewicz et al. (2018) Functional annotation of genomic variants in
                                             studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
@@ -386,18 +391,10 @@ const useInnerSectionStyles = makeStyles((theme) =>
 );
 
 const Section = (props: GridProps) => {
-    const innerClasses = useInnerSectionStyles(),
-        theme = useTheme();
+    const innerClasses = useInnerSectionStyles();
 
     return (
-        <Grid
-            container
-            style={{ paddingTop: theme.spacing(5), paddingBottom: theme.spacing(5) }}
-            item
-            xs={12}
-            justify="center"
-            classes={props.classes}
-        >
+        <Grid container item xs={12} justify="center" classes={props.classes}>
             <Grid
                 alignContent="center"
                 alignItems="center"
@@ -416,32 +413,38 @@ const Section = (props: GridProps) => {
 const WhiteBackgroundSection = withStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.grey[50],
+        paddingBottom: theme.spacing(6),
+        paddingTop: theme.spacing(6),
     },
 }))(Section);
 
 const GreyBackgroundSection = withStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.grey[200],
+        paddingBottom: theme.spacing(6),
+        paddingTop: theme.spacing(6),
     },
 }))(Section);
 
 const BlueBackgroundSection = withStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.primary.dark,
+        paddingBottom: theme.spacing(2),
+        paddingTop: theme.spacing(12),
     },
 }))(Section);
 
 const NarrowerWidthRow = (props: GridProps) => (
-    <Grid {...props} spacing={3} container direction="row" item alignItems="center" justify="center" xs={12} md={10}>
+    <Grid {...props} spacing={3} container direction="row" item alignItems="center" justify="center" xs={12} md={11}>
         {props.children}
     </Grid>
 );
 
-const WiderWidthRow = (props: GridProps) => (
-    <Grid {...props} spacing={3} container direction="row" item alignItems="center" justify="center" xs={12} md={12}>
+/* const NarrowerWidthRow = (props: GridProps) => (
+    <Grid spacing={3} {...props} container direction="row" item alignItems="center" justify="center" xs={12} md={12}>
         {props.children}
     </Grid>
-);
+); */
 
 interface IconCard {
     Icon: React.ComponentType<SvgIconProps>;
