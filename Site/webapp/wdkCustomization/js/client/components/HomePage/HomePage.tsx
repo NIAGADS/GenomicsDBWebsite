@@ -277,76 +277,66 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             ADSP's sequencing efforts and downstream meta-analyses.
                         </LightContrastText>
                     </Grid>
-                    <Grid container item direction="column" spacing={2}>
-                        <Grid container item xs={12} direction="row">
-                            <Grid item xs={12}>
-                                <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
+                    <Grid container item direction="row" justify="flex-start">
+                        <Grid item xs={12}>
+                            <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
+                        </Grid>
+                        <Grid container item spacing={5} direction="row">
+                            <Grid item xs={12} sm={6}>
+                                <LightContrastText>
+                                    Annotated variants in the NIAGADS GenomicsDB include SNPs and short-indels
+                                    identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome
+                                    sequencing (WES) efforts. These variants are highlighted in variant and dataset
+                                    reports and their quality control status is provided. Annotated tracks are available
+                                    for both the WES and WGS variants on the genome browser.
+                                </LightContrastText>
                             </Grid>
-                            <Grid container direction="row" spacing={4} item xs={12}>
-                                <Grid item xs={12} sm={6}>
-                                    <LightContrastText>
-                                        Annotated variants in the NIAGADS GenomicsDB include SNPs and short-indels
-                                        identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome
-                                        sequencing (WES) efforts. These variants are highlighted in variant and dataset
-                                        reports and their quality control status is provided. Annotated tracks are
-                                        available for both the WES and WGS variants on the genome browser.
-                                    </LightContrastText>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <Grid item container direction="column" wrap="nowrap">
-                                        <img
-                                            width={"100%"}
-                                            src={`${webAppUrl}/images/home_page/adsp-variant-table.svg`}
-                                        />
-                                        <LightContrastCaptionTextItalic>
-                                            From Butkiewicz et al. (2018) Functional annotation of genomic variants in
-                                            studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
-                                            (after Table 1). PMID:{" "}
-                                            <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
-                                        </LightContrastCaptionTextItalic>
-                                    </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Grid item container direction="column" wrap="nowrap">
+                                    <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
+                                    <LightContrastCaptionTextItalic>
+                                        From Butkiewicz et al. (2018) Functional annotation of genomic variants in
+                                        studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
+                                        (after Table 1). PMID:{" "}
+                                        <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
+                                    </LightContrastCaptionTextItalic>
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container item direction="row" spacing={4}>
-                            <Grid container xs={12} sm={6} item direction="row" justify="flex-start">
-                                <LightContrastTextSubheading>ADSP Annotation</LightContrastTextSubheading>
-                                <LightContrastText>
-                                    As part of their sequencing effort, the ADSP developed an annotation pipeline that
-                                    efficiently integrates standard annotations and ranks potential variant impacts
-                                    according to predicted effect (such as codon changes, loss of function, and
-                                    potential deleteriousness) (PMID:{" "}
-                                    <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
-                                    GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants
-                                    are annotated in real-time.
-                                </LightContrastText>
-                            </Grid>
-                            <Grid container item xs={12} sm={6} direction="column">
-                                <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
-                                <LightContrastText>
-                                    The GenomicsDB provides access to summary statistics from the following ADSP
-                                    meta-analyses:
-                                </LightContrastText>
-                                <Box mt={1}></Box>
-                                <Box display="flex">
-                                    <Typography>
-                                        <BoldPrimaryLink to="#">NG00065:&nbsp;</BoldPrimaryLink>
-                                    </Typography>
-                                    <LightContrastTextBold>
-                                        ADSP Discovery Case/Control Association Results{" "}
-                                    </LightContrastTextBold>
-                                </Box>
-                                <Box>
-                                    <LightContrastText>
-                                        These datasets contain results from{" "}
-                                        <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
-                                        <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation
-                                        tests, performed separately by ancestry (European ancestry, Caribbean Hispanic)
-                                        and meta-analyzed.
-                                    </LightContrastText>
-                                </Box>
-                            </Grid>
-                        </Grid>
+                    </Grid>
+                    <Grid container item direction="row" justify="flex-start">
+                        <LightContrastTextSubheading>ADSP Annotation</LightContrastTextSubheading>
+                        <LightContrastText>
+                            As part of their sequencing effort, the ADSP developed an annotation pipeline that
+                            efficiently integrates standard annotations and ranks potential variant impacts according to
+                            predicted effect (such as codon changes, loss of function, and potential deleteriousness)
+                            (PMID: <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
+                            GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants are
+                            annotated in real-time.
+                        </LightContrastText>
+                    </Grid>
+                    <Grid container item direction="column" spacing={1}>
+                        <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
+                        <LightContrastText>
+                            The GenomicsDB provides access to summary statistics from the following ADSP meta-analyses:
+                        </LightContrastText>
+                        <Box mt={1}></Box>
+                        <Box display="flex">
+                            <Typography>
+                                <BoldPrimaryLink to="#">NG00065:&nbsp;</BoldPrimaryLink>
+                            </Typography>
+                            <LightContrastTextBold>
+                                ADSP Discovery Case/Control Association Results{" "}
+                            </LightContrastTextBold>
+                        </Box>
+                        <Box>
+                            <LightContrastText>
+                                These datasets contain results from <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
+                                <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation tests,
+                                performed separately by ancestry (European ancestry, Caribbean Hispanic) and
+                                meta-analyzed.
+                            </LightContrastText>
+                        </Box>
                     </Grid>
                 </NarrowerWidthRow>
             </WhiteBackgroundSection>
