@@ -16,39 +16,45 @@ import Data from 'highcharts/modules/data';
 Data(Highcharts);
 
 import Heatmap from 'highcharts/modules/heatmap';
-import { useWdkEffect } from 'wdk-client/Service/WdkService';
+
 Heatmap(Highcharts);
 
 require('highcharts/highcharts-more')(Highcharts); // bubble plot & others
 
+export interface ChartCallbackFunc {
+	(chart: any): void
+}
 export interface HighchartsPlotProps {
 	data?: any,
 	properties: any
 	noDataMessage?: string;
 	displayNoDataMessage?: boolean;
 	plotOptions?: Options;
+	callback?: ChartCallbackFunc;
 }
 
 export function buildOptions(data: any, properties: any, options: Options) {
 
 	let opts = buildChartOptions(properties.type);
 
-	if (data.categories)
-		opts = merge(opts, addCategories(data.categories));
+	if (data) {
+		if (data.categories)
+			opts = merge(opts, addCategories(data.categories));
 
-	if (data.ycategories) {
-		opts = merge(opts, addCategories(data.ycategories, 'yAxis'));
+		if (data.ycategories) {
+			opts = merge(opts, addCategories(data.ycategories, 'yAxis'));
+		}
+
+		if (data.series) {
+			opts = merge(opts, addSeries(data.series))
+		}
+
+		if (data.title) {
+			opts = merge(opts, addTitle(data.title));
+		}
 	}
 
-	if (data.series) {
-		opts = merge(opts, addSeries(data.series))
-	}
-
-	if (data.title) {
-		opts = merge(opts, addTitle(data.title));
-	}
-
-	if (options) 
+	if (options)
 		opts = merge(opts, options);
 
 	return opts;
@@ -56,7 +62,7 @@ export function buildOptions(data: any, properties: any, options: Options) {
 
 
 const HighchartsPlot: React.FC<HighchartsPlotProps> = props => {
-	const { data, properties, noDataMessage, displayNoDataMessage, plotOptions } = props;
+	const { data, properties, noDataMessage, displayNoDataMessage, plotOptions, callback } = props;
 	const [options, setOptions] = useState(plotOptions);
 
 	useLayoutEffect(() => {
@@ -68,12 +74,14 @@ const HighchartsPlot: React.FC<HighchartsPlotProps> = props => {
 	const displayMessage = displayNoDataMessage === false ? false : true;
 
 	return (
-		options ?
-			<HighchartsReact highcharts={Highcharts}
-				options={options} />
+		options
+			? (callback
+				? <HighchartsReact highcharts={Highcharts}
+					options={options} callback={callback} />
+				: <HighchartsReact highcharts={Highcharts}
+					options={options} />)
 			: displayMessage ? <div>{message}</div> : null
 	);
 }
-
 
 export default HighchartsPlot;
