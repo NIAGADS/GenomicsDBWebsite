@@ -11,6 +11,7 @@ import org.niagads.genomics.service.services.Search.SiteSearchService;
 import org.niagads.genomics.service.services.Dataset.DatasetModelRefService;
 import org.niagads.genomics.service.services.Dataset.DatasetLookupService;
 import org.niagads.genomics.service.services.Dataset.GWASSummaryStatisticResultService;
+import org.niagads.genomics.service.services.Dataset.DatasetSummaryPlotService;
 
 import org.niagads.genomics.service.services.Variant.VariantLDWindowService;
 import org.niagads.genomics.service.services.Variant.VariantLookupService;
@@ -44,6 +45,7 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(DatasetModelRefService.class)
     .add(DatasetLookupService.class)
     .add(GWASSummaryStatisticResultService.class)
+    .add(DatasetSummaryPlotService.class)
 
     .add(VariantLDWindowService.class)
     .add(VariantLookupService.class)
