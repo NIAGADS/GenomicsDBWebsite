@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { connect } from "react-redux";
 import {
     PrimaryExternalLink,
@@ -42,6 +42,12 @@ interface HomePage {
 
 const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
     const goto = useGoto();
+
+    useLayoutEffect(() => {
+        //remove the padding that's required everywhere but here
+        document.querySelectorAll(".wdk-PageContent")[0].setAttribute("style", "padding: 0;");
+        return () => document.querySelectorAll(".wdk-PageContent")[0].setAttribute("style", "padding: 0 2em;");
+    }, []);
 
     const buildBrowser = (b: any) => {
         b.loadTrack({
