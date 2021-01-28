@@ -147,7 +147,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
         >
             <DialogContent className={classes.DialogContent}>
                 <Grid container alignItems="flex-start" direction="row" spacing={3}>
-                    <Grid item container direction="column" spacing={2} xs={2}>
+                    <Grid item container direction="column" spacing={2} xs={4} lg={2}>
                         <Grid container>
                             <Typography variant="h4">Browse Tracks</Typography>
                         </Grid>
@@ -221,7 +221,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                             </Accordion>
                         </Grid>
                     </Grid>
-                    <Grid item container direction="column" xs={10} spacing={2}>
+                    <Grid item container direction="column" xs={8} lg={10} spacing={2}>
                         <Grid item container direction="row" wrap="nowrap" alignItems="center">
                             <UnlabeledTextField
                                 fullWidth={false}

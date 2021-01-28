@@ -30,7 +30,7 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
         <ThemeProvider theme={theme}>
             <Box borderBottom={1} borderColor="grey.500">
                 <Grid container className="p-2">
-                    <Hidden mdDown>
+                    <Hidden smDown>
                         <Grid container alignItems="center" item xs={3}>
                             <SiteTitle>GenomicsDB</SiteTitle>
                         </Grid>
@@ -38,12 +38,19 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                     <Grid item container direction="row" xs={12} lg={9}>
                         <Grid item spacing={2} direction="column" container>
                             <Grid direction="row" wrap="nowrap" item container justify="flex-end" alignItems="center">
-                                <Grid item className="mr-2" container alignItems="center" justify="flex-end">
-                                    <LightContrastText variant="body2">
-                                        <strong>Build Number: GRCh37.p13/hg19</strong>
-                                        <span className="m-3">|</span>
-                                        <span>Welcome, Guest</span>
-                                    </LightContrastText>
+                                <Grid item className="mr-2" container alignItems="center" wrap="nowrap">
+                                    <Hidden mdUp>
+                                        <Grid container justify="flex-start" item>
+                                            <SiteTitle>GenomicsDB</SiteTitle>
+                                        </Grid>
+                                    </Hidden>
+                                    <Grid item container justify="flex-end">
+                                        <LightContrastText variant="body2">
+                                            <strong>Build Number: GRCh37.p13/hg19</strong>
+                                            <span className="m-3">|</span>
+                                            <span>Welcome, Guest</span>
+                                        </LightContrastText>
+                                    </Grid>
                                 </Grid>
                                 <Grid item>
                                     <PrimaryActionButton>User Login</PrimaryActionButton>
