@@ -13,9 +13,9 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Dialog from "@material-ui/core/Dialog";
 import Checkbox from "@material-ui/core/Checkbox";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
-import { startCase, truncate, uniq as unique } from "lodash";
+import { groupBy, startCase, truncate, uniq as unique } from "lodash";
 import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
 import { BaseIconButton, UnlabeledTextField } from "../../Shared";
 import ReactTable, { Column } from "react-table";
@@ -67,7 +67,9 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
         [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
         classes = useBrowserStyles(),
         sourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
-        typeList = useMemo(() => unique((_trackList || []).map((t) => t.trackType)), [_trackList]);
+        typeList = useMemo(() => unique((_trackList || []).map((t) => t.trackType)), [_trackList]),
+        sourceCounts = useMemo(() => groupBy(_trackList || [], (t) => t.source), [_trackList]),
+        typeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.trackType), [_trackList]);
 
     useEffect(() => {
         const st = searchTerm.toLowerCase();
@@ -114,16 +116,22 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
             }
         },
         tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
-            return tracks.map((track) => ({
-                displayMode: "expanded",
-                format: track.format,
-                url: track.url,
-                indexURL: `${track.url}.tbi`,
-                name: track.name,
-                type: track.trackType,
-                id: track.trackType,
-                visibilityWindow: -1,
-            }));
+            return tracks.map((track) => {
+                const base = {
+                    displayMode: "expanded",
+                    format: track.format,
+                    url: track.url,
+                    indexURL: `${track.url}.tbi`,
+                    name: track.name,
+                    type: track.trackType,
+                    id: track.trackType,
+                    visibilityWindow: -1,
+                } as IgvTrackConfig;
+                if (track.reader) {
+                    base.reader = track.reader;
+                }
+                return base;
+            });
         };
 
     return trackList ? (
@@ -153,9 +161,23 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <FilterList>
-                                        {activeTracks.map((a) => (
-                                            <UnpaddedListItem key={a}>{startCase(a)}</UnpaddedListItem>
-                                        ))}
+                                        {activeTracks
+                                            .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
+                                            .map((t) => (
+                                                <UnpaddedListItem key={t}>
+                                                    <UnpaddedCheckbox
+                                                        color="primary"
+                                                        checked={true}
+                                                        onChange={toggleTracks.bind(
+                                                            null,
+                                                            tracksToTrackConfigs([
+                                                                _trackList.find((track) => track.name === t),
+                                                            ])
+                                                        )}
+                                                    />
+                                                    &nbsp;{t}
+                                                </UnpaddedListItem>
+                                            ))}
                                     </FilterList>
                                 </AccordionDetails>
                             </Accordion>
@@ -172,7 +194,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                                     checked={sources.includes(a)}
                                                     onChange={toggleSource.bind(null, a)}
                                                 />{" "}
-                                                {a}
+                                                {`${a} (${sourceCounts[a].length})`}
                                             </UnpaddedListItem>
                                         ))}
                                     </FilterList>
@@ -191,7 +213,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                                     checked={types.includes(a)}
                                                     onChange={toggleType.bind(null, a)}
                                                 />{" "}
-                                                {a}
+                                                {`${a} (${typeCounts[a].length})`}
                                             </UnpaddedListItem>
                                         ))}
                                     </FilterList>
@@ -214,57 +236,51 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </BaseIconButton>
                             </Grid>
                         </Grid>
-                        <ReactTable
-                            style={{
-                                maxHeight: "500px", // This will force the table body to overflow and scroll, since there is not enough room
-                            }}
-                            columns={[
-                                {
-                                    id: "select",
-                                    accessor: (row: any) => {
-                                        return (
-                                            <UnpaddedCheckbox
-                                                color="primary"
-                                                checked={activeTracks.includes(row.name)}
-                                                onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]))}
-                                                disabled={!!loadingTrack}
-                                            />
-                                        );
-                                    },
-                                    Header: () => "Select",
-                                    width: 50,
-                                } as Column,
-                            ].concat(
-                                getTableHeadings().map((r) => {
-                                    const ret: Column = {};
-                                    ret.id = r;
-                                    ret.Header = () => startCase(r);
-                                    ret.accessor = (row: any) => {
-                                        if (r === "description") {
-                                            return <ShowMore str={row[r] ? _truncateLongStrings(row[r]) : ""} />;
-                                        } else {
-                                            return row[r];
-                                        }
-                                    };
-                                    return ret;
-                                })
-                            )}
-                            data={trackList}
-                            PaginationComponent={PaginationComponent}
-                            minRows={0}
-                        />
+                        <Box className="browser-table">
+                            <ReactTable
+                                style={{
+                                    maxHeight: "500px", // This will force the table body to overflow and scroll
+                                }}
+                                columns={[
+                                    {
+                                        id: "select",
+                                        accessor: (row: any) => {
+                                            return (
+                                                <UnpaddedCheckbox
+                                                    color="primary"
+                                                    checked={activeTracks.includes(row.name)}
+                                                    onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]))}
+                                                    disabled={!!loadingTrack}
+                                                />
+                                            );
+                                        },
+                                        Header: () => "Select",
+                                        width: 50,
+                                    } as Column,
+                                ].concat(
+                                    getColumns().map((col: Column) => {
+                                        col.Header = () => startCase(col.id);
+                                        col.accessor = (row: any) => {
+                                            if (col.id === "description") {
+                                                return <ShowMore str={row[col.id] ? row[col.id] : ""} />;
+                                            } else {
+                                                return row[col.id];
+                                            }
+                                        };
+                                        return col;
+                                    })
+                                )}
+                                data={trackList}
+                                PaginationComponent={PaginationComponent}
+                                minRows={0}
+                            />
+                        </Box>
                     </Grid>
                 </Grid>
             </DialogContent>
         </Dialog>
     ) : null;
 };
-
-const _truncateLongStrings = (str: string) =>
-    str
-        .split(" ")
-        .map((s) => truncate(s))
-        .join(" ");
 
 export default TrackBrowser;
 
@@ -273,17 +289,25 @@ export interface IgvTrackConfig {
     format?: string;
     displayMode: string;
     height?: number;
-    url: string;
+    id: string;
     indexURL?: string;
+    reader?: any;
+    type: string;
+    url: string;
     visibilityWindow: number;
 }
 
-const getTableHeadings = () => ["name", "source", "featureType", "description"];
+const getColumns = (): Column[] => [
+    { id: "name", maxWidth: 300 } as Column,
+    { id: "description" },
+    { id: "source", width: 100 },
+    { id: "featureType", width: 120 },
+];
 
 const ShowMore: React.FC<{ str: string }> = ({ str }) => {
     const [fullStringVisible, setFullStringVisible] = useState(false);
 
-    if (str.length < 50) return <span>{str}</span>;
+    if (str.length < 150) return <span>{str}</span>;
 
     return fullStringVisible ? (
         <span>
@@ -294,7 +318,7 @@ const ShowMore: React.FC<{ str: string }> = ({ str }) => {
         </span>
     ) : (
         <span>
-            {truncate(str, { length: 50 })}{" "}
+            {truncate(str, { length: 150 })}{" "}
             <span className="link" onClick={() => setFullStringVisible(true)}>
                 more
             </span>
@@ -311,7 +335,7 @@ const UnpaddedCheckbox = withStyles(() => ({
 const FilterList = withStyles((theme) => ({
     root: {
         paddingTop: "0px",
-        paddingBottom: "0px",
+        paddingBottom: "10px",
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
     },

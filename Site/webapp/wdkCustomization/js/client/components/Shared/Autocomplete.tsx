@@ -75,7 +75,6 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
             freeSolo
             fullWidth={canGrow}
             getOptionSelected={(option, value) => option.primary_key === value.primary_key}
-            //todo: try separating renderOption and renderTags
             getOptionLabel={(option) => option.matched_term}
             includeInputInList={true}
             noOptionsText="No Results"

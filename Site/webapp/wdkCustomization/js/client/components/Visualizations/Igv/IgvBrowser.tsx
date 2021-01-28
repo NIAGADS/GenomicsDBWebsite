@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from "react";
-import igv from "igv/dist/igv.min";
+import igv from "igv/dist/igv.esm";
 import { noop } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
 import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
@@ -7,6 +7,7 @@ import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
 interface IgvBrowser {
     defaultSpan: string;
     defaultTracks?: TrackConfig[];
+    disableRefTrack?: boolean;
     onBrowserLoad?: (Browser: any) => void;
     searchUrl: string;
     serviceUrl: string;
@@ -20,11 +21,13 @@ export interface TrackConfig {
     filterTypes?: string[];
     format?: string;
     height?: number;
+    id?: string;
     indexURL?: string;
     maxLogP?: number;
     maxRows?: number;
     name: string;
     order?: string;
+    reader?: any;
     snpField?: string;
     sourceType?: string;
     type?: string;
@@ -35,6 +38,7 @@ export interface TrackConfig {
 const IgvBrowser: React.FC<IgvBrowser> = ({
     defaultSpan,
     defaultTracks,
+    disableRefTrack,
     onBrowserLoad,
     searchUrl,
     serviceUrl,
@@ -53,21 +57,22 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
                         "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta.fai",
                     cytobandURL:
                         "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/cytoBand.txt",
-                    tracks: [
-                        {
-                            name: "Ensembl Genes",
-                            displayMode: "expanded",
-                            visibilityWindow: 100000000,
-                            format: "refgene",
-                            //queryable: true,
-                            reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                            url: `${serviceUrl}/track/gene`,
-                            id: "niagadsgenetrack",
-                        },
-                    ],
+                    tracks: disableRefTrack
+                        ? []
+                        : [
+                              {
+                                  name: "Ensembl Genes",
+                                  displayMode: "expanded",
+                                  visibilityWindow: 100000000,
+                                  format: "refgene",
+                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                                  url: `${serviceUrl}/track/gene`,
+                                  id: "niagadsgenetrack",
+                              },
+                          ],
                 },
-                locus: defaultSpan,
-                tracks: defaultTracks || [],
+                locus: defaultSpan || "ABCA7",
+                tracks: (defaultTracks || []).concat(),
                 search: {
                     url: `${searchUrl}$FEATURE$`,
                 },

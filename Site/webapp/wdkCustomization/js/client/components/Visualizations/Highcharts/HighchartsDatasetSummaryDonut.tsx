@@ -1,40 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { isEmpty, assign, merge } from 'lodash';
-import { Options } from 'highcharts';
-import HighchartsPlot from './HighchartsPlot';
-import {
-    addTitle,
-    disableLegendClick,
-    disableExport,
-    applyCustomSeriesColor,
-    backgroundTransparent
-} from './HighchartsOptions';
-import {_color_blind_friendly_palettes as PALETTES} from '../palettes';
-import WdkService, { useWdkEffect } from 'wdk-client/Service/WdkService';
-import { Loading, LoadingOverlay } from 'wdk-client/Components';
-
-
-
-interface DatasetSummaryDonutProps {
-    properties: any;
-}
-
+import React, { useState } from "react";
+import { merge } from "lodash";
+import { Options } from "highcharts";
+import HighchartsPlot from "./HighchartsPlot";
+import { addTitle, disableExport, applyCustomSeriesColor, backgroundTransparent } from "./HighchartsOptions";
+import { _color_blind_friendly_palettes as PALETTES } from "../palettes";
+import WdkService, { useWdkEffect } from "wdk-client/Service/WdkService";
+import { useGoto } from "../../../hooks";
+import { Point, PointClickEventObject } from "highcharts";
 
 interface ChartData {
-    data: any;
+    data: [string, number, string][];
 }
 
-export const HighchartsDatasetSummaryDonut: React.FC<DatasetSummaryDonutProps> = props => {
-    const { properties } = props;
-    const [series, setSeries] = useState(null);
+export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
+    const [series, setSeries] = useState(null),
+        goto = useGoto();
 
-    function searchDatasets(point: any) {
-        let endpoint = properties.webAppUrl + "/app/search/gwas_summary/neuropathology?autoRun=true&value="
-        location.href = endpoint + point.name;
-    }
+    useWdkEffect((service: WdkService) => {
+        service
+            ._fetchJson<ChartData>("get", `/dataset/summary_plot`)
+            .then((res: ChartData) => setSeries(buildSeries(res)))
+            .catch((err) => console.log(err));
+    }, []);
 
-    function buildSeries(data: any) {
-        let series = {
+    const searchDatasets = (point: Point) =>
+        goto(`search/gwas_summary/neuropathology?autoRun=true&value=${point.name}`);
+
+    const buildSeries = (data: ChartData) => {
+        const series = {
             series: [
                 {
                     name: "Datasets",
@@ -43,63 +36,46 @@ export const HighchartsDatasetSummaryDonut: React.FC<DatasetSummaryDonutProps> =
                     allowPointSelect: true,
                     cursor: "pointer",
                     dataLabels: {
-                        enabled: false
+                        enabled: false,
                     },
                     point: {
                         events: {
-                            click: function () { return searchDatasets(this); },
-                            legendItemClick: function() {return false;} // for pies this is a point, not a series property
-                        } 
+                            click: (e: PointClickEventObject) => searchDatasets(e.point),
+                            legendItemClick: () => false,
+                        },
                     },
                     keys: ["name", "y", "full_name"],
                     data: data,
-
-                }
-            ]
-        }
+                },
+            ],
+        };
 
         return series;
-    }
+    };
 
-    function buildDonutPlotOptions() {
+    const buildDonutPlotOptions = () => {
         let plotOptions: Options = {
             tooltip: {
-                pointFormat: "{point.full_name}: <b>{point.y}</b>"
+                pointFormat: "{point.full_name}: <b>{point.y}</b>",
             },
             legend: {
                 align: "right",
                 verticalAlign: "middle",
                 layout: "vertical",
                 itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
-                itemHoverStyle: { color: "#ffc665" }
-            }
-        }
+                itemHoverStyle: { color: "#ffc665" },
+            },
+        };
 
         plotOptions = merge(plotOptions, addTitle(null));
         plotOptions = merge(plotOptions, disableExport());
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
 
-        console.log(plotOptions);
         return plotOptions;
-    }
-
-    const sendRequest = () => (service: WdkService) => {
-
-        service
-            ._fetchJson<ChartData>(
-                "get",
-                `/dataset/summary_plot`
-            )
-            .then((res: ChartData) => setSeries(buildSeries(res)))
-            .catch(err => console.log(err));
     };
 
-    useWdkEffect(sendRequest(), []);
-
-    return (
-        series ?
-            <HighchartsPlot data={series} properties={properties} plotOptions={buildDonutPlotOptions()} />
-            : <LoadingOverlay></LoadingOverlay>
-    );
-}
+    return series ? (
+        <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} />
+    ) : null;
+};

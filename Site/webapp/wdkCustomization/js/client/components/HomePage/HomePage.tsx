@@ -11,12 +11,8 @@ import {
 } from "../../components/Shared";
 import { useGoto } from "../../hooks";
 import DownArrow from "@material-ui/icons/ArrowDropDown";
-import Explore from "@material-ui/icons/FindReplace";
-import Analyze from "@material-ui/icons/ScatterPlot";
-import Share from "@material-ui/icons/GetApp";
 import {
     Box,
-    Container,
     createStyles,
     Grid,
     GridProps,
@@ -25,11 +21,11 @@ import {
     SvgIconProps,
     Typography,
     TypographyProps,
-    useTheme,
     withStyles,
 } from "@material-ui/core";
 
 import Browser from "./../Visualizations/Igv/IgvBrowser";
+import { HighchartsDatasetSummaryDonut as Donut } from "./../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
 import {
     DarkContrastText,
     LightContrastCaptionTextItalic,
@@ -70,7 +66,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 <NarrowerWidthRow spacing={0}>
                     {/* chart and search bar */}
                     {/* should be 6 ems of padding here total... */}
-                    <Grid item container direction="row">
+                    <Grid item container direction="row" spacing={6}>
                         {/* heading and search bar column */}
                         <Grid item direction="row" container xs={12} sm={6}>
                             <Grid item container spacing={2} direction="column">
@@ -115,7 +111,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         {/* chart column */}
                         <Hidden mdDown>
                             <Grid item justify="center" alignItems="center" container md={6}>
-                                <img height={300} src={`${webAppUrl}/images/home_page/genomicsdb-tally-donut.svg`} />
+                                <Donut />
                             </Grid>
                         </Hidden>
                     </Grid>

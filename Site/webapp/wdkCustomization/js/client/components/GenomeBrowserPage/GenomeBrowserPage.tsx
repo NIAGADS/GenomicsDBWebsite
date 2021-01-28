@@ -4,17 +4,16 @@ import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
 import theme from "./../../theme";
-import TrackBrowser from "./../Visualizations/Igv/IgvTrackBrowser";
+import TrackBrowser, { IgvTrackConfig } from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
-import { NiagadsGwasTrack } from "./../../../lib/igv/NiagadsTracks";
-import { makeStyles, ThemeProvider, withStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import { get } from "lodash";
 import { WdkServiceContext } from "wdk-client/Service/WdkService";
 import { PrimaryActionButton } from "../Shared";
-import { CheckBox } from "@material-ui/icons";
+import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
@@ -30,9 +29,22 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
     const wdkService = useContext(WdkServiceContext);
 
     useEffect(() => {
-        wdkService
-            ._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`)
-            .then((res) => setTrackList(res.map((res) => transformRawNiagadsTrack(res))));
+        wdkService._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
+            setTrackList(
+                res
+                    .map((res) => transformRawNiagadsTrack(res))
+                    .map((t) =>
+                        //we have to manually attach the reader to the config coming out of the backend
+                        t.trackType === "refgene"
+                            ? {
+                                  ...t,
+                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                                  trackType: "annotation",
+                              }
+                            : t
+                    )
+            )
+        );
     }, [wdkService, serviceUrl]);
 
     const [Browser, setBrowser] = useState<any>(),
@@ -41,30 +53,60 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
         [reloadKey, setReloadKey] = useState(makeReloadKey()),
         [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>();
 
-    const location = useLocation();
-
-    const defaultSpan = useMemo(() => {
-        return get(qs.parse(location.search), "locus") as string;
-    }, [location.search]);
+    const refGeneTrack = useMemo(() => {
+        if (trackList) {
+            const refGeneTrack = trackList.find((t) => t.name === "Ensembl Genes"),
+                { url, format, reader, name } = refGeneTrack,
+                trackConfig: IgvTrackConfig = {
+                    displayMode: "expanded",
+                    format,
+                    id: name,
+                    name,
+                    reader,
+                    type: "annotation",
+                    //url: `${serviceUrl}/track/gene`,
+                    url,
+                    visibilityWindow: -1,
+                };
+            return trackConfig;
+        } else return null;
+    }, [trackList]);
 
     const loadTrack = async (config: TrackConfig) => {
             setLoadingTrack(config.name);
             await Browser.loadTrack(config);
             setLoadingTrack(undefined);
         },
-        getTrackIsLoaded = (config: TrackConfig) => getLoadedTracks(Browser).includes(config.name),
-        toggleTracks = (config: TrackConfig[]) => {
+        getTrackIsLoaded = (config: TrackConfig) => getLoadedTracks(Browser).includes(config.name);
+
+    //since we're going to treat the ref track like any other track in our track list
+    //we're not going to load it from the start but rather wait till the list comes in,
+    //grab it from the list, and load it ourselves
+    useEffect(() => {
+        if (trackList && Browser && refGeneTrack) {
+            if (!getTrackIsLoaded(refGeneTrack)) {
+                loadTrack(refGeneTrack);
+            }
+        }
+    }, [trackList, Browser, refGeneTrack]);
+
+    const location = useLocation();
+
+    const defaultSpan = useMemo(() => {
+        return get(qs.parse(location.search), "locus") as string;
+    }, [location.search]);
+
+    const toggleTracks = (config: TrackConfig[]) => {
             config.forEach((c) => {
                 getTrackIsLoaded(c) ? unloadTrack(c) : loadTrack(c);
             });
         },
         unloadTrack = (config: TrackConfig) => {
             Browser.removeTrackByName(config.name);
-            //force react to update based on imperative change
+            //force react to update based on imperative change // i dont think we need this?
             setReloadKey(makeReloadKey());
         },
         buildBrowser = useCallback((b: any) => {
-            b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGwasTrack(config, browser));
             setBrowser(b);
         }, []);
 
@@ -83,6 +125,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                 <Grid>
                     <MemoBroswer
                         defaultSpan={defaultSpan}
+                        disableRefTrack={true}
                         onBrowserLoad={buildBrowser}
                         searchUrl={`${serviceUrl}/track/feature?id=`}
                         serviceUrl={serviceUrl}
@@ -166,8 +209,8 @@ interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
 export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
     featureType: string;
     phenotypes: string;
+    reader?: any;
     track: string;
     trackType: string;
     url: string;
 }
-
