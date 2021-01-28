@@ -2,31 +2,22 @@ import React, { useState } from "react";
 import { merge } from "lodash";
 import { Options } from "highcharts";
 import HighchartsPlot from "./HighchartsPlot";
-import { addTitle, disableExport, applyCustomSeriesColor, backgroundTransparent } from "./HighchartsOptions";
+import {
+    addTitle,
+    disableExport,
+    applyCustomSeriesColor,
+    backgroundTransparent,
+    disableSeriesAnimationOnLoad,
+} from "./HighchartsOptions";
 import { _color_blind_friendly_palettes as PALETTES } from "../palettes";
 import WdkService, { useWdkEffect } from "wdk-client/Service/WdkService";
 import { useGoto } from "../../../hooks";
 import { Point, PointClickEventObject } from "highcharts";
 
-interface ChartData {
-    data: [string, number, string][];
-}
+type ChartData = [string, number, string];
 
 export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
-    const [series, setSeries] = useState(null),
-        goto = useGoto();
-
-    useWdkEffect((service: WdkService) => {
-        service
-            ._fetchJson<ChartData>("get", `/dataset/summary_plot`)
-            .then((res: ChartData) => setSeries(buildSeries(res)))
-            .catch((err) => console.log(err));
-    }, []);
-
-    const searchDatasets = (point: Point) =>
-        goto(`search/gwas_summary/neuropathology?autoRun=true&value=${point.name}`);
-
-    const buildSeries = (data: ChartData) => {
+    const buildSeries = (data: ChartData[]) => {
         const series = {
             series: [
                 {
@@ -53,6 +44,19 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         return series;
     };
 
+    const [series, setSeries] = useState(buildSeries([["Datasets", 69, "All Summary Statistics Datasets"]])),
+        goto = useGoto();
+
+    const searchDatasets = (point: Point) =>
+        goto(`search/gwas_summary/neuropathology?autoRun=true&value=${point.name}`);
+
+    useWdkEffect((service: WdkService) => {
+        service
+            ._fetchJson<ChartData[]>("get", `/dataset/summary_plot`)
+            .then((res) => setSeries(buildSeries(res)))
+            .catch((err) => console.log(err));
+    }, []);
+
     const buildDonutPlotOptions = () => {
         let plotOptions: Options = {
             tooltip: {
@@ -71,6 +75,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         plotOptions = merge(plotOptions, disableExport());
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
+        plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
 
         return plotOptions;
     };
