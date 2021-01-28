@@ -6,6 +6,7 @@ import Search from "@material-ui/icons/Search";
 import { isEmpty } from "lodash";
 import { WdkServiceContext } from "wdk-client/Service/WdkService";
 import { useTheme } from "@material-ui/core";
+import { isString, get } from "lodash";
 
 export interface SearchResult {
     type?: "result" | "summary";
@@ -19,13 +20,13 @@ export interface SearchResult {
 
 interface MultiSearch {
     canGrow?: boolean;
-    onSelect: (result: SearchResult & { searchTerm: string }) => void;
+    onSelect: (selectedOption: SearchResult, searchTerm: string) => void;
 }
 
 export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
     const [options, setOptions] = useState<SearchResult[]>([]),
-        [selected, setSelected] = useState<SearchResult>(),
         [inputValue, setInputValue] = useState<string>(""),
+        [resetKey, setResetKey] = useState(Math.random().toString(32).slice(2)),
         [searchInProgress, setSearchInProgress] = useState(false),
         wdkService = useContext(WdkServiceContext);
 
@@ -67,6 +68,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
 
     return (
         <Autocomplete
+            key={resetKey}
             style={{ flexGrow: 1 }}
             autoComplete
             clearOnEscape
@@ -76,7 +78,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
             freeSolo
             fullWidth={canGrow}
             getOptionSelected={(option, value) => option.primary_key === value.primary_key}
-            getOptionLabel={(option) => option.matched_term}
+            getOptionLabel={(option) => get(option, "matched_term", "")}
             includeInputInList={true}
             noOptionsText="No Results"
             options={options}
@@ -87,11 +89,14 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                     setInputValue(newInputValue);
                 }
             }}
-            onChange={(event: any, newValue: any) => {
+            onChange={(event: any, selectedValue: string | SearchResult) => {
                 //seems simpler to hold onto internal state
                 //controlling b/c we might want to format differently than getOptionLabel() would have us, which is the default for uncontrolled
-                setSelected(newValue);
-                onSelect({ ...newValue, searchTerm: inputValue });
+                setInputValue("");
+                setResetKey(Math.random().toString(32).slice(2));
+                if (isString(selectedValue)) {
+                    onSelect(null, inputValue);
+                } else onSelect(selectedValue, inputValue);
             }}
             renderInput={(params) => {
                 const { InputLabelProps, InputProps, ...rest } = params;
@@ -113,7 +118,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                     </small>
                 </span>
             )}
-            value={selected}
+            value={""}
         />
     );
 };

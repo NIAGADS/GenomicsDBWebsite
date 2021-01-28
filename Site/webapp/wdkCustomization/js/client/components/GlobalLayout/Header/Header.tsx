@@ -59,11 +59,11 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                             <Grid direction="row" item justify="space-between" container>
                                 <Grid item container justify="center" xs={6} md={3}>
                                     <MultiSearch
-                                        onSelect={(result: SearchResult & { searchTerm: string }) =>
+                                        onSelect={(value: SearchResult, searchTerm: string) =>
                                             goto(
-                                                result.type == "summary"
-                                                    ? buildSummaryRoute(result.searchTerm)
-                                                    : buildRouteFromResult(result)
+                                                !value || value.type == "summary"
+                                                    ? buildSummaryRoute(searchTerm)
+                                                    : buildRouteFromResult(value)
                                             )
                                         }
                                     />

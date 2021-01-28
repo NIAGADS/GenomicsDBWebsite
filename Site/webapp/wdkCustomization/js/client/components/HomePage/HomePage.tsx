@@ -85,11 +85,11 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                 </Grid>
                                 <Grid item>
                                     <MultiSearch
-                                        onSelect={(result: SearchResult & { searchTerm: string }) =>
+                                        onSelect={(value: SearchResult, searchTerm: string) =>
                                             goto(
-                                                result.type == "summary"
-                                                    ? buildSummaryRoute(result.searchTerm)
-                                                    : buildRouteFromResult(result)
+                                                !value || value.type == "summary"
+                                                    ? buildSummaryRoute(searchTerm)
+                                                    : buildRouteFromResult(value)
                                             )
                                         }
                                     />
