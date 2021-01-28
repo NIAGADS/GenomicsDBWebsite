@@ -12,8 +12,7 @@ import {
   updateActiveQuestion
 } from "wdk-client/Actions/QuestionActions";
 import { QuestionState } from "wdk-client/StoreModules/QuestionStoreModule";
-import { HighchartsManhattan } from "../../../Visualizations/Highcharts/HighchartsManhattan";
-import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
+
 
 const SEARCH_NAME = "gwas_stats";
 const PVALUE_PARAM_NAME = "pvalue";

@@ -1,6 +1,7 @@
 import { Options, OptionsStackingValue } from 'highcharts';
 import { Term, Glossary } from '../../../data/glossary';
 import { merge } from 'lodash';
+import { _color_blind_friendly_palettes as PALETTES} from '../palettes';
 
 /* const HIGHCHARTS_EXPORTING_MENU_ITEMS = [
     "printChart",
@@ -29,9 +30,6 @@ import { merge } from 'lodash';
     "viewData",
     "openInCloud"
 ]; */
-
-const PuBlRd_COLOR_BLIND_PALETTE = ["#601A4A", "#EE442F", "#63ACBE"];
-const RdBlPu_COLOR_BLIND_PALETTE = ["#EE442F", "#601A4A", "#63ACBE"];
 
 export const HIGHCHARTS_DEFAULTS: Options = {
     credits: { enabled: false }
@@ -39,6 +37,8 @@ export const HIGHCHARTS_DEFAULTS: Options = {
 
 export function buildChartOptions(chartType: string) {
     switch (chartType) {
+        case "pie":
+            return buildPieChartOptions();
         case "column":
             return buildColumnChartOptions();
         case "bubble":
@@ -104,7 +104,7 @@ export function buildInteractiveManhattanOptions(options?: Options) {
                     width: 1,
                     dashStyle: "Dash",
                     value: 7.30102999566,
-                    label: { text: "p <= 5e-8", style: { color: "red" } , align: "right"},
+                    label: { text: "p <= 5e-8", style: { color: "red" }, align: "right" },
                     zIndex: 5
                 }
             ]
@@ -175,7 +175,7 @@ export function buildVariantGwsSummaryOptions(options?: Options) {
     plotOptions = merge(plotOptions, disableLegendHover());
     plotOptions = merge(plotOptions, limitedExportMenu());
     plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
-    plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE.slice(0, 2)));
+    plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.RdBlPu.slice(0, 2)));
 
     if (options) {
         plotOptions = merge(plotOptions, options);
@@ -219,7 +219,7 @@ export function buildGeneGwsSummaryOptions(options?: Options) {
     plotOptions = merge(plotOptions, disableLegendHover());
     plotOptions = merge(plotOptions, limitedExportMenu());
     plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
-    plotOptions = merge(plotOptions, applyCustomSeriesColor(RdBlPu_COLOR_BLIND_PALETTE));
+    plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.RdBlPu));
 
     if (options) {
         plotOptions = merge(plotOptions, options);
@@ -228,6 +228,21 @@ export function buildGeneGwsSummaryOptions(options?: Options) {
     return buildColumnChartOptions(true, "normal", plotOptions) // stacked bar (inverted column) w/additional formatting from above
 }
 
+
+export function buildPieChartOptions(options?: Options) {
+    let plotOptions: Options = {
+        chart: {
+            type: "pie",
+            plotShadow: false,
+        }
+    }
+
+    if (options) {
+        plotOptions = merge(plotOptions, options);
+    }
+
+    return Object.assign({}, HIGHCHARTS_DEFAULTS, plotOptions);
+}
 
 export function buildScatterChartOptions(options?: Options) {
     let plotOptions: Options = {
@@ -287,7 +302,18 @@ export function buildColumnChartOptions(inverted?: boolean, stacking?: OptionsSt
 }
 
 
-function noDataExports() {
+
+export function disableExport() {
+    const plotOptions: Options = {
+        exporting: {
+            enabled: false
+        }
+    }
+
+    return plotOptions;
+}
+
+export function noDataExports() {
     const HIGHCHARTS_EXPORTING_MENU_ITEMS = [
         "printChart",
         "separator",
@@ -313,7 +339,7 @@ function noDataExports() {
 
 }
 
-function limitedExportMenu() {
+export function limitedExportMenu() {
     const plotOptions: Options = {
         exporting: {
             buttons: {
@@ -347,9 +373,8 @@ export function applyCustomSeriesColor(palette: string[]) {
     return plotOptions;
 }
 
-
 export function disableLegendClick() {
-    const plotOptions: Options = {
+   const plotOptions: Options = {
         plotOptions: {
             series: {
                 events: {
@@ -392,6 +417,14 @@ export function addSeries(series: any) {
     return plotOptions;
 }
 
+export function backgroundTransparent() {
+    const plotOptions: Options = {
+        chart: {
+            backgroundColor: "transparent"
+        }
+    }
+    return plotOptions;
+}
 
 export function buildTooltipOptions(shared?: boolean, outside?: boolean) {
     const plotOptions: Options = {
@@ -414,11 +447,18 @@ export function addCategories(categories: string[], axis: string = "xAxis") {
 }
 
 export function addTitle(title: string) {
-    const plotOptions: Options = {
-        title: {
-            text: title
+
+    const plotOptions: Options = title !== null
+        ? {
+            title: {
+                text: title
+            }
         }
-    }
+        : {
+            title: {
+                text: undefined
+            }
+        }
 
     return plotOptions;
 }
