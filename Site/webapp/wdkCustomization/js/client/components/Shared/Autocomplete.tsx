@@ -25,7 +25,7 @@ interface MultiSearch {
 export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
     const [options, setOptions] = useState<SearchResult[]>([]),
         [selected, setSelected] = useState<SearchResult>(),
-        [inputValue, setInputValue] = useState<string>(),
+        [inputValue, setInputValue] = useState<string>(""),
         [searchInProgress, setSearchInProgress] = useState(false),
         wdkService = useContext(WdkServiceContext);
 
@@ -67,6 +67,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
 
     return (
         <Autocomplete
+            style={{ flexGrow: 1 }}
             autoComplete
             clearOnEscape
             //we're filtering on the server, so no need to filter here

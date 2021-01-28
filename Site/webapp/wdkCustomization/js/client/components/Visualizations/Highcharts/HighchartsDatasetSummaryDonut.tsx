@@ -80,7 +80,5 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         return plotOptions;
     };
 
-    return series ? (
-        <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} />
-    ) : null;
+    return <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} />;
 };

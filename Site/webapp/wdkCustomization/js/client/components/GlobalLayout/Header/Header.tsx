@@ -3,9 +3,10 @@ import { Box, Grid, Hidden, Menu, MenuItem, Typography, TypographyProps, withSty
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "../../../theme";
 import { useGoto } from "../../../hooks";
-import { PrimaryActionButton } from "../../Shared";
+import { MultiSearch, PrimaryActionButton, SearchResult } from "../../Shared";
 import { Home } from "@material-ui/icons";
 import { LightContrastText } from "../../Shared/Typography";
+import { buildRouteFromResult, buildSummaryRoute } from "../../HomePage/HomePage";
 
 interface Header {
     isLoggedIn: boolean;
@@ -24,44 +25,58 @@ const menuConfig: MenuElement[] = [
 ];
 
 const Header: React.FC<Header> = ({ isLoggedIn }) => {
+    const goto = useGoto();
     return (
         <ThemeProvider theme={theme}>
             <Box borderBottom={1} borderColor="grey.500">
                 <Grid container className="p-2">
                     <Hidden mdDown>
-                        <Grid container alignItems="center" item md={6}>
+                        <Grid container alignItems="center" item xs={3}>
                             <SiteTitle>GenomicsDB</SiteTitle>
                         </Grid>
                     </Hidden>
-                    <Grid item spacing={2} direction="column" container xs={12} md={6}>
-                        <Grid direction="row" wrap="nowrap" item container justify="flex-end" alignItems="center">
-                            <Grid item className="mr-2" container alignItems="center" justify="flex-end">
-                                <LightContrastText variant="body2">
-                                    <strong>Build Number: GRCh37.p13/hg19</strong>
-                                    <span className="m-3">|</span>
-                                    <span>Welcome, Guest</span>
-                                </LightContrastText>
+                    <Grid item container direction="row" xs={12} lg={9}>
+                        <Grid item spacing={2} direction="column" container>
+                            <Grid direction="row" wrap="nowrap" item container justify="flex-end" alignItems="center">
+                                <Grid item className="mr-2" container alignItems="center" justify="flex-end">
+                                    <LightContrastText variant="body2">
+                                        <strong>Build Number: GRCh37.p13/hg19</strong>
+                                        <span className="m-3">|</span>
+                                        <span>Welcome, Guest</span>
+                                    </LightContrastText>
+                                </Grid>
+                                <Grid item>
+                                    <PrimaryActionButton>User Login</PrimaryActionButton>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <PrimaryActionButton>User Login</PrimaryActionButton>
-                            </Grid>
-                        </Grid>
-                        <Grid direction="row" item justify="flex-end" container>
-                            <Grid
-                                alignItems="center"
-                                container
-                                item
-                                xs={12}
-                                xl={9}
-                                wrap="nowrap"
-                                justify="space-evenly"
-                            >
-                                {menuConfig.map((conf, i) => (
-                                    <React.Fragment key={i}>
-                                        <MenuElement {...conf} />
-                                        {/*                                         {i === menuConfig.length - 1 ? null : "|"} */}
-                                    </React.Fragment>
-                                ))}
+                            <Grid direction="row" item justify="space-between" container>
+                                <Grid item container justify="center" xs={6} md={3}>
+                                    <MultiSearch
+                                        onSelect={(result: SearchResult & { searchTerm: string }) =>
+                                            goto(
+                                                result.type == "summary"
+                                                    ? buildSummaryRoute(result.searchTerm)
+                                                    : buildRouteFromResult(result)
+                                            )
+                                        }
+                                    />
+                                </Grid>
+                                <Grid
+                                    alignItems="center"
+                                    container
+                                    item
+                                    xs={12}
+                                    md={9}
+                                    wrap="nowrap"
+                                    justify="space-evenly"
+                                >
+                                    {menuConfig.map((conf, i) => (
+                                        <React.Fragment key={i}>
+                                            <MenuElement {...conf} />
+                                            {/*{i === menuConfig.length - 1 ? null : "|"} */}
+                                        </React.Fragment>
+                                    ))}
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -90,7 +105,7 @@ const MenuElement: React.FC<MenuElement> = ({ items, target, title }) => {
             : goto.bind(null, target);
 
     return (
-        <div>
+        <Box pl={1}>
             <MenuTitle onClick={onClick}>
                 {title === "Home" && <Home />}
                 {title}
@@ -124,7 +139,7 @@ const MenuElement: React.FC<MenuElement> = ({ items, target, title }) => {
                     ))}
                 </Menu>
             )}
-        </div>
+        </Box>
     );
 };
 
