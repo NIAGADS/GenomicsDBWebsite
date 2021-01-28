@@ -4,19 +4,19 @@ import { Options } from 'highcharts';
 import HighchartsPlot from './HighchartsPlot';
 import {
     addTitle,
-    disableLegendClick,
     disableExport,
     applyCustomSeriesColor,
-    backgroundTransparent
+    backgroundTransparent,
+    disableSeriesAnimationOnLoad
 } from './HighchartsOptions';
-import {_color_blind_friendly_palettes as PALETTES} from '../palettes';
+import { _color_blind_friendly_palettes as PALETTES } from '../palettes';
 import WdkService, { useWdkEffect } from 'wdk-client/Service/WdkService';
 import { Loading, LoadingOverlay } from 'wdk-client/Components';
 
 
 
 interface DatasetSummaryDonutProps {
-    properties: any;
+    webAppUrl: string;
 }
 
 
@@ -25,11 +25,14 @@ interface ChartData {
 }
 
 export const HighchartsDatasetSummaryDonut: React.FC<DatasetSummaryDonutProps> = props => {
-    const { properties } = props;
-    const [series, setSeries] = useState(null);
+    const { webAppUrl } = props;
+    const initialData: any = ['Datasets', 69, 'All Summary Statistics Datasets']; // TODO lookup total # datasets from model.prop
+    const [series, setSeries] = useState(initialData);
+    const [seriesUpdated, setSeriesUpdated] = useState(false); // since the request for the series is a one-off, set flag to limit re-rendering
+
 
     function searchDatasets(point: any) {
-        let endpoint = properties.webAppUrl + "/app/search/gwas_summary/neuropathology?autoRun=true&value="
+        let endpoint = webAppUrl + "/app/search/gwas_summary/neuropathology?autoRun=true&value="
         location.href = endpoint + point.name;
     }
 
@@ -48,8 +51,8 @@ export const HighchartsDatasetSummaryDonut: React.FC<DatasetSummaryDonutProps> =
                     point: {
                         events: {
                             click: function () { return searchDatasets(this); },
-                            legendItemClick: function() {return false;} // for pies this is a point, not a series property
-                        } 
+                            legendItemClick: function () { return false; } // for pies this is a point, not a series property
+                        }
                     },
                     keys: ["name", "y", "full_name"],
                     data: data,
@@ -79,6 +82,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<DatasetSummaryDonutProps> =
         plotOptions = merge(plotOptions, disableExport());
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
+        plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
 
         console.log(plotOptions);
         return plotOptions;
@@ -92,14 +96,13 @@ export const HighchartsDatasetSummaryDonut: React.FC<DatasetSummaryDonutProps> =
                 `/dataset/summary_plot`
             )
             .then((res: ChartData) => setSeries(buildSeries(res)))
+            .then(() => setSeriesUpdated(true))
             .catch(err => console.log(err));
     };
 
-    useWdkEffect(sendRequest(), []);
+    useWdkEffect(sendRequest(), [seriesUpdated]);
 
     return (
-        series ?
-            <HighchartsPlot data={series} properties={properties} plotOptions={buildDonutPlotOptions()} />
-            : <LoadingOverlay></LoadingOverlay>
+        <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} />
     );
 }
