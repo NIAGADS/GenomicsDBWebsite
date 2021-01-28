@@ -55,7 +55,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
                         "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/cytoBand.txt",
                     tracks: [
                         {
-                            name: "Niagads gene track",
+                            name: "Ensembl Genes",
                             displayMode: "expanded",
                             visibilityWindow: 100000000,
                             format: "refgene",

@@ -252,7 +252,6 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                             data={trackList}
                             PaginationComponent={PaginationComponent}
                             minRows={0}
-                            pageSize={25}
                         />
                     </Grid>
                 </Grid>

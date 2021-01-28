@@ -1,5 +1,7 @@
 import React from "react";
 import { findExportWith } from "ebrc-client/component-wrappers/util";
+import theme from "./../theme";
+import { ThemeProvider } from "@material-ui/core";
 
 //todo: typings (esp dynamic record interface, cause that's going to become a problem)
 export function RecordHeading(DefaultComponent: any) {
@@ -18,7 +20,11 @@ export function RecordHeading(DefaultComponent: any) {
 export function RecordMainSection(DefaultComponent: React.Component) {
     const DynamicRecordMainSection = makeDynamicWrapper("RecordMainSection")(DefaultComponent);
     return function NiagadsRecordMainSection(props: any) {
-        return <DynamicRecordMainSection {...props} />;
+        return (
+            <ThemeProvider theme={theme}>
+                <DynamicRecordMainSection {...props} />
+            </ThemeProvider>
+        );
     };
 }
 
