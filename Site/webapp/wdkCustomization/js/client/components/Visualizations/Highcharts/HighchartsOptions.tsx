@@ -353,6 +353,15 @@ export function limitedExportMenu() {
     return plotOptions;
 }
 
+export function disableChartAnimationOnUpdate() {
+    const plotOptions: Options = {
+        chart: {
+            animation: false
+        }
+    }
+
+    return plotOptions;
+}
 export function disableSeriesAnimationOnLoad() {
     const plotOptions: Options = {
         plotOptions: {

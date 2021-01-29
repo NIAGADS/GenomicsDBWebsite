@@ -8,6 +8,7 @@ import {
     applyCustomSeriesColor,
     backgroundTransparent,
     disableSeriesAnimationOnLoad,
+    disableChartAnimationOnUpdate
 } from "./HighchartsOptions";
 import { _color_blind_friendly_palettes as PALETTES } from "../palettes";
 import WdkService, { useWdkEffect } from "wdk-client/Service/WdkService";
@@ -45,10 +46,10 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
     };
 
     const [series, setSeries] = useState(buildSeries([["Datasets", 69, "All Summary Statistics Datasets"]])),
-        goto = useGoto();
+    goto = useGoto();
 
     const searchDatasets = (point: Point) =>
-        goto(`search/gwas_summary/neuropathology?autoRun=true&value=${point.name}`);
+        goto(`search/gwas_summary/neuropathology?autoRun=true&param.phenotype=${point.name}`);
 
     useWdkEffect((service: WdkService) => {
         service
@@ -60,7 +61,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
     const buildDonutPlotOptions = () => {
         let plotOptions: Options = {
             tooltip: {
-                pointFormat: "{point.full_name}: <b>{point.y}</b>",
+                pointFormat: "{point.full_name}: <b>{point.y}</b> <br/>Click on chart to browse these datasets.",
             },
             legend: {
                 align: "right",
@@ -69,6 +70,10 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
                 itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
                 itemHoverStyle: { color: "#ffc665" },
             },
+            /*caption: {
+                text: 'Click on chart to find datasets associated with the selected AD-related dementia or neuropathology.',
+                style: {color: "white"}
+            }*/
         };
 
         plotOptions = merge(plotOptions, addTitle(null));
@@ -76,6 +81,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
         plotOptions = merge(plotOptions, disableSeriesAnimationOnLoad());
+        plotOptions = merge(plotOptions, disableChartAnimationOnUpdate());
 
         return plotOptions;
     };
