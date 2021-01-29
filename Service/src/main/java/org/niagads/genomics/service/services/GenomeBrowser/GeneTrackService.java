@@ -58,9 +58,14 @@ public class GeneTrackService extends AbstractWdkService {
         JSONObject response = new JSONObject();
       
         try {
-            JSONArray data = (locationStart == null) ? lookupChr(chromosome) : lookupSpan(chromosome, locationStart, locationEnd);
-            //LOG.debug("query result: " + data.toString());
-            response.put("data", data);
+            if (chromosome != "all") {
+                JSONArray data = (locationStart == null) ? lookupChr(chromosome) : lookupSpan(chromosome, locationStart, locationEnd);
+                response.put("data", data);
+            }
+            else { // no response for all chrs
+                response.put("data", new JSONArray()); 
+            }
+            //LOG.debug("query result: " + data.toString());         
         }
 
         catch (WdkRuntimeException ex) {
@@ -86,7 +91,7 @@ public class GeneTrackService extends AbstractWdkService {
         }
 
         String resultStr = (String) results.get(0).get("result");
-        if (resultStr == "null") {
+        if (resultStr == "null" || resultStr == null) {
             return new JSONArray();
         }
 
@@ -109,7 +114,7 @@ public class GeneTrackService extends AbstractWdkService {
         }
 
         String resultStr = (String) results.get(0).get("result");
-        if (resultStr == "null") {
+        if (resultStr == "null" || resultStr == null) {
             return new JSONArray();
         }
 

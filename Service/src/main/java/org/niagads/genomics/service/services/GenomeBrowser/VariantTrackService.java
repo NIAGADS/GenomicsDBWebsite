@@ -33,6 +33,7 @@ public class VariantTrackService extends AbstractWdkService {
     private static final String DBSNP_COMMON_TRACK="dbSNP_COMMON";
     private static final String ADSP_TRACK="ADSP";
     private static final String ADSP_WES_TRACK="ADSP_WES";
+    private static final String ADSP_WGS_TRACK="ADSP_WGS";
 
     private static final String CHROMOSOME_PARAM = "chromosome";
     private static final String TRACK_PARAM = "track";
@@ -74,7 +75,7 @@ public class VariantTrackService extends AbstractWdkService {
         response.put("track", track);
 
         try {
-            JSONArray data = fetchResult(track, chromosome, locationStart, locationEnd);
+            JSONArray data = lookup(track, chromosome, locationStart, locationEnd);
             //LOG.debug("query result: " + data.toString());
             response.put("data", data);
         }
@@ -87,7 +88,7 @@ public class VariantTrackService extends AbstractWdkService {
     }
 
 
-    private JSONArray fetchResult(String track, String chromosome, Long locationStart, Long locationEnd) {
+    private JSONArray lookup(String track, String chromosome, Long locationStart, Long locationEnd) {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
@@ -106,7 +107,7 @@ public class VariantTrackService extends AbstractWdkService {
         }
 
         String resultStr = (String) results.get(0).get("result");
-        if (resultStr == "null") {
+        if (resultStr == "null" || resultStr == null) {
             return new JSONArray();
         }
 
@@ -133,7 +134,7 @@ public class VariantTrackService extends AbstractWdkService {
 
         cteSql += ")";
 
-        LOG.debug(cteSql);
+        //LOG.debug(cteSql);
 
         String querySql = cteSql + NL
             + "SELECT jsonb_agg(row_json)::text AS result FROM vcfRows";

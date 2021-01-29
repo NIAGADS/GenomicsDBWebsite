@@ -37,8 +37,9 @@ public class TrackConfigService extends AbstractWdkService {
         + "SELECT 'GENCODE_V19_GENE'::text AS track, 'gene'::text AS track_type, 'GENCODE|ENSEMBL'::text AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', 'ENSEMBL_GENE'," + NL
-        + "'feature_type', 'gene'," + NL
-        + "'track_type', 'refgene'," + NL
+        + "'feature_type', 'Gene'," + NL
+        + "'track_type_display', 'Gene Annotation'," + NL
+        + "'track_type', 'annotation'," + NL  // refseq
         + "'endpoint', '@SERVICE_BASE_URI@/track/gene'," + NL
         + "'label', 'Ensembl Genes'," + NL
         + "'source', 'GENCODE|ENSEMBL'," + NL
@@ -50,7 +51,8 @@ public class TrackConfigService extends AbstractWdkService {
         + "SELECT track, 'variant'::text AS track_type, CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', track," + NL
-        + "'feature_type', 'variant'," + NL
+        + "'feature_type', 'Variant'," + NL
+        + "'track_type_display', 'Variant Annotation'," + NL
         + "'track_type', 'niagadsvariant'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
         + "'label', track_name," +  NL
@@ -83,7 +85,8 @@ public class TrackConfigService extends AbstractWdkService {
         + "jsonb_build_object(" + NL
         + "'track', ta.track," + NL
         + "'label', ta.name," + NL
-        + "'feature_type', 'gwas'," + NL
+        + "'feature_type', 'Variant'," + NL
+        + "'track_type_display', 'GWAS Summary Statistics'," + NL
         + "'track_type', 'niagadsgwas'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/gwas'," + NL
         + "'source', 'NIAGADS'," + NL
@@ -93,7 +96,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "FROM GwasPhenotypes p," + NL
         + "NIAGADS.TrackAttributes ta" + NL
         + "WHERE p.track = ta.track" + NL
-        + "AND ta.track LIKE 'NG%'" + NL
+        + "AND ta.dataset_accession LIKE 'NG0%'" + NL
         + "GROUP BY ta.track, ta.name, ta.description, ta.attribution" + NL
         + "ORDER BY ta.track)";
 
@@ -109,13 +112,15 @@ public class TrackConfigService extends AbstractWdkService {
         + "ta.dataset_accession AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', ta.track," + NL
-        + "'name', ta.name," + NL
+        + "'name',  replace(ta.name,'ChromHMM 15-state model for', 'Roadmap Enhancer:')," + NL
         + "'track_type', 'annotation'," + NL
         + "'format', 'bed'," + NL
-        + "'feature_type', 'enhancer'," + NL
+        + "'feature_type', 'Enhancer'," + NL
+        + "'track_type_display', 'Functional Genomics'," + NL
         + "'path', '@FILER_TRACK_URL@' || '/' || pan.uri,"  + NL
         + "'source', 'ROADMAP|FILER'," + NL
-        + "'label', replace(ta.name,'ChromHMM 15-state model for', 'Roadmap Enhancers:')," + NL
+        + "'label', replace(ta.name,'ChromHMM 15-state model for', 'Enh:')," + NL
+        + "'description', ta.name,"
         + "'phenotypes', json_agg(jsonb_build_object(p.characteristic_type, p.characteristic))) AS track_config" + NL
         + "FROM NIAGADS.TrackAttributes ta, Phenotypes p, Phenotypes enhancers," + NL
         + "Study.ProtocolAppNode pan" + NL

@@ -95,7 +95,7 @@ public class FeatureLookupService extends AbstractWdkService {
         SQLRunner runner = new SQLRunner(ds, sql, "track-feature-lookup-query");
    
         if (isVariant && isRefSnp(id)) {
-            runner.executeQuery(new Object[] {id}, handler);
+            runner.executeQuery(new Object[] {id.toLowerCase()}, handler);
         }
         else {
             runner.executeQuery(new Object[] {id, id, id}, handler);
