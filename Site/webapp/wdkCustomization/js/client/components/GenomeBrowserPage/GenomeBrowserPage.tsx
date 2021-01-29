@@ -35,7 +35,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                     .map((res) => transformRawNiagadsTrack(res))
                     .map((t) =>
                         //we have to manually attach the reader to the config coming out of the backend
-                        t.trackType === "refgene"
+                        t.track === "ENSEMBL_GENE"
                             ? {
                                   ...t,
                                   reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
@@ -55,7 +55,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
 
     const refGeneTrack = useMemo(() => {
         if (trackList) {
-            const refGeneTrack = trackList.find((t) => t.name === "Ensembl Genes"),
+            const refGeneTrack = trackList.find((t) => t.track === "ENSEMBL_GENE"),
                 { url, format, reader, name } = refGeneTrack,
                 trackConfig: IgvTrackConfig = {
                     displayMode: "expanded",
