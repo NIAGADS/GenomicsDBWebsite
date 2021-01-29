@@ -150,6 +150,8 @@ DatasetRecordClasses.GWASDatasetRecordClass.niagads_accession	http://edamontolog
 DatasetRecordClasses.GWASDatasetRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	search_link						results	record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.attribution	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	attribution						results	record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.has_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	has_manhattan_plot					1		record-internal	
+DatasetRecordClasses.GWASDatasetRecordClass.phenotype_list	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	phenotype_list						results	record-internal	download
+DatasetRecordClasses.GWASDatasetRecordClass.covariate_list	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	covariate_list						results	record-internal	download
 													
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_expanded_snps					1		record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_tag_ideogram	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_tag_ideogram					2		record-internal	
@@ -162,6 +164,8 @@ DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_enhancer_overlap_r
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_enhancer_overlap_fantom5	http://www.niagadsontology.org/no_03	Functional mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_enhancer_overlap_fantom5					1		record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	table	top_variants					2		record	
 DatasetRecordClasses.GWASDatasetRecordClass.phenotypes	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	table	phenotypes							record	
+													
+													
 													
 DatasetRecordClasses.NIAGADSDatasetRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	attribute	name						result	record-internal	download
 DatasetRecordClasses.NIAGADSDatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	attribute	description						result	record-internal	download
