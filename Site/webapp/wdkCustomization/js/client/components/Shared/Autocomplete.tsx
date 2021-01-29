@@ -102,7 +102,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                 const { InputLabelProps, InputProps, ...rest } = params;
                 return (
                     <UnlabeledTextField
-                        placeholder="Enter a gene or variant identifier"
+                        placeholder="Search by keyword or identifier"
                         {...rest}
                         {...InputProps}
                         startAdornment={<Search fontSize={"small"} htmlColor={theme.palette.grey[600]} />}
