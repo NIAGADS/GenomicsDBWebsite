@@ -40,8 +40,8 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                     setOptions(
                         isEmpty(res)
                             ? []
-                            : res.slice(0, 10).concat(
-                                  res.length > 10
+                            : res.slice(0, 5).concat(
+                                  res.length > 5
                                       ? [
                                             {
                                                 type: "summary",
@@ -49,7 +49,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                                                 matched_term: "click to view full results",
                                                 record_type: "dummy",
                                                 description: "dummy",
-                                                display: `...and ${res.length - 10} more`,
+                                                display: `...and ${res.length - 5} more`,
                                                 primary_key: "dummy",
                                             },
                                         ]
