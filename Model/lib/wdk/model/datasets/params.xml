@@ -17,8 +17,17 @@
           </filterParam>
 
           <!-- =============================================================== -->
-          <!-- Spans -->
+          <!-- Phenotype Categories -->
           <!-- =============================================================== -->
+
+	  <flatVocabParam name="phenotype"
+                    queryRef="GWASDatasetVocab.NeuropathologyCategory"
+                    prompt="Neuropathology"
+                    multiPick="false">
+                 
+	    <suggest selectMode="none" allowEmpty="false"/>
+	    <help>Select AD/ADRD neuropathology.  Search will return all NIAGADS GWAS summary statistics datasets that match the selected term.</help>
+	  </flatVocabParam>
 
 
      </paramSet>

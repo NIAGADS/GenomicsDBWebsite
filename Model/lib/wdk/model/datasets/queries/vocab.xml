@@ -3,6 +3,20 @@
 
   <querySet name="GWASDatasetVocab" queryType="vocab" isCacheable="true">
 
+    <sqlQuery name="NeuropathologyCategory">
+      <column name="internal"/>
+      <column name="display"/>
+      <column name="term"/>
+      <sql>
+	<![CDATA[
+		 SELECT DISTINCT category_abbrev AS internal,
+		 category_abbrev AS term,
+		 category AS display
+		 FROM NIAGADS.NeuropathologyTrackCategories
+	]]>
+      </sql>
+    </sqlQuery>
+    
     <sqlQuery name="TrackFilterMetadata">
       <column name="internal"/>
       <column name="ontology_term_name"/>

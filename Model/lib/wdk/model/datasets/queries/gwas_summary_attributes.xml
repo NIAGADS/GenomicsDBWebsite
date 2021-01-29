@@ -29,6 +29,8 @@
             <column name="category"/>
             <column name="is_adsp"/>
             <column name="search_link"/>
+	    <column name="phenotype_list"/>
+	    <column name="covariate_list"/>
             <sql>
                 <![CDATA[
                         SELECT track,
@@ -46,7 +48,36 @@
             </sql>
         </sqlQuery>
 
+	<sqlQuery name="CovariateList">
+	  <column name="track"/>
+	  <column name="project_id"/>
+	  <column name="covariate_list"/>
+	  <sql>
+	    <![CDATA[
+		     SELECT ta.track, '@PROJECT_ID@'::text AS project_id, characteristic AS covariate_list
+		     FROM NIAGADS.TrackAttributes ta LEFT OUTER JOIN NIAGADS.ProtocolAppNodeCharacteristic c
+		     ON c.protocol_app_node_id = ta.protocol_app_node_id
+		     AND characteristic_type = 'covariate_list'
+	    ]]>
+	  </sql>
+	</sqlQuery>
 
+	<sqlQuery name="PhenotypeList">
+	  <column name="track"/>
+	  <column name="project_id"/>
+	  <column name="phenotype_list"/>
+	  <sql>
+	    <![CDATA[
+		     SELECT ta.track, '@PROJECT_ID@'::text AS project_id, characteristic AS phenotype_list
+		     FROM NIAGADS.TrackAttributes ta LEFT OUTER JOIN NIAGADS.ProtocolAppNodeCharacteristic c
+		     ON c.protocol_app_node_id = ta.protocol_app_node_id
+		     AND characteristic_type = 'phenotype_list'
+	    ]]>
+	  </sql>
+	</sqlQuery>
+
+
+	
         <sqlQuery name="HasManhattanPlot">
             <column name="track" columnType="string"/>
             <column name="project_id" columnType="string"/>

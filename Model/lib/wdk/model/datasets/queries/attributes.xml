@@ -43,8 +43,7 @@
                         FROM NIAGADS.DatasetAttributes
                     ]]>
                 </sql>
-            </sqlQuery>
-
+        </sqlQuery>
 
         </querySet>
     </wdkModel>
