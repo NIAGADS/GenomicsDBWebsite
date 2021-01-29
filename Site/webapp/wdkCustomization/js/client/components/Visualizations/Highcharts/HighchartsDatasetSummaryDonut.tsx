@@ -8,7 +8,7 @@ import {
     applyCustomSeriesColor,
     backgroundTransparent,
     disableSeriesAnimationOnLoad,
-    disableChartAnimationOnUpdate
+    disableChartAnimationOnUpdate,
 } from "./HighchartsOptions";
 import { _color_blind_friendly_palettes as PALETTES } from "../palettes";
 import WdkService, { useWdkEffect } from "wdk-client/Service/WdkService";

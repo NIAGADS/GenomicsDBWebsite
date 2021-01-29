@@ -26,6 +26,9 @@
         }
         .rt-tbody {
             overflow-x: hidden;
+            .rt-tr-group {
+                flex-grow: 0;
+            }
         }
         .rt-thead {
             &.-header {

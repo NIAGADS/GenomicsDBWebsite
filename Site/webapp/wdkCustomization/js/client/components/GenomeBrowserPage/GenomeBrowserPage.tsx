@@ -64,7 +64,6 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                     name,
                     reader,
                     type: "annotation",
-                    //url: `${serviceUrl}/track/gene`,
                     url,
                     visibilityWindow: -1,
                 };
@@ -167,7 +166,7 @@ const getLoadedTracks = (browser: any): string[] =>
     get(browser, "trackViews", []).map((view: any) => view.track.name || view.track.id);
 
 const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig): NiagadsBrowserTrackConfig => {
-    const { endpoint, feature_type, path, phenotypes, track_type, ...rest } = track,
+    const { endpoint, feature_type, path, phenotypes, track_type, track_type_display, ...rest } = track,
         niagadsConfig = (rest as unknown) as NiagadsBrowserTrackConfig;
 
     if (track.endpoint) {
@@ -179,6 +178,7 @@ const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig): NiagadsBrowserT
     }
 
     niagadsConfig.trackType = track.track_type;
+    niagadsConfig.trackTypeDisplay = track.track_type_display;
     niagadsConfig.featureType = track.feature_type;
 
     niagadsConfig.phenotypes = (phenotypes || []).reduce(
@@ -204,6 +204,7 @@ interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
     phenotypes: { [key: string]: string }[]; //for browser filter
     track: string; //unique id (pass to backend for async), for instance
     track_type: string; //igv track type
+    track_type_display: string; //niagads track type
 }
 
 export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
@@ -212,5 +213,6 @@ export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
     reader?: any;
     track: string;
     trackType: string;
+    trackTypeDisplay: string;
     url: string;
 }

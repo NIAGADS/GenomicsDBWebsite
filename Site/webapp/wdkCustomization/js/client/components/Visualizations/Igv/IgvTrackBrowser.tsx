@@ -64,12 +64,15 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
     const [searchTerm, setSearchTerm] = useState(""),
         [sources, setSources] = useState<string[]>([]),
         [types, setTypes] = useState<string[]>([]),
+        [displayTypes, setDisplayTypes] = useState<string[]>([]),
         [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
         classes = useBrowserStyles(),
         sourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
-        typeList = useMemo(() => unique((_trackList || []).map((t) => t.trackType)), [_trackList]),
+        typeList = useMemo(() => unique((_trackList || []).map((t) => t.featureType)), [_trackList]),
+        displayTypeList = useMemo(() => unique((_trackList || []).map((t) => t.trackTypeDisplay)), [_trackList]),
         sourceCounts = useMemo(() => groupBy(_trackList || [], (t) => t.source), [_trackList]),
-        typeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.trackType), [_trackList]);
+        typeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.featureType), [_trackList]),
+        displayTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.trackTypeDisplay), [_trackList]);
 
     useEffect(() => {
         const st = searchTerm.toLowerCase();
@@ -87,13 +90,14 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                         (t) =>
                             !!(
                                 sources.includes(t.source) ||
-                                types.includes(t.trackType) ||
-                                (!sources.length && !types.length)
+                                types.includes(t.featureType) ||
+                                displayTypes.includes(t.trackTypeDisplay) ||
+                                (!sources.length && !types.length && !displayTypes.length)
                             )
                     )
             );
         }
-    }, [searchTerm, _trackList, sources, types]);
+    }, [searchTerm, _trackList, sources, types, displayTypes]);
 
     const closeSelf = () => {
             setSearchTerm("");
@@ -113,6 +117,13 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                 setTypes(types.filter((s) => s != type));
             } else {
                 setTypes(types.concat([type]));
+            }
+        },
+        toggleDisplayType = (type: string) => {
+            if (displayTypes.includes(type)) {
+                setDisplayTypes(displayTypes.filter((s) => s != type));
+            } else {
+                setDisplayTypes(displayTypes.concat([type]));
             }
         },
         tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
@@ -202,7 +213,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                             </Accordion>
                             <Accordion className={classes.Accordion}>
                                 <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>Type</Typography>
+                                    <Typography>Feature Type</Typography>
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <FilterList>
@@ -214,6 +225,25 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                                     onChange={toggleType.bind(null, a)}
                                                 />{" "}
                                                 {`${a} (${typeCounts[a].length})`}
+                                            </UnpaddedListItem>
+                                        ))}
+                                    </FilterList>
+                                </AccordionDetails>
+                            </Accordion>
+                            <Accordion className={classes.Accordion}>
+                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                    <Typography>Track Type</Typography>
+                                </FilterAccordionSummary>
+                                <AccordionDetails className={classes.AccordionDetails}>
+                                    <FilterList>
+                                        {displayTypeList.map((a: string) => (
+                                            <UnpaddedListItem key={a}>
+                                                <UnpaddedCheckbox
+                                                    color="primary"
+                                                    checked={displayTypes.includes(a)}
+                                                    onChange={toggleDisplayType.bind(null, a)}
+                                                />{" "}
+                                                {`${a} (${displayTypeCounts[a].length})`}
                                             </UnpaddedListItem>
                                         ))}
                                     </FilterList>
@@ -239,7 +269,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                         <Box className="browser-table">
                             <ReactTable
                                 style={{
-                                    maxHeight: "500px", // This will force the table body to overflow and scroll
+                                    height: "500px", // This will force the table body to overflow and scroll
                                 }}
                                 columns={[
                                     {
