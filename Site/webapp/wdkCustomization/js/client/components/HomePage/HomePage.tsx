@@ -51,7 +51,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
 
     const buildBrowser = (b: any) => {
         b.loadTrack({
-            name: "NG00075 Stage 1",
+            name: "IGAP 2019",
             type: "niagadsgwas",
             id: "niagadsgwas",
             url: `${endpoint}/track/gwas?track=NG00075_STAGE1`,
@@ -83,10 +83,10 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                 </Grid>
                                 <Grid item>
                                     <DarkContrastText>
-                                        An interactive knowledgebase for AD genetics that provides a platform for data
+                                        An interactive knowledgebase for Alzheimer's disease (AD) genetics that provides a platform for data
                                         sharing, discovery, and analysis to help advance the understanding of the
                                         complex genetic underpinnings of AD neurodegeneration and accelerate the
-                                        progress of research on AD and AD related dementias.
+                                        progress of research on AD and AD related dementias (ADRD).
                                     </DarkContrastText>
                                 </Grid>
                                 <Grid item>
@@ -111,6 +111,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                             19:45411941:T:C
                                         </SecondaryLink>
                                     </DarkContrastText>
+                                  
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -137,10 +138,10 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         <Grid item container spacing={4} direction="row">
                             <Grid container item xs={12} sm={6} alignContent="space-between" justify="center">
                                 <LightContrastText>
-                                    The NIAGADS genome browser enables researchers to visually inspect and browse GWAS
-                                    summary statistics datasets in a broader genomic context. Our genome browser can
+                                    Use our interactive genome browser to visually inspect and browse GWAS
+                                    summary statistics datasets in a broader genomic context. The genome browser can
                                     also be used to compare NIAGADS GWAS summary statistics tracks to each other,
-                                    against annotated gene or variant tracks, or to the more than &gt;50,000 functional
+                                    against annotated gene or variant tracks, and to functional
                                     genomics tracks from the NIAGADS <PrimaryLink to="#">FILER</PrimaryLink> functional
                                     genomics repository.
                                 </LightContrastText>
@@ -187,11 +188,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         </Grid>
                         <Grid container alignItems="center" item xs={12} sm={6}>
                             <LightContrastText>
-                                As of December 2020, the GenomicsDB provides unrestricted access to genome-wide summary
-                                statistics p-values from >70 GWAS and ADSP meta-analysis. Variants in these datasets are
-                                consistently annotated using the ADSP Annotation pipeline and linked to gene and
-                                functional genomics data to help not only make these data accessible, but also
-                                interpretable in the broader genomic context.
+                                <p>As of December 2020, the NIAGADS Alzheimer's Genomics Database provides unrestricted access to 
+                                summary statistics <em>p</em>-values from &gt;100 GWAS and ADSP meta-analysis.</p>
+                                <p>AD/ADRD risk-associated variants are comprehensively annotated using the ADSP Annotation pipeline.</p>
                             </LightContrastText>
                         </Grid>
                     </Grid>
@@ -202,32 +201,32 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid direction="column" alignItems="center" container>
                         <Grid item>
                             <Box p={3}>
-                                <LightContrastTextHeading>Latest Updates</LightContrastTextHeading>
+                                <LightContrastTextHeading>Latest Datasets</LightContrastTextHeading>
                             </Box>
                         </Grid>
                         <Grid item container spacing={10} justify="center" direction="row">
                             <Grid container item xs={12} sm={4}>
                                 <NewsItem
                                     date="January 1 2021"
-                                    title="News #1"
-                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
-                                    target="#"
+                                    title="NG00078: IGAP APOE-Stratified Analysis (Jun et al. 2016)"
+                                    content="Summary statistics from an APOE-stratified genome-wide association meta-analysis for AD status was performed using the IGAP discovery phase dataset.  Summary statistics are available for all samples, as well as subsets of just APOEε4 carriers or APOEε4 non-carriers.  Summary statistics from an interaction test with APOEε4 status are also available."
+                                    target="/record/dataset/NG00078"
                                 />
                             </Grid>
                             <Grid container item xs={12} sm={4}>
                                 <NewsItem
                                     date="January 1 2021"
-                                    title="News #2"
-                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
-                                    target="#"
+                                    title="NG00089: CSF TREM2 (Deming et al. 2019)"
+                                    content="Summary statistics of genome wide association study to identify genetic modifiers of CSF sTREM2 (Soluble triggering receptor expressed on myeloid cells 2) obtained using ADNI samples."
+                                    target="/record/dataset/NG00089"
                                 />
                             </Grid>
                             <Grid container item xs={12} sm={4}>
                                 <NewsItem
                                     date="January 1 2021"
-                                    title="News #3"
-                                    content="Big-data optimized relational database and interactive graphical workflows make it easy to interactively browse, compare, and mine AD-related summary statistics datasets."
-                                    target="#"
+                                    title="NG00088: Informed conditioning on African American LOAD genetic risk (Mez et al. 2017)"
+                                    content="Summary statistics from a genome‐wide association study (GWAS) in African Americans employing informed conditioning in 1825 LOAD cases and 3784 cognitively normal controls. Posterior liabilities were conditioned on age, sex, diabetes status, current smoking status, educational attainment, and affection status, with parameters informed by external prevalence information."
+                                    target="/record/dataset/NG00088"
                                 />
                             </Grid>
                         </Grid>
@@ -239,7 +238,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid container item justify="center">
                         <LightContrastTextHeading>About the Project</LightContrastTextHeading>
                         <LightContrastText>
-                            The Genomics Database is developed by a team of researchers at the University of
+                            The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the University of
                             Pennsylvania as part of the{" "}
                             <PrimaryExternalLink href="https://www.niagads.org/">
                                 National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site
@@ -247,9 +246,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             (NIAGADS), a national genetics repository created by NIA to facilitate access to genotypic
                             data for the study of the genetics of late-onset Alzheimer's disease. We welcome the
                             involvement of interested researchers.{" "}
-                            <PrimaryExternalLink href="#">Click here to learn more</PrimaryExternalLink> about
+                            <PrimaryExternalLink href="https://www.niagads.org/data">Click here to learn more</PrimaryExternalLink> about
                             contributing data or making formal data access requests. Or{" "}
-                            <PrimaryExternalLink href="#">contact us</PrimaryExternalLink> for more information. The
+                            <PrimaryExternalLink href="https://www.niagads.org/contact">contact us</PrimaryExternalLink> for more information. The
                             GenomicsDB is a collaboration among the following organizations which may also provide
                             funding or governance:
                         </LightContrastText>
@@ -272,9 +271,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid item container justify="center">
                         <LightContrastTextHeading>ADSP Collaboration</LightContrastTextHeading>
                         <LightContrastText>
-                            The NIAGADS Genomics Database has an ongoing collaboration with the{" "}
-                            <PrimaryExternalLink href="#">Alzheimer's Disease Sequencing Project</PrimaryExternalLink>{" "}
-                            (ADSP). The GenomicsDB allows browsing, searching, and analysis of variants and genes linked
+                            The NIAGADS Alzheimer's Genomics Database (NIAGADS GenomicsDB) has an ongoing collaboration with the{" "}
+                            <PrimaryExternalLink href="https://www.niagads.org/adsp">Alzheimer's Disease Sequencing Project</PrimaryExternalLink>{" "}
+                            (ADSP). The NIAGADS GenomicsDB allows browsing, searching, and analysis of variants and genes linked
                             to the risk of developing late-onset Alzheimer's disease that were identified through the
                             ADSP's sequencing efforts and downstream meta-analyses.
                         </LightContrastText>
@@ -313,19 +312,19 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             efficiently integrates standard annotations and ranks potential variant impacts according to
                             predicted effect (such as codon changes, loss of function, and potential deleteriousness)
                             (PMID: <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
-                            GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants are
+                            NIAGADS GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants are
                             annotated in real-time.
                         </LightContrastText>
                     </Grid>
                     <Grid container item direction="column" spacing={1}>
                         <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
                         <LightContrastText>
-                            The GenomicsDB provides access to summary statistics from the following ADSP meta-analyses:
+                            The NIAGADS GenomicsDB provides access to summary statistics from the following ADSP meta-analyses:
                         </LightContrastText>
                         <Box mt={1}></Box>
                         <Box display="flex">
                             <Typography>
-                                <BoldPrimaryLink to="#">NG00065:&nbsp;</BoldPrimaryLink>
+                                <BoldPrimaryLink to="/record/dataset/NG00065">NG00065:&nbsp;</BoldPrimaryLink>
                             </Typography>
                             <LightContrastTextBold>
                                 ADSP Discovery Case/Control Association Results{" "}
