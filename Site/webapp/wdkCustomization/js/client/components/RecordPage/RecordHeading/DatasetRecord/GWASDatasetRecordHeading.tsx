@@ -5,22 +5,15 @@ import * as gr from "./../../types";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
 import { HelpIcon, LoadingOverlay } from "wdk-client/Components";
-import {
-  SubmissionMetadata,
-  submitQuestion,
-  updateParamValue,
-  updateActiveQuestion
-} from "wdk-client/Actions/QuestionActions";
-import { QuestionState } from "wdk-client/StoreModules/QuestionStoreModule";
 
-
-const SEARCH_NAME = "gwas_stats";
-const PVALUE_PARAM_NAME = "pvalue";
+const SEARCH_PATH = "../../search/gwas_summary/filter";
+const PVALUE_PARAM_NAME = "param.pvalue";
+const ACCESSION_PARAM_NAME = "param.gwas_accession";
+const DATASET_PARAM_NAME =  "param.gwas_dataset";
 
 interface StoreProps {
   externalUrls: { [key: string]: any };
   webAppUrl: string;
-  questionState: QuestionState;
 }
 
 interface IRecordHeading {
@@ -30,7 +23,8 @@ interface IRecordHeading {
 }
 
 interface SearchProps {
-  questionState: QuestionState;
+  record: string;
+  accession: string;
 }
 
 type GWASDatasetRecord = StoreProps & gr.GWASDatasetRecord;
@@ -40,7 +34,7 @@ const GWASDatasetSearchHelp: React.SFC<any> = props => {
     <div>
       <p>
         Set the adjusted p-value threshold for GWAS significance. The search
-        will return all genes supported by an p-value &le; the specified
+        will return all genes supported by a p-value &le; the specified
         threshold.
       </p>
       <p>
@@ -52,20 +46,10 @@ const GWASDatasetSearchHelp: React.SFC<any> = props => {
   );
 };
 
-const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
+const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
   //const [activeQuestion, setActionQuestion] = useState(null),
-  const [error, setError] = useState(false),
-    submissionMetadata: SubmissionMetadata = { type: "create-strategy" },
-    dispatch = useDispatch();
-
-  let handleSubmit = useCallback(
-    (event: React.FormEvent) => {
-      event.preventDefault();
-      dispatch(submitQuestion({ searchName: SEARCH_NAME, submissionMetadata }));
-    },
-    [SEARCH_NAME, submissionMetadata]
-  );
-
+  const [error, setError] = useState(false)
+  
   let handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       //drop whitespace to simplify regex
@@ -77,23 +61,14 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
       }
 
       setError(false);
-
-      dispatch(
-        updateParamValue({
-          searchName: SEARCH_NAME,
-          parameter: questionState.question.parametersByName["pvalue"],
-          paramValues: questionState.paramValues,
-          paramValue: event.target.value
-        })
-      );
     },
-    [questionState]
+    []
   );
 
   return (
     <>
       <h4>Mine this dataset</h4>
-      <form className="form-inline" onSubmit={handleSubmit}>
+      <form className="form-inline" action={SEARCH_PATH}>
         <div className="input-group mb-3 d-flex align-items-center">
           {" "}
           p-value &le;
@@ -104,6 +79,9 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
               </HelpIcon>
             </span>
           </div>
+          <input type="hidden" name="autoRun"/>
+          <input type="hidden" name={DATASET_PARAM_NAME} defaultValue={record}/>
+          <input type="hidden" name={ACCESSION_PARAM_NAME} defaultValue={accession}/>
           <input
             type="text"
             className="form-control input-sm"
@@ -129,35 +107,13 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ questionState }) => {
           Please enter a valid p-value, e.g., 0.0007, 3e-6, 3^-6, 3x10^-6
         </p>
       )}
-      {questionState.submitting && (
-        <LoadingOverlay>
-          <span>Loading Data...</span>
-        </LoadingOverlay>
-      )}
     </>
   );
 };
 
 const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
   StoreProps> = props => {
-  const { record, recordClass, headerActions, questionState } = props;
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const initialParamData = {
-      gwas_accession: record.attributes.niagads_accession,
-      gwas_dataset: record.id[0].value,
-      pvalue: "5e-8"
-    };
-    dispatch(
-      updateActiveQuestion({
-        searchName: SEARCH_NAME,
-        autoRun: false,
-        initialParamData: initialParamData,
-        stepId: undefined
-      })
-    );
-  }, []);
+  const { record, recordClass, headerActions } = props;
 
   return (
     <React.Fragment>
@@ -200,7 +156,7 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
             </h2>
           )}
 
-          <GWASDatasetSearch questionState={questionState}></GWASDatasetSearch>
+          <GWASDatasetSearch accession={record.attributes.niagads_accession} record={record.id[0].value} ></GWASDatasetSearch>
         </div>
       </div>
       
@@ -211,7 +167,6 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading &
 const enhance = connect<StoreProps, any, IRecordHeading>((state: any) => ({
   externalUrls: state.globalData.siteConfig.externalUrls,
   webAppUrl: state.globalData.siteConfig.webAppUrl,
-  questionState: (state.question.questions[SEARCH_NAME] || {}) as QuestionState
 }));
 
 export default enhance(GWASDatasetRecordSummary);
