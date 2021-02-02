@@ -328,7 +328,10 @@
 	<columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
 	
 	<propertyList name="type">
-	  <value>default</value>
+	  <value>chart_filter</value>
+	</propertyList>
+	<propertyList name="filter_field">
+	  <value>pvalue</value>
 	</propertyList>
 	
 	<description>

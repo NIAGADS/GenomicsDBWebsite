@@ -55,7 +55,7 @@
 		<sql>
 			<![CDATA[
 				WITH Results AS (
-				SELECT r.record_primary_key AS source_id,
+				SELECT r.variant_record_primary_key AS source_id,
 				-1 * r.neg_log10_pvalue AS log10_pvalue,
 				r.pvalue_display AS pvalue,
 				r.allele AS test_allele

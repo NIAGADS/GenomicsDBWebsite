@@ -420,7 +420,7 @@
 		 conseq->>'amino_acids' AS amino_acid_change,
 		 conseq->>'codons' AS codon_change,
 
-		 CASE WHEN (conseq->>'is_coding')::boolean 
+		 CASE WHEN (conseq->>'consequence_is_coding')::boolean 
 		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') ELSE NULL END AS is_coding,
 
 		 CASE WHEN conseq->>'cds_start' = conseq->>'cds_end' THEN conseq->>'cds_start' 

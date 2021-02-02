@@ -89,7 +89,7 @@
     <!-- =============================================================== -->
     <!-- Dataset -->
     <!-- =============================================================== -->
-    <question name="gwas_stats" displayName="NIAGADS GWAS" shortDisplayName="GWAS" queryRef="VariantIds.GWAS" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
+    <question name="filter" displayName="NIAGADS GWAS" shortDisplayName="GWAS" queryRef="VariantIds.GWAS" noSummaryOnSingleRecord="true" recordClassRef="VariantRecordClasses.VariantRecordClass">
 
       <attributesList summary="pvalue,is_adsp_variant,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding" />
 
