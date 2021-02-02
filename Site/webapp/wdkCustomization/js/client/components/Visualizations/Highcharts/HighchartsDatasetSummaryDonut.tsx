@@ -45,7 +45,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         return series;
     };
 
-    const [series, setSeries] = useState(buildSeries([["Datasets", 69, "All Summary Statistics Datasets"]])),
+    const [series, setSeries] = useState(buildSeries([[null, null, null]])),
     goto = useGoto();
 
     const searchDatasets = (point: Point) =>

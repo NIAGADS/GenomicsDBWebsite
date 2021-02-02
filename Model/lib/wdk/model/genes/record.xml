@@ -28,7 +28,8 @@
       <!-- =================================================================== -->
       <!-- Reporters -->
       <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%"
+		scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
       <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%"
 		scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
@@ -193,11 +194,12 @@
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
 	<columnAttribute name="variant" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="gene_impact" displayName="Impact" type="string" help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
+	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="track_name" displayName="Track" type="json_text" />
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
 
 	<propertyList name="type">
 	  <value>chart_filter</value>
@@ -225,11 +227,12 @@
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
 	<columnAttribute name="variant" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="gene_impact" displayName="Impact" type="string" help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
+	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="track_name" displayName="Track" type="json_text" />
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
 
         <propertyList name="type">
 	  <value>chart_filter</value>
@@ -254,9 +257,11 @@
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
 	<columnAttribute name="variant" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="gene_impact" displayName="Impact" type="string" help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
+	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
 	<columnAttribute name="trait" displayName="Trait" type="string" />
 	<columnAttribute name="pubmed_id" displayName="PubMed ID" type="json_link" />
@@ -283,9 +288,11 @@
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
 	<columnAttribute name="variant" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant is an ADSP variant" type="json_icon" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="gene_impact" displayName="Impact" type="string" help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
+	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
 	<columnAttribute name="trait" displayName="Trait" type="string" />
 	<columnAttribute name="pubmed_id" displayName="PubMed ID" type="json_link" />

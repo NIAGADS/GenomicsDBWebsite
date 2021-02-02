@@ -320,7 +320,7 @@
       <table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
 	<columnAttribute name="variant" displayName="Variant" type="json_link"/>
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric"/>
-	<columnAttribute name="refsnp_id" displayName="refSNP" type="string"/>
+	<columnAttribute name="ref_snp_id" displayName="refSNP" type="string"/>
 	<columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
 	<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
 	<columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>

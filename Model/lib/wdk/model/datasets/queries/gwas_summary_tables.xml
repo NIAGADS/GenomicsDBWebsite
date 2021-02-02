@@ -59,7 +59,7 @@
             <column name="track"/>
             <column name="project_id"/>
             <column name="variant"/>
-            <column name="refsnp_id" />
+            <column name="ref_snp_id" />
             <column name="is_adsp_variant" />
             <column name="most_severe_consequence"/>
             <column name="msc_impact" />
@@ -72,11 +72,11 @@
                                   
                         SELECT datasets.track
                         , '@PROJECT_ID@'::text AS project_id
-                        , build_link_attribute(CASE WHEN length(v.metaseq_id) > 30 THEN substr(v.metaseq_id, 0, 27) ELSE v.metaseq_id END, '../variant/', record_pk) AS variant
-                        , CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id ELSE NULL END AS refsnp_id
-                        , v.adsp_variant_display_flag AS is_adsp_variant
+                        , build_link_attribute(truncate_str(v.metaseq_id, 30), '../variant/', v.record_primary_key) AS variant
+                        , v.ref_snp_id
+                        , adsp_variant_display_flag(v.is_adsp_variant) AS is_adsp_variant
                         , v.most_severe_consequence
-                        , v.annotation->'VEP_MS_CONSEQUENCE'->>'impact' AS msc_impact
+			, v.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'vep_impact' AS msc_impact
                         , v.msc_impacted_gene_link -- virtual column
                         , v.msc_is_coding
                         , r.neg_log10_pvalue
@@ -90,7 +90,7 @@
                         AND r.protocol_app_node_id = pan.protocol_app_node_id
                         AND ((datasets.track SIMILAR TO '%(' || '@DATASETS_WITH_RELAXED_PVALUE@' || ')%' AND  r.neg_log10_pvalue >= abs(log(1e-3)))
                         OR r.neg_log10_pvalue >= abs(log(5e-8)))
-                        AND v.variant_id = r.variant_id
+                        AND v.record_primary_key = r.variant_record_primary_key
                         ORDER BY neg_log10_pvalue DESC
                     ]]>
             </sql>

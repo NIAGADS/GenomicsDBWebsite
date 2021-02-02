@@ -215,6 +215,8 @@
       <column name="pvalue"/>
       <column name="accession_link"/>
       <column name="adsp_variant_flag"/>
+      <column name="gene_impact"/>
+      <column name="gene_consequence"/>
 
       <sql>
 	<![CDATA[
@@ -241,10 +243,12 @@
 		CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
 		THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
 		
-		CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		CASE WHEN r.variant_record_primary_key LIKE '%_%'
 		THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
 		
-		adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
+		adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
+		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		
 		CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -285,6 +289,8 @@
       <column name="pvalue"/>
       <column name="accession_link"/>
       <column name="adsp_variant_flag"/>
+      <column name="gene_impact"/>
+      <column name="gene_consequence"/>
 
       <sql>
 	<![CDATA[
@@ -311,10 +317,12 @@
 		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
 		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
 		 
-		 CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		 CASE WHEN r.variant_record_primary_key LIKE '%_%'
 		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
 		 
-		 adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
+		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
+		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -356,6 +364,8 @@
       <column name="track_name"/>
       <column name="pvalue"/>
       <column name="adsp_variant_flag"/>
+      <column name="gene_impact"/>
+      <column name="gene_consequence"/>
 
       <column name="source"/>
       <column name="pubmed_id"/>
@@ -381,11 +391,13 @@
 		 r.variant_record_primary_key,
 		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
 		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
-
-		 CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		
+		 CASE WHEN r.variant_record_primary_key LIKE '%_%'
 		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
-
-		 adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		 
+		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
+		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
+		 adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -434,6 +446,9 @@
       <column name="pvalue"/>
 
       <column name="adsp_variant_flag"/>
+      <column name="gene_impact"/>
+      <column name="gene_consequence"/>
+      
       <column name="source"/>
       <column name="pubmed_id"/>
       <column name="study"/>
@@ -459,10 +474,12 @@
 		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
 		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
 
-		 CASE WHEN split_part(r.variant_record_primary_key, '_', 2) != NULL 
+		 CASE WHEN r.variant_record_primary_key LIKE '%_%' 
 		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
-
-		 adsp_variant_display_flag(is_adsp_variant(r.variant_record_primary_key)) AS adsp_variant_flag,
+		 
+		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
+		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
+		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -616,34 +633,34 @@ THEN 'in gene'
 		 || '{"type":"thumbnail_link"}'::jsonb || ('{"img_url":"' || '@KEGG_IMG_URL@' || p.source_id || '.png"}')::jsonb 
 		 END AS pathway_image
 
-FROM
-SRes.Pathway p,
-SRes.PathwayNode pn,
-CBIL.GeneAttributes ga,
-(##WDK_ID_SQL##) id
-WHERE id.source_id = ga.source_id
-AND ga.gene_id = pn.row_id
-AND p.pathway_id = pn.pathway_id
-AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'KEGG')
-
-UNION ALL 
-
-SELECT ga.source_id,
-'@PROJECT_ID@'::text AS project_id,
-p.name AS pathway_name, 
-build_link_attribute(p.source_id, '@REACTOME_PATHWAY_URL@', null, null) AS accession,
-'Reactome'::text AS source,
-NULL AS pathway_image
-
-FROM
-SRes.Pathway p,
-SRes.PathwayNode pn,
-CBIL.GeneAttributes ga,
-(##WDK_ID_SQL##) id
-WHERE id.source_id = ga.source_id
-AND ga.gene_id = pn.row_id
-AND p.pathway_id = pn.pathway_id
-AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'REACTOME')
+		 FROM
+		 SRes.Pathway p,
+		 SRes.PathwayNode pn,
+		 CBIL.GeneAttributes ga,
+		 (##WDK_ID_SQL##) id
+		 WHERE id.source_id = ga.source_id
+		 AND ga.gene_id = pn.row_id
+		 AND p.pathway_id = pn.pathway_id
+		 AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'KEGG')
+		 
+		 UNION ALL 
+		 
+		 SELECT ga.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 p.name AS pathway_name, 
+		 build_link_attribute(p.source_id, '@REACTOME_PATHWAY_URL@', null, null) AS accession,
+		 'Reactome'::text AS source,
+		 NULL AS pathway_image
+		 
+		 FROM
+		 SRes.Pathway p,
+		 SRes.PathwayNode pn,
+		 CBIL.GeneAttributes ga,
+		 (##WDK_ID_SQL##) id
+		 WHERE id.source_id = ga.source_id
+		 AND ga.gene_id = pn.row_id
+		 AND p.pathway_id = pn.pathway_id
+		 AND p.external_database_release_id = (SELECT external_database_release_id FROM SRes.ExternalDatabaseRelease r WHERE id_type = 'REACTOME')
 	]]>
       </sql>
     </sqlQuery>

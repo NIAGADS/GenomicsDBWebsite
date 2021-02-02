@@ -55,17 +55,16 @@
 		<sql>
 			<![CDATA[
 				WITH Results AS (
-				SELECT v.record_pk AS source_id,
+				SELECT r.record_primary_key AS source_id,
 				-1 * r.neg_log10_pvalue AS log10_pvalue,
 				r.pvalue_display AS pvalue,
 				r.allele AS test_allele
 				FROM Results.VariantGWAS r,
-				NIAGADS.Variant v,
 				Study.ProtocolAppNode pan
 				WHERE  neg_log10_pvalue >= -1 * log(replace(replace(replace(replace($$pvalue$$, ' ', ''), 'x10^', 'e'), 'x10', 'e'), '^', 'e')::numeric)
 				AND pan.source_id = $$gwas_dataset$$
-				AND r.protocol_app_node_id = pan.protocol_app_node_id
-				AND v.variant_id = r.variant_id)
+				AND r.protocol_app_node_id = pan.protocol_app_node_id)
+				
 
 				SELECT DISTINCT ON (source_id)
 				source_id,
@@ -74,10 +73,11 @@
 				first_value(pvalue) OVER wnd AS pvalue,
 				first_value(test_allele) OVER wnd AS test_allele
 				FROM Results
-	            WINDOW wnd AS (
+
+				WINDOW wnd AS (
 	       			PARTITION BY source_id ORDER BY log10_pvalue ASC -- return only top result for the dataset
 	       			ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-	       		)
+	       			)
 			]]>
 		</sql>
     </sqlQuery>
