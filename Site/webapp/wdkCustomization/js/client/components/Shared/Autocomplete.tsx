@@ -89,14 +89,16 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                     setInputValue(newInputValue);
                 }
             }}
-            onChange={(event: any, selectedValue: string | SearchResult) => {
+            onChange={(event: any, selectedValue: string | SearchResult, reason: string) => {
                 //seems simpler to hold onto internal state
                 //controlling b/c we might want to format differently than getOptionLabel() would have us, which is the default for uncontrolled
-                setInputValue("");
-                setResetKey(Math.random().toString(32).slice(2));
-                if (isString(selectedValue)) {
-                    onSelect(null, inputValue);
-                } else onSelect(selectedValue, inputValue);
+                if (inputValue && reason !== "clear") {
+                    setInputValue("");
+                    setResetKey(Math.random().toString(32).slice(2));
+                    if (isString(selectedValue)) {
+                        onSelect(null, inputValue);
+                    } else onSelect(selectedValue, inputValue);
+                }
             }}
             renderInput={(params) => {
                 const { InputLabelProps, InputProps, ...rest } = params;
