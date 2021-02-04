@@ -48,7 +48,7 @@ public class GeneTrackService extends AbstractWdkService {
  
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    // @OutSchema("niagads.track.gwas.get-response")
+    // @OutSchema("niagads.track.gene.get-response")
     public Response buildResponse(String body,
             @QueryParam(CHROMOSOME_PARAM) String chromosome,
             @QueryParam(LOCATION_START_PARAM) Long locationStart,

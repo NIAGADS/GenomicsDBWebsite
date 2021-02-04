@@ -50,9 +50,8 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
 
         JSONObject response = new JSONObject();
         response.put("track", track);
-
         try {
-            JSONArray data = fetchResult(track, chromosome, locationStart, locationEnd);
+            JSONArray data = lookup(track, chromosome, locationStart, locationEnd);
             //LOG.debug("query result: " + data.toString());
             response.put("data", data);
         }
@@ -65,7 +64,7 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
     }
 
 
-    private JSONArray fetchResult(String track, String chromosome, Long locationStart, Long locationEnd) {
+    private JSONArray lookup(String track, String chromosome, Long locationStart, Long locationEnd) {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
