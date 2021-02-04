@@ -22,13 +22,12 @@ import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
 @Path("locuszoom/linkage")
-public class LinkageService extends AbstractWdkService {
-    private static final Logger LOG = Logger.getLogger(LinkageService.class);
+// @OutSchema("niagads.locuszoom.linkage.get-response")   
+public class LZLinkageService extends AbstractWdkService {
+    private static final Logger LOG = Logger.getLogger(LZLinkageService.class);
 
     private static final String REFERENCE_VARIANT_PARAM = "variant";
     private static final String POPULATION_PARAM = "population";
-    private static final String SCORE_PARAM = "score";
-
 
     private static final String LINKAGE_QUERY = "WITH id AS (SELECT ?::text AS source_id)," + NL
         + "variant AS (SELECT source_id," + NL
@@ -53,23 +52,20 @@ public class LinkageService extends AbstractWdkService {
         + "SELECT id.source_id AS variant, 1.0 AS r_squared FROM id)" + NL
         + "SELECT jsonb_build_object('data'," + NL
         + "jsonb_build_object('id2', jsonb_agg(variant ORDER BY variant)) || " + NL
-        + "jsonb_build_object('value', jsonb_agg(r_squared ORDER BY variant)))::text AS result_json" + NL
+        + "jsonb_build_object('value', jsonb_agg(r_squared ORDER BY variant)))::text AS result" + NL
         + "FROM LDResult";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.locuszoom.linkage.get-response")
     public Response buildResponse(String body, @QueryParam(REFERENCE_VARIANT_PARAM) String variant, 
-                                 /*@QueryParam(RANGE_START_PARAM) int start, 
-                                 @QueryParam(RANGE_END_PARAM) int end,*/
                                  @QueryParam(POPULATION_PARAM) String population) throws WdkModelException {
         LOG.info("Starting 'Locus Zoom Linkage' Service");
-        String response = "{}";
+        String response = null;
         try {
             // query database for ld
-            response = fetchLinkage(variant, population);
-            LOG.debug("query result: " + response);
-            if (response == null) { response = "{}";}
+            response = lookup(variant, population);
+            //LOG.debug("query result: " + response);
         }
 
         catch(WdkRuntimeException ex) {
@@ -79,7 +75,7 @@ public class LinkageService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
-    private String fetchLinkage(String variant, String population) {   
+    private String lookup(String variant, String population) {   
     
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
@@ -90,11 +86,18 @@ public class LinkageService extends AbstractWdkService {
         SQLRunner runner = new SQLRunner(ds, LINKAGE_QUERY, "linkage-query");
         runner.executeQuery(new Object[] {variant, population}, handler);
 
-        List <Map <String, Object>> results = handler.getResults();
+        List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
-            return null;
+            return "{}";
         }
-        return (String) results.get(0).get("result_json");
+
+        String resultStr = (String) results.get(0).get("result");
+        if (resultStr == "null" || resultStr == null) {
+            return "{}";
+        }
+
+        //LOG.debug("RESULT:  " + resultStr);
+        return resultStr;
     }
 
 }

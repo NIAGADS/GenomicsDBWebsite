@@ -127,7 +127,7 @@ const _buildPlot = (selector: string, state: any, population: string, dataset: s
         ldSource = lz.Data.Source.extend(buildConstructorFunc("/api/ld", "assoc:id"), "ld", "LDLZ");
 
     assocSource.prototype.getURL = function (state: any, chain: any, fields: any) {
-        return `${endpoint}/locuszoom/gwas?dataset=${dataset}&chromosome=${state.chr}&locStart=${state.start}&locEnd=${state.end}`;
+        return `${endpoint}/locuszoom/gwas?track=${dataset}&chromosome=${state.chr}&start=${state.start}&end=${state.end}`;
     };
 
     //probably better to use extractFields?

@@ -24,14 +24,16 @@ import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 import org.json.JSONObject;
 
+
 @Path("locuszoom/gwas")
-public class GWASService extends AbstractWdkService {
-    private static final Logger LOG = Logger.getLogger(GWASService.class);
+// @OutSchema("niagads.locuszoom.gwas.get-response")    
+public class LZGWASService extends AbstractWdkService {
+    private static final Logger LOG = Logger.getLogger(LZGWASService.class);
 
     private static final String CHROMOSOME_PARAM = "chromosome";
-    private static final String LOCATION_START_PARAM = "locStart";
-    private static final String LOCATION_END_PARAM = "locEnd";
-    private static final String DATASET_PARAM = "dataset";
+    private static final String LOCATION_START_PARAM = "start";
+    private static final String LOCATION_END_PARAM = "end";
+    private static final String DATASET_PARAM = "track";
 
     private static final String DATASET_QUERY = "SELECT protocol_app_node_id" + NL
             + "FROM Study.ProtocolAppNode WHERE source_id = ?";
@@ -48,12 +50,12 @@ public class GWASService extends AbstractWdkService {
         + "AND 'chr' || split_part(variant_record_primary_key, ':', 1)::text = ?" + NL
         + "AND split_part(variant_record_primary_key, ':', 2)::bigint" + NL
         + "<@ int8range(?, ?))" + NL
-        + "SELECT jsonb_build_object('chromosome', jsonb_agg(chromosome)," + NL
+        + "SELECT jsonb_build_object('data', jsonb_build_object('chromosome', jsonb_agg(chromosome)," + NL
         + "'position', jsonb_agg(position ORDER BY variant_gwas_id)," + NL
         + "'id', jsonb_agg(variant_record_primary_key ORDER BY variant_gwas_id)," + NL
         + "'pvalue', jsonb_agg(pvalue_display ORDER BY variant_gwas_id)," + NL
         + "'neg_log10_pvalue', jsonb_agg(neg_log10_pvalue ORDER BY variant_gwas_id)," + NL
-        + "'testAllele', jsonb_agg(test_allele ORDER BY variant_gwas_id))::text AS result_json" + NL
+        + "'testAllele', jsonb_agg(test_allele ORDER BY variant_gwas_id)))::text AS result" + NL
         + "FROM gwas";
   
     @GET
@@ -63,19 +65,20 @@ public class GWASService extends AbstractWdkService {
             @QueryParam(CHROMOSOME_PARAM) String chromosome, @QueryParam(LOCATION_END_PARAM) int locEnd,
             @QueryParam(LOCATION_START_PARAM) int locStart) throws WdkModelException {
         LOG.info("Starting 'Locus Zoom GWAS' Service");
-        String response = "{}";
+        String response = null;
 
         try {
-            // query database for ld
-            Long protocolAppNodeId = getProtocolAppNodeId(dataset);
+            Long protocolAppNodeId = validateDataset(dataset);
+
+            // TODO: Error Checking
             if (protocolAppNodeId < 0) {
-                response = new JSONObject().put("message", "No dataset associated with id: " + dataset + ".")
-                        .toString();
-            }
+                LOG.debug("ProtocolAppNode not found: " + dataset);
+                response = new JSONObject().put("message", "No dataset associated with id: " + dataset + ".").toString();
+            } 
          
-            response = fetchGWAS(protocolAppNodeId, chromosome, locStart, locEnd);
-            if (response == null) { response = "{}";}
-            LOG.debug("query result: " + response);
+            response = lookup(protocolAppNodeId, chromosome, locStart, locEnd);
+          
+            // LOG.debug("query result: " + response);
         }
 
         catch (WdkRuntimeException ex) {
@@ -86,7 +89,7 @@ public class GWASService extends AbstractWdkService {
     }
 
 
-    private Long getProtocolAppNodeId(String dataset) {
+    private Long validateDataset(String dataset) {
         LOG.debug("Validating dataset:" + dataset);
 
         WdkModel wdkModel = getWdkModel();
@@ -99,7 +102,7 @@ public class GWASService extends AbstractWdkService {
     }
 
 
-    private String fetchGWAS(Long protocolAppNodeId, String chromosome, int locStart, int locEnd) {
+    private String lookup(Long protocolAppNodeId, String chromosome, int locStart, int locEnd) {
 
         LOG.debug("Fetching GWAS for dataset with protocol app node: " + protocolAppNodeId + "; in window: " + chromosome + ":" + locStart + "-" + locEnd);
 
@@ -107,15 +110,20 @@ public class GWASService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-
         SQLRunner runner = new SQLRunner(ds, GWAS_QUERY, "gwas-query");
         runner.executeQuery(new Object[] {protocolAppNodeId, chromosome, locStart, locEnd, chromosome, locStart, locEnd }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
-            return null;
+            return "{}";
         }
-        return (String) results.get(0).get("result_json");
+
+        String resultStr = (String) results.get(0).get("result");
+        if (resultStr == "null" || resultStr == null) {
+            return "{}";
+        }
+
+        return resultStr;
     }
 
 }

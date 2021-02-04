@@ -4,27 +4,12 @@ import java.util.Set;
 
 import org.eupathdb.common.service.EuPathServiceApplication;
 
-import org.niagads.genomics.service.services.LocusZoom.GWASService;
-import org.niagads.genomics.service.services.LocusZoom.LinkageService;
+
 import org.niagads.genomics.service.services.Search.SiteSearchService;
-
-import org.niagads.genomics.service.services.Dataset.DatasetModelRefService;
-import org.niagads.genomics.service.services.Dataset.DatasetLookupService;
-import org.niagads.genomics.service.services.Dataset.GWASSummaryStatisticResultService;
-import org.niagads.genomics.service.services.Dataset.DatasetSummaryPlotService;
-
-import org.niagads.genomics.service.services.Variant.VariantLDWindowService;
-import org.niagads.genomics.service.services.Variant.VariantLookupService;
-import org.niagads.genomics.service.services.Variant.VariantLDService;
-
-
-import org.niagads.genomics.service.services.Manhattan.InteractivePlotService;
-
-import org.niagads.genomics.service.services.GenomeBrowser.GWASSummaryStatisticsTrackService;
-import org.niagads.genomics.service.services.GenomeBrowser.TrackConfigService;
-import org.niagads.genomics.service.services.GenomeBrowser.FeatureLookupService;
-import org.niagads.genomics.service.services.GenomeBrowser.VariantTrackService;
-import org.niagads.genomics.service.services.GenomeBrowser.GeneTrackService;
+import org.niagads.genomics.service.services.LocusZoom.*;
+import org.niagads.genomics.service.services.Dataset.*;
+import org.niagads.genomics.service.services.Variant.*;
+import org.niagads.genomics.service.services.GenomeBrowser.*;
 
 // import static org.gusdb.fgputil.functional.Functions.filter;
 import org.gusdb.fgputil.SetBuilder;
@@ -38,8 +23,10 @@ public class ServiceApplication extends EuPathServiceApplication {
      .addAll(super.getClasses())
 
      // add NIAGADS Services
-    .add(LinkageService.class)
-    .add(GWASService.class)
+    .add(LZLinkageService.class)
+    .add(LZGWASService.class)
+    .add(LZGeneService.class)
+
     .add(SiteSearchService.class)
 
     .add(DatasetModelRefService.class)
@@ -50,9 +37,6 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(VariantLDWindowService.class)
     .add(VariantLookupService.class)
     .add(VariantLDService.class)
-
-    // manhattan plot
-    .add(InteractivePlotService.class)
 
     // genome browser tracks
     .add(GWASSummaryStatisticsTrackService.class)
