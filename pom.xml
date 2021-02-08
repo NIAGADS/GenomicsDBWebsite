@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <name>Niagads</name>
@@ -21,32 +21,46 @@
     <relativePath>../FgpUtil/Dependencies/org/gusdb/base-pom/1.0.0/base-pom-1.0.0.pom</relativePath>
   </parent>
 
-<dependencies>
- 
-	    <dependency>
-	      <groupId>org.eupathdb</groupId>
-	      <artifactId>ebrc-website-common-model</artifactId>
-		  <version>${project.version}</version>
-	    </dependency>
-    
-	    <dependency>
-	      <groupId>org.gusdb</groupId>
-	      <artifactId>wdk-website-controller</artifactId>
-		  <version>${project.version}</version>
-	    </dependency>
-    
-	    <dependency>
-	      <groupId>org.gusdb</groupId>
-	      <artifactId>wdk-model</artifactId>
-		  <version>${project.version}</version>
-	    </dependency>
-    
-	    <dependency>
-	      <groupId>org.gusdb</groupId>
-	      <artifactId>fgputil-util</artifactId>
-		  <version>${project.version}</version>
-	    </dependency>
-    </dependencies>
+  <dependencies>
+
+    <dependency>
+      <groupId>org.eupathdb</groupId>
+      <artifactId>ebrc-website-common-model</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gusdb</groupId>
+      <artifactId>wdk-website-controller</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gusdb</groupId>
+      <artifactId>wdk-model</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gusdb</groupId>
+      <artifactId>fgputil-util</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.13.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.13.3</version>
+    </dependency>
+  </dependencies>
+
+
 
   <repositories>
     <repository>

@@ -39,54 +39,39 @@
     </ant>
 
     <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt to ${targetDir}/lib/wdk/ontology/annotation.txt"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true"/> 
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true"/>
 
     <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl to ${targetDir}/lib/wdk/ontology/categories.owl"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/> 
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/>
 
     <!-- the following four commands generate the website ontology -->
+
+    <path id="owl-class-path">
+      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/> 
+      <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
+      <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
+      <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
+      <pathelement location="${targetDir}/config/"/>
+    </path>
+
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename individuals.txt -outputFilename individuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/individuals.owl'"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.EuPathAnnotPropAdder">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename annotation.txt -outputFilename annotation.owl  -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/annotation.owl'"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename commonIndividuals.txt -outputFilename commonIndividuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/commonIndividuals.owl'"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OntologyMerger">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename categories_full.owl -outputFilename categories_merged.owl"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
   </target>
@@ -119,7 +104,7 @@
                                                             EbrcWebSvcCommon-WebInstallation,
                                                             GenomicsDBWebsite/View-WebInstallation,
                                                             GenomicsDBWebsite/Site-WebInstallation">
-                                                           <!-- GenomicsDBWebsite/Service-WebInstallation,
+    <!-- GenomicsDBWebsite/Service-WebInstallation,
                                                             checkLinks,docLink">-->
   </target>
 
@@ -170,7 +155,7 @@
 
   <!-- <target name="docLink" unless="docsLinkExists"> -->
   <!--   <symlink link="${htdocsTargetDir}" -->
-  <!--            resource="${webappTargetDir}/docs" /> -->
+  <!-- resource="${webappTargetDir}/docs" /> -->
   <!-- </target> -->
 
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
