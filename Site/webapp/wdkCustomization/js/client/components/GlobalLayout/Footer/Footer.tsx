@@ -10,24 +10,28 @@ const Footer: React.FC = () => {
     return (
         <ThemeProvider theme={theme}>
             <FooterWrapper container alignItems="center" direction="column">
-                <Grid container item direction="column" spacing={3}>
+                <Grid container item direction="column">
                     <Grid item container justify="center" alignItems="center">
-                        <Box pl={3} pr={3}>
-                            <DarkContrastText variant="body2">
-                                <WhiteExternalLink href="https://www.niagads.org/privacy-policy">
-                                    Privacy policy
-                                </WhiteExternalLink>{" "}
-                            </DarkContrastText>
-                        </Box>
-                        <Box pl={3} pr={3}>
-                            <DarkContrastText variant="body2" color="secondary">
-                                |
-                            </DarkContrastText>
-                        </Box>
-                        <Box pl={3} pr={3}>
-                            <DarkContrastText variant="body2">
-                                <WhiteExternalLink href="https://www.niagads.org/contact">Contact</WhiteExternalLink>
-                            </DarkContrastText>
+                        <Box p={3} display="flex">
+                            <Box pl={3} pr={3}>
+                                <DarkContrastText variant="body2">
+                                    <WhiteExternalLink href="https://www.niagads.org/privacy-policy">
+                                        Privacy policy
+                                    </WhiteExternalLink>{" "}
+                                </DarkContrastText>
+                            </Box>
+                            <Box pl={3} pr={3}>
+                                <DarkContrastText variant="body2" color="secondary">
+                                    |
+                                </DarkContrastText>
+                            </Box>
+                            <Box pl={3} pr={3}>
+                                <DarkContrastText variant="body2">
+                                    <WhiteExternalLink href="https://www.niagads.org/contact">
+                                        Contact
+                                    </WhiteExternalLink>
+                                </DarkContrastText>
+                            </Box>
                         </Box>
                     </Grid>
                     <Grid item container direction="column" alignItems="center">
