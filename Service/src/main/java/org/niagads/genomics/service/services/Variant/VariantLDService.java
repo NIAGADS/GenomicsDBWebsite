@@ -39,41 +39,48 @@ public class VariantLDService extends AbstractWdkService {
     private static final String DEFAULT_POPULATION = "EUR";
 
 
-    private static final String REQUEST_ID_CTE = "SELECT * FROM unnest(string_to_array(?, ',')) variant_identifier";
-    private static final String RECORD_PK_CTE = "SELECT find_variant_primary_key(variant_identifier) AS record_pk, variant_identifier FROM request_ids";
+    private static final String REQUEST_ID_CTE = "SELECT * FROM unnest(string_to_array(?, ',')) request_variant_id";
+    private static final String RECORD_PK_CTE = "SELECT find_variant_primary_key(request_variant_id) AS record_primary_key," + NL
+        + "request_variant_id FROM request_ids";
     
-    private static final String VARIANT_CTE = "SELECT ids.variant_identifier AS request_variant_id," + NL 
-        + "v.variant_id::integer AS variant_id, v.record_pk," + NL
-        + "v.source_id AS refsnp_id, v.metaseq_id, v.chromosome, v.location_start" + NL
-        + "FROM NIAGADS.Variant v, ids" + NL
-        + "WHERE v.record_pk = ids.record_pk";
+    private static final String VARIANT_CTE = "SELECT request_variant_id," + NL
+        + "record_primary_key," + NL
+        + "'chr' || split_part(record_primary_key, ':', 1) AS chromosome," + NL
+        + "split_part(record_primary_key, '_', 2) AS ref_snp_id," + NL
+        + "split_part(record_primary_key, ':', 2)::bigint AS location," + NL
+        + "split_part(record_primary_key, '_', 1) AS metaseq_id" + NL
+        + "FROM ids" + NL
+        + "WHERE ids.record_primary_key IS NOT NULL";
     
     private static final String VARIANT_DETAILS_JSON_QUERY = "SELECT jsonb_agg(jsonb_build_object(" + NL
         + "'request_id', request_variant_id," + NL 
-        + "'record_pk', record_pk," + NL 
-        + "'refsnp_id', CASE WHEN v.refsnp_id LIKE 'rs%' THEN refsnp_id ELSE NULL END,"
+        + "'record_pk', record_primary_key," + NL 
+        + "'refsnp_id', ref_snp_id,"
         + "'display_label'," + NL 
-        + "CASE WHEN v.refsnp_id LIKE 'rs%' THEN refsnp_id" + NL 
-        + "ELSE CASE WHEN length(metaseq_id) > 30 THEN substr(metaseq_id, 0, 27) || '...'" + NL 
-        + "ELSE metaseq_id END END) ORDER BY v.location_start)::text AS details" + NL 
-        + "FROM variants v";
+        + "CASE WHEN ref_snp_id IS NOT NULL THEN ref_snp_id" + NL 
+        + "ELSE truncate_str(v.metaseq_id, 27) END)" + NL 
+        + "ORDER BY chromosome, location)::text AS details" + NL 
+        + "FROM Variants v";
 
-    private static final String LD_CTE = "SELECT ld.variants," + NL
-        + "ld.r_squared, protocol_app_node_id" + NL
-        + "FROM Results.VariantLD ld," + NL
+    private static final String LD_CTE = "SELECT r.variants," + NL
+        + "r.r_squared, population_protocol_app_node_id" + NL
+        + "FROM Results.VariantLD r," + NL
         + "Variants v" + NL
-        + "WHERE ld.variants @> ARRAY[v.variant_id]";
+        + "WHERE r.variants @> ARRAY[v.ref_snp_id]";
         
       
-    private static final String LD_RESULT_QUERY = "SELECT DISTINCT jsonb_agg(" + NL 
-        + "jsonb_build_object('variant1', v1.record_pk, 'variant2', v2.record_pk, 'value', ld.r_squared))::text AS result" + NL
-        + "FROM linkage ld," + NL 
-        + "variants v1, variants v2," + NL
-        + "Study.ProtocolAppNode pan" + NL
-        + "WHERE ld.variants[1] = v1.variant_id" + NL
-        + "AND ld.variants[2] = v2.variant_id" + NL
-        + "AND pan.source_id = '1000GenomesLD_' || ?" + NL
-        + "AND pan.protocol_app_node_id = ld.protocol_app_node_id";
+    private static final String LD_RESULT_QUERY = "Results AS (" + NL
+        + "SELECT DISTINCT v1.record_primary_key AS variant1," + NL
+        + "v2.record_primary_key AS variant2," + NL
+        + "ld.r_squared AS value" + NL
+        + "FROM Study.ProtocolAppNode pan," + NL
+        + "Variants v1, Variants v2," + NL
+        + "Linkage ld" + NL
+        + "WHERE ld.variants[1] = v1.ref_snp_id" + NL
+        + "AND ld.variants[2] = v2.ref_snp_id" + NL
+        + "AND pan.source_id = '1000GenomesLD_' || ?::text" + NL
+        + "AND pan.protocol_app_node_id = ld.population_protocol_app_node_id)" + NL
+        + "SELECT json_agg(row_to_json(results.*))::text AS result FROM Results";
        
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -156,6 +163,10 @@ public class VariantLDService extends AbstractWdkService {
         runner.executeQuery(new Object[] {variants, population}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return null;
+        }
+
         return (String) results.get(0).get("result");
     }
 
@@ -179,18 +190,19 @@ public class VariantLDService extends AbstractWdkService {
     }
 
     private String prepareUnmappedVariantQuery() {
+
         String sql = prepareIdCTE() + NL
-            + "SELECT json_agg(ids.variant_identifier)::text AS unmapped_variants" + NL
+            + "SELECT json_agg(ids.request_variant_id)::text AS unmapped_variants" + NL 
             + "FROM ids" + NL
-            + "WHERE ids.record_pk NOT IN" + NL 
-            + "(SELECT v.record_pk FROM NIAGADS.Variant v, ids WHERE ids.record_pk = v.record_pk)";
+            + "WHERE ids.record_primary_key IS NULL";
         return sql;
     }
 
     private String prepareLDQuery() {
         String sql = prepareMappedVariantIdCTE() + ", " + NL
-            + "linkage AS (" + LD_CTE + ")" + NL
+            + "linkage AS (" + LD_CTE + ")," + NL
             + LD_RESULT_QUERY;
+
         return sql;
     }
 
@@ -205,6 +217,9 @@ public class VariantLDService extends AbstractWdkService {
         runner.executeQuery(new Object[] {variants}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return null;
+        }
         return (String) results.get(0).get("unmapped_variants");
     }
 
@@ -220,6 +235,9 @@ public class VariantLDService extends AbstractWdkService {
         runner.executeQuery(new Object[] {variants}, handler);
 
         List <Map <String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return null;
+        }
         return (String) results.get(0).get("details");
     }
 

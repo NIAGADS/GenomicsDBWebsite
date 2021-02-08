@@ -14,6 +14,10 @@ DONT_EMAIL_NEW_USER=true
 WDK_VERSION=API_BLD_42
 JBROWSE_VERSION=1.11.6
 
+GENOME_BUILD=GRCh37.p13
+GENCODE_VERSION=v19
+dbSNP_VERSION=151
+
 SITE_ADMIN_EMAIL=
 
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
@@ -68,7 +72,6 @@ VARIANT_RECORD=/app/record/variant/
 SPAN_RECORD=/app/record/span
 
 VARIANTS_BY_FEATURE_SEARCH=/query?question=by_feature&flanking=0kb&feature_identifier=
-GWAS_SEARCH=/query?question=gwas_stats
 
 GENE_IN_REGION_SEARCH=/processQuestion.do?questionFullName=GeneQuestions.GenesByRegion&span=
 
@@ -102,6 +105,7 @@ ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=c
 ENSEMBL_TRANSCRIPT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
 ENSEMBL_VARIANT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
 ENSEMBL_REGULATORY_FEATURE_URL_GRCh37=https://grch37.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
+ENSEMBL_MOTIF_FEATURE_URL_GRCh37=https://grch37.ensembl.org/motifWidget.htm?id=
 
 VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
 OMIM_URL=http://omim.org/entry/
@@ -137,3 +141,7 @@ EMBL_EXPRESSION_ATLAS_URL=https://www.ebi.ac.uk/gxa/search?exactMatch=true&_exac
 UCSC_BROWSER_URL_GRCh37=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=
 
 HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
+
+EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
+
+FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB

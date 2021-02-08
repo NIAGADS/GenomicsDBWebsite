@@ -5,6 +5,7 @@ import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/Hea
 import * as gr from "./../../types";
 import { HighchartsTableTrellis, IgvBrowser } from "../../../Visualizations";
 import { Link } from "wdk-client/Components";
+import { resolveJsonInput, isJson } from "../../../../util/jsonParse";
 
 interface StoreProps {
     externalUrls: { [key: string]: any };
@@ -24,7 +25,12 @@ interface RecordHeading {
 
 type GeneRecordSummary = StoreProps & gr.GeneRecord;
 
-const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, recordClass, headerActions }) => {
+const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({
+    record,
+    recordClass,
+    headerActions,
+    webAppUrl,
+}) => {
     return (
         <>
             <div className="col-sm-3">
@@ -59,9 +65,9 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
                                 ? "/ ".concat(record.attributes.cytogenetic_location)
                                 : ""}
                         </li>
-                        {record.attributes.ad_evidence_flag && (
+                        {record.attributes.has_genetic_evidence_for_ad_risk && (
                             <li>
-                                <span className="label">Genetic Evidence for AD?</span>&nbsp;YES
+                                <span className="label">Genetic Evidence for AD?</span>&nbsp; {resolveJsonInput(record.attributes.has_genetic_evidence_for_ad_risk_display)}
                             </li>
                         )}
                     </ul>
@@ -70,8 +76,7 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
             <div className="col-sm-9">
                 {record.attributes.gws_variants_summary_plot && (
                     <div className="header-summary-plot-title">
-                        With which AD-related dementias, neuropathologies, and/or biomarkers are variants proximal to or
-                        co-located with {record.attributes.gene_symbol} associated? &nbsp;&nbsp;&nbsp;
+                        Summary of AD/ADRD associations for this variants proximal to {record.attributes.gene_symbol}: &nbsp;&nbsp;&nbsp;
                         <a href="#ad_variants_from_gwas">
                             Browse the association evidence <i className="fa fa-level-down"></i>
                         </a>
@@ -84,7 +89,7 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
                     />
                 )}
             </div>
-            <div className="col-sm-12">
+            {/*<div className="col-sm-12">
                 <Link
                     to={`/visualizations/browser?locus=${record.attributes.chromosome}:${
                         +record.attributes.location_start + 10000
@@ -96,8 +101,9 @@ const GeneRecordSummary: React.SFC<RecordHeading & StoreProps> = ({ record, reco
                     defaultSpan={`${record.attributes.chromosome}:${+record.attributes.location_start - 50000}-${
                         +record.attributes.location_end + 50000
                     }`}
+                    searchUrl={`${window.location.origin}${webAppUrl}/service/track/feature?id=`}
                 />
-            </div>
+                </div>*/}
         </>
     );
 };

@@ -19,8 +19,18 @@
         }
     }
     .record-subtitle-container {
+        margin-top: -10px;
+        h3 {
+           padding-top: 0px;
+        } 
+       
+    }
+    .record-detail-container {
+        &.bordered {
+            border-bottom: 1px solid;
+        }
         p {
-            margin-bottom: 3px;
+            margin: 2px;
         }
     }
     ul.link-list {

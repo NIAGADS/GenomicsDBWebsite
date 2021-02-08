@@ -24,8 +24,8 @@ GeneRecordClasses.GeneRecordClass.location_start	GenomicSequenceLocationCategory
 GeneRecordClasses.GeneRecordClass.location_end	http://edamontology.org/topic_0114	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	location_end				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.gene_symbol	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	gene_symbol				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.synonyms	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	synonyms				gene		results	record-internal	download
-GeneRecordClasses.GeneRecordClass.jbrowse_span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	jbrowse_span				gene			record-internal	
-GeneRecordClasses.GeneRecordClass.has_ad_evidence	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	has_ad_evidence				gene			record-internal	download
+GeneRecordClasses.GeneRecordClass.has_genetic_evidence_for_ad_risk	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	has_genetic_evidence_for_ad_risk				gene			record-internal	download
+GeneRecordClasses.GeneRecordClass.has_genetic_evidence_for_ad_risk_display	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	has_genetic_evidence_for_ad_risk_display				gene		results	record-internal	
 GeneRecordClasses.GeneRecordClass.ad_evidence_flag	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	ad_evidence_flag				gene		results	record-internal	
 GeneRecordClasses.GeneRecordClass.num_colocated_variants	http://edamontology.org/topic_0199	Genetic variation	GeneRecordClasses.GeneRecordClass	attribute	num_colocated_variants				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.num_unique_colocated_variants	http://edamontology.org/topic_0199	Genetic variation	GeneRecordClasses.GeneRecordClass	attribute	num_unique_colocated_variants				gene		results	record-internal	download
@@ -56,7 +56,8 @@ GeneRecordClasses.GeneRecordClass.sequence_link_outs	http://edamontology.org/top
 GeneRecordClasses.GeneRecordClass.protein_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	protein_link_outs				gene	3		record	download
 GeneRecordClasses.GeneRecordClass.clinical_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	clinical_link_outs				gene	2		record	download
 GeneRecordClasses.GeneRecordClass.transcript_link_outs	http://edamontology.org/topic_3345	Data identity and mapping	GeneRecordClasses.GeneRecordClass	table	transcript_link_outs				gene	5		record	download
-GeneRecordClasses.GeneRecordClass.gws_variants_summary_plot	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_plot							record-internal	
+GeneRecordClasses.GeneRecordClass.gws_variants_summary_plot	http://www.niagadsontology.org/no_01	NIAGADS GWAS	GeneRecordClasses.GeneRecordClass	attribute	gws_variants_summary_plot				gene			record-internal	
+GeneRecordClasses.GeneRecordClass.functional_genomics_enhancers	http://edamontology.org/topic_0749	Transcription factors and regulatory sites	GeneRecordClasses.GeneRecordClass	table	functional_genomics_enhancers				gene			record	download
 													
 ## Variant Questions  ##													
 													
@@ -66,47 +67,28 @@ VariantRecordClasses.VariantRecordClass.VariantQuestions.gwas_stats	http://www.n
 													
 ## Variant Attributes ##													
 													
-VariantRecordClasses.VariantRecordClass.variant_source	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	variant_source						results	record-internal	download
+VariantRecordClasses.VariantRecordClass.display_metaseq_id	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	display_metaseq_id							record-internal	
 VariantRecordClasses.VariantRecordClass.ref_snp_id	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	ref_snp_id						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.metaseq_id	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	metaseq_id						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.is_annotated	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	is_annotated							record-internal	
-VariantRecordClasses.VariantRecordClass.adsp_id	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	adsp_id						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.ref_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	ref_allele						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.alt_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	alt_allele						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.chromosome	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	chromosome						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.position	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	position						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.location	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	location						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.full_jbrowse_link	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	full_jbrowse_link							record-internal	
-VariantRecordClasses.VariantRecordClass.jbrowse_source_url	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	jbrowse_source_url							record-internal	
+VariantRecordClasses.VariantRecordClass.ref_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	ref_allele						results	record-internal	download
+VariantRecordClasses.VariantRecordClass.alt_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	alt_allele						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.display_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	display_allele						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.sequence_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	sequence_allele						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.upstream_sequence	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	upstream_sequence							record-internal	
-VariantRecordClasses.VariantRecordClass.downstream_sequence	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	downstream_sequence							record-internal	
-VariantRecordClasses.VariantRecordClass.is_adsp_variant	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	is_adsp_variant						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.is_adsp_wes	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	is_adsp_wes						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.is_adsp_wgs	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	is_adsp_wgs						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.is_multi_allelic	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	is_multi_allelic						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.is_reversed	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	is_reversed							record-internal	download
-VariantRecordClasses.VariantRecordClass.variant_class	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	variant_class		 					record-internal	download
+VariantRecordClasses.VariantRecordClass.sequence_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	sequence_allele							record-internal	
+VariantRecordClasses.VariantRecordClass.sequence_allele_display	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	sequence_allele_display							record-internal	
+VariantRecordClasses.VariantRecordClass.variant_class	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	variant_class		 				results	record-internal	download
 VariantRecordClasses.VariantRecordClass.variant_class_abbrev	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	variant_class_abbrev						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.sequence	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	sequence						results		download
-VariantRecordClasses.VariantRecordClass.has_merge_history	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	has_merge_history							record-internal	
-VariantRecordClasses.VariantRecordClass.current_rsid	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	current_rsid							record-internal	
-VariantRecordClasses.VariantRecordClass.current_primary_key	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	current_primary_key							record-internal	
+VariantRecordClasses.VariantRecordClass.adsp_display_flag	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	adsp_display_flag						results	record-internal	
+VariantRecordClasses.VariantRecordClass.is_adsp_variant	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	is_adsp_variant							record-internal	download
+VariantRecordClasses.VariantRecordClass.is_adsp_wes	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	is_adsp_wes							record-internal	download
+VariantRecordClasses.VariantRecordClass.is_adsp_wgs	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	is_adsp_wgs							record-internal	download
 VariantRecordClasses.VariantRecordClass.adsp_wes_qc_filter_status	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	adsp_wes_qc_filter_status							record-internal	download
 VariantRecordClasses.VariantRecordClass.adsp_wgs_qc_filter_status	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	adsp_wgs_qc_filter_status							record-internal	download
 VariantRecordClasses.VariantRecordClass.adsp_wes_qc_filter_status_display	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	adsp_wes_qc_filter_status_display						results	record-internal	
 VariantRecordClasses.VariantRecordClass.adsp_wgs_qc_filter_status_display	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	adsp_wgs_qc_filter_status_display						results	record-internal	
-VariantRecordClasses.VariantRecordClass.colocated_gene_link	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	colocated_gene_link						results	record-internal	
-VariantRecordClasses.VariantRecordClass.colocated_gene	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	colocated_gene							record-internal	download
-VariantRecordClasses.VariantRecordClass.num_colocated_genes	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	num_colocated_genes						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.colocated_transcripts	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	colocated_transcripts							record-internal	
-VariantRecordClasses.VariantRecordClass.cadd_raw_score	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	cadd_raw_score						results	record	download
-VariantRecordClasses.VariantRecordClass.cadd_phred_score	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	cadd_phred_score						results	record	download
-VariantRecordClasses.VariantRecordClass.num_colocated_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	num_colocated_variants							record-internal	
-VariantRecordClasses.VariantRecordClass.colocated_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	colocated_variants							record-internal	
-VariantRecordClasses.VariantRecordClass.num_alternative_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	num_alternative_variants							record-internal	
-VariantRecordClasses.VariantRecordClass.alternative_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	alternative_variants							record-internal	
+													
 VariantRecordClasses.VariantRecordClass.most_severe_consequence	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	most_severe_consequence						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.msc_impact	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	msc_impact						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.msc_impacted_gene_link	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	msc_impacted_gene_link						results	record-internal	
@@ -116,17 +98,25 @@ VariantRecordClasses.VariantRecordClass.msc_impacted_transcript	http://edamontol
 VariantRecordClasses.VariantRecordClass.msc_amino_acid_change	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	msc_amino_acid_change						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.msc_codon_change	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	msc_codon_change						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.msc_is_coding	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	msc_is_coding						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.num_impacted_transcripts	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	num_impacted_transcripts							record-internal	
-VariantRecordClasses.VariantRecordClass.num_impacted_genes	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	num_impacted_genes							record-internal	
-VariantRecordClasses.VariantRecordClass.transcript_consequence_summary	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	transcript_consequence_summary							record-internal	
-VariantRecordClasses.VariantRecordClass.locuszoom_gwas_datasets	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	locuszoom_gwas_datasets					1		record	
-VariantRecordClasses.VariantRecordClass.display_metaseq_id	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	display_metaseq_id							record-internal	
+													
 VariantRecordClasses.VariantRecordClass.gws_datasets_summary_plot	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	gws_datasets_summary_plot							record-internal	
+VariantRecordClasses.VariantRecordClass.locuszoom_gwas_datasets	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	locuszoom_gwas_datasets					1		record	
+													
+VariantRecordClasses.VariantRecordClass.is_multi_allelic	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	is_multi_allelic						results	record-internal	download
+VariantRecordClasses.VariantRecordClass.num_colocated_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	num_colocated_variants							record-internal	
+VariantRecordClasses.VariantRecordClass.colocated_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	colocated_variants							record-internal	
+VariantRecordClasses.VariantRecordClass.alternative_variants	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	alternative_variants							record-internal	
+													
+VariantRecordClasses.VariantRecordClass.cadd_raw_score	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	cadd_raw_score						results	record-internal	download
+VariantRecordClasses.VariantRecordClass.cadd_phred_score	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	attribute	cadd_phred_score						results	record-internal	download
+													
+VariantRecordClasses.VariantRecordClass.sequence	http://edamontology.org/topic_0219	Curation and Annotation	VariantRecordClasses.VariantRecordClass	attribute	sequence						results		download
 													
 VariantRecordClasses.VariantRecordClass.allele_frequencies	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	table	allele_frequencies					1		record	download
 VariantRecordClasses.VariantRecordClass.transcript_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	transcript_consequences					1		record	download
-VariantRecordClasses.VariantRecordClass.intergenic_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	intergenic_consequences					3		record	download
+VariantRecordClasses.VariantRecordClass.intergenic_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	intergenic_consequences					4		record	download
 VariantRecordClasses.VariantRecordClass.regulatory_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	regulatory_consequences					2		record	download
+VariantRecordClasses.VariantRecordClass.motif_consequences	http://edamontology.org/topic_1775	Function analysis	VariantRecordClasses.VariantRecordClass	table	motif_consequences					3		record	download
 VariantRecordClasses.VariantRecordClass.ad_associations_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	ad_associations_from_gwas					1		record	download
 VariantRecordClasses.VariantRecordClass.other_associations_from_gwas	http://www.niagadsontology.org/no_01	NIAGADS GWAS	VariantRecordClasses.VariantRecordClass	table	other_associations_from_gwas					2		record	download
 VariantRecordClasses.VariantRecordClass.ad_associations_from_catalog	http://www.niagadsontology.org/no_02	GWAS Catalog	VariantRecordClasses.VariantRecordClass	table	ad_associations_from_catalog					1		record	download
@@ -160,6 +150,8 @@ DatasetRecordClasses.GWASDatasetRecordClass.niagads_accession	http://edamontolog
 DatasetRecordClasses.GWASDatasetRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	search_link						results	record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.attribution	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	attribution						results	record-internal	download
 DatasetRecordClasses.GWASDatasetRecordClass.has_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	has_manhattan_plot					1		record-internal	
+DatasetRecordClasses.GWASDatasetRecordClass.phenotype_list	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	phenotype_list						results	record-internal	download
+DatasetRecordClasses.GWASDatasetRecordClass.covariate_list	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	covariate_list						results	record-internal	download
 													
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_expanded_snps					1		record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_tag_ideogram	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_tag_ideogram					2		record-internal	
@@ -172,6 +164,8 @@ DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_enhancer_overlap_r
 DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_enhancer_overlap_fantom5	http://www.niagadsontology.org/no_03	Functional mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_enhancer_overlap_fantom5					1		record-internal	
 DatasetRecordClasses.GWASDatasetRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	table	top_variants					2		record	
 DatasetRecordClasses.GWASDatasetRecordClass.phenotypes	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	table	phenotypes							record	
+													
+													
 													
 DatasetRecordClasses.NIAGADSDatasetRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	attribute	name						result	record-internal	download
 DatasetRecordClasses.NIAGADSDatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	attribute	description						result	record-internal	download

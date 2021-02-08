@@ -15,19 +15,31 @@ import static org.gusdb.fgputil.FormatUtil.NL;
 
     @Override
     public String prepareSql(String idSql) {
-        String sql = "WITH ids AS (" + idSql + ")"  + NL
-            + "SELECT replace(v.chromosome, 'chr', '') AS chromosome," + NL
-            + "jsonb_agg(jsonb_build_object('record_primary_key', ids.source_id," + NL
-            + "'record_type', 'variant'," + NL 
-            + "'display_label', CASE WHEN v.source_id LIKE 'rs%' THEN v.source_id" + NL
-                    + "ELSE CASE WHEN length(v.metaseq_id) > 30 THEN" + NL
-                    + "substr(v.metaseq_id, 27) || '...' ELSE v.metaseq_id END END," + NL
+        String sql = "WITH ids AS (" + idSql + "),"  + NL
+            + "variants AS (SELECT source_id AS record_primary_key," + NL
+            + "split_part(source_id, ':', 1)::text AS chromosome," + NL
+            + "split_part(source_id, ':', 2)::integer AS position," + NL
+            + "split_part(source_id, ':', 3)::text AS ref_allele," + NL
+            + "split_part(split_part(source_id, '_', 1), ':', 4)::text AS alt_allele," + NL
+            + "split_part(source_id, '_', 1) AS metaseq_id," + NL
+            + "split_part(source_id, '_', 2) AS ref_snp_id" + NL
+            + "FROM ids)," + NL
+            + "AnnotatedVariants AS (" + NL
+            + "SELECT v.*, da.*" + NL
+            + "FROM variants v," + NL
+            + "normalize_alleles(v.ref_allele, v.alt_allele) na," + NL
+            + "display_allele_attributes(v.ref_allele, v.alt_allele, na.ref, na.alt, v.position) da)" + NL
+            + "SELECT v.chromosome," + NL
+            + "jsonb_agg(jsonb_build_object('record_primary_key', v.record_primary_key," + NL
+            + "'record_type', 'variant'," + NL
+            + "'display_label', CASE WHEN v.ref_snp_id IS NOT NULL" + NL
+            + "THEN v.ref_snp_id ELSE truncate_str(metaseq_id, 27) END," + NL
             + "'location_start', v.location_start," + NL
-            + "'location_end', v.location_end," + NL 
-            + "'span_length', v.location_end - v.location_start) ORDER BY location_start)::text AS feature_json" + NL
-            + "FROM NIAGADS.Variant v, ids" + NL
-            + "WHERE v.record_pk = ids.source_id" + NL
+            + "'location_end', v.location_end," + NL
+            + "'span_length', v.location_end - v.location_start) ORDER BY location_start)::text AS feature_json"
+            + "FROM AnnotatedVariants v"
             + "GROUP BY chromosome";
+            
         return sql;
     }
 

@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
-import * as d3 from "d3";
-import { toString, chain } from "lodash";
-import { scientificToDecimal } from "../../../../util/util";
+import d3, { DragEvent } from "d3";
+import { chain, debounce } from "lodash";
 
 interface PvalFilterProps {
-    values: any[];
-    setFilter: (id: string, value: any) => void;
-    selectClass: string;
     defaultPVal: number;
+    setMaxPvalue: (value: number) => void;
+    selectClass: string;
+    values: { [key: string]: any; pvalue: string }[];
 }
 
 interface CanvasSpec {
@@ -27,27 +26,24 @@ const canvasSpec: CanvasSpec = {
     height: 150,
 };
 
-const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setFilter, selectClass, values }) => {
-    //p refers to negative log, so maxP means lowest pVal to display (e.g., 15 =  e-15)
-    const maxP = 15;
-
+const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, selectClass, values }) => {
+    const defaultPLog10 = Math.log10(defaultPVal);
     useEffect(() => {
-        const smallestP = _getSmallestP(values),
-            data = _transformData(values),
+        const data = _transformData(values),
+            maxP = data[data.length - 1].pValueLog10,
             svg = _drawFrame(selectClass, canvasSpec),
-            xScale = _buildXScale(data, canvasSpec.width, maxP),
-            unXScale = _buildUnXScale(data, canvasSpec.width, maxP),
+            xScale = _buildXScale(canvasSpec.width, minP, maxP),
             yScale = _buildYScale(data, canvasSpec.height),
             area = _buildAreaFunc(canvasSpec.height, xScale, yScale);
         _drawArea(svg, data, area);
-        _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale, maxP), _buildYAxis(yScale));
+        _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec);
-        _drawSlider(svg, xScale, unXScale, smallestP, defaultPVal, canvasSpec, (val: number) =>
-            setFilter("pvalue", val)
-        );
+        _drawSlider(svg, xScale, defaultPLog10, canvasSpec, setMaxPvalue);
         //this component is uncontrolled and holds its own state after initialization; it never rerenders
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
+
+    const minP = 1e-15;
 
     return (
         <div className="p-val-filter-chart control">
@@ -59,46 +55,45 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setFilter, selectC
 //never rerender!
 export default React.memo(PvalFilter, () => true);
 
-const _buildYAxis = (yScale: any) => {
-    return d3.svg.axis().scale(yScale).orient("left");
+const _buildYAxis = (yScale: any) =>
+    d3.svg
+        .axis()
+        .scale(yScale)
+        .orient("left")
+        .ticks(5)
+        .tickFormat((d) => formatNumber(d));
+
+const formatNumber = (n: number) => {
+    if (n > 999) {
+        return d3.format(".2s")(n);
+    } else return String(n);
 };
 
-const _buildXAxis = (xScale: d3.scale.Ordinal<string, number>, maxP: number) => {
-    return d3.svg
+const _buildXAxis = (xScale: d3.scale.Linear<number, number>) =>
+    d3.svg
         .axis()
         .scale(xScale)
-        .tickFormat((tick) => (+tick === maxP ? tick + "+" : tick))
+        .tickFormat((tick) => {
+            return +tick == xScale.domain()[1] ? Math.abs(tick) + "+" : String(Math.abs(tick));
+        })
         .orient("bottom");
-};
 
 interface ChartDatum {
-    pValue: string;
+    pValueLog10: number;
     count: number;
 }
 
-const _buildXScale = (data: ChartDatum[], width: number, maxP: number) => {
-    return (
-        d3.scale
-            .ordinal()
-            //d3.range does not include max number in array, so need to increment
-            .domain(d3.range(0, maxP + 1).map((item) => item.toString()))
-            .rangePoints([0, width])
-    );
-};
-
-const _buildUnXScale = (data: ChartDatum[], width: number, maxP: number) => {
-    return d3.scale.linear().domain([0, width]).rangeRound([0, maxP]);
+const _buildXScale = (width: number, minP: number, maxP: number) => {
+    return d3.scale
+        .linear()
+        .range([0, width])
+        .domain([Math.ceil(maxP + 0.5), Math.log10(Number(minP))]);
 };
 
 const _buildYScale = (data: ChartDatum[], height: number) => {
     return d3.scale
         .linear()
-        .domain([
-            0,
-            d3.max(data, function (d) {
-                return d.count;
-            }),
-        ])
+        .domain([0, d3.max(data, (d) => d.count)])
         .range([height, 0]);
 };
 
@@ -112,15 +107,15 @@ const _drawFrame = (selectorClass: string, cs: CanvasSpec) => {
         .attr("transform", "translate(" + cs.margin.left + "," + cs.margin.top + ")");
 };
 
-const _buildAreaFunc = (height: number, xScale: any, yScale: any) => {
+const _buildAreaFunc = (height: number, xScale: d3.scale.Linear<number, number>, yScale: any) => {
     return d3.svg
         .area()
-        .x((d: any) => xScale(d.pValue))
+        .x((d: any) => xScale(+d.pValueLog10))
         .y0(height)
         .y1((d: any) => yScale(d.count));
 };
 
-const _drawArea = (svg: any, data: any, area: any) => {
+const _drawArea = (svg: any, data: ChartDatum[], area: d3.svg.Area<[number, number]>) => {
     svg.append("path").datum(data).attr("class", "area").attr("d", area);
 };
 
@@ -140,75 +135,65 @@ const _drawAxes = (svg: any, height: number, xAxis: any, yAxis: any) => {
 
 const _drawRectangle = (
     svg: d3.Selection<any>,
-    xScale: d3.scale.Ordinal<string, number>,
-    minXVal: number,
+    xScale: d3.scale.Linear<number, number>,
+    defaultPvalue: number,
     height: number,
     classname = ""
 ) => {
-    const xLimit = xScale(String(minXVal));
+    const xStart = xScale(defaultPvalue);
     svg.append("g")
         .append("rect")
-        .attr("width", xScale.range()[xScale.range().length - 1] - xLimit)
+        .attr("width", xScale.range()[1] - xStart)
         .attr("height", height)
         .attr("fill", "pink")
         .attr("opacity", 0.2)
         .attr("class", classname)
-        .attr("transform", "translate(" + xLimit + ",0)");
+        .attr("transform", "translate(" + xStart + ",0)");
 };
 
-const _buildDrag = (unXScale: d3.scale.Linear<number, number>, sizerClass: string, cb: Function) => {
-    return d3.behavior.drag().on("drag", function (d: any) {
-        const event = d3.event as any;
-        //@ts-ignore
-        const cx =
-            event.x >= d.extent[0] && event.x <= d.extent[1]
-                ? event.x
-                : //
-                  //@ts-ignore
-                  d3.select(this as any).attr("cx");
-        const rectWidth = d.extent[1] - cx;
-        d3.select("." + sizerClass)
-            .attr("transform", "translate(" + cx + ",0)")
-            .attr("width", rectWidth);
-        //@ts-ignore
-        d3.select(this).attr("cx", cx);
-        //note that this will lag while table is rerendering after callback, ReactTable seems to be the culprit
-        cb(unXScale(cx));
+function _buildDrag(this: any, xScale: d3.scale.Linear<number, number>, sizerClass: string, cb: (val: number) => void) {
+    return d3.behavior.drag().on("drag", function (this: any) {
+        const event = d3.event as DragEvent;
+        if (event.x >= xScale.range()[0] && event.x <= xScale.range()[1]) {
+            //move slider
+            d3.select(this).attr("cx", event.x);
+            //shift rectangle
+            d3.select("." + sizerClass)
+                .attr("width", xScale.range()[1] - event.x)
+                .attr("transform", "translate(" + event.x + ",0)");
+            debounce(() => cb(Math.pow(10, xScale.invert(event.x))), 100)();
+        }
     });
-};
+}
 
 const _drawCircle = (
     svg: d3.Selection<any>,
-    xScale: d3.scale.Ordinal<string, number>,
-    xVal: number,
-    hcp: number,
+    xScale: d3.scale.Linear<number, number>,
+    defaultP: number,
     height: number,
     drag: any
-) => {
-    svg.append("g")
+) =>
+    svg
+        .append("g")
         .append("circle")
         .attr("fill", "orange")
         .attr("r", 7)
         .attr("opacity", 0.5)
-        .attr("cx", xScale(String(xVal)))
-        .datum({ extent: [xScale(String(hcp)), xScale.rangeExtent()[1]] })
+        .attr("cx", xScale(defaultP))
         .attr("cy", height)
         .call(drag);
-};
 
 const _drawSlider = (
     svg: d3.Selection<any>,
-    xScale: d3.scale.Ordinal<string, number>,
-    unXScale: d3.scale.Linear<number, number>,
-    minP: number,
+    xScale: d3.scale.Linear<number, number>,
     defaultP: number,
     cs: CanvasSpec,
     cb: (val: number) => void
 ) => {
     const sizerClass = "sizer-" + Math.random().toString(36).slice(3),
-        drag = _buildDrag(unXScale, sizerClass, cb);
+        drag = _buildDrag(xScale, sizerClass, cb);
     _drawRectangle(svg, xScale, defaultP, cs.height, sizerClass);
-    _drawCircle(svg, xScale, defaultP, minP, cs.height, drag);
+    _drawCircle(svg, xScale, defaultP, cs.height, drag);
 };
 
 const _drawLabels = (svg: d3.Selection<null>, cs: CanvasSpec) => {
@@ -230,29 +215,21 @@ const _drawLabels = (svg: d3.Selection<null>, cs: CanvasSpec) => {
         .attr("transform", "rotate(90) translate(70,-30)");
 };
 
-const _transformData = (data: { [key: string]: any }) => {
-    const stodEntriesSort = ([k]: any, [l]: any) => (scientificToDecimal(k) > scientificToDecimal(l) ? 1 : -1);
+const _transformData = (data: { [key: string]: any; pvalue: string }[]): ChartDatum[] => {
     let count = 0;
-    return (
-        chain(data)
-            //collapse all pvals less that e-15 into e-15
-            .map((datum) => {
-                if (scientificToDecimal(datum.pvalue) <= scientificToDecimal("1e-15")) {
-                    datum.pvalue = "1e-15";
-                }
-                return datum;
-            })
-            .groupBy((datum) => datum.pvalue)
-            .entries()
-            .sort(stodEntriesSort)
-            .map(([k, v]) => ({
-                pValue: String(Math.abs(+k.split("e")[1])),
-                count: count += v.length,
-            }))
-            .value()
-    );
-};
-
-const _getSmallestP = (values: { [key: string]: any }[]) => {
-    return Math.abs(d3.max(values, (d) => +toString(d.pvalue).split("e")[1]));
+    return chain(data)
+        .map((datum) => {
+            if (+datum.pvalue <= 1e-15) {
+                datum.pvalue = "1e-15";
+            }
+            return Math.log10(+datum.pvalue);
+        })
+        .groupBy()
+        .entries()
+        .sort(([a], [b]) => (+a > +b ? 1 : -1))
+        .map((vals) => ({
+            pValueLog10: +vals[0],
+            count: count += vals[1].length,
+        }))
+        .value();
 };

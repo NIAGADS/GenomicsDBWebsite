@@ -1,3 +1,3 @@
-import CustomSiteHeader from '../components/SiteHeader';
+import Header from "../components/GlobalLayout/Header/Header";
 
-export const SiteHeader = () => CustomSiteHeader;
+export const SiteHeader = () => Header;

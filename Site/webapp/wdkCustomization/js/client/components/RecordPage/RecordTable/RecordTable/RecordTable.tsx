@@ -9,40 +9,52 @@ import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
-import { toString } from "lodash";
 
 const SelectTable = SelectTableHOC(ReactTable);
 
 interface NiagadsRecordTable {
-    table: rt.Table;
-    value: { [key: string]: any }[];
     attributes: rt.TableAttribute[];
+    canShrink?: boolean;
+    chartProperties?: any;
     filtered: Filter[];
+    isSelected: any;
     onLoad: (ref: React.MutableRefObject<Instance>) => void;
     onSelectionToggled: any;
-    isSelected: any;
-    canShrink?: boolean;
+    stringFilterMethod: (val: string, rows: any[]) => any[];
+    table: rt.Table;
+    value: { [key: string]: any }[];
     visible?: boolean;
-    chartProperties?: any;
 }
 
 const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     attributes,
     canShrink,
+    chartProperties,
     filtered,
     isSelected,
     onLoad,
     onSelectionToggled,
+    stringFilterMethod,
     table,
     value,
     visible,
-    chartProperties,
 }) => {
     const instance = useRef<Instance>();
 
     useEffect(() => {
         onLoad(instance);
     }, [onLoad]);
+
+    const hiddenFilterCol = {
+        Header: () => <span />,
+        id: "all",
+        width: 0,
+        resizable: false,
+        sortable: false,
+        Filter: (): null => null,
+        filterMethod: (filter: Filter, rows: any[]) => stringFilterMethod(filter.value, rows),
+        filterAll: true,
+    };
 
     const subCompKey = table.properties.subtable_field ? table.properties.subtable_field[0] : null,
         columns: Column[] =
@@ -116,19 +128,19 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         : {};
 
     const tableProps = {
+        chartProperties,
+        className: canShrink ? "shrink" : "",
         columns,
         data: _setKeyCol(value),
-        minRows: 0,
-        filtered,
-        className: canShrink ? "shrink" : "",
         defaultSortMethod: NiagadsTableSort,
-        onLoad,
-        showPagination: value.length > 20,
-        resizable: true,
         expanderDefaults: { width: 200 },
-        resolveData,
-        chartProperties,
+        filtered,
+        minRows: 0,
+        onLoad,
         PaginationComponent,
+        resizable: true,
+        resolveData,
+        showPagination: true,
         style: { display: visible ? "inherit" : "none" },
         ...subComponent,
     };
@@ -197,7 +209,7 @@ const NiagadsTableSort = (a: string, b: string) => {
     return 0;
 };
 
-const SortIconGroup: React.SFC = () => (
+const SortIconGroup: React.FC = () => (
     <span className="sort-icons">
         <i className="icon-asc fa fa-sort-asc"></i>
         <i className="icon-desc fa fa-sort-desc"></i>
@@ -205,32 +217,7 @@ const SortIconGroup: React.SFC = () => (
     </span>
 );
 
-const hiddenFilterCol = {
-    Header: () => <span />,
-    id: "all",
-    width: 0,
-    resizable: false,
-    sortable: false,
-    Filter: (): null => null,
-    filterMethod: (filter: Filter, rows: any[]) => {
-        //https://github.com/benjamingr/RegExp.escape/blob/master/polyfill.js
-        const re = new RegExp(filter.value.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "i");
-        return rows.filter((row) => {
-            const rowString = Object.entries(row)
-                //filter out falsey vals and internal react-table properties marked by leading _
-                .filter(([k, v]) => !(!v || /^_.+/.test(k)))
-                .map(([_, v]: any) => extractDisplayText(v))
-                .join("");
-            return re.test(rowString);
-        });
-    },
-    filterAll: true,
-};
-
-const pValFilter = (filter: Filter, row: any) => {
-    const exponent = Math.abs((toString(row.pvalue).split("e")[1] as unknown) as number);
-    return exponent >= filter.value;
-};
+const pValFilter = (filter: Filter, row: any) => +row.pvalue <= +filter.value;
 
 const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFunction => {
     switch (attribute.type) {
@@ -239,16 +226,6 @@ const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFun
             return (row: { [key: string]: any }) => {
                 const content: string = isObject(row[key]) ? resolveObjectInput(row[key]) : row[key];
                 return content;
-                /*  display =
-            get(content, "length", 0) > 35
-              ? withTooltip(
-                  <span>{`${content.slice(0, 35)}...`}</span>,
-                  content,
-                  "",
-                  { my: "top left", at: "top left" }
-                )
-              : content;
-        return display; */
             };
 
         case "integer":
@@ -272,7 +249,7 @@ const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFun
 
 const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
-        return forIn(datum, (v: string, k: React.ReactText, o: { [x: string]: any }) => {
+        return forIn(datum, (v: string, k: string, o: { [x: string]: any }) => {
             if (isJson(v)) {
                 o[k] = JSON.parse(v);
             }

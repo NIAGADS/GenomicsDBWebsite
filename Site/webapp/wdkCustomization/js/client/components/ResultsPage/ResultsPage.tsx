@@ -4,7 +4,8 @@ import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { Link } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
-import { SearchResult, buildRouteFromResult } from "../AutoCompleteSearch/AutoCompleteSearch";
+import { SearchResult } from "./../Shared/Autocomplete";
+import { buildRouteFromResult } from "./../HomePage/HomePage";
 import { chain, isEmpty, isObject, get } from "lodash";
 
 interface ResultsPageNavProps {

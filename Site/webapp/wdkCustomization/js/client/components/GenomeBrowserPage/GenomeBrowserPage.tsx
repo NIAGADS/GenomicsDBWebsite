@@ -1,75 +1,93 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
-import { theme } from "./../Visualizations/Igv/mui-theme";
-import tempTrackList from "./../Visualizations/Igv/tempTracklist";
-import TrackBrowser from "./../Visualizations/Igv/IgvTrackBrowser";
+import theme from "./../../theme";
+import TrackBrowser, { IgvTrackConfig } from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
-import NiagadsGWASTrack from "./../../../lib/igv/niagadsTrack";
-import { ThemeProvider, makeStyles, createStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Button from "@material-ui/core/Button";
-import Drawer from "@material-ui/core/Drawer";
-import Divider from "@material-ui/core/Divider";
-import Checkbox from "@material-ui/core/Checkbox";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import Close from "@material-ui/icons/Close";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-import ArrowForward from "@material-ui/icons/ArrowForward";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { get, flow } from "lodash";
-
-const useDemoStyles = makeStyles((theme) =>
-    createStyles({
-        root: {},
-        AppBar: {
-            padding: "0px 10px",
-        },
-        Accordion: {
-            flexGrow: 1,
-        },
-        AccordionDetails: {
-            flexDirection: "column",
-        },
-        Container: {
-            marginTop: "5px",
-        },
-        Drawer: {
-            position: "relative",
-            right: "auto",
-            bottom: "auto",
-            top: "auto",
-            left: "auto",
-        },
-        FormControl: {
-            flexGrow: 1,
-        },
-        IconButton: {
-            justifyContent: "flex-start",
-            marginLeft: theme.spacing(2),
-        },
-    })
-);
+import { get } from "lodash";
+import { WdkServiceContext } from "wdk-client/Service/WdkService";
+import { PrimaryActionButton } from "../Shared";
+import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
 const MemoBroswer = React.memo(IGVBrowser);
 
-export default () => {
-    const classes = useDemoStyles(),
-        [Browser, setBrowser] = useState<any>(),
-        [loadingTrack, setLoadingTrack] = useState<string>(),
-        [drawerOpen, setDrawerOpen] = useState(false),
+interface GenomeBrowserPage {
+    //connected
+    webAppUrl: string;
+    serviceUrl: string;
+}
+
+const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
+    const wdkService = useContext(WdkServiceContext);
+
+    useEffect(() => {
+        wdkService._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
+            setTrackList(
+                res
+                    .map((res) => transformRawNiagadsTrack(res))
+                    .map((t) =>
+                        //we have to manually attach the reader to the config coming out of the backend
+                        t.track === "ENSEMBL_GENE"
+                            ? {
+                                  ...t,
+                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                                  trackType: "annotation",
+                              }
+                            : t
+                    )
+            )
+        );
+    }, [wdkService, serviceUrl]);
+
+    const [Browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),
-        [reloadKey, setReloadKey] = useState(makeReloadKey());
+        [loadingTrack, setLoadingTrack] = useState<string>(),
+        [reloadKey, setReloadKey] = useState(makeReloadKey()),
+        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>();
+
+    const refGeneTrack = useMemo(() => {
+        if (trackList) {
+            const refGeneTrack = trackList.find((t) => t.track === "ENSEMBL_GENE"),
+                { url, format, reader, name } = refGeneTrack,
+                trackConfig: IgvTrackConfig = {
+                    displayMode: "expanded",
+                    format,
+                    id: name,
+                    name,
+                    reader,
+                    type: "annotation",
+                    url,
+                    visibilityWindow: -1,
+                };
+            return trackConfig;
+        } else return null;
+    }, [trackList]);
+
+    const loadTrack = async (config: TrackConfig) => {
+            setLoadingTrack(config.name);
+            await Browser.loadTrack(config);
+            setLoadingTrack(undefined);
+        },
+        getTrackIsLoaded = (config: TrackConfig) => getLoadedTracks(Browser).includes(config.name);
+
+    //since we're going to treat the ref track like any other track in our track list
+    //we're not going to load it from the start but rather wait till the list comes in,
+    //grab it from the list, and load it ourselves
+    useEffect(() => {
+        if (trackList && Browser && refGeneTrack) {
+            if (!getTrackIsLoaded(refGeneTrack)) {
+                loadTrack(refGeneTrack);
+            }
+        }
+    }, [trackList, Browser, refGeneTrack]);
 
     const location = useLocation();
 
@@ -77,179 +95,61 @@ export default () => {
         return get(qs.parse(location.search), "locus") as string;
     }, [location.search]);
 
-    const loadTrack = async (config: TrackConfig) => {
-            setLoadingTrack(config.name);
-            await Browser.loadTrack(config);
-            setLoadingTrack(undefined);
-        },
-        getTrackIsLoaded = (config: TrackConfig) => getLoadedTracks(Browser).includes(config.name),
-        toggleTracks = (config: TrackConfig[]) => {
+    const toggleTracks = (config: TrackConfig[]) => {
             config.forEach((c) => {
                 getTrackIsLoaded(c) ? unloadTrack(c) : loadTrack(c);
             });
         },
         unloadTrack = (config: TrackConfig) => {
             Browser.removeTrackByName(config.name);
-            //force react to update based on imperative change
+            //force react to update based on imperative change // i dont think we need this?
             setReloadKey(makeReloadKey());
         },
-        getTrackIsLoading = (name: string) => loadingTrack === name,
         buildBrowser = useCallback((b: any) => {
-            b.addTrackToFactory("niagadsgwas", (config: any, browser: any) => new NiagadsGWASTrack(config, browser));
             setBrowser(b);
         }, []);
 
     return (
         <Container maxWidth="xl">
             <ThemeProvider theme={theme}>
-                <Button variant="outlined" color="primary" onClick={() => setDrawerOpen(!drawerOpen)}>
-                    <LibraryBooksIcon />
-                    Browse Tracks
-                </Button>
-                <Grid container>
-                    <Drawer
-                        /* className={classes.Drawer} */ style={{
-                            position: "relative",
-                            right: "auto",
-                            bottom: "auto",
-                            top: "auto",
-                            left: "auto",
-                            zIndex: 1299,
-                        }}
-                        open={drawerOpen}
-                        ModalProps={{ hideBackdrop: true }}
-                    >
-                        <Box style={{ maxWidth: "500px", padding: "15px" }}>
-                            <Grid container direction="column">
-                                <Grid
-                                    item
-                                    container
-                                    direction="row"
-                                    alignItems="center"
-                                    justify="space-between"
-                                    xs={12}
-                                >
-                                    <Typography>Available Tracks</Typography>
-                                    <IconButton onClick={() => setDrawerOpen(false)}>
-                                        <Close />
-                                    </IconButton>
-                                </Grid>
-                                <Divider />
-                                <Grid container item xs={12}>
-                                    <Accordion className={classes.Accordion}>
-                                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                            <Typography>Gene</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails className={classes.AccordionDetails} key={reloadKey}>
-                                            {!!Browser &&
-                                                getGeneTrackChoices().map((config) => (
-                                                    <FormControlLabel
-                                                        key={config.name}
-                                                        control={
-                                                            <Checkbox
-                                                                checked={getTrackIsLoaded(config)}
-                                                                onChange={() => toggleTracks([config])}
-                                                                color="primary"
-                                                                disabled={!!loadingTrack}
-                                                            />
-                                                        }
-                                                        label={
-                                                            <span>
-                                                                {config.name}
-                                                                {getTrackIsLoading(config.name) && <LinearProgress />}
-                                                            </span>
-                                                        }
-                                                    />
-                                                ))}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                </Grid>
-                                <Grid>
-                                    <Accordion className={classes.Accordion}>
-                                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                            <Typography>Genetic Variation</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails className={classes.AccordionDetails}>
-                                            <Accordion className={classes.Accordion}>
-                                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                                    <Typography>ADSP</Typography>
-                                                </AccordionSummary>
-                                            </Accordion>
-                                            <Accordion className={classes.Accordion}>
-                                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                                    <Typography>dbSNP</Typography>
-                                                </AccordionSummary>
-                                            </Accordion>
-                                            <Accordion className={classes.Accordion}>
-                                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                                    <Typography>NHGRI</Typography>
-                                                </AccordionSummary>
-                                            </Accordion>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <Grid>
-                                        <Accordion>
-                                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                                <Typography>Genome Reference</Typography>
-                                            </AccordionSummary>
-                                        </Accordion>
-                                    </Grid>
-                                    <Grid>
-                                        <Accordion>
-                                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                                <Typography>Niagads GWAS</Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails className={classes.AccordionDetails} key={reloadKey}>
-                                                {!!Browser &&
-                                                    getNiagadsGwasChoices().map((config) => (
-                                                        <FormControlLabel
-                                                            key={config.name}
-                                                            control={
-                                                                <Checkbox
-                                                                    checked={getTrackIsLoaded(config)}
-                                                                    onChange={() => toggleTracks([config])}
-                                                                    color="primary"
-                                                                    disabled={!!loadingTrack}
-                                                                />
-                                                            }
-                                                            label={
-                                                                <span>
-                                                                    {config.name}
-                                                                    {getTrackIsLoading(config.name) && (
-                                                                        <LinearProgress />
-                                                                    )}
-                                                                </span>
-                                                            }
-                                                        />
-                                                    ))}
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    </Grid>
-                                </Grid>
-                                <Button variant="outlined" color="primary" onClick={() => setListVisible(true)}>
-                                    Functional Genomics&nbsp;
-                                    <ArrowForward />
-                                </Button>
-                            </Grid>
-                        </Box>
-                    </Drawer>
-                    <MemoBroswer onBrowserLoad={buildBrowser} defaultSpan={defaultSpan} />
+                <Grid container item xs={12}>
+                    {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
+                    <Box m="10px">
+                        <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
+                            <LibraryBooksIcon />
+                            Browse Tracks
+                        </PrimaryActionButton>
+                    </Box>
                 </Grid>
-                <TrackBrowser
-                    activeTracks={getLoadedTracks(Browser)}
-                    handleClose={flow(
-                        () => setListVisible(false),
-                        () => setDrawerOpen(false)
-                    )}
-                    isOpen={listVisible}
-                    loadingTrack={loadingTrack}
-                    toggleTracks={toggleTracks}
-                    tracks={tempTrackList}
-                />
+                <Grid>
+                    <MemoBroswer
+                        defaultSpan={defaultSpan}
+                        disableRefTrack={true}
+                        onBrowserLoad={buildBrowser}
+                        searchUrl={`${serviceUrl}/track/feature?id=`}
+                        serviceUrl={serviceUrl}
+                        webappUrl={webAppUrl}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TrackBrowser
+                        activeTracks={getLoadedTracks(Browser)}
+                        handleClose={setListVisible.bind(null, false)}
+                        isOpen={listVisible}
+                        loadingTrack={loadingTrack}
+                        toggleTracks={toggleTracks}
+                        trackList={trackList}
+                    />
+                </Grid>
             </ThemeProvider>
         </Container>
     );
 };
+
+export default connect((state: any) => ({
+    webAppUrl: state.globalData.siteConfig.webAppUrl,
+    serviceUrl: state.globalData.siteConfig.endpoint,
+}))(GenomeBrowserPage);
 
 export interface TrackConfig {
     name: string;
@@ -261,35 +161,58 @@ export interface TrackConfig {
     visibilityWindow: number;
 }
 
-const getGeneTrackChoices = (): TrackConfig[] => [
-    {
-        name: "Refseq Genes",
-        displayMode: "expanded",
-        url: "https://s3.amazonaws.com/igv.org.genomes/hg19/refGene.sorted.txt.gz",
-        visibilityWindow: -1,
-    },
-];
-
-const getNiagadsGwasChoices = () => [
-    /* {
-        name: "NG00027 stage 12",
-        displayMode: "EXPANDED",
-        url: "http://localhost:3009/NG00027_STAGE12.bed.gz",
-        indexURL: "http://localhost:3009/NG00027_STAGE12.bed.gz.tbi",
-        visibilityWindow: 1000000,
-    }, */
-    {
-        name: "NG00027 stage 1",
-        type: "niagadsgwas",
-        url: "http://localhost:8080/genomics_gus_4/service/track/gwas?track=NG00027_STAGE1",
-        maxLogP: 25,
-        autoscale: false,
-        displayMode: "EXPANDED",
-        visibilityWindow: 100000,
-        snpField: "record_pk",
-    },
-];
-
-/* note that id is unreliable, not necessarily passed from config to trackView.track, at least */
+/* note that id is unreliable, not necessarily passed from config to trackView.track, at least --> todo: make sure to pass into config during conversion */
 const getLoadedTracks = (browser: any): string[] =>
     get(browser, "trackViews", []).map((view: any) => view.track.name || view.track.id);
+
+const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig): NiagadsBrowserTrackConfig => {
+    const { endpoint, feature_type, path, phenotypes, track_type, track_type_display, ...rest } = track,
+        niagadsConfig = (rest as unknown) as NiagadsBrowserTrackConfig;
+
+    if (track.endpoint) {
+        niagadsConfig.url = `${track.endpoint}?track=${track.track}`;
+    }
+
+    if (track.path) {
+        niagadsConfig.url = track.path;
+    }
+
+    niagadsConfig.trackType = track.track_type;
+    niagadsConfig.trackTypeDisplay = track.track_type_display;
+    niagadsConfig.featureType = track.feature_type;
+
+    niagadsConfig.phenotypes = (phenotypes || []).reduce(
+        (a, c) => a + "\n" + Object.keys(c)[0].toUpperCase() + " : " + Object.values(c)[0],
+        ""
+    );
+
+    return niagadsConfig;
+};
+
+interface NiagadsBaseTrackConfig {
+    description?: string; //for browser
+    format?: string; //bed, etc
+    label: string; // for track popover
+    name: string; //for display in track browser
+    source: string; //for display in track browser
+}
+
+interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
+    endpoint?: string; //for async tracks only
+    feature_type: string; //gene, variant, enhancer, etc., for categorizing
+    path?: string; //for filer -- can pass in as url
+    phenotypes: { [key: string]: string }[]; //for browser filter
+    track: string; //unique id (pass to backend for async), for instance
+    track_type: string; //igv track type
+    track_type_display: string; //niagads track type
+}
+
+export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
+    featureType: string;
+    phenotypes: string;
+    reader?: any;
+    track: string;
+    trackType: string;
+    trackTypeDisplay: string;
+    url: string;
+}

@@ -45,7 +45,8 @@ interface GeneRecordTableType {
 }
 
 export interface GeneRecordAttributes {
-    ad_evidence_flag: string;
+    has_genetic_evidence_for_ad_risk_display: string; // json
+    has_genetic_evidence_for_ad_risk: string;
     chromosome: string;
     ensembl_id: string;
     entrez_id: string;
@@ -55,7 +56,6 @@ export interface GeneRecordAttributes {
     gws_variants_summary_plot: string;
     has_ad_evidence: "true" | "false";
     hgnc_id: string;
-    jbrowse_source_url: string;
     location_end: string;
     location_start: string;
     cytogenetic_location: string;
@@ -79,29 +79,21 @@ export interface VariantRecord extends BaseRecord {
 }
 
 export interface VariantRecordAttributes {
-    adsp_id: string;
-    adsp_wes_qc_filter_status_display: string;
     adsp_wes_qc_filter_status: string;
     adsp_wgs_qc_filter_status: string;
-    adsp_wgs_qc_filter_status_display: string;
     alt_allele: string;
     alternative_variants: string;
     chromosome: string;
     display_metaseq_id: string;
     colocated_variants: string;
     display_allele: string;
-    downstream_sequence: string;
     gws_datasets_summary_plot: string;
     has_merge_history: string;
-    is_adsp_variant: string;
-    is_adsp_wes: string;
-    is_adsp_wgs: string;
-    is_annotated: string; //boolean
+    is_adsp_variant: boolean;
+    is_adsp_wes: boolean;
+    is_adsp_wgs: boolean;
+    adsp_display_flag: string; // json
     is_multi_allelic: string;
-    is_reversed: string;
-    jbrowse_highlight: string;
-    jbrowse_source_url: string;
-    jbrowse_span: string;
     location: string;
     locuszoom_gwas_datasets: string; //json
     metaseq_id: string;
@@ -119,7 +111,6 @@ export interface VariantRecordAttributes {
     ref_snp_id: string;
     ref_allele: string;
     sequence_allele: string;
-    transcript_consequence_summary: string; //json
     upstream_sequence: string;
     variant_class: string;
     variant_class_abbrev: string;
@@ -158,7 +149,7 @@ export interface NIAGADSDatasetRecordAttributes {
     is_adsp: string;
 }
 
-export interface IRecordTable {
+export interface RecordTable {
     //todo: other record types, likely need to use generic: IRecordTable<GeneRecord>
     record: BaseRecord;
     recordClass: RecordClass;
@@ -232,8 +223,6 @@ export interface HeaderActions {
     onClick: any;
     label: string;
 }
-
-//typeguards
 
 export const isVariantRecord = (item: VariantRecord | any): item is VariantRecord => {
     return (item as VariantRecord).recordClassName === "VariantRecordClasses.VariantRecordClass";

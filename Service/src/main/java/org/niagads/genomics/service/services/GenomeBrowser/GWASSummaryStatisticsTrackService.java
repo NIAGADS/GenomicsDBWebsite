@@ -50,9 +50,8 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
 
         JSONObject response = new JSONObject();
         response.put("track", track);
-
         try {
-            JSONArray data = fetchResult(track, chromosome, locationStart, locationEnd);
+            JSONArray data = lookup(track, chromosome, locationStart, locationEnd);
             //LOG.debug("query result: " + data.toString());
             response.put("data", data);
         }
@@ -65,7 +64,7 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
     }
 
 
-    private JSONArray fetchResult(String track, String chromosome, Long locationStart, Long locationEnd) {
+    private JSONArray lookup(String track, String chromosome, Long locationStart, Long locationEnd) {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
@@ -95,15 +94,15 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
         String cteSql = "WITH dataset AS (" + TRACK_INTERNAL_ID_CTE + ")," + NL
             + "bin AS (" + BIN_INDEX_CTE + ")," + NL
             + "variants AS (SELECT jsonb_build_object(" + NL
-            + "'neg_log10_pvalue', neg_log10_pvalue," + NL
+            + "'neg_log10_pvalue', CASE WHEN neg_log10_pvalue > 15 THEN 15 ELSE neg_log10_pvalue END," + NL
             + "'pvalue', pvalue_display," + NL
-            + "'record_pk', CASE WHEN source_id IS NOT NULL THEN metaseq_id || '_' ||  source_id ELSE metaseq_id END," + NL
-            + "'variant', CASE WHEN source_id IS NOT NULL THEN source_id ELSE metaseq_id END" + NL
+            + "'record_pk', r.variant_record_primary_key," + NL
+            + "'variant', split_part(r.variant_record_primary_key, '_', 1)" + NL
             + ") AS rjson" + NL
             + "FROM Results.VariantGWAS r, dataset, bin" + NL 
             + "WHERE r.protocol_app_node_id = dataset.protocol_app_node_id" + NL
             + "AND r.bin_index <@ bin.bin" + NL
-            + "AND int8range(?, ?) @> split_part(r.metaseq_id, ':', 2)::bigint)";
+            + "AND int8range(?, ?) @> split_part(r.variant_record_primary_key, ':', 2)::bigint)";
 
         String querySql = cteSql + NL
             + "SELECT jsonb_agg(rjson)::text AS result FROM variants";
