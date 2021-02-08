@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -15,20 +14,24 @@
 
 	<dependencies>
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>1.5</version>
-    </dependency>
-	
 		<dependency>
 			<groupId>org.gusdb</groupId>
-			<artifactId>fgputil-util</artifactId>
+			<artifactId>fgputil-core</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.gusdb</groupId>
-			<artifactId>fgputil-accountdb</artifactId>
+			<artifactId>fgputil-db</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.gusdb</groupId>
+			<artifactId>fgputil-cli</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.gusdb</groupId>
+			<artifactId>fgputil-json</artifactId>
 		</dependency>
 
 		<dependency>
@@ -38,9 +41,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.gusdb</groupId>
-			<artifactId>wdk-website-controller</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.5</version>
 		</dependency>
 
 		<dependency>
@@ -48,7 +51,6 @@
 			<artifactId>ebrc-website-common-model</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -75,43 +77,25 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
-
 		<dependency>
-			<groupId>commons-digester</groupId>
-			<artifactId>commons-digester</artifactId>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-
-   <dependency>
-      <groupId>com.googlecode.json-simple</groupId>
-      <artifactId>json-simple</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-	
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+		</dependency>
 
 	</dependencies>
 
