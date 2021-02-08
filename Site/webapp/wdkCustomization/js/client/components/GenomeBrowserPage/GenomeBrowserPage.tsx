@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import { get } from "lodash";
-import { WdkServiceContext } from "wdk-client/Service/WdkService";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { PrimaryActionButton } from "../Shared";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 
@@ -26,26 +26,26 @@ interface GenomeBrowserPage {
 }
 
 const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
-    const wdkService = useContext(WdkServiceContext);
-
-    useEffect(() => {
-        wdkService._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
-            setTrackList(
-                res
-                    .map((res) => transformRawNiagadsTrack(res))
-                    .map((t) =>
-                        //we have to manually attach the reader to the config coming out of the backend
-                        t.track === "ENSEMBL_GENE"
-                            ? {
-                                  ...t,
-                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                                  trackType: "annotation",
-                              }
-                            : t
-                    )
-            )
-        );
-    }, [wdkService, serviceUrl]);
+    useWdkEffect(
+        (service) =>
+            service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
+                setTrackList(
+                    res
+                        .map((res) => transformRawNiagadsTrack(res))
+                        .map((t) =>
+                            //we have to manually attach the reader to the config coming out of the backend
+                            t.track === "ENSEMBL_GENE"
+                                ? {
+                                      ...t,
+                                      reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                                      trackType: "annotation",
+                                  }
+                                : t
+                        )
+                )
+            ),
+        [serviceUrl]
+    );
 
     const [Browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),

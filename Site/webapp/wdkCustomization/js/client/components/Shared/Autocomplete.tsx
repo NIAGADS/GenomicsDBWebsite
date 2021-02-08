@@ -4,7 +4,7 @@ import { Autocomplete } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Search from "@material-ui/icons/Search";
 import { isEmpty } from "lodash";
-import { WdkServiceContext } from "wdk-client/Service/WdkService";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { useTheme } from "@material-ui/core";
 import { isString, get } from "lodash";
 
@@ -27,42 +27,45 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
     const [options, setOptions] = useState<SearchResult[]>([]),
         [inputValue, setInputValue] = useState<string>(""),
         [resetKey, setResetKey] = useState(Math.random().toString(32).slice(2)),
-        [searchInProgress, setSearchInProgress] = useState(false),
-        wdkService = useContext(WdkServiceContext);
+        [searchInProgress, setSearchInProgress] = useState(false);
 
-    useEffect(() => {
-        if (inputValue && inputValue.length > 2) {
-            setSearchInProgress(true);
-            wdkService
-                ._fetchJson<SearchResult[]>("get", `/search/site?term=${inputValue}`)
-                .then((res) => {
-                    setSearchInProgress(false);
-                    setOptions(
-                        isEmpty(res)
-                            ? []
-                            : res.slice(0, 5).concat(
-                                  res.length > 5
-                                      ? [
-                                            {
-                                                type: "summary",
-                                                match_rank: 0,
-                                                matched_term: "click to view full results",
-                                                record_type: "dummy",
-                                                description: "dummy",
-                                                display: `...and ${res.length - 5} more`,
-                                                primary_key: "dummy",
-                                            },
-                                        ]
-                                      : []
-                              )
-                    );
-                })
-                .catch(() => {
-                    setSearchInProgress(false);
-                    setOptions([]);
-                });
-        }
-    }, [inputValue, wdkService]);
+    useWdkEffect(
+        (service) => {
+            if (inputValue && inputValue.length > 2) {
+                setSearchInProgress(true);
+                service
+                    ._fetchJson<SearchResult[]>("get", `/search/site?term=${inputValue}`)
+                    .then((res) => {
+                        setSearchInProgress(false);
+                        setOptions(
+                            isEmpty(res)
+                                ? []
+                                : res.slice(0, 5).concat(
+                                      res.length > 5
+                                          ? [
+                                                {
+                                                    type: "summary",
+                                                    match_rank: 0,
+                                                    matched_term: "click to view full results",
+                                                    record_type: "dummy",
+                                                    description: "dummy",
+                                                    display: `...and ${res.length - 5} more`,
+                                                    primary_key: "dummy",
+                                                },
+                                            ]
+                                          : []
+                                  )
+                        );
+                    })
+                    .catch(() => {
+                        setSearchInProgress(false);
+                        setOptions([]);
+                    });
+            }
+        },
+
+        [inputValue]
+    );
 
     const theme = useTheme();
 

@@ -54,7 +54,7 @@ export default class NiagadsRecordMainCategorySection extends React.PureComponen
                     record={record}
                     recordClass={recordClass}
                     isCollapsed={isCollapsed}
-                    requestParialRecord={requestPartialRecord}
+                    requestPartialRecord={requestPartialRecord}
                     onCollapsedChange={this.toggleCollapse}
                 />;
 
