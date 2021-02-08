@@ -62,7 +62,8 @@ const Footer: React.FC = () => {
 const FooterWrapper = withStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.primary.dark,
-        paddingTop: theme.spacing(3),
+        paddingTop: theme.spacing(2),
+        marginTop: theme.spacing(3),
     },
 }))(Grid);
 
