@@ -16,7 +16,6 @@ import {
     createStyles,
     Grid,
     GridProps,
-    Hidden,
     makeStyles,
     SvgIconProps,
     Typography,
@@ -115,11 +114,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             </Grid>
                         </Grid>
                         {/* chart column */}
-                        <Hidden mdDown>
-                            <Grid item justify="center" alignItems="center" container md={6}>
-                                <Donut />
-                            </Grid>
-                        </Hidden>
+                        <Grid item justify="center" alignItems="center" container xs={12} md={6}>
+                            <Donut />
+                        </Grid>
                     </Grid>
 
                     <Box padding={4} />

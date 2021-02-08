@@ -46,11 +46,13 @@ const Footer: React.FC = () => {
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <DarkContrastGreyText variant="caption">
-                        {`©2018-${moment().format(
-                            "YYYY"
-                        )} University of Pennsylvania, School of Medicine. All rights reserved.`}
-                    </DarkContrastGreyText>
+                    <Box pt={3}>
+                        <DarkContrastGreyText variant="caption">
+                            {`©2018-${moment().format(
+                                "YYYY"
+                            )} University of Pennsylvania, School of Medicine. All rights reserved.`}
+                        </DarkContrastGreyText>
+                    </Box>
                 </Grid>
             </FooterWrapper>
         </ThemeProvider>
