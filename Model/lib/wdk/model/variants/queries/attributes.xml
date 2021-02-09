@@ -411,14 +411,14 @@
 		 SELECT flags.source_id,
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
 		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS colocated_variants
-		 FROM flags, cv WHERE cv.source_id = flags.source_id
+		 FROM flags LEFT OUTER JOIN cv ON cv.source_id = flags.source_id
 		 AND split_part(flags.source_id, '_', 2) != split_part(cv.record_primary_key, '_', 2)),
 		 
 		 altv AS (
 		 SELECT DISTINCT flags.source_id, 
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
 		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS alternative_variants
-		 FROM flags, cv WHERE cv.source_id = flags.source_id
+		 FROM flags LEFT OUTER JOIN cv ON cv.source_id = flags.source_id
 		 AND split_part(flags.source_id, '_', 2) = split_part(cv.record_primary_key, '_', 2)),
 
 		 result AS (
@@ -427,7 +427,8 @@
 		 flags.is_multi_allelic,
 		 NULLIF(jsonb_agg(DISTINCT altv.alternative_variants)::text, '[null]') AS alternative_variants,
 		 NULLIF(jsonb_agg(DISTINCT colocv.colocated_variants)::text, '[null]') AS colocated_variants
-		 FROM flags, cv, colocv, altv
+		 FROM flags, colocv, altv
+		 WHERE flags.source_id = colocv.source_id AND flags.source_id = altv.source_id
 		 GROUP BY flags.source_id, is_multi_allelic, num_colocated_variants)
 
 		 SELECT id.source_id,
