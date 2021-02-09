@@ -34,6 +34,8 @@ FLANK_100KB=100000
 FLANK_200KB=200000
 FLANK_LOCUSZOOM=10000
 
+LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
+
 #----------------------------------------------------------
 # External Database Release Ids (as referenced in appDb)
 #----------------------------------------------------------
