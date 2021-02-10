@@ -42,8 +42,8 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         + "'feature_type', hit_type," + NL
         + "'ld_reference_variant', ld_reference_variant," + NL
         + "'chromosome', chromosome," + NL
-        + "'start', location_start," + NL
-        + "'end', location_end," + NL
+        + "'start', CASE WHEN hit_type = 'variant' THEN location_start - ? ELSE location_start END," + NL
+        + "'end', CASE WHEN hit_type = 'variant' THEN location_end + ? ELSE location_end END," + NL
         + "'neg_log10_pvalue', neg_log10_pvalue" + NL
         + ") ORDER BY rank)::text AS result" + NL
         + "FROM topFeatures";
@@ -78,16 +78,22 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         return sql;
     }
 
-    private String lookup(String track, int limit) {
+    private String lookup(String track, int limit) throws WdkModelException {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
+        int flank = Integer.parseInt(wdkModel.getProperties().get("FLANK_LOCUSZOOM"));
+        LOG.debug("Variant Flank:" + flank);
+        if (flank == 0) {
+            throw new WdkModelException("Need to specify FLANK_LOCUSZOOM in model.prop");
+        }
+
         String sql = buildQuery(limit);
 
         SQLRunner runner = new SQLRunner(ds, sql, "dataset-top-hits-data-query");
-        runner.executeQuery(new Object[] {track}, handler);
+        runner.executeQuery(new Object[] {track, flank, flank}, handler);
         
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
