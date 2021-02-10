@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import locuszoom from "locuszoom";
 import "locuszoom/dist/locuszoom.css";
 import { connect } from "react-redux";
 import registry from "locuszoom/esm/registry/adapters";
-import { cloneDeep } from "lodash";
+import { cloneDeep, noop } from "lodash";
 import { Grid } from "@material-ui/core";
 
 const AssociationLZ = registry.get("AssociationLZ"),
@@ -34,14 +34,22 @@ const LzPlot: React.FC<LzProps> = ({
     start,
     track,
 }) => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false),
+        interval: NodeJS.Timeout = useRef().current,
+        layoutRendered = useRef(false);
 
-    const interval: NodeJS.Timeout = useRef().current;
-    
     useEffect(() => {
+        if (layoutRendered.current) {
+            initPlot();
+            return () => clearInterval(interval);
+        }
+        return noop;
+    }, [refVariant, population, track]);
+
+    useLayoutEffect(() => {
         initPlot();
-        return () => clearInterval(interval);
-    }, [refVariant]);
+        layoutRendered.current = true;
+    }, []);
 
     const initPlot = () => {
         const state = buildPlotState(chromosome, start, end, refVariant),
