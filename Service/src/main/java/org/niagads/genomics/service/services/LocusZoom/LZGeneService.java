@@ -49,7 +49,7 @@ public class LZGeneService extends AbstractWdkService {
         + "'gene_type', replace(ga.gene_type, ' ', '_')) AS json_obj" + NL
         + "FROM CBIL.GeneAttributes ga, span" + NL
         + "WHERE span.bin_index @> ga.bin_index" + NL
-        + "AND int8range(span.location_start, span.location_end, '[]') @> int8range(ga.location_start, ga.location_end, '[]')" + NL
+        + "AND int8range(span.location_start, span.location_end, '[]') && int8range(ga.location_start, ga.location_end, '[]')" + NL
         + ")," + NL
         
         + "exons AS (" + NL
