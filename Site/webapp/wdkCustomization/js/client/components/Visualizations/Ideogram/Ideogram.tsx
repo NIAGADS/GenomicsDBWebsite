@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-//@ts-ignore
 import Ideogram from "ideogram";
-import d3 from "d3";
+import { selectAll } from "d3";
 import { connect } from "react-redux";
 import { get } from "lodash";
 import { isPlainObject } from "lodash";
@@ -51,7 +50,7 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({ annotations, config, container
 
     useEffect(() => {
         if (annotations) {
-            let baseConfig: any = {
+            const baseConfig: any = {
                 organism: "human",
                 dataDir: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
                 annotations: annotations,
@@ -59,7 +58,8 @@ const IdeogramPlot: React.SFC<IdeogramProps> = ({ annotations, config, container
                 showAnnotTooltip: true,
                 onWillShowAnnotTooltip: showToolTip,
                 onLoad: () => {
-                    d3.selectAll(".annot path").on("click", (d) => {
+                    //@ts-ignore
+                    selectAll(".annot path").on("click", (d: Point) => {
                         if (Array.isArray(get(d, "features"))) {
                             setActivePoint(d);
                             return setDetailModalOpen(true);

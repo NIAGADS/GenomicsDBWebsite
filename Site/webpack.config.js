@@ -30,7 +30,8 @@ module.exports = configure({
                 ],
             },
             {
-                test: require.resolve("./webapp/wdkCustomization/js/lib/locusZoom/locuszoom.app.js"),
+                //todo: designate external?
+                test: require.resolve("locuszoom"),
                 use: [
                     {
                         loader: "expose-loader",
