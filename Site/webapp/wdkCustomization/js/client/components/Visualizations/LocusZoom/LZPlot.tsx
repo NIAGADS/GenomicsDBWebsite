@@ -1,17 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import locuszoom from "locuszoom";
+//the below would expose lz (as lz.default) in the window for tooltip, but it seems latest lz has drooped the function altogether
+//import * as lz from "expose-loader?lz!locuszoom";
+import * as lz from "locuszoom";
 import "locuszoom/dist/locuszoom.css";
 import { connect } from "react-redux";
 import registry from "locuszoom/esm/registry/adapters";
 import { cloneDeep, noop } from "lodash";
 import { Grid } from "@material-ui/core";
+import { select, selectAll } from "d3";
+
+const LZ = lz.default as any;
 
 const AssociationLZ = registry.get("AssociationLZ"),
     LDLZ2 = registry.get("LDLZ2"),
     GeneLZ = registry.get("GeneLZ"),
     RecombLZ = registry.get("RecombLZ");
-
-const LZ = locuszoom as any; //typescript shim -- lz is already a global (see webpack) (needs to be global so tooltips work)
 
 interface LzProps {
     chromosome?: string;
@@ -70,6 +73,13 @@ const LzPlot: React.FC<LzProps> = ({
             }
         };
     };
+
+    selectAll(".lz-data_layer-scatter").on("click", function (d: any) {
+        //d.getPlot().panels.association_panel.x_scale(d.position) will give x coordinate
+        //leaving this in b/c we can use it to create our own tooltip if we want to keep setNewRef behavior
+    });
+;
+
 
     return (
         <Grid container alignItems="center" direction="column">
@@ -467,7 +477,7 @@ const associationLayer = {
             "<strong>{{assoc:id}}</strong><br>" +
             "P Value: <strong>{{assoc:pvalue}}</strong><br>" +
             "Test Allele: <strong>{{assoc:testAllele}}</strong><br>" +
-            '<a href="javascript:void(0);" onclick="lz.getToolTipDataLayer(this).makeLDReference(lz.getToolTipData(this));">Make LD Reference</a><br>',
+            '<a href="javascript:void(0);" onclick="lz.default.getToolTipDataLayer(this).makeLDReference(lz.default.getToolTipData(this));">Make LD Reference</a><br>',
     },
 };
 

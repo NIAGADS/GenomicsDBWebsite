@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 import { Grid, List, ListItem, Typography, withStyles } from "@material-ui/core";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { PrimaryExternalLink } from "../../../../Shared";
+import { PseudoLink } from "../../../../Shared";
 import LZPlot from "../../../../Visualizations/LocusZoom/LZPlot";
 import { get, noop } from "lodash";
 import { useWdkService } from "wdk-client/Hooks/WdkServiceHook";
 
 interface VariantLzPlotProps {
     chromosome: string;
-    endpoint: string;
     datasetChoices: { [key: string]: string }[];
     populationChoices: { [key: string]: string }[];
-    selectClass: string;
     variant: string;
 }
 
@@ -26,15 +23,9 @@ interface TopHit {
     ld_reference_variant: string;
 }
 
-const VariantLzPlot: React.FC<VariantLzPlotProps> = ({
-    chromosome,
-    datasetChoices,
-    endpoint,
-    populationChoices,
-    selectClass,
-    variant,
-}) => {
+const VariantLzPlot: React.FC<VariantLzPlotProps> = ({ chromosome, datasetChoices, populationChoices, variant }) => {
     const [dataset, setDataset] = useState<string>(Object.keys(datasetChoices[0])[0]),
+        [selectClass, setSelectClass] = useState(Math.random().toString(32).slice(2).replace(/\d/g, "")),
         [population, setPopulation] = useState<string>(Object.keys(populationChoices[0])[0]),
         [topHits, setTopHits] = useState<TopHit[]>(),
         [refVariant, setRefVariant] = useState<string>(variant),
@@ -98,9 +89,7 @@ const VariantLzPlot: React.FC<VariantLzPlotProps> = ({
                         {(topHits || []).map((t) => (
                             //@ts-ignore
                             <TopHitListItem key={t.ld_reference_variant}>
-                                <PrimaryExternalLink onClick={() => loadTopHit(t)} href="#">
-                                    {t.hit}
-                                </PrimaryExternalLink>
+                                <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
                             </TopHitListItem>
                         ))}
                     </List>
@@ -122,8 +111,6 @@ const VariantLzPlot: React.FC<VariantLzPlotProps> = ({
 };
 
 //@ts-ignore
-const TopHitListItem = withStyles({ root: { paddingTop: 0, paddingLeft: 0 } })(ListItem);
+const TopHitListItem = withStyles({ root: { paddingTop: 0, paddingBottom: 1, paddingLeft: 0 } })(ListItem);
 
-export default connect((state: any) => ({
-    endpoint: state.globalData.siteConfig.endpoint,
-}))(VariantLzPlot);
+export default VariantLzPlot;

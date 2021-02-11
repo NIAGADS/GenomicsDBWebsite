@@ -37,8 +37,6 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
         }
     };
 
-    const selectClass = useRef(Math.random().toString(32).slice(2)).current;
-
     //todo: use target type and create new section type component to break this all up
     switch (getTargetType(category)) {
         case "attribute":
@@ -96,7 +94,6 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
                                 { EAS: "EAS: East Asian" },
                                 { SAS: "SAS: South Asian" },
                             ]}
-                            selectClass={selectClass}
                             variant={`${record.attributes.metaseq_id}_${record.attributes.ref_snp_id}`}
                             datasetChoices={JSON.parse(
                                 (record.tables as any)[category.wdkReference.name][0].dataset_list

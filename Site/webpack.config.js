@@ -29,16 +29,6 @@ module.exports = configure({
                     },
                 ],
             },
-            {
-                //todo: designate external?
-                test: require.resolve("locuszoom"),
-                use: [
-                    {
-                        loader: "expose-loader",
-                        options: "lz",
-                    },
-                ],
-            },
         ],
     },
 });
