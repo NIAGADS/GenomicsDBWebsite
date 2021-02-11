@@ -226,7 +226,7 @@ const PvalFilterControls: React.FC<PvalFilterControls> = ({
             {filterVisible && (
                 <RecordTablePValFilter
                     key={tableName}
-                    defaultPVal={defaultPValue}
+                    defaultPVal={+filterPVal || defaultPValue}
                     selectClass={tableName + "_chart"}
                     setMaxPvalue={(val: number) => setMaxPValue(Number(val).toString())}
                     values={

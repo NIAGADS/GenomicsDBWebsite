@@ -71,7 +71,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                 <NarrowerWidthRow spacing={0}>
                     {/* chart and search bar */}
                     {/* should be 6 ems of padding here total... */}
-                    <Grid item container direction="row" spacing={7}>
+                    <Grid item container direction="row" justify="center" spacing={7}>
                         {/* heading and search bar column */}
                         <Grid item direction="row" container xs={12} sm={6}>
                             <Grid item container spacing={2} direction="column">

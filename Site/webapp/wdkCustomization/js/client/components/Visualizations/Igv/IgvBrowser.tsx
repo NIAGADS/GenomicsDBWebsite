@@ -104,7 +104,9 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
                                 value: {
                                     name: (ppd: PopUpData[]) => ppd.find((p) => p.name === "variant").value,
                                     target: (ppd: PopUpData[]) =>
-                                        `${webappUrl}/record/variant/${ppd.find((pd) => pd.name === "variant").value}`,
+                                        `${webappUrl}/app/record/variant/${
+                                            ppd.find((pd) => pd.name === "variant").value
+                                        }`,
                                 },
                             },
                         ],
@@ -134,6 +136,23 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
                             },
                         ],
                         remove: ["Delim", "AttributeString"],
+                    },
+                    {
+                        trackType: "niagadsvariant",
+                        fields: [
+                            {
+                                name: "Names",
+                                type: "link" as "link",
+                                value: {
+                                    name: (ppd: PopUpData[]) => ppd.find((ppd) => ppd.name === "Names").value,
+                                    target: (ppd: PopUpData[]) =>
+                                        `${webappUrl}/app/record/variant/${
+                                            ppd.find((ppd) => ppd.name === "Names").value
+                                        }`,
+                                },
+                            },
+                        ],
+                        remove: ["record"],
                     },
                 ];
                 return transformConfigToHtml(customPopOverConfig, popoverData, track);
