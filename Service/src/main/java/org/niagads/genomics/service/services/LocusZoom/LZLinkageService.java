@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.gusdb.fgputil.db.runner.BasicResultSetHandler;
 import org.gusdb.fgputil.db.runner.SQLRunner;
+import org.gusdb.fgputil.db.runner.SingleLongResultSetHandler;
 import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
@@ -42,12 +43,10 @@ public class LZLinkageService extends AbstractWdkService {
         + "ELSE find_variant_primary_key(r.variants[1])" + NL
         + "END AS variant, r.r_squared" + NL
         + "FROM Results.VariantLD r," + NL
-        + "variant v," + NL
-        + "Study.ProtocolAppNode pan" + NL
+        + "variant v" + NL
         + "WHERE r.variants @> ARRAY[v.pattern]" + NL
         + "AND r.chromosome = ?" + NL
-        + "AND pan.protocol_app_node_id = r.population_protocol_app_node_id" + NL
-        + "AND pan.source_id = '1000GenomesLD_' || ?::text" + NL
+        + "AND r.population_protocol_app_node_id = ?" + NL
         + "UNION" + NL
         + "SELECT id.source_id AS variant, 1.0 AS r_squared FROM id)" + NL
         + "SELECT jsonb_build_object('data'," + NL
@@ -64,7 +63,10 @@ public class LZLinkageService extends AbstractWdkService {
         String response = null;
         try {
             // query database for ld
-            response = lookup(variant, population);
+            LOG.debug("Fetching linkage for variant:" + variant + "; population: " + population);
+
+            long protocolAppNodeId = getPopulationProtocolAppNode(population);
+            response = lookup(variant, protocolAppNodeId);
             //LOG.debug("query result: " + response);
         }
 
@@ -75,7 +77,17 @@ public class LZLinkageService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
-    private String lookup(String variant, String population) {   
+    private long getPopulationProtocolAppNode(String population) throws WdkModelException {
+
+        DataSource ds = getWdkModel().getAppDb().getDataSource();
+        String sql = "SELECT protocol_app_node_id FROM Study.ProtocolAppNode WHERE source_id = '1000GenomesLD_" + population + "'";
+        long result = new SQLRunner(ds, sql, "lz-linkage-pop-lookup").executeQuery(new SingleLongResultSetHandler())
+        .orElseThrow(() -> new WdkModelException("No match found for the population: " + population));
+
+        return result;
+    }
+
+    private String lookup(String variant, long populationProtocolAppNode) {   
     
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
@@ -83,10 +95,9 @@ public class LZLinkageService extends AbstractWdkService {
         
         String variantLoc[] = variant.split(":");
         String chromosome = "chr" + variantLoc[0];
-        LOG.debug("Fetching linkage for variant:" + variant + "; population: " + population + "; on chromosome: " + chromosome);
-
+     
         SQLRunner runner = new SQLRunner(ds, LINKAGE_QUERY, "linkage-query");
-        runner.executeQuery(new Object[] {variant, chromosome, population}, handler);
+        runner.executeQuery(new Object[] {variant, chromosome, populationProtocolAppNode}, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
