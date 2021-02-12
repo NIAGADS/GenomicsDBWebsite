@@ -14,6 +14,10 @@ $theme-colors: (
     "success": $bluegrey
 );
 
+.StepBoxes--InsertStepButton {
+    display: none;
+}
+
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap";
 
