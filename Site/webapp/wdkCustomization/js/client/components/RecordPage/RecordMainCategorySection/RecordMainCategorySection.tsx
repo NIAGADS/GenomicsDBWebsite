@@ -75,32 +75,6 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
                         properties={JSON.parse(category.wdkReference.chartProperties)}
                     />
                 </CollapsibleSection>
-            ) : category.wdkReference.name == "locuszoom_gwas_datasets" && GR.isVariantRecord(record) ? (
-                <CollapsibleSection
-                    id={category.wdkReference.name}
-                    className={"wdk-RecordTableContainer"}
-                    headerComponent="h3"
-                    headerContent={category.wdkReference.displayName}
-                    isCollapsed={isCollapsed}
-                    onCollapsedChange={toggleCollapse}
-                >
-                    {(record.tables as any)[category.wdkReference.name] && (
-                        <VariantLzPlot
-                            chromosome={(record as GR.VariantRecord).attributes.chromosome}
-                            populationChoices={[
-                                { EUR: "EUR: European" },
-                                { AFR: "AFR: African/African American" },
-                                { AMR: "AMR: Ad Mixed American" },
-                                { EAS: "EAS: East Asian" },
-                                { SAS: "SAS: South Asian" },
-                            ]}
-                            variant={`${record.attributes.metaseq_id}_${record.attributes.ref_snp_id}`}
-                            datasetChoices={JSON.parse(
-                                (record.tables as any)[category.wdkReference.name][0].dataset_list
-                            )}
-                        />
-                    )}
-                </CollapsibleSection>
             ) : category.wdkReference.name.includes("ideogram") &&
               !isEmpty((record.tables as any)[category.wdkReference.name]) ? (
                 <CollapsibleSection
