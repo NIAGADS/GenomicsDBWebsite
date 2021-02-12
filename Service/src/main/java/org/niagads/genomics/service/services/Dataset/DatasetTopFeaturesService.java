@@ -29,6 +29,7 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
 
     private static final String DATASET_PARAM = "track";
     private static final String LIMIT_PARAM = "limit";
+    private static final String FLANK_PARAM = "flank";
 
     private static final String TOP_HITS_CTE_SQL = "SELECT * FROM" + NL
         + "NIAGADS.DatasetTopFeatures" + NL
@@ -42,8 +43,8 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         + "'feature_type', hit_type," + NL
         + "'ld_reference_variant', ld_reference_variant," + NL
         + "'chromosome', chromosome," + NL
-        + "'start', CASE WHEN hit_type = 'variant' THEN location_start - ? ELSE location_start END," + NL
-        + "'end', CASE WHEN hit_type = 'variant' THEN location_end + ? ELSE location_end END," + NL
+        + "'start', location_start - ?," + NL
+        + "'end', location_end + ?," + NL
         + "'neg_log10_pvalue', neg_log10_pvalue" + NL
         + ") ORDER BY rank)::text AS result" + NL
         + "FROM topFeatures";
@@ -54,14 +55,17 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
     // @OutSchema("niagads.dataset.top.get-response")
     public Response buildResponse(String body, 
             @QueryParam(DATASET_PARAM) String track,
-            @QueryParam(LIMIT_PARAM) int limit
+            @QueryParam(LIMIT_PARAM) int limit,
+            @QueryParam(FLANK_PARAM) boolean flank
             ) throws WdkModelException {
  
         LOG.info("Starting 'GWAS Summary Statistics Top Hits' Service");
         String response = null;
 
         try {
-            response = lookup(track, limit);       
+            boolean flankRanges = getRequest().getRequestParamMap().containsKey(FLANK_PARAM);
+            LOG.debug(flank + " - " + flankRanges);
+            response = lookup(track, limit, flankRanges);       
             // LOG.debug("query result: " + response);
         }
 
@@ -78,15 +82,15 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         return sql;
     }
 
-    private String lookup(String track, int limit) throws WdkModelException {
+    private String lookup(String track, int limit, boolean flankRanges) throws WdkModelException {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-        int flank = Integer.parseInt(wdkModel.getProperties().get("FLANK_LOCUSZOOM"));
-        LOG.debug("Variant Flank:" + flank);
-        if (flank == 0) {
+        int flank = (flankRanges) ? Integer.parseInt(wdkModel.getProperties().get("FLANK_LOCUSZOOM")) : 0;
+        LOG.debug("Flank:" + flank);
+        if (flank == 0 && flankRanges) {
             throw new WdkModelException("Need to specify FLANK_LOCUSZOOM in model.prop");
         }
 
