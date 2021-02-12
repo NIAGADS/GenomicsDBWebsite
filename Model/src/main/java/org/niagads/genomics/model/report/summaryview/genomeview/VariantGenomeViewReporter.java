@@ -36,8 +36,8 @@ import static org.gusdb.fgputil.FormatUtil.NL;
             + "THEN v.ref_snp_id ELSE truncate_str(metaseq_id, 27) END," + NL
             + "'location_start', v.location_start," + NL
             + "'location_end', v.location_end," + NL
-            + "'span_length', v.location_end - v.location_start) ORDER BY location_start)::text AS feature_json"
-            + "FROM AnnotatedVariants v"
+            + "'span_length', v.location_end - v.location_start) ORDER BY location_start)::text AS feature_json" + NL
+            + "FROM AnnotatedVariants v" + NL
             + "GROUP BY chromosome";
             
         return sql;
