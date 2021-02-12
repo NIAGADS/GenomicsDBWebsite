@@ -21,8 +21,7 @@ import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.gusdb.fgputil.json.JsonWriter;
 import static org.gusdb.fgputil.FormatUtil.NL;
 
-import org.gusdb.wdk.model.WdkModelException;
-import org.gusdb.wdk.model.WdkUserException;
+import org.gusdb.wdk.model.WdkModelException;;
 import org.gusdb.wdk.model.answer.AnswerValue;
 import org.gusdb.wdk.model.report.AbstractReporter;
 import org.gusdb.wdk.model.report.Reporter;
@@ -272,8 +271,8 @@ public abstract class IdeogramJSONReporter extends AbstractReporter {
     private JSONObject fetchChromosomeSizes(DataSource dataSource)  {
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-        String sql = "SELECT json_object_agg(replace(chromosome, 'chr', ''), location_end)::text AS chr_map" + NL
-            + "FROM CBIL.BinIndexRef WHERE level = 0";
+        String sql = "SELECT json_object_agg(replace(chromosome, 'chr', ''), upper(location))::text AS chr_map" + NL
+            + "FROM AnnotatedVDB.BinIndexRef WHERE level = 0";
 
         SQLRunner runner = new SQLRunner(dataSource, sql, "chromosome-query");
         runner.executeQuery(handler);
