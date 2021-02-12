@@ -45,7 +45,7 @@ public class LZLinkageService extends AbstractWdkService {
         + "variant v," + NL
         + "Study.ProtocolAppNode pan" + NL
         + "WHERE r.variants @> ARRAY[v.pattern]" + NL
-        + "AND r.chromosome = v.chromosome" + NL
+        + "AND r.chromosome = ?" + NL
         + "AND pan.protocol_app_node_id = r.population_protocol_app_node_id" + NL
         + "AND pan.source_id = '1000GenomesLD_' || ?::text" + NL
         + "UNION" + NL
@@ -81,10 +81,12 @@ public class LZLinkageService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
         
-        LOG.debug("Fetching linkage for variant:" + variant + "; population: " + population);
+        String variantLoc[] = variant.split(":");
+        String chromosome = "chr" + variantLoc[0];
+        LOG.debug("Fetching linkage for variant:" + variant + "; population: " + population + "; on chromosome: " + chromosome);
 
         SQLRunner runner = new SQLRunner(ds, LINKAGE_QUERY, "linkage-query");
-        runner.executeQuery(new Object[] {variant, population}, handler);
+        runner.executeQuery(new Object[] {variant, chromosome, population}, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
