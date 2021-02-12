@@ -95,9 +95,9 @@ public class LZGeneService extends AbstractWdkService {
         + "FROM (SELECT DISTINCT gene_source_id, json_obj, location_start, location_end FROM transcripts) AS ut" + NL
         + "GROUP BY gene_source_id)" + NL
         
-        + "SELECT jsonb_build_object('data', jsonb_agg(gene.json_obj" + NL 
+        + "SELECT replace(jsonb_build_object('data', jsonb_agg(gene.json_obj" + NL 
         + "|| jsonb_build_object('transcripts', gene_transcripts.json_obj, 'exons', gene_exons.json_obj)" + NL
-        + "ORDER BY gene.location_start, gene.location_end))::text AS result" + NL
+        + "ORDER BY gene.location_start, gene.location_end))::text, 'null', '[]') AS result" + NL
         + "FROM gene, gene_transcripts, gene_exons" + NL
         + "WHERE gene.source_id = gene_transcripts.gene_source_id" + NL
         + "AND gene.source_id = gene_exons.gene_source_id";
@@ -115,7 +115,7 @@ public class LZGeneService extends AbstractWdkService {
 
         try {
            response = lookupSpan(chromosome, locStart, locEnd);       
-            // LOG.debug("query result: " + response);
+           // LOG.debug("query result: " + response);
         }
 
         catch (WdkRuntimeException ex) {
@@ -136,12 +136,12 @@ public class LZGeneService extends AbstractWdkService {
         
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
-            return "{}";
+            return "{data: []}";
         }
 
         String resultStr = (String) results.get(0).get("result");
         if (resultStr == "null" || resultStr == null) {
-            return "{}";
+            return "{data: []}";
         }
 
         //LOG.debug("RESULT:  " + resultStr);
