@@ -5,6 +5,7 @@ import * as gr from "./../../types";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
 import { HelpIcon, LoadingOverlay } from "wdk-client/Components";
+import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
@@ -66,15 +67,8 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
             <h4>Mine this dataset</h4>
             <form className="form-inline" action={SEARCH_PATH}>
                 <div className="input-group mb-3 d-flex align-items-center">
-                    {" "}
                     p-value &le;
-                    <div className="input-group-prepend mr-2">
-                        <span className="help-block">
-                            <HelpIcon>
-                                <GWASDatasetSearchHelp />
-                            </HelpIcon>
-                        </span>
-                    </div>
+                    {"  "}                  
                     <input type="hidden" name="autoRun" />
                     <input type="hidden" name={DATASET_PARAM_NAME} defaultValue={record} />
                     <input type="hidden" name={ACCESSION_PARAM_NAME} defaultValue={accession} />
@@ -87,11 +81,15 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
                         placeholder={"5e-8"}
                         onChange={handleChange}
                     />
-                    <div className="input-group-append">
-                        <button disabled={error} className="btn btn-outline-secondary" type="submit">
-                            <i className="fa fa-search" />
-                        </button>
-                    </div>
+
+                    <button disabled={error} className="btn" type="submit">
+                        Search
+                    </button>
+                    <span className="help-block">
+                        <HelpIcon>
+                            <GWASDatasetSearchHelp />
+                        </HelpIcon>
+                    </span>
                 </div>
             </form>
             {error && <p className="red">Please enter a valid p-value, e.g., 0.0007, 3e-6, 3^-6, 3x10^-6</p>}
@@ -138,6 +136,20 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading & StoreProps> = (props)
                         record={record.id[0].value}
                     ></GWASDatasetSearch>
                 </div>
+            </div>
+            <div className="col">
+
+                <GWASDatasetLZPlot
+                    populationChoices={[
+                        { EUR: "EUR: European" },
+                        { AFR: "AFR: African/African American" },
+                        { AMR: "AMR: Ad Mixed American" },
+                        { EAS: "EAS: East Asian" },
+                        { SAS: "SAS: South Asian" },
+                    ]}
+                    dataset={record.id[0].value}
+                />
+
             </div>
         </React.Fragment>
     );
