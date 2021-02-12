@@ -290,7 +290,7 @@
 	</columnAttribute>
       </attributeQueryRef>
 
-      <table name="phenotypes" displayName="Phenotypes"
+      <!-- <table name="phenotypes" displayName="Phenotypes"
 	     queryRef="GwasDatasetTables.Phenotypes">
 	<columnAttribute name="phenotype_category" displayName="Category" type="string"/>
 	<columnAttribute name="phenotype" displayName="Phenotype" type="string" />
@@ -306,7 +306,7 @@
 		   Phenotypes associated with this dataset.
 	  ]]>
 	</description>
-      </table>
+      </table> -->
 
 
       <!-- =============================================================== -->
