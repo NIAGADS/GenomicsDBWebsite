@@ -1,11 +1,13 @@
-import React, { useEffect, useCallback, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import React, { useCallback, useState } from "react";
+import { connect } from "react-redux";
 import { HeaderRecordActions } from "./../Shared";
 import * as gr from "./../../types";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
-import { HelpIcon, LoadingOverlay } from "wdk-client/Components";
+import { HelpIcon } from "wdk-client/Components";
 import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
+import { ThemeProvider } from "@material-ui/core";
+import theme from "../../../../theme";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
@@ -17,7 +19,7 @@ interface StoreProps {
     webAppUrl: string;
 }
 
-interface IRecordHeading {
+interface RecordHeading {
     record: gr.GWASDatasetRecord;
     recordClass: { [key: string]: any };
     headerActions: gr.HeaderActions[];
@@ -30,7 +32,7 @@ interface SearchProps {
 
 type GWASDatasetRecord = StoreProps & gr.GWASDatasetRecord;
 
-const GWASDatasetSearchHelp: React.SFC<any> = (props) => {
+const GWASDatasetSearchHelp: React.FC = () => {
     return (
         <div>
             <p>
@@ -50,7 +52,7 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
     //const [activeQuestion, setActionQuestion] = useState(null),
     const [error, setError] = useState(false);
 
-    let handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         //drop whitespace to simplify regex
         const val = event.target.value.replace(/ /g, ""),
             re = new RegExp(/(^\d(e|\^|x10\^)?-\d$)|(^((\d)?\.)\d+$)/);
@@ -68,7 +70,7 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
             <form className="form-inline" action={SEARCH_PATH}>
                 <div className="input-group mb-3 d-flex align-items-center">
                     p-value &le;
-                    {"  "}                  
+                    {"  "}
                     <input type="hidden" name="autoRun" />
                     <input type="hidden" name={DATASET_PARAM_NAME} defaultValue={record} />
                     <input type="hidden" name={ACCESSION_PARAM_NAME} defaultValue={accession} />
@@ -81,7 +83,6 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
                         placeholder={"5e-8"}
                         onChange={handleChange}
                     />
-
                     <button disabled={error} className="btn" type="submit">
                         Search
                     </button>
@@ -97,11 +98,9 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
     );
 };
 
-const GWASDatasetRecordSummary: React.SFC<IRecordHeading & StoreProps> = (props) => {
-    const { record, recordClass, headerActions } = props;
-
-    return (
-        <React.Fragment>
+const GWASDatasetRecordSummary: React.FC<RecordHeading & StoreProps> = ({ record, recordClass, headerActions }) => (
+    <React.Fragment>
+        <ThemeProvider theme={theme}>
             <div className="col-sm-3">
                 <div className="record-summary-container dataset-record-summary-container">
                     <div>
@@ -138,26 +137,13 @@ const GWASDatasetRecordSummary: React.SFC<IRecordHeading & StoreProps> = (props)
                 </div>
             </div>
             <div className="col">
-
-                <GWASDatasetLZPlot
-                    populationChoices={[
-                        { EUR: "EUR: European" },
-                        { AFR: "AFR: African/African American" },
-                        { AMR: "AMR: Ad Mixed American" },
-                        { EAS: "EAS: East Asian" },
-                        { SAS: "SAS: South Asian" },
-                    ]}
-                    dataset={record.id[0].value}
-                />
-
+                <GWASDatasetLZPlot dataset={record.id[0].value} />
             </div>
-        </React.Fragment>
-    );
-};
+        </ThemeProvider>
+    </React.Fragment>
+);
 
-const enhance = connect<StoreProps, any, IRecordHeading>((state: any) => ({
+export default connect((state: any) => ({
     externalUrls: state.globalData.siteConfig.externalUrls,
     webAppUrl: state.globalData.siteConfig.webAppUrl,
-}));
-
-export default enhance(GWASDatasetRecordSummary);
+}))(GWASDatasetRecordSummary);

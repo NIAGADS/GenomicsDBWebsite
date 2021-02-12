@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import { Grid, List, ListItem, Typography, withStyles } from "@material-ui/core";
+import { Grid, ListItem, withStyles } from "@material-ui/core";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { PseudoLink } from "../../../../Shared";
-import LZPlot from "../../../../Visualizations/LocusZoom/LZPlot";
-import { get, noop } from "lodash";
-import { useWdkService } from "wdk-client/Hooks/WdkServiceHook";
+import LZPlot from "../LZPlot";
 
 interface VariantLzPlotProps {
     chromosome: string;
     datasetChoices: { [key: string]: string }[];
-    populationChoices: { [key: string]: string }[];
     variant: string;
 }
 
@@ -23,30 +19,19 @@ interface TopHit {
     ld_reference_variant: string;
 }
 
-const VariantLzPlot: React.FC<VariantLzPlotProps> = ({ chromosome, datasetChoices, populationChoices, variant }) => {
+const VariantLzPlot: React.FC<VariantLzPlotProps> = ({ chromosome, datasetChoices, variant }) => {
     const [dataset, setDataset] = useState<string>(Object.keys(datasetChoices[0])[0]),
         [selectClass, setSelectClass] = useState(Math.random().toString(32).slice(2).replace(/\d/g, "")),
-        [population, setPopulation] = useState<string>(Object.keys(populationChoices[0])[0]),
-        [topHits, setTopHits] = useState<TopHit[]>(),
-        [refVariant, setRefVariant] = useState<string>(variant),
-        [range, setRange] = useState<{ start: number; end: number }>();
+        [population, setPopulation] = useState<string>("EUR"),
+        [refVariant, setRefVariant] = useState<string>(variant);
 
-    const loadTopHit = (hit: TopHit) => {
-        setRange({ start: hit.start, end: hit.end });
-        setRefVariant(hit.ld_reference_variant);
-    };
-
-    useWdkService(
-        (service) => {
-            if (dataset) {
-                service
-                    ._fetchJson<TopHit[]>("get", `/dataset/gwas/top?track=${dataset}&limit=10`)
-                    .then((res) => setTopHits(res));
-            }
-            return new Promise(noop);
-        },
-        [dataset]
-    );
+    const populationChoices = [
+        { EUR: "EUR: European" },
+        { AFR: "AFR: African/African American" },
+        { AMR: "AMR: Ad Mixed American" },
+        { EAS: "EAS: East Asian" },
+        { SAS: "SAS: South Asian" },
+    ];
 
     return (
         <div className="variant-plot">
@@ -84,24 +69,11 @@ const VariantLzPlot: React.FC<VariantLzPlotProps> = ({ chromosome, datasetChoice
             </form>
             <Grid container wrap="nowrap" justify="center" direction="row">
                 <Grid item>
-                    <Typography>Top Hits</Typography>
-                    <List>
-                        {(topHits || []).map((t) => (
-                            //@ts-ignore
-                            <TopHitListItem key={t.ld_reference_variant}>
-                                <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
-                            </TopHitListItem>
-                        ))}
-                    </List>
-                </Grid>
-                <Grid item>
                     <LZPlot
                         chromosome={chromosome}
-                        end={get(range, "end")}
                         population={population}
                         refVariant={refVariant}
                         selectClass={selectClass}
-                        start={get(range, "start")}
                         track={dataset}
                     />
                 </Grid>
@@ -109,8 +81,5 @@ const VariantLzPlot: React.FC<VariantLzPlotProps> = ({ chromosome, datasetChoice
         </div>
     );
 };
-
-//@ts-ignore
-const TopHitListItem = withStyles({ root: { paddingTop: 0, paddingBottom: 1, paddingLeft: 0 } })(ListItem);
 
 export default VariantLzPlot;

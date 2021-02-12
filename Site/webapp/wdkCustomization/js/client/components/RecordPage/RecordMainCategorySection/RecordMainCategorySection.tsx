@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { RecordAttributeSection, CollapsibleSection, HelpIcon } from "wdk-client/Components";
 import RecordTableSection from "../RecordTableSection/RecordTableSection";
 import { getId, getTargetType, getDisplayName } from "wdk-client/Utils/CategoryUtils";
@@ -6,7 +6,7 @@ import * as GR from "../types";
 import { IdeogramPlot, HighchartsPlot } from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { isEmpty } from "lodash";
-import { GeneGeneticVariationSummary, VariantLzPlot } from "./SectionSummaries";
+import { GeneGeneticVariationSummary } from "./SectionSummaries";
 
 interface RecordMainCategorySection {
     category: any;
