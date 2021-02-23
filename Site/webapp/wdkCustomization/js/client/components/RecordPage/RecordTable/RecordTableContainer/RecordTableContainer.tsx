@@ -174,7 +174,12 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                     {!!getPValFilteredResultsEmpty() && (
                         <p style={{ textAlign: "center" }}>
                             No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-
-                            {defaultPVal}). To see more results, please adjust the p-value limit with the{" "}
+                            {/* TODO: useMemo */}
+                            {get(
+                                filtered.find((f) => f.id === "pvalue"),
+                                "value"
+                            ) || defaultPVal}
+                            ). To see more results, please adjust the p-value limit with the{" "}
                             <span className="link" onClick={setPValueFilterVisible.bind(null, true)}>
                                 p-value filter
                             </span>

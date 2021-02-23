@@ -1,18 +1,17 @@
 import React from "react";
 import { findExportWith } from "ebrc-client/component-wrappers/util";
 import theme from "./../theme";
-import { ThemeProvider } from "@material-ui/core";
+import { Container, ThemeProvider } from "@material-ui/core";
 
-//todo: typings (esp dynamic record interface, cause that's going to become a problem)
 export function RecordHeading(DefaultComponent: any) {
     const DynamicRecordHeading = makeDynamicWrapper("RecordHeading")(DefaultComponent);
     return function NiagadsRecordHeading(props: any) {
         return (
-            <div className="container-fluid">
-                <div className="record-heading-container row">
+            <ThemeProvider theme={theme}>
+                <Container maxWidth={false}>
                     <DynamicRecordHeading {...props} />
-                </div>
-            </div>
+                </Container>
+            </ThemeProvider>
         );
     };
 }

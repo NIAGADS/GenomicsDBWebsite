@@ -1,4 +1,4 @@
-import { createStyles, lighten, Typography, TypographyProps, withStyles } from "@material-ui/core";
+import { Box, createStyles, Typography, TypographyProps, withStyles } from "@material-ui/core";
 import React from "react";
 
 export const LightSecondaryText = withStyles((theme) =>
@@ -9,7 +9,7 @@ export const LightSecondaryText = withStyles((theme) =>
     })
 )(Typography);
 
-/* dark contrast typography */
+/* dark contrast base text */
 
 export const DarkContrastText = withStyles((theme) =>
     createStyles({
@@ -27,9 +27,15 @@ export const DarkContrastGreyText = withStyles((theme) =>
     })
 )((props: TypographyProps) => <Typography variant="body1" {...props} />);
 
-/* light contrast typography */
+/* light contrast base text */
 
 export const LightContrastText = (props: TypographyProps) => <Typography variant="body1" {...props} />;
+
+export const LightContrastTextSmall = withStyles({
+    root: {
+        fontSize: "12px",
+    },
+})(Typography);
 
 export const LightContrastTextBold = withStyles((theme) =>
     createStyles({
@@ -43,7 +49,7 @@ export const LightContrastTextHeading = withStyles((theme) =>
     createStyles({
         root: {
             paddingTop: theme.spacing(3),
-            paddingBottom: theme.spacing(4),
+            paddingBottom: theme.spacing(3),
         },
     })
 )((props: TypographyProps) => <Typography {...props} variant="h4" />);
@@ -57,6 +63,15 @@ export const LightContrastTextSubheading = withStyles((theme) =>
     })
 )((props: TypographyProps) => <Typography {...props} variant="h5" />);
 
+export const LightContrastTextSubheadingSmall = withStyles((theme) =>
+    createStyles({
+        root: {
+            paddingTop: theme.spacing(1),
+            paddingBottom: theme.spacing(1),
+        },
+    })
+)((props: TypographyProps) => <Typography {...props} variant="h6" />);
+
 export const LightContrastCaptionTextItalic = withStyles(() =>
     createStyles({
         root: {
@@ -64,3 +79,27 @@ export const LightContrastCaptionTextItalic = withStyles(() =>
         },
     })
 )((props: TypographyProps) => <Typography {...props} variant="caption" />);
+
+///badges
+
+export const BaseBadge = withStyles((theme) =>
+    createStyles({
+        root: {
+            fontSize: "inherit",
+            color: theme.palette.primary.contrastText,
+        },
+    })
+)(Typography);
+
+interface BadgeProps extends TypographyProps {
+    backgroundColor: string;
+}
+
+export const SmallBadge = (props: BadgeProps) => {
+    const { backgroundColor, ...rest } = props;
+    return (
+        <Box margin={1} borderRadius="5px" padding={1} component="span" display="inline" style={{ backgroundColor }}>
+            <BaseBadge variant="caption" {...rest} />
+        </Box>
+    );
+};

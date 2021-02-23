@@ -6,7 +6,7 @@ import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
 import { HelpIcon } from "wdk-client/Components";
 import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
-import { ThemeProvider } from "@material-ui/core";
+import { Grid, ThemeProvider } from "@material-ui/core";
 import theme from "../../../../theme";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
@@ -99,48 +99,46 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
 };
 
 const GWASDatasetRecordSummary: React.FC<RecordHeading & StoreProps> = ({ record, recordClass, headerActions }) => (
-    <React.Fragment>
-        <ThemeProvider theme={theme}>
-            <div className="col-sm-3">
-                <div className="record-summary-container dataset-record-summary-container">
-                    <div>
-                        <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-                        <h1 className="record-heading">Dataset: {record.attributes.name} </h1>
-                    </div>
-                    <h2>
-                        {convertHtmlEntites(record.attributes.name)} &nbsp;(
-                        {record.attributes.attribution})
-                    </h2>
-
-                    <ul>
-                        <li>
-                            <h5 className="dataset-subtitle">{record.attributes.description}</h5>
-                        </li>
-                        <li>
-                            <span className="label">Category:</span> {recordClass.displayName}
-                        </li>
-                        <li>
-                            <span className="label">Explore related datasets: </span>
-                            {resolveJsonInput(record.attributes.accession_link)}{" "}
-                        </li>
-                    </ul>
-                    {record.attributes.is_adsp && (
-                        <h2>
-                            <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong>
-                        </h2>
-                    )}
-
-                    <GWASDatasetSearch
-                        accession={record.attributes.niagads_accession}
-                        record={record.id[0].value}
-                    ></GWASDatasetSearch>
+    <Grid container>
+        <Grid item container sm={3} xs={12}>
+            <div className="record-summary-container dataset-record-summary-container">
+                <div>
+                    <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+                    <h1 className="record-heading">Dataset: {record.attributes.name} </h1>
                 </div>
+                <h2>
+                    {convertHtmlEntites(record.attributes.name)} &nbsp;(
+                    {record.attributes.attribution})
+                </h2>
+
+                <ul>
+                    <li>
+                        <h5 className="dataset-subtitle">{record.attributes.description}</h5>
+                    </li>
+                    <li>
+                        <span className="label">Category:</span> {recordClass.displayName}
+                    </li>
+                    <li>
+                        <span className="label">Explore related datasets: </span>
+                        {resolveJsonInput(record.attributes.accession_link)}{" "}
+                    </li>
+                </ul>
+                {record.attributes.is_adsp && (
+                    <h2>
+                        <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong>
+                    </h2>
+                )}
+
+                <GWASDatasetSearch
+                    accession={record.attributes.niagads_accession}
+                    record={record.id[0].value}
+                ></GWASDatasetSearch>
             </div>
-            <div className="col">
-                <GWASDatasetLZPlot dataset={record.id[0].value} />
-            </div>
-        </ThemeProvider>
-    </React.Fragment>
+        </Grid>
+        <Grid sm={9} xs={12}>
+            <GWASDatasetLZPlot dataset={record.id[0].value} />
+        </Grid>
+    </Grid>
 );
 
 export default connect((state: any) => ({
