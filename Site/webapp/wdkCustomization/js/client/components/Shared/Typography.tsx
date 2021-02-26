@@ -29,15 +29,15 @@ export const DarkContrastGreyText = withStyles((theme) =>
 
 /* light contrast base text */
 
-export const LightContrastText = (props: TypographyProps) => <Typography variant="body1" {...props} />;
+export const BaseText = (props: TypographyProps) => <Typography variant="body1" {...props} />;
 
-export const LightContrastTextSmall = withStyles({
+export const BaseTextSmall = withStyles({
     root: {
         fontSize: "12px",
     },
 })(Typography);
 
-export const LightContrastTextBold = withStyles((theme) =>
+export const BaseTextBold = withStyles((theme) =>
     createStyles({
         root: {
             fontWeight: theme.typography.fontWeightBold,
@@ -45,7 +45,7 @@ export const LightContrastTextBold = withStyles((theme) =>
     })
 )((props: TypographyProps) => <Typography {...props} variant="body1" />);
 
-export const LightContrastTextHeading = withStyles((theme) =>
+export const Heading = withStyles((theme) =>
     createStyles({
         root: {
             paddingTop: theme.spacing(3),
@@ -54,7 +54,7 @@ export const LightContrastTextHeading = withStyles((theme) =>
     })
 )((props: TypographyProps) => <Typography {...props} variant="h4" />);
 
-export const LightContrastTextSubheading = withStyles((theme) =>
+export const Subheading = withStyles((theme) =>
     createStyles({
         root: {
             paddingTop: theme.spacing(2),
@@ -63,7 +63,7 @@ export const LightContrastTextSubheading = withStyles((theme) =>
     })
 )((props: TypographyProps) => <Typography {...props} variant="h5" />);
 
-export const LightContrastTextSubheadingSmall = withStyles((theme) =>
+export const SubheadingSmall = withStyles((theme) =>
     createStyles({
         root: {
             paddingTop: theme.spacing(1),
@@ -72,7 +72,7 @@ export const LightContrastTextSubheadingSmall = withStyles((theme) =>
     })
 )((props: TypographyProps) => <Typography {...props} variant="h6" />);
 
-export const LightContrastCaptionTextItalic = withStyles(() =>
+export const CaptionTextItalic = withStyles(() =>
     createStyles({
         root: {
             fontStyle: "italic",

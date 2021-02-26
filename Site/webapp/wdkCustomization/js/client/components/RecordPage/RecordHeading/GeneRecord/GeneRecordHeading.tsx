@@ -1,81 +1,80 @@
 import React from "react";
 import { connect } from "react-redux";
-import { HeaderRecordActions } from "./../Shared";
+import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
-import * as gr from "./../../types";
+import { GeneRecord, HeaderActions } from "./../../types";
 import { HighchartsTableTrellis } from "../../../Visualizations";
 import { resolveJsonInput } from "../../../../util/jsonParse";
-import { Grid } from "@material-ui/core";
+import { Grid, List, Typography } from "@material-ui/core";
+import { BaseText, BaseTextSmall, Subheading, UnpaddedListItem } from "../../../Shared";
 
-interface StoreProps {
-    externalUrls: { [key: string]: any };
-}
-
-const enhance = connect<StoreProps, any, RecordHeading>((state: any) => ({
+const enhance = connect((state: any) => ({
     externalUrls: state.globalData.siteConfig.externalUrls,
 }));
 
 interface RecordHeading {
-    record: gr.GeneRecord;
+    externalUrls: { [key: string]: any };
+    headerActions: HeaderActions[];
+    record: GeneRecord;
     recordClass: { [key: string]: any };
-    headerActions: gr.HeaderActions[];
 }
 
-type GeneRecordSummary = StoreProps & gr.GeneRecord;
-
-const GeneRecordSummary: React.FC<RecordHeading & StoreProps> = ({ record, recordClass, headerActions }) => {
+const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
     return (
-        <Grid container spacing={3} style={{ marginLeft: "10px" }}>
+        <Grid container style={{ marginLeft: "10px" }}>
             <Grid item container direction="column" sm={3}>
-                <div className="record-summary-container gene-record-summary-container">
-                    <div>
-                        <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-                        <h1 className="record-heading">
-                            {recordClass.displayName}: {record.displayName}
-                        </h1>
-                    </div>
-                    <h2>
-                        {record.displayName} - {record.attributes.source_id}
-                    </h2>
-                    <ul>
-                        <li>
-                            <h4 className="subtitle">{record.attributes.gene_name}</h4>
-                        </li>
+                <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+                <Subheading style={{ paddingBottom: "0px" }}>
+                    <strong>
+                        {recordClass.displayName}: {record.displayName}
+                    </strong>
+                </Subheading>
+                <Typography variant="h5">
+                    {record.displayName} - {record.attributes.source_id}
+                </Typography>
+                <List>
+                    <UnpaddedListItem>
+                        <BaseText>
+                            <strong>{record.attributes.gene_name}</strong>
+                        </BaseText>
+                    </UnpaddedListItem>
 
-                        {record.attributes.synonyms && (
-                            <li>
-                                <span className="label">Also known as: {record.attributes.synonyms}</span>
-                            </li>
-                        )}
+                    {record.attributes.synonyms && (
+                        <UnpaddedListItem>
+                            <RecordAttributeItem label="Also known as:" attribute={record.attributes.synonyms} />
+                        </UnpaddedListItem>
+                    )}
 
-                        <li>
-                            <span className="label">Gene Type</span>: {record.attributes.gene_type}
-                        </li>
+                    <UnpaddedListItem>
+                        <RecordAttributeItem label="Gene Type:" attribute={record.attributes.gene_type} />
+                    </UnpaddedListItem>
 
-                        <li>
-                            <span className="label">Location</span>: {record.attributes.span}{" "}
-                            {record.attributes.cytogenetic_location
-                                ? "/ ".concat(record.attributes.cytogenetic_location)
-                                : ""}
-                        </li>
-                        {record.attributes.has_genetic_evidence_for_ad_risk && (
-                            <li>
-                                <span className="label">Genetic Evidence for AD?</span>&nbsp;{" "}
+                    <UnpaddedListItem>
+                        <RecordAttributeItem
+                            label="Location:"
+                            attribute={`${record.attributes.span}${
+                                record.attributes.cytogenetic_location
+                                    ? "/ ".concat(record.attributes.cytogenetic_location)
+                                    : ""
+                            } `}
+                        />
+                    </UnpaddedListItem>
+                    {record.attributes.has_genetic_evidence_for_ad_risk && (
+                        <UnpaddedListItem>
+                            <BaseTextSmall>
+                                Genetic Evidence for AD?&nbsp;
                                 {resolveJsonInput(record.attributes.has_genetic_evidence_for_ad_risk_display)}
-                            </li>
-                        )}
-                    </ul>
-                </div>
+                            </BaseTextSmall>
+                        </UnpaddedListItem>
+                    )}
+                </List>
             </Grid>
             <Grid item container xs={9}>
                 {record.attributes.gws_variants_summary_plot && (
-                    <div className="header-summary-plot-title">
-                        Summary of AD/ADRD associations for this variants proximal to {record.attributes.gene_symbol}:
-                        &nbsp;&nbsp;&nbsp;
-                        <a href="#ad_variants_from_gwas">
-                            Browse the association evidence <i className="fa fa-level-down"></i>
-                        </a>
-                    </div>
+                    <SummaryPlotHeader
+                        labelText={`Summary of AD/ADRD associations for this variants proximal to ${record.attributes.gene_symbol}`}
+                        linkTarget="#ad_variants_from_gwas"
+                    />
                 )}
                 {record.attributes.gws_variants_summary_plot && (
                     <HighchartsTableTrellis

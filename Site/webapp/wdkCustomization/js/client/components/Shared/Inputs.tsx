@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControl, Input, InputProps, TextField, TextFieldProps } from "@material-ui/core";
+import { FormControl, Input, InputProps, OutlinedInput, TextField, TextFieldProps } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 //base resset of wdk non-button inputs
@@ -27,7 +27,7 @@ interface InputStyleProps {
     fullWidth?: boolean;
 }
 
-export const UnlabeledTextField: React.FC<InputProps & { fullWidth: boolean }> = React.forwardRef((props, ref) => {
+export const UnlabeledTextField: React.FC<InputProps & { fullWidth?: boolean }> = React.forwardRef((props, ref) => {
     const inputClasses = useBaseInputStyles(),
         formControlClasses = useBaseFormControlStyles(props);
     return (
@@ -37,10 +37,21 @@ export const UnlabeledTextField: React.FC<InputProps & { fullWidth: boolean }> =
     );
 });
 
+export const UnlabeledTextFieldOutlined: React.FC<InputProps & { fullWidth?: boolean }> = React.forwardRef(
+    (props, ref) => {
+        const inputClasses = useBaseInputStyles(),
+            formControlClasses = useBaseFormControlStyles(props);
+        return (
+            <FormControl classes={formControlClasses}>
+                <OutlinedInput ref={ref} type="search" classes={inputClasses} {...props} />
+            </FormControl>
+        );
+    }
+);
+
 export const LabeledTextField = (props: TextFieldProps) => {
     const classes = useBaseInputStyles(props);
-
     return (
-        <TextField {...props} InputProps={{ ...props.InputProps, classes, disableUnderline: true }} variant="filled" />
+        <TextField {...props} variant="filled" InputProps={{ ...props.InputProps, classes, disableUnderline: true }} />
     );
 };

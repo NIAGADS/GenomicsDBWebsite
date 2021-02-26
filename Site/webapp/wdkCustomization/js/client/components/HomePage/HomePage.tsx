@@ -27,11 +27,11 @@ import Browser from "./../Visualizations/Igv/IgvBrowser";
 import { HighchartsDatasetSummaryDonut as Donut } from "./../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
 import {
     DarkContrastText,
-    LightContrastCaptionTextItalic,
-    LightContrastText,
-    LightContrastTextBold,
-    LightContrastTextHeading,
-    LightContrastTextSubheading,
+    CaptionTextItalic,
+    BaseText,
+    BaseTextBold,
+    Heading,
+    Subheading,
 } from "../Shared/Typography";
 
 interface HomePage {
@@ -130,16 +130,16 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
             <WhiteBackgroundSection>
                 <NarrowerWidthRow>
                     <Grid container alignItems="center" item direction="column" spacing={6}>
-                        <LightContrastTextHeading>Explore the genomic context of AD variants</LightContrastTextHeading>
+                        <Heading>Explore the genomic context of AD variants</Heading>
                         <Grid item container spacing={4} direction="row">
                             <Grid container item xs={12} sm={6} alignContent="space-between" justify="center">
-                                <LightContrastText>
+                                <BaseText>
                                     Use our interactive genome browser to visually inspect and browse GWAS summary
                                     statistics datasets in a broader genomic context. The genome browser can also be
                                     used to compare NIAGADS GWAS summary statistics tracks to each other, against
                                     annotated gene or variant tracks, and to functional genomics tracks from the NIAGADS{" "}
                                     <PrimaryLink to="#">FILER</PrimaryLink> functional genomics repository.
-                                </LightContrastText>
+                                </BaseText>
                                 <Grid item container direction="row" justify="flex-start">
                                     <PrimaryActionButton
                                         onClick={goto.bind(null, `/visualizations/browser?locus=ABCA7`)}
@@ -182,14 +182,14 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             </Grid>
                         </Grid>
                         <Grid container alignItems="center" item xs={12} sm={6}>
-                            <LightContrastText>
+                            <BaseText>
                                 As of December 2020, the NIAGADS Alzheimer's Genomics Database provides unrestricted
                                 access to summary statistics <em>p</em>-values from &gt;100 GWAS and ADSP meta-analysis.
-                            </LightContrastText>
-                            <LightContrastText>
+                            </BaseText>
+                            <BaseText>
                                 AD/ADRD risk-associated variants are comprehensively annotated using the ADSP Annotation
                                 pipeline.
-                            </LightContrastText>
+                            </BaseText>
                         </Grid>
                     </Grid>
                 </NarrowerWidthRow>
@@ -199,7 +199,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid direction="column" alignItems="center" container>
                         <Grid item>
                             <Box p={3}>
-                                <LightContrastTextHeading>Latest Datasets</LightContrastTextHeading>
+                                <Heading>Latest Datasets</Heading>
                             </Box>
                         </Grid>
                         <Grid item container spacing={10} justify="center" direction="row">
@@ -234,8 +234,8 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
             <GreyBackgroundSection>
                 <NarrowerWidthRow>
                     <Grid container item justify="center">
-                        <LightContrastTextHeading>About the Project</LightContrastTextHeading>
-                        <LightContrastText>
+                        <Heading>About the Project</Heading>
+                        <BaseText>
                             The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the
                             University of Pennsylvania as part of the{" "}
                             <PrimaryExternalLink href="https://www.niagads.org/">
@@ -251,7 +251,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             <PrimaryExternalLink href="https://www.niagads.org/contact">contact us</PrimaryExternalLink>{" "}
                             for more information. The GenomicsDB is a collaboration among the following organizations
                             which may also provide funding or governance:
-                        </LightContrastText>
+                        </BaseText>
                     </Grid>
                     <Grid container item spacing={4} direction="row" justify="space-between" alignItems="center">
                         <Grid item>
@@ -269,8 +269,8 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
             <WhiteBackgroundSection>
                 <NarrowerWidthRow>
                     <Grid item container justify="center">
-                        <LightContrastTextHeading>ADSP Collaboration</LightContrastTextHeading>
-                        <LightContrastText>
+                        <Heading>ADSP Collaboration</Heading>
+                        <BaseText>
                             The NIAGADS Alzheimer's Genomics Database (NIAGADS GenomicsDB) has an ongoing collaboration
                             with the{" "}
                             <PrimaryExternalLink href="https://www.niagads.org/adsp">
@@ -279,68 +279,68 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             (ADSP). The NIAGADS GenomicsDB allows browsing, searching, and analysis of variants and
                             genes linked to the risk of developing late-onset Alzheimer's disease that were identified
                             through the ADSP's sequencing efforts and downstream meta-analyses.
-                        </LightContrastText>
+                        </BaseText>
                     </Grid>
                     <Grid container item direction="row" justify="flex-start">
                         <Grid item xs={12}>
-                            <LightContrastTextSubheading>ADSP Variants</LightContrastTextSubheading>
+                            <Subheading>ADSP Variants</Subheading>
                         </Grid>
                         <Grid container item spacing={5} direction="row">
                             <Grid item xs={12} sm={6}>
-                                <LightContrastText>
+                                <BaseText>
                                     Annotated variants in the NIAGADS GenomicsDB include SNPs and short-indels
                                     identified during the ADSP Discovery Phase whole-genome (WGS) and whole-exome
                                     sequencing (WES) efforts. These variants are highlighted in variant and dataset
                                     reports and their quality control status is provided. Annotated tracks are available
                                     for both the WES and WGS variants on the genome browser.
-                                </LightContrastText>
+                                </BaseText>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Grid item container direction="column" wrap="nowrap">
                                     <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
-                                    <LightContrastCaptionTextItalic>
+                                    <CaptionTextItalic>
                                         From Butkiewicz et al. (2018) Functional annotation of genomic variants in
                                         studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
                                         (after Table 1). PMID:{" "}
                                         <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
-                                    </LightContrastCaptionTextItalic>
+                                    </CaptionTextItalic>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid container item direction="row" justify="flex-start">
-                        <LightContrastTextSubheading>ADSP Annotation</LightContrastTextSubheading>
-                        <LightContrastText>
+                        <Subheading>ADSP Annotation</Subheading>
+                        <BaseText>
                             As part of their sequencing effort, the ADSP developed an annotation pipeline that
                             efficiently integrates standard annotations and ranks potential variant impacts according to
                             predicted effect (such as codon changes, loss of function, and potential deleteriousness)
                             (PMID: <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
                             NIAGADS GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants
                             are annotated in real-time.
-                        </LightContrastText>
+                        </BaseText>
                     </Grid>
                     <Grid container item direction="column" spacing={1}>
-                        <LightContrastTextSubheading>ADSP Meta-analysis Results</LightContrastTextSubheading>
-                        <LightContrastText>
+                        <Subheading>ADSP Meta-analysis Results</Subheading>
+                        <BaseText>
                             The NIAGADS GenomicsDB provides access to summary statistics from the following ADSP
                             meta-analyses:
-                        </LightContrastText>
+                        </BaseText>
                         <Box mt={1}></Box>
                         <Box display="flex">
                             <Typography>
                                 <BoldPrimaryLink to="/record/dataset/NG00065">NG00065:&nbsp;</BoldPrimaryLink>
                             </Typography>
-                            <LightContrastTextBold>
+                            <BaseTextBold>
                                 ADSP Discovery Case/Control Association Results{" "}
-                            </LightContrastTextBold>
+                            </BaseTextBold>
                         </Box>
                         <Box>
-                            <LightContrastText>
+                            <BaseText>
                                 These datasets contain results from <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
                                 <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation tests,
                                 performed separately by ancestry (European ancestry, Caribbean Hispanic) and
                                 meta-analyzed.
-                            </LightContrastText>
+                            </BaseText>
                         </Box>
                     </Grid>
                 </NarrowerWidthRow>
@@ -454,8 +454,8 @@ const IconCard: React.FC<IconCard> = ({ Icon, text, title }) => (
                 <IconCardIcon Icon={Icon} />
             </Grid>
             <Grid item container direction="column" xs={8}>
-                <LightContrastTextSubheading>{title}</LightContrastTextSubheading>
-                <LightContrastText>{text}</LightContrastText>
+                <Subheading>{title}</Subheading>
+                <BaseText>{text}</BaseText>
             </Grid>
         </Grid>
     </Box>
@@ -484,11 +484,11 @@ interface QuickStat {
 
 const QuickStat: React.FC<QuickStat> = ({ captionText, mainText, title, type }) => (
     <Box>
-        <LightContrastText>{title}</LightContrastText>
+        <BaseText>{title}</BaseText>
         <QuickStatMainText>{mainText}</QuickStatMainText>
         <Box>
-            <LightContrastText>{type}&nbsp;</LightContrastText>
-            <LightContrastTextBold>{captionText}</LightContrastTextBold>
+            <BaseText>{type}&nbsp;</BaseText>
+            <BaseTextBold>{captionText}</BaseTextBold>
         </Box>
     </Box>
 );
@@ -518,14 +518,14 @@ const NewsItem: React.FC<NewsItem> = ({ content, date, target, title }) => {
             <Grid style={{ flexGrow: 1 }} item container direction="column">
                 <Grid style={{ flexGrow: 1 }} item container direction="column" spacing={2}>
                     <Grid item>
-                        <LightContrastText>{date}</LightContrastText>
+                        <BaseText>{date}</BaseText>
                     </Grid>
                     <Grid item>
-                        <LightContrastTextSubheading>{title}</LightContrastTextSubheading>
+                        <Subheading>{title}</Subheading>
                     </Grid>
                 </Grid>
                 <Grid container item direction="column">
-                    <LightContrastText variant="body2">{content}</LightContrastText>
+                    <BaseText variant="body2">{content}</BaseText>
                 </Grid>
             </Grid>
             <Box pl={1} pr={1} pt={5} pb={5}>

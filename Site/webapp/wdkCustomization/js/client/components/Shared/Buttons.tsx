@@ -50,19 +50,10 @@ const useButtonStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, disabled }) => {
+export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, disabled, ...rest }) => {
     const classes = useButtonStyles();
     return (
-        <BaseButton classes={classes} disabled={disabled} onClick={onClick} variant="contained">
-            {children}
-        </BaseButton>
-    );
-};
-
-export const PrimaryOutlinedButton: React.FC<ButtonProps> = ({ onClick, children, disabled }) => {
-    const classes = useButtonStyles();
-    return (
-        <BaseButton classes={classes} disabled={disabled} onClick={onClick} variant="outlined">
+        <BaseButton {...rest} classes={classes} disabled={disabled} onClick={onClick}>
             {children}
         </BaseButton>
     );

@@ -8,7 +8,8 @@ export function RecordHeading(DefaultComponent: any) {
     return function NiagadsRecordHeading(props: any) {
         return (
             <ThemeProvider theme={theme}>
-                <Container maxWidth={false}>
+                {/* class needed for toggling header-width on contents-box expansion */}
+                <Container maxWidth={false} className="record-heading-container">
                     <DynamicRecordHeading {...props} />
                 </Container>
             </ThemeProvider>

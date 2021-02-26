@@ -5,9 +5,9 @@ import * as lz from "locuszoom";
 import "locuszoom/dist/locuszoom.css";
 import { connect } from "react-redux";
 import registry from "locuszoom/esm/registry/adapters";
-import { cloneDeep, noop } from "lodash";
+import { cloneDeep, get, noop } from "lodash";
 import { Grid } from "@material-ui/core";
-import { select, selectAll } from "d3";
+import { selectAll } from "d3";
 
 const LZ = lz.default as any;
 
@@ -20,6 +20,7 @@ interface LzProps {
     chromosome?: string;
     end?: number;
     endpoint: string;
+    maxWidthAsRatioToBody?: number;
     population: string;
     refVariant: string;
     selectClass: string;
@@ -31,6 +32,7 @@ const LzPlot: React.FC<LzProps> = ({
     chromosome,
     end,
     endpoint,
+    maxWidthAsRatioToBody,
     population,
     refVariant,
     selectClass,
@@ -38,8 +40,13 @@ const LzPlot: React.FC<LzProps> = ({
     track,
 }) => {
     const [loading, setLoading] = useState(false),
+        [width, setWidth] = useState<number>(800),
         interval: NodeJS.Timeout = useRef().current,
         layoutRendered = useRef(false);
+
+    //
+    const getWidth = () =>
+        get(window.document.querySelectorAll("body"), "[0].clientWidth", width * 2) * (maxWidthAsRatioToBody || 0.5);
 
     useEffect(() => {
         if (layoutRendered.current) {
@@ -47,7 +54,13 @@ const LzPlot: React.FC<LzProps> = ({
             return () => clearInterval(interval);
         }
         return noop;
-    }, [refVariant, population, track]);
+    }, [refVariant, population, track, width]);
+
+    useLayoutEffect(() => {
+        const resizeListener = () => setWidth(getWidth());
+        window.addEventListener("resize", resizeListener);
+        return () => window.removeEventListener("resize", resizeListener);
+    }, []);
 
     useLayoutEffect(() => {
         initPlot();
@@ -56,7 +69,7 @@ const LzPlot: React.FC<LzProps> = ({
 
     const initPlot = () => {
         const state = buildPlotState(chromosome, start, end, refVariant),
-            plot = buildPlot(selectClass, state, population, track, endpoint);
+            plot = buildPlot(selectClass, state, population, track, endpoint, width);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -78,9 +91,6 @@ const LzPlot: React.FC<LzProps> = ({
         //d.getPlot().panels.association_panel.x_scale(d.position) will give x coordinate
         //leaving this in b/c we can use it to create our own tooltip if we want to keep setNewRef behavior
     });
-;
-
-
     return (
         <Grid container alignItems="center" direction="column">
             <LoadingIndicator loading={loading} />
@@ -121,7 +131,14 @@ const LoadingIndicator: React.FC<LoadingIndicator> = (props) => {
     ) : null;
 };
 
-const buildPlot = (selector: string, state: LzState, population: string, track: string, endpoint: string) => {
+const buildPlot = (
+    selector: string,
+    state: LzState,
+    population: string,
+    track: string,
+    endpoint: string,
+    width: number
+) => {
     class AssocSource extends AssociationLZ {
         //typescript boilerplate
         constructor(...args: any[]) {
@@ -185,7 +202,7 @@ const buildPlot = (selector: string, state: LzState, population: string, track: 
         return `${endpoint}/locuszoom/gene?chromosome=${state.chromosome}&start=${state.start}&end=${state.end}`;
     };
 
-    const layout = _buildLayout(state);
+    const layout = _buildLayout(state, width);
 
     const dataSources = new LZ.DataSources();
     dataSources.add("assoc", new AssocSource({ url: "asdf" }));
@@ -196,12 +213,12 @@ const buildPlot = (selector: string, state: LzState, population: string, track: 
     return LZ.populate(`#${selector}`, dataSources, layout);
 };
 
-const _buildLayout = (state: LzState) => {
+const _buildLayout = (state: LzState, containerWidth: number) => {
     return LZ.Layouts.merge(
         { state },
         {
             id: "association_layout",
-            width: 800,
+            width: containerWidth,
             height: 225,
             min_width: 400,
             min_height: 200,
