@@ -43,7 +43,7 @@ export const UnlabeledTextFieldOutlined: React.FC<InputProps & { fullWidth?: boo
             formControlClasses = useBaseFormControlStyles(props);
         return (
             <FormControl classes={formControlClasses}>
-                <OutlinedInput ref={ref} type="search" classes={inputClasses} {...props} />
+                <OutlinedInput ref={ref} classes={inputClasses} {...props} />
             </FormControl>
         );
     }

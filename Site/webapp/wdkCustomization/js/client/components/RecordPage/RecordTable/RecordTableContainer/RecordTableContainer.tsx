@@ -7,6 +7,14 @@ import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
 import { Filter, Instance } from "react-table";
+import { Box, Grid, List, Typography } from "@material-ui/core";
+import {
+    BaseTextSmall,
+    PrimaryActionButton,
+    PseudoLink,
+    UnlabeledTextFieldOutlined,
+    UnpaddedListItem,
+} from "../../../Shared";
 
 const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
     const [tableInstance, setTableInstance] = useState<Instance>(),
@@ -79,7 +87,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
         );
     };
 
-    const handleSearchFilterChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    const handleSearchFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilterVal(e.currentTarget.value);
         updateFilter("all", e.currentTarget.value);
     };
@@ -113,83 +121,82 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
 
     const { attributes } = table;
 
-    return (
-        <div className="record-table-container">
-            {!isEmpty(value) ? (
-                <div className="record-table-inner-container">
-                    <div className="record-table-controls-container">
-                        <div className="main-controls row">
-                            {tableInstance && (
-                                <div className="col flex-grow-0 align-items-center d-flex">
-                                    <CSVLink
-                                        className="control d-flex"
-                                        filename={`${kebabCase(table.displayName)}.csv`}
-                                        onClick={loadCsvData}
-                                        data={csvData}
-                                    >
-                                        Download <span className="fa p-1 fa-download" />
-                                    </CSVLink>
-                                    <input
-                                        type="text"
-                                        className="filter"
-                                        placeholder="Search table"
-                                        value={filterVal}
-                                        onChange={handleSearchFilterChange}
-                                    />
-                                </div>
-                            )}
-                            {/* todo: extract to its own component with maxPvalue as internal state */}
-                            {getHasPValFilter(table) && (
-                                <PvalFilterControls
-                                    defaultPValue={defaultPVal}
-                                    filterPVal={
-                                        get(
-                                            filtered.find((f) => f.id === "pvalue"),
-                                            "value"
-                                        ) || defaultPVal
-                                    }
-                                    filterVisible={pValueFilterVisible}
-                                    tableName={table.name}
-                                    toggleVisibility={togglePValueChartVisibility}
-                                    updatePvalFilter={updateFilter.bind(null, "pvalue")}
-                                    values={value}
-                                />
-                            )}
-                        </div>
-                    </div>
-                    {
-                        <NiagadsRecordTable
-                            attributes={attributes}
-                            canShrink={get(table, "properties.canShrink[0]", false)}
-                            isSelected={isSelected}
-                            filtered={filtered}
-                            onLoad={onTableLoaded}
-                            onSelectionToggled={toggleSelection}
-                            stringFilterMethod={filterString}
-                            table={table}
-                            value={value}
-                            visible={!getPValFilteredResultsEmpty()}
+    return !isEmpty(value) ? (
+        <Grid container direction="column" wrap="nowrap" spacing={1}>
+            <Grid item container direction="row" wrap="nowrap">
+                {tableInstance && (
+                    <Grid item spacing={1} sm={3} container alignItems="center">
+                        <Grid item>
+                            <CSVLink
+                                filename={`${kebabCase(table.displayName)}.csv`}
+                                onClick={loadCsvData}
+                                data={csvData}
+                            >
+                                Download <span className="fa fa-download" />
+                            </CSVLink>
+                        </Grid>
+                        <Grid>
+                            <UnlabeledTextFieldOutlined
+                                placeholder="Search table"
+                                value={filterVal}
+                                onChange={handleSearchFilterChange}
+                            />
+                        </Grid>
+                    </Grid>
+                )}
+                {/* todo: extract to its own component with maxPvalue as internal state */}
+                {getHasPValFilter(table) && (
+                    <Grid item sm={9}>
+                        <PvalFilterControls
+                            defaultPValue={defaultPVal}
+                            filterPVal={
+                                get(
+                                    filtered.find((f) => f.id === "pvalue"),
+                                    "value"
+                                ) || defaultPVal
+                            }
+                            filterVisible={pValueFilterVisible}
+                            tableName={table.name}
+                            toggleVisibility={togglePValueChartVisibility}
+                            updatePvalFilter={updateFilter.bind(null, "pvalue")}
+                            values={value}
                         />
-                    }
-                    {!!getPValFilteredResultsEmpty() && (
-                        <p style={{ textAlign: "center" }}>
-                            No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-
-                            {/* TODO: useMemo */}
-                            {get(
-                                filtered.find((f) => f.id === "pvalue"),
-                                "value"
-                            ) || defaultPVal}
-                            ). To see more results, please adjust the p-value limit with the{" "}
-                            <span className="link" onClick={setPValueFilterVisible.bind(null, true)}>
-                                p-value filter
-                            </span>
-                        </p>
-                    )}
-                </div>
-            ) : (
-                "None Reported"
+                    </Grid>
+                )}
+            </Grid>
+            {
+                <Grid item>
+                    <NiagadsRecordTable
+                        attributes={attributes}
+                        canShrink={get(table, "properties.canShrink[0]", false)}
+                        isSelected={isSelected}
+                        filtered={filtered}
+                        onLoad={onTableLoaded}
+                        onSelectionToggled={toggleSelection}
+                        stringFilterMethod={filterString}
+                        table={table}
+                        value={value}
+                        visible={!getPValFilteredResultsEmpty()}
+                    />
+                </Grid>
+            }
+            {!!getPValFilteredResultsEmpty() && (
+                <Grid item>
+                    <BaseTextSmall style={{ textAlign: "center" }}>
+                        No variants meet the default p-value cutoff for genome-wide significance (≤ 5e-
+                        {/* TODO: useMemo */}
+                        {get(
+                            filtered.find((f) => f.id === "pvalue"),
+                            "value"
+                        ) || defaultPVal}
+                        ). To see more results, please adjust the p-value limit with the{" "}
+                        <PseudoLink onClick={setPValueFilterVisible.bind(null, true)}>p-value filter</PseudoLink>
+                    </BaseTextSmall>
+                </Grid>
             )}
-        </div>
+        </Grid>
+    ) : (
+        <BaseTextSmall>None Reported</BaseTextSmall>
     );
 };
 
@@ -227,43 +234,45 @@ const PvalFilterControls: React.FC<PvalFilterControls> = ({
     const [maxPvalue, setMaxPValue] = useState<string>(transform(defaultPValue));
 
     return (
-        <div className="col d-flex">
+        <Grid container item direction="row" wrap="nowrap" spacing={2}>
             {filterVisible && (
-                <RecordTablePValFilter
-                    key={tableName}
-                    defaultPVal={+filterPVal || defaultPValue}
-                    selectClass={tableName + "_chart"}
-                    setMaxPvalue={(val: number) => setMaxPValue(Number(val).toString())}
-                    values={
-                        /* no need to memoize, since pval filter is itself memoized and will never rerender */
-                        (cloneDeep(values) as unknown) as {
-                            [key: string]: any;
-                            pvalue: string;
-                        }[]
-                    }
-                />
+                <Grid item sm={9}>
+                    <RecordTablePValFilter
+                        key={tableName}
+                        defaultPVal={+filterPVal || defaultPValue}
+                        selectClass={tableName + "_chart"}
+                        setMaxPvalue={(val: number) => setMaxPValue(Number(val).toString())}
+                        values={
+                            /* no need to memoize, since pval filter is itself memoized and will never rerender */
+                            (cloneDeep(values) as unknown) as {
+                                [key: string]: any;
+                                pvalue: string;
+                            }[]
+                        }
+                    />
+                </Grid>
             )}
-            <div className="flex-column d-flex align-self-center">
+            <Grid item container direction="column" alignItems="flex-start" spacing={1} sm={3}>
                 {filterVisible && (
-                    <>
-                        <div>
+                    <List>
+                        <UnpaddedListItem>
                             <strong>Current p-value:&nbsp;</strong>
                             {transform(+filterPVal)}
-                        </div>
-                        <div>
+                        </UnpaddedListItem>
+                        <UnpaddedListItem>
                             <strong>New p-value:&nbsp;</strong>
                             {transform(+maxPvalue)}
-                        </div>
+                        </UnpaddedListItem>
 
-                        <a onClick={() => updatePvalFilter(+transform(+maxPvalue))} className="btn filter btn-primary">
+                        <PrimaryActionButton onClick={() => updatePvalFilter(+transform(+maxPvalue))}>
                             Update
-                        </a>
-                    </>
+                        </PrimaryActionButton>
+                    </List>
                 )}
-                <a onClick={toggleVisibility} className="btn filter btn-primary">
+                <PrimaryActionButton onClick={toggleVisibility}>
                     {filterVisible ? "Close P-value Filter" : "Open P-value Filter"}
-                </a>
-            </div>
-        </div>
+                </PrimaryActionButton>
+            </Grid>
+        </Grid>
     );
 };

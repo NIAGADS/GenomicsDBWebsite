@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-//the below would expose lz (as lz.default) in the window for tooltip, but it seems latest lz has drooped the function altogether
+//the below would expose lz (as lz.default) in the window for tooltip, but it seems latest lz has drooped the functionality altogether?
 //import * as lz from "expose-loader?lz!locuszoom";
 import * as lz from "locuszoom";
 import "locuszoom/dist/locuszoom.css";
