@@ -29,6 +29,7 @@
     }
     .rt-thead {
         &.-header {
+            flex-grow: 0;
             box-shadow: none;
             border-bottom: 3px solid black;
             .header-container {
@@ -45,6 +46,7 @@
         .rt-tr {
             text-align: left;
             font-weight: bold;
+            flex-grow: 0;
             .rt-th {
                 box-shadow: none;
                 .icon-inactive {

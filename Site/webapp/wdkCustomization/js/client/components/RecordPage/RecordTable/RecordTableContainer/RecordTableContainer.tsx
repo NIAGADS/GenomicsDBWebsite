@@ -7,7 +7,7 @@ import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
 import { Filter, Instance } from "react-table";
-import { Box, Grid, List, Typography } from "@material-ui/core";
+import { Grid, List } from "@material-ui/core";
 import {
     BaseTextSmall,
     PrimaryActionButton,
