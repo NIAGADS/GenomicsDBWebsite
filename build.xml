@@ -123,8 +123,6 @@
       <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
     </ant>
-    <echo message="Copying ${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp to ${webappTargetDir}/WEB-INF/includes/client/index.jsp"/>
-    <copy file="${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp" tofile="${webappTargetDir}/WEB-INF/includes/client/index.jsp" overwrite="true"/>
   </target>
 
   <target name="GenomicsDBWebsite/View-WebInstallation">

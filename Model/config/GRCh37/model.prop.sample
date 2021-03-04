@@ -1,8 +1,6 @@
 # Properties defined here can be referenced in model XML files.
 # For example, this line: NAME=value
 # will cause the WDK to replace  all occurrences of "@NAME@" in the model XML with "value".
-# Properties can also be accessed via jsp pages through the wdkModel bean as follows:
-# ${applicationScope.wdkModel.properties['NAME']}
 
 #----------------------------------------------------------
 # Project Identifiers & Configuration
@@ -11,8 +9,7 @@
 PROJECT_ID=GRCh37
 #PROJECT_ID=GRCh38
 DONT_EMAIL_NEW_USER=true
-WDK_VERSION=API_BLD_42
-JBROWSE_VERSION=1.11.6
+WDK_VERSION=API_BLD_50
 
 GENOME_BUILD=GRCh37.p13
 GENCODE_VERSION=v19
@@ -22,14 +19,11 @@ SITE_ADMIN_EMAIL=
 
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
 
-# uncomment to display banner at top of every page warning users that site is under active development
-IS_DEV_SITE=true
-IGNORE_LOGIN_RESTRICTIONS=true
-
 # Base URL: uncomment https://dev.niagads.org for development
 # only one should be uncommented
 # NIAGADS_BASE_URL=https://www.niagads.org 
 NIAGADS_BASE_URL=https://beta.niagads.org
+WEBAPP_BASE_URL=https://
 WEBAPP=genomics
 
 # bypass reporter selection since we only have one type; remove to reinstate normal WDK behavior
