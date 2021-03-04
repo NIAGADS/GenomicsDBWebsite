@@ -236,7 +236,7 @@
 
 		Result AS (
 		SELECT id.source_id,
-		r.protocol_app_node_id,
+		r.dataset_id AS track,
 
 		build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
 		'/record/variant/', r.variant_record_primary_key,
@@ -250,28 +250,26 @@
 		adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
 		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		
-		CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
+		CASE WHEN r.position::bigint < ga.location_start 
 		THEN build_text_attribute('upstream', NULL, 'red')::text
-		WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
+		WHEN r.position::bigint > ga.location_end 
 		THEN build_text_attribute('downstream', NULL, 'green')::text
 		ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
 		
-		r.allele, 
+		r.test_allele AS allele,
 		to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
 		neg_log10_pvalue,
 
 		t.*
 
-		FROM id, Results.VariantGWAS r, tracks t, CBIL.GeneAttributes ga
+		FROM id, NIAGADS.VariantGWASTopHits r, tracks t, CBIL.GeneAttributes ga
 		WHERE id.source_id = ga.source_id
 		AND ga.bin_index_100kb_flank @> r.bin_index
 		AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
-		@> split_part(variant_record_primary_key, ':', 2)::bigint
-		AND t.protocol_app_node_id = r.protocol_app_node_id
-		AND r.neg_log10_pvalue > 3)
+		@> r.position::bigint
+		AND t.track = r.dataset_id)
 
 		SELECT * FROM result 
-		WHERE neg_log10_pvalue != 'NaN'
 		ORDER BY neg_log10_pvalue DESC
 	]]>
       </sql>
@@ -310,7 +308,7 @@
 
 		 Result AS (
 		 SELECT id.source_id,
-		 r.protocol_app_node_id,
+		 r.dataset_id AS track,
 		 
 		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
 		 '/record/variant/', r.variant_record_primary_key,
@@ -322,30 +320,28 @@
 		 
 		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
 		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
-		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
+		 adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		 
-		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
+		 CASE WHEN r.position::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
-		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
+		 WHEN r.position::bigint > ga.location_end 
 		 THEN build_text_attribute('downstream', NULL, 'green')::text
 		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
 		 
-		 r.allele, 
+		 r.test_allele AS allele,
 		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
 		 neg_log10_pvalue,
 		 
 		 t.*
 		 
-		 FROM id, Results.VariantGWAS r, tracks t, CBIL.GeneAttributes ga
+		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t, CBIL.GeneAttributes ga
 		 WHERE id.source_id = ga.source_id
 		 AND ga.bin_index_100kb_flank @> r.bin_index
 		 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
 		 @> split_part(variant_record_primary_key, ':', 2)::bigint
-		 AND t.protocol_app_node_id = r.protocol_app_node_id
-		 AND r.neg_log10_pvalue > 3)
+		 AND t.track = r.dataset_id)
 		 
 		 SELECT * FROM result 
-		 WHERE neg_log10_pvalue != 'NaN'
 		 ORDER BY neg_log10_pvalue DESC
 	]]>
       </sql>
@@ -479,7 +475,7 @@
 		 
 		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
 		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
-		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
+		 adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text

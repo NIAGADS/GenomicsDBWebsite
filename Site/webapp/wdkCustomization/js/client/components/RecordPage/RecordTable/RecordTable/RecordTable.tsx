@@ -150,14 +150,10 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         toggleSelection: onSelectionToggled,
     };
 
-    return (
-        <div className="record-table">
-            {true ? (
-                <ReactTable {...tableProps} ref={instance} />
-            ) : (
-                <NiagadsSelectTable {...tableProps} {...selectTableProps} />
-            )}
-        </div>
+    return true ? (
+        <ReactTable {...tableProps} ref={instance} />
+    ) : (
+        <NiagadsSelectTable {...tableProps} {...selectTableProps} />
     );
 };
 

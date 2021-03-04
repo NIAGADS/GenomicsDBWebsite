@@ -4,6 +4,9 @@
 # Properties can also be accessed via jsp pages through the wdkModel bean as follows:
 # ${applicationScope.wdkModel.properties['NAME']}
 
+SITE_ADMIN_EMAIL=
+STEP_ANALYSIS_JOB_DIR=/www/common/temp
+
 #----------------------------------------------------------
 # Project Identifiers & Configuration
 #----------------------------------------------------------
@@ -11,20 +14,10 @@
 PROJECT_ID=GRCh37
 #PROJECT_ID=GRCh38
 DONT_EMAIL_NEW_USER=true
-WDK_VERSION=API_BLD_42
-JBROWSE_VERSION=1.11.6
 
 GENOME_BUILD=GRCh37.p13
 GENCODE_VERSION=v19
 dbSNP_VERSION=151
-
-SITE_ADMIN_EMAIL=
-
-STEP_ANALYSIS_JOB_DIR=/www/common/temp
-
-# uncomment to display banner at top of every page warning users that site is under active development
-IS_DEV_SITE=true
-IGNORE_LOGIN_RESTRICTIONS=true
 
 # Base URL: uncomment https://dev.niagads.org for development
 # only one should be uncommented
@@ -32,18 +25,16 @@ IGNORE_LOGIN_RESTRICTIONS=true
 NIAGADS_BASE_URL=https://beta.niagads.org
 WEBAPP=genomics
 
-# bypass reporter selection since we only have one type; remove to reinstate normal WDK behavior
-# also will have to uncomment drop-down select in reporter.tag (site)
-DEFAULT_REPORTER=tabular
-
 #----------------------------------------------------------
 # Constants
 #----------------------------------------------------------
 
-DEFAULT_JBROWSE_TRACKS=ENSEMBL_GENE,ADSP_WES,ADSP_WGS,dbSNP_COMMON
-DEFAULT_JBROWSE_LOCATION=chr19:45342451..45430750
+FLANK_50KB=50000
+FLANK_100KB=100000
+FLANK_200KB=200000
+FLANK_LOCUSZOOM=10000
 
-FLANKING_REGION=10000
+LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 
 #----------------------------------------------------------
 # External Database Release Ids (as referenced in appDb)
@@ -64,25 +55,13 @@ DATASETS_WITH_RELAXED_PVALUE=NG00027_ADJ_STAGE2|NG00040
 # Internal Urls
 #----------------------------------------------------------
 
-DOCUMENTATION_URL=/showXmlDataContent.do?name=XmlQuestions.Documentation
-
-GENE_RECORD=/app/record/gene/
-RESOURCE_RECORD=/app/record/dataset/
-VARIANT_RECORD=/app/record/variant/
-SPAN_RECORD=/app/record/span
-
-VARIANTS_BY_FEATURE_SEARCH=/query?question=by_feature&flanking=0kb&feature_identifier=
-
-GENE_IN_REGION_SEARCH=/processQuestion.do?questionFullName=GeneQuestions.GenesByRegion&span=
-
-REGION_COLOCATED_VARIANT_SEARCH=/processQuestion.do?questionFullName=VariantQuestions.VariantsByRegion&span=
-
 #----------------------------------------------------------
 # External URLS
 #----------------------------------------------------------
 
 ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
+FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB
 
 ENSEMBL_URL=http://www.ensembl.org/
 ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
@@ -90,7 +69,8 @@ ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
 GENE_ONTOLOGY_URL=http://www.geneontology.org/
 NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
 
-DBSNP_BASE_URL=http://www.ncbi.nlm.nih.gov/SNP
+DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
+
 KEGG_BASE_URL=http://www.kegg.jp/
 SNP_EFF_URL=http://snpeff.sourceforge.net/
 SNP_EFF_VERSION=4.2
@@ -119,8 +99,6 @@ UNIPROT_URL=https://www.uniprot.org/uniprot/
 
 DOI_URL=https://www.doi.org/
 
-DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
-
 AMIGO_URL=http://amigo.geneontology.org/amigo/term/
 
 KEGG_PATHWAY_IMG_URL=http://www.kegg.jp/kegg-bin/show_pathway?
@@ -144,4 +122,3 @@ HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
 
 EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
 
-FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB

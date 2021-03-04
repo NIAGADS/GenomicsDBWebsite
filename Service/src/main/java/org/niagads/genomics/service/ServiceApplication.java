@@ -26,13 +26,14 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(LZLinkageService.class)
     .add(LZGWASService.class)
     .add(LZGeneService.class)
+    .add(LZRecombinationService.class)
 
     .add(SiteSearchService.class)
 
     .add(DatasetModelRefService.class)
     .add(DatasetLookupService.class)
-    .add(GWASSummaryStatisticResultService.class)
     .add(DatasetSummaryPlotService.class)
+    .add(DatasetTopFeaturesService.class)
 
     .add(VariantLDWindowService.class)
     .add(VariantLookupService.class)

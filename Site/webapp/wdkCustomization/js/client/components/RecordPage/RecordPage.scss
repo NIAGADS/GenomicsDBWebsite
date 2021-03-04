@@ -1,4 +1,3 @@
-@import "./RecordHeading/RecordHeading";
 @import "./RecordTable/RecordTable";
 @import "./RecordMainCategorySection/RecordMainCategorySection";
 @import "./RecordTableSection/RecordTableSection";
@@ -9,41 +8,7 @@
     #_ideogramInnerWrap {
         overflow-x: auto !important;
     }
-    /* .wdk-RecordSidebar,
-  .wdk-RecordMain {
-    *,
-    *::before,
-    *::after {
-      box-sizing: content-box;
-    }
-    font-size: 0.85rem;
-    .btn {
-      font-size: inherit;
-    }
-  }
-  */
     .wdk-RecordSidebar {
         top: 10px;
-        button.wdk-RecordSidebarToggle {
-            //top: 2px;
-        }
     }
-
-    /*
-  .wdk-RecordSubsectionContent {
-    .section-summary-text {
-      margin-top: 50px;
-    }
-  }
-}
-.wdk-RecordNavigationSectionHeader {
-  display: none;
-}
-
-.wdk-CollapsibleSection,
-.wdk-RecordTableContainer {
-  .wdk-CollapsibleSectionHeader,
-  .wdk-RecordTableContainerHeader {
-    align-items: baseline;
-  } */
 }

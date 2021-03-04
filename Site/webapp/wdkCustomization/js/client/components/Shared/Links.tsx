@@ -1,6 +1,6 @@
 import React from "react";
 import { LinkProps as RouterLinkProps, Link as RouterLink } from "react-router-dom";
-import { makeStyles, Link, withStyles, Theme } from "@material-ui/core";
+import { makeStyles, Link, withStyles, Theme, Typography, TypographyProps } from "@material-ui/core";
 
 /* note that links should always inherit their fontsize -- if they stand alone, wrap in a <Typography> element */
 
@@ -70,3 +70,14 @@ export const BoldPrimaryLink: React.FC<RouterLinkProps> = (props) => {
     const classes = useBoldPrimaryLinkStyles();
     return <RouterLink {...props} className={classes.root} />;
 };
+
+export const PseudoLink = withStyles((theme) => ({
+    root: {
+        color: theme.palette.primary.light,
+        cursor: "pointer",
+        "&:hover": {
+            color: theme.palette.primary.dark,
+            textDecoration: "underline",
+        },
+    },
+}))((props: TypographyProps) => <Typography variant="caption" {...props} />);

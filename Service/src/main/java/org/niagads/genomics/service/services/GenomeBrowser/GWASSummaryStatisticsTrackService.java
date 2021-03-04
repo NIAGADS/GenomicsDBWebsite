@@ -81,7 +81,7 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
         }
 
         String resultStr = (String) results.get(0).get("result");
-        if (resultStr == "null") {
+        if (resultStr == "null" || resultStr == null) {
             return new JSONArray();
         }
 
@@ -94,7 +94,9 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
         String cteSql = "WITH dataset AS (" + TRACK_INTERNAL_ID_CTE + ")," + NL
             + "bin AS (" + BIN_INDEX_CTE + ")," + NL
             + "variants AS (SELECT jsonb_build_object(" + NL
-            + "'neg_log10_pvalue', CASE WHEN neg_log10_pvalue > 15 THEN 15 ELSE neg_log10_pvalue END," + NL
+            + "'neg_log10_pvalue'," + NL
+            + "CASE WHEN neg_log10_pvalue = 'NaN' THEN 0" + NL
+            + "WHEN neg_log10_pvalue > 15 THEN 15 ELSE neg_log10_pvalue END," + NL
             + "'pvalue', pvalue_display," + NL
             + "'record_pk', r.variant_record_primary_key," + NL
             + "'variant', split_part(r.variant_record_primary_key, '_', 1)" + NL

@@ -15,11 +15,11 @@ export function RecordController(WdkRecordController: React.ComponentClass<any, 
             return [
                 {
                     attributes: requestOptions[0].attributes,
-                    tables: requestOptions[0].tables.concat(
+                    tables: requestOptions[0].tables /*.concat(
                         recordClass.fullName === "VariantRecordClasses.VariantRecordClass"
                             ? ["locuszoom_gwas_datasets"]
-                            : []
-                    ),
+                    : [] 
+                    ), */
                 },
             ];
         };

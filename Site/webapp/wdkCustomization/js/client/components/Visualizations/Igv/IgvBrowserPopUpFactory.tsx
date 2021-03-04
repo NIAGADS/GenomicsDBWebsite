@@ -45,8 +45,13 @@ export const transformConfigToHtml = (config: PopupConfig[], ppd: PopUpData[], t
                         newEntry.value = conf.accessor(ppd).toString();
                         break;
                 }
-                remove(ppd, (p) => p.name === conf.name);
-                ppd.push(newEntry);
+                if (ppd.find((d) => d.name === conf.name)) {
+                    ppd = ppd.map((d) => {
+                        return d.name === conf.name ? newEntry : d;
+                    });
+                } else {
+                    ppd.push(newEntry);
+                }
             });
 
         ppd = ppd.filter((p) => !(c.remove || []).includes(p.name));

@@ -3,22 +3,24 @@ import { Button, ButtonProps, IconButton, Theme, withStyles } from "@material-ui
 import { makeStyles, createStyles } from "@material-ui/styles";
 
 //base override of wdk input[type=button]
-const buttonResetStyles = (theme: Theme) => ({
-    root: {
-        backgroundImage: "none",
-        color: theme.palette.primary.contrastText,
-        "&:hover": {
-            backgroundColor: theme.palette.primary.dark,
-        },
-        "&:focus, &:visited, &:active, &:hover": {
+const buttonResetStyles = (theme: Theme) =>
+    createStyles({
+        root: {
             backgroundImage: "none",
+            color: theme.palette.primary.contrastText,
+            textTransform: "none",
+            "&:hover": {
+                backgroundColor: theme.palette.primary.dark,
+            },
+            "&:focus, &:visited, &:active, &:hover": {
+                backgroundImage: "none",
+            },
+            "&:focus": {
+                backgroundColor: theme.palette.primary.light,
+                outline: "none",
+            },
         },
-        "&:focus": {
-            backgroundColor: theme.palette.primary.light,
-            outline: "none",
-        },
-    },
-});
+    });
 
 const BaseStyles = (theme: Theme) =>
     createStyles({
@@ -50,19 +52,10 @@ const useButtonStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, disabled }) => {
+export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, disabled, ...rest }) => {
     const classes = useButtonStyles();
     return (
-        <BaseButton classes={classes} disabled={disabled} onClick={onClick} variant="contained">
-            {children}
-        </BaseButton>
-    );
-};
-
-export const PrimaryOutlinedButton: React.FC<ButtonProps> = ({ onClick, children, disabled }) => {
-    const classes = useButtonStyles();
-    return (
-        <BaseButton classes={classes} disabled={disabled} onClick={onClick} variant="outlined">
+        <BaseButton {...rest} classes={classes} disabled={disabled} onClick={onClick}>
             {children}
         </BaseButton>
     );

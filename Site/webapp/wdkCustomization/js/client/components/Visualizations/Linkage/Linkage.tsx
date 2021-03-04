@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { get } from "lodash";
-import d3 from "d3";
+import { axisBottom, axisLeft, extent, line, range, scaleBand, scaleLinear, select, selectAll } from "d3";
 
 interface CorrelationPlot {
     variants: string[];
@@ -67,48 +67,40 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                 left: width / 5,
             };
 
-            const xScale = d3.scale
-                .ordinal()
-                .rangeBands([height, 0])
+            const xScale = scaleBand()
+                .range([height, 0])
                 .domain(chartData.variants.map((v) => v.display_label).reverse());
 
-            const yScale = d3.scale
-                .ordinal()
-                .rangeBands([height, 0])
+            const yScale = scaleBand()
+                .range([height, 0])
                 .domain(chartData.variants.map((v) => v.display_label).reverse());
 
-            const zScale = d3.scale
-                .ordinal()
-                .rangeBands([height - yScale.rangeBand() / 4, -(yScale.rangeBand() / 4)])
-                .domain(chartData.variants.map((v) => v.display_label).reverse());
+            const zScale = scaleBand([height - yScale.bandwidth() / 4, -(yScale.bandwidth() / 4)]).domain(
+                chartData.variants.map((v) => v.display_label).reverse()
+            );
 
-            const yContScale = d3.scale
-                .linear()
-                .range([-yScale.rangeBand(), height])
+            const yContScale = scaleBand()
+                .range([-yScale.bandwidth(), height])
+                .domain(range(chartData.variants.length - 1).map((s) => s.toString()));
+
+            const xContScale = scaleLinear()
+                .range([0, width + xScale.bandwidth()])
                 .domain([0, chartData.variants.length - 1]);
 
-            const xContScale = d3.scale
-                .linear()
-                .range([0, width + xScale.rangeBand()])
-                .domain([0, chartData.variants.length - 1]);
+            const ryScale = scaleLinear()
+                .range([-yScale.bandwidth(), height - yScale.bandwidth()])
+                .domain(extent(chartData.variants.map((vari) => +vari.record_pk.split(":")[1])));
 
-            const ryScale = d3.scale
-                .linear()
-                .range([-yScale.rangeBand(), height - yScale.rangeBand()])
-                .domain(d3.extent(chartData.variants.map((vari) => +vari.record_pk.split(":")[1])));
+            const rxScale = scaleLinear()
+                .range([xScale.bandwidth(), width + xScale.bandwidth()])
+                .domain(extent(chartData.variants.map((vari) => +vari.record_pk.split(":")[1])));
 
-            const rxScale = d3.scale
-                .linear()
-                .range([xScale.rangeBand(), width + xScale.rangeBand()])
-                .domain(d3.extent(chartData.variants.map((vari) => +vari.record_pk.split(":")[1])));
+            const xAxis = axisBottom(xScale).tickValues([]);
 
-            const xAxis = d3.svg.axis().scale(xScale).tickValues([]).orient("bottom");
-
-            const yAxis = d3.svg.axis().scale(yScale).tickValues([]).orient("left");
+            const yAxis = axisLeft(yScale).tickValues([]);
 
             //margin convention
-            const svg = d3
-                .select("#correlation-plot")
+            const svg = select("#correlation-plot")
                 .append("svg")
                 .attr("transform", "rotate(-45)")
                 .attr("width", width + margin.left + margin.right)
@@ -123,7 +115,7 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
 
             svg.append("g").attr("classed", "x-axis").call(yAxis);
 
-            d3.selectAll("path").style("fill", "none").style("stroke", "black");
+            selectAll("path").style("fill", "none").style("stroke", "black");
 
             const data: {
                 variant: Variant;
@@ -181,8 +173,7 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                 data.push(ret);
             });
 
-            const colorScale = d3.scale
-                .linear()
+            const colorScale = scaleLinear()
                 .domain([0, 0.2, 0.2, 0.6, 1])
                 //http://colorbrewer2.org/#type=sequential&scheme=OrRd&n=3
                 .range(["white" as any, "white" as any, "#fee8c8" as any, "#fdbb84" as any, "#e34a33" as any]);
@@ -193,15 +184,14 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                 .append("g")
                 .attr("class", "bar")
                 .each(function (block) {
-                    //@ts-ignore
-                    d3.select(this)
+                    select(this)
                         .selectAll(".block")
                         .data(block)
                         .enter()
                         .append("rect")
                         .attr("class", (d, i) => `block-${i}`)
-                        .attr("width", xScale.rangeBand())
-                        .attr("height", yScale.rangeBand())
+                        .attr("width", xScale.bandwidth())
+                        .attr("height", yScale.bandwidth())
                         .attr("fill", (d) => colorScale(d.value))
                         .attr("stroke", "black")
                         .attr("x", (d) => xScale(d.variant.display_label))
@@ -211,14 +201,14 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
             svg.selectAll("text").attr("transform", "rotate(45)");
             svg.selectAll(".x-axis").selectAll("text").style("text-anchor", "start").attr("dy", "0").attr("x", "5");
 
+            //@ts-ignore
             svg.selectAll(".bar").each(function (d: Datum[]) {
                 const last = d[0];
                 const x = xScale(last.variant.display_label);
                 const y = zScale(last.correlate.display_label);
-                //@ts-ignore
-                d3.select(this)
+                select(this)
                     .append("g")
-                    .attr("transform", "translate(" + xScale.rangeBand() * 1.33 + ", 0)")
+                    .attr("transform", "translate(" + xScale.bandwidth() * 1.33 + ", 0)")
                     .append("text")
                     .attr("class", "variant-label")
                     .attr("transform", "rotate(-45," + x + "," + y + ")")
@@ -232,23 +222,21 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                     .text(() => last.variant.display_label);
             });
 
-            const line = d3.svg
-                .line()
+            const lineFn = line()
                 .x((d: any, i) => xContScale(i) + 5)
-                .y((d: any, i) => yContScale(i) - 5);
+                .y((d: any, i) => yContScale(i.toString()) - 5);
 
             svg.append("path")
                 .attr("class", "line")
                 .style("stroke", "black")
-                .attr("d", (d: any) => line(data as any));
+                .attr("d", (d: any) => lineFn(data as any));
 
-            const labelLine = d3.svg
-                .line()
+            const labelLine = line()
                 .x(
                     (d: any, i) =>
                         (i % 2
                             ? rxScale(+d.record_pk.split(":")[1]) + 5
-                            : xScale(d.display_label) + xScale.rangeBand() * 1.25) + 65
+                            : xScale(d.display_label) + xScale.bandwidth() * 1.25) + 65
                 )
                 .y((d: any, i) => (i % 2 ? ryScale(+d.record_pk.split(":")[1]) - 5 : zScale(d.display_label)) - 65);
 
@@ -261,18 +249,15 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                 .style("stroke", "black")
                 .attr("d", (d) => labelLine(d as any));
 
-            const cLine1 = d3.svg
-                .line()
+            const cLine1 = line()
                 .x((d: any, i) => rxScale(+d.record_pk.split(":")[1]) + 70)
                 .y((d: any, i) => ryScale(+d.record_pk.split(":")[1]) - 70);
 
-            const cLine2 = d3.svg
-                .line()
+            const cLine2 = line()
                 .x((d: any, i) => rxScale(+d.record_pk.split(":")[1]) + 75)
                 .y((d: any, i) => ryScale(+d.record_pk.split(":")[1]) - 75);
 
-            const bandLine = d3.svg
-                .line()
+            const bandLine = line()
                 .x((d: any, i) =>
                     i % 2 ? rxScale(+d.record_pk.split(":")[1]) + 70 : rxScale(+d.record_pk.split(":")[1]) + 75
                 )

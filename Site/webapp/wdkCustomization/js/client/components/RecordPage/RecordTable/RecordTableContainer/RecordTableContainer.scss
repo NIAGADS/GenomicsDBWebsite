@@ -1,55 +1,6 @@
 .wdk-CollapsibleSectionContent {
-  &.wdk-RecordTableContainerContent {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.record-table-container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 10px;
-  border-radius: 7px;
-  overflow-x: auto;
-  h4 {
-    font-weight: bold;
-  }
-  .record-table-inner-container {
-    display: flex;
-    flex-direction: column;
-    .record-table-controls-container {
-      .action-link {
-        border-color: $primary;
-        color: $primary;
-        &:hover {
-          color: $white;
-          background-color: $primary;
-        }
-      }
-      .main-controls {
-        .filters {
-          display: flex;
-          white-space: nowrap;
-          align-items: center;
-          .filter {
-            + .filter {
-              margin-left: 10px;
-            }
-          }
-        }
-        .control {
-          a {
-            color: white;
-          }
-          + .control {
-            margin-left: 10px;
-          }
-        }
+    &.wdk-RecordTableContainerContent {
         display: flex;
-        flex-shrink: 1;
-        align-items: center;
-      }
+        justify-content: center;
     }
-  }
 }
