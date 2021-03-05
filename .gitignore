@@ -67,6 +67,7 @@ node_modules/*
 */.settings/*
 */node_modules/*
 yarn.lock
+.factorypath
 
 # mac .ds_store
 **/.DS_Store

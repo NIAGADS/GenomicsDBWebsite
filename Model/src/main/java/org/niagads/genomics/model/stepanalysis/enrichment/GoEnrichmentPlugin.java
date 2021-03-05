@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ import org.gusdb.wdk.model.WdkUserException;
 import org.gusdb.wdk.model.analysis.AbstractSimpleProcessAnalyzer;
 
 import org.gusdb.wdk.model.answer.AnswerValue;
-
+import org.gusdb.wdk.model.query.param.AbstractEnumParam;
 import org.gusdb.wdk.model.user.analysis.IllegalAnswerValueException;
 
 
@@ -79,7 +78,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 	private static final String DOWNLOAD_IMAGE_RESULT_FILE_NAME = RESULT_FILE_PREFIX + "_wordcloud.png";
 	private static final String INPUT_FILE_PREFIX = "goa_counts";
 
-	public ValidationBundle validateFormParams(Map<String, String[]> formParams) throws WdkModelException {
+	public ValidationBundle validateFormParams(Map<String, String> formParams) throws WdkModelException {
 
 		ValidationBundleBuilder errors = ValidationBundle.builder(ValidationLevel.SEMANTIC);
 
@@ -87,8 +86,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		EnrichmentPluginUtil.validatePValue(formParams, errors);
 
 		// validate ontology
-		String ontology = EnrichmentPluginUtil.getSingleAllowableValueParam(GO_ASSOC_ONTOLOGY_PARAM_KEY, formParams,
-				errors);
+		String ontology = EnrichmentPluginUtil.getSingleAllowableValueParam(GO_ASSOC_ONTOLOGY_PARAM_KEY, getFormParams(), errors);
 
 		// only validate further if the above pass
 		if (!errors.hasErrors()) {
@@ -111,7 +109,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 	private JSONObject getAnnotatedGeneCountTotals(String ontology) throws WdkModelException, WdkUserException {
 
 		String idSql = EnrichmentPluginUtil.getOrgSpecificIdSql(getAnswerValue(), getFormParams());
-		String organism = getFormParams().get(ORGANISM_PARAM_KEY)[0];
+		String organism = getSingleValue(getFormParams(), ORGANISM_PARAM_KEY);
 
 		String sql = "SELECT *" + NL + "FROM (" + NL + "SELECT b.ontology_abbrev AS ontology," + NL
 				+ "(jsonb_build_object('background', b.num_annotated_genes) || "
@@ -157,7 +155,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		// TODO get GO Levels for pie Charts
 
 		String idSql = EnrichmentPluginUtil.getOrgSpecificIdSql(getAnswerValue(), getFormParams());
-		String organism = getFormParams().get(ORGANISM_PARAM_KEY)[0];
+		String organism = getFormParams().get(ORGANISM_PARAM_KEY);
 
 		String sql = "WITH r AS (" + idSql + ")," + NL
 
@@ -262,11 +260,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 
 	@Override
 	protected String[] getCommand(AnswerValue answerValue) throws WdkModelException, WdkUserException {
-		Map<String, String[]> params = getFormParams();
-		for (String pkey : params.keySet()) {
-			logger.debug("param: " + pkey);
-			logger.debug("value: " + Arrays.toString(params.get(pkey)));
-		}
+		Map<String, String> params = getFormParams();
 
 		String pValueCutoff = EnrichmentPluginUtil.getPvalueCutoff(params);
 		String ontology = EnrichmentPluginUtil.getSingleAllowableValueParam(GO_ASSOC_ONTOLOGY_PARAM_KEY, params, null);
@@ -366,12 +360,12 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		private List<ResultRow> _resultData;
 		private String _imageDownloadPath;
 		private String _downloadPath;
-		private Map<String, String[]> _formParams;
+		private Map<String, String> _formParams;
 		private String _goTermBaseUrl;
 		private String _revigoInputList;
 		private JSONArray _header;
 
-		public ResultViewModel(String downloadPath, List<ResultRow> resultData, Map<String, String[]> formParams,
+		public ResultViewModel(String downloadPath, List<ResultRow> resultData, Map<String, String> formParams,
 				String imageDownloadPath, String revigoInputList) {
 			this._downloadPath = downloadPath;
 			this._formParams = formParams;
@@ -421,7 +415,7 @@ public class GoEnrichmentPlugin extends AbstractSimpleProcessAnalyzer {
 		}
 
 		public String getGoOntologies() {
-			return FormatUtil.join(_formParams.get(GoEnrichmentPlugin.GO_ASSOC_ONTOLOGY_PARAM_KEY), ", ");
+			return FormatUtil.join(AbstractEnumParam.convertToTerms(_formParams.get(GoEnrichmentPlugin.GO_ASSOC_ONTOLOGY_PARAM_KEY)), ", ");
 		}
 
 		public String getGoTermBaseUrl() {
