@@ -4,7 +4,6 @@ import java.util.Set;
 
 import org.eupathdb.common.service.EuPathServiceApplication;
 
-
 import org.niagads.genomics.service.services.Search.SiteSearchService;
 import org.niagads.genomics.service.services.LocusZoom.*;
 import org.niagads.genomics.service.services.Dataset.*;

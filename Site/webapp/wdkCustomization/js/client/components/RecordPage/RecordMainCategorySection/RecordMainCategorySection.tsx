@@ -47,7 +47,7 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
                     record={record}
                     recordClass={recordClass}
                     isCollapsed={isCollapsed}
-                    requestParialRecord={requestPartialRecord}
+                    requestPartialRecord={requestPartialRecord}
                     onCollapsedChange={toggleCollapse}
                 />
             );

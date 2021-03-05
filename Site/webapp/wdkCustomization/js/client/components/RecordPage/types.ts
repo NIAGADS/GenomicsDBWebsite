@@ -1,4 +1,4 @@
-import { RecordClass } from "wdk-client/Utils/WdkModel";
+import { PrimaryKey, RecordClass } from "wdk-client/Utils/WdkModel";
 //@ts-ignore
 import { Filter } from "react-csv";
 import { Instance as rtInstance } from "react-table";
@@ -6,7 +6,7 @@ import { Instance as rtInstance } from "react-table";
 //when fixing this up, cf WdkModel.ts
 
 export interface BaseRecord {
-    attributes: { [key: string]: any };
+    attributes: Record<string, any>;
     displayName: string;
     displayNamePlural: string;
     recordClassName: string;
@@ -17,12 +17,12 @@ export interface BaseRecord {
 }
 
 export interface GeneRecord extends BaseRecord {
-    attributes: GeneRecordAttributes;
+    attributes: Record<keyof GeneRecordAttributes, string>;
     categories: any[];
     description: string;
     formats: { [key: string]: any };
     hasAllRecordsQuery: boolean;
-    id: string;
+    id: PrimaryKey;
     name: string;
     primaryKeyColumnRefs: string[];
     recordIdAttributeName: string;
@@ -41,7 +41,7 @@ interface GeneRecordTableType {
         other_gwas_niagads: any;
         go_terms: any;
         pathways: any;
-    };
+    }[];
 }
 
 export interface GeneRecordAttributes {
@@ -72,7 +72,8 @@ export interface GeneRecordAttributes {
 }
 
 export interface VariantRecord extends BaseRecord {
-    attributes: VariantRecordAttributes;
+    attributes: Record<keyof VariantRecordAttributes, string>;
+    id: PrimaryKey;
     recordClassName: string;
     urlName: "variant";
     tables: { [key: string]: any };
@@ -89,9 +90,9 @@ export interface VariantRecordAttributes {
     display_allele: string;
     gws_datasets_summary_plot: string;
     has_merge_history: string;
-    is_adsp_variant: boolean;
-    is_adsp_wes: boolean;
-    is_adsp_wgs: boolean;
+    is_adsp_variant: string;
+    is_adsp_wes: string;
+    is_adsp_wgs: string;
     adsp_display_flag: string; // json
     is_multi_allelic: string;
     location: string;
@@ -118,8 +119,8 @@ export interface VariantRecordAttributes {
 }
 
 export interface GWASDatasetRecord extends BaseRecord {
-    attributes: GWASDatasetRecordAttributes;
-    id: { [key: string]: any };
+    attributes: Record<keyof GWASDatasetRecordAttributes, string>;
+    id: PrimaryKey;
     urlName: "gwas_summary";
     tables: { [key: string]: any };
 }
@@ -133,13 +134,14 @@ export interface GWASDatasetRecordAttributes {
     accession_link: string;
     niagads_accession: string;
     search_link: string;
-    has_manhattan_plot: boolean;
+    has_manhattan_plot: string;
 }
 
 export interface NIAGADSDatasetRecord extends BaseRecord {
-    attributes: NIAGADSDatasetRecordAttributes;
-    urlName: "gwas_summary";
+    attributes: Record<keyof NIAGADSDatasetRecordAttributes, string>;
+    id: PrimaryKey;
     tables: { [key: string]: any };
+    urlName: "gwas_summary";
 }
 
 export interface NIAGADSDatasetRecordAttributes {

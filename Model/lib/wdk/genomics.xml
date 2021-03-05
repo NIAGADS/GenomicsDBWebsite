@@ -17,13 +17,15 @@
   
   <constant name="defaultGene">ABCA7</constant>
   <constant name="defaultTextExpression">*beta-amyloid*</constant>
+
+  <exampleStratsAuthor name="NIAGADS"/>
   
-  <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB" 
+  <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh37" 
 	     version="%%releaseVersion37%%"
 	     releaseDate="%%releaseDate%%"
 	     buildNumber="%%buildNumber37%%" />
 
-  <modelName includeProjects="GRCh38" displayName="model Alzheimer's GenomicsDB" 
+  <modelName includeProjects="GRCh38" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh38" 
 	     version="%%releaseVersion38%%"
 	     releaseDate="%%releaseDate%%"
 	     buildNumber="%%buildNumber38%%" />

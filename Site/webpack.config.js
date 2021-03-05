@@ -2,7 +2,6 @@ var configure = require("../../EbrcWebsiteCommon/Site/site.webpack.config");
 var path = require("path");
 module.exports = configure({
     entry: {
-        "site-legacy": path.join(__dirname, "/webapp/wdkCustomization/js/client/main.ts"),
         "site-client": path.join(__dirname, "/webapp/wdkCustomization/js/client/main.ts"),
     },
     stats: {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4" 
-  xmlns="http://java.sun.com/xml/ns/j2ee" 
-  xmlns:web="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
+<web-app version="2.4"
+  xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:web="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
   <context-param>
@@ -16,20 +16,16 @@
   </context-param>
 
   <listener>
-    <listener-class>org.niagads.genomics.controller.ApplicationInitListener</listener-class>
+    <listener-class>se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventorListener</listener-class>
   </listener>
 
   <listener>
-    <listener-class>org.gusdb.wdk.controller.InitListenerForBeans</listener-class>
+    <listener-class>org.niagads.genomics.controller.ApplicationInitListener</listener-class>
   </listener>
 
   <listener>
     <listener-class>org.gusdb.wdk.jmx.JmxInitListener</listener-class>
   </listener>
-
-  <!-- <listener>
-    <listener-class>net.bull.javamelody.SessionListener</listener-class>
-  </listener> -->
 
   <!-- The Apache file upload library starts a cleanup thread to remove temporary files -->
   <!--    This listener destroys that thread when the webapp is unloaded.               -->
@@ -43,6 +39,39 @@
   </filter>
   <filter-mapping>
     <filter-name>HttpResponseLogger</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>AssetBundlerFilter</filter-name>
+    <filter-class>org.eupathdb.common.controller.AssetBundleFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AssetBundlerFilter</filter-name>
+    <url-pattern>/bundles/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>BetaLegacyFilter</filter-name>
+    <filter-class>org.eupathdb.common.controller.BetaLegacyFilter</filter-class>
+    <init-param>
+      <param-name>true</param-name>
+      <!-- switch to false if in the prod branch -->
+      <param-value>false</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>BetaLegacyFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+ <!-- Replace /-PROJECT-/ in the request URL with the WDK Project ID -->
+  <filter>
+    <filter-name>ProjectIdMacroFilter</filter-name>
+    <filter-class>org.eupathdb.common.controller.ProjectIdMacroFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ProjectIdMacroFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -97,7 +126,7 @@
   <!-- WDK RESTful client filter -->
   <servlet>
     <servlet-name>WDKClient</servlet-name>
-    <jsp-file>/WEB-INF/includes/client/index.jsp</jsp-file>
+    <jsp-file>/WEB-INF/includes/client.html</jsp-file>
   </servlet>
   <servlet-mapping>
     <servlet-name>WDKClient</servlet-name>
@@ -137,8 +166,21 @@
 
   <!-- The Welcome File List -->
   <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
   <!-- Error Page Mappings -->
+  <error-page>
+    <error-code>401</error-code>
+    <location>/401.html</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404.html</location>
+  </error-page>
+  <error-page>
+    <exception-type>java.lang.Exception</exception-type>
+    <location>/500.html</location>
+  </error-page>
+
 </web-app>
