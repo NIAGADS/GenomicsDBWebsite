@@ -2,42 +2,61 @@
 # For example, this line: NAME=value
 # will cause the WDK to replace  all occurrences of "@NAME@" in the model XML with "value".
 
+# NOTE:
+# ===========================================================================================================
+# All External URLS (including references to other NIAGADS resources) must be defined in this 
+# file and assigned a name ending in "_URL".  After updating/adding new _URL macros, please 
+# run `python $PROJECT_HOME/GenomicsDBWebsite/Model/bin/generateExternalUrlConstantsJson` to regenerate 
+# the external url constant file for the front end, setting the --modelPropFile option to this file and the 
+# --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/webapp/wdkCustomization/js/client/externalUrls.js.
+# The updated model.prop.sample & externalUrls.js can then be committed to the repository
+
 #----------------------------------------------------------
-# Project Identifiers & Configuration
+# WDK SETTINGS & INFO
 #----------------------------------------------------------
 
-PROJECT_ID=GRCh37
-#PROJECT_ID=GRCh38
 DONT_EMAIL_NEW_USER=true
-WDK_VERSION=API_BLD_50
-
-GENOME_BUILD=GRCh37.p13
-GENCODE_VERSION=v19
-dbSNP_VERSION=151
+WDK_VERSION=API_BUILD_50
 
 SITE_ADMIN_EMAIL=
 
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
 
+
+#----------------------------------------------------------
+# Production v Dev / Beta
+#----------------------------------------------------------
+
 # Base URL: uncomment https://dev.niagads.org for development
 # only one should be uncommented
 # NIAGADS_BASE_URL=https://www.niagads.org 
 NIAGADS_BASE_URL=https://beta.niagads.org
-WEBAPP_BASE_URL=https://
-WEBAPP=genomics
+WEBAPP = genomics
 
-# bypass reporter selection since we only have one type; remove to reinstate normal WDK behavior
-# also will have to uncomment drop-down select in reporter.tag (site)
-DEFAULT_REPORTER=tabular
+#----------------------------------------------------------
+# Project Identifiers & Configuration
+#----------------------------------------------------------
+
+PROJECT_ID=GRCh37
+GENOME_BUILD=GRCh37.p13
+GENCODE_VERSION=v19
+dbSNP_VERSION=151
+
+#PROJECT_ID=GRCh38
+#GENOME_BUILD=GRCh38.p8
+#GENCODE_VERSION=v25
+#dbSNP_VERSION= 
 
 #----------------------------------------------------------
 # Constants
 #----------------------------------------------------------
 
-DEFAULT_JBROWSE_TRACKS=ENSEMBL_GENE,ADSP_WES,ADSP_WGS,dbSNP_COMMON
-DEFAULT_JBROWSE_LOCATION=chr19:45342451..45430750
+FLANK_50KB=50000
+FLANK_100KB=100000
+FLANK_200KB=200000
+FLANK_LOCUSZOOM=20000
 
-FLANKING_REGION=10000
+LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 
 #----------------------------------------------------------
 # External Database Release Ids (as referenced in appDb)
@@ -52,24 +71,11 @@ NON_GWAS_SS_NIAGADS=NG00061
 INFERNO_PUBMED_ID=30113658
 GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
 
-DATASETS_WITH_RELAXED_PVALUE=NG00027_ADJ_STAGE2|NG00040
-
 #----------------------------------------------------------
 # Internal Urls
 #----------------------------------------------------------
 
-DOCUMENTATION_URL=/showXmlDataContent.do?name=XmlQuestions.Documentation
-
-GENE_RECORD=/app/record/gene/
-RESOURCE_RECORD=/app/record/dataset/
-VARIANT_RECORD=/app/record/variant/
-SPAN_RECORD=/app/record/span
-
-VARIANTS_BY_FEATURE_SEARCH=/query?question=by_feature&flanking=0kb&feature_identifier=
-
-GENE_IN_REGION_SEARCH=/processQuestion.do?questionFullName=GeneQuestions.GenesByRegion&span=
-
-REGION_COLOCATED_VARIANT_SEARCH=/processQuestion.do?questionFullName=VariantQuestions.VariantsByRegion&span=
+DOCUMENTATION_URL=TBA
 
 #----------------------------------------------------------
 # External URLS
@@ -87,12 +93,11 @@ NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
 DBSNP_BASE_URL=http://www.ncbi.nlm.nih.gov/SNP
 KEGG_BASE_URL=http://www.kegg.jp/
 SNP_EFF_URL=http://snpeff.sourceforge.net/
-SNP_EFF_VERSION=4.2
+
 EXAC_URL=http://exac.broadinstitute.org/
 HUGO_URL=https://www.genenames.org
 
 NCBI_ENTREZ_GENE_URL=http://www.ncbi.nlm.nih.gov/gene/
-NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
 NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
 
 ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=

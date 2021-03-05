@@ -47,7 +47,7 @@
     <!-- the following four commands generate the website ontology -->
 
     <path id="owl-class-path">
-      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/> 
+      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
       <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
       <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
       <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
@@ -118,11 +118,30 @@
     <exec executable="${patch-full-path-wdkclient}"/>
   </target>
 
+ 
+
   <target name="GenomicsDBWebsite/Site-WebInstallation">
     <ant target="eupathWebComponentInstall">
       <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
     </ant>
+
+    <replace dir="${webappTargetDir}/WEB-INF/includes"
+             propertyFile="${webPropFile}" >
+      <include name="client.html" />
+      <replacefilter token="@build@" property="build"/>
+      <replacefilter token="@assetPath@" property="assetPath" />
+      <replacefilter token="@googleAnalyticsId@" property="googleAnalyticsId" />
+      <replacefilter token="@webappCtx@" property="webappCtx" />
+    </replace>
+
+
+    <!-- <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js; assuming GRCh37 and 38 builds have same model.prop"/>
+    <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstants"/>
+    <exec executable="${extract-urls}">
+      <arg line="-\-modelPropFile ${projectsDir}/${project}/Model/config/GRCh37/model.prop.sample"/>
+      <arg line="-\-outputFile ${webappTargetDir}/wdkCustomization/js/client/data/externalUrls.js"/>
+    </exec> -->
   </target>
 
   <target name="GenomicsDBWebsite/View-WebInstallation">
