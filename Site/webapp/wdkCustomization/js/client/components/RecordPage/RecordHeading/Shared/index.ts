@@ -1,9 +1,7 @@
-import RecordOutLink from './RecordOutLink/RecordOutLink';
-import HeaderRecordActions from './HeaderRecordActions/HeaderRecordActions';
-import ImpactIndicator from './ImpactIndicator/ImpactIndicator';
+import RecordOutLink from "./RecordOutLink/RecordOutLink";
+import HeaderRecordActions from "./HeaderRecordActions/HeaderRecordActions";
+import ImpactIndicator from "./ImpactIndicator/ImpactIndicator";
+import RecordAttributeItem from "./RecordAttributeItem/RecordAttributeItem";
+import SummaryPlotHeader from "./SummaryPlotHeader/SummaryPlotHeader";
 
-export {
-	RecordOutLink,
-	HeaderRecordActions,
-	ImpactIndicator
-}
+export { HeaderRecordActions, ImpactIndicator, RecordAttributeItem, RecordOutLink, SummaryPlotHeader };

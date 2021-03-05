@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useEffect, useState } from "react";
-import { isEmpty, merge } from "lodash";
+import React, { useLayoutEffect, useState } from "react";
+import { merge } from "lodash";
 
 import { buildChartOptions, addCategories, addTitle, addSeries } from "./HighchartsOptions";
 

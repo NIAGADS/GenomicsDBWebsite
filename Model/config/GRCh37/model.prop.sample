@@ -11,6 +11,9 @@
 # --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/webapp/wdkCustomization/js/client/externalUrls.js.
 # The updated model.prop.sample & externalUrls.js can then be committed to the repository
 
+SITE_ADMIN_EMAIL=
+STEP_ANALYSIS_JOB_DIR=/www/common/temp
+
 #----------------------------------------------------------
 # WDK SETTINGS & INFO
 #----------------------------------------------------------
@@ -83,6 +86,7 @@ DOCUMENTATION_URL=TBA
 
 ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
+FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB
 
 ENSEMBL_URL=http://www.ensembl.org/
 ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
@@ -90,7 +94,8 @@ ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
 GENE_ONTOLOGY_URL=http://www.geneontology.org/
 NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
 
-DBSNP_BASE_URL=http://www.ncbi.nlm.nih.gov/SNP
+DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
+
 KEGG_BASE_URL=http://www.kegg.jp/
 SNP_EFF_URL=http://snpeff.sourceforge.net/
 
@@ -118,8 +123,6 @@ UNIPROT_URL=https://www.uniprot.org/uniprot/
 
 DOI_URL=https://www.doi.org/
 
-DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
-
 AMIGO_URL=http://amigo.geneontology.org/amigo/term/
 
 KEGG_PATHWAY_IMG_URL=http://www.kegg.jp/kegg-bin/show_pathway?
@@ -143,4 +146,3 @@ HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
 
 EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
 
-FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB

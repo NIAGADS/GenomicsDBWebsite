@@ -3,6 +3,7 @@ import { Link, Tooltip } from "wdk-client/Components";
 import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import { isString, isPlainObject, isNull } from "lodash";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
+import { PrimaryExternalLink, PrimaryLink } from "../components/Shared";
 
 export interface LinkType {
     url: string;
@@ -59,13 +60,13 @@ export const resolveObjectInput = (
         case "link":
             //probably need to designate outlinks and routelinks formally, but for now using a regex
             const el = /^http/.test(obj.url) ? (
-                <a key={obj.url} href={obj.url}>
+                <PrimaryExternalLink key={obj.url} href={obj.url}>
                     {obj.value}
-                </a>
+                </PrimaryExternalLink>
             ) : (
-                <Link key={obj.url} to={obj.url}>
+                <PrimaryLink key={obj.url} to={obj.url}>
                     {obj.value}
-                </Link>
+                </PrimaryLink>
             );
             return withTooltip(el, obj.tooltip);
         case "text":

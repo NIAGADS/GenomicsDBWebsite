@@ -28,15 +28,6 @@ module.exports = configure({
                     },
                 ],
             },
-            {
-                test: require.resolve("./webapp/wdkCustomization/js/lib/locusZoom/locuszoom.app.js"),
-                use: [
-                    {
-                        loader: "expose-loader",
-                        options: "lz",
-                    },
-                ],
-            },
         ],
     },
 });

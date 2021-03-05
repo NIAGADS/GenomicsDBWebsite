@@ -246,7 +246,7 @@
       </attributeQueryRef>
 
    
-      <table name="locuszoom_gwas_datasets" displayName="LocusZoom Overview" queryRef="VariantTables.LocusZoomGwasDatasets">
+     <!-- <table name="locuszoom_gwas_datasets" displayName="LocusZoom Overview" queryRef="VariantTables.LocusZoomGwasDatasets">
 	<columnAttribute name="dataset_list" internal="true" inReportMaker="false" type="json" />
 
 	<propertyList name="type">
@@ -254,7 +254,7 @@
 	</propertyList>
 
 	<description><![CDATA[coming soon]]></description>
-      </table>
+      </table> -->
 
       <table name="linkage" displayName="Linkage" queryRef="VariantTables.Linkage">
 	<columnAttribute name="variant" displayName="Variant" type="json_link"/>

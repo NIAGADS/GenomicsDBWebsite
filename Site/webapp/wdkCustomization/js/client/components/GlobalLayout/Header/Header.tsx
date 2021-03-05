@@ -5,7 +5,7 @@ import theme from "../../../theme";
 import { useGoto } from "../../../hooks";
 import { MultiSearch, PrimaryActionButton, SearchResult } from "../../Shared";
 import { Home } from "@material-ui/icons";
-import { LightContrastText } from "../../Shared/Typography";
+import { BaseText } from "../../Shared/Typography";
 import { buildRouteFromResult, buildSummaryRoute } from "../../HomePage/HomePage";
 
 interface Header {
@@ -45,11 +45,11 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                                         </Grid>
                                     </Hidden>
                                     <Grid item container justify="flex-end">
-                                        <LightContrastText variant="body2">
+                                        <BaseText variant="body2">
                                             <strong>Build Number: GRCh37.p13/hg19</strong>
                                             <span className="m-3">|</span>
                                             <span>Welcome, Guest</span>
-                                        </LightContrastText>
+                                        </BaseText>
                                     </Grid>
                                 </Grid>
                                 <Grid item>
