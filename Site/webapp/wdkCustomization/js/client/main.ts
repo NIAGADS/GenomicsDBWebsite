@@ -4,6 +4,7 @@ import * as componentWrappers from "./component-wrappers";
 import { wrapRoutes } from "./routes";
 import pluginConfig from "./pluginConfig";
 
+import "eupathdb/wdkCustomization/css/client.scss";
 import "site/wdkCustomization/sass/client.scss";
 
 // Initialize the application.
