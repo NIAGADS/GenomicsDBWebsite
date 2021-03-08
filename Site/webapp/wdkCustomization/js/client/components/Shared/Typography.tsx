@@ -29,6 +29,8 @@ export const DarkContrastGreyText = withStyles((theme) =>
 
 /* light contrast base text */
 
+//todo: we should have an initial wrap on all typography that allows for passing in bold/italic to ANY typography element
+
 export const BaseText = (props: TypographyProps) => <Typography variant="body1" {...props} />;
 
 export const BaseTextSmall = withStyles({
@@ -36,14 +38,6 @@ export const BaseTextSmall = withStyles({
         fontSize: "12px",
     },
 })(Typography);
-
-export const BaseTextBold = withStyles((theme) =>
-    createStyles({
-        root: {
-            fontWeight: theme.typography.fontWeightBold,
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="body1" />);
 
 export const Heading = withStyles((theme) =>
     createStyles({
@@ -71,14 +65,6 @@ export const SubheadingSmall = withStyles((theme) =>
         },
     })
 )((props: TypographyProps) => <Typography {...props} variant="h6" />);
-
-export const CaptionTextItalic = withStyles(() =>
-    createStyles({
-        root: {
-            fontStyle: "italic",
-        },
-    })
-)((props: TypographyProps) => <Typography {...props} variant="caption" />);
 
 ///badges
 

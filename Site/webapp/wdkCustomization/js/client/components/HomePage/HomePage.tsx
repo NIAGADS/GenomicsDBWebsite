@@ -25,14 +25,7 @@ import {
 
 import Browser from "./../Visualizations/Igv/IgvBrowser";
 import { HighchartsDatasetSummaryDonut as Donut } from "./../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
-import {
-    DarkContrastText,
-    CaptionTextItalic,
-    BaseText,
-    BaseTextBold,
-    Heading,
-    Subheading,
-} from "../Shared/Typography";
+import { DarkContrastText, BaseText, Heading, Subheading } from "../Shared/Typography";
 
 interface HomePage {
     webAppUrl: string;
@@ -298,12 +291,14 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             <Grid item xs={12} sm={6}>
                                 <Grid item container direction="column" wrap="nowrap">
                                     <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
-                                    <CaptionTextItalic>
-                                        From Butkiewicz et al. (2018) Functional annotation of genomic variants in
-                                        studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
-                                        (after Table 1). PMID:{" "}
+                                    <Typography variant="caption">
+                                        <em>
+                                            From Butkiewicz et al. (2018) Functional annotation of genomic variants in
+                                            studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
+                                            (after Table 1). PMID:{" "}
+                                        </em>
                                         <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
-                                    </CaptionTextItalic>
+                                    </Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -330,9 +325,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             <Typography>
                                 <BoldPrimaryLink to="/record/dataset/NG00065">NG00065:&nbsp;</BoldPrimaryLink>
                             </Typography>
-                            <BaseTextBold>
-                                ADSP Discovery Case/Control Association Results{" "}
-                            </BaseTextBold>
+                            <BaseText>
+                                <strong>ADSP Discovery Case/Control Association Results</strong>
+                            </BaseText>
                         </Box>
                         <Box>
                             <BaseText>
@@ -488,7 +483,9 @@ const QuickStat: React.FC<QuickStat> = ({ captionText, mainText, title, type }) 
         <QuickStatMainText>{mainText}</QuickStatMainText>
         <Box>
             <BaseText>{type}&nbsp;</BaseText>
-            <BaseTextBold>{captionText}</BaseTextBold>
+            <BaseText>
+                <strong>{captionText}</strong>
+            </BaseText>
         </Box>
     </Box>
 );

@@ -44,16 +44,20 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                                             <SiteTitle>GenomicsDB</SiteTitle>
                                         </Grid>
                                     </Hidden>
-                                    <Grid item container justify="flex-end">
-                                        <BaseText variant="body2">
-                                            <strong>Build Number: GRCh37.p13/hg19</strong>
-                                            <span className="m-3">|</span>
-                                            <span>Welcome, Guest</span>
-                                        </BaseText>
+                                    <Grid item alignItems="center" container spacing={3} justify="flex-end">
+                                        <Grid item>
+                                            <BaseText variant="body2">
+                                                <strong>Build Number: GRCh37.p13/hg19</strong>
+                                            </BaseText>
+                                        </Grid>
+                                        <Grid item>|</Grid>
+                                        <Grid item>
+                                            <BaseText>Welcome, Guest</BaseText>
+                                        </Grid>
+                                        <Grid item>
+                                            <PrimaryActionButton>User Login</PrimaryActionButton>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                                <Grid item>
-                                    <PrimaryActionButton>User Login</PrimaryActionButton>
                                 </Grid>
                             </Grid>
                             <Grid direction="row" item justify="space-between" container>
@@ -80,7 +84,6 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
                                     {menuConfig.map((conf, i) => (
                                         <React.Fragment key={i}>
                                             <MenuElement {...conf} />
-                                            {/*{i === menuConfig.length - 1 ? null : "|"} */}
                                         </React.Fragment>
                                     ))}
                                 </Grid>
