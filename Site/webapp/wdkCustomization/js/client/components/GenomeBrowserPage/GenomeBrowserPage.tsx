@@ -27,7 +27,7 @@ interface GenomeBrowserPage {
 
 const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
     useWdkEffect(
-        (service) =>
+        (service) => {
             service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
                 setTrackList(
                     res
@@ -43,7 +43,9 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                                 : t
                         )
                 )
-            ),
+            );
+        },
+
         [serviceUrl]
     );
 
