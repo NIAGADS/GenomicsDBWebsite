@@ -116,7 +116,6 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid direction="row" container item xs={12} justify="center">
                         <DownArrow style={{ fontSize: 65 }} color="secondary" />
                     </Grid>
-                    {/* minimal padding here */}
                 </NarrowerWidthRow>
             </BlueBackgroundSection>
             {/* genome browser section */}
@@ -429,12 +428,6 @@ const NarrowerWidthRow = (props: GridProps) => (
         {props.children}
     </Grid>
 );
-
-/* const NarrowerWidthRow = (props: GridProps) => (
-    <Grid spacing={3} {...props} container direction="row" item alignItems="center" justify="center" xs={12} md={12}>
-        {props.children}
-    </Grid>
-); */
 
 interface IconCard {
     Icon: React.ComponentType<SvgIconProps>;

@@ -16,6 +16,7 @@ import {
     Selection,
 } from "d3";
 import { chain, debounce } from "lodash";
+import { useDynamicWidth } from "../../../../hooks";
 
 interface PvalFilterProps {
     defaultPVal: number;
@@ -35,14 +36,17 @@ interface CanvasSpec {
     height: number;
 }
 
-const canvasSpec: CanvasSpec = {
-    margin: { left: 90, right: 20, top: 20, bottom: 65 },
-    width: 700,
-    height: 150,
-};
-
 const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, selectClass, values }) => {
     const defaultPLog10 = Math.log10(defaultPVal);
+
+    const width = useDynamicWidth("body") * 0.33;
+
+    const canvasSpec: CanvasSpec = {
+        margin: { left: 90, right: 20, top: 20, bottom: 65 },
+        width,
+        height: 150,
+    };
+
     useEffect(() => {
         const data = _transformData(values),
             maxP = data[data.length - 1].pValueLog10,
@@ -54,7 +58,7 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, sele
         _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec);
         _drawSlider(svg, xScale, defaultPLog10, canvasSpec, setMaxPvalue);
-        //this component is uncontrolled and holds its own state after initialization; it never rerenders
+        //this component is uncontrolled and holds its own state after initialization; it never rerenders...
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
 

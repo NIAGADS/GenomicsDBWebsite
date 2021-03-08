@@ -8,6 +8,7 @@ import registry from "locuszoom/esm/registry/adapters";
 import { cloneDeep, get, noop } from "lodash";
 import { Grid } from "@material-ui/core";
 import { selectAll } from "d3";
+import { useDynamicWidth } from "../../../hooks";
 
 const LZ = lz.default as any;
 
@@ -40,13 +41,10 @@ const LzPlot: React.FC<LzProps> = ({
     track,
 }) => {
     const [loading, setLoading] = useState(false),
-        [width, setWidth] = useState<number>(800),
         interval: NodeJS.Timeout = useRef().current,
         layoutRendered = useRef(false);
 
-    //
-    const getWidth = () =>
-        get(window.document.querySelectorAll("body"), "[0].clientWidth", width * 2) * (maxWidthAsRatioToBody || 0.5);
+    const width = useDynamicWidth() * (maxWidthAsRatioToBody || 0.5);
 
     useEffect(() => {
         if (layoutRendered.current) {
@@ -55,12 +53,6 @@ const LzPlot: React.FC<LzProps> = ({
         }
         return noop;
     }, [refVariant, population, track, width]);
-
-    useLayoutEffect(() => {
-        const resizeListener = () => setWidth(getWidth());
-        window.addEventListener("resize", resizeListener);
-        return () => window.removeEventListener("resize", resizeListener);
-    }, []);
 
     useLayoutEffect(() => {
         initPlot();

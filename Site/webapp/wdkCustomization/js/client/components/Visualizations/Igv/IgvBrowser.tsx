@@ -45,6 +45,10 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
     webappUrl,
 }) => {
     useLayoutEffect(() => {
+        window.addEventListener("error", (event) => {
+            console.log(event);
+        });
+
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         const igvDiv = document.getElementById("igv-div"),
             options = {
@@ -90,6 +94,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
 
             browser.on("trackclick", (track: any, popoverData: any) => {
                 // Don't show a pop-over when there's no data.
+
                 if (!popoverData || !popoverData.length) {
                     return false;
                 }
