@@ -1,6 +1,5 @@
 /* ApiCommon defaults */
-//@import "~eupathdb/wdkCustomization/css/client.scss"; //throwing an error down stream...
-@import "./../../css/AllApiSites.css";
+@import "./../../css/AllApiSites.css"; //local
 
 /* Hide default record ID printed by WDK for genes */
 .wdk-RecordContainer__GeneRecordClasses\.GeneRecordClass .wdk-RecordHeading {
