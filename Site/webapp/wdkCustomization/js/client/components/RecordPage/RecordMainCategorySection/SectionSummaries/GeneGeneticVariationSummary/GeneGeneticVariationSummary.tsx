@@ -1,20 +1,26 @@
+import { Typography } from "@material-ui/core";
 import React from "react";
+import { BaseTextSmall } from "../../../../Shared";
 import * as GR from "../../../types";
 import { resolveJsonInput } from "./../../../../../util/jsonParse";
 
-const GeneGeneticVariationSummary: React.SFC<{ record: GR.GeneRecord }> = (props) => (
-    <span className="gene-genetic-variation-summary">
+const GeneGeneticVariationSummary: React.FC<{ record: GR.GeneRecord }> = (props) => (
+    <BaseTextSmall>
         The&nbsp;
-        <span className="gene-symbol-text">{props.record.attributes.gene_symbol}</span>
+        <Typography variant="inherit" color="primary">
+            {props.record.attributes.gene_symbol}
+        </Typography>
         &nbsp;gene contains&nbsp;
         {resolveJsonInput(props.record.attributes.num_colocated_variants)}
         &nbsp;variants records (corresponding to {props.record.attributes.num_unique_colocated_variants} unique genomic
         positions).
         <br />
         The following variants, contained within ±100kb of&nbsp;
-        <span className="gene-symbol-text">{props.record.attributes.gene_symbol}</span>, have been found to be
-        associated with Alzheimer's disease in a GWAS study:
-    </span>
+        <Typography variant="inherit" color="primary">
+            {props.record.attributes.gene_symbol}
+        </Typography>
+        , have been found to be associated with Alzheimer's disease in a GWAS study:
+    </BaseTextSmall>
 );
 
 export default GeneGeneticVariationSummary;

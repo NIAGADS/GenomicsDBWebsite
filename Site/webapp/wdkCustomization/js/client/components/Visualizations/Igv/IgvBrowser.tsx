@@ -72,7 +72,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
                           ],
                 },
                 locus: defaultSpan || "ABCA7",
-                tracks: (defaultTracks || []).concat(),
+                tracks: defaultTracks || [],
                 search: {
                     url: `${searchUrl}$FEATURE$`,
                 },

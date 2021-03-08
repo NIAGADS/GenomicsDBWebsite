@@ -1,14 +1,1 @@
 @import "./RecordTable/RecordTable";
-@import "./RecordMainCategorySection/RecordMainCategorySection";
-@import "./RecordTableSection/RecordTableSection";
-////////////
-//wdk resets and overrides
-///
-.wdk-RecordContainer {
-    #_ideogramInnerWrap {
-        overflow-x: auto !important;
-    }
-    .wdk-RecordSidebar {
-        top: 10px;
-    }
-}

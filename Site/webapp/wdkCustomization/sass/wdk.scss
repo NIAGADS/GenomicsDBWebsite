@@ -1,5 +1,23 @@
+//overrides go here
+
 .wdk-RecordMain .wdk-CollapsibleSectionHeader.wdk-RecordSubsectionHeader {
     font-size: 1.2em;
+}
+
+.wdk-CollapsibleSectionContent {
+    &.wdk-RecordTableContainerContent {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.wdk-RecordContainer {
+    #_ideogramInnerWrap {
+        overflow-x: auto !important;
+    }
+    .wdk-RecordSidebar {
+        top: 10px;
+    }
 }
 
 .wdk-RecordNavigationSectionHeader {
