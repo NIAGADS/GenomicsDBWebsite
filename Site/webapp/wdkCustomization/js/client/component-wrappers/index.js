@@ -5,3 +5,4 @@ export * from "./RecordController";
 export * from "./RecordPage";
 export * from "./ResultTableSummaryViewController";
 export * from "./SiteHeader";
+export * from "./UnhandledErrors";
