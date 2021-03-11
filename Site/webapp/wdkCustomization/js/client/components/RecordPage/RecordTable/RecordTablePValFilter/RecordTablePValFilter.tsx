@@ -17,6 +17,7 @@ import {
 } from "d3";
 import { chain, debounce } from "lodash";
 import { useDynamicWidth } from "../../../../hooks";
+import { styled } from "@material-ui/core";
 
 interface PvalFilterProps {
     defaultPVal: number;
@@ -65,11 +66,16 @@ const PvalFilter: React.FC<PvalFilterProps> = ({ defaultPVal, setMaxPvalue, sele
     const minP = 1e-15;
 
     return (
-        <div className="p-val-filter-chart control">
+        <ChartContainer>
             <svg className={selectClass}></svg>
-        </div>
+        </ChartContainer>
     );
 };
+
+const ChartContainer = styled("div")({
+    fill: "none",
+    stroke: "#000",
+});
 
 //never rerender!
 export default React.memo(PvalFilter, () => true);
@@ -124,7 +130,7 @@ const _buildAreaFunc = (height: number, xScale: ScaleLinear<number, number>, ySc
 };
 
 const _drawArea = (svg: any, data: ChartDatum[], area: Area<[number, number]>) => {
-    svg.append("path").datum(data).attr("class", "area").attr("d", area);
+    svg.append("path").datum(data).attr("class", "area").attr("d", area).style("fill", "#f2dfde");
 };
 
 const _drawAxes = (svg: any, height: number, xAxis: any, yAxis: any) => {

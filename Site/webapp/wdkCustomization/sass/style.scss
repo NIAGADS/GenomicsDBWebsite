@@ -4,6 +4,11 @@ ul {
     list-style-type: none;
 }
 
+text {
+    fill: $black;
+    stroke-width: 0;
+}
+
 .badge {
     padding: 10px;
     border-radius: 4px;
