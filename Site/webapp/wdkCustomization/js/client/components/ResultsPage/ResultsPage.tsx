@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { Link } from "wdk-client/Components";
+import { Loading } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { SearchResult } from "./../Shared/Autocomplete";
 import { buildRouteFromResult } from "./../HomePage/HomePage";
-import { chain, isEmpty, isObject, get } from "lodash";
+import { chain, isEmpty, get } from "lodash";
+import { Box, Grid, List, ListItem, withStyles } from "@material-ui/core";
+import { BaseText, BaseTextSmall, Heading, PrimaryLink, PrimaryExternalLink } from "../Shared";
 
 interface ResultsPageNavProps {
     genes: number;
@@ -17,42 +19,54 @@ interface ResultsPageNavProps {
 
 const ResultsPageNav: React.FC<ResultsPageNavProps> = ({ genes, variants, datasets, accessions }) => {
     return (
-        <div className="flex-column">
+        <List disablePadding={true}>
             {genes > 0 && (
-                <a className="nav-link" href="#genes">
-                    {genes} Gene{genes > 1 ? "s" : ""}
-                </a>
+                <ListItem>
+                    <PrimaryExternalLink href="#genes">
+                        {genes} Gene{genes > 1 ? "s" : ""}
+                    </PrimaryExternalLink>
+                </ListItem>
             )}
             {variants > 0 && (
-                <a className="nav-link" href="#variants">
-                    {variants} Variant{variants > 1 ? "s" : ""}
-                </a>
+                <ListItem>
+                    <PrimaryExternalLink href="#variants">
+                        {variants} Variant{variants > 1 ? "s" : ""}
+                    </PrimaryExternalLink>
+                </ListItem>
             )}
             {accessions > 0 && (
-                <a className="nav-link" href="#accessions">
-                    {accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}
-                </a>
+                <ListItem>
+                    <PrimaryExternalLink href="#accessions">
+                        {accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}
+                    </PrimaryExternalLink>
+                </ListItem>
             )}
             {datasets > 0 && (
-                <a className="nav-link" href="#datasets">
-                    {datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}
-                </a>
+                <ListItem>
+                    <PrimaryExternalLink href="#datasets">
+                        {datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}
+                    </PrimaryExternalLink>
+                </ListItem>
             )}
-        </div>
+        </List>
     );
 };
 
 const ResultsPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
     const [results, setResults] = useState<SearchResult[]>(),
+        [loading, setLoading] = useState(false),
         sendRequest = (searchTerm: string) => (service: WdkService) => {
-            !!searchTerm &&
+            if (searchTerm && searchTerm.length > 2) {
+                setLoading(true);
                 service
                     ._fetchJson<SearchResult[]>("get", `/search/site?term=${searchTerm}`)
                     .then((res) => setResults(res))
                     .catch((e) => {
                         setResults([]);
                         console.log("caught: " + e);
-                    });
+                    })
+                    .finally(() => setLoading(false));
+            }
         };
 
     const searchTerm = location.search.split("=")[1];
@@ -67,104 +81,90 @@ const ResultsPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
     //search term could change in header box
     useWdkEffect(sendRequest(searchTerm), [searchTerm]);
 
-    const nGenes = get(counts, "gene");
-    const nVariants = get(counts, "variant");
-    const nDatasets = get(counts, "gwas_summary");
-    const nAccessions = get(counts, "dataset");
+    const nGenes = get(counts, "gene"),
+        nVariants = get(counts, "variant"),
+        nDatasets = get(counts, "gwas_summary"),
+        nAccessions = get(counts, "dataset");
+    t;
+    return loading ? (
+        <Loading />
+    ) : searchTerm.length < 3 ? (
+        <Grid>
+            <Box marginTop={3}>
+                <BaseText>
+                    <strong>{searchTerm}</strong> is too short to search. Please enter a search term that is at least 3
+                    characters long.
+                </BaseText>
+            </Box>
+        </Grid>
+    ) : (
+        <Grid container spacing={2}>
+            {resultsArray.length ? (
+                <>
+                    <Grid item xs={3}>
+                        <Heading>Search Results</Heading>
+                        <BaseText>
+                            <strong>{resultsArray.length}</strong> results were found for the search{" "}
+                            <strong>{searchTerm}</strong>
+                        </BaseText>
+                        <ResultsPageNav
+                            genes={nGenes}
+                            variants={nVariants}
+                            datasets={nDatasets}
+                            accessions={nAccessions}
+                        />
+                    </Grid>
+                    <Grid item xs={9}>
+                        <Box marginTop={3} />
+                        <a id="genes" />
+                        {nGenes > 0 && <ResultSectionTitle>Genes</ResultSectionTitle>}
+                        {nGenes > 0 && resultsArray.map((res) => _buildSearchResult(res, "gene"))}
 
-    return (
-        <div>
-            {isObject(results) ? (
-                resultsArray.length ? (
-                    <React.Fragment>
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-sm-3 sticky-top h-100">
-                                    <h2>Search Results</h2>
-                                    <strong className="text-danger">{resultsArray.length}</strong> results were found
-                                    for the search <strong className="text-danger">{searchTerm}</strong>
-                                    <ResultsPageNav
-                                        genes={nGenes}
-                                        variants={nVariants}
-                                        datasets={nDatasets}
-                                        accessions={nAccessions}
-                                    />
-                                </div>
-                                <div className="col-sm-8">
-                                    <a id="genes" />
-                                    {nGenes > 0 && (
-                                        <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">Genes</h3>
-                                    )}
-                                    {nGenes > 0 && resultsArray.map((res) => _buildSearchResult(res, "gene"))}
+                        <a id="variants" />
+                        {nVariants > 0 && <ResultSectionTitle>Variants</ResultSectionTitle>}
+                        {nVariants > 0 && resultsArray.map((res) => _buildSearchResult(res, "variant"))}
 
-                                    <a id="variants" />
-                                    {nVariants > 0 && (
-                                        <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">Variants</h3>
-                                    )}
-                                    {nVariants > 0 && resultsArray.map((res) => _buildSearchResult(res, "variant"))}
+                        <a id="accessions" />
+                        {nAccessions > 0 && <ResultSectionTitle>NIAGADS Accessions</ResultSectionTitle>}
+                        {nAccessions > 0 && resultsArray.map((res) => _buildSearchResult(res, "dataset"))}
 
-                                    <a id="accessions" />
-                                    {nAccessions > 0 && (
-                                        <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">
-                                            NIAGADS Accessions
-                                        </h3>
-                                    )}
-                                    {nAccessions > 0 && resultsArray.map((res) => _buildSearchResult(res, "dataset"))}
-
-                                    <a id="datasets" />
-                                    {nDatasets > 0 && (
-                                        <h3 className="mt-5 mb-2 pb-2 site-search-result__section-title">
-                                            GWAS Summary Statistics Datasets
-                                        </h3>
-                                    )}
-                                    {nDatasets > 0 &&
-                                        resultsArray.map((res) => _buildSearchResult(res, "gwas_summary"))}
-                                </div>
-                            </div>
-                        </div>
-                    </React.Fragment>
-                ) : (
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-sm-12">
-                                <h2>Search Results</h2>
-                                <strong className="text-danger">No</strong> results were found for the search{" "}
-                                <strong className="text-danger">{searchTerm}</strong>
-                            </div>
-                        </div>
-                    </div>
-                )
+                        <a id="datasets" />
+                        {nDatasets > 0 && <ResultSectionTitle>GWAS Summary Statistics Datasets</ResultSectionTitle>}
+                        {nDatasets > 0 && resultsArray.map((res) => _buildSearchResult(res, "gwas_summary"))}
+                    </Grid>
+                </>
             ) : (
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <h2>Search Results</h2>
-                            Loading results for the search <strong className="text-danger">{searchTerm}</strong>...
-                        </div>
-                    </div>
-                </div>
+                <Grid>
+                    <Box marginTop={3}>
+                        <BaseText>
+                            <strong>No</strong> results were found for the search <strong>{searchTerm}</strong>
+                        </BaseText>
+                    </Box>
+                </Grid>
             )}
-        </div>
+        </Grid>
     );
 };
+
+const ResultSectionTitle = withStyles({
+    root: {
+        fontVariant: "small-caps",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+    },
+})(BaseText);
 
 const _buildSearchResult = (result: SearchResult, recordType: string) => {
     return (
         result.record_type === recordType && (
-            <div key={result.primary_key} className="mb-3">
-                <div>
-                    <Link className="h6 wdk-Link" to={buildRouteFromResult(result)}>
-                        {safeHtml(result.display)}
-                    </Link>
-                    {result.record_type === "variant" && result.matched_term.indexOf("merge") > -1 && (
-                        <em>{result.matched_term}</em>
-                    )}
-                </div>
-
-                <div>
-                    <small>{safeHtml(result.description)}</small>
-                </div>
-            </div>
+            <Box key={result.primary_key} mb={3}>
+                <PrimaryLink className="h6 wdk-PrimaryLink" to={buildRouteFromResult(result)}>
+                    {safeHtml(result.display)}
+                </PrimaryLink>
+                {result.record_type === "variant" && result.matched_term.indexOf("merge") > -1 && (
+                    <em>{result.matched_term}</em>
+                )}
+                <BaseTextSmall>{safeHtml(result.description)}</BaseTextSmall>
+            </Box>
         )
     );
 };

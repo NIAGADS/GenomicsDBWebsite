@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { UnlabeledTextField } from "./../Shared";
 import { Autocomplete } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -69,6 +69,12 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
 
     const theme = useTheme();
 
+    const reset = () => {
+        setInputValue("");
+        setResetKey(Math.random().toString(32).slice(2));
+        setOptions([]);
+    };
+
     return (
         <Autocomplete
             key={resetKey}
@@ -86,6 +92,7 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
             noOptionsText="No Results"
             options={options}
             loading={searchInProgress}
+            onClose={reset}
             onInputChange={(event, newInputValue) => {
                 //prevent requery on select
                 if (!options.map((o) => o.display).includes(newInputValue)) {
@@ -96,11 +103,10 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                 //seems simpler to hold onto internal state
                 //controlling b/c we might want to format differently than getOptionLabel() would have us, which is the default for uncontrolled
                 if (inputValue && reason !== "clear") {
-                    setInputValue("");
-                    setResetKey(Math.random().toString(32).slice(2));
                     if (isString(selectedValue)) {
                         onSelect(null, inputValue);
                     } else onSelect(selectedValue, inputValue);
+                    reset();
                 }
             }}
             renderInput={(params) => {
