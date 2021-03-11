@@ -1,25 +1,19 @@
 import React, { useEffect, useRef } from "react";
 //@ts-ignore
-import SelectTableHOC, { SelectTableAdditionalProps } from "react-table/lib/hoc/selectTable";
-import ReactTable, { AccessorFunction, Instance, RowInfo, Filter, Column, TableProps } from "react-table";
-import { isString, isObject, findIndex, uniqueId, forIn } from "lodash";
-import { scientificToDecimal } from "../../../../util/util";
+import ReactTable, { AccessorFunction, Instance, RowInfo, Filter, Column } from "react-table";
+import { isString, isObject, findIndex, forIn } from "lodash";
 import { isJson, resolveObjectInput, withTooltip } from "../../../../util/jsonParse";
 import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
 
-const SelectTable = SelectTableHOC(ReactTable);
-
 interface NiagadsRecordTable {
     attributes: rt.TableAttribute[];
     canShrink?: boolean;
     chartProperties?: any;
     filtered: Filter[];
-    isSelected: any;
     onLoad: (ref: React.MutableRefObject<Instance>) => void;
-    onSelectionToggled: any;
     stringFilterMethod: (val: string, rows: any[]) => any[];
     table: rt.Table;
     value: { [key: string]: any }[];
@@ -31,9 +25,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     canShrink,
     chartProperties,
     filtered,
-    isSelected,
     onLoad,
-    onSelectionToggled,
     stringFilterMethod,
     table,
     value,
@@ -97,10 +89,6 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
 
     columns.push(hiddenFilterCol);
 
-    //for selectTable
-    const _setKeyCol = (values: { [key: string]: any }[]) =>
-        values.map((row) => Object.assign(row, { id: uniqueId() }));
-
     const subComponent = subCompKey
         ? {
               SubComponent: (rowInfo: RowInfo) => {
@@ -131,7 +119,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         chartProperties,
         className: canShrink ? "shrink" : "",
         columns,
-        data: _setKeyCol(value),
+        data: value,
         defaultSortMethod: NiagadsTableSort,
         expanderDefaults: { width: 200 },
         filtered,
@@ -145,57 +133,18 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         ...subComponent,
     };
 
-    const selectTableProps = {
-        isSelected: isSelected,
-        toggleSelection: onSelectionToggled,
-    };
-
-    return true ? (
-        <ReactTable {...tableProps} ref={instance} />
-    ) : (
-        <NiagadsSelectTable {...tableProps} {...selectTableProps} />
-    );
+    return <ReactTable {...tableProps} ref={instance} />;
 };
 
-interface NiagadsSelectTable extends Partial<TableProps> {
-    onLoad: any;
-}
-
-interface TProps extends NiagadsSelectTable, Partial<SelectTableAdditionalProps> {}
-
-const NiagadsSelectTable: React.ComponentClass<NiagadsSelectTable> = class extends React.Component<NiagadsSelectTable> {
-    private tProps: TProps;
-    private wrapper: any;
-
-    constructor(props: NiagadsSelectTable) {
-        super(props);
-        this.tProps = {
-            ...this.props,
-            ...{
-                keyField: "id",
-                selectAll: false,
-                toggleAll: () => console.log("all toggled"),
-                selectType: "checkbox",
-            },
-        };
-    }
-
-    componentDidMount = () => {
-        this.props.onLoad(this.wrapper.getWrappedInstance());
-    };
-
-    render = () => <SelectTable {...this.tProps} ref={(r: any) => (this.wrapper = r)} />;
-};
-
-/*todo: move and update once record data structure is stablized*/
 const NiagadsTableSort = (a: string, b: string) => {
     let c = extractDisplayText(a),
         d = extractDisplayText(b);
     (c = c === null || c === undefined ? -Infinity : c), (d = d === null || d === undefined ? -Infinity : d);
-    c = scientificToDecimal(c);
-    d = scientificToDecimal(d);
-    c = isString(c) ? c.toLowerCase() : c;
-    d = isString(d) ? d.toLowerCase() : d;
+    //sci string to num
+    c = /\d\.\d+e-\d+/.test(c) ? +c : c;
+    d = /\d\.\d+e-\d+/.test(d) ? +d : d;
+    c = isString(c) ? c.replace(/:/g, "").toLowerCase() : c;
+    d = isString(d) ? d.replace(/:/g, "").toLowerCase() : d;
     if (c > d) {
         return 1;
     }
@@ -219,11 +168,7 @@ const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFun
     switch (attribute.type) {
         case "string":
         case "json_text":
-            return (row: { [key: string]: any }) => {
-                const content: string = isObject(row[key]) ? resolveObjectInput(row[key]) : row[key];
-                return content;
-            };
-
+            return (row: { [key: string]: any }) => (isObject(row[key]) ? resolveObjectInput(row[key]) : row[key]);
         case "integer":
         case "boolean":
         case "numeric":

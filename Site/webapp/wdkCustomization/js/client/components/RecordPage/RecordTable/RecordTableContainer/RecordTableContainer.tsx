@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import * as rt from "../../types";
 //@ts-ignore
 import { CSVLink } from "react-csv";
-import { cloneDeep, intersection, findIndex, forIn, get, isEmpty, kebabCase, maxBy, pickBy, round } from "lodash";
+import { cloneDeep, intersection, forIn, get, isEmpty, kebabCase, maxBy, pickBy, round } from "lodash";
 import NiagadsRecordTable from "../RecordTable/RecordTable";
 import { extractDisplayText } from "../util";
 import RecordTablePValFilter from "../RecordTablePValFilter/RecordTablePValFilter";
@@ -20,7 +20,6 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
     const [tableInstance, setTableInstance] = useState<Instance>(),
         [filtered, setFiltered] = useState<Filter[]>([]),
         [filterVal, setFilterVal] = useState(""),
-        [basket, setBasket] = useState([]),
         [pValueFilterVisible, setPValueFilterVisible] = useState(false),
         [csvData, setCsvData] = useState<any[]>([]);
 
@@ -92,23 +91,13 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
         updateFilter("all", e.currentTarget.value);
     };
 
-    const isSelected = (key: string) => getBasketIndex(key) > -1;
-
     const onTableLoaded = (ref: React.MutableRefObject<Instance>) => {
         if (!tableInstance && ref.current) {
             setTableInstance(ref.current);
         }
     };
 
-    const toggleSelection = (key: string, shift: boolean, row: { [key: string]: any }) => {
-        const idx = getBasketIndex(key);
-        idx > -1 ? basket.splice(idx, idx + 1) : basket.push(row);
-        setBasket(basket);
-    };
-
     const togglePValueChartVisibility = () => setPValueFilterVisible(!pValueFilterVisible);
-
-    const getBasketIndex = (key: string) => findIndex(basket, (item) => item.id === key);
 
     const loadCsvData = () => {
         const data = tableInstance.getResolvedState().sortedData,
@@ -169,10 +158,8 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                     <NiagadsRecordTable
                         attributes={attributes}
                         canShrink={get(table, "properties.canShrink[0]", false)}
-                        isSelected={isSelected}
                         filtered={filtered}
                         onLoad={onTableLoaded}
-                        onSelectionToggled={toggleSelection}
                         stringFilterMethod={filterString}
                         table={table}
                         value={value}
