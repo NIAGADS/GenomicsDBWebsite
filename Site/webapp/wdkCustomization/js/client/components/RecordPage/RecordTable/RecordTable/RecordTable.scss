@@ -85,15 +85,6 @@
         .-next {
             display: flex;
             justify-content: center;
-            .-btn {
-                background: transparent;
-                height: auto;
-                width: auto;
-                &:hover:enabled {
-                    color: $white;
-                    background: $primary;
-                }
-            }
         }
         .-center {
             .-pageJump {

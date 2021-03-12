@@ -1,6 +1,7 @@
 import React from "react";
 import { HeaderActions } from "./../../../types";
 import { RecordActionLink } from "wdk-client/Components";
+import { Box } from "@material-ui/core";
 
 interface HeaderRecordActions {
     record: any;
@@ -13,21 +14,17 @@ interface HeaderRecordActions {
 
 const HeaderRecordActions: React.FC<HeaderRecordActions> = (props) => {
     return (
-        <ul className="wdk-RecordActions d-flex">
-            {props.headerActions.map((action, index) => {
-                return (
-                    <li key={index} className="wdk-RecordActionItem">
-                        <RecordActionLink record={props.record} recordClass={props.recordClass} {...action} />
-                    </li>
-                );
-            })}
-        </ul>
+        <Box marginTop={1} display="flex" justifyContent="space-between">
+            {props.headerActions.map((action, index) => (
+                <RecordActionLink key={index} record={props.record} recordClass={props.recordClass} {...action} />
+            ))}
+        </Box>
     );
 };
 
 // return the attribute details from the record class
 export function getAttributeByName(recordClass: any, attributeName: string) {
-    let targetAttribute = recordClass.attributes.filter(function (attribute: any) {
+    const targetAttribute = recordClass.attributes.filter(function (attribute: any) {
         return attribute.name == attributeName;
     });
     return targetAttribute[0];
@@ -35,7 +32,7 @@ export function getAttributeByName(recordClass: any, attributeName: string) {
 
 // return attribute properties (specified in propertyList in model)
 export function getAttributePropertiesByName(recordClass: any, attributeName: string) {
-    let targetAttribute = recordClass.attributes.filter(function (attribute: any) {
+    const targetAttribute = recordClass.attributes.filter(function (attribute: any) {
         return attribute.name == attributeName;
     });
     return targetAttribute[0].properties;
@@ -43,7 +40,7 @@ export function getAttributePropertiesByName(recordClass: any, attributeName: st
 
 // return chartProperties (specified in propertyList (name=chartProperties) in model)
 export function getAttributeChartProperties(recordClass: any, attributeName: string) {
-    let targetAttribute = recordClass.attributes.filter(function (attribute: any) {
+    const targetAttribute = recordClass.attributes.filter(function (attribute: any) {
         return attribute.name == attributeName;
     });
     return targetAttribute[0].properties.chartProperties;

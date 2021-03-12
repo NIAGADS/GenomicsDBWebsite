@@ -110,11 +110,11 @@ const ADSPQCDisplay: React.FC<{ attributes: VariantRecordAttributes }> = ({ attr
             {attributes.adsp_wgs_qc_filter_status &&
                 (attributes.is_adsp_wgs ? (
                     <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="red">WES</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
+                        <SmallBadge backgroundColor="red">WGS</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
                     </Box>
                 ) : (
                     <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="black">WES</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
+                        <SmallBadge backgroundColor="black">WGS</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
                     </Box>
                 ))}
         </Box>

@@ -3,20 +3,21 @@ import { Options } from "highcharts";
 import HighchartsPlot, { HighchartsPlotProps } from "./HighchartsPlot";
 
 import "./HighchartsTrellisPlot.scss";
+import { Grid } from "@material-ui/core";
 
 // https://jsfiddle.net/65mbxwc9/
 
 export const HighchartsColumnTrellis: React.FC<HighchartsPlotProps> = ({ data, properties }) => {
     return data ? (
-        <div className="row">
+        <Grid container wrap="nowrap">
             {data.map((item: any, index: number) => {
                 return (
-                    <div className="col" key={`col_${index}`}>
+                    <Grid item key={`col_${index}`}>
                         <HighchartsPlot data={item} properties={properties} />
-                    </div>
+                    </Grid>
                 );
             })}
-        </div>
+        </Grid>
     ) : null;
 };
 

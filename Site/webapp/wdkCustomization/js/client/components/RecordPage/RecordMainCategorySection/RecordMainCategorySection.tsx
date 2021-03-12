@@ -7,6 +7,8 @@ import { IdeogramPlot, HighchartsPlot } from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { isEmpty } from "lodash";
 import { GeneGeneticVariationSummary } from "./SectionSummaries";
+import { Box } from "@material-ui/core";
+import { BaseText } from "../../Shared";
 
 interface RecordMainCategorySection {
     category: any;
@@ -60,12 +62,12 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
                     className={"wdk-RecordTableContainer"}
                     headerComponent="h3"
                     headerContent={
-                        <div className="d-flex justify-between align-items-baseline">
-                            <p className="mb-0">{category.wdkReference.displayName}</p>
+                        <Box display="flex" justifyContent="space-between" alignItems="baseline">
+                            <BaseText>{category.wdkReference.displayName}</BaseText>
                             {category.wdkReference.description && (
                                 <HelpIcon>{safeHtml(category.wdkReference.description)}</HelpIcon>
                             )}
-                        </div>
+                        </Box>
                     }
                     isCollapsed={isCollapsed}
                     onCollapsedChange={toggleCollapse}
@@ -82,12 +84,12 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
                     className={"wdk-RecordTableContainer"}
                     headerComponent="h3"
                     headerContent={
-                        <div className="d-flex justify-between align-items-baseline">
+                        <Box display="flex" justifyContent="space-between" alignItems="baseline">
                             <p>{category.wdkReference.displayName}</p>
                             {category.wdkReference.description && (
                                 <HelpIcon>{safeHtml(category.wdkReference.description)}</HelpIcon>
                             )}
-                        </div>
+                        </Box>
                     }
                     isCollapsed={isCollapsed}
                     onCollapsedChange={toggleCollapse}

@@ -7,6 +7,8 @@ import RecordTableContainer from "../RecordTable/RecordTableContainer/RecordTabl
 import { CollapsibleSection, HelpIcon } from "wdk-client/Components";
 import { ErrorBoundary } from "wdk-client/Controllers";
 import { BaseRecord, Table } from "../../RecordPage/types";
+import { Box } from "@material-ui/core";
+import { BaseText } from "../../Shared";
 
 interface NiagadsRecordTableSection {
     isCollapsed: boolean;
@@ -45,10 +47,10 @@ const NiagadsRecordTableSection: React.SFC<NiagadsRecordTableSection> = ({
         isLoading = value == null,
         className = ["wdk-RecordTable", "wdk-RecordTable__" + table.name].join(" "),
         headerContent = (
-            <div className="d-flex justify-between align-items-baseline">
-                <p>{displayName}</p>
+            <Box display="flex" justifyContent="space-between" alignItems="baseline">
+                <BaseText variant="caption">{displayName}</BaseText>
                 {description && <HelpIcon>{safeHtml(description)}</HelpIcon>}
-            </div>
+            </Box>
         );
 
     return (
@@ -61,7 +63,9 @@ const NiagadsRecordTableSection: React.SFC<NiagadsRecordTableSection> = ({
         >
             <ErrorBoundary>
                 {isError ? (
-                    <p style={{ color: "darkred", fontStyle: "italic" }}>Unable to load data due to a server error.</p>
+                    <BaseText color="error">
+                        <em>Unable to load data due to a server error.</em>
+                    </BaseText>
                 ) : isLoading ? (
                     <p>Loading...</p>
                 ) : (
