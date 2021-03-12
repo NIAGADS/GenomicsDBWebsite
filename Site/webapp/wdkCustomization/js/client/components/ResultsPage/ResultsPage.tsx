@@ -85,7 +85,7 @@ const ResultsPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
         nVariants = get(counts, "variant"),
         nDatasets = get(counts, "gwas_summary"),
         nAccessions = get(counts, "dataset");
-    t;
+
     return loading ? (
         <Loading />
     ) : searchTerm.length < 3 ? (

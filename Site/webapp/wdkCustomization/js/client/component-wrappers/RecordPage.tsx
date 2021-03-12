@@ -32,6 +32,7 @@ export function RecordMainSection(DefaultComponent: React.Component) {
 //@ts-ignore;
 const requireCast = require as any;
 
+//https://webpack.js.org/guides/dependency-management/
 const findRecordPageComponent = findExportWith(requireCast.context("../components/RecordTypes", true));
 
 function makeDynamicWrapper(componentName: string) {

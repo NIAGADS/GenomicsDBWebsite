@@ -1,7 +1,7 @@
 import React from "react";
 import { UnhandledError } from "wdk-client/Actions/UnhandledErrorActions";
 
-//overriding the Ebrc Error handler, which listens to errors on the window (not just react errors, but imperative library errors as well) and shows a modal, which we want to suppress
+//overriding the Ebrc unhandled error handler, which listens to errors on the window (imperative library errors, callback errors, etc) and shows a modal, which we want to suppress
 interface Props {
     errors?: UnhandledError[];
     showStackTraces: boolean;
