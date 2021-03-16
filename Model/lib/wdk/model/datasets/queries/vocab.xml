@@ -31,7 +31,7 @@
             CAST(NULL AS numeric(10)) AS number_value,
             CAST(NULL AS numeric(10)) AS date_value
             FROM NIAGADS.ProtocolAppNodeCharacteristic
-            WHERE track LIKE 'NG%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
+            WHERE track LIKE 'NG0%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
 
 
             UNION ALL
@@ -45,7 +45,7 @@
             CAST(NULL AS numeric(10)) AS date_value
             FROM NIAGADS.TrackAttributes ta
             WHERE name SIMILAR TO'%(IGAP|ADGC|ADSP)%'
-            AND (ta.track LIKE 'NG%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
+            AND (ta.track LIKE 'NG0%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
 
             ORDER BY ontology_term_name, string_value
          ]]>
@@ -76,7 +76,7 @@
             CAST(NULL AS NUMERIC(10)) AS precision,
             array_position(string_to_array('@GWAS_ORDERED_FILTER_CATEGORY_PARENTS@', ','), filter_category_parent) AS order_num
             FROM NIAGADS.ProtocolAppNodeCharacteristic pan
-            WHERE track LIKE 'NG%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
+            WHERE track LIKE 'NG0%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
             AND filter_category NOT SIMILAR TO  '%' || '(Tissue)' || '%'
 
             UNION ALL
@@ -104,7 +104,7 @@
             CAST(NULL AS NUMERIC(10)) AS precision,
             array_position(string_to_array('@GWAS_ORDERED_FILTER_CATEGORY_PARENTS@', ','), filter_category_parent) AS order_num
             FROM NIAGADS.ProtocolAppNodeCharacteristic pan
-            WHERE track LIKE 'NG%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
+            WHERE track LIKE 'NG0%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
             AND filter_category NOT SIMILAR TO  '%' || '(Tissue)' || '%'
             AND filter_category != filter_category_parent
 
