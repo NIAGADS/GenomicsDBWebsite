@@ -8,6 +8,7 @@
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.57",
         "btoa": "^1.2.1",
+        "d3": "5.16.0",
         "highcharts": "^7.1.2",
         "highcharts-react-official": "^2.2.2",
         "ideogram": "^1.18.0",
