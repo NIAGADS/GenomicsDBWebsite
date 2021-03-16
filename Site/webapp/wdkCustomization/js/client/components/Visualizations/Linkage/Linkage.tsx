@@ -75,17 +75,9 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                 .range([height, 0])
                 .domain(chartData.variants.map((v) => v.display_label).reverse());
 
-            const zScale = scaleBand([height - yScale.bandwidth() / 4, -(yScale.bandwidth() / 4)]).domain(
-                chartData.variants.map((v) => v.display_label).reverse()
-            );
-
-            const yContScale = scaleBand()
-                .range([-yScale.bandwidth(), height])
-                .domain(range(chartData.variants.length - 1).map((s) => s.toString()));
-
-            const xContScale = scaleLinear()
-                .range([0, width + xScale.bandwidth()])
-                .domain([0, chartData.variants.length - 1]);
+            const zScale = scaleBand()
+                .range([height - yScale.bandwidth() / 4, -(yScale.bandwidth() / 4)])
+                .domain(chartData.variants.map((v) => v.display_label).reverse());
 
             const ryScale = scaleLinear()
                 .range([-yScale.bandwidth(), height - yScale.bandwidth()])
@@ -221,15 +213,6 @@ const CorrelationPlot: React.FC<CorrelationPlot> = ({ variants, population }) =>
                     .on("click", () => history.push(`/record/variant/${last.variant.record_pk}`))
                     .text(() => last.variant.display_label);
             });
-
-            const lineFn = line()
-                .x((d: any, i) => xContScale(i) + 5)
-                .y((d: any, i) => yContScale(i.toString()) - 5);
-
-            svg.append("path")
-                .attr("class", "line")
-                .style("stroke", "black")
-                .attr("d", (d: any) => lineFn(data as any));
 
             const labelLine = line()
                 .x(

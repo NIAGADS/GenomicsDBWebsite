@@ -49,44 +49,45 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         filterAll: true,
     };
 
-    const subCompKey = table.properties.subtable_field ? table.properties.subtable_field[0] : null,
-        columns: Column[] =
-            value.length === 0
-                ? []
-                : Object.keys(value[0])
-                      .filter((k) => {
-                          const attribute: rt.TableAttribute = attributes.find((item) => item.name === k);
-                          return attribute && attribute.isDisplayable;
-                      })
-                      .map(
-                          (k): Column => {
-                              const attribute = attributes.find((attribute) => attribute.name === k),
-                                  filterType =
-                                      table.properties.type[0] === "chart_filter" &&
-                                      table.properties.filter_field[0] === attribute.name
-                                          ? pValFilter
-                                          : null;
-                              return k === subCompKey
-                                  ? {
-                                        expander: true,
-                                        Header: () => <span>{attribute.displayName}</span>,
-                                        id: attribute.name,
-                                        sortable: false,
-                                        Expander: ({ original, isExpanded }) => {
-                                            const iconClass = isExpanded ? "fa fa-caret-up" : "fa fa-caret-down";
-                                            return (
-                                                <span>
-                                                    <a className="action-element">{original[k].value}</a>
-                                                    &nbsp;
-                                                    <span className={iconClass} />
-                                                </span>
-                                            );
-                                        },
-                                    }
-                                  : _buildColumn(attribute, attribute.isSortable, filterType);
-                          }
-                      )
-                      .sort((c1, c2) => _indexSort(c1, c2, attributes));
+    const subCompKey = table.properties.subtable_field ? table.properties.subtable_field[0] : null;
+
+    const columns: Column[] =
+        value.length === 0
+            ? []
+            : Object.keys(value[0])
+                  .filter((k) => {
+                      const attribute: rt.TableAttribute = attributes.find((item) => item.name === k);
+                      return attribute && attribute.isDisplayable;
+                  })
+                  .map(
+                      (k): Column => {
+                          const attribute = attributes.find((attribute) => attribute.name === k),
+                              filterType =
+                                  table.properties.type[0] === "chart_filter" &&
+                                  table.properties.filter_field[0] === attribute.name
+                                      ? pValFilter
+                                      : null;
+                          return k === subCompKey
+                              ? {
+                                    expander: true,
+                                    Header: () => <span>{attribute.displayName}</span>,
+                                    id: attribute.name,
+                                    sortable: false,
+                                    Expander: ({ original, isExpanded }) => {
+                                        const iconClass = isExpanded ? "fa fa-caret-up" : "fa fa-caret-down";
+                                        return (
+                                            <span>
+                                                <a className="action-element">{original[k].value}</a>
+                                                &nbsp;
+                                                <span className={iconClass} />
+                                            </span>
+                                        );
+                                    },
+                                }
+                              : _buildColumn(attribute, attribute.isSortable, filterType);
+                      }
+                  )
+                  .sort((c1, c2) => _indexSort(c1, c2, attributes));
 
     columns.push(hiddenFilterCol);
 

@@ -28,7 +28,7 @@ const Header: React.FC<Header> = ({ isLoggedIn }) => {
     const goto = useGoto();
     return (
         <ThemeProvider theme={theme}>
-            <Box borderBottom={1} borderColor="grey.500">
+            <Box borderBottom={1} padding={1} borderColor="grey.500">
                 <Grid container className="p-2">
                     <Hidden smDown>
                         <Grid container alignItems="center" item xs={3}>
