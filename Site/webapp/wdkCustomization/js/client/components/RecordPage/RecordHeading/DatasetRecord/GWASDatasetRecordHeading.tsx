@@ -25,7 +25,6 @@ interface GWASRecordHeading {
     record: GWASDatasetRecord;
     recordClass: { [key: string]: any };
     headerActions: HeaderActions[];
-    externalUrls: { [key: string]: any };
     webAppUrl: string;
 }
 
@@ -62,6 +61,10 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
             return setError(true);
         }
 
+        if (parseFloat(val) > 0.001) {
+            return setError(true);
+        }
+
         setError(false);
     }, []);
 
@@ -94,7 +97,7 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
             </form>
             {error && (
                 <BaseTextSmall color="error">
-                    Please enter a valid p-value, e.g., 0.0007, 3e-6, 3^-6, 3x10^-6
+                    Please enter a valid p-value &le; 0.001, e.g., 0.0007, 3e-6, 3^-6, 3x10^-6
                 </BaseTextSmall>
             )}
         </>
@@ -141,6 +144,5 @@ const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordC
 );
 
 export default connect((state: any) => ({
-    externalUrls: state.globalData.siteConfig.externalUrls,
     webAppUrl: state.globalData.siteConfig.webAppUrl,
 }))(GWASDatasetRecordSummary);

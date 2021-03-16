@@ -4,21 +4,21 @@ import { Tooltip } from "wdk-client/Components";
 import { MostSevereConsequencesSection } from "./Components/index";
 import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
-import { resolveJsonInput, isJson } from "../../../../util/jsonParse";
+import { resolveJsonInput, isJson, withTooltip } from "../../../../util/jsonParse";
 import { VariantRecordSummary, VariantRecordAttributes } from "./../../types";
 import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
 import { Box, Grid, List } from "@material-ui/core";
 import { Check, ReportProblemOutlined } from "@material-ui/icons";
 import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../../Shared/Typography";
-import { UnpaddedListItem } from "../../../Shared";
+import { UnpaddedListItem, PrimaryExternalLink } from "../../../Shared";
+
+import { _externalUrls } from "../../../../data/_externalUrls";
 
 interface StoreProps {
-    externalUrls: { [key: string]: any };
     webAppUrl: string;
 }
 
 const enhance = connect((state: any) => ({
-    externalUrls: state.globalData.siteConfig.externalUrls,
     webAppUrl: state.globalData.siteConfig.webAppUrl,
 }));
 
@@ -38,7 +38,13 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
                     </strong>
                 </Subheading>
 
-                {attributes.ref_snp_id && <SubheadingSmall>{attributes.ref_snp_id}</SubheadingSmall>}
+                {attributes.ref_snp_id 
+                    && <SubheadingSmall>
+                        {attributes.ref_snp_id}
+                        {" "} {withTooltip(<PrimaryExternalLink href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
+                            <i className="fa fa-external-link"></i>
+                        </PrimaryExternalLink>, 'Explore dbSNP record for this variant')}
+                    </SubheadingSmall>}
                 <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
                     <BaseTextSmall>
                         Has this variant been flagged by the ADSP?&nbsp;&nbsp;&nbsp;

@@ -27,6 +27,8 @@ import Browser from "./../Visualizations/Igv/IgvBrowser";
 import { HighchartsDatasetSummaryDonut as Donut } from "./../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
 import { DarkContrastText, BaseText, Heading, Subheading } from "../Shared/Typography";
 
+import { _externalUrls } from "../../data/_externalUrls";
+
 interface HomePage {
     webAppUrl: string;
     endpoint: string;
@@ -130,7 +132,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                                     statistics datasets in a broader genomic context. The genome browser can also be
                                     used to compare NIAGADS GWAS summary statistics tracks to each other, against
                                     annotated gene or variant tracks, and to functional genomics tracks from the NIAGADS{" "}
-                                    <PrimaryLink to="#">FILER</PrimaryLink> functional genomics repository.
+                                    <PrimaryExternalLink href={_externalUrls.FILER_TRACK_URL}>FILER</PrimaryExternalLink> functional genomics repository.
                                 </BaseText>
                                 <Grid item container direction="row" justify="flex-start">
                                     <PrimaryActionButton
@@ -230,30 +232,30 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         <BaseText>
                             The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the
                             University of Pennsylvania as part of the{" "}
-                            <PrimaryExternalLink href="https://www.niagads.org/">
+                            <PrimaryExternalLink href={_externalUrls.NIAGADS_BASE_URL}>
                                 National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site
                             </PrimaryExternalLink>{" "}
                             (NIAGADS), a national genetics repository created by NIA to facilitate access to genotypic
                             data for the study of the genetics of late-onset Alzheimer's disease. We welcome the
                             involvement of interested researchers.{" "}
-                            <PrimaryExternalLink href="https://www.niagads.org/data">
+                            <PrimaryExternalLink href={`${_externalUrls.NIAGADS_BASE_URL}/data`}>
                                 Click here to learn more
                             </PrimaryExternalLink>{" "}
                             about contributing data or making formal data access requests. Or{" "}
-                            <PrimaryExternalLink href="https://www.niagads.org/contact">contact us</PrimaryExternalLink>{" "}
+                            <PrimaryExternalLink href={`${_externalUrls.NIAGADS_BASE_URL}/contact`}>contact us</PrimaryExternalLink>{" "}
                             for more information. The GenomicsDB is a collaboration among the following organizations
                             which may also provide funding or governance:
                         </BaseText>
                     </Grid>
                     <Grid container item spacing={4} direction="row" justify="space-between" alignItems="center">
                         <Grid item>
-                            <img width="210" src={`${webAppUrl}/images/home_page/nih-logo.svg`} />
+                            <img width="210" src={`${webAppUrl}/images/home/nih-logo.svg`} />
                         </Grid>
                         <Grid item>
-                            <img width="145px" src={`${webAppUrl}/images/home_page/adsp-logo.svg`} />
+                            <img width="145px" src={`${webAppUrl}/images/home/adsp-logo.svg`} />
                         </Grid>
                         <Grid item>
-                            <img width="210px" src={`${webAppUrl}/images/home_page/psom_logo_blue.png`} />
+                            <img width="210px" src={`${webAppUrl}/images/home/psom_logo_blue.png`} />
                         </Grid>
                     </Grid>
                 </NarrowerWidthRow>
@@ -265,7 +267,7 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         <BaseText>
                             The NIAGADS Alzheimer's Genomics Database (NIAGADS GenomicsDB) has an ongoing collaboration
                             with the{" "}
-                            <PrimaryExternalLink href="https://www.niagads.org/adsp">
+                            <PrimaryExternalLink href={`${_externalUrls.NIAGADS_BASE_URL}/adsp`}>
                                 Alzheimer's Disease Sequencing Project
                             </PrimaryExternalLink>{" "}
                             (ADSP). The NIAGADS GenomicsDB allows browsing, searching, and analysis of variants and
@@ -289,14 +291,14 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Grid item container direction="column" wrap="nowrap">
-                                    <img width={"100%"} src={`${webAppUrl}/images/NG00061.png`} />
+                                    <img width={"100%"} src={`${webAppUrl}/images/home/NG00061.png`} />
                                     <Typography variant="caption">
                                         <em>
-                                            From Butkiewicz et al. (2018) Functional annotation of genomic variants in
+                                            After Butkiewicz et al. (2018) Functional annotation of genomic variants in
                                             studies of late-onset Alzheimer's disease. Bioinformatics 34(16):2724-2731
                                             (after Table 1). PMID:{" "}
                                         </em>
-                                        <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>
+                                        <PrimaryExternalLink href={`${_externalUrls.PUBMED_URL}/29590295`}>29590295</PrimaryExternalLink>
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -305,12 +307,10 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                     <Grid container item direction="row" justify="flex-start">
                         <Subheading>ADSP Annotation</Subheading>
                         <BaseText>
-                            As part of their sequencing effort, the ADSP developed an annotation pipeline that
+                            As part of this sequencing effort, the ADSP developed an annotation pipeline that
                             efficiently integrates standard annotations and ranks potential variant impacts according to
-                            predicted effect (such as codon changes, loss of function, and potential deleteriousness)
-                            (PMID: <PrimaryExternalLink href="#">29590295</PrimaryExternalLink>). All variants in the
-                            NIAGADS GenomicsDB have been annotated using this pipeline. Lists of user uploaded variants
-                            are annotated in real-time.
+                            predicted effect (such as codon changes, loss of function, and potential deleteriousness). 
+                            All variants in the NIAGADS GenomicsDB have been annotated using this pipeline. 
                         </BaseText>
                     </Grid>
                     <Grid container item direction="column" spacing={1}>
@@ -330,8 +330,8 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
                         </Box>
                         <Box>
                             <BaseText>
-                                These datasets contain results from <PrimaryLink to="#">single variant</PrimaryLink> and{" "}
-                                <PrimaryLink to="#">gene-based rare variant</PrimaryLink>&nbsp; aggregation tests,
+                                These datasets contain results from single variant and
+                                gene-based rare variant aggregation tests,
                                 performed separately by ancestry (European ancestry, Caribbean Hispanic) and
                                 meta-analyzed.
                             </BaseText>
