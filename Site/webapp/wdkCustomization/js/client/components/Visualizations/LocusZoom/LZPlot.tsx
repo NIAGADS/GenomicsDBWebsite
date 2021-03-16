@@ -155,11 +155,11 @@ const buildPlot = (
     }
 
     RecombSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/recomb?chromosome=${state.chromosome}&start=${state.start}&end=${state.end}`;
+        return `${endpoint}/locuszoom/recomb?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(state.end)}`;
     };
 
     AssocSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/gwas?track=${track}&chromosome=${state.chromosome}&start=${state.start}&end=${state.end}`;
+        return `${endpoint}/locuszoom/gwas?track=${track}&chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(state.end)}`;
     };
 
     //note that other sources have to be transformed into array of objects, but not ld source....
@@ -191,7 +191,7 @@ const buildPlot = (
     }
 
     GeneSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/gene?chromosome=${state.chromosome}&start=${state.start}&end=${state.end}`;
+        return `${endpoint}/locuszoom/gene?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(state.end)}`;
     };
 
     const layout = _buildLayout(state, width);
