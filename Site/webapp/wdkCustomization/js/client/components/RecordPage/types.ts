@@ -156,7 +156,7 @@ export interface RecordTable {
     record: BaseRecord;
     recordClass: RecordClass;
     table: Table;
-    value: { [key: string]: any }[];
+    tableData: { [key: string]: any }[];
     className: string;
 }
 

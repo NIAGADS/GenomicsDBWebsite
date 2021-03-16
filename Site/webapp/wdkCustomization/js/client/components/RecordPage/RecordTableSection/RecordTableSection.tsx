@@ -42,9 +42,9 @@ const NiagadsRecordTableSection: React.SFC<NiagadsRecordTableSection> = ({
     }, [isCollapsed]);
 
     const { name, displayName, description } = table,
-        value = record.tables[name],
+        tableData = record.tables[name],
         isError = includes(record.tableErrors, name),
-        isLoading = value == null,
+        isLoading = tableData == null,
         className = ["wdk-RecordTable", "wdk-RecordTable__" + table.name].join(" "),
         headerContent = (
             <Box display="flex" justifyContent="space-between" alignItems="baseline">
@@ -71,7 +71,7 @@ const NiagadsRecordTableSection: React.SFC<NiagadsRecordTableSection> = ({
                 ) : (
                     <RecordTableContainer
                         className={className}
-                        value={value}
+                        tableData={tableData}
                         table={table}
                         record={record}
                         recordClass={recordClass}

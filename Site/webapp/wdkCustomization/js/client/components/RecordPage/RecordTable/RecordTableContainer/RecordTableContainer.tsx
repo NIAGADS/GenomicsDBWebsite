@@ -16,7 +16,7 @@ import {
     UnpaddedListItem,
 } from "../../../Shared";
 
-const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
+const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, tableData }) => {
     const [tableInstance, setTableInstance] = useState<Instance>(),
         [filtered, setFiltered] = useState<Filter[]>([]),
         [filterVal, setFilterVal] = useState(""),
@@ -26,11 +26,11 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
     const defaultPVal = useMemo(() => {
         //make sure default p is within the range of values, otherwise, default to max pval in data
         const observedMax = +get(
-            maxBy(value, (v) => +v.pvalue),
+            maxBy(tableData, (v) => +v.pvalue),
             "pvalue"
         );
         return Math.min(observedMax, 5e-8);
-    }, [value]);
+    }, [tableData]);
 
     useEffect(() => {
         const filter = [{ id: "all", value: "" as any }].concat(
@@ -71,7 +71,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
     const getPValFilteredResultsEmpty = () => {
         //table instance check is unreliable b/c this function might fire after filter update but before table state has been resolved
         //so we have to check 'raw' data outside of instance
-        const data = value || [],
+        const data = tableData || [],
             pValFilter = (filtered || []).find((f) => f.id == "pvalue"),
             stringFiltered = filterString(filterVal, data),
             pFiltered = data.filter(
@@ -80,8 +80,8 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
 
         return (
             getHasPValFilter(table) &&
-            get(value, "length") &&
-            //return true if pval filter is masking everything, or if it's masking
+            get(tableData, "length") &&
+            //return true if pval filter is masking everything
             (pFiltered.length === 0 || (stringFiltered.length && !intersection(stringFiltered, pFiltered).length))
         );
     };
@@ -110,7 +110,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
 
     const { attributes } = table;
 
-    return !isEmpty(value) ? (
+    return !isEmpty(tableData) ? (
         <Grid container direction="column" wrap="nowrap" spacing={1}>
             <Grid item container direction="row" wrap="nowrap">
                 {tableInstance && (
@@ -133,7 +133,6 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                         </Grid>
                     </Grid>
                 )}
-                {/* todo: extract to its own component with maxPvalue as internal state */}
                 {getHasPValFilter(table) && (
                     <Grid item sm={9}>
                         <PvalFilterControls
@@ -148,7 +147,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                             tableName={table.name}
                             toggleVisibility={togglePValueChartVisibility}
                             updatePvalFilter={updateFilter.bind(null, "pvalue")}
-                            values={value}
+                            values={tableData}
                         />
                     </Grid>
                 )}
@@ -162,7 +161,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, value }) => {
                         onLoad={onTableLoaded}
                         stringFilterMethod={filterString}
                         table={table}
-                        value={value}
+                        value={tableData}
                         visible={!getPValFilteredResultsEmpty()}
                     />
                 </Grid>
@@ -210,7 +209,7 @@ const PvalFilterControls: React.FC<PvalFilterControls> = ({
     updatePvalFilter,
     values,
 }) => {
-    const transform = (pval: number) => {
+    const roundScientific = (pval: number) => {
         //depending how small it is, pval may or may not come as exponent
         const asExp = Number(pval).toExponential();
         //to get a well-displayed number, we'll round only as far as first digit of coeff
@@ -218,7 +217,7 @@ const PvalFilterControls: React.FC<PvalFilterControls> = ({
         return Number(round(pval, +exp + 1)).toExponential();
     };
 
-    const [maxPvalue, setMaxPValue] = useState<string>(transform(defaultPValue));
+    const [maxPvalue, setMaxPValue] = useState<string>(roundScientific(defaultPValue));
 
     return (
         <Grid container item direction="row" wrap="nowrap" spacing={2}>
@@ -244,14 +243,14 @@ const PvalFilterControls: React.FC<PvalFilterControls> = ({
                     <List>
                         <UnpaddedListItem>
                             <strong>Current p-value:&nbsp;</strong>
-                            {transform(+filterPVal)}
+                            {roundScientific(+filterPVal)}
                         </UnpaddedListItem>
                         <UnpaddedListItem>
                             <strong>New p-value:&nbsp;</strong>
-                            {transform(+maxPvalue)}
+                            {roundScientific(+maxPvalue)}
                         </UnpaddedListItem>
 
-                        <PrimaryActionButton onClick={() => updatePvalFilter(+transform(+maxPvalue))}>
+                        <PrimaryActionButton onClick={() => updatePvalFilter(+roundScientific(+maxPvalue))}>
                             Update
                         </PrimaryActionButton>
                     </List>

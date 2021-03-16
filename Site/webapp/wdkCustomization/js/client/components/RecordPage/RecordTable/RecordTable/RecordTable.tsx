@@ -7,6 +7,7 @@ import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
+import { Box } from "@material-ui/core";
 
 interface NiagadsRecordTable {
     attributes: rt.TableAttribute[];
@@ -64,7 +65,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                                       table.properties.type[0] === "chart_filter" &&
                                       table.properties.filter_field[0] === attribute.name
                                           ? pValFilter
-                                          : (filter: any, rows: any) => rows;
+                                          : null;
                               return k === subCompKey
                                   ? {
                                         expander: true,
@@ -143,6 +144,7 @@ const NiagadsTableSort = (a: string, b: string) => {
     //sci string to num
     c = /\d\.\d+e-\d+/.test(c) ? +c : c;
     d = /\d\.\d+e-\d+/.test(d) ? +d : d;
+    //pos strings
     c = isString(c) ? c.replace(/:/g, "").toLowerCase() : c;
     d = isString(d) ? d.replace(/:/g, "").toLowerCase() : d;
     if (c > d) {
@@ -182,10 +184,10 @@ const resolveAccessor = (key: string, attribute: rt.TableAttribute): AccessorFun
         case "json_icon":
         case "json_text_or_link":
         case "json_dictionary":
-            //idea is that resolveData() has already parsed all json, here we just resolve the component through the accessor
+            //resolveData() has already parsed json, here we just resolve the component through the accessor
             return (row: { [key: string]: any }) => resolveObjectInput(row[key]);
     }
-    throw new Error(`I'm JSON of type ${attribute.type} and no one will parse me`);
+    throw new Error(`No accessor for value of type ${attribute.type}`);
 };
 
 const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
@@ -203,27 +205,20 @@ const _buildColumn = (attribute: rt.TableAttribute, sortable: boolean, filterTyp
     sortable,
     accessor: resolveAccessor(attribute.name, attribute),
     id: attribute.name,
-    //maxWidth: 100,
     filterMethod: filterType ? filterType : (filter: any, rows: any) => rows,
 });
 
 const _buildHeader = (attribute: rt.TableAttribute) => {
     return (
-        <>
-            <span className="header-container">
-                <span className="header-left-side">
-                    <span className="header-display-name">{attribute.displayName}</span>
-                    {attribute.help
-                        ? withTooltip(
-                              <span className="header-help fa fa-question-circle-o" />,
-                              attribute.help,
-                              "header-help"
-                          )
-                        : null}
-                </span>
-                {attribute.isSortable && <SortIconGroup />}
-            </span>
-        </>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex">
+                <Box overflow="hidden" textOverflow="ellipsis" paddingRight="2px">
+                    {attribute.displayName}
+                </Box>
+                {attribute.help ? withTooltip(<span className="fa fa-question-circle-o" />, attribute.help) : null}
+            </Box>
+            {attribute.isSortable && <SortIconGroup />}
+        </Box>
     );
 };
 
