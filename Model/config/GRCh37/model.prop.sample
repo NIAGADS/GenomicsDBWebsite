@@ -32,9 +32,11 @@ STEP_ANALYSIS_JOB_DIR=/www/common/temp
 
 # Base URL: uncomment https://dev.niagads.org for development
 # only one should be uncommented
-# NIAGADS_BASE_URL=https://www.niagads.org 
-NIAGADS_BASE_URL=https://beta.niagads.org
-WEBAPP = genomics
+NIAGADS_BASE_URL=https://www.niagads.org 
+# NIAGADS_BASE_URL=https://beta.niagads.org
+WEBAPP=genomics
+
+FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
 
 #----------------------------------------------------------
 # Project Identifiers & Configuration
