@@ -32,16 +32,6 @@
             flex-grow: 0;
             box-shadow: none;
             border-bottom: 3px solid black;
-            .header-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                .header-display-name {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    padding-right: 2px;
-                }
-            }
         }
         .rt-tr {
             text-align: left;

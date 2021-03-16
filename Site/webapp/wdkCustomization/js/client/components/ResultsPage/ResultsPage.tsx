@@ -157,9 +157,7 @@ const _buildSearchResult = (result: SearchResult, recordType: string) => {
     return (
         result.record_type === recordType && (
             <Box key={result.primary_key} mb={3}>
-                <PrimaryLink className="h6 wdk-PrimaryLink" to={buildRouteFromResult(result)}>
-                    {safeHtml(result.display)}
-                </PrimaryLink>
+                <PrimaryLink to={buildRouteFromResult(result)}>{safeHtml(result.display)}</PrimaryLink>
                 {result.record_type === "variant" && result.matched_term.indexOf("merge") > -1 && (
                     <em>{result.matched_term}</em>
                 )}
