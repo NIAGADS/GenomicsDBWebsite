@@ -1,6 +1,16 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { Grid, List, ListItem, Typography, withStyles, Select, MenuItem, FormHelperText } from "@material-ui/core";
+import {
+    Grid,
+    List,
+    ListItem,
+    Box,
+    Typography,
+    withStyles,
+    Select,
+    MenuItem,
+    FormHelperText
+} from "@material-ui/core";
 import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "../../Shared";
 import LZPlot from "./LZPlot";
 import { get } from "lodash";
@@ -46,7 +56,7 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
 
     useWdkService(
         (service) =>
-            service._fetchJson<TopHit[]>("get", `/dataset/gwas/top?track=${dataset}&limit=10&flank`).then((res) => {
+            service._fetchJson<TopHit[]>("get", `/dataset/gwas/top?track=${dataset}&flank`).then((res) => {
                 setTopHits(res);
                 loadTopHit(res[0]);
             }),
@@ -54,11 +64,11 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
     );
 
     return chromosome && refVariant && range ? (
-        <div className="locuszoom-plot">
-            <Grid container direction="column" spacing={2}>
-                <Grid item container direction="row" justify="center">
-                    <Grid item xs={4}>
-                        <Select
+        <Box className="locuszoom-plot">
+            <Grid container spacing={2}>
+                <Grid item container direction="column" spacing={1} sm={3}>
+                    <Grid item>
+                        <Select style={{fontSize:14.4, width:100}}
                             value={population}
                             onChange={(e) => setPopulation(e.target.value as string)}
                             input={<UnlabeledTextField fullWidth={true} />}
@@ -71,13 +81,11 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
                                 );
                             })}
                         </Select>
-                        <FormHelperText>Select a population</FormHelperText>
+                        <FormHelperText>Select a LD population</FormHelperText>
                     </Grid>
-                </Grid>
-                <Grid item container wrap="nowrap" justify="center" direction="row" spacing={1}>
                     <Grid item>
                         <Typography>Top Hits</Typography>
-                        <List>
+                        <List style={{ maxHeight: 350, minWidth: 150, overflow: "auto" }}>
                             {(topHits || []).map((t) => (
                                 //@ts-ignore
                                 <TopHitListItem key={t.ld_reference_variant}>
@@ -86,20 +94,20 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
                             ))}
                         </List>
                     </Grid>
-                    <Grid item>
-                        <LZPlot
-                            chromosome={chromosome}
-                            end={get(range, "end")}
-                            population={population}
-                            refVariant={refVariant}
-                            selectClass={selectClass.current}
-                            start={get(range, "start")}
-                            track={dataset}
-                        />
-                    </Grid>
+                </Grid>
+                <Grid item direction="column">
+                    <LZPlot
+                        chromosome={chromosome}
+                        end={get(range, "end")}
+                        population={population}
+                        refVariant={refVariant}
+                        selectClass={selectClass.current}
+                        start={get(range, "start")}
+                        track={dataset}
+                    />
                 </Grid>
             </Grid>
-        </div>
+        </Box>
     ) : (
         <LoadingOverlay />
     );

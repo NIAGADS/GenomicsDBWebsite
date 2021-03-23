@@ -69,7 +69,7 @@ const siteAnnouncements = [
       if (isGenomicHomePage(props.projectId, props.location)) {
         return (
           <div key="live-beta">
-            Welcome to NIAGADS Alzheimer's GenomicsDB (${props.project_id}) <i>beta</i> where you will find the
+            Welcome to NIAGADS Alzheimer's GenomicsDB ({props.projectId}) <i>beta</i> where you will find the
             newest versions of our interface, features, tools and data. While we
             transition to making this beta site permanent,{" "}
             <a

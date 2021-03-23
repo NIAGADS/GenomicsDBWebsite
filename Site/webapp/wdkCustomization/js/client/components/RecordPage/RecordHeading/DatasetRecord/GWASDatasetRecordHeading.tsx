@@ -6,14 +6,15 @@ import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
 import { HelpIcon } from "wdk-client/Components";
 import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
-import { Box, FormGroup, Grid, List } from "@material-ui/core";
+import { Box, FormGroup, Grid, List, FormHelperText } from "@material-ui/core";
 import {
     BaseText,
     BaseTextSmall,
     PrimaryActionButton,
     Subheading,
+    SubheadingSmall,
     UnlabeledTextFieldOutlined,
-    UnpaddedListItem,
+    UnpaddedListItem
 } from "../../../Shared";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
@@ -37,8 +38,8 @@ const GWASDatasetSearchHelp: React.FC = () => {
     return (
         <Box>
             <BaseTextSmall>
-                Set the adjusted p-value threshold for GWAS significance. The search will return all genes supported by
-                a p-value &le; the specified threshold.
+                Set the threshold for GWAS significance. The search will return all variants supported
+                by a p-value &le; the specified threshold.
             </BaseTextSmall>
             <BaseTextSmall>
                 p-values may be specified in decimal (e.g., 0.000003) or scientific (e.g., 3e-6 or 3^-6 or 3 x 10^-6)
@@ -70,7 +71,12 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
 
     return (
         <>
-            <BaseText>Mine this dataset</BaseText>
+            <BaseText>
+                Mine this dataset
+                <HelpIcon>
+                    <GWASDatasetSearchHelp />
+                </HelpIcon>
+            </BaseText>
             <form action={SEARCH_PATH}>
                 <FormGroup row={true}>
                     <input type="hidden" name="autoRun" />
@@ -82,16 +88,12 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
                             defaultValue="5e-8"
                             placeholder={"5e-8"}
                             onChange={handleChange}
-                            startAdornment={<BaseTextSmall style={{ whiteSpace: "nowrap" }}>p-value</BaseTextSmall>}
                         />
                     </Box>
                     <Box display="flex" alignItems="flex-start">
                         <PrimaryActionButton disabled={error} type="submit">
                             Search
                         </PrimaryActionButton>
-                        <HelpIcon>
-                            <GWASDatasetSearchHelp />
-                        </HelpIcon>
                     </Box>
                 </FormGroup>
             </form>
@@ -107,24 +109,20 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
 const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordClass, headerActions }) => (
     <Grid container style={{ marginLeft: "10px" }}>
         <Grid item container direction="column" sm={3} xs={12}>
-            <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-            <Subheading>
-                {convertHtmlEntites(record.attributes.name)} &nbsp;(
-                {record.attributes.attribution})
-            </Subheading>
+            {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
+            <Subheading style={{paddingBottom: 0}}>{convertHtmlEntites(record.attributes.name)}</Subheading>
+            <SubheadingSmall style={{padding: 0}}>{record.attributes.attribution}</SubheadingSmall>
             <List>
                 <UnpaddedListItem>
-                    <BaseText variant="body2">{record.attributes.description}</BaseText>
-                </UnpaddedListItem>
-                <UnpaddedListItem>
-                    <RecordAttributeItem label="Category:" attribute={recordClass.displayName} />
-                </UnpaddedListItem>
-                <UnpaddedListItem>
                     <RecordAttributeItem
-                        label="Explore related datasets:"
+                        label="Related datasets:"
                         attribute={resolveJsonInput(record.attributes.accession_link)}
                     />
                 </UnpaddedListItem>
+                <UnpaddedListItem>
+                    <BaseText variant="body2">{record.attributes.description}</BaseText>
+                </UnpaddedListItem>
+              
             </List>
             {record.attributes.is_adsp && (
                 <Subheading>
@@ -137,7 +135,7 @@ const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordC
                 record={record.id[0].value}
             ></GWASDatasetSearch>
         </Grid>
-        <Grid item sm={9} xs={12}>
+        <Grid item sm={9} xs={12} style={{marginTop: 15}}>
             <GWASDatasetLZPlot dataset={record.id[0].value} />
         </Grid>
     </Grid>

@@ -1,297 +1,287 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-  <recordClassSet name="DatasetRecordClasses">
-    <recordClass name="ResourceRecordClass" displayName="Data Source" displayNamePlural="Data Sources" shortDisplayName="Data Source" useBasket="false" urlName="resource">
-      <!-- =================================================================== -->
-      <!-- Primary Key -->
-      <!-- =================================================================== -->
+	<recordClassSet name="DatasetRecordClasses">
+		<recordClass name="ResourceRecordClass" displayName="Data Source" displayNamePlural="Data Sources" shortDisplayName="Data Source" useBasket="false" urlName="resource">
+			<!-- =================================================================== -->
+			<!-- Primary Key -->
+			<!-- =================================================================== -->
 
-      <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
-	<columnRef>
+			<primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
+				<columnRef>
 	  resource_id
-	</columnRef>
-      </primaryKey>
+				</columnRef>
+			</primaryKey>
 
-      <idAttribute name="primary_key" displayName="Resource ID">
-	<text>
-	  <![CDATA[$$resource_id$$]]>
-	</text>
-      </idAttribute>
+			<idAttribute name="primary_key" displayName="Resource ID">
+				<text>
+					<![CDATA[$$resource_id$$]]>
+				</text>
+			</idAttribute>
 
-      <testParamValues>
-	<paramValue name="resource_id">
+			<testParamValues>
+				<paramValue name="resource_id">
 	  NG00027
-	</paramValue>
-      </testParamValues>
+				</paramValue>
+			</testParamValues>
 
-      <!-- =================================================================== -->
-      <!-- Reporters -->
-      <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record"
-		implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+			<!-- =================================================================== -->
+			<!-- Reporters -->
+			<!-- =================================================================== -->
+			<reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
-      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results"
-		implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-	<description>
+			<reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+				<description>
 	  %%attributesReporterDescription%%
-	</description>
-	<property name="page_size">
+				</description>
+				<property name="page_size">
 	  1000000
-	</property>
-      </reporter>
+				</property>
+			</reporter>
 
-      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results"
-		implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-	<description>
+			<reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+				<description>
 	  %%tableReporterDescription%%
-	</description>
-	<property name="page_size">
+				</description>
+				<property name="page_size">
 	  1000000
-	</property>
-      </reporter>
+				</property>
+			</reporter>
 
-      <reporter name="xml" displayName="XML: choose from columns
-					and/or tables" scopes=""
-		implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
-      </reporter>
-
-      <reporter name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results"
-		implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-      </reporter>
-
-      <!-- =============================================================== -->
-      <!-- Step Analysis Plugins -->
-      <!-- =============================================================== -->
-
-      <!-- <stepAnalysisRef name="pathway-enrichment"/> -->
-
-      <!-- =============================================================== -->
-      <!-- Annotation and Link Outs -->
-      <!-- =============================================================== -->
-      <attributeQueryRef ref="ResourceAttributes.BasicAttributes">
-	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link"/>
-	<columnAttribute name="name" displayName="Name" type="string"/>
-	<columnAttribute name="description" displayName="Description" type="string"/>
-	<columnAttribute name="attribution" displayName="Attribution" type="string" />
-	<columnAttribute name="version" displayName="Version" type="string"/>
-	<columnAttribute name="category" displayName="Category" type="string"/>
-	<columnAttribute name="caveats" displayName="Notes/Caveats" type="string"/>
-	<columnAttribute name="is_adsp" displayName="ADSP?" type="json_icon"/>
-      </attributeQueryRef>
-
-      <!-- =============================================================== -->
-      <!-- Tracks / Datasets -->
-      <!-- =============================================================== -->
-
-    </recordClass>
-
-    <recordClass name="NIAGADSDatasetRecordClass" displayName="NIAGADS Dataset" displayNamePlural="NIAGADS Datasets" shortDisplayName="Dataset" useBasket="false" urlName="dataset">
-      <!-- =================================================================== -->
-      <!-- Primary Key -->
-      <!-- =================================================================== -->
-
-      <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
-	<columnRef>
-	  accession
-	</columnRef>
-      </primaryKey>
-
-      <idAttribute name="primary_key" displayName="Resource ID">
-	<text>
-	  <![CDATA[$$accession$$]]>
-	</text>
-      </idAttribute>
-
-      <testParamValues>
-	<paramValue name="accession">
-	  NG00027
-	</paramValue>
-      </testParamValues>
-
-      <!-- =================================================================== -->
-      <!-- Reporters -->
-      <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
-
-      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-	<description>
-	  %%attributesReporterDescription%%
-	</description>
-	<property name="page_size">
-	  1000000
-	</property>
-      </reporter>
-
-      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-	<description>
-	  %%tableReporterDescription%%
-	</description>
-	<property name="page_size">
-	  1000000
-	</property>
-      </reporter>
-
-      <reporter name="xml" displayName="XML: choose from columns
+			<reporter name="xml" displayName="XML: choose from columns
 					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
-      </reporter>
+			</reporter>
 
-      <reporter name="json" displayName="JSON: choose from columns
+			<reporter name="json" displayName="JSON: choose from columns
 					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-      </reporter>
+			</reporter>
 
-      <!-- =============================================================== -->
-      <!-- Step Analysis Plugins -->
-      <!-- =============================================================== -->
+			<!-- =============================================================== -->
+			<!-- Step Analysis Plugins -->
+			<!-- =============================================================== -->
 
-      <!-- <stepAnalysisRef name="pathway-enrichment"/> -->
+			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
-      <!-- =============================================================== -->
-      <!-- Annotation and Link Outs -->
-      <!-- =============================================================== -->
-      <attributeQueryRef ref="NIAGADSDatasetAttributes.BasicAttributes">
-	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
-	<columnAttribute name="external_link" displayName="Accession" type="json_link"/>
-	<columnAttribute name="name" displayName="Name" type="string"/>
-	<columnAttribute name="description" displayName="Description" type="string"/>
-	<columnAttribute name="is_adsp" displayName="ADSP?" type="json_icon"/>
-      </attributeQueryRef>
+			<!-- =============================================================== -->
+			<!-- Annotation and Link Outs -->
+			<!-- =============================================================== -->
+			<attributeQueryRef ref="ResourceAttributes.BasicAttributes">
+				<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
+				<columnAttribute name="accession_link" displayName="Accession" type="json_link"/>
+				<columnAttribute name="name" displayName="Name" type="string"/>
+				<columnAttribute name="description" displayName="Description" type="string"/>
+				<columnAttribute name="attribution" displayName="Attribution" type="string" />
+				<columnAttribute name="version" displayName="Version" type="string"/>
+				<columnAttribute name="category" displayName="Category" type="string"/>
+				<columnAttribute name="caveats" displayName="Notes/Caveats" type="string"/>
+				<columnAttribute name="is_adsp" displayName="ADSP?" type="json_icon"/>
+			</attributeQueryRef>
+
+			<!-- =============================================================== -->
+			<!-- Tracks / Datasets -->
+			<!-- =============================================================== -->
+
+		</recordClass>
+
+		<recordClass name="NIAGADSDatasetRecordClass" displayName="NIAGADS Dataset" displayNamePlural="NIAGADS Datasets" shortDisplayName="Dataset" useBasket="false" urlName="dataset">
+			<!-- =================================================================== -->
+			<!-- Primary Key -->
+			<!-- =================================================================== -->
+
+			<primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
+				<columnRef>
+	  accession
+				</columnRef>
+			</primaryKey>
+
+			<idAttribute name="primary_key" displayName="Resource ID">
+				<text>
+					<![CDATA[$$accession$$]]>
+				</text>
+			</idAttribute>
+
+			<testParamValues>
+				<paramValue name="accession">
+	  NG00027
+				</paramValue>
+			</testParamValues>
+
+			<!-- =================================================================== -->
+			<!-- Reporters -->
+			<!-- =================================================================== -->
+			<reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+
+			<reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+				<description>
+	  %%attributesReporterDescription%%
+				</description>
+				<property name="page_size">
+	  1000000
+				</property>
+			</reporter>
+
+			<reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+				<description>
+	  %%tableReporterDescription%%
+				</description>
+				<property name="page_size">
+	  1000000
+				</property>
+			</reporter>
+
+			<reporter name="xml" displayName="XML: choose from columns
+					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
+			</reporter>
+
+			<reporter name="json" displayName="JSON: choose from columns
+					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+			</reporter>
+
+			<!-- =============================================================== -->
+			<!-- Step Analysis Plugins -->
+			<!-- =============================================================== -->
+
+			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
+
+			<!-- =============================================================== -->
+			<!-- Annotation and Link Outs -->
+			<!-- =============================================================== -->
+			<attributeQueryRef ref="NIAGADSDatasetAttributes.BasicAttributes">
+				<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
+				<columnAttribute name="external_link" displayName="Accession" type="json_link"/>
+				<columnAttribute name="name" displayName="Name" type="string"/>
+				<columnAttribute name="description" displayName="Description" type="string"/>
+				<columnAttribute name="is_adsp" displayName="ADSP?" type="json_icon"/>
+			</attributeQueryRef>
 
 
-      <!-- =============================================================== -->
-      <!-- Tracks / Datasets -->
-      <!-- =============================================================== -->
+			<!-- =============================================================== -->
+			<!-- Tracks / Datasets -->
+			<!-- =============================================================== -->
 
-      <table name="datasets" displayName="Summary Statistics Results" queryRef="NIAGADSDatasetTables.SummaryStatistics">
-	<columnAttribute name="track" displayName="Track" type="json_link"/>
-	<columnAttribute name="name" displayName="Name" type="string"/>
-	<columnAttribute name="description" displayName="Description" type="string"/>
-	
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+			<table name="datasets" displayName="Summary Statistics Results" queryRef="NIAGADSDatasetTables.SummaryStatistics">
+				<columnAttribute name="track" displayName="Track" type="json_link"/>
+				<columnAttribute name="name" displayName="Name" type="string"/>
+				<columnAttribute name="description" displayName="Description" type="string"/>
 
-	<propertyList name="defaultOpen">
-	  <value>true</value>
-	</propertyList>
+				<propertyList name="type">
+					<value>default</value>
+				</propertyList>
+
+				<propertyList name="defaultOpen">
+					<value>true</value>
+				</propertyList>
 
 
-	<description>
-	  <![CDATA[
+				<description>
+					<![CDATA[
                    Summary statistics results associated with this accession.  Click on the track to search or browse these data.
 	  ]]>
-	</description>
-      </table>
+				</description>
+			</table>
 
 
 
-    </recordClass>
+		</recordClass>
 
 
-    <recordClass name="GWASDatasetRecordClass" displayName="Summary Statistics Dataset Report"
-		 displayNamePlural="Datasets" shortDisplayName="Dataset" useBasket="false" urlName="gwas_summary">
-      
-      <!-- =================================================================== -->
-      <!-- Primary Key -->
-      <!-- =================================================================== -->
+		<recordClass name="GWASDatasetRecordClass" displayName="Summary Statistics Dataset Report" displayNamePlural="Datasets" shortDisplayName="Dataset" useBasket="false" urlName="gwas_summary">
 
-      <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
-	<columnRef>
+			<!-- =================================================================== -->
+			<!-- Primary Key -->
+			<!-- =================================================================== -->
+
+			<primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
+				<columnRef>
 	  track
-	</columnRef>
-      </primaryKey>
+				</columnRef>
+			</primaryKey>
 
-      <idAttribute name="primary_key" displayName="Dataset" help="explore this dataset">
-	<text>
-	  <![CDATA[$$name$$]]>
-	</text>
-      </idAttribute>
+			<idAttribute name="primary_key" displayName="Dataset" help="explore this dataset">
+				<text>
+					<![CDATA[$$name$$]]>
+				</text>
+			</idAttribute>
 
-      <testParamValues>
-	<paramValue name="track">
+			<testParamValues>
+				<paramValue name="track">
 	  NG00027_STAGE1
-	</paramValue>
-      </testParamValues>
-                       
-      
-      <!-- =================================================================== -->
-      <!-- Reporters -->
-      <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+				</paramValue>
+			</testParamValues>
 
-      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-	<description>
+
+			<!-- =================================================================== -->
+			<!-- Reporters -->
+			<!-- =================================================================== -->
+			<reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+
+			<reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+				<description>
 	  %%attributesReporterDescription%%
-	</description>
-	<property name="page_size">
+				</description>
+				<property name="page_size">
 	  1000000
-	</property>
-      </reporter>
+				</property>
+			</reporter>
 
-      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results"
-		implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-	<description>
+			<reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+				<description>
 	  %%tableReporterDescription%%
-	</description>
-	<property name="page_size">
+				</description>
+				<property name="page_size">
 	  1000000
-	</property>
-      </reporter>
+				</property>
+			</reporter>
 
-      <reporter name="xml" displayName="XML: choose from columns
-					and/or tables" scopes=""
-		implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
-      </reporter>
+			<reporter name="xml" displayName="XML: choose from columns
+					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
+			</reporter>
 
-      <reporter name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results"
-		implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-      </reporter>
+			<reporter name="json" displayName="JSON: choose from columns
+					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+			</reporter>
 
-      <!-- =============================================================== -->
-      <!-- Step Analysis Plugins -->
-      <!-- =============================================================== -->
+			<!-- =============================================================== -->
+			<!-- Step Analysis Plugins -->
+			<!-- =============================================================== -->
 
-      <!-- <stepAnalysisRef name="pathway-enrichment"/> -->
+			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
-      <!-- =============================================================== -->
-      <!-- Annotation and Link Outs -->
-      <!-- =============================================================== -->
+			<!-- =============================================================== -->
+			<!-- Annotation and Link Outs -->
+			<!-- =============================================================== -->
 
-      <attributesList summary="description,accession_link,search_link"/>
+			<attributesList summary="description,accession_link,search_link"/>
 
-      <attributeQueryRef ref="GwasDatasetAttributes.BasicAttributes">
-	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
-	<columnAttribute name="name" displayName="Name" type="string" />
-	<columnAttribute name="attribution" displayName="Attribution" type="string" />
-	<columnAttribute name="description" displayName="Description" type="string"/>
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
-	<columnAttribute name="search_link" displayName="Mine Dataset" type="json_link" help="retrieve the top variants in this dataset, modify filter criteria/download result"/>
-	<columnAttribute name="niagads_accession" displayName="Accession" type="string" internal="true" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
-	<columnAttribute name="category" displayName="Category" type="string" internal="true" inReportMaker="false"/>
-	<columnAttribute name="is_adsp" displayName="ADSP Dataset" type="json_icon" help="data generated by the Alzheimer's Disease Sequencing Project (ADSP)"/>
-      </attributeQueryRef>
+			<attributeQueryRef ref="GwasDatasetAttributes.BasicAttributes">
+				<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
+				<columnAttribute name="name" displayName="Name" type="string" />
+				<columnAttribute name="attribution" displayName="Attribution" type="string" />
+				<columnAttribute name="description" displayName="Description" type="string"/>
+				<columnAttribute name="accession_link" displayName="Accession" type="json_link" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
+				<columnAttribute name="search_link" displayName="Mine Dataset" type="json_link" help="retrieve the top variants in this dataset, modify filter criteria/download result"/>
+				<columnAttribute name="niagads_accession" displayName="Accession" type="string" internal="true" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
+				<columnAttribute name="category" displayName="Category" type="string" internal="true" inReportMaker="false"/>
+				<columnAttribute name="is_adsp" displayName="ADSP Dataset" type="json_icon" help="data generated by the Alzheimer's Disease Sequencing Project (ADSP)"/>
+			</attributeQueryRef>
 
-      <!-- <attributeQueryRef ref="GwasDatasetAttributes.CovariateList"> -->
-      <!-- 	<columnAttribute name="covariate_list" displayName="Covariates" type="string" help="study covariates"/> -->
-      <!-- </attributeQueryRef> -->
+			<!-- <attributeQueryRef ref="GwasDatasetAttributes.CovariateList"> -->
+			<!-- 	<columnAttribute name="covariate_list" displayName="Covariates" type="string" help="study covariates"/> -->
+			<!-- </attributeQueryRef> -->
 
-      <!-- <attributeQueryRef ref="GwasDatasetAttributes.PhenotypeList"> -->
-      <!-- 	<columnAttribute name="phenotype_list" displayName="Phenotypes" type="string" -->
-      <!-- 			 help="phenotypes assessed in the study, may incl.: population, diagnosis, neuropathology, biomarker, APOE allele carrier status"/> -->
-      <!-- </attributeQueryRef> -->
-      
-      <attributeQueryRef ref="GwasDatasetAttributes.HasManhattanPlot">
-	<columnAttribute name="has_manhattan_plot" internal="true" inReportMaker="false" type="boolean">
-	  <propertyList name="chartProperties">
-	    <value>{"type": "imanhattan"}</value>
-	  </propertyList>
-	</columnAttribute>
-      </attributeQueryRef>
+			<!-- <attributeQueryRef ref="GwasDatasetAttributes.PhenotypeList"> -->
+			<!-- 	<columnAttribute name="phenotype_list" displayName="Phenotypes" type="string" -->
+			<!-- help="phenotypes assessed in the study, may incl.: population, diagnosis, neuropathology, biomarker, APOE allele carrier status"/> -->
+			<!-- </attributeQueryRef> -->
 
-      <!-- <table name="phenotypes" displayName="Phenotypes"
-	     queryRef="GwasDatasetTables.Phenotypes">
+			<attributeQueryRef ref="GwasDatasetAttributes.HasManhattanPlot">
+				<columnAttribute name="has_manhattan_plot" internal="true" inReportMaker="false" type="boolean">
+					<propertyList name="chartProperties">
+						<value>{"type": "imanhattan"}</value>
+					</propertyList>
+				</columnAttribute>
+			</attributeQueryRef>
+
+			<!-- <table name="phenotypes" displayName="Phenotypes" queryRef="GwasDatasetTables.Phenotypes">
 	<columnAttribute name="phenotype_category" displayName="Category" type="string"/>
 	<columnAttribute name="phenotype" displayName="Phenotype" type="string" />
 	<propertyList name="type">
@@ -305,195 +295,195 @@
 	  <![CDATA[
 		   Phenotypes associated with this dataset.
 	  ]]>
-	</description>
-      </table> -->
+</description>
+</table> -->
 
 
-      <!-- =============================================================== -->
-      <!-- Genetic Variation  -->
-      <!-- =============================================================== -->
-      
-      <attributeQueryRef ref="GwasDatasetAttributes.TopGenes">
-	<columnAttribute name="top_gene_list" displayName="Top Genes" type="json" internal="true" inReportMaker="false"/>
-      </attributeQueryRef>
-      
-      <table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
-	<columnAttribute name="variant" displayName="Variant" type="json_link"/>
-	<columnAttribute name="pvalue" displayName="p-value" type="numeric"/>
-	<columnAttribute name="ref_snp_id" displayName="refSNP" type="string"/>
-	<columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
-	<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
-	<columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>
-	<columnAttribute name="msc_impacted_gene_link" displayName="Impactd Gene" help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="json_link"/>
-	<columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
-	
-	<propertyList name="type">
-	  <value>chart_filter</value>
-	</propertyList>
-	<propertyList name="filter_field">
-	  <value>pvalue</value>
-	</propertyList>
-	
-	<description>
-	  <![CDATA[
+			<!-- =============================================================== -->
+			<!-- Genetic Variation  -->
+			<!-- =============================================================== -->
+
+			<attributeQueryRef ref="GwasDatasetAttributes.TopGenes">
+				<columnAttribute name="top_gene_list" displayName="Top Genes" type="json" internal="true" inReportMaker="false"/>
+			</attributeQueryRef>
+
+			<!-- <table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
+				<columnAttribute name="variant" displayName="Variant" type="json_link"/>
+				<columnAttribute name="pvalue" displayName="p-value" type="numeric"/>
+				<columnAttribute name="ref_snp_id" displayName="refSNP" type="string"/>
+				<columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
+				<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
+				<columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>
+				<columnAttribute name="msc_impacted_gene_link" displayName="Impactd Gene" help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="json_link"/>
+				<columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
+
+				<propertyList name="type">
+					<value>chart_filter</value>
+				</propertyList>
+				<propertyList name="filter_field">
+					<value>pvalue</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Top variants from this GWAS summary statistics dataset.
 	  ]]>
-	</description>
-      </table>
+				</description>
+			</table> -->
 
-      <!-- =============================================================== -->
-      <!-- INFERNO Genetic Variation  -->
-      <!-- =============================================================== -->
-      
-      <table name="inferno_expanded_snps" displayName="INFERNO Expanded Variants" queryRef="InfernoTables.ExpandedSNPs">
-	<columnAttribute name="variant" displayName="SNP" type="json_link"/>
-	<columnAttribute name="is_expanded" displayName="Expanded?" type="json_icon" help="variant identified by INFERNO LD-expansion"/>
-	<columnAttribute name="refsnp_id" displayName="refSNP" type="string"/>
-	<columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
-	<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
-	<columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>
-	<columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
-	<columnAttribute name="tag_id" displayName="Assigned Tag Region" type="string"/>
+			<!-- =============================================================== -->
+			<!-- INFERNO Genetic Variation  -->
+			<!-- =============================================================== -->
 
-	<columnAttribute name="tag_refsnp" displayName="Tag refSNP" help="refSNP(s) in the tag region to which this variant has linkage" type="string"/>
-	<columnAttribute name="tag_maf" displayName="Tag refSNP MAF" help="minor allele frequency of the refSNP(s) in the tag region to which this variant has linkage" type="numeric"/>
-	<columnAttribute name="tag_rsquared" displayName="Tag r^2" help="LD r-squared between this variant the refSNP(s) in the tag region to which it has linkage" type="numeric"/>
-	<columnAttribute name="tag_distance" displayName="Tag Distance" help="distance between this variant and the refSNP(s) in the tage reigon to which it has linkage" type="numeric"/>
-	
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	
-	<description>
-	  <![CDATA[
+			<table name="inferno_expanded_snps" displayName="INFERNO Expanded Variants" queryRef="InfernoTables.ExpandedSNPs">
+				<columnAttribute name="variant" displayName="SNP" type="json_link"/>
+				<columnAttribute name="is_expanded" displayName="Expanded?" type="json_icon" help="variant identified by INFERNO LD-expansion"/>
+				<columnAttribute name="refsnp_id" displayName="refSNP" type="string"/>
+				<columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
+				<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
+				<columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>
+				<columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
+				<columnAttribute name="tag_id" displayName="Assigned Tag Region" type="string"/>
+
+				<columnAttribute name="tag_refsnp" displayName="Tag refSNP" help="refSNP(s) in the tag region to which this variant has linkage" type="string"/>
+				<columnAttribute name="tag_maf" displayName="Tag refSNP MAF" help="minor allele frequency of the refSNP(s) in the tag region to which this variant has linkage" type="numeric"/>
+				<columnAttribute name="tag_rsquared" displayName="Tag r^2" help="LD r-squared between this variant the refSNP(s) in the tag region to which it has linkage" type="numeric"/>
+				<columnAttribute name="tag_distance" displayName="Tag Distance" help="distance between this variant and the refSNP(s) in the tage reigon to which it has linkage" type="numeric"/>
+
+				<propertyList name="type">
+					<value>default</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Top variants from this GWAS summary statistics dataset and 
 		   additional variants linked to the results via <a href="@INFERNO_URL@">INFERNO</a> LD-expansion, assigned tag regions, and the linkage results used to do the expansion.
 		   <br/>
 		   <br/>
 	  ]]>
-	</description>
-      </table>
+				</description>
+			</table>
 
-      <!-- =============================================================== -->
-      <!-- INFERNO Tags  -->
-      <!-- =============================================================== -->
-      
-      <table name="inferno_tag_ideogram" queryRef="InfernoTables.TagIdeogram" displayName="Tag Region Overview">
-	<columnAttribute name="data" inReportMaker="false" type="json"/>
-	<columnAttribute name="annotation_tracks" inReportMaker="false" type="json"/>
+			<!-- =============================================================== -->
+			<!-- INFERNO Tags  -->
+			<!-- =============================================================== -->
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	<description>
-	  <![CDATA[
+			<table name="inferno_tag_ideogram" queryRef="InfernoTables.TagIdeogram" displayName="Tag Region Overview">
+				<columnAttribute name="data" inReportMaker="false" type="json"/>
+				<columnAttribute name="annotation_tracks" inReportMaker="false" type="json"/>
+
+				<propertyList name="type">
+					<value>default</value>
+				</propertyList>
+				<description>
+					<![CDATA[
 		   Unique tag regions identified during <a href="@INFERNO_URL@">INFERNO</a> LD-expansion step.  See table below for details.
 	  ]]>
-	</description>			
-      </table>
+				</description>
+			</table>
 
-      <!-- <columnAttribute name="tag_rsid" displayName="Expanded SNPs" type="string" help="expanded set of SNPs associated with this tag region"/>-->
-      <table name="inferno_tags" displayName="Tag Regions" queryRef="InfernoTables.Tags">
-	<columnAttribute name="tag_id" displayName="Tag" type="string"/>
-	<columnAttribute name="tag_location" displayName="Location" type="string"/>
-	<columnAttribute name="tag_span" displayName="Length" help="span of this tag region, in bp" type="numeric"/>
-	
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	
-	<description>
-	  <![CDATA[
+			<!-- <columnAttribute name="tag_rsid" displayName="Expanded SNPs" type="string" help="expanded set of SNPs associated with this tag region"/>-->
+			<table name="inferno_tags" displayName="Tag Regions" queryRef="InfernoTables.Tags">
+				<columnAttribute name="tag_id" displayName="Tag" type="string"/>
+				<columnAttribute name="tag_location" displayName="Location" type="string"/>
+				<columnAttribute name="tag_span" displayName="Length" help="span of this tag region, in bp" type="numeric"/>
+
+				<propertyList name="type">
+					<value>default</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Unique tag regions identified during <a href="@INFERNO_URL@">INFERNO</a> LD-expansion step.
 	  ]]>
-	</description>			
-      </table>
+				</description>
+			</table>
 
-      <!-- =============================================================== -->
-      <!-- INFERNO Genetic mapping -->
-      <!-- =============================================================== -->
-      
-      <table name="inferno_genomic_partitions" displayName="Genomic partitions" queryRef="InfernoTables.GenomicPartitions">
-	<columnAttribute name="variant" displayName="SNP" type="json_link"/>
-	<columnAttribute name="tag_id" displayName="Tag" type="string"/>
-	<columnAttribute name="hit_type" displayName="Category" type="string"/>
-	<columnAttribute name="component" displayName="Feature Type" type="string"/>
-	<columnAttribute name="feature_name" displayName="Feature" type="json_text_or_link"/>
-	<columnAttribute name="chromosome" displayName="Chromosome" type="string"/>
-	<columnAttribute name="span_start" displayName="Overlap Region Start" type="string" help="starting position (bp) of the region containing this variant"/>
-	<columnAttribute name="span_end" displayName="Overlap Region End" type="string" help="end position (bp) of the region containing this variant"/>
-	
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	
-	<description>	
-	  <![CDATA[
+			<!-- =============================================================== -->
+			<!-- INFERNO Genetic mapping -->
+			<!-- =============================================================== -->
+
+			<table name="inferno_genomic_partitions" displayName="Genomic partitions" queryRef="InfernoTables.GenomicPartitions">
+				<columnAttribute name="variant" displayName="SNP" type="json_link"/>
+				<columnAttribute name="tag_id" displayName="Tag" type="string"/>
+				<columnAttribute name="hit_type" displayName="Category" type="string"/>
+				<columnAttribute name="component" displayName="Feature Type" type="string"/>
+				<columnAttribute name="feature_name" displayName="Feature" type="json_text_or_link"/>
+				<columnAttribute name="chromosome" displayName="Chromosome" type="string"/>
+				<columnAttribute name="span_start" displayName="Overlap Region Start" type="string" help="starting position (bp) of the region containing this variant"/>
+				<columnAttribute name="span_end" displayName="Overlap Region End" type="string" help="end position (bp) of the region containing this variant"/>
+
+				<propertyList name="type">
+					<value>default</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Distribution of expanded variants across genomic components.
 	  ]]>
-	</description>	
-      </table>
+				</description>
+			</table>
 
-      <table name="inferno_highchart_gene_mapping" displayName="Gene regions" queryRef="InfernoTables.GeneMapping">
-	<columnAttribute name="chart" internal="true" inReportMaker="false"/>
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
-	<propertyList name="chartProperties">
+			<table name="inferno_highchart_gene_mapping" displayName="Gene regions" queryRef="InfernoTables.GeneMapping">
+				<columnAttribute name="chart" internal="true" inReportMaker="false"/>
+				<propertyList name="type">
+					<value>highchart</value>
+				</propertyList>
+				<propertyList name="chartProperties">
 
-	</propertyList>
-	
-	<description>	
-	  <![CDATA[
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Distribution of expanded variants across gene regions.
 	  ]]>
-	</description>	
-      </table>
-      
-      <table name="inferno_highchart_list_lncRNA_mapping" displayName="lncRNA regions" queryRef="InfernoTables.lncRNAMapping">
-	<columnAttribute name="charts" internal="true" inReportMaker="false"/>
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
-	
-	<description>	
-	  <![CDATA[
+				</description>
+			</table>
+
+			<table name="inferno_highchart_list_lncRNA_mapping" displayName="lncRNA regions" queryRef="InfernoTables.lncRNAMapping">
+				<columnAttribute name="charts" internal="true" inReportMaker="false"/>
+				<propertyList name="type">
+					<value>highchart</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Distribution of expanded variants across lncRNA regions.
 	  ]]>
-	</description>	
-      </table>
+				</description>
+			</table>
 
-      <table name="inferno_highchart_list_mRNA_mapping" displayName="mRNA regions" queryRef="InfernoTables.mRNAMapping">
-	<columnAttribute name="charts" internal="true" inReportMaker="false"/>
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
-	
-	<description>	
-	  <![CDATA[
+			<table name="inferno_highchart_list_mRNA_mapping" displayName="mRNA regions" queryRef="InfernoTables.mRNAMapping">
+				<columnAttribute name="charts" internal="true" inReportMaker="false"/>
+				<propertyList name="type">
+					<value>highchart</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Distribution of expanded variants across mRNA regions.
 	  ]]>
-	</description>	
-      </table>
+				</description>
+			</table>
 
-      <!-- =============================================================== -->
-      <!-- Functional mapping -->
-      <!-- =============================================================== -->
+			<!-- =============================================================== -->
+			<!-- Functional mapping -->
+			<!-- =============================================================== -->
 
-      <table name="inferno_highchart_enhancer_overlap_fantom5" displayName="FANTOM5 enhancer overlap" queryRef="InfernoTables.FANTOM5">
-	<columnAttribute name="chart" internal="true" inReportMaker="false"/>
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
-	
-	<description>	
-	  <![CDATA[
+			<table name="inferno_highchart_enhancer_overlap_fantom5" displayName="FANTOM5 enhancer overlap" queryRef="InfernoTables.FANTOM5">
+				<columnAttribute name="chart" internal="true" inReportMaker="false"/>
+				<propertyList name="type">
+					<value>highchart</value>
+				</propertyList>
+
+				<description>
+					<![CDATA[
 		   Overlap of expanded variants with tissue-specific FANTOM5 enhancer regions.
 	  ]]>
-	</description>	
-      </table>
-      
-      <!-- 	<table name="inferno_highchart_enhancer_overlap_roadmap" displayName="Roadmap enhancer overlap" queryRef="InfernoTables.Roadmap">
+				</description>
+			</table>
+
+			<!-- 	<table name="inferno_highchart_enhancer_overlap_roadmap" displayName="Roadmap enhancer overlap" queryRef="InfernoTables.Roadmap">
 	   <columnAttribute name="chart" internal="true" inReportMaker="false"/>
 	   <propertyList name="type">
 	   <value>highchart</value>
@@ -503,8 +493,8 @@
 	   <![CDATA[
 	   Overlap of expanded variants with tissue-specific Roadmap enhancer regions.
 	   ]]>
-	   </description>	
-	   </table> -->
-    </recordClass>
-  </recordClassSet>
+</description>
+</table> -->
+		</recordClass>
+	</recordClassSet>
 </wdkModel>
