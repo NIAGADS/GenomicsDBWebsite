@@ -6,7 +6,7 @@ import { useGoto } from "../../../hooks";
 import { MultiSearch, PrimaryActionButton, SearchResult } from "../../Shared";
 import { Home } from "@material-ui/icons";
 import { BaseText } from "../../Shared/Typography";
-import { buildRouteFromResult, buildSummaryRoute } from "../../HomePage/HomePage";
+import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
 
 interface Header {
     isLoggedIn: boolean;

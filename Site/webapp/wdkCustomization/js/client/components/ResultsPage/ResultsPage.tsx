@@ -5,7 +5,7 @@ import { Loading } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { SearchResult } from "./../Shared/Autocomplete";
-import { buildRouteFromResult } from "./../HomePage/HomePage";
+import { buildRouteFromResult } from '../../util/util';
 import { chain, isEmpty, get } from "lodash";
 import { Box, Grid, List, ListItem, withStyles } from "@material-ui/core";
 import { BaseText, BaseTextSmall, Heading, PrimaryLink, PrimaryExternalLink } from "../Shared";

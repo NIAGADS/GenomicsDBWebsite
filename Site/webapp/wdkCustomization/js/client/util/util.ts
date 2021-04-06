@@ -1,4 +1,5 @@
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
+import { SearchResult } from '../components/Shared/Autocomplete';
 
 export function isTrue(stringArg: string) {
     return stringArg === "true" ? true : false;
@@ -11,3 +12,6 @@ export const convertHtmlEntites = (html: string) => {
         proc = conv.props.dangerouslySetInnerHTML.__html;
     return proc;
 };
+
+export const buildRouteFromResult = (result: SearchResult) => `/record/${result.record_type}/${result.primary_key}`,
+    buildSummaryRoute = (searchTerm: string) => `/searchResults?searchTerm=${searchTerm}`;
