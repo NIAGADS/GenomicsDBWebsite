@@ -37,4 +37,5 @@ export default [
         name: "go-enrichment",
         component: StepAnalysisGoEnrichmentResults,
     },
+  
 ];
