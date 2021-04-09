@@ -4,7 +4,7 @@ import { HeaderRecordActions, RecordAttributeItem } from "./../Shared";
 import { GWASDatasetRecord, HeaderActions } from "./../../types";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
-import { HelpIcon } from "wdk-client/Components";
+import { HelpIcon, CollapsibleSection } from "wdk-client/Components";
 import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
 import { Box, FormGroup, Grid, List, FormHelperText } from "@material-ui/core";
 import {
@@ -14,8 +14,10 @@ import {
     Subheading,
     SubheadingSmall,
     UnlabeledTextFieldOutlined,
-    UnpaddedListItem
+    UnpaddedListItem,
 } from "../../../Shared";
+
+import './GWASDatasetRecordHeading.scss';
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
@@ -38,8 +40,8 @@ const GWASDatasetSearchHelp: React.FC = () => {
     return (
         <Box>
             <BaseTextSmall>
-                Set the threshold for GWAS significance. The search will return all variants supported
-                by a p-value &le; the specified threshold.
+                Set the threshold for GWAS significance. The search will return all variants supported by a p-value &le;
+                the specified threshold.
             </BaseTextSmall>
             <BaseTextSmall>
                 p-values may be specified in decimal (e.g., 0.000003) or scientific (e.g., 3e-6 or 3^-6 or 3 x 10^-6)
@@ -106,40 +108,64 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
     );
 };
 
-const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordClass, headerActions }) => (
-    <Grid container style={{ marginLeft: "10px" }}>
-        <Grid item container direction="column" sm={3} xs={12}>
-            {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
-            <Subheading style={{paddingBottom: 0}}>{convertHtmlEntites(record.attributes.name)}</Subheading>
-            <SubheadingSmall style={{padding: 0}}>{record.attributes.attribution}</SubheadingSmall>
-            <List>
-                <UnpaddedListItem>
-                    <RecordAttributeItem
-                        label="Related datasets:"
-                        attribute={resolveJsonInput(record.attributes.accession_link)}
-                    />
-                </UnpaddedListItem>
-                <UnpaddedListItem>
-                    <BaseText variant="body2">{record.attributes.description}</BaseText>
-                </UnpaddedListItem>
-              
-            </List>
-            {record.attributes.is_adsp && (
-                <Subheading>
-                    <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong>
-                </Subheading>
-            )}
 
-            <GWASDatasetSearch
-                accession={record.attributes.niagads_accession}
-                record={record.id[0].value}
-            ></GWASDatasetSearch>
+const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordClass, headerActions }) => {
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
+    return (
+        <Grid container style={{ marginLeft: "10px" }}>
+            <Grid item container direction="row">
+                <Grid item container direction="column" sm={3} xs={12}>
+                    {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
+                    <Subheading style={{ paddingBottom: 0 }}>{convertHtmlEntites(record.attributes.name)}</Subheading>
+                    <SubheadingSmall style={{ padding: 0 }}>{record.attributes.attribution}</SubheadingSmall>
+                    <List>
+                        <UnpaddedListItem>
+                            <RecordAttributeItem
+                                label="Related datasets:"
+                                attribute={resolveJsonInput(record.attributes.accession_link)}
+                            />
+                        </UnpaddedListItem>
+                        <UnpaddedListItem>
+                            <BaseText variant="body2">{record.attributes.description}</BaseText>
+                        </UnpaddedListItem>
+                    </List>
+                    {record.attributes.is_adsp && (
+                        <Subheading>
+                            <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong>
+                        </Subheading>
+                    )}
+                    <GWASDatasetSearch
+                        accession={record.attributes.niagads_accession}
+                        record={record.id[0].value}
+                    ></GWASDatasetSearch>
+                </Grid>
+                <Grid item>images here</Grid>
+            </Grid>
+            <Grid item container direction="row">
+                <CollapsibleSection
+                    id="locuszoom-section"
+                    className="wdk-RecordTableContainer"
+                    headerComponent="h3"
+                    headerContent={
+                        <Box display="flex" justifyContent="space-between" alignItems="baseline">
+                            <BaseText>Browse Top Loci</BaseText>
+                            <HelpIcon>
+                                Use this interactive LocusZoom plot to browse genomic loci associated with the variants
+                                exhibiting the most genome-wide significance in this study.
+                            </HelpIcon>
+                        </Box>
+                    }
+                    isCollapsed={isCollapsed}
+                    onCollapsedChange={setIsCollapsed}
+                >
+                    <GWASDatasetLZPlot dataset={record.id[0].value} />
+                </CollapsibleSection>
+            </Grid>
         </Grid>
-        <Grid item sm={9} xs={12} style={{marginTop: 15}}>
-            <GWASDatasetLZPlot dataset={record.id[0].value} />
-        </Grid>
-    </Grid>
-);
+    );
+};
+
 
 export default connect((state: any) => ({
     webAppUrl: state.globalData.siteConfig.webAppUrl,

@@ -1,16 +1,6 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import {
-    Grid,
-    List,
-    ListItem,
-    Box,
-    Typography,
-    withStyles,
-    Select,
-    MenuItem,
-    FormHelperText
-} from "@material-ui/core";
+import { Grid, List, ListItem, Box, Typography, withStyles, Select, MenuItem, FormHelperText } from "@material-ui/core";
 import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "../../Shared";
 import LZPlot from "./LZPlot";
 import { get } from "lodash";
@@ -64,50 +54,55 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
     );
 
     return chromosome && refVariant && range ? (
-        <Box className="locuszoom-plot">
-            <Grid container spacing={2}>
-                <Grid item container direction="column" spacing={1} sm={3}>
-                    <Grid item>
-                        <Select style={{fontSize:14.4, width:100}}
-                            value={population}
-                            onChange={(e) => setPopulation(e.target.value as string)}
-                            input={<UnlabeledTextField fullWidth={true} />}
-                        >
-                            {populationChoices.map((item) => {
-                                return (
-                                    <MenuItem key={Object.keys(item)[0]} value={Object.keys(item)[0]}>
-                                        {Object.values(item)[0]}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
-                        <FormHelperText>Select a LD population</FormHelperText>
-                    </Grid>
-                    <Grid item>
-                        <Typography>Top Hits</Typography>
-                        <List style={{ maxHeight: 350, minWidth: 150, overflow: "auto" }}>
-                            {(topHits || []).map((t) => (
-                                //@ts-ignore
-                                <TopHitListItem key={t.ld_reference_variant}>
-                                    <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
-                                </TopHitListItem>
-                            ))}
-                        </List>
-                    </Grid>
+        <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+            {/* outer */}
+            <Grid container item direction="column" xs={3}>
+                {/* left col -- selectors */}
+                <Grid item>
+                    {/* top row -- population selector */}
+                    <Select
+                        style={{ fontSize: 14.4, width: 100 }}
+                        value={population}
+                        onChange={(e) => setPopulation(e.target.value as string)}
+                        input={<UnlabeledTextField fullWidth={true} />}
+                    >
+                        {populationChoices.map((item) => {
+                            return (
+                                <MenuItem key={Object.keys(item)[0]} value={Object.keys(item)[0]}>
+                                    {Object.values(item)[0]}
+                                </MenuItem>
+                            );
+                        })}
+                    </Select>
+                    <FormHelperText>Select a LD population</FormHelperText>
                 </Grid>
-                <Grid item direction="column">
-                    <LZPlot
-                        chromosome={chromosome}
-                        end={get(range, "end")}
-                        population={population}
-                        refVariant={refVariant}
-                        selectClass={selectClass.current}
-                        start={get(range, "start")}
-                        track={dataset}
-                    />
+
+                <Grid item xs={6}>
+                    {/* bottom row - top hits selector */}
+                    <Typography>Top Hits</Typography>
+                    <List style={{ maxHeight: 350, minWidth: 150, overflow: "auto" }}>
+                        {(topHits || []).map((t) => (
+                            //@ts-ignore
+                            <TopHitListItem key={t.ld_reference_variant}>
+                                <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
+                            </TopHitListItem>
+                        ))}
+                    </List>
                 </Grid>
             </Grid>
-        </Box>
+            <Grid item>
+                {/* right col - plot */}
+                <LZPlot
+                    chromosome={chromosome}
+                    end={get(range, "end")}
+                    population={population}
+                    refVariant={refVariant}
+                    selectClass={selectClass.current}
+                    start={get(range, "start")}
+                    track={dataset}
+                />
+            </Grid>
+        </Grid>
     ) : (
         <LoadingOverlay />
     );
