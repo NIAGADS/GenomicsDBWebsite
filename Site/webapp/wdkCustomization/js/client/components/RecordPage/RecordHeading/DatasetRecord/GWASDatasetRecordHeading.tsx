@@ -1,28 +1,35 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { HeaderRecordActions, RecordAttributeItem } from "./../Shared";
 import { GWASDatasetRecord, HeaderActions } from "./../../types";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
 import { HelpIcon, CollapsibleSection } from "wdk-client/Components";
+import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
 import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
 import { Box, FormGroup, Grid, List, FormHelperText } from "@material-ui/core";
 import {
     BaseText,
     BaseTextSmall,
     PrimaryActionButton,
+    PrimaryExternalLink,
     Subheading,
     SubheadingSmall,
     UnlabeledTextFieldOutlined,
     UnpaddedListItem,
 } from "../../../Shared";
 
-import './GWASDatasetRecordHeading.scss';
+import GetAppIcon from "@material-ui/icons/GetApp";
+
+import "./GWASDatasetRecordHeading.scss";
+import { ImageRounded } from "@material-ui/icons";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
 const ACCESSION_PARAM_NAME = "param.gwas_accession";
 const DATASET_PARAM_NAME = "param.gwas_dataset";
+
+const cx = makeClassNameHelper("gwas-RecordHeading");
 
 interface GWASRecordHeading {
     record: GWASDatasetRecord;
@@ -108,9 +115,42 @@ const GWASDatasetSearch: React.FC<SearchProps> = ({ record, accession }) => {
     );
 };
 
+interface HeaderImage {
+    src: string;
+    type?: string;
+}
 
-const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordClass, headerActions }) => {
+const DatasetHeaderImage: React.FC<HeaderImage> = ({ src, type }) => {
+    const enclosingGrid = useRef(0);
+
+    const wrapperClass = cx(`--${type}-wrapper`);
+
+    const handleImgError = () => {
+        (document.getElementsByClassName(wrapperClass)[0] as HTMLElement).style.display = 'none';
+    }
+
+    return (
+        <Grid item container direction="column" className={wrapperClass}>
+            <Grid item>
+                <img
+                    className={cx(`--${type}`)}
+                    src={src}
+                    onError={handleImgError}
+                />
+            </Grid>
+            <Grid>
+                <PrimaryExternalLink href={src}>
+                     View HighRes Image <GetAppIcon fontSize="small" />
+                </PrimaryExternalLink>
+            </Grid>
+        </Grid>
+    );
+};
+
+const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordClass, headerActions, webAppUrl }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+
+    let imgPrefix = `${webAppUrl}/images/manhattan/${record.attributes.niagads_accession}/png/${record.id[0].value}`;
 
     return (
         <Grid container style={{ marginLeft: "10px" }}>
@@ -140,8 +180,12 @@ const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordC
                         record={record.id[0].value}
                     ></GWASDatasetSearch>
                 </Grid>
-                <Grid item>images here</Grid>
+                <Grid item>
+                    <DatasetHeaderImage src={`${imgPrefix}-cmanhattan.png`} type={"circular-manhattan"} />
+                    <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
+                </Grid>
             </Grid>
+
             <Grid item container direction="row">
                 <CollapsibleSection
                     id="locuszoom-section"
@@ -165,7 +209,6 @@ const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordC
         </Grid>
     );
 };
-
 
 export default connect((state: any) => ({
     webAppUrl: state.globalData.siteConfig.webAppUrl,

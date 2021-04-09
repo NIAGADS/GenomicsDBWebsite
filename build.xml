@@ -118,14 +118,16 @@
     <exec executable="${patch-full-path-wdkclient}"/>
   </target>
 
- 
-
   <target name="GenomicsDBWebsite/Site-WebInstallation" depends="GenomicsDBWebsite-Website-Patch">
     <ant target="eupathWebComponentInstall">
       <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
     </ant>
 
+    <echo message="Unpack manhattan plots"/>
+    <untar src="${webappTargetDir}/images/manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images"/>
+    <delete file="${webappTargetDir}/images/manhattan.tar.gz" quiet="true"/>
+    
     <replace dir="${webappTargetDir}/WEB-INF/includes"
              propertyFile="${webPropFile}" >
       <include name="client.html" />
