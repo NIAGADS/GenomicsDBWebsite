@@ -5,28 +5,22 @@ import { IdeogramPlot } from "../Visualizations";
 import { LoadingOverlay } from "wdk-client/Components";
 import { getCustomReport } from "wdk-client/Utils/WdkResult";
 
-const GenomeView: React.FC<any> = ({ resultType, projectId }) => {
+const HistogramIdeogramView: React.FC<any> = ({ resultType, projectId }) => {
     const [data, setData] = useState<{ [key: string]: any }>();
 
-    const featureTrackColor = "#EE442F";
-    const locusTrackColor = "#63ACBE";
     let legend: any = [];
-
-    const annotationTracks = [
-        { id: "single_feature", displayName: "Feature", color: featureTrackColor, shape: "triangle" },
-        { id: "binned_features", displayName: "Locus", color: locusTrackColor, shape: "triangle" },
-    ];
 
     const config = {
         annotationHeight: 4,
         chrWidth: 15,
         chrHeight: 750,
         chrMargin: 20,
-        rotatable: false,
-        annotationTracks: annotationTracks,
+        rotatable: true,
         assembly: projectId,
         showBandLabels: true,
-        orientation: "vertical",
+        annotationsLayout: "histogram",
+        histogramScaling: 'absolute',
+        orientation: "vertical"
     };
 
     // load data from WDK service if necessary
@@ -34,33 +28,17 @@ const GenomeView: React.FC<any> = ({ resultType, projectId }) => {
         (wdkService) => {
             getCustomReport(wdkService, resultType, {
                 format: "genomeViewReporter",
-                formatConfig: { bin_features: true },
+                formatConfig: { bin_features: false },
             }).then((data) => setData(data));
         },
         [resultType]
     );
 
-    if (data) {
-        legend = [
-            {
-                name: "Legend",
-                rows: [
-                    { name: data.record_type, color: featureTrackColor, shape: "triangle" },
-                    {
-                        name: "Locus containing multiple " + data.record_type + "s",
-                        color: locusTrackColor,
-                        shape: "triangle",
-                    },
-                ],
-            },
-        ];
-    }
-
     return data ? (
         data.exceeds_limit ? (
             <div>{`The number of ${data.record_type}s in the result exceeds the display limit (50000 IDs).  Genome-wide Summary View is not available for the result.`}</div>
         ) : (
-            <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} legend={legend} />
+            <IdeogramPlot container="ideogram" annotations={data.ideogram_annotation} config={config} />
         )
     ) : (
         <LoadingOverlay>Loading results...</LoadingOverlay>
@@ -73,4 +51,4 @@ const mapStateToProps = (state: any) => {
     };
 };
 
-export default connect(mapStateToProps)(GenomeView);
+export default connect(mapStateToProps)(HistogramIdeogramView);

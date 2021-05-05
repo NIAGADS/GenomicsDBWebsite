@@ -61,7 +61,7 @@
 	</description>
       </summaryView>
       
-      <summaryView name="ideogram" display="Genome View">
+      <summaryView name="variant-histogram-ideogram" display="Genome View">
 	<description>
 	  <![CDATA[View your results mapped against the genome.]]>
 	</description>

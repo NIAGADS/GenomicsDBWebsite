@@ -160,13 +160,13 @@
 
   </target>
 
-  <!-- <target name="GenomicsDBWebsite/Service-WebInstallation"> -->
-  <!-- <echo message="Generating API documentation"/> -->
-  <!--   <antcall target="runRaml2Html"> -->
-  <!--     <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml"/> -->
-  <!--     <param name="outputFile" value="${htdocsTargetDir}/service-api.html"/> -->
-  <!--   </antcall> -->
-  <!-- </target> -->
+<target name="GenomicsDBWebsite/Service-WebInstallation">
+  <echo message="Generating API documentation"/>
+  <antcall target="runRaml2Html">
+   <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml"/>
+  <param name="outputFile" value="${htdocsTargetDir}/genomics-service-api.html"/> 
+  </antcall>
+</target>
 
   <!-- <target name="checkLinks"> -->
   <!--   <available file="${webappTargetDir}/docs" property="docsLinkExists" /> -->

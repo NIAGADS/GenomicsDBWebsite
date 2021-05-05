@@ -3,5 +3,17 @@ title: NIAGADS Genomics Database REST API
 version: 1.0
 baseUri: // {siteUrl}/{webApp}/service
 
+/:
+  get:
+    description: Get basic information about the NIAGADS GenomicsDB
+    responses:
+      200:
+        description: success response
+        body:
+          application/json:
+            type: !include ../schema/wdk/get-response.json
+
+
 /locuszoom: !include ./locuszoom-api.raml
+/variant: !include ./variant-api.raml
   

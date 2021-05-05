@@ -2,8 +2,9 @@
 // Then run `python $PROJECT_HOME/GenomicsDBWebsite/Model/bin/generateExternalUrlConstantsJson` to regenerate this file.
 // See the model.prop.sample file for more information.
 export const _externalUrls = {
-    NIAGADS_BASE_URL: "https://beta.niagads.org",
+    NIAGADS_BASE_URL: "https://www.niagads.org",
     DOCUMENTATION_URL: "TBA",
+    IDEOGRAM_CYTOBAND_URL: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
     ADSP_URL: "https://www.niagads.org/adsp/content/about",
     INFERNO_URL: "http://inferno.lisanwanglab.org/",
     FILER_TRACK_URL: "https://tf.lisanwanglab.org/GADB",

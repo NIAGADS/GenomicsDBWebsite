@@ -28,7 +28,7 @@ public class VariantLookupService extends AbstractWdkService {
     private static final String VARIANT_PARAM = "id";
     private static final String FULL_VEP_PARAM = "full_vep";
 
-    private static final String VARIANT_ID_CTE = "id AS (SELECT find_variant_primary_key(?) AS pk)";
+    private static final String VARIANT_ID_CTE = "id AS (SELECT search_term, variant_primary_key AS pk FROM get_variant_primary_keys(?))";
 
     private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL + "SELECT id.pk AS variant_primary_key," + NL
             + "split_part(pk, '_', 1) AS metaseq_id," + NL + "split_part(pk, '_', 2) AS ref_snp_id," + NL
