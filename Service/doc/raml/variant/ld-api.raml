@@ -1,0 +1,16 @@
+displayName: Variant Linkage
+
+
+get: 
+    description: > 
+        return all variants in linkage disequilbrium with query variant(s)
+    queryParameters:
+        variant: comma separated list of one or more variant identifiers (rsId, chr:pos:ref:alt, or NIAGADS GenomicsDB primaryKey)
+        population: unique ID for the population (default EUR)
+        r2: r-squared threshold (optional) -- default 0.5
+        maf: minor allele frequency threshold (option) -- default none
+    responses:
+        200:
+            body:
+                application/json:
+                    example: {}

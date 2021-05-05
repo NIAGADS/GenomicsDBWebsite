@@ -1,0 +1,15 @@
+displayName: LocusZoom DataSource API - GWAS Summary Statistics Track
+
+get: 
+    description: > 
+        return GWAS summary statistics features for LocusZoom.js
+    queryParameters:
+        chromosome: chromosome (chrN)
+        start: start of span / display window
+        end: end of span / display window
+        track: unique track identifier
+    responses:
+        200:
+            body:
+                application/json:
+                    example: !include examples/gwas.json

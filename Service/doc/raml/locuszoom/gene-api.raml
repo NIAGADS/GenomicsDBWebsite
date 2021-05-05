@@ -1,0 +1,14 @@
+displayName: LocusZoom DataSource API - Gene Track
+
+get: 
+    description: > 
+        return gene features for LocusZoom.js
+    queryParameters:
+        chromosome: chromosome (chrN)
+        start: start of span / display window
+        end: end of span / display window
+    responses:
+        200:
+            body:
+                application/json:
+                    example: !include examples/gene.json
