@@ -3,6 +3,8 @@ import { findExportWith } from "ebrc-client/component-wrappers/util";
 import theme from "./../theme";
 import { Container, ThemeProvider } from "@material-ui/core";
 
+export const ResultTable = makeDynamicWrapper('ResultTable');
+
 export function RecordHeading(DefaultComponent: any) {
     const DynamicRecordHeading = makeDynamicWrapper("RecordHeading")(DefaultComponent);
     return function NiagadsRecordHeading(props: any) {
@@ -44,3 +46,5 @@ function makeDynamicWrapper(componentName: string) {
         };
     };
 }
+
+

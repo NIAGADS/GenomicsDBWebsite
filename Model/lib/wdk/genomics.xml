@@ -30,6 +30,25 @@
 	     releaseDate="%%releaseDate%%"
 	     buildNumber="%%buildNumber38%%" />
 
+ <columnToolBundles>
+      <toolBundle name="default">
+      <tool name="byValue">
+        <string>
+          <reporter implementation="org.gusdb.wdk.model.toolbundle.reporter.MultiTypeColumnReporter" />
+          <filter implementation="org.gusdb.wdk.model.toolbundle.filter.MultiTypeColumnFilter" />
+        </string>
+        <number>
+          <reporter implementation="org.gusdb.wdk.model.toolbundle.reporter.MultiTypeColumnReporter" />
+          <filter implementation="org.gusdb.wdk.model.toolbundle.filter.MultiTypeColumnFilter" />
+        </number>
+        <date>
+          <reporter implementation="org.gusdb.wdk.model.toolbundle.reporter.MultiTypeColumnReporter" />
+          <filter implementation="org.gusdb.wdk.model.toolbundle.filter.MultiTypeColumnFilter" />
+        </date>
+      </tool>
+    </toolBundle>
+
+  </columnToolBundles>
  
 
     <!-- order is the order in strategies/favorites tables -->
