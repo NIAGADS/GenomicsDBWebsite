@@ -30,24 +30,35 @@ public class VariantLookupService extends AbstractWdkService {
 
     private static final String VARIANT_ID_CTE = "id AS (SELECT search_term, variant_primary_key AS pk FROM get_variant_primary_keys(?))";
 
-    private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL + "SELECT id.pk AS variant_primary_key," + NL
-            + "split_part(pk, '_', 1) AS metaseq_id," + NL + "split_part(pk, '_', 2) AS ref_snp_id," + NL
-            + "'chr' || split_part(pk, ':', 1)::text AS chrm" + NL + "FROM id)";
+    private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL 
+        + "SELECT id.pk AS variant_primary_key," + NL
+        + "split_part(pk, '_', 1) AS metaseq_id," + NL 
+        + "split_part(pk, '_', 2) AS ref_snp_id," + NL
+        + "'chr' || split_part(pk, ':', 1)::text AS chrm," + NL
+        + "search_term" + NL
+        + "FROM id)";
 
-    private static final String LOOKUP_SQL = "SELECT jsonb_build_object(" + NL + "'chromosome', v.chromosome," + NL
-            + "'search_term', ?," + NL + "'location', v.location," + NL + "'is_adsp_variant', v.is_adsp_variant," + NL
-            + "'metaseq_id', v.metaseq_id," + NL + "'ref_snp_id', v.ref_snp_id," + NL
-            + "'allele_frequencies', v.allele_frequencies," + NL + "'cadd_scores', v.cadd_scores," + NL
-            + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
-            + "'transcript_consequences', v.adsp_ranked_consequences->'transcript_consequences'," + NL
-            + "'regulatory_feature_consequences', v.adsp_ranked_consequences->'regulatory_feature_consequences'," + NL
-            + "'motif_consequences', v.adsp_ranked_consequences->'motif_feature_consequences'," + NL
-            + "'intergenic_consequences', v.adsp_ranked_consequences->'intergenic_consequences'," + NL
-            + "'genomicsdb_flags', v.other_annotation->'GenomicsDB'," + NL
-            + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
-            + "'adsp_wes_qc', v.other_annotation->'ADSP_WES')::text AS result" + NL
-            + "FROM AnnotatedVDB.Variant v, vdetails d" + NL + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)"
-            + NL + "AND v.ref_snp_id = d.ref_snp_id" + NL + "AND v.chromosome = d.chrm";
+    private static final String LOOKUP_CTE = "annotations AS (SELECT jsonb_build_object(" + NL 
+        + "'chromosome', v.chromosome," + NL
+        + "'search_term', d.search_term," + NL 
+        + "'location', v.location," + NL 
+        + "'is_adsp_variant', v.is_adsp_variant," + NL
+        + "'metaseq_id', v.metaseq_id," + NL
+        + "'ref_snp_id', v.ref_snp_id," + NL
+        + "'allele_frequencies', v.allele_frequencies," + NL 
+        + "'cadd_scores', v.cadd_scores," + NL
+        + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
+        + "'transcript_consequences', v.adsp_ranked_consequences->'transcript_consequences'," + NL
+        + "'regulatory_feature_consequences', v.adsp_ranked_consequences->'regulatory_feature_consequences'," + NL
+        + "'motif_consequences', v.adsp_ranked_consequences->'motif_feature_consequences'," + NL
+        + "'intergenic_consequences', v.adsp_ranked_consequences->'intergenic_consequences'," + NL
+        + "'genomicsdb_flags', v.other_annotation->'GenomicsDB'," + NL
+        + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
+        + "'adsp_wes_qc', v.other_annotation->'ADSP_WES') AS aJson" + NL
+        + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
+        + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
+        + "AND v.ref_snp_id = d.ref_snp_id" + NL 
+        + "AND v.chromosome = d.chrm)";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +72,7 @@ public class VariantLookupService extends AbstractWdkService {
 
             response = fetchResult(variant);
             if (response == null) {
-                response = "{}";
+                response = "[]";
             }
         }
 
@@ -73,7 +84,12 @@ public class VariantLookupService extends AbstractWdkService {
     }
 
     private String buildQuery() {
-        String sql = "WITH" + NL + VARIANT_ID_CTE + "," + NL + VARIANT_DETAILS_CTE + NL + LOOKUP_SQL;
+        String sql = "WITH" + NL 
+            + VARIANT_ID_CTE + "," + NL 
+            + VARIANT_DETAILS_CTE + "," + NL 
+            + LOOKUP_CTE + NL
+            + "SELECT json_agg(aJson)::text AS result FROM annotations";
+        LOG.debug(sql);
 
         return sql;
     }
@@ -88,7 +104,7 @@ public class VariantLookupService extends AbstractWdkService {
         LOG.debug(buildQuery());
         SQLRunner runner = new SQLRunner(ds, buildQuery(), "variant-lookup-query");
 
-        runner.executeQuery(new Object[] { variant, variant }, handler);
+        runner.executeQuery(new Object[] { variant }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
