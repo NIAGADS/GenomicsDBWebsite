@@ -30,7 +30,7 @@ import org.gusdb.wdk.service.service.AbstractWdkService;
 
 
 
-@Path("variant/ld/window")
+@Path("variant/linkage/window")
 public class VariantLDWindowService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLDWindowService.class);
 

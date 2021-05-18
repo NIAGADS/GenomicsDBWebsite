@@ -22,8 +22,6 @@ import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * performs LD expansion on one or more variants; expects metaseq_ids, record_pk, or rsids
@@ -31,20 +29,20 @@ import org.json.JSONObject;
  * @author ega
  */
 
-@Path("variant/ld/expansion")
+@Path("variant/linkage/expansion")
 public class VariantLDExpansionService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLDExpansionService.class);
 
     private static final String VARIANT_PARAM = "id"; 
     private static final String POPULATION_PARAM = "population";
-    private static final String MAF_PARAM="maf";
-    private static final String RSQ_PARAM="rsq";
+    private static final String MAF_PARAM="minMaf";
+    private static final String RSQ_PARAM="minRsq";
 
     private static final String DEFAULT_POPULATION = "EUR";
     private static final String DEFAULT_MAF = "0.0";
     private static final String DEFAULT_RSQ = "0.2";
 
-    private static final String VARIANT_ID_CTE = "WITH ids AS(" + NL
+    private static final String VARIANT_ID_CTE = "ids AS(" + NL
         + "SELECT search_term, variant_primary_key AS source_id" + NL
         + "FROM get_variant_primary_keys(?))";
 
@@ -62,12 +60,9 @@ public class VariantLDExpansionService extends AbstractWdkService {
     private static final String PARAM_SUMMARY_CTE = "searchParams AS (" + NL
         + "SELECT source_id, chromosome, position, pattern," + NL
         + "jsonb_build_object(" + NL
-        + "'population', ?," + NL
-        + "'maf', ?," + NL
-        + "'r_squared', ?," + NL
-        + "'submitted_variant', v.search_term," + NL
-        + "'matched_variant', jsonb_build_object('rsId', v.ref_snp_id, 'metaseq_id', v.metaseq_id))" + NL
-        + "AS search_parameters" + NL
+        + "'submitted', v.search_term," + NL
+        + "'matched', jsonb_build_object('rsId', v.ref_snp_id," + NL
+        + "'metaseq_id', v.metaseq_id)) AS tag" + NL
         + "FROM Variant v)";
 
     private static final String FULL_LD_RESULT_CTE = "LDResult AS (" + NL
@@ -94,25 +89,26 @@ public class VariantLDExpansionService extends AbstractWdkService {
         + "'d_prime', r.d_prime::numeric) AS linkage_json" + NL
         + "FROM Results.VariantLD r, SearchParams v" + NL
         + "WHERE r.variants @> ARRAY[v.pattern]" + NL
-        + "AND r.population_protocol_app_node_id = ?";
+        + "AND r.population_protocol_app_node_id = ?)";
 
     private static final String FILTERED_AGG_RESULT_CTE = "AggResult AS (" + NL
         + "SELECT v.source_id," + NL
         + "jsonb_build_object('ld_expansion', jsonb_agg(r.linkage_json ORDER BY r_squared DESC)," + NL
-        + "'search_parameters', jsonb_set(v.search_parameters, '{matched_variant}'," + NL
-        + "v.search_parameters->'matched_variant' || jsonb_build_object('maf', r.maf))) AS linkage_json" + NL
+        + "'tag_variant', " + NL
+        + "jsonb_set(v.tag, '{matched}'," + NL
+        + "v.tag->'matched' || jsonb_build_object('maf', r.maf))) AS linkage_json" + NL
         + "FROM LDResult r, SearchParams v" + NL
         + "WHERE v.source_id = r.source_id" + NL
         + "AND r.passes_maf_filter" + NL
         + "AND r.passes_rsquared_filter" + NL
-        + "GROUP BY v.search_parameters, r.maf, v.source_id)";
+        + "GROUP BY v.tag, r.maf, v.source_id)";
 
-    private static final String RESULT_SQL = "SELECT" + NL
+    private static final String RESULT_CTE = "Result AS (SELECT" + NL
         + "jsonb_agg(CASE WHEN linkage_json IS NULL" + NL
-        + "THEN jsonb_build_object('search_parameters', v.search_parameters, 'ld_expansion', '[]')" + NL
-        + "ELSE linkage_json END)::text AS result" + NL
+        + "THEN jsonb_build_object('tag_variant', v.tag, 'ld_expansion', '[]')" + NL
+        + "ELSE linkage_json END) AS agg_linkage_json" + NL
         + "FROM SearchParams v LEFT OUTER JOIN AggResult r" + NL
-        + "ON v.source_id = r.source_id";
+        + "ON v.source_id = r.source_id)";
 
        
     @GET
@@ -146,8 +142,16 @@ public class VariantLDExpansionService extends AbstractWdkService {
         + VARIANT_DETAILS_CTE + "," + NL 
         + PARAM_SUMMARY_CTE + "," + NL
         + FULL_LD_RESULT_CTE + "," + NL
-        + FILTERED_AGG_RESULT_CTE + NL
-        + RESULT_SQL;
+        + FILTERED_AGG_RESULT_CTE + "," + NL
+        + RESULT_CTE + NL
+        + "SELECT jsonb_build_object(" + NL
+        + "'search_parameters', jsonb_build_object(" + NL
+        + "'minRsq', ?," + NL
+        + "'minMaf', ?," + NL
+        + "'population', ?," + NL
+        + "'submitted_variants', ?)," + NL
+        + "'result', r.agg_linkage_json)::text AS result" + NL
+        + "FROM Result r";
 
         LOG.debug(sql);
         return sql;
@@ -161,8 +165,8 @@ public class VariantLDExpansionService extends AbstractWdkService {
         
         SQLRunner runner = new SQLRunner(ds, buildQuery(), "ld-expansion-query");
 
-        //   bind parameters  id, pop, maf, rsq, maf, maf, rsq, protocolappnode
-        runner.executeQuery(new Object[] {variants, population, mafFilter, rsqFilter, mafFilter, mafFilter, rsqFilter, popProtocolAppNodeId}, handler);
+        //   bind parameters  id, maf, maf, rsq, protocolappnode, rsq, maf, pop, id
+        runner.executeQuery(new Object[] {variants, mafFilter, mafFilter, rsqFilter, popProtocolAppNodeId, rsqFilter, mafFilter, population, variants}, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {

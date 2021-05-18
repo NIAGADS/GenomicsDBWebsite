@@ -30,7 +30,7 @@ import org.json.JSONObject;
  * @author ega
  */
 
-@Path("variant/ld/linkage")
+@Path("variant/linkage/block")
 public class VariantLDService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLDService.class);
 
