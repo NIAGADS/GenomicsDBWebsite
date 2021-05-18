@@ -26,7 +26,8 @@ public class VariantLookupService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
 
     private static final String VARIANT_PARAM = "id";
-    private static final String FULL_VEP_PARAM = "full_vep";
+    private static final String MSC_ONLY_PARAM = "mscOnly";
+    private static final String ADSP_QC_PARAM = "adspQC";
 
     private static final String VARIANT_ID_CTE = "id AS (SELECT search_term, variant_primary_key AS pk FROM get_variant_primary_keys(?))";
 
@@ -38,41 +39,49 @@ public class VariantLookupService extends AbstractWdkService {
         + "search_term" + NL
         + "FROM id)";
 
-    private static final String LOOKUP_CTE = "annotations AS (SELECT jsonb_build_object(" + NL 
-        + "'chromosome', v.chromosome," + NL
-        + "'search_term', d.search_term," + NL 
-        + "'location', v.location," + NL 
-        + "'is_adsp_variant', v.is_adsp_variant," + NL
-        + "'metaseq_id', v.metaseq_id," + NL
-        + "'ref_snp_id', v.ref_snp_id," + NL
-        + "'allele_frequencies', v.allele_frequencies," + NL 
-        + "'cadd_scores', v.cadd_scores," + NL
-        + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
+    private static final String MSC_ONLY_JSON_OBJECT = "jsonb_build_object(" + NL 
+    + "'chromosome', v.chromosome," + NL
+    + "'location', v.location," + NL 
+    + "'is_adsp_variant', v.is_adsp_variant," + NL
+    + "'metaseq_id', v.metaseq_id," + NL
+    + "'ref_snp_id', v.ref_snp_id," + NL
+    + "'allele_frequencies', v.allele_frequencies," + NL 
+    + "'cadd_scores', v.cadd_scores," + NL
+    + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
+    + "'flagged_genomicsdb_datasets', v.other_annotation->'GenomicsDB')";
+
+    private final static String FULL_VEP_JSON_OBJECT = "jsonb_build_object(" + NL
         + "'transcript_consequences', v.adsp_ranked_consequences->'transcript_consequences'," + NL
         + "'regulatory_feature_consequences', v.adsp_ranked_consequences->'regulatory_feature_consequences'," + NL
         + "'motif_consequences', v.adsp_ranked_consequences->'motif_feature_consequences'," + NL
-        + "'intergenic_consequences', v.adsp_ranked_consequences->'intergenic_consequences'," + NL
-        + "'genomicsdb_flags', v.other_annotation->'GenomicsDB'," + NL
-        + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
-        + "'adsp_wes_qc', v.other_annotation->'ADSP_WES') AS aJson" + NL
-        + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
-        + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
-        + "AND v.ref_snp_id = d.ref_snp_id" + NL 
-        + "AND v.chromosome = d.chrm)";
+        + "'intergenic_consequences', v.adsp_ranked_consequences->'intergenic_consequences')";
 
+    private final static String ADSP_QC_JSON_OBJECT = "jsonb_build_object(" + NL
+        + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
+        + "'adsp_wes_qc', v.other_annotation->'ADSP_WES'";
+
+ 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.get-response")
-    public Response buildResponse(String body, @QueryParam(FULL_VEP_PARAM) Boolean fullVep,
+    public Response buildResponse(String body, @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
+            @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
             @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
 
+        if (adspQC == null) {
+            adspQC = false;
+        }
+        if (mscOnly == null) {
+            mscOnly = false;
+        }
+        LOG.info("adspQC:" + adspQC);
         LOG.info("Starting 'Variant Lookup' Service");
         String response = "[]";
         try {
 
-            response = lookup(variant);
+            response = lookup(variant, mscOnly, adspQC);
             if (response == null) {
-                response = "[]";
+                response = "{}";
             }
         }
 
@@ -83,18 +92,36 @@ public class VariantLookupService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
-    private String buildQuery() {
+    private String buildQuery(Boolean mscOnly, Boolean adspQC) {
+        String lookupCTE = "annotations AS (SELECT" + NL
+            + "jsonb_build_object(d.search_term," + NL
+            + MSC_ONLY_JSON_OBJECT + NL;
+        
+        if (mscOnly) {
+            lookupCTE = lookupCTE + " || " + FULL_VEP_JSON_OBJECT + NL;
+        }
+
+        if (adspQC) {
+            lookupCTE = lookupCTE + " || " + ADSP_QC_JSON_OBJECT + NL;
+        }
+
+        lookupCTE = lookupCTE + ")) AS annotation_json" + NL
+        + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
+        + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
+        + "AND v.ref_snp_id = d.ref_snp_id" + NL 
+        + "AND v.chromosome = d.chrm)";
+
         String sql = "WITH" + NL 
             + VARIANT_ID_CTE + "," + NL 
             + VARIANT_DETAILS_CTE + "," + NL 
-            + LOOKUP_CTE + NL
-            + "SELECT json_agg(aJson)::text AS result FROM annotations";
+            + lookupCTE + NL
+            + "SELECT json_agg(annotation_json)::text AS result FROM annotations";
         // LOG.debug(sql);
 
         return sql;
     }
 
-    private String lookup(String variant) {
+    private String lookup(String variant, Boolean mscOnly, Boolean adspQC) {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
@@ -102,17 +129,17 @@ public class VariantLookupService extends AbstractWdkService {
 
         // LOG.debug("Fetching details for variant:" + variant);
         // LOG.debug(buildQuery());
-        SQLRunner runner = new SQLRunner(ds, buildQuery(), "variant-lookup-query");
+        SQLRunner runner = new SQLRunner(ds, buildQuery(mscOnly, adspQC), "variant-lookup-query");
 
         runner.executeQuery(new Object[] { variant }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
-            return "[]";
+            return "{}";
         }
         String resultStr = (String) results.get(0).get("result");
         if (resultStr == "null" || resultStr == null) {
-            return "[]";
+            return "{}";
         }
         return resultStr;
     }
