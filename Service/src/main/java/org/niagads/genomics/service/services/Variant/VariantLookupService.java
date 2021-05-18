@@ -67,10 +67,10 @@ public class VariantLookupService extends AbstractWdkService {
             @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
 
         LOG.info("Starting 'Variant Lookup' Service");
-        String response = "{}";
+        String response = "[]";
         try {
 
-            response = fetchResult(variant);
+            response = lookup(variant);
             if (response == null) {
                 response = "[]";
             }
@@ -89,27 +89,32 @@ public class VariantLookupService extends AbstractWdkService {
             + VARIANT_DETAILS_CTE + "," + NL 
             + LOOKUP_CTE + NL
             + "SELECT json_agg(aJson)::text AS result FROM annotations";
-        LOG.debug(sql);
+        // LOG.debug(sql);
 
         return sql;
     }
 
-    private String fetchResult(String variant) {
+    private String lookup(String variant) {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
         // LOG.debug("Fetching details for variant:" + variant);
-        LOG.debug(buildQuery());
+        // LOG.debug(buildQuery());
         SQLRunner runner = new SQLRunner(ds, buildQuery(), "variant-lookup-query");
 
         runner.executeQuery(new Object[] { variant }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
-            return null;
+            return "[]";
         }
-        return (String) results.get(0).get("result");
+        String resultStr = (String) results.get(0).get("result");
+        if (resultStr == "null" || resultStr == null) {
+            return "[]";
+        }
+        return resultStr;
     }
+
 }
