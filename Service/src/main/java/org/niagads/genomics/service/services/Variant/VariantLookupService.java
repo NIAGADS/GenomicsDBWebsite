@@ -5,12 +5,14 @@ import static org.gusdb.fgputil.FormatUtil.NL;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -45,8 +47,10 @@ public class VariantLookupService extends AbstractPagedWdkService {
     + "'chromosome', v.chromosome," + NL
     + "'location', v.location," + NL 
     + "'is_adsp_variant', v.is_adsp_variant," + NL
+    + "'matched_variant', jsonb_build_object(" + NL
     + "'metaseq_id', v.metaseq_id," + NL
     + "'ref_snp_id', v.ref_snp_id," + NL
+    + "'genomicsdb_id', d.variant_primary_key)," + NL
     + "'allele_frequencies', v.allele_frequencies," + NL 
     + "'cadd_scores', v.cadd_scores," + NL
     + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
@@ -60,24 +64,25 @@ public class VariantLookupService extends AbstractPagedWdkService {
 
     private final static String ADSP_QC_JSON_OBJECT = "jsonb_build_object(" + NL
         + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
-        + "'adsp_wes_qc', v.other_annotation->'ADSP_WES'";
+        + "'adsp_wes_qc', v.other_annotation->'ADSP_WES')";
 
- 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.get-response")
-    public Response buildResponse(String body, @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
+    public Response buildResponse(@Context HttpServletRequest request, 
+            String body, @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
             @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
             @QueryParam(VARIANT_PARAM) String variants,
             @DefaultValue("1")@QueryParam(PAGE_PARAM) Integer currentPage) throws WdkModelException {
 
-        if (adspQC == null) {
-            adspQC = false;
-        }
-        if (mscOnly == null) {
-            mscOnly = false;
-        }
+        LOG.info("Starting 'Variant Lookup' Service");
 
+        adspQC = validateBooleanParam(request, ADSP_QC_PARAM);
+        mscOnly = validateBooleanParam(request, MSC_ONLY_PARAM);
+
+        LOG.debug("adspQC: " + adspQC); // not provided: null, provided: false, 
+        LOG.debug("mscOnly: " + mscOnly);
+        
         String response = "{}";
         try {
             initializePaging(variants, currentPage);
@@ -96,6 +101,20 @@ public class VariantLookupService extends AbstractPagedWdkService {
         return Response.ok(response).build();
     }
 
+    
+    private Boolean validateBooleanParam(HttpServletRequest request, String param) {
+        if (!request.getParameterMap().containsKey(param)) {
+            return false;
+        }
+
+        String paramValue = request.getParameterValues(param)[0];
+        if (paramValue == "") {
+            return true;
+        }
+        else {
+            return Boolean.valueOf(paramValue);
+        }
+    }    
 
 
     private String buildQuery(Boolean mscOnly, Boolean adspQC) {
@@ -103,7 +122,7 @@ public class VariantLookupService extends AbstractPagedWdkService {
             + "jsonb_build_object(d.search_term," + NL
             + MSC_ONLY_JSON_OBJECT + NL;
         
-        if (mscOnly) {
+        if (!mscOnly) {
             lookupCTE = lookupCTE + " || " + FULL_VEP_JSON_OBJECT + NL;
         }
 
@@ -111,7 +130,7 @@ public class VariantLookupService extends AbstractPagedWdkService {
             lookupCTE = lookupCTE + " || " + ADSP_QC_JSON_OBJECT + NL;
         }
 
-        lookupCTE = lookupCTE + ")) AS annotation_json" + NL
+        lookupCTE = lookupCTE + ") AS annotation_json" + NL
         + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
         + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
         + "AND v.ref_snp_id = d.ref_snp_id" + NL 
@@ -121,7 +140,9 @@ public class VariantLookupService extends AbstractPagedWdkService {
             + VARIANT_ID_CTE + "," + NL 
             + VARIANT_DETAILS_CTE + "," + NL 
             + lookupCTE + NL
-            + "SELECT json_agg(annotation_json)::text AS result FROM annotations";
+            + "SELECT jsonb_object_agg(t.k, t.v)::text AS result" + NL
+            + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
+            
         // LOG.debug(sql);
 
         return sql;

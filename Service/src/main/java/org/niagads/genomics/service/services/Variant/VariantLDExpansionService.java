@@ -58,15 +58,15 @@ public class VariantLDExpansionService extends AbstractWdkService {
         + "FROM ids)";
 
     private static final String PARAM_SUMMARY_CTE = "searchParams AS (" + NL
-        + "SELECT source_id, chromosome, position, pattern," + NL
+        + "SELECT source_id, chromosome, position, pattern, search_term," + NL
         + "jsonb_build_object(" + NL
-        + "'submitted', v.search_term," + NL
-        + "'matched', jsonb_build_object('rsId', v.ref_snp_id," + NL
-        + "'metaseq_id', v.metaseq_id)) AS tag" + NL
+        + "'genomicsdb_id', v.source_id," + NL
+        + "'ref_snp_id', v.ref_snp_id," + NL
+        + "'metaseq_id', v.metaseq_id) AS matched_variant" + NL
         + "FROM Variant v)";
 
     private static final String FULL_LD_RESULT_CTE = "LDResult AS (" + NL
-        + "SELECT v.source_id, v.chromosome, v.position," + NL
+        + "SELECT v.search_term, v.chromosome, v.position," + NL
     
         + "CASE WHEN r.variants[1] = v.pattern" + NL
         + "THEN r.minor_allele_frequency[1]" + NL
@@ -92,25 +92,29 @@ public class VariantLDExpansionService extends AbstractWdkService {
         + "AND r.population_protocol_app_node_id = ?)";
 
     private static final String FILTERED_AGG_RESULT_CTE = "AggResult AS (" + NL
-        + "SELECT v.source_id," + NL
+        + "SELECT v.search_term," + NL
         + "jsonb_build_object('ld_expansion', jsonb_agg(r.linkage_json ORDER BY r_squared DESC)," + NL
-        + "'tag_variant', " + NL
-        + "jsonb_set(v.tag, '{matched}'," + NL
-        + "v.tag->'matched' || jsonb_build_object('maf', r.maf))) AS linkage_json" + NL
+        + "'matched_variant', " + NL
+        + "v.matched_variant || jsonb_build_object('maf', r.maf)) AS linkage_json" + NL
         + "FROM LDResult r, SearchParams v" + NL
-        + "WHERE v.source_id = r.source_id" + NL
+        + "WHERE v.search_term = r.search_term" + NL
         + "AND r.passes_maf_filter" + NL
         + "AND r.passes_rsquared_filter" + NL
-        + "GROUP BY v.tag, r.maf, v.source_id)";
+        + "GROUP BY v.matched_variant, r.maf, v.search_term)";
 
-    private static final String RESULT_CTE = "Result AS (SELECT" + NL
-        + "jsonb_agg(CASE WHEN linkage_json IS NULL" + NL
-        + "THEN jsonb_build_object('tag_variant', v.tag, 'ld_expansion', '[]')" + NL
-        + "ELSE linkage_json END) AS agg_linkage_json" + NL
+    private static final String INDEXED_RESULT_CTE = "indexedResult AS (SELECT" + NL
+        + "jsonb_build_object(v.search_term," + NL
+        + "CASE WHEN linkage_json IS NULL" + NL
+        + "THEN jsonb_build_object('matched_variant', v.matched_variant, 'ld_expansion', '[]')" + NL
+        + "ELSE linkage_json END) AS linkage_json_obj" + NL
         + "FROM SearchParams v LEFT OUTER JOIN AggResult r" + NL
-        + "ON v.source_id = r.source_id)";
+        + "ON v.search_term = r.search_term)";
+    
+    private static final String AGG_INDEXED_RESULT_CTE = "aggIndexedResult AS (" + NL
+        + "SELECT jsonb_object_agg(t.k, t.v) AS agg_json" + NL
+        + "FROM indexedResult," + NL
+        + "jsonb_each(linkage_json_obj) AS t(k,v))"; 
 
-       
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.linkage.get-response")
@@ -121,7 +125,7 @@ public class VariantLDExpansionService extends AbstractWdkService {
                                       
         LOG.info("Starting 'Variant LD Expansion' Service");
         
-        String response = "[]";
+        String response = "{}";
 
         try {
             long protocolAppNodeId = getPopulationProtocolAppNode(population);
@@ -143,15 +147,17 @@ public class VariantLDExpansionService extends AbstractWdkService {
         + PARAM_SUMMARY_CTE + "," + NL
         + FULL_LD_RESULT_CTE + "," + NL
         + FILTERED_AGG_RESULT_CTE + "," + NL
-        + RESULT_CTE + NL
+        + INDEXED_RESULT_CTE + "," + NL
+        + AGG_INDEXED_RESULT_CTE + NL
+      
         + "SELECT jsonb_build_object(" + NL
         + "'search_parameters', jsonb_build_object(" + NL
         + "'minRsq', ?," + NL
         + "'minMaf', ?," + NL
         + "'population', ?," + NL
         + "'submitted_variants', ?)," + NL
-        + "'result', r.agg_linkage_json)::text AS result" + NL
-        + "FROM Result r";
+        + "'result', r.agg_json)::text AS result" + NL
+        + "FROM AggIndexedResult r";
 
         LOG.debug(sql);
         return sql;
