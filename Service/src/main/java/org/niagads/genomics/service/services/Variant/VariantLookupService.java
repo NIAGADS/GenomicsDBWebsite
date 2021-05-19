@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,10 +20,11 @@ import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
-import org.gusdb.wdk.service.service.AbstractWdkService;
+// import org.gusdb.wdk.service.service.AbstractWdkService;
+import org.niagads.genomics.service.services.AbstractPagedWdkService;
 
 @Path("variant")
-public class VariantLookupService extends AbstractWdkService {
+public class VariantLookupService extends AbstractPagedWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
 
     private static final String VARIANT_PARAM = "id";
@@ -66,7 +68,8 @@ public class VariantLookupService extends AbstractWdkService {
     // @OutSchema("niagads.variant.get-response")
     public Response buildResponse(String body, @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
             @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
-            @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
+            @QueryParam(VARIANT_PARAM) String variants,
+            @DefaultValue("1")@QueryParam(PAGE_PARAM) Integer currentPage) throws WdkModelException {
 
         if (adspQC == null) {
             adspQC = false;
@@ -74,12 +77,13 @@ public class VariantLookupService extends AbstractWdkService {
         if (mscOnly == null) {
             mscOnly = false;
         }
-        LOG.info("adspQC:" + adspQC);
-        LOG.info("Starting 'Variant Lookup' Service");
-        String response = "[]";
-        try {
 
-            response = lookup(variant, mscOnly, adspQC);
+        String response = "{}";
+        try {
+            initializePaging(variants, currentPage);
+            String pagedVariantIds = getPagedFeatureStr();
+            response = lookup(pagedVariantIds, mscOnly, adspQC);
+
             if (response == null) {
                 response = "{}";
             }
@@ -91,6 +95,8 @@ public class VariantLookupService extends AbstractWdkService {
 
         return Response.ok(response).build();
     }
+
+
 
     private String buildQuery(Boolean mscOnly, Boolean adspQC) {
         String lookupCTE = "annotations AS (SELECT" + NL
