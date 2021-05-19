@@ -70,20 +70,16 @@ public class VariantLookupService extends AbstractWdkService {
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.get-response")
     public Response buildResponse(@Context HttpServletRequest request, 
-        String body, @DefaultValue("false") @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
-        @DefaultValue("false") @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
+        String body,@QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
+        @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
         @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
 
         LOG.info("Starting 'Variant Lookup' Service");
+     
+        adspQC = validateBooleanParam(request, ADSP_QC_PARAM);
+        mscOnly = validateBooleanParam(request, MSC_ONLY_PARAM);
 
-        if (request.getParameterMap().containsKey(ADSP_QC_PARAM)) {
-            adspQC = true;
-        }
-        if (request.getParameterMap().containsKey(MSC_ONLY_PARAM)) {
-            mscOnly = true;
-        }
-
-        LOG.debug("adspQC: " + adspQC);
+        LOG.debug("adspQC: " + adspQC); // not provided: null, provided: false, 
         LOG.debug("mscOnly: " + mscOnly);
    
         String response = "{}";
@@ -101,6 +97,22 @@ public class VariantLookupService extends AbstractWdkService {
 
         return Response.ok(response).build();
     }
+
+    
+    private Boolean validateBooleanParam(HttpServletRequest request, String param) {
+        if (!request.getParameterMap().containsKey(param)) {
+            return false;
+        }
+
+        String paramValue = request.getParameterValues(param)[0];
+        if (paramValue == "") {
+            return true;
+        }
+        else {
+            return Boolean.valueOf(paramValue);
+        }
+    }    
+
 
     private String buildQuery(Boolean mscOnly, Boolean adspQC) {
         String lookupCTE = "annotations AS (SELECT" + NL
