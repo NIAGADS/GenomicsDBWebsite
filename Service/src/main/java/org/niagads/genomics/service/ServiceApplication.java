@@ -37,6 +37,8 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(VariantLDWindowService.class)
     .add(VariantLookupService.class)
     .add(VariantLDService.class)
+    .add(VariantLDExpansionService.class)
+    .add(VariantGWASHitsService.class)
 
     // genome browser tracks
     .add(GWASSummaryStatisticsTrackService.class)
