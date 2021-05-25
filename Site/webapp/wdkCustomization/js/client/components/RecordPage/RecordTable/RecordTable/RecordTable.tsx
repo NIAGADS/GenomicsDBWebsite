@@ -1,19 +1,77 @@
 import React, { useEffect, useRef } from "react";
 //@ts-ignore
-import ReactTable, { AccessorFunction, Instance, RowInfo, Filter, Column } from "react-table";
-import { isString, isObject, findIndex, forIn } from "lodash";
+//import ReactTable, { AccessorFunction, Instance, RowInfo, Filter, Column } from "react-table";
+import ReactTable, { AccessorFunction, Instance, RowInfo, Filter, Column, CellProps, FilterProps, FilterValue, IdType, Row, TableInstance, DefaultFilterFunction } from 'react-table'
+import { isString, isObject, findIndex, forIn, includes } from "lodash";
 import { isJson, resolveObjectInput, withTooltip } from "../../../../util/jsonParse";
 import { extractDisplayText } from "../util";
 import CssBarChart from "./CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
-import { Box } from "@material-ui/core";
+// import { Box } from "@material-ui/core";
+import { Box, Button, CssBaseline, InputLabel, MenuItem, TextField } from '@material-ui/core';
+
+
+
+
+/* FILTERS ADDED BY EGA --  to be refactored when time allows
+modified from:  https://github.com/ggascoigne/react-table-example */
+
+
+//const NiagadsRecordTable: React.FC<NiagadsRecordTable> =({
+
+const SelectColumnFilter:React.FC<FilterProps> = ({column: { filterValue, render, setFilter, row, id },}: FilterProps) => {
+    const optionSet = new Set<any>()
+      row.forEach((row:any) => {
+        optionSet.add(row.values[id])
+      });
+    const options = Array.from(optionSet.values());
+  
+    return (
+      <TextField
+        select
+        label={render('Header')}
+        value={filterValue || ''}
+        onChange={(e) => {
+          setFilter(e.target.value || undefined)
+        }}
+      >
+        <MenuItem value={''}>All</MenuItem>
+        {options.map((option, i) => (
+          <MenuItem key={i} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+    )
+  }
+
+  const useActiveElement = () => {
+    const [active, setActive] = React.useState(document.activeElement)
+  
+    const handleFocusIn = () => {
+      setActive(document.activeElement)
+    }
+  
+    React.useEffect(() => {
+      document.addEventListener('focusin', handleFocusIn)
+      return () => {
+        document.removeEventListener('focusin', handleFocusIn)
+      }
+    }, [])
+  
+    return active
+  }
+
+  /* END EGA FILTERS */
+  
 
 interface NiagadsRecordTable {
     attributes: rt.TableAttribute[];
     canShrink?: boolean;
     chartProperties?: any;
     filtered: Filter[];
+    filterable?: boolean;
     onLoad: (ref: React.MutableRefObject<Instance>) => void;
     stringFilterMethod: (val: string, rows: any[]) => any[];
     table: rt.Table;
@@ -28,6 +86,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
     filtered,
     onLoad,
     stringFilterMethod,
+    filterable,
     table,
     value,
     visible,
@@ -65,8 +124,11 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                               filterType =
                                   table.properties.type[0] === "chart_filter" &&
                                   table.properties.filter_field[0] === attribute.name
-                                      ? pValFilter
-                                      : null;
+                                      ? "pvalue"
+                                      : table.properties.type[0] === "select_filter" && 
+                                      includes(table.properties.filter_field[0].split(","), attribute.name) 
+                                      ? "select"
+                                      : null
                           return k === subCompKey
                               ? {
                                     expander: true,
@@ -84,6 +146,8 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                                         );
                                     },
                                 }
+                              : table.properties.type[0] === "select_filter" ?
+                              _buildSelectFilteredColumn(attribute, attribute.isSortable)
                               : _buildColumn(attribute, attribute.isSortable, filterType);
                       }
                   )
@@ -99,7 +163,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
                           .map(
                               (k): Column => {
                                   const attribute = row.attributes.find((attr: rt.TableAttribute) => attr.name === k);
-                                  return _buildColumn(attribute, false);
+                                  return _buildSubcomponentColumn(attribute, false);
                               }
                           )
                           .sort((col1, col2) => _indexSort(col1, col2, row.attributes));
@@ -125,6 +189,7 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         defaultSortMethod: NiagadsTableSort,
         expanderDefaults: { width: 200 },
         filtered,
+        filterable,
         minRows: 0,
         onLoad,
         PaginationComponent,
@@ -135,7 +200,10 @@ const NiagadsRecordTable: React.FC<NiagadsRecordTable> = ({
         ...subComponent,
     };
 
-    return <ReactTable {...tableProps} ref={instance} />;
+    return (
+            <ReactTable {...tableProps} ref={instance} />
+            )
+    ;
 };
 
 const NiagadsTableSort = (a: string, b: string) => {
@@ -164,6 +232,9 @@ const SortIconGroup: React.FC = () => (
         <i className="icon-inactive fa fa-sort"></i>
     </span>
 );
+
+
+
 
 const pValFilter = (filter: Filter, row: any) => +row.pvalue <= +filter.value;
 
@@ -201,12 +272,31 @@ const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] =
     });
 };
 
+const _buildSelectFilteredColumn = (attribute: rt.TableAttribute, sortable: boolean) => ({
+    Header: _buildHeader(attribute),
+    sortable,
+    accessor: resolveAccessor(attribute.name, attribute),
+    id: attribute.name,
+    filterMethod: (filter: any, rows: any) => {return rows[filter.id] === filter.value;},
+    Filter: SelectColumnFilter
+});
+
 const _buildColumn = (attribute: rt.TableAttribute, sortable: boolean, filterType?: any) => ({
     Header: _buildHeader(attribute),
     sortable,
     accessor: resolveAccessor(attribute.name, attribute),
     id: attribute.name,
-    filterMethod: filterType ? filterType : (filter: any, rows: any) => rows,
+    //  filterMethod: filterType ? filterType : (filter: any, rows: any) => rows,
+    filterMethod: filterType === 'pvalue' ? pValFilter 
+        : (filter: any, rows: any) => rows
+});
+
+const _buildSubcomponentColumn = (attribute: rt.TableAttribute, sortable: boolean) => ({
+    Header: _buildHeader(attribute),
+    sortable,
+    accessor: resolveAccessor(attribute.name, attribute),
+    id: attribute.name,
+    filterMethod: (filter: any, rows: any) => rows
 });
 
 const _buildHeader = (attribute: rt.TableAttribute) => {

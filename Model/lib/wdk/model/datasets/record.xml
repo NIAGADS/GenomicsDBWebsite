@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
   <recordClassSet name="DatasetRecordClasses">
-    <recordClass name="ResourceRecordClass" displayName="Data Source" displayNamePlural="Data Sources" shortDisplayName="Data Source" useBasket="false" urlName="resource">
+    <recordClass name="ResourceDatasetRecordClass" displayName="Data Source"
+		 displayNamePlural="Data Sources" shortDisplayName="Data Source"
+		 useBasket="false" urlName="resource">
       <!-- =================================================================== -->
       <!-- Primary Key -->
       <!-- =================================================================== -->
@@ -93,14 +95,16 @@
 
     </recordClass>
 
-    <recordClass name="NIAGADSDatasetRecordClass" displayName="NIAGADS Dataset" displayNamePlural="NIAGADS Datasets" shortDisplayName="Dataset" useBasket="false" urlName="dataset">
+    <recordClass name="NIAGADSDatasetRecordClass" displayName="NIAGADS Dataset"
+		 displayNamePlural="NIAGADS Datasets"
+		 shortDisplayName="Dataset" useBasket="false" urlName="dataset">
       <!-- =================================================================== -->
       <!-- Primary Key -->
       <!-- =================================================================== -->
 
       <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
 	<columnRef>
-	  accession
+	  dataset_type
 	</columnRef>
       </primaryKey>
 
@@ -110,18 +114,19 @@
 	</text>
       </idAttribute>
 
-      <testParamValues>
-	<paramValue name="accession">
-	  NG00027
-	</paramValue>
-      </testParamValues>
 
       <!-- =================================================================== -->
       <!-- Reporters -->
       <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+      <reporter name="fullRecord"
+		displayName="%%fullReporterDisplayName%%"
+		scopes="record"
+		implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
-      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+      <reporter name="attributesTabular"
+		displayName="%%attributesReporterDisplayName%%"
+		scopes="results"
+		implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
 	<description>
 	  %%attributesReporterDescription%%
 	</description>
@@ -130,7 +135,10 @@
 	</property>
       </reporter>
 
-      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+      <reporter name="tableTabular"
+		displayName="%%tableReporterDisplayName%%"
+		scopes="results"
+		implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
 	<description>
 	  %%tableReporterDescription%%
 	</description>
@@ -140,11 +148,15 @@
       </reporter>
 
       <reporter name="xml" displayName="XML: choose from columns
-					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
+					and/or tables"
+		scopes=""
+		implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
       </reporter>
 
       <reporter name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+					 and/or tables"
+		scopes="record,results"
+		implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
       </reporter>
 
       <!-- =============================================================== -->
@@ -161,18 +173,30 @@
 	<columnAttribute name="name" displayName="Name" type="string"/>
       </attributeQueryRef>
 
-      <table name="datasets" displayName="Datasets" ref="NIAGADSDatasetTables.Datasets">
-	<columnAttribute name="track" displayName="Track" type="string"/>
+      <table name="datasets" displayName="Datasets" queryRef="NIAGADSDatasetTables.Datasets">
+	<columnAttribute name="dataset_accession" displayName="NIAGADS Accession" type="string"/>
 	<columnAttribute name="consortium" displayName="Consortium" type="string" />
-	<columnAttribute name="name" displayName="Name" type="string" />
+		
+	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true"/>
+	<columnAttribute name="name" displayName="Name" type="string" internal="true"
+			 inReportMaker="true"/>
+	<columnAttribute name="dataset_record_link" displayName="Name" type="string"  inReportMaker="false"/>
+
+	<columnAttribute name="attribution" displayName="Attribution" type="string" />
 	<columnAttribute name="description" displayName="Description" type="string" />
 	<columnAttribute name="neuropathology" displayName="Diagnosis/Neuropathology" type="string" />
 	<columnAttribute name="population" displayName="Population" type="string"/>
+	<columnAttribute name="biomarker" displayName="Biomarker" type="string"/>
+	<columnAttribute name="additional_phenotype" displayName="Additional Phenotypes"
+			 type="string"
+			 help="additional phenotypic information, incl. APOE Carrier Status" />
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
-	<columnAttribute name="additional_phenotype" displayName="Additional Phenotypes" type="string" help="additional phenotypic information, incl. APOE Carrier Status, biomarker, etc" />
 
 	<propertyList name="type">
-	  <value>default</value>
+	  <value>select_filter</value>
+	</propertyList>
+	<propertyList name="filter_field">
+	  <value>dataset_accession,consortium,neuropathology,population,biomarker</value>
 	</propertyList>
 	<propertyList name="defaultOpen">
 	  <value>true</value>
@@ -184,7 +208,10 @@
     </recordClass>
 
 
-    <recordClass name="GWASDatasetRecordClass" displayName="Summary Statistics Dataset Report" displayNamePlural="Datasets" shortDisplayName="Dataset" useBasket="false" urlName="gwas_summary">
+    <recordClass name="GWASDatasetRecordClass"
+		 displayName="Summary Statistics Dataset Report"
+		 displayNamePlural="Datasets" shortDisplayName="Dataset"
+		 useBasket="false" urlName="gwas_summary">
 
       <!-- =================================================================== -->
       <!-- Primary Key -->
@@ -212,9 +239,14 @@
       <!-- =================================================================== -->
       <!-- Reporters -->
       <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%"
+		scopes="record"
+		implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
-      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+      <reporter name="attributesTabular"
+		displayName="%%attributesReporterDisplayName%%"
+		scopes="results"
+		implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
 	<description>
 	  %%attributesReporterDescription%%
 	</description>
@@ -223,7 +255,10 @@
 	</property>
       </reporter>
 
-      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+      <reporter name="tableTabular"
+		displayName="%%tableReporterDisplayName%%"
+		scopes="results"
+		implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
 	<description>
 	  %%tableReporterDescription%%
 	</description>
@@ -233,11 +268,14 @@
       </reporter>
 
       <reporter name="xml" displayName="XML: choose from columns
-					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
+					and/or tables" scopes=""
+		implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
       </reporter>
 
       <reporter name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+					 and/or tables"
+		scopes="record,results"
+		implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
       </reporter>
 
       <!-- =============================================================== -->
@@ -257,11 +295,17 @@
 	<columnAttribute name="name" displayName="Name" type="string" />
 	<columnAttribute name="attribution" displayName="Attribution" type="string" />
 	<columnAttribute name="description" displayName="Description" type="string"/>
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
-	<columnAttribute name="search_link" displayName="Mine Dataset" type="json_link" help="retrieve the top variants in this dataset, modify filter criteria/download result"/>
-	<columnAttribute name="niagads_accession" displayName="Accession" type="string" internal="true" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
-	<columnAttribute name="category" displayName="Category" type="string" internal="true" inReportMaker="false"/>
-	<columnAttribute name="is_adsp" displayName="ADSP Dataset" type="json_icon" help="data generated by the Alzheimer's Disease Sequencing Project (ADSP)"/>
+	<columnAttribute name="accession_link" displayName="Accession" type="json_link"
+			 help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
+	<columnAttribute name="search_link" displayName="Mine Dataset" type="json_link"
+			 help="retrieve the top variants in this dataset, modify filter criteria/download result"/>
+	<columnAttribute name="niagads_accession" displayName="Accession" type="string"
+			 internal="true"
+			 help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets"/>
+	<columnAttribute name="category" displayName="Category" type="string"
+			 internal="true" inReportMaker="false"/>
+	<columnAttribute name="is_adsp" displayName="ADSP Dataset" type="json_icon"
+			 help="data generated by the Alzheimer's Disease Sequencing Project (ADSP)"/>
       </attributeQueryRef>
 
       <!-- <attributeQueryRef ref="GwasDatasetAttributes.CovariateList"> -->
@@ -273,13 +317,7 @@
       <!-- help="phenotypes assessed in the study, may incl.: population, diagnosis, neuropathology, biomarker, APOE allele carrier status"/> -->
       <!-- </attributeQueryRef> -->
 
-      <attributeQueryRef ref="GwasDatasetAttributes.HasManhattanPlot">
-	<columnAttribute name="has_manhattan_plot" internal="true" inReportMaker="false" type="boolean">
-	  <propertyList name="chartProperties">
-	    <value>{"type": "imanhattan"}</value>
-	  </propertyList>
-	</columnAttribute>
-      </attributeQueryRef>
+     
 
       <!-- <table name="phenotypes" displayName="Phenotypes" queryRef="GwasDatasetTables.Phenotypes">
 	   <columnAttribute name="phenotype_category" displayName="Category" type="string"/>

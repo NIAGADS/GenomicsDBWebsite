@@ -55,6 +55,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, tableData }) =
 
     const getHasPValFilter = (table: rt.Table) => !!tableInstance && table.properties.type[0] === "chart_filter";
 
+
     const filterString = (value: string, rows: any[]) => {
         //https://github.com/benjamingr/RegExp.escape/blob/master/polyfill.js
         const re = new RegExp(value.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "i");
@@ -162,6 +163,7 @@ const NiagadsTableContainer: React.FC<rt.RecordTable> = ({ table, tableData }) =
                         stringFilterMethod={filterString}
                         table={table}
                         value={tableData}
+                        filterable={true}
                         visible={!getPValFilteredResultsEmpty()}
                     />
                 </Grid>
