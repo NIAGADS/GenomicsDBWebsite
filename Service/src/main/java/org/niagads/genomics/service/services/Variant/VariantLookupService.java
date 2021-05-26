@@ -39,7 +39,8 @@ public class VariantLookupService extends AbstractPagedWdkService {
     private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL 
         + "SELECT id.pk AS variant_primary_key," + NL
         + "split_part(pk, '_', 1) AS metaseq_id," + NL 
-        + "split_part(pk, '_', 2) AS ref_snp_id," + NL
+        + "left(split_part(pk, '_', 1), 50) AS indexed_metaseq_id," + NL 
+        + "CASE WHEN split_part(pk, '_', 2) = '' THEN NULL ELSE split_part(pk, '_', 2) END AS ref_snp_id," + NL
         + "'chr' || split_part(pk, ':', 1)::text AS chrm," + NL
         + "search_term" + NL
         + "FROM id)";
@@ -57,7 +58,7 @@ public class VariantLookupService extends AbstractPagedWdkService {
     + "'ref_snp_id', v.ref_snp_id," + NL
     + "'genomicsdb_id', d.variant_primary_key)," + NL
     + "'allele_frequencies', v.allele_frequencies," + NL 
-    + "'cadd_scores', v.cadd_scores," + NL
+    + "'cadd_scores', CASE WHEN v.cadd_scores::text = '{}' THEN NULL ELSE v.cadd_scores END," + NL
     + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
     + "'flagged_genomicsdb_datasets', v.other_annotation->'GenomicsDB')";
 
@@ -158,8 +159,8 @@ public class VariantLookupService extends AbstractPagedWdkService {
 
         lookupCTE = lookupCTE + ") AS annotation_json" + NL
         + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
-        + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
-        + "AND v.ref_snp_id = d.ref_snp_id" + NL 
+        + "WHERE left(v.metaseq_id, 50) = d.indexed_metaseq_id" + NL 
+        + "AND (v.ref_snp_id = d.ref_snp_id OR d.ref_snp_id IS NULL)" + NL 
         + "AND v.chromosome = d.chrm)";
         /* + "UNION ALL SELECT" + NL
         + "jsonb_build_object(search_term, '{}'::jsonb) AS annotation_json" + NL
