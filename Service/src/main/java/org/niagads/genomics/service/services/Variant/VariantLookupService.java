@@ -82,7 +82,7 @@ public class VariantLookupService extends AbstractPagedWdkService {
 
         LOG.debug("adspQC: " + adspQC); // not provided: null, provided: false, 
         LOG.debug("mscOnly: " + mscOnly);
-        
+
         String response = "{}";
         try {
             initializePaging(variants, currentPage);
@@ -140,8 +140,13 @@ public class VariantLookupService extends AbstractPagedWdkService {
             + VARIANT_ID_CTE + "," + NL 
             + VARIANT_DETAILS_CTE + "," + NL 
             + lookupCTE + NL
-            + "SELECT jsonb_object_agg(t.k, t.v)::text AS result" + NL
+            + "SELECT jsonb_build_object(" + NL
+            + "'page', jsonb_build_oject(" + NL 
+            + "'current'," + getCurrentPageDisplay() + "," + NL
+            + "'total'," + getNumPages() + ")," + NL
+            + "'result', jsonb_object_agg(t.k, t.v))::text AS result" + NL
             + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
+            
             
         // LOG.debug(sql);
 
