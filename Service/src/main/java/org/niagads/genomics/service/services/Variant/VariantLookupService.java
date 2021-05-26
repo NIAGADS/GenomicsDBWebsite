@@ -22,11 +22,13 @@ import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
-import org.gusdb.wdk.service.service.AbstractWdkService;
+import org.json.JSONObject;
+// import org.gusdb.wdk.service.service.AbstractWdkService;
+import org.niagads.genomics.service.services.AbstractPagedWdkService;
 
 @Path("variant")
-public class VariantLookupService extends AbstractWdkService {
-    private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
+public class VariantLookupService extends AbstractPagedWdkService {
+    //private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
 
     private static final String VARIANT_PARAM = "id";
     private static final String MSC_ONLY_PARAM = "mscOnly";
@@ -37,10 +39,15 @@ public class VariantLookupService extends AbstractWdkService {
     private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL 
         + "SELECT id.pk AS variant_primary_key," + NL
         + "split_part(pk, '_', 1) AS metaseq_id," + NL 
-        + "split_part(pk, '_', 2) AS ref_snp_id," + NL
+        + "left(split_part(pk, '_', 1), 50) AS indexed_metaseq_id," + NL 
+        + "CASE WHEN split_part(pk, '_', 2) = '' THEN NULL ELSE split_part(pk, '_', 2) END AS ref_snp_id," + NL
         + "'chr' || split_part(pk, ':', 1)::text AS chrm," + NL
         + "search_term" + NL
         + "FROM id)";
+
+    private static final String MISSING_VARIANTS_CTE = "unmappedVariants AS (" + NL
+        + "SELECT search_term FROM vdetails" + NL
+        + "WHERE variant_primary_key IS NULL)";
 
     private static final String MSC_ONLY_JSON_OBJECT = "jsonb_build_object(" + NL 
     + "'chromosome', v.chromosome," + NL
@@ -51,7 +58,7 @@ public class VariantLookupService extends AbstractWdkService {
     + "'ref_snp_id', v.ref_snp_id," + NL
     + "'genomicsdb_id', d.variant_primary_key)," + NL
     + "'allele_frequencies', v.allele_frequencies," + NL 
-    + "'cadd_scores', v.cadd_scores," + NL
+    + "'cadd_scores', CASE WHEN v.cadd_scores::text = '{}' THEN NULL ELSE v.cadd_scores END," + NL
     + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
     + "'flagged_genomicsdb_datasets', v.other_annotation->'GenomicsDB')";
 
@@ -65,27 +72,50 @@ public class VariantLookupService extends AbstractWdkService {
         + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
         + "'adsp_wes_qc', v.other_annotation->'ADSP_WES')";
 
- 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.variant.get-response")
     public Response buildResponse(@Context HttpServletRequest request, 
-        String body,@QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
-        @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
-        @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
+            String body, @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
+            @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
+            @QueryParam(VARIANT_PARAM) String variants,
+            @DefaultValue("1")@QueryParam(PAGE_PARAM) Integer currentPage) throws WdkModelException {
 
         LOG.info("Starting 'Variant Lookup' Service");
-     
+
         adspQC = validateBooleanParam(request, ADSP_QC_PARAM);
         mscOnly = validateBooleanParam(request, MSC_ONLY_PARAM);
 
         LOG.debug("adspQC: " + adspQC); // not provided: null, provided: false, 
         LOG.debug("mscOnly: " + mscOnly);
-   
+
         String response = "{}";
         try {
+            if (variants == null) {
+                String messageStr = "must supply a comma separated list of one or more variants using the `id` parameter";
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("missing required parameter: `id`", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
+            }
 
-            response = lookup(variant, mscOnly, adspQC);
+            Boolean pagingIsValid = initializePaging(variants, currentPage);
+            LOG.debug("paging validation: " + pagingIsValid);
+
+            if (!pagingIsValid) {
+                String messageStr = "invalid value for paging parameter; requested page (" 
+                    + getCurrentPageDisplay() 
+                    + ") > max number of pages (" + getNumPages() + ").";
+
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("invalid paging", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
+            }
+
+            String pagedVariantIds = getPagedFeatureStr();
+            response = lookup(pagedVariantIds, mscOnly, adspQC);
+
             if (response == null) {
                 response = "{}";
             }
@@ -129,16 +159,27 @@ public class VariantLookupService extends AbstractWdkService {
 
         lookupCTE = lookupCTE + ") AS annotation_json" + NL
         + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
-        + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
-        + "AND v.ref_snp_id = d.ref_snp_id" + NL 
+        + "WHERE left(v.metaseq_id, 50) = d.indexed_metaseq_id" + NL 
+        + "AND (v.ref_snp_id = d.ref_snp_id OR d.ref_snp_id IS NULL)" + NL 
         + "AND v.chromosome = d.chrm)";
+        /* + "UNION ALL SELECT" + NL
+        + "jsonb_build_object(search_term, '{}'::jsonb) AS annotation_json" + NL
+        + "FROM unmappedVariants) "; */
 
         String sql = "WITH" + NL 
             + VARIANT_ID_CTE + "," + NL 
             + VARIANT_DETAILS_CTE + "," + NL 
+            + MISSING_VARIANTS_CTE + "," + NL
             + lookupCTE + NL
-            + "SELECT jsonb_object_agg(t.k, t.v)::text AS result" + NL
+            + "SELECT jsonb_build_object(" + NL
+            + "'paging', jsonb_build_object(" + NL 
+            + "'page'," + getCurrentPageDisplay() + "," + NL
+            + "'total_pages'," + getNumPages() + ")," + NL
+            + "'unmapped_variants', (SELECT json_agg(search_term) FROM unmappedVariants)," + NL
+            + "'result', jsonb_object_agg(t.k, t.v)" + NL
+            + ")::text AS result" + NL            
             + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
+            
             
         // LOG.debug(sql);
 
