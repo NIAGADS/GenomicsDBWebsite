@@ -22,12 +22,13 @@ import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
+import org.json.JSONObject;
 // import org.gusdb.wdk.service.service.AbstractWdkService;
 import org.niagads.genomics.service.services.AbstractPagedWdkService;
 
 @Path("variant")
 public class VariantLookupService extends AbstractPagedWdkService {
-    private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
+    //private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
 
     private static final String VARIANT_PARAM = "id";
     private static final String MSC_ONLY_PARAM = "mscOnly";
@@ -42,6 +43,10 @@ public class VariantLookupService extends AbstractPagedWdkService {
         + "'chr' || split_part(pk, ':', 1)::text AS chrm," + NL
         + "search_term" + NL
         + "FROM id)";
+
+    private static final String MISSING_VARIANTS_CTE = "unmappedVariants AS (" + NL
+        + "SELECT search_term FROM vdetails" + NL
+        + "WHERE variant_primary_key IS NULL)";
 
     private static final String MSC_ONLY_JSON_OBJECT = "jsonb_build_object(" + NL 
     + "'chromosome', v.chromosome," + NL
@@ -85,7 +90,28 @@ public class VariantLookupService extends AbstractPagedWdkService {
 
         String response = "{}";
         try {
-            initializePaging(variants, currentPage);
+            if (variants == null) {
+                String messageStr = "must supply a comma separated list of one or more variants using the `id` parameter";
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("missing required parameter: `id`", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
+            }
+
+            Boolean pagingIsValid = initializePaging(variants, currentPage);
+            LOG.debug("paging validation: " + pagingIsValid);
+
+            if (!pagingIsValid) {
+                String messageStr = "invalid value for paging parameter; requested page (" 
+                    + getCurrentPageDisplay() 
+                    + ") > max number of pages (" + getNumPages() + ").";
+
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("invalid paging", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
+            }
+
             String pagedVariantIds = getPagedFeatureStr();
             response = lookup(pagedVariantIds, mscOnly, adspQC);
 
@@ -135,16 +161,22 @@ public class VariantLookupService extends AbstractPagedWdkService {
         + "WHERE left(v.metaseq_id, 50) = left(d.metaseq_id, 50)" + NL 
         + "AND v.ref_snp_id = d.ref_snp_id" + NL 
         + "AND v.chromosome = d.chrm)";
+        /* + "UNION ALL SELECT" + NL
+        + "jsonb_build_object(search_term, '{}'::jsonb) AS annotation_json" + NL
+        + "FROM unmappedVariants) "; */
 
         String sql = "WITH" + NL 
             + VARIANT_ID_CTE + "," + NL 
             + VARIANT_DETAILS_CTE + "," + NL 
+            + MISSING_VARIANTS_CTE + "," + NL
             + lookupCTE + NL
             + "SELECT jsonb_build_object(" + NL
-            + "'page', jsonb_build_oject(" + NL 
-            + "'current'," + getCurrentPageDisplay() + "," + NL
-            + "'total'," + getNumPages() + ")," + NL
-            + "'result', jsonb_object_agg(t.k, t.v))::text AS result" + NL
+            + "'paging', jsonb_build_object(" + NL 
+            + "'page'," + getCurrentPageDisplay() + "," + NL
+            + "'total_pages'," + getNumPages() + ")," + NL
+            + "'unmapped_variants', (SELECT json_agg(search_term) FROM unmappedVariants)," + NL
+            + "'result', jsonb_object_agg(t.k, t.v)" + NL
+            + ")::text AS result" + NL            
             + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
             
             

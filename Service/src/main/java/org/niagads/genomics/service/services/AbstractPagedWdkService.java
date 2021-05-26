@@ -1,14 +1,15 @@
 package org.niagads.genomics.service.services;
 
+import org.apache.log4j.Logger;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
 import java.lang.Math;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AbstractPagedWdkService extends AbstractWdkService {
+public abstract class AbstractPagedWdkService extends AbstractWdkService {
+    protected final Logger LOG = Logger.getLogger(this.getClass().getName());
 
     protected final static String PAGE_PARAM = "page";
     protected final static Integer PAGE_SIZE = 200; // number of recortdds
@@ -16,7 +17,7 @@ public class AbstractPagedWdkService extends AbstractWdkService {
     protected int _currentPage;
     protected int _numFeatureLookups = -1;
     protected List<String> _featureLookupList;
-
+    
     protected void setNumPages() {
         _numPages = (_numFeatureLookups > 0) ? (int) Math.ceil((double) _numFeatureLookups / PAGE_SIZE) : 1;
     }
@@ -40,7 +41,7 @@ public class AbstractPagedWdkService extends AbstractWdkService {
     protected void setFeatureLookupList(String idList) {
         String[] strArray = idList.split(",");    
         _featureLookupList = Arrays.asList(strArray);
-        _numFeatureLookups = _featureLookupList.size();
+        _numFeatureLookups = _featureLookupList.size();        
     }
 
     protected Integer getNumFeatureLookups() {
@@ -50,17 +51,26 @@ public class AbstractPagedWdkService extends AbstractWdkService {
     // slices featureLookupList and return comma separated string w/paged ids
     protected String getPagedFeatureStr() {
         int startIndex = 0 + (_currentPage * PAGE_SIZE);
-        int endIndex = PAGE_SIZE + (_currentPage * PAGE_SIZE) -1;
-        List<String> subset = _featureLookupList.subList(startIndex, endIndex);
+        int endIndex = PAGE_SIZE + (_currentPage * PAGE_SIZE);
+        if (endIndex > _numFeatureLookups) {
+            endIndex = _numFeatureLookups;
+        }
+        List<String> subset = _featureLookupList.subList(startIndex, endIndex);  // from - inclusive, to -- exclusive
+        LOG.debug("split: " + startIndex + " - " + endIndex );
+        LOG.debug("subset: " + subset.toString());
         return subset.stream().collect(Collectors.joining(","));
     }
 
-    protected void initializePaging(String idList, int currentPage) {
+    protected Boolean initializePaging(String idList, int currentPage) {
         setFeatureLookupList(idList);
         setNumPages();
         setCurrentPage(currentPage);
+        return validateCurrentPage();
     }
 
+    private Boolean validateCurrentPage() {
+        return getCurrentPageDisplay() <= _numPages;
+    }
 
 
 
