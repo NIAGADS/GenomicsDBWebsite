@@ -137,18 +137,32 @@ export interface GWASDatasetRecordAttributes {
     has_manhattan_plot: string;
 }
 
+export interface ResourceDatasetRecord extends BaseRecord {
+    attributes: Record<keyof ResourceDatasetRecordAttributes, string>;
+    id: PrimaryKey;
+    tables: { [key: string]: any };
+    urlName: "resource";
+}
+
+
 export interface NIAGADSDatasetRecord extends BaseRecord {
     attributes: Record<keyof NIAGADSDatasetRecordAttributes, string>;
     id: PrimaryKey;
     tables: { [key: string]: any };
-    urlName: "gwas_summary";
+    urlName: "dataset";
 }
 
-export interface NIAGADSDatasetRecordAttributes {
+export interface ResourceDatasetRecordAttributes {
     name: string;
     description: string;
     external_link: string;
     is_adsp: string;
+}
+
+export interface NIAGADSDatasetRecordAttributes {
+    dataset_type: string;
+    name: string;
+    description: string;
 }
 
 export interface RecordTable {
@@ -160,7 +174,7 @@ export interface RecordTable {
     className: string;
 }
 
-type tableType = "default" | "chart_filter" | "default" | "browser_linked";
+type tableType = "default" | "chart_filter" |  "browser_linked" | "select_filter";
 
 export interface Table {
     attributes: TableAttribute[];

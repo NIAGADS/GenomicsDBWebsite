@@ -14,6 +14,7 @@
         "ideogram": "^1.29.0",
         "igv": "^2.7.4",
         "locuszoom": "^0.12.2",
+        "match-sorter": "^6.3.0",
         "prettier": "^2.0.4",
         "qs": "^6.9.4",
         "react-csv": "^1.0.19",

@@ -29,19 +29,19 @@ public class DatasetSummaryPlotService extends AbstractWdkService {
 
     private static final String LOOKUP_SQL = "WITH tcounts AS (" + NL
         + "SELECT category_abbrev, category, count(DISTINCT track) AS n_tracks," + NL
-        + "CASE WHEN category_abbrev = 'AD' THEN 1" + NL
-        + "WHEN category_abbrev = 'LOAD' THEN 2" + NL
-        + "WHEN category_abbrev = 'PSP' THEN 3" + NL
-        + "WHEN category_abbrev =  'FTD' THEN 4" + NL
-        + "WHEN category_abbrev = 'LBD' THEN 5" + NL
-        + "WHEN category_abbrev = 'VBI' THEN 6" + NL
-        + "WHEN category_abbrev = 'PD' THEN 7" + NL
-        + "WHEN category_abbrev = 'CSF Biomarker' THEN 8" + NL
-        + "WHEN category_abbrev = 'Other Neuropathology' THEN 9" + NL
+        + "CASE WHEN category_abbrev = 'AD/LOAD' THEN 1" + NL
+        //+ "WHEN category_abbrev = 'LOAD' THEN 2" + NL
+        + "WHEN category_abbrev = 'PSP' THEN 2" + NL
+        + "WHEN category_abbrev =  'FTD' THEN 3" + NL
+        + "WHEN category_abbrev = 'LBD' THEN 4" + NL
+        + "WHEN category_abbrev = 'VBI' THEN 5" + NL
+        + "WHEN category_abbrev = 'PD' THEN 6" + NL
+        + "WHEN category_abbrev = 'CSF Biomarker' THEN 7" + NL
+        + "WHEN category_abbrev = 'Other Neuropathology' THEN 8" + NL
         + "END AS sort_order" + NL
         + "FROM NIAGADS.NeuropathologyTrackCategories" + NL
         + "GROUP BY category_abbrev, category)" + NL
-        + "SELECT jsonb_agg(('[" + '"' + "' || category_abbrev || '" + '"' + ",' || n_tracks::text || '," + '"' + "' || category || '" + '"' + "]')::jsonb ORDER BY sort_order)::text AS series_json" + NL
+        + "SELECT jsonb_agg(('[" + '"' + "' || CASE WHEN category_abbrev = 'Other Neuropathology' THEN 'Other ADRD' ELSE category_abbrev END || '" + '"' + ",' || n_tracks::text || '," + '"' + "' || category || '" + '"' + "]')::jsonb ORDER BY sort_order)::text AS series_json" + NL
         + "FROM tcounts";
 
     @GET    
