@@ -1,0 +1,92 @@
+//@import "~react-table/react-table.css";
+.ReactTable {
+    border: none;
+    flex-grow: 1;
+    &.shrink {
+        flex-grow: 0;
+    }
+    .rt-resizer {
+        width: 5px;
+        right: -2.5px;
+    }
+    .rt-th,
+    .rt-td,
+    .wdk-tooltip {
+        white-space: normal;
+    }
+    .rt-tr {
+        align-items: center;
+        .rt-td {
+            font-size: 0.9em;
+        }
+    }
+    .rt-tbody {
+        overflow-x: hidden;
+        flex-grow: 0;
+        .rt-tr-group {
+            flex-grow: 0;
+        }
+    }
+    .rt-thead {
+        &.-header {
+            flex-grow: 0;
+            box-shadow: none;
+            border-bottom: 3px solid black;
+        }
+        .rt-tr {
+            text-align: left;
+            font-weight: bold;
+            flex-grow: 0;
+            .rt-th {
+                box-shadow: none;
+                .icon-inactive {
+                    color: $gray;
+                    opacity: 0.5;
+                }
+                .icon-desc,
+                .icon-asc {
+                    display: none;
+                }
+                &.-sort-desc {
+                    .icon-desc {
+                        display: inline;
+                    }
+                    .icon-inactive {
+                        display: none;
+                    }
+                }
+                &.-sort-asc {
+                    .icon-asc {
+                        display: inline;
+                    }
+                    .icon-inactive {
+                        display: none;
+                    }
+                }
+                .sort-icons {
+                }
+            }
+        }
+    }
+    .-pagination {
+        display: flex;
+        align-items: center;
+        .-previous,
+        .-next {
+            display: flex;
+            justify-content: center;
+        }
+        .-center {
+            .-pageJump {
+                input {
+                    margin: 0px;
+                }
+            }
+        }
+    }
+    &.sub-table {
+        width: 100%; //margin: 30px auto;
+        border: thin $grey solid; //box-shadow: rgba(black, .3) 5px 5px;
+        //background-color: $gray;
+    }
+}
