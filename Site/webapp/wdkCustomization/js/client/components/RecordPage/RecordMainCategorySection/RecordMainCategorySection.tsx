@@ -2,13 +2,13 @@ import React from "react";
 import { RecordAttributeSection, CollapsibleSection, HelpIcon } from "wdk-client/Components";
 import RecordTableSection from "../RecordTableSection/RecordTableSection";
 import { getId, getTargetType, getDisplayName } from "wdk-client/Utils/CategoryUtils";
-import * as GR from "../types";
 import { IdeogramPlot, HighchartsPlot } from "../../Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
+import { RecordInstance, RecordClass } from "wdk-client/Utils/WdkModel";
 import { isEmpty } from "lodash";
-import { GeneGeneticVariationSummary } from "./SectionSummaries";
 import { Box } from "@material-ui/core";
 import { BaseText } from "../../Shared";
+import { PartialRecordRequest } from 'wdk-client/Views/Records/RecordUtils';
 
 interface RecordMainCategorySection {
     category: any;
@@ -16,9 +16,9 @@ interface RecordMainCategorySection {
     enumeration: any;
     isCollapsed: boolean;
     onSectionToggle: { (sectionName: string, isVisible: boolean): any };
-    record: GR.GeneRecord | GR.VariantRecord | GR.GWASDatasetRecord | GR.NIAGADSDatasetRecord;
-    recordClass: any;
-    requestPartialRecord?: any;
+    record: RecordInstance
+    recordClass: RecordClass;
+    requestPartialRecord?: (request: PartialRecordRequest) => void;
 }
 
 const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
@@ -115,60 +115,31 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
             );
 
         default: {
-            const id = getId(category),
-                categoryName = getDisplayName(category),
-                Header = "h" + Math.min(depth + 3, 6),
-                SubHeader = React.createElement(
-                    "h" + Math.min(depth + 4, 6),
-                    {},
-                    "Here is some new text in the heading area"
-                ),
-                headerContent = (
-                    <span>
-                        <span className="wdk-RecordSectionEnumeration">{enumeration}</span> {categoryName}
-                        {/*SubHeader*/}
-                        <a className="wdk-RecordSectionLink" onClick={(e) => e.stopPropagation()} href={"#" + id}>
-                            &sect;
-                        </a>
-                    </span>
-                );
-            return (
-                <CollapsibleSection
-                    id={id}
-                    className={depth === 0 ? "wdk-RecordSection" : "wdk-RecordSubsection"}
-                    //this seems to be an issue with section component typing
-                    //@ts-ignore
-                    headerComponent={Header}
-                    headerContent={headerContent}
-                    isCollapsed={isCollapsed}
-                    onCollapsedChange={toggleCollapse}
-                >
-                    <SectionSummaryText record={record} categoryId={id} />
-                    {children}
-                </CollapsibleSection>
+            let id = getId(category);
+            let categoryName = getDisplayName(category);
+            let Header = 'h' + Math.min(depth + 2, 6);
+            let headerContent = (
+              <span>
+                <span className="wdk-RecordSectionEnumeration">{enumeration}</span> {categoryName}
+                <a className="wdk-RecordSectionLink" onClick={e => e.stopPropagation()} href={'#' + id}>&sect;</a>
+              </span>
             );
+            return (
+              <CollapsibleSection
+                id={id}
+                className={depth === 0 ? 'wdk-RecordSection' : 'wdk-RecordSubsection'}
+                headerComponent="h3"
+                headerContent={headerContent}
+                isCollapsed={isCollapsed}
+                onCollapsedChange={toggleCollapse}
+              >
+                {children}
+              </CollapsibleSection>
+            );
+        
         }
     }
 };
 
-interface SectionSummaryText {
-    record: GR.GeneRecord | GR.VariantRecord | GR.GWASDatasetRecord | GR.NIAGADSDatasetRecord;
-    categoryId: string;
-}
-
-const SectionSummaryText: React.FC<SectionSummaryText> = ({ categoryId, record }) => {
-    let Element: React.ReactElement<any> = null;
-    switch (categoryId) {
-        case "category:genetic-variation":
-            switch (record.recordClassName) {
-                case "GeneRecordClasses.GeneRecordClass":
-                    const geneRec = record as GR.GeneRecord;
-                    Element = <GeneGeneticVariationSummary record={geneRec} />;
-                    break;
-            }
-            break;
-    }
-    return <div className="section-summary-text">{Element}</div>;
-};
 
 export default NiagadsRecordMainCategorySection;

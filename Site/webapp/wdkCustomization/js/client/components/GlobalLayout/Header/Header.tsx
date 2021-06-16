@@ -18,7 +18,7 @@ const menuConfig: MenuElement[] = [
       items: [
           {title: "GWAS Summary Statistics", target: "/record/dataset/gwas_summary" },
           {title: "Gene-level AD/ADRD Association", target: "/record/dataset/gene_risk" },
-          {title: "Single-Variant AD/ADRD Association", target: "/record/dataset/single-variant" }
+          {title: "Single-Variant AD/ADRD Association", target: "/record/dataset/single_variant" }
       ]
     },
     { title: "Workspace", target: "/workspace/strategies" },

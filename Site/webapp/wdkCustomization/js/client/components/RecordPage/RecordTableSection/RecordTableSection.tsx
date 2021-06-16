@@ -1,87 +1,65 @@
-import React, { useRef, useEffect } from "react";
-import { connect } from "react-redux";
-import { includes } from "lodash";
-import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { RecordClass } from "wdk-client/Utils/WdkModel";
-import RecordTableContainer from "../RecordTable/RecordTableContainer/RecordTableContainer";
-import { CollapsibleSection, HelpIcon } from "wdk-client/Components";
-import { ErrorBoundary } from "wdk-client/Controllers";
-import { BaseRecord, Table } from "../../RecordPage/types";
-import { Box } from "@material-ui/core";
-import { BaseText } from "../../Shared";
+import { includes } from 'lodash';
+import React from 'react';
+import { useEffect, useRef } from 'react';
+import CollapsibleSection from 'wdk-client/Components/Display/CollapsibleSection';
+import ErrorBoundary from 'wdk-client/Core/Controllers/ErrorBoundary';
+import { CategoryTreeNode } from 'wdk-client/Utils/CategoryUtils';
+import { TableField, RecordInstance, RecordClass } from 'wdk-client/Utils/WdkModel';
+import RecordTableDescription from 'wdk-client/Views/Records/RecordTable/RecordTableDescription';
+import { PartialRecordRequest } from 'wdk-client/Views/Records/RecordUtils';
+import { DefaultSectionTitle } from 'wdk-client/Views/Records/SectionTitle';
 
-interface NiagadsRecordTableSection {
-    isCollapsed: boolean;
-    record: BaseRecord;
-    recordClass: RecordClass;
-    requestPartialRecord?: any;
-    onCollapsedChange: any;
-    ontologyProperties: any;
-    //from store
-    table: Table;
-    urls?: { [key: string]: string };
+import RecordTable  from "../RecordTable/RecordTable";
+
+export interface RecordTableSection {
+  table: TableField;
+  isCollapsed: boolean;
+  onCollapsedChange: () => void;
+  ontologyProperties: CategoryTreeNode['properties'];
+  record: RecordInstance;
+  recordClass: RecordClass;
+  requestPartialRecord: (request: PartialRecordRequest) => void;
+  title?: React.ReactNode;
 }
 
-const NiagadsRecordTableSection: React.SFC<NiagadsRecordTableSection> = ({
-    isCollapsed,
-    onCollapsedChange,
-    record,
-    recordClass,
-    requestPartialRecord,
-    table,
-}) => {
-    const requestedRef = useRef(false);
+/** Record table section on record page */
+function RecordTableSection(props: RecordTableSection) {
+  let { table, record, recordClass, isCollapsed, onCollapsedChange, requestPartialRecord, title } = props;
+  let { displayName, help, name } = table;
+  let data = record.tables[name];
+  let isError = includes(record.tableErrors, name);
+  let isLoading = data == null;
+  let className = [ 'wdk-RecordTable', 'wdk-RecordTable__' + table.name ].join(' ');
 
-    useEffect(() => {
-        if (isCollapsed || requestedRef.current) return;
-        requestPartialRecord({
-            tables: [name],
-            attributes: Object.keys(record.attributes),
-        });
-        requestedRef.current = true;
-    }, [isCollapsed]);
+  const requestedRef = useRef(false);
 
-    const { name, displayName, description } = table,
-        tableData = record.tables[name],
-        isError = includes(record.tableErrors, name),
-        isLoading = tableData == null,
-        className = ["wdk-RecordTable", "wdk-RecordTable__" + table.name].join(" "),
-        headerContent = (
-            <Box display="flex" justifyContent="space-between" alignItems="baseline">
-                <BaseText variant="caption">{displayName}</BaseText>
-                {description && <HelpIcon>{safeHtml(description)}</HelpIcon>}
-            </Box>
-        );
+  useEffect(() => {
+    if (isCollapsed || requestedRef.current) return;
+    requestPartialRecord({ tables: [ name ]})
+    requestedRef.current = true;
+  }, [ isCollapsed ])
 
-    return (
-        <CollapsibleSection
-            id={name}
-            className="wdk-RecordTableContainer"
-            headerContent={headerContent}
-            isCollapsed={isCollapsed}
-            onCollapsedChange={onCollapsedChange}
-        >
-            <ErrorBoundary>
-                {isError ? (
-                    <BaseText color="error">
-                        <em>Unable to load data due to a server error.</em>
-                    </BaseText>
-                ) : isLoading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <RecordTableContainer
-                        className={className}
-                        tableData={tableData}
-                        table={table}
-                        record={record}
-                        recordClass={recordClass}
-                    />
-                )}
-            </ErrorBoundary>
-        </CollapsibleSection>
-    );
-};
+  const headerContent = (
+    title ??
+    <DefaultSectionTitle displayName={displayName} help={help} />
+  );
 
-export default connect((state: any) => ({
-    urls: state.globalData.siteConfig.externalUrls,
-}))(NiagadsRecordTableSection);
+  return (
+    <CollapsibleSection
+      id={name}
+      className="wdk-RecordTableContainer"
+      headerContent={headerContent}
+      isCollapsed={isCollapsed}
+      onCollapsedChange={onCollapsedChange}
+    >
+      <ErrorBoundary>
+        <RecordTableDescription table={table} record={record} recordClass={recordClass}/>
+        { isError ? <p style={{ color: 'darkred', fontStyle: 'italic' }}>Unable to load data due to a server error.</p>
+        : isLoading ? <p>Loading...</p>
+        : <RecordTable data={data} table={table} /> }
+      </ErrorBoundary>
+    </CollapsibleSection>
+  );
+}
+
+export default RecordTableSection;

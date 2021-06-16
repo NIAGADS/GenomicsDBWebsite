@@ -19,7 +19,7 @@ import { groupBy, startCase, truncate, uniq as unique } from "lodash";
 import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
 import { BaseIconButton, UnlabeledTextField } from "../../Shared";
 import ReactTable, { Column } from "react-table";
-import PaginationComponent from "./../../RecordPage/RecordTable-old/RecordTable/PaginationComponent/PaginationComponent";
+//import PaginationComponent from "./../../RecordPage/RecordTable-old/RecordTable/PaginationComponent/PaginationComponent";
 
 const useBrowserStyles = makeStyles(() =>
     createStyles({
@@ -267,7 +267,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                             </Grid>
                         </Grid>
                         <Box className="browser-table">
-                            <ReactTable
+                            {/*<ReactTable
                                 style={{
                                     height: "500px", // This will force the table body to overflow and scroll
                                 }}
@@ -301,9 +301,9 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                     })
                                 )}
                                 data={trackList}
-                                PaginationComponent={PaginationComponent}
+                                //PaginationComponent={PaginationComponent}
                                 minRows={0}
-                            />
+                                />*/}
                         </Box>
                     </Grid>
                 </Grid>

@@ -180,7 +180,7 @@
 	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true"/>
 	<columnAttribute name="name" displayName="Name" type="string" internal="true"
 			 inReportMaker="true"/>
-	<columnAttribute name="dataset_record_link" displayName="Name" type="string"  inReportMaker="false"/>
+	<columnAttribute name="dataset_record_link" displayName="Name" type="json_link"  inReportMaker="false"/>
 
 	<columnAttribute name="attribution" displayName="Attribution" type="string" />
 	<columnAttribute name="description" displayName="Description" type="string" />

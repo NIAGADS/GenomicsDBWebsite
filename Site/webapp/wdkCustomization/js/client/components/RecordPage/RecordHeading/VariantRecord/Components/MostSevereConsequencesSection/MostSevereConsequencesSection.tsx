@@ -1,28 +1,25 @@
 import React from "react";
-import * as gr from "./../../../../types";
 import { resolveJsonInput } from "./../../../../../../util/jsonParse";
 import { ImpactIndicator } from "../../../Shared/index";
 import { Box, List } from "@material-ui/core";
 import { BaseTextSmall, UnpaddedListItem } from "../../../../../Shared";
+import { RecordAttributes } from '../../../RecordHeadingTypes';
 
-interface MSConsequencesSection {
-    attributes: gr.VariantRecordAttributes;
-}
-const MostSevereConsequencesSection: React.FC<MSConsequencesSection> = ({ attributes }) => (
+const MostSevereConsequencesSection: React.FC<{ attributes: RecordAttributes }> = ({ attributes }) => (
     <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
         <List disablePadding={true}>
             <UnpaddedListItem>
                 <BaseTextSmall variant="caption">
                     <strong>Consequence:</strong>&nbsp;
                     {attributes.most_severe_consequence}&nbsp;
-                    {attributes.msc_is_coding && resolveJsonInput(attributes.msc_is_coding)}
+                    {attributes.msc_is_coding && resolveJsonInput(attributes.msc_is_coding.toString())}
                 </BaseTextSmall>
             </UnpaddedListItem>
             {attributes.msc_impact && (
                 <UnpaddedListItem>
                     <BaseTextSmall variant="caption">
                         <strong>Impact:</strong>&nbsp;
-                        <ImpactIndicator impact={attributes.msc_impact} />
+                        <ImpactIndicator impact={attributes.msc_impact.toString()} />
                     </BaseTextSmall>
                 </UnpaddedListItem>
             )}
@@ -50,7 +47,7 @@ const MostSevereConsequencesSection: React.FC<MSConsequencesSection> = ({ attrib
                     <UnpaddedListItem>
                         <BaseTextSmall variant="caption">
                             Impacted Gene:&nbsp;
-                            {resolveJsonInput(attributes.msc_impacted_gene_link)}
+                            {resolveJsonInput(attributes.msc_impacted_gene_link.toString())}
                         </BaseTextSmall>
                     </UnpaddedListItem>
                 )}
@@ -58,7 +55,7 @@ const MostSevereConsequencesSection: React.FC<MSConsequencesSection> = ({ attrib
                     <UnpaddedListItem>
                         <BaseTextSmall variant="caption">
                             Impacted Transcript:&nbsp;
-                            {resolveJsonInput(attributes.msc_impacted_transcript)}
+                            {resolveJsonInput(attributes.msc_impacted_transcript.toString())}
                         </BaseTextSmall>
                     </UnpaddedListItem>
                 )}

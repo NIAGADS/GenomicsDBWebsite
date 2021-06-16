@@ -1,6 +1,9 @@
 var configure = require("../../EbrcWebsiteCommon/Site/site.webpack.config");
 var path = require("path");
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = configure({
+    //plugins: [new BundleAnalyzerPlugin()],
     entry: {
         "site-client": path.join(__dirname, "/webapp/wdkCustomization/js/client/main.ts"),
     },
@@ -13,6 +16,7 @@ module.exports = configure({
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
+                    //path.join(__dirname, "/webapp/wdkCustomization/js/client/components/RecordPage/RecordTable-old"),
                 use: [
                     {
                         loader: "babel-loader",

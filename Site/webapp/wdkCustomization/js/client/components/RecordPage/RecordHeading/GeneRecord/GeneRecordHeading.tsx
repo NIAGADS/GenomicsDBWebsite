@@ -1,23 +1,12 @@
 import React from "react";
-import { connect } from "react-redux";
 import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
-import { GeneRecord, HeaderActions } from "./../../types";
+import { RecordHeading } from "../RecordHeadingTypes";
 import { HighchartsTableTrellis } from "../../../Visualizations";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { Grid, List, Typography } from "@material-ui/core";
 import { BaseText, BaseTextSmall, Subheading, UnpaddedListItem } from "../../../Shared";
 
-const enhance = connect((state: any) => ({
-    externalUrls: state.globalData.siteConfig.externalUrls,
-}));
-
-interface RecordHeading {
-    externalUrls: { [key: string]: any };
-    headerActions: HeaderActions[];
-    record: GeneRecord;
-    recordClass: { [key: string]: any };
-}
 
 const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
     return (
@@ -41,12 +30,12 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
 
                     {record.attributes.synonyms && (
                         <UnpaddedListItem>
-                            <RecordAttributeItem label="Also known as:" attribute={record.attributes.synonyms} />
+                            <RecordAttributeItem label="Also known as:" attribute={record.attributes.synonyms.toString()} />
                         </UnpaddedListItem>
                     )}
 
                     <UnpaddedListItem>
-                        <RecordAttributeItem label="Gene Type:" attribute={record.attributes.gene_type} />
+                        <RecordAttributeItem label="Gene Type:" attribute={record.attributes.gene_type.toString()} />
                     </UnpaddedListItem>
 
                     <UnpaddedListItem>
@@ -54,7 +43,7 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
                             label="Location:"
                             attribute={`${record.attributes.span}${
                                 record.attributes.cytogenetic_location
-                                    ? "/ ".concat(record.attributes.cytogenetic_location)
+                                    ? "/ ".concat(record.attributes.cytogenetic_location.toString())
                                     : ""
                             } `}
                         />
@@ -63,7 +52,7 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
                         <UnpaddedListItem>
                             <BaseTextSmall>
                                 Genetic Evidence for AD?&nbsp;
-                                {resolveJsonInput(record.attributes.has_genetic_evidence_for_ad_risk_display)}
+                                {resolveJsonInput(record.attributes.has_genetic_evidence_for_ad_risk_display.toString())}
                             </BaseTextSmall>
                         </UnpaddedListItem>
                     )}
@@ -78,7 +67,7 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
                 )}
                 {record.attributes.gws_variants_summary_plot && (
                     <HighchartsTableTrellis
-                        data={JSON.parse(record.attributes.gws_variants_summary_plot)}
+                        data={JSON.parse(record.attributes.gws_variants_summary_plot.toString())}
                         properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_variants_summary_plot"))}
                     />
                 )}
@@ -87,4 +76,4 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
     );
 };
 
-export default enhance(GeneRecordSummary);
+export default GeneRecordSummary;

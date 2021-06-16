@@ -5,7 +5,6 @@ import { MostSevereConsequencesSection } from "./Components/index";
 import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
 import { resolveJsonInput, isJson, withTooltip } from "../../../../util/jsonParse";
-import { VariantRecordSummary, VariantRecordAttributes } from "./../../types";
 import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
 import { Box, Grid, List } from "@material-ui/core";
 import { Check, ReportProblemOutlined } from "@material-ui/icons";
@@ -13,16 +12,9 @@ import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../..
 import { UnpaddedListItem, PrimaryExternalLink } from "../../../Shared";
 
 import { _externalUrls } from "../../../../data/_externalUrls";
+import { RecordHeading, RecordAttributes } from '../RecordHeadingTypes';
 
-interface StoreProps {
-    webAppUrl: string;
-}
-
-const enhance = connect((state: any) => ({
-    webAppUrl: state.globalData.siteConfig.webAppUrl,
-}));
-
-const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props) => {
+const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 
@@ -33,7 +25,7 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
                 <Subheading style={{ paddingBottom: "0px" }}>
                     <strong>
                         {isJson(attributes.display_metaseq_id)
-                            ? resolveJsonInput(attributes.display_metaseq_id)
+                            ? resolveJsonInput(attributes.display_metaseq_id.toString())
                             : attributes.display_metaseq_id}
                     </strong>
                 </Subheading>
@@ -62,20 +54,20 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
                 {attributes.most_severe_consequence && <MostSevereConsequencesSection attributes={attributes} />}
 
                 <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                    <RecordAttributeItem label="Allele:" attribute={attributes.display_allele} />
+                    <RecordAttributeItem label="Allele:" attribute={attributes.display_allele.toString()} />
                     <BaseTextSmall>{attributes.variant_class}</BaseTextSmall>
-                    {attributes.location && <RecordAttributeItem label="Location:" attribute={attributes.location} />}
+                    {attributes.location && <RecordAttributeItem label="Location:" attribute={attributes.location.toString()} />}
                 </Box>
                 {(attributes.alternative_variants || attributes.colocated_variants) && (
                     <Box paddingBottom={1} borderBottom="1px solid">
                         {attributes.alternative_variants && (
-                            <AlternativeVariants altVars={attributes.alternative_variants} />
+                            <AlternativeVariants altVars={attributes.alternative_variants.toString()} />
                         )}
                         {attributes.colocated_variants && (
                             <ColocatedVariants
-                                position={attributes.position}
-                                chromosome={attributes.chromosome}
-                                colVars={attributes.colocated_variants}
+                                position={attributes.position.toString()}
+                                chromosome={attributes.chromosome.toString()}
+                                colVars={attributes.colocated_variants.toString()}
                             />
                         )}
                     </Box>
@@ -91,7 +83,7 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
 
                 {record.attributes.gws_datasets_summary_plot && (
                     <HighchartsTableTrellis
-                        data={JSON.parse(record.attributes.gws_datasets_summary_plot)}
+                        data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}
                         properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_datasets_summary_plot"))}
                     />
                 )}
@@ -100,7 +92,7 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
     );
 };
 
-const ADSPQCDisplay: React.FC<{ attributes: VariantRecordAttributes }> = ({ attributes }) =>
+const ADSPQCDisplay: React.FC<{ attributes: RecordAttributes }> = ({ attributes }) =>
     (attributes.adsp_wgs_qc_filter_status || attributes.adsp_wes_qc_filter_status) && (
         <Box>
             {attributes.adsp_wes_qc_filter_status &&
@@ -163,4 +155,4 @@ const LinkList: React.FC<{ list: string[] }> = ({ list }) => (
     </List>
 );
 
-export default enhance(VariantRecordSummary);
+export default VariantRecordSummary;

@@ -1,22 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { HeaderRecordActions } from "./../Shared";
-import { NIAGADSDatasetRecord, HeaderActions } from "./../../types";
+import { RecordHeading } from "../RecordHeadingTypes";
 import { Grid } from "@material-ui/core";
 import { BaseText, Heading, Subheading } from "../../../Shared";
+import { RecordInstance, RecordClass } from 'wdk-client/Utils/WdkModel';
 
 import './NIAGADSDatasetRecordHeading.scss';
 
-const enhance = connect((state: any) => ({
-    webAppUrl: state.globalData.siteConfig.webAppUrl,
-}));
-
-interface RecordHeading {
-    headerActions: HeaderActions[];
-    record: NIAGADSDatasetRecord;
-    recordClass: { [key: string]: any };
-    webAppUrl: string;
-}
 
 const NIAGADSDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => (
     <Grid container direction="column" style={{ marginLeft: "10px" }}>
@@ -28,4 +19,4 @@ const NIAGADSDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordCl
     </Grid>
 );
 
-export default enhance(NIAGADSDatasetRecordSummary);
+export default NIAGADSDatasetRecordSummary;
