@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Column } from "react-table";
 import { TableField, TableValue, AttributeField } from 'wdk-client/Utils/WdkModel';
-import CustomTable, { SortIconGroup } from "../../Visualizations/Table/Table";
+import CustomTable /*, { SortIconGroup } */ from "../../Visualizations/Table/Table";
 import { Grid, Box } from "@material-ui/core";
 import { resolveAccessor, resolveData } from "./RecordTableUtils";
 import { RecordTableProps } from './RecordTableTypes';
