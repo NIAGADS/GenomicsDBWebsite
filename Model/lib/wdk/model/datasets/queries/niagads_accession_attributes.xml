@@ -74,11 +74,13 @@
 		 AND ta.dataset_accession = '@ADSP_CC_ACCESSION@')),
 		 
 		 neuropathology AS (
-		 SELECT ta.dataset_type, ta.track,  tc.category_abbrev, tc.category, tc.characteristic
+		 SELECT ta.dataset_type, ta.track, /* tc.category_abbrev, tc.characteristic, */
+		 string_agg(DISTINCT tc.category || CASE WHEN tc.category_abbrev = 'Other Neuropathology' THEN '' ELSE ' (' || tc.category_abbrev || ')' END, ' // ') AS characteristic
 		 FROM tracks ta LEFT OUTER JOIN NIAGADS.NeuropathologyTrackCategories tc
 		 ON ta.track = tc.track
 		 AND (tc.characteristic_type IN ('neuropathology', 'diagnosis')
-		 OR tc.category LIKE '%neuropathology%')),
+		 OR tc.category LIKE '%neuropathology%')
+		 GROUP BY ta.dataset_type, ta.track),
 		 
 		 biomarker AS (
 		 SELECT ta.dataset_type, ta.track, tc.category_abbrev, tc.category, tc.characteristic
@@ -88,10 +90,11 @@
 		 ),
 		 
 		 population AS (
-		 SELECT ta.dataset_type, ta.track, tc.characteristic
+		 SELECT ta.dataset_type, ta.track, string_agg(DISTINCT tc.characteristic, ' // ') AS characteristic
 		 FROM tracks ta LEFT OUTER JOIN NIAGADS.ProtocolAppNodeCharacteristic tc
 		 ON ta.track = tc.track
-		 AND characteristic_type = 'population'),
+		 AND characteristic_type = 'population'
+		 GROUP BY ta.dataset_type, ta.track),
 		 
 		 covariates AS (
 		 SELECT ta.dataset_type, ta.track, tc.characteristic
@@ -112,8 +115,9 @@
 		 ELSE NULL END AS consortium,
 		 ta.name,
 		 build_link_attribute(ta.name, '../gwas_summary/', ta.track) AS dataset_record_link,
-		 ta.description, ta.attribution, ta.dataset_accession, 
-		 n.category || CASE WHEN n.category_abbrev = 'Other Neuropathology' THEN '' ELSE ' (' || n.category_abbrev || ')' END AS neuropathology,
+		 split_part(ta.description, '; adjusted', 1) AS description, -- remove covariates from single variant study descriptions
+		 ta.attribution, ta.dataset_accession, 
+		 n.characteristic AS neuropathology,
 		 b.characteristic AS biomarker,
 		 p.characteristic AS population,
 		 c.characteristic AS covariates,

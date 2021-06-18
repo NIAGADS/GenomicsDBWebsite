@@ -174,17 +174,19 @@
       </attributeQueryRef>
 
       <table name="datasets" displayName="Datasets" queryRef="NIAGADSDatasetTables.Datasets">
-	<columnAttribute name="dataset_accession" displayName="NIAGADS Accession" type="string"/>
-	<columnAttribute name="consortium" displayName="Consortium" type="string" />
-		
+	
 	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true"/>
-	<columnAttribute name="name" displayName="Name" type="string" internal="true"
+	<columnAttribute name="name" displayName="Dataset" type="string" internal="true"
 			 inReportMaker="true"/>
-	<columnAttribute name="dataset_record_link" displayName="Name" type="json_link"  inReportMaker="false"/>
+
+	<columnAttribute name="dataset_record_link" displayName="Dataset" type="json_link"  inReportMaker="false"/>
 
 	<columnAttribute name="attribution" displayName="Attribution" type="string" />
 	<columnAttribute name="description" displayName="Description" type="string" />
-	<columnAttribute name="neuropathology" displayName="Diagnosis/Neuropathology" type="string" />
+	<columnAttribute name="dataset_accession" displayName="NIAGADS Accession" type="string"/>
+	<columnAttribute name="consortium" displayName="Consortium" type="string" />
+	
+	<columnAttribute name="neuropathology" displayName="Neuropathology" type="string" />
 	<columnAttribute name="population" displayName="Population" type="string"/>
 	<columnAttribute name="biomarker" displayName="Biomarker" type="string"/>
 	<columnAttribute name="additional_phenotype" displayName="Additional Phenotypes"
