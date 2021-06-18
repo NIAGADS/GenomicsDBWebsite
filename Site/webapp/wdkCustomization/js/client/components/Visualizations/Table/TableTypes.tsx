@@ -10,7 +10,6 @@ import {
 
 export interface TableState<D extends object = {}> extends UsePaginationState<D> {}
 
-
 export interface CustomTableProps {
     columns: Column<{}>[];
     data: any;

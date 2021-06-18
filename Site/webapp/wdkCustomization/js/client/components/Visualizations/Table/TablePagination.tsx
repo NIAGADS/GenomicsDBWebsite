@@ -2,7 +2,7 @@ import { TablePagination as _MuiTablePagination } from '@material-ui/core'
 import React, { PropsWithChildren, ReactElement, useCallback } from 'react'
 import { TableInstance,  UsePaginationOptions } from 'react-table';
 
-const rowsPerPageOptions = [10, 20, 50, 100, { label: 'All', value: -1 }]
+const rowsPerPageOptions = [10, 20, 50, { label: 'All', value: -1 }]
 
 // avoid all of the redraws caused by the internal withStyles
 const interestingPropsEqual = (prevProps: any, nextProps: any) =>

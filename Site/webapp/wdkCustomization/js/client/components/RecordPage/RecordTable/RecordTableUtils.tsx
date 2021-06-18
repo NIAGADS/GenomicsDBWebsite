@@ -1,5 +1,5 @@
 import React  from "react";
-import { isString, isObject, findIndex, forIn } from "lodash";
+import { isString, isObject, findIndex, forIn, get, toNumber } from "lodash";
 import { resolveObjectInput, withTooltip } from "../../../util/jsonParse";
 import CssBarChart from "./CssBarChart/CssBarChart";
 
