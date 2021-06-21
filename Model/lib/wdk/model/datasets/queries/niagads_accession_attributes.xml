@@ -59,7 +59,7 @@
       <column name="neuropathology" columnType="string"/>
       <column name="population" columnType="string"/>
       <column name="covariates" columnType="string"/>
-      <column name="additional_phenotype" columnType="string"/>
+      <column name="genotype" columnType="string"/>
       <sql>
         <![CDATA[
 		 WITH id AS (##WDK_ID_SQL##),
@@ -78,15 +78,14 @@
 		 string_agg(DISTINCT tc.category || CASE WHEN tc.category_abbrev = 'Other Neuropathology' THEN '' ELSE ' (' || tc.category_abbrev || ')' END, ' // ') AS characteristic
 		 FROM tracks ta LEFT OUTER JOIN NIAGADS.NeuropathologyTrackCategories tc
 		 ON ta.track = tc.track
-		 AND (tc.characteristic_type IN ('neuropathology', 'diagnosis')
-		 OR tc.category LIKE '%neuropathology%')
+		 AND tc.characteristic_type IN ('neuropathology', 'diagnosis')
 		 GROUP BY ta.dataset_type, ta.track),
 		 
 		 biomarker AS (
 		 SELECT ta.dataset_type, ta.track, tc.category_abbrev, tc.category, tc.characteristic
 		 FROM tracks ta LEFT OUTER JOIN NIAGADS.NeuropathologyTrackCategories tc
 		 ON ta.track = tc.track
-		 AND (tc.characteristic_type IN ('biomarker') AND tc.category NOT LIKE '%neuropathology%')
+		 AND tc.characteristic_type IN ('biomarker')
 		 ),
 		 
 		 population AS (
@@ -102,7 +101,7 @@
 		 ON ta.track = tc.track
 		 AND characteristic_type = 'covariate_list'),
 		 
-		 other AS (
+		 genotype AS (
 		 SELECT ta.dataset_type, ta.track, tc.characteristic
 		 FROM tracks ta LEFT OUTER JOIN NIAGADS.ProtocolAppNodeCharacteristic tc
 		 ON ta.track = tc.track
@@ -121,8 +120,8 @@
 		 b.characteristic AS biomarker,
 		 p.characteristic AS population,
 		 c.characteristic AS covariates,
-		 o.characteristic AS additional_phenotype
-		 FROM neuropathology n, biomarker b, population p, covariates c, other o, tracks ta
+		 g.characteristic AS genotype
+		 FROM neuropathology n, biomarker b, population p, covariates c, genotype g, tracks ta
 		 WHERE n.track = o.track
 		 AND n.track = b.track
 		 AND n.track = p.track
@@ -134,4 +133,3 @@
     </sqlQuery>
   </querySet>
 </wdkModel>
-
