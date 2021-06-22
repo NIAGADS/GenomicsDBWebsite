@@ -1,3 +1,5 @@
+// modified from https://github.com/ggascoigne/react-table-example
+
 import { TablePagination as _MuiTablePagination } from '@material-ui/core'
 import React, { PropsWithChildren, ReactElement, useCallback } from 'react'
 import { TableInstance,  UsePaginationOptions } from 'react-table';

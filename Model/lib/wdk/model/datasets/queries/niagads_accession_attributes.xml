@@ -122,7 +122,7 @@
 		 c.characteristic AS covariates,
 		 g.characteristic AS genotype
 		 FROM neuropathology n, biomarker b, population p, covariates c, genotype g, tracks ta
-		 WHERE n.track = o.track
+		 WHERE n.track = g.track
 		 AND n.track = b.track
 		 AND n.track = p.track
 		 AND n.track = c.track

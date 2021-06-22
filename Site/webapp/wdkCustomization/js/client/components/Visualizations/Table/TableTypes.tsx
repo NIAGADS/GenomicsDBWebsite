@@ -1,11 +1,10 @@
+import React, { MouseEventHandler } from 'react';
 import {
-    usePagination,
+
     Column,
     Row,
     UsePaginationState,
-    UseTableOptions,
-    UsePaginationOptions,
-    UseFiltersOptions,
+    TableInstance
 } from "react-table";
 
 export interface TableState<D extends object = {}> extends UsePaginationState<D> {}
@@ -16,3 +15,7 @@ export interface CustomTableProps {
     onClick?: (row: Row) => void;
 }
 
+
+export type TableMouseEventHandler = (instance: TableInstance) => MouseEventHandler;
+
+export type TableData = Record<string, string>;

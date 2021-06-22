@@ -1,5 +1,5 @@
 
-import { TableField, AttributeField, TableValue } from 'wdk-client/Utils/WdkModel';
+import { TableField, AttributeField, TableValue, AttributeValue } from 'wdk-client/Utils/WdkModel';
 
 type FilterType = "pie" | "pvalue" | "select";
 export interface Filters extends Array<Record<FilterType, any>> { };

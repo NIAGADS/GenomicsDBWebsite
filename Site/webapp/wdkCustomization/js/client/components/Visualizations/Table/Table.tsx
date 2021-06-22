@@ -1,3 +1,5 @@
+// modeled after https://github.com/ggascoigne/react-table-example
+
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, Props } from "react";
 import cx from "classnames";
 
@@ -22,13 +24,16 @@ import {
 } from "react-table";
 
 import useDebounce from "../../../hooks/useDebounce";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 import { CustomTableProps } from "./TableTypes";
 import TablePagination from "./TablePagination";
 import TableHeaderCell from "./TableHeaderCell";
-import { DefaultColumnFilter } from "./TableFilters";
+import TableToolbar from "./TableToolbar";
+import { FilterChipBar } from "./TableFilters/FilterChipBar";
+import { DefaultColumnFilter, SelectColumnFilter, SliderColumnFilter, NumberRangeColumnFilter } from "./TableFilters/TableFilters";
 
-import { fuzzyTextFilter, numericTextFilter} from './filters';
+import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from './TableFilters/filters';
 
 import { useStyles } from "./TableStyles";
 
@@ -48,7 +53,9 @@ const hooks = [
 const filterTypes = {
     fuzzyText: fuzzyTextFilter,
     numeric: numericTextFilter,
-  }
+    greater: greaterThanFilter,
+    customIncludes: includesFilter
+}
 
 // fix to force table to always take full width of container
 // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
@@ -58,7 +65,7 @@ const _defaultColumn = React.useMemo(
         // When using the useFlexLayout:
         minWidth: 30, // minWidth is only used as a limit for resizing
         width: 150, // width is used for both the flex-basis and flex-grow
-        maxWidth: 200, // maxWidth is only used as a limit for resizing
+        maxWidth: 300, // maxWidth is only used as a limit for resizing
         Filter: DefaultColumnFilter,
         //Cell: TooltipCell,
         //Header: DefaultHeader,
@@ -70,7 +77,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick }) => 
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
     const classes = useStyles();
-
+    const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {})
     const instance = useTable(
         {
             columns,
@@ -90,8 +97,23 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick }) => 
         headerGroups,
         prepareRow,
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
-        state: { pageIndex, pageSize },
+        state //: { pageIndex, pageSize },
     } = instance;
+
+    const debouncedState = useDebounce(state, 500)
+
+    useEffect(() => {
+      const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState
+      const val = {
+        sortBy,
+        filters,
+        pageSize,
+        columnResizing,
+        hiddenColumns,
+      }
+      setInitialState(val)
+    }, [setInitialState, debouncedState]);
+  
 
     // Render the UI for your table
     return (
@@ -102,6 +124,9 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick }) => 
                 </Grid>
 
                 <Grid item>
+                    <TableToolbar instance={instance}/>
+                    <FilterChipBar instance={instance}/>
+                    
                     <MaUTable {...getTableProps()}>
                         <TableHead>
                             {headerGroups.map((headerGroup: HeaderGroup<object>) => (

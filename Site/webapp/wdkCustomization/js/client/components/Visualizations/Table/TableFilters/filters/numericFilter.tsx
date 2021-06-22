@@ -39,3 +39,4 @@ export function numericTextFilter<T extends Record<string, unknown>>(
 
 // Let the table remove the filter if the string is empty
 numericTextFilter.autoRemove = (val: any) => !val
+
