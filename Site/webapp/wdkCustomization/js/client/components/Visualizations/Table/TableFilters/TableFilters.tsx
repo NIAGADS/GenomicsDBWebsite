@@ -197,11 +197,12 @@ export function DefaultColumnFilter<T extends Record<string, unknown>>({
     return (
         <TextField
             name={id}
+            className="filter-text-input"
             label={render("Header")}
             InputLabelProps={{ htmlFor: id }}
             value={value}
             autoFocus={isFirstColumn}
-            variant={"standard"}
+            variant="standard"
             onChange={handleChange}
             onBlur={(e) => {
                 setFilter(e.target.value || undefined);

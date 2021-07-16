@@ -3,15 +3,12 @@
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, Props } from "react";
 import cx from "classnames";
 
-import CssBaseline from "@material-ui/core/CssBaseline";
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 
 import {
     useTable,
@@ -29,9 +26,8 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 import { CustomTableProps } from "./TableTypes";
 import TablePagination from "./TablePagination";
 import TableHeaderCell from "./TableHeaderCell";
-import TableToolbar from "./TableToolbar";
-import { FilterChipBar } from "./TableFilters/FilterChipBar";
 import { DefaultColumnFilter, SelectColumnFilter, SliderColumnFilter, NumberRangeColumnFilter } from "./TableFilters/TableFilters";
+import FilterPanel  from "./TableFilters/FilterPanel";
 
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from './TableFilters/filters';
 
@@ -67,7 +63,7 @@ const _defaultColumn = React.useMemo(
         width: 150, // width is used for both the flex-basis and flex-grow
         maxWidth: 300, // maxWidth is only used as a limit for resizing
         Filter: DefaultColumnFilter,
-        //Cell: TooltipCell,
+        //Cell: ,
         //Header: DefaultHeader,
     }),
     []
@@ -120,12 +116,13 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick }) => 
         <>
             <Grid container direction="column">
                 <Grid item>
+                    <FilterPanel instance={instance}/>
                     <TablePagination instance={instance} />
                 </Grid>
 
                 <Grid item>
-                    <TableToolbar instance={instance}/>
-                    <FilterChipBar instance={instance}/>
+                    {/*<TableToolbar instance={instance}/>*/}
+                    {/*<FilterChipBar instance={instance}/>*/}
                     
                     <MaUTable {...getTableProps()}>
                         <TableHead>

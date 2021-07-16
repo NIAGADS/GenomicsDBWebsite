@@ -12,7 +12,7 @@ import { TableInstance } from 'react-table'
 
 import { TableMouseEventHandler } from './TableTypes';
 //import { ColumnHidePage } from './ColumnHidePage'
-import FilterMenu from './TableFilters/FilterMenu';
+import FilterMenu from './TableFilters/FilterPanel';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -157,17 +157,8 @@ function TableToolbar({
     [setAnchorEl, setColumnsOpen]
   )
 
-  const handleFilterClick = useCallback(
-    (event: MouseEvent) => {
-      setAnchorEl(event.currentTarget)
-      setFilterOpen(true)
-    },
-    [setAnchorEl, setFilterOpen]
-  )
-
   const handleClose = useCallback(() => {
     setColumnsOpen(false)
-    setFilterOpen(false)
     setAnchorEl(undefined)
   }, [])
 
@@ -217,7 +208,7 @@ function TableToolbar({
       </div>
       <div className={classes.rightButtons}>
         {/*<ColumnHidePage instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />*/}
-        <FilterMenu instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
+        <FilterMenu instance={instance} />
         {hideableColumns.length > 1 && (
           <SmallIconActionButton
             icon={<ViewColumnsIcon />}
@@ -226,12 +217,6 @@ function TableToolbar({
             variant='right'
           />
         )}
-        <SmallIconActionButton
-          icon={<FilterListIcon />}
-          onClick={handleFilterClick}
-          label='Filter by columns'
-          variant='right'
-        />
       </div>
     </Toolbar>
   )

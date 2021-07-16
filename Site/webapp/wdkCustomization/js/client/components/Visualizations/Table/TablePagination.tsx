@@ -50,6 +50,7 @@ export default function TablePagination<T extends Record<string, unknown>>({
   )
 
   return rowCount ? (
+    //@ts-ignore -- versioning issue
     <MuiTablePagination
       rowsPerPageOptions={rowsPerPageOptions}
       component='div'
