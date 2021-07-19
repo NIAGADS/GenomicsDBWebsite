@@ -1,12 +1,13 @@
 
 import { TableField, AttributeField, TableValue, AttributeValue } from 'wdk-client/Utils/WdkModel';
-
+import { TableInstance } from 'react-table';
 type FilterType = "pie" | "pvalue" | "select";
 export interface Filters extends Array<Record<FilterType, any>> { };
 
 export interface RecordTableProps {
     table: TableField;
     data: TableValue;
+    onLoad?: (ref: React.MutableRefObject<TableInstance>) => void;
 }
 
 export interface TableAttribute extends AttributeField {

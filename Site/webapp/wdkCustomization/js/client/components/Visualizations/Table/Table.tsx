@@ -69,7 +69,7 @@ const _defaultColumn = React.useMemo(
     []
 );
 
-const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick }) => {
+const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick, className }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
     const classes = useStyles();
@@ -124,7 +124,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick }) => 
                     {/*<TableToolbar instance={instance}/>*/}
                     {/*<FilterChipBar instance={instance}/>*/}
                     
-                    <MaUTable {...getTableProps()}>
+                    <MaUTable {...getTableProps()} className={className}>
                         <TableHead>
                             {headerGroups.map((headerGroup: HeaderGroup<object>) => (
                                 <TableRow {...headerGroup.getHeaderGroupProps()}>

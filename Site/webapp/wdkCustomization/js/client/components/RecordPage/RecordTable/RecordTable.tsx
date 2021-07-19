@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Column } from "react-table";
+import React, { useMemo, useRef } from "react";
+import { Column, TableInstance, HeaderProps } from "react-table";
 import { TableField, TableValue, AttributeField } from 'wdk-client/Utils/WdkModel';
 import CustomTable /*, { SortIconGroup } */ from "../../Visualizations/Table/Table";
 import { Box } from "@material-ui/core";
@@ -7,19 +7,37 @@ import { resolveAccessor, resolveData } from "./RecordTableUtils";
 import { RecordTableProps } from './RecordTableTypes';
 import { findIndex, has } from "lodash";
 import { HelpIcon } from "wdk-client/Components";
-import { linkColumnSort } from "./RecordTableSort";
+import { linkColumnSort, sciNotationColumnSort } from "./RecordTableSort";
 
 import { SelectColumnFilter } from "../../Visualizations/Table/TableFilters/TableFilters";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
 
+import { fuzzyRecordTableTextFilter } from './RecordTableFilter';
 
-const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
+const RecordTable: React.FC<RecordTableProps> = ({ table, data, onLoad }) => {
     const { attributes } = table;
 
+    const instance = useRef<TableInstance>();
     const columns:Column<{}>[] = useMemo(() => _buildColumns(table, data), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
+
+    const hiddenFilterCol = {
+        Header: () => <span />,
+        id: "all",
+        width: 0,
+        resizable: false,
+        sortable: false,
+        Filter: (): null => null,
+        filter: fuzzyRecordTableTextFilter,
+        filterAll: true,
+    };
+
+    useWdkEffect(() => {
+        onLoad(instance);
+    }, [onLoad]);
     
     return (
-        <CustomTable columns={columns} data={resolvedData} />
+        <CustomTable className={table.properties.canShrink ? "shrink" : ""} columns={columns} data={resolvedData} />
     );
 };
 
@@ -44,6 +62,8 @@ const _buildColumns = (table: TableField, data: TableValue) => {
                     let column = _buildColumn(attribute, attribute.isSortable, filterType);
                     //@ts-ignore
                     if (column.id.endsWith('link')) column.sortType = linkColumnSort;
+                    //@ts-ignore
+                    if (column.id.includes('pvalue')) column.sortType = sciNotationColumnSort;
                     //@ts-ignore
                     if (filterType) { column = _addColumnFilters(column, filterType);}
                     return column;

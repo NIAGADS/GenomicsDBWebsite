@@ -13,6 +13,7 @@ export interface CustomTableProps {
     columns: Column<{}>[];
     data: any;
     onClick?: (row: Row) => void;
+    className?: string;
 }
 
 
