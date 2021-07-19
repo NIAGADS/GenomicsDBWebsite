@@ -82,14 +82,6 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
 
-    /* const onSubmit = useCallback(
-        (e: FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            onClose();
-        },
-        [onClose]
-    ); */
-
     const resetFilters = useCallback(() => {
         setAllFilters([]);
     }, [setAllFilters]);

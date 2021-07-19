@@ -1,13 +1,33 @@
-// credit to https://github.com/ggascoigne/react-table-example
+// credit to https://github.com/ggascoigne/react-table-example for all except global filer
 
 import React, { useMemo, useState, useEffect } from "react";
-import { Row, IdType, FilterValue, Column, FilterProps } from "react-table";
+import { Row, IdType, FilterValue, Column, FilterProps, TableInstance, useAsyncDebounce } from "react-table";
 import { TableData } from "../TableTypes";
 
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
+import { AnyMxRecord } from "dns";
+
+// modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
+export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }:any) {
+    const count = preGlobalFilteredRows.length
+    const [value, setValue] = useState(globalFilter)
+    const onChange = useAsyncDebounce(value => {
+        setGlobalFilter(value || undefined)
+    }, 200);
+
+    return (
+        <TextField id="outlined-search"
+            label="Search"
+            type="search"
+            variant="outlined"
+            onChange={e => {setValue(e.target.value); onChange(e.target.value);}}
+        />
+    )
+}
 
 //@ts-ignore
 export function SelectColumnFilter<T extends Record<string, unknown>>({
@@ -22,18 +42,18 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
     const options = React.useMemo(() => {
         const options = new Set<any>();
         preFilteredRows.forEach((row: any) => {
-          let value = row.values[id];
-          if (value) {
-            if (value.includes("//")) {
-              let vals = value.split(" // ");
-              vals.forEach((v: string) => {
-                options.add(v)
-              });
+            let value = row.values[id];
+            if (value) {
+                if (value.includes("//")) {
+                    let vals = value.split(" // ");
+                    vals.forEach((v: string) => {
+                        options.add(v)
+                    });
+                }
+                else {
+                    options.add(value);
+                }
             }
-            else {
-              options.add(value);
-            }
-          }
         });
         return [...Array.from(options.values())];
     }, [id, preFilteredRows]);

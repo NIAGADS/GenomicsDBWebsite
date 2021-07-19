@@ -10,34 +10,22 @@ import { HelpIcon } from "wdk-client/Components";
 import { linkColumnSort, sciNotationColumnSort } from "./RecordTableSort";
 
 import { SelectColumnFilter } from "../../Visualizations/Table/TableFilters/TableFilters";
-import { useWdkEffect } from "wdk-client/Service/WdkService";
 
-import { fuzzyRecordTableTextFilter } from './RecordTableFilter';
+import { fuzzyRecordTableTextFilter, globalTextFilter } from './RecordTableFilter';
 
-const RecordTable: React.FC<RecordTableProps> = ({ table, data, onLoad }) => {
+const filterTypes = {
+  global : globalTextFilter,
+  fuzzyText: fuzzyRecordTableTextFilter,
+}
+
+const RecordTable: React.FC<RecordTableProps> = ({ table, data}) => {
     const { attributes } = table;
 
-    const instance = useRef<TableInstance>();
     const columns:Column<{}>[] = useMemo(() => _buildColumns(table, data), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
 
-    const hiddenFilterCol = {
-        Header: () => <span />,
-        id: "all",
-        width: 0,
-        resizable: false,
-        sortable: false,
-        Filter: (): null => null,
-        filter: fuzzyRecordTableTextFilter,
-        filterAll: true,
-    };
-
-    useWdkEffect(() => {
-        onLoad(instance);
-    }, [onLoad]);
-    
     return (
-        <CustomTable className={table.properties.canShrink ? "shrink" : ""} columns={columns} data={resolvedData} />
+        <CustomTable className={table.properties.canShrink ? "shrink" : ""} columns={columns} data={resolvedData} filterTypes={filterTypes}/>
     );
 };
 
@@ -62,8 +50,13 @@ const _buildColumns = (table: TableField, data: TableValue) => {
                     let column = _buildColumn(attribute, attribute.isSortable, filterType);
                     //@ts-ignore
                     if (column.id.endsWith('link')) column.sortType = linkColumnSort;
-                    //@ts-ignore
-                    if (column.id.includes('pvalue')) column.sortType = sciNotationColumnSort;
+                    if (column.id.includes('pvalue')) {
+                        //@ts-ignore
+                        column.sortType = sciNotationColumnSort;
+                        //@ts-ignore
+                        column.disableGlobalFilter = true;
+                    }
+                    
                     //@ts-ignore
                     if (filterType) { column = _addColumnFilters(column, filterType);}
                     return column;
@@ -81,6 +74,9 @@ const _addColumnFilters = (column: Column, filterType: string) => {
         //@ts-ignore
         column.filter = 'customIncludes';
     }
+
+    //@ts-ignore
+    //column.canFilter = true;
     return column;
 };
 
@@ -89,6 +85,7 @@ const _buildColumn = (attribute: AttributeField, sortable: boolean, filterType?:
     sortable,
     accessor: resolveAccessor(attribute.name, attribute.type),
     id: attribute.name,
+    //canFilter: false // default to false; only set true when a specific filter is assigned to the column
     //sortType: recordTableSort,
     //filter: filterType ? filterType : 'default',
     //Filter: 

@@ -4,4 +4,4 @@ cp $PROJECT_HOME/GenomicsDBWebsite/patches/Announcements.jsx $PROJECT_HOME/EbrcW
 
 # CSS / conflicts
 echo "AllSites.scss"
-cp $PROJECT_HOME/GenomicsDBWebsite/patchees/AllSites.scss $PROJECT_HOME/EbrcWebsiteCommon/Site/webapp/css/AllSites.scss
+cp $PROJECT_HOME/GenomicsDBWebsite/patches/AllSites.scss $PROJECT_HOME/EbrcWebsiteCommon/Site/webapp/css/AllSites.scss

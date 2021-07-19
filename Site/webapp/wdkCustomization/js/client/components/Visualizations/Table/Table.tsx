@@ -2,7 +2,7 @@
 
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, Props } from "react";
 import cx from "classnames";
-
+import { assign } from 'lodash';
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -18,16 +18,18 @@ import {
     useResizeColumns,
     useFlexLayout,
     useFilters,
+    useGlobalFilter,
+    useAsyncDebounce
 } from "react-table";
 
-import useDebounce from "../../../hooks/useDebounce";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 
 import { CustomTableProps } from "./TableTypes";
 import TablePagination from "./TablePagination";
 import TableHeaderCell from "./TableHeaderCell";
-import { DefaultColumnFilter, SelectColumnFilter, SliderColumnFilter, NumberRangeColumnFilter } from "./TableFilters/TableFilters";
-import FilterPanel  from "./TableFilters/FilterPanel";
+import { DefaultColumnFilter, GlobalFilter } from "./TableFilters/TableFilters";
+import FilterPanel from "./TableFilters/FilterPanel";
+import { FilterChipBar } from "./TableFilters/FilterChipBar";
 
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from './TableFilters/filters';
 
@@ -35,18 +37,19 @@ import { useStyles } from "./TableStyles";
 
 const hooks = [
     //useColumnOrder,
-    useFilters,
     //useGroupBy,
-    useSortBy,
     //useExpanded,
     useFlexLayout,
-    usePagination,
     useResizeColumns,
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
     //useRowSelect,
     //selectionHook,
 ];
 
-const filterTypes = {
+const defaultFilterTypes = {
     fuzzyText: fuzzyTextFilter,
     numeric: numericTextFilter,
     greater: greaterThanFilter,
@@ -62,27 +65,30 @@ const _defaultColumn = React.useMemo(
         minWidth: 30, // minWidth is only used as a limit for resizing
         width: 150, // width is used for both the flex-basis and flex-grow
         maxWidth: 300, // maxWidth is only used as a limit for resizing
-        Filter: DefaultColumnFilter,
+        Filter: () => null // overcome the issue that useGlobalFilter sets canFilter to true
         //Cell: ,
         //Header: DefaultHeader,
     }),
     []
 );
 
-const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick, className }) => {
+const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, className }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
     const classes = useStyles();
-    const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {})
+    const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
+    const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes ) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
     const instance = useTable(
         {
             columns,
             data,
             // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
             initialState: { pageIndex: 0, pageSize: 10 },
+            defaultCanFilter: false,
             //@ts-ignore
             defaultColumn: _defaultColumn,
-            filterTypes,
+            globalFilter: 'global' in tableFilterTypes ? 'global' : 'text', // text is the react-table default
+            filterTypes: tableFilterTypes,
         },
         ...hooks
     );
@@ -92,38 +98,42 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, onClick, class
         getTableBodyProps,
         headerGroups,
         prepareRow,
+        preGlobalFilteredRows,
+        setGlobalFilter,
+        globalFilter,
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
         state //: { pageIndex, pageSize },
     } = instance;
 
-    const debouncedState = useDebounce(state, 500)
+    const debouncedState = useAsyncDebounce(state, 500)
 
     useEffect(() => {
-      const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState
-      const val = {
-        sortBy,
-        filters,
-        pageSize,
-        columnResizing,
-        hiddenColumns,
-      }
-      setInitialState(val)
+        const { sortBy, filters, pageSize, columnResizing, hiddenColumns, globalFilter } = debouncedState
+        const val = {
+            sortBy,
+            filters,
+            pageSize,
+            columnResizing,
+            hiddenColumns     
+        }
+        setInitialState(val)
     }, [setInitialState, debouncedState]);
-  
+
 
     // Render the UI for your table
     return (
         <>
             <Grid container direction="column">
                 <Grid item>
-                    <FilterPanel instance={instance}/>
+                    <GlobalFilter preGlobalFilteredRows={preGlobalFilteredRows} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
+                    <FilterPanel instance={instance} />
                     <TablePagination instance={instance} />
                 </Grid>
 
                 <Grid item>
                     {/*<TableToolbar instance={instance}/>*/}
-                    {/*<FilterChipBar instance={instance}/>*/}
-                    
+                    <FilterChipBar instance={instance}/>
+
                     <MaUTable {...getTableProps()} className={className}>
                         <TableHead>
                             {headerGroups.map((headerGroup: HeaderGroup<object>) => (
