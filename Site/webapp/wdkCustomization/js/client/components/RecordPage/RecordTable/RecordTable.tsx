@@ -11,7 +11,7 @@ import { linkColumnSort, sciNotationColumnSort } from "./RecordTableSort";
 
 import { SelectColumnFilter, PieChartFilter } from "../../Visualizations/Table/TableFilters/TableFilters";
 
-import { fuzzyRecordTableTextFilter, globalTextFilter } from './RecordTableFilter';
+import { fuzzyRecordTableTextFilter, globalTextFilter } from './RecordTableFilters/filters';
 
 const filterTypes = {
   global : globalTextFilter,
@@ -70,19 +70,21 @@ const _buildColumns = (table: TableField, data: TableValue) => {
 const _addColumnFilters = (column: Column, filterType: string) => {
     if (filterType === 'select') {
         //@ts-ignore
-        column.Filter = SelectColumnFilter;
-        //@ts-ignore
-        column.filter = 'customIncludes';
+        column.Filter = SelectColumnFilter;     
     }
     if (filterType === 'pie') {
         //@ts-ignore
         column.Filter = PieChartFilter;
+
+    }
+    if (filterType === 'pvalue') {
         //@ts-ignore
-        column.filter = 'customIncludes';
+        //column.Filter = PValueFilter;
     }
 
     //@ts-ignore
-    //column.canFilter = true;
+    column.filter = filterType;
+
     return column;
 };
 
@@ -91,10 +93,7 @@ const _buildColumn = (attribute: AttributeField, sortable: boolean, filterType?:
     sortable,
     accessor: resolveAccessor(attribute.name, attribute.type),
     id: attribute.name,
-    //canFilter: false // default to false; only set true when a specific filter is assigned to the column
     //sortType: recordTableSort,
-    //filter: filterType ? filterType : 'default',
-    //Filter: 
 });
 
 const _buildHeader = (attribute: AttributeField) => {

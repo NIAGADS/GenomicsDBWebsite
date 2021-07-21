@@ -2,7 +2,7 @@
 
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, Props } from "react";
 import cx from "classnames";
-import { assign } from 'lodash';
+import { assign } from "lodash";
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -19,7 +19,7 @@ import {
     useFlexLayout,
     useFilters,
     useGlobalFilter,
-    useAsyncDebounce
+    useAsyncDebounce,
 } from "react-table";
 
 import useLocalStorage from "../../../hooks/useLocalStorage";
@@ -31,7 +31,7 @@ import { DefaultColumnFilter, GlobalFilter } from "./TableFilters/TableFilters";
 import FilterPanel from "./TableFilters/FilterPanel";
 import { FilterChipBar } from "./TableFilters/FilterChipBar";
 
-import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from './TableFilters/filters';
+import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
 
 import { useStyles } from "./TableStyles";
 
@@ -53,8 +53,9 @@ const defaultFilterTypes = {
     fuzzyText: fuzzyTextFilter,
     numeric: numericTextFilter,
     greater: greaterThanFilter,
-    customIncludes: includesFilter
-}
+    select: includesFilter,
+    pie: includesFilter,
+};
 
 // fix to force table to always take full width of container
 // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
@@ -65,7 +66,8 @@ const _defaultColumn = React.useMemo(
         minWidth: 30, // minWidth is only used as a limit for resizing
         width: 150, // width is used for both the flex-basis and flex-grow
         maxWidth: 300, // maxWidth is only used as a limit for resizing
-        Filter: () => null // overcome the issue that useGlobalFilter sets canFilter to true
+        //@ts-ignore
+        Filter: () => null, // overcome the issue that useGlobalFilter sets canFilter to true
         //Cell: ,
         //Header: DefaultHeader,
     }),
@@ -77,7 +79,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, c
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
     const classes = useStyles();
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
-    const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes ) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
+    const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
     const instance = useTable(
         {
             columns,
@@ -87,7 +89,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, c
             defaultCanFilter: false,
             //@ts-ignore
             defaultColumn: _defaultColumn,
-            globalFilter: 'global' in tableFilterTypes ? 'global' : 'text', // text is the react-table default
+            globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
         },
         ...hooks
@@ -102,37 +104,46 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, c
         setGlobalFilter,
         globalFilter,
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
-        state //: { pageIndex, pageSize },
+        state, //: { pageIndex, pageSize },
     } = instance;
 
-    const debouncedState = useAsyncDebounce(state, 500)
+    const debouncedState = useAsyncDebounce(state, 500);
 
     useEffect(() => {
-        const { sortBy, filters, pageSize, columnResizing, hiddenColumns, globalFilter } = debouncedState
+        const { sortBy, filters, pageSize, columnResizing, hiddenColumns, globalFilter } = debouncedState;
         const val = {
             sortBy,
             filters,
             pageSize,
             columnResizing,
-            hiddenColumns     
-        }
-        setInitialState(val)
+            hiddenColumns,
+        };
+        setInitialState(val);
     }, [setInitialState, debouncedState]);
-
 
     // Render the UI for your table
     return (
         <>
             <Grid container direction="column">
                 <Grid item>
-                    <GlobalFilter preGlobalFilteredRows={preGlobalFilteredRows} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
-                    <FilterPanel instance={instance} />
+                    <Grid container direction="row">
+                        <Grid item xs={3}>
+                            <GlobalFilter
+                                preGlobalFilteredRows={preGlobalFilteredRows}
+                                globalFilter={globalFilter}
+                                setGlobalFilter={setGlobalFilter}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FilterPanel instance={instance} />
+                        </Grid>
+                    </Grid>
                     <TablePagination instance={instance} />
                 </Grid>
 
                 <Grid item>
                     {/*<TableToolbar instance={instance}/>*/}
-                    <FilterChipBar instance={instance}/>
+                    <FilterChipBar instance={instance} />
 
                     <MaUTable {...getTableProps()} className={className}>
                         <TableHead>

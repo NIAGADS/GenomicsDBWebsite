@@ -96,11 +96,28 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
                 </AccordionSummary>
 
                 <AccordionDetails className={classes.details}>
+                    <AccordionActions>
+                        <Button color="primary" onClick={resetFilters}>
+                            Clear Advanced Filters
+                        </Button>
+                    </AccordionActions>
+                    
                     <form>
                         <div className={classes.grid}>
+                            {/* render pie charts first */}
                             {allColumns
                                 //@ts-ignore
-                                .filter((item) => item.canFilter)
+                                .filter((item) => item.canFilter && item.filter === "pie")
+                                .map((column) => (
+                                    <div key={column.id} className={classes.cell}>
+                                        {column.render("Filter")}
+                                    </div>
+                                ))}
+
+                            {/* render selects */}
+                            {allColumns
+                                //@ts-ignore
+                                .filter((item) => item.canFilter && item.filter === "select")
                                 .map((column) => (
                                     <div key={column.id} className={classes.cell}>
                                         {column.render("Filter")}
@@ -113,11 +130,6 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
                     </form>
                 </AccordionDetails>
                 <Divider />
-                <AccordionActions>
-                    <Button color="primary" onClick={resetFilters}>
-                        Reset
-                    </Button>
-                </AccordionActions>
             </Accordion>
         </div>
     );

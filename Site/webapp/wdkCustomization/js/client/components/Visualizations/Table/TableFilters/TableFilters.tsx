@@ -58,18 +58,11 @@ export function PieChartFilter<T extends Record<string, unknown>>({
     const buildPlotOptions = () => {
         let plotOptions: Options = {
             tooltip: {
-                pointFormat: "<b>{point.y}</b> datasets",
-            },
-            legend: {
-                align: "right",
-                verticalAlign: "middle",
-                layout: "vertical",
-                itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
-                itemHoverStyle: { color: "#ffc665" },
-            },
+                pointFormat: "",
+            }
         };
 
-        plotOptions = merge(plotOptions, addTitle(toProperCase(id)));
+        plotOptions = merge(plotOptions, addTitle(toProperCase(id), { y: 50 }));
         plotOptions = merge(plotOptions, disableExport());
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
@@ -107,6 +100,10 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                 enabled: false,
             },
             cursor: "pointer",
+            showInLegend: true,
+            point: {
+                events: { legendItemClick: () => false },
+            },
             events: {
                 click: function (e: any) {
                     setFilter(e.point.name || undefined);
