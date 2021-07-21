@@ -118,7 +118,7 @@
 		 ta.attribution, ta.dataset_accession, 
 		 n.characteristic AS neuropathology,
 		 b.characteristic AS biomarker,
-		 p.characteristic AS population,
+		 CASE WHEN p.characteristic IS NULL THEN 'European' ELSE p.characteristic END AS population, -- patch for missing data
 		 c.characteristic AS covariates,
 		 g.characteristic AS genotype
 		 FROM neuropathology n, biomarker b, population p, covariates c, genotype g, tracks ta

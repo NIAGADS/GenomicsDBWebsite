@@ -9,7 +9,7 @@ import { findIndex, has } from "lodash";
 import { HelpIcon } from "wdk-client/Components";
 import { linkColumnSort, sciNotationColumnSort } from "./RecordTableSort";
 
-import { SelectColumnFilter } from "../../Visualizations/Table/TableFilters/TableFilters";
+import { SelectColumnFilter, PieChartFilter } from "../../Visualizations/Table/TableFilters/TableFilters";
 
 import { fuzzyRecordTableTextFilter, globalTextFilter } from './RecordTableFilter';
 
@@ -71,6 +71,12 @@ const _addColumnFilters = (column: Column, filterType: string) => {
     if (filterType === 'select') {
         //@ts-ignore
         column.Filter = SelectColumnFilter;
+        //@ts-ignore
+        column.filter = 'customIncludes';
+    }
+    if (filterType === 'pie') {
+        //@ts-ignore
+        column.Filter = PieChartFilter;
         //@ts-ignore
         column.filter = 'customIncludes';
     }

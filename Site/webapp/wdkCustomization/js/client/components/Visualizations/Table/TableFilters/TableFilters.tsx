@@ -1,32 +1,126 @@
 // credit to https://github.com/ggascoigne/react-table-example for all except global filer
 
 import React, { useMemo, useState, useEffect } from "react";
-import { Row, IdType, FilterValue, Column, FilterProps, TableInstance, useAsyncDebounce } from "react-table";
-import { TableData } from "../TableTypes";
+import { countBy, merge } from "lodash";
+import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
-import { AnyMxRecord } from "dns";
+
+import { Options } from "highcharts";
+import HighchartsPlot from "../../Highcharts/HighchartsPlot";
+import {
+    addTitle,
+    disableExport,
+    applyCustomSeriesColor,
+    backgroundTransparent,
+} from "../../Highcharts/HighchartsOptions";
+import { _color_blind_friendly_palettes as PALETTES } from "../../palettes";
+
+import { toProperCase } from "../../../../util/util";
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
-export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }:any) {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = useState(globalFilter)
-    const onChange = useAsyncDebounce(value => {
-        setGlobalFilter(value || undefined)
+export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
+    const count = preGlobalFilteredRows.length;
+    const [value, setValue] = useState(globalFilter);
+    const onChange = useAsyncDebounce((value) => {
+        setGlobalFilter(value || undefined);
     }, 200);
 
     return (
-        <TextField id="outlined-search"
-            label="Search"
+        <TextField
+            id="outlined-search"
+            label="Search Table"
             type="search"
             variant="outlined"
-            onChange={e => {setValue(e.target.value); onChange(e.target.value);}}
+            onChange={(e) => {
+                setValue(e.target.value);
+                onChange(e.target.value);
+            }}
         />
-    )
+    );
+}
+
+//@ts-ignore
+export function PieChartFilter<T extends Record<string, unknown>>({
+    columns,
+    column,
+}: {
+    columns: Column[];
+    column: Column;
+}) {
+    //@ts-ignore
+    const { id, filterValue, setFilter, render, preFilteredRows } = column;
+
+    const buildPlotOptions = () => {
+        let plotOptions: Options = {
+            tooltip: {
+                pointFormat: "<b>{point.y}</b> datasets",
+            },
+            legend: {
+                align: "right",
+                verticalAlign: "middle",
+                layout: "vertical",
+                itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
+                itemHoverStyle: { color: "#ffc665" },
+            },
+        };
+
+        plotOptions = merge(plotOptions, addTitle(toProperCase(id)));
+        plotOptions = merge(plotOptions, disableExport());
+        plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
+        plotOptions = merge(plotOptions, backgroundTransparent());
+        return plotOptions;
+    };
+
+    const series = useMemo(() => {
+        let values = new Array<String>(); // assumming pie filter is only for categorical values
+        preFilteredRows.forEach((row: any) => {
+            let value = row.values[id];
+            //counts[num] = counts[num] ? counts[num] + 1 : 1;
+            if (value) {
+                if (value.includes("//")) {
+                    let vals = value.split(" // ");
+                    vals.forEach((v: string) => {
+                        values.push(v);
+                    });
+                } else {
+                    values.push(value);
+                }
+            }
+        });
+
+        let data: any = [];
+        let counts = countBy(values);
+        for (const id of Object.keys(counts)) {
+            data.push({ name: id, y: counts[id] });
+        }
+        let series = {
+            name: id,
+            data: data,
+            colorByPoint: true,
+            allowPointSelect: true,
+            dataLabels: {
+                enabled: false,
+            },
+            cursor: "pointer",
+            events: {
+                click: function (e: any) {
+                    setFilter(e.point.name || undefined);
+                },
+            },
+        };
+        return series;
+    }, [id, preFilteredRows]);
+
+    return (
+        <>
+            <HighchartsPlot data={{ series: series }} properties={{ type: "pie" }} plotOptions={buildPlotOptions()} />
+        </>
+    );
 }
 
 //@ts-ignore
@@ -39,7 +133,7 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
-    const options = React.useMemo(() => {
+    const options = useMemo(() => {
         const options = new Set<any>();
         preFilteredRows.forEach((row: any) => {
             let value = row.values[id];
@@ -47,10 +141,9 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
-                        options.add(v)
+                        options.add(v);
                     });
-                }
-                else {
+                } else {
                     options.add(value);
                 }
             }
@@ -89,7 +182,7 @@ const getMinMax = (rows: Row[], id: IdType<any>) => {
 
 //@ts-ignore
 export function SliderColumnFilter({ filterValue, render, setFilter, preFilteredRows, id }: Column) {
-    const [min, max] = React.useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows]);
+    const [min, max] = useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows]);
     return (
         <div
             style={{
@@ -141,7 +234,7 @@ const useActiveElement = () => {
 
 // @ts-ignore
 export function NumberRangeColumnFilter({ filterValue = [], render, setFilter, preFilteredRows, id }: Column) {
-    const [min, max] = React.useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows]);
+    const [min, max] = useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows]);
     const focusedElement = useActiveElement();
     const hasFocus = focusedElement && (focusedElement.id === `${id}_1` || focusedElement.id === `${id}_2`);
     return (
