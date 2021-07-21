@@ -62,7 +62,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
             }
         };
 
-        plotOptions = merge(plotOptions, addTitle(toProperCase(id), { y: 50 }));
+        plotOptions = merge(plotOptions, addTitle(toProperCase(id), { y: 40 }));
         plotOptions = merge(plotOptions, disableExport());
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
