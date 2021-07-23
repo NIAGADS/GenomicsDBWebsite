@@ -37,7 +37,7 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
     //using useState instead of useEffect b/c we need it to set collapsed *before* first render
     const [loaded, setLoaded] = useState(false),
         defaultOpen = (recordClass.tables || [])
-            .filter((t) => get(t, "properties.defaultOpen[0]") === "true")
+            .filter((t) => get(JSON.parse(get(t, "properties.flags[0]", '{}')), 'defaultOpen', false) === "true")
             .map((t) => t.name),
         defaultClosed = flatMap(categories, getTableNames).filter((n) => !defaultOpen.includes(n));
     if (!loaded) {

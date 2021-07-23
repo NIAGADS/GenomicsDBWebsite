@@ -74,7 +74,7 @@ const _defaultColumn = React.useMemo(
     []
 );
 
-const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, className }) => {
+const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, className, canFilter }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
     const classes = useStyles();
@@ -126,24 +126,26 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, c
         <>
             <Grid container direction="column">
                 <Grid item>
-                    <Grid container direction="row">
-                        <Grid item xs={3}>
-                            <GlobalFilter
-                                preGlobalFilteredRows={preGlobalFilteredRows}
-                                globalFilter={globalFilter}
-                                setGlobalFilter={setGlobalFilter}
-                            />
+                    {canFilter && (
+                        <Grid container direction="row">
+                            <Grid item xs={3}>
+                                <GlobalFilter
+                                    preGlobalFilteredRows={preGlobalFilteredRows}
+                                    globalFilter={globalFilter}
+                                    setGlobalFilter={setGlobalFilter}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FilterPanel instance={instance} />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            <FilterPanel instance={instance} />
-                        </Grid>
-                    </Grid>
+                    )}
                     <TablePagination instance={instance} />
                 </Grid>
 
                 <Grid item>
                     {/*<TableToolbar instance={instance}/>*/}
-                    <FilterChipBar instance={instance} />
+                    {canFilter && <FilterChipBar instance={instance} />}
 
                     <MaUTable {...getTableProps()} className={className}>
                         <TableHead>

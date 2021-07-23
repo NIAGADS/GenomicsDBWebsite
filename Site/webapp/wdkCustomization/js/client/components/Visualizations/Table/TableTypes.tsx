@@ -12,6 +12,7 @@ export interface TableState<D extends object = {}> extends UsePaginationState<D>
 export interface CustomTableProps {
     columns: Column<{}>[];
     data: any;
+    canFilter: boolean;
     filterTypes?: any; // json object of filter types
     className?: string;
 }

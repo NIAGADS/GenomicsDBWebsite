@@ -67,15 +67,17 @@
     <!-- RESOURCE/DATASETS -->
     <import file="model/datasets/record.xml" /> 
     <import file="model/datasets/queries/resource_attributes.xml" /> 
-    <import file="model/datasets/queries/niagads_accession_attributes.xml" /> 
+    <import file="model/datasets/queries/datasetAttributes.xml" />
+    <import file="model/datasets/queries/datasetTables.xml" />
+    
     <import file="model/datasets/queries/gwas_summary_attributes.xml" /> 
     <import file="model/datasets/queries/gwas_summary_tables.xml" /> 
-    <import file="model/datasets/queries/inferno_attributes.xml" /> 
+    <!-- <import file="model/datasets/queries/inferno_attributes.xml" />  -->
     <!-- <import file="model/resources/queries/recordFilters.xml" /> -->
-    <import file="model/datasets/questions.xml" /> 
-    <import file="model/datasets/queries/questions.xml" /> 
-    <import file="model/datasets/params.xml" />
-    <import file="model/datasets/queries/vocab.xml"/>
+    <!-- <import file="model/datasets/questions.xml" />  -->
+    <!-- <import file="model/datasets/queries/questions.xml" />  -->
+    <!-- <import file="model/datasets/params.xml" /> -->
+    <!-- <import file="model/datasets/queries/vocab.xml"/> -->
     
     <!-- SHARED/COMMON -->
     <import file="model/shared/params.xml"/> 

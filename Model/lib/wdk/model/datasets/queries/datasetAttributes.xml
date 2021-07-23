@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+  <querySet name="DatasetAttributes" queryType="attribute" isCacheable="false">
+
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="BasicAttributes">
+      <column name="source"/>
+      <column name="project_id"/>
+      <column name="description"/>
+      <column name="name"/>
+      <sql>
+        <![CDATA[
+		 SELECT '@PROJECT_ID@'::text AS project_id, t.* 
+		 FROM (VALUES
+		 ('accessions', 'NIAGADS Accessions', 
+		 'datasets from the NIAGADS repository'), 
+		 ('third-party', 'Third-party Resources',
+		 'third-party data sources used to annotated NIAGADS accessions')
+		 ) AS t (source, name, description)
+        ]]>
+      </sql>
+    </sqlQuery>
+  </querySet>
+</wdkModel>
