@@ -97,16 +97,16 @@
 	<description>
 	  <![CDATA[
 		   <p>Optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease in European or Caribbean Hispanic populations.  Datasets differ in filter criteria for variants (CADD score or predicted impact) and analysis covariates.</p>
-		   <p>On the GenomicsDB, these results are reported in the context of individual genes.  See for example: <a href="../gene/ABCA7">ABCA7</a>.</p>
-		   <p>Coming soon: Mine these data.</p>
-		   <p>Use the link to the NIAGADS accession in the table below to download summary statistics of these data or request access to the full results.</p>
+		   <p>In the NIAGADS Alzheimer's GenomicsDB, these results are reported in the context of individual genes.</p>
+		   <p><em>Coming soon: Mine these data.</em></p>
+		   <p>Use the link to the NIAGADS accession in the table below to access the full results.</p>
 	  ]]>
 	</description>
 
 	<columnAttribute name="dataset_accession" displayName="Accession" type="json_link" help="NIAGADS accession number" internal="true" inReportMaker="true"/>
 	<columnAttribute name="dataset_accession_link" displayName="Accession" type="string" help="NIAGADS accession number" inReportMaker="false"/>
 	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true" />
-	<columnAttribute name="name" displayName="Dataset" type="string" internal="true" inReportMaker="true" />
+	<columnAttribute name="name" displayName="Dataset" type="string"  inReportMaker="true" />
 	<columnAttribute name="attribution" displayName="Attribution" type="string" />
 	<columnAttribute name="consortium" displayName="Consortium" type="string" />
 	<columnAttribute name="description" displayName="Description" type="string" />
@@ -114,9 +114,12 @@
 	<columnAttribute name="population" displayName="Population" type="string" />
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
 
+	<propertyList name="column_filter">
+	  <value>{"population": "select"}</value>
+	</propertyList>
 
 	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter":false}</value>
+	  <value>{"defaultOpen": true, "filter":true}</value>
 	</propertyList>
       </table>
 
@@ -124,14 +127,14 @@
       <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
       <!-- Rare Variant  -->
       <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-      <table name="rare_variant" displayName="Rare Variant Association" queryRef="DatasetTables.rare_variant">
+      <table name="rare_variants" displayName="Rare Variant Association" queryRef="DatasetTables.rare_variants">
 
 	<description>
 	  <![CDATA[
-		   <p>test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease in European or Caribbean Hispanic populations.  Datasets differ in  analysis covariates.</p>
-		   <p>On the GenomicsDB, these results are reported in the context of individual variants.</p>
+		   <p>Single (rare) variant tests for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease in European or Caribbean Hispanic populations.  Datasets differ in  analysis covariates.</p>
+		   <p>In the NIAGADS Alzheimer's GenomicsDB, these results are reported in the context of specific variants.</p>
 		   <p><em>Coming soon: Mine these data / Browse on the NIAGADS Genome Browser.</em></p>
-		   <p>Use the link to the NIAGADS accession in the table below to download summary statistics of these data or request access to the full results.</p>
+		   <p>Use the link to the NIAGADS accession in the table below to access the <em>p</em>-values from these summary statistics or request access to the full results.</p>
 	  ]]>
 	</description>
 	
@@ -139,7 +142,7 @@
 	<columnAttribute name="dataset_accession" displayName="Accession" type="json_link" help="NIAGADS accession number" internal="true" inReportMaker="true"/>
 	<columnAttribute name="dataset_accession_link" displayName="Accession" type="string" help="NIAGADS accession number" inReportMaker="false"/>
 	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true" />
-	<columnAttribute name="name" displayName="Dataset" type="string" internal="true" inReportMaker="true" />
+	<columnAttribute name="name" displayName="Dataset" type="string" inReportMaker="true" />
 	<columnAttribute name="attribution" displayName="Attribution" type="string" />
 	<columnAttribute name="consortium" displayName="Consortium" type="string" />
 	<columnAttribute name="description" displayName="Description" type="string" />

@@ -92,7 +92,7 @@
     </sqlQuery>
 
 
-    <sqlQuery name="rare_variant">
+    <sqlQuery name="rare_variants">
       <column name="source" columnType="string"/>
       <column name="track" columnType="string"/>
       <column name="name" columnType="string"/>
@@ -110,7 +110,7 @@
 		 
 		 tracks AS (SELECT id.source, ta.*
 		 FROM NIAGADS.TrackAttributes ta, id 
-		 WHERE ta.dataset_accession != '@ADSP_CC_ACCESSION@' 
+		 WHERE ta.dataset_accession = '@ADSP_CC_ACCESSION@' 
 		 AND ta.subcategory = 'GWAS summary statistics'),
 
 		 neuropathology AS (
@@ -140,7 +140,7 @@
 		 WHEN ta.name LIKE '%ADGC%' THEN 'ADGC'
 		 ELSE NULL END AS consortium,
 		 ta.name,
-		 build_link_attribute(ta.name, '@NIAGADS_BASE_URL/datasets/', ta.track) AS dataset_accession_link,
+		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', ta.dataset_accession) AS dataset_accession_link,
 		 split_part(ta.description, '; adjusted', 1) AS description, -- remove covariates from single variant study descriptions
 		 ta.attribution, ta.dataset_accession, 
 		 CASE WHEN n.characteristic IS NULL THEN 'Alzheimer''s disease/late onset AD (AD/LOAD)' ELSE n.characteristic END AS neuropathology,
@@ -174,8 +174,8 @@
 		 
 		 tracks AS (SELECT id.source, ta.*
 		 FROM NIAGADS.TrackAttributes ta, id 
-		 WHERE ta.dataset_accession != '@ADSP_CC_ACCESSION@' 
-		 AND ta.subcategory = 'GWAS summary statistics'),
+		 WHERE ta.dataset_accession = '@ADSP_CC_ACCESSION@' 
+		 AND ta.subcategory != 'GWAS summary statistics'),
 
 		 neuropathology AS (
 		 SELECT ta.source, ta.track, /* tc.category_abbrev, tc.characteristic, */
@@ -204,7 +204,7 @@
 		 WHEN ta.name LIKE '%ADGC%' THEN 'ADGC'
 		 ELSE NULL END AS consortium,
 		 ta.name,
-		 build_link_attribute(ta.name, '@NIAGADS_BASE_URL/datasets/', ta.track) AS dataset_accession_link,
+		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', ta.dataset_accession) AS dataset_accession_link,
 		 split_part(ta.description, '; adjusted', 1) AS description, -- remove covariates from single variant study descriptions
 		 ta.attribution, ta.dataset_accession, 
 		 CASE WHEN n.characteristic IS NULL THEN 'Alzheimer''s disease/late onset AD (AD/LOAD)' ELSE n.characteristic END AS neuropathology,

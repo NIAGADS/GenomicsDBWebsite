@@ -128,9 +128,8 @@ VariantRecordClasses.VariantRecordClass.linkage	http://edamontology.org/topic_01
 													
 ## Dataset Attributes ##													
 													
-DatasetRecordClasses.DatasetRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.DatasetRecordClass	attribute	name					1		record	download
-DatasetRecordClasses.DatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.DatasetRecordClass	attribute	description					4		record	download
-DatasetRecordClasses.DatasetRecordClass.attribution	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.DatasetRecordClass	attribute	attribution					3		record	download
+DatasetRecordClasses.DatasetRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.DatasetRecordClass	attribute	name					1		record-internal	download
+DatasetRecordClasses.DatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.DatasetRecordClass	attribute	description					4		record-internal	download
 DatasetRecordClasses.DatasetRecordClass.gwas	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.DatasetRecordClass	table	gwas					1		record	download
 DatasetRecordClasses.DatasetRecordClass.rare_variants	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.DatasetRecordClass	table	rare_variants					2		record	download
 DatasetRecordClasses.DatasetRecordClass.gene_risk	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.DatasetRecordClass	table	gene_risk					3		record	download
