@@ -9,14 +9,11 @@ import { RecordInstance, RecordClass } from 'wdk-client/Utils/WdkModel';
 import './DatasetRecordHeading.scss';
 
 
-const NIAGADSDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => (
+const DatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => (
     <Grid container direction="column" style={{ marginLeft: "10px" }}>
-        <Heading>
-            Browse NIAGADS Accessions
-        </Heading>
-        <Subheading>{record.attributes.name}</Subheading>
-        <BaseText variant="body2">{record.attributes.description}</BaseText>
+        <Heading>{record.attributes.name}</Heading>
+        <Subheading>{record.attributes.description}</Subheading>
     </Grid>
 );
 
-export default NIAGADSDatasetRecordSummary;
+export default DatasetRecordSummary;

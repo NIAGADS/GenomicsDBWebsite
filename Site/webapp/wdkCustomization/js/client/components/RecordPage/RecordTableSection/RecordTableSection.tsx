@@ -25,7 +25,7 @@ export interface RecordTableSection {
 /** Record table section on record page */
 function RecordTableSection(props: RecordTableSection) {
   let { table, record, recordClass, isCollapsed, onCollapsedChange, requestPartialRecord, title } = props;
-  let { displayName, help, name } = table;
+  let { displayName, description, name } = table;
   let data = record.tables[name];
   let isError = includes(record.tableErrors, name);
   let isLoading = data == null;
@@ -41,7 +41,7 @@ function RecordTableSection(props: RecordTableSection) {
 
   const headerContent = (
     title ??
-    <DefaultSectionTitle displayName={displayName} help={help} />
+    <DefaultSectionTitle displayName={displayName} help={description} />
   );
 
   return (
@@ -53,7 +53,7 @@ function RecordTableSection(props: RecordTableSection) {
       onCollapsedChange={onCollapsedChange}
     >
       <ErrorBoundary>
-        <RecordTableDescription table={table} record={record} recordClass={recordClass}/>
+        {/* <RecordTableDescription table={table} record={record} recordClass={recordClass}/> */}
         { isError ? <p style={{ color: 'darkred', fontStyle: 'italic' }}>Unable to load data due to a server error.</p>
         : isLoading ? <p>Loading...</p>
         : <RecordTable data={data} table={table} /> }
