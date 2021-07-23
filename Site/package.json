@@ -8,7 +8,6 @@
         "@material-ui/data-grid": "^4.0.0-alpha.31",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.57",
-
         "btoa": "^1.2.1",
         "classnames": "^2.3.1",
         "d3": "5.16.0",
@@ -21,6 +20,7 @@
         "prettier": "^2.0.4",
         "qs": "^6.9.4",
         "react-csv": "^1.0.19",
+        "react-material-ui-carousel": "^2.2.7",
         "react-native": "^0.64.2",
         "react-table": "7.7.0"
     },

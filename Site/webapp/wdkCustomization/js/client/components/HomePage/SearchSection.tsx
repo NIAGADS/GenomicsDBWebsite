@@ -62,10 +62,10 @@ export const SearchSection: React.FC<SearchSection> = ({ webAppUrl }) => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    {/* chart column */}
+                    {/* chart column 
                     <Grid item justify="center" alignItems="center" container xs={12} md={6}>
                         <Donut />
-                    </Grid>
+                    </Grid> */}
                 </Grid> 
             </NarrowerWidthRow>
             <DownArrowRow />

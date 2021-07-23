@@ -23,16 +23,21 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
             series: [
                 {
                     name: "Datasets",
-                    innerSize: "60%",
+                    innerSize: "50%",
                     showInLegend: true,
-                    allowPointSelect: true,
+                    allowPointSelect: false,
                     cursor: "pointer",
                     dataLabels: {
                         enabled: false,
                     },
+
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ["50%", "75%"],
+
                     point: {
                         events: {
-                            click: (e: PointClickEventObject) => searchDatasets(e.point),
+                            //click: (e: PointClickEventObject) => searchDatasets(e.point),
                             legendItemClick: () => false,
                         },
                     },
@@ -46,7 +51,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
     };
 
     const [series, setSeries] = useState(buildSeries([[null, null, null]])),
-    goto = useGoto();
+        goto = useGoto();
 
     const searchDatasets = (point: Point) =>
         goto(`search/gwas_summary/neuropathology?autoRun=true&param.phenotype=${point.name}`);
@@ -61,12 +66,13 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
     const buildDonutPlotOptions = () => {
         let plotOptions: Options = {
             tooltip: {
-                pointFormat: "{point.full_name}: <b>{point.y}</b> <br/>Click on chart to browse these datasets.",
+                // pointFormat: "{point.full_name}: <b>{point.y}</b> <br/>Click on chart to browse these datasets.",
+                pointFormat: "{point.full_name}: <b>{point.y}</b>",
             },
             legend: {
-                align: "right",
-                verticalAlign: "middle",
-                layout: "vertical",
+                //align: "right",
+                //verticalAlign: "middle",
+                //layout: "vertical",
                 itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
                 itemHoverStyle: { color: "#ffc665" },
             },

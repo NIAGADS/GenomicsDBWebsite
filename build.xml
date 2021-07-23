@@ -43,6 +43,10 @@
 
     <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl to ${targetDir}/lib/wdk/ontology/categories.owl"/>
     <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/>
+    
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl to ${targetDir}/lib/wdk/ontology/categories_full.owl"/>
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl" tofile="${targetDir}/lib/wdk/ontology/categories_full.owl" overwrite="true"/>
+
 
     <!-- the following four commands generate the website ontology -->
 
@@ -64,10 +68,10 @@
       <classpath refid="owl-class-path"/>
     </java>
 
-    <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
+    <!-- <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename commonIndividuals.txt -outputFilename commonIndividuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/commonIndividuals.owl'"/>
       <classpath refid="owl-class-path"/>
-    </java>
+    </java> -->
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OntologyMerger">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename categories_full.owl -outputFilename categories_merged.owl"/>
