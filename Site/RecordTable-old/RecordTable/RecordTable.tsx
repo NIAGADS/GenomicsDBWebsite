@@ -4,7 +4,7 @@ import ReactTable, { AccessorFunction, Instance, RowInfo, Filter, Column } from 
 import { isString, isObject, findIndex, forIn } from "lodash";
 import { isJson, resolveObjectInput, withTooltip } from "../../../../util/jsonParse";
 import { extractDisplayText } from "../util";
-import CssBarChart from "./CssBarChart/CssBarChart";
+import CssBarChart from "../../RecordTable/CssBarChart/CssBarChart";
 import * as rt from "../../types";
 import PaginationComponent from "./PaginationComponent/PaginationComponent";
 import { Box } from "@material-ui/core";

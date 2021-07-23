@@ -1,11 +1,12 @@
 import React, { useCallback, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { HeaderRecordActions, RecordAttributeItem } from "./../Shared";
-import { GWASDatasetRecord, HeaderActions } from "./../../types";
+import { RecordHeading } from "../RecordHeadingTypes";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
 import { HelpIcon, CollapsibleSection } from "wdk-client/Components";
 import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
+
 import GWASDatasetLZPlot from "../../../Visualizations/LocusZoom/GWASDatasetLZPlot";
 import { Box, FormGroup, Grid, List, FormHelperText } from "@material-ui/core";
 import {
@@ -22,7 +23,6 @@ import {
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 import "./GWASDatasetRecordHeading.scss";
-import { ImageRounded } from "@material-ui/icons";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
@@ -30,14 +30,6 @@ const ACCESSION_PARAM_NAME = "param.gwas_accession";
 const DATASET_PARAM_NAME = "param.gwas_dataset";
 
 const cx = makeClassNameHelper("gwas-RecordHeading");
-
-interface GWASRecordHeading {
-    record: GWASDatasetRecord;
-    recordClass: { [key: string]: any };
-    headerActions: HeaderActions[];
-    webAppUrl: string;
-}
-
 interface SearchProps {
     record: string;
     accession: string;
@@ -147,7 +139,7 @@ const DatasetHeaderImage: React.FC<HeaderImage> = ({ src, type }) => {
     );
 };
 
-const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordClass, headerActions, webAppUrl }) => {
+const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions, webAppUrl }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     let imgPrefix = `${webAppUrl}/images/manhattan/${record.attributes.niagads_accession}/png/${record.id[0].value}`;
@@ -157,13 +149,13 @@ const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordC
             <Grid item container direction="row">
                 <Grid item container direction="column" sm={3} xs={12}>
                     {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
-                    <Subheading style={{ paddingBottom: 0 }}>{convertHtmlEntites(record.attributes.name)}</Subheading>
+                    <Subheading style={{ paddingBottom: 0 }}>{convertHtmlEntites(record.attributes.name.toString())}</Subheading>
                     <SubheadingSmall style={{ padding: 0 }}>{record.attributes.attribution}</SubheadingSmall>
                     <List>
                         <UnpaddedListItem>
                             <RecordAttributeItem
                                 label="Related datasets:"
-                                attribute={resolveJsonInput(record.attributes.accession_link)}
+                                attribute={resolveJsonInput(record.attributes.accession_link.toString())}
                             />
                         </UnpaddedListItem>
                         <UnpaddedListItem>
@@ -172,11 +164,11 @@ const GWASDatasetRecordSummary: React.FC<GWASRecordHeading> = ({ record, recordC
                     </List>
                     {record.attributes.is_adsp && (
                         <Subheading>
-                            <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp)}</strong>
+                            <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
                         </Subheading>
                     )}
                     <GWASDatasetSearch
-                        accession={record.attributes.niagads_accession}
+                        accession={record.attributes.niagads_accession.toString()}
                         record={record.id[0].value}
                     ></GWASDatasetSearch>
                 </Grid>

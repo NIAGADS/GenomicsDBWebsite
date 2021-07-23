@@ -14,7 +14,13 @@ interface Header {
 
 const menuConfig: MenuElement[] = [
     { title: "Home", target: "/" },
-    { title: "Search Datasets", target: "/search/gwas_summary/browse" },
+    { title: "Browse Datasets", 
+      items: [
+          {title: "GWAS Summary Statistics", target: "/record/dataset/gwas_summary" },
+          {title: "Gene-level AD/ADRD Association (ADSP)", target: "/record/dataset/gene_risk" },
+          {title: "Single-Variant AD/ADRD Association (ADSP)", target: "/record/dataset/single_variant" }
+      ]
+    },
     { title: "Workspace", target: "/workspace/strategies" },
     {
         title: "Genome Browser",

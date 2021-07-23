@@ -1,5 +1,5 @@
 import React from "react";
-import { HeaderActions } from "./../../../types";
+import { HeaderActions } from "../../RecordHeadingTypes";
 import { RecordActionLink } from "wdk-client/Components";
 import { Box } from "@material-ui/core";
 
