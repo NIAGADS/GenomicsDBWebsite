@@ -26,6 +26,8 @@ import TablePagination from "./TablePagination";
 import Table from "./Table";
 
 import FilterPanel from "./TableFilters/FilterPanel";
+import { HideColumnPage } from "./HideColumnPage";
+
 import { FilterChipBar } from "./TableFilters/FilterChipBar";
 
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
@@ -166,14 +168,11 @@ const TableContainer: React.FC<TableContainerProps> = ({
                             />
                         )}
                         {canFilter && showAdvancedFilter && <FilterChipBar instance={instance} />}
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
                         <TablePagination instance={instance} />
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <VerticalTabContainer labels={tabs}>
-        
+                    <VerticalTabContainer labels={tabs}>  
                         <Table
                             showAdvancedFilter={showAdvancedFilter}
                             canFilter={canFilter}
@@ -181,6 +180,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                             instance={instance}
                         />
                         {(canFilter && showAdvancedFilter) && <FilterPanel instance={instance}/>}
+                        {/* showHideColumns && <HideColumnPage instance={instance}/> */}
                     </VerticalTabContainer>
                 </Grid>
             </Grid>

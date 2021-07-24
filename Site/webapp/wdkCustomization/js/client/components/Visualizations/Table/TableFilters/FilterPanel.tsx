@@ -5,7 +5,7 @@ import { Theme, createStyles, makeStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-
+import Divider from "@material-ui/core/Divider";
 import React, { ReactElement, useCallback } from "react";
 import { TableInstance } from "react-table";
 
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         grid: {
             display: "grid",
-            gridTemplateColumns: "repeat(4, 218px)",
+            gridTemplateColumns: "repeat(2, 218px)",
             "@media (max-width: 600px)": {
                 gridTemplateColumns: "repeat(1, 180px)",
             },
@@ -91,7 +91,7 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
                 </Grid>
                 <Grid item>
                     <form>
-                        <div className={classes.grid}>
+                        <Grid container direction="column">
                             {/* pvalue */}
                             {/*allColumns
                                 //@ts-ignore
@@ -102,28 +102,35 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
                                     </div>
                                 ))*/}
                             {/* render pie charts first ; includes to handle special cases */}
-                            {allColumns
-                               
-                                .filter(
-                                     //@ts-ignore
-                                    (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pie")
-                                )
-                                .map((column) => (
-                                    <div key={column.id} className={classes.cell}>
-                                        {column.render("Filter")}
-                                    </div>
-                                ))}
+                            <Grid item>
+                                <div className={classes.grid}>
+                                    {allColumns
 
+                                        .filter(
+                                            //@ts-ignore
+                                            (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pie")
+                                        )
+                                        .map((column) => (
+                                            <div key={column.id} className={classes.cell}>
+                                                {column.render("Filter")}
+                                            </div>
+                                        ))}
+                                </div>
+                            </Grid>
                             {/* render selects */}
-                            {allColumns
-                                //@ts-ignore
-                                .filter((item) => item.canFilter && item.filter === "select")
-                                .map((column) => (
-                                    <div key={column.id} className={classes.cell}>
-                                        {column.render("Filter")}
-                                    </div>
-                                ))}
-                        </div>
+                            <Grid item>
+                                <div className={classes.grid}>
+                                    {allColumns
+                                        //@ts-ignore
+                                        .filter((item) => item.canFilter && item.filter === "select")
+                                        .map((column) => (
+                                            <div key={column.id} className={classes.cell}>
+                                                {column.render("Filter")}
+                                            </div>
+                                        ))}
+                                </div>
+                            </Grid>
+                        </Grid>
                         <Button className={classes.hidden} type={"submit"}>
                             &nbsp;
                         </Button>
