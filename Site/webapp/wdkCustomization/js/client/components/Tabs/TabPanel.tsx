@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-
+import Box from "@material-ui/core/Box";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: any;
@@ -15,10 +15,8 @@ export const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...o
             aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
-            {value === index && { children }}
+            {value === index && <Box>{children}</Box>}
             {/* <Box p={3}><Typography>{children}</Typography></Box> */}
         </div>
     );
 };
-
-

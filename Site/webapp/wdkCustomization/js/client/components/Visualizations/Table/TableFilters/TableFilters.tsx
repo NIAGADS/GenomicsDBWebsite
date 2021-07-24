@@ -5,6 +5,7 @@ import { countBy, merge } from "lodash";
 
 import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
+import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -38,6 +39,7 @@ export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFil
 
     return (
         <>
+          <Paper component="form" className={classes.root}>
             <InputBase
                 className={classes.input}
                 placeholder="Search table"
@@ -50,6 +52,7 @@ export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFil
             <IconButton disabled={true} className={classes.iconButton} aria-label="search">
                 <SearchIcon />
             </IconButton>
+            </Paper>
         </>
     );
 }

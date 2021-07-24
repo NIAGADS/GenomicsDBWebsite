@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { Column, TableInstance, HeaderProps } from "react-table";
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
-import CustomTable /*, { SortIconGroup } */ from "../../Visualizations/Table/Table";
+import TableContainer /*, { SortIconGroup } */ from "../../Visualizations/Table/TableContainer";
 import { Box } from "@material-ui/core";
 import { resolveAccessor, resolveData } from "./RecordTableUtils";
 import { RecordTableProps } from "./RecordTableTypes";
@@ -51,7 +51,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
     }
 
     return (
-        <CustomTable
+        <TableContainer
             className={table.properties.canShrink ? "shrink" : ""}
             columns={columns}
             data={resolvedData}

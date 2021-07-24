@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
         display: "flex",
-        height: 224,
+       // height: 224,
     },
     tabs: {
         borderRight: `1px solid ${theme.palette.divider}`,
@@ -46,16 +46,16 @@ const VerticalTabContainer: React.FC<TabContainerProps> = ({ labels, children })
                 variant="scrollable"
                 value={value}
                 onChange={handleChange}
-                aria-label="Vertical tabs example"
+                aria-label="data-table"
                 className={classes.tabs}
             >
-                {labels.map((value: string, index: number) => {
-                    return <Tab key={index} label={value} {...a11yProps(index)} />;
+                {labels.map((label: string, index: number) => {
+                    return <Tab key={index} label={label} {...a11yProps(index)} />;
                 })}
             </Tabs>
 
             {React.Children.map(children, ((child: React.ReactNode, index: number) =>  {
-                return <TabPanel value={labels[index]} index={index}>
+                return <TabPanel value={value} index={index}>
                     {child}
                 </TabPanel>
             }))}
