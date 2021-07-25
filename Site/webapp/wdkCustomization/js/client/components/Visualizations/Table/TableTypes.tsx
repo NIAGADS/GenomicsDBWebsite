@@ -15,6 +15,7 @@ export interface CustomTableProps {
     canFilter: boolean;
     filterTypes?: any; // json object of filter types
     className?: string;
+    showAdvancedFilter?: boolean;
 }
 
 

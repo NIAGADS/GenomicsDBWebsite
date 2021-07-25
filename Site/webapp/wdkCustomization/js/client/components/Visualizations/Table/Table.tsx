@@ -55,6 +55,7 @@ const defaultFilterTypes = {
     greater: greaterThanFilter,
     select: includesFilter,
     pie: includesFilter,
+    booleanPie: includesFilter
 };
 
 // fix to force table to always take full width of container
@@ -74,7 +75,14 @@ const _defaultColumn = React.useMemo(
     []
 );
 
-const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, className, canFilter }) => {
+const CustomTable: React.FC<CustomTableProps> = ({
+    columns,
+    data,
+    filterTypes,
+    className,
+    canFilter,
+    showAdvancedFilter,
+}) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
     const classes = useStyles();
@@ -135,9 +143,11 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, c
                                     setGlobalFilter={setGlobalFilter}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
-                                <FilterPanel instance={instance} />
-                            </Grid>
+                            {showAdvancedFilter && (
+                                <Grid item xs={6}>
+                                    <FilterPanel instance={instance} />
+                                </Grid>
+                            )}
                         </Grid>
                     )}
                     <TablePagination instance={instance} />
@@ -145,7 +155,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data, filterTypes, c
 
                 <Grid item>
                     {/*<TableToolbar instance={instance}/>*/}
-                    {canFilter && <FilterChipBar instance={instance} />}
+                    {(canFilter && showAdvancedFilter) && <FilterChipBar instance={instance} />}
 
                     <MaUTable {...getTableProps()} className={className}>
                         <TableHead>

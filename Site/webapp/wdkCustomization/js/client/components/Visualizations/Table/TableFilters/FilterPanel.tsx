@@ -104,10 +104,19 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
                     
                     <form>
                         <div className={classes.grid}>
-                            {/* render pie charts first */}
+                            {/* pvalue */}
+                            {/*allColumns
+                                //@ts-ignore
+                                .filter((item) => item.canFilter && item.filter === "pvalue")
+                                .map((column) => (
+                                    <div key={column.id} className={classes.cell}>
+                                        {column.render("Filter")}
+                                    </div>
+                                ))*/}
+                            {/* render pie charts first ; includes to handle special cases */}
                             {allColumns
                                 //@ts-ignore
-                                .filter((item) => item.canFilter && item.filter === "pie")
+                                .filter((item) => item.canFilter && (item.filter && item.filter.toLowerCase().includes("pie")))
                                 .map((column) => (
                                     <div key={column.id} className={classes.cell}>
                                         {column.render("Filter")}

@@ -15,6 +15,11 @@ import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { PrimaryActionButton } from "../Shared";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 
+
+import {
+ Heading
+} from "../Shared";
+
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
 const MemoBroswer = React.memo(IGVBrowser);
@@ -26,7 +31,7 @@ interface GenomeBrowserPage {
 }
 
 const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
-    useWdkEffect(
+    /*useWdkEffect(
         (service) => {
             service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
                 setTrackList(
@@ -110,13 +115,14 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
         buildBrowser = useCallback((b: any) => {
             setBrowser(b);
         }, []);
-
+*/
     return (
         <Container maxWidth="xl">
             <ThemeProvider theme={theme}>
                 <Grid container item xs={12}>
+                    <Heading>Temporarily Unavailable.  Please check back soon!</Heading>
                     {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
-                    <Box m="10px">
+                 {/*   <Box m="10px">
                         <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
                             <LibraryBooksIcon />
                             Browse Tracks
@@ -141,8 +147,8 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                         loadingTrack={loadingTrack}
                         toggleTracks={toggleTracks}
                         trackList={trackList}
-                    />
-                </Grid>
+    /> */}
+               </Grid> 
             </ThemeProvider>
         </Container>
     );
