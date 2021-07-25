@@ -4,7 +4,7 @@ import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { Loading } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
-import { SearchResult } from "./../Shared/Autocomplete";
+import { SearchResult } from "./../Shared";
 import { buildRouteFromResult } from '../../util/util';
 import { chain, isEmpty, get } from "lodash";
 import { Box, Grid, List, ListItem, withStyles } from "@material-ui/core";

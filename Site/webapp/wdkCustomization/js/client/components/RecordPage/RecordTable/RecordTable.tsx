@@ -24,7 +24,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data}) => {
     const columns:Column<{}>[] = useMemo(() => _buildColumns(table, data), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
 
-    const canFilter = get(JSON.parse(table.properties.flags[0]), 'filter', true); // default to true if missing
+    const canFilter = get(JSON.parse(get(table, 'properties.flags[0]', '{"filter":true}')), 'filter', true); // default to true if missing
 
     return (
         <CustomTable className={table.properties.canShrink ? "shrink" : ""} columns={columns} data={resolvedData} filterTypes={filterTypes} canFilter={canFilter}/>

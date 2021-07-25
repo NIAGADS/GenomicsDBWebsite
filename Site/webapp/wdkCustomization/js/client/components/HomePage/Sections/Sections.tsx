@@ -5,7 +5,7 @@ import {
     withStyles,
 } from "@material-ui/core";
 
-import { useInnerSectionStyles} from './Styles';
+import { useInnerSectionStyles} from '../Styles';
 
 export const Section = (props: GridProps) => {
     const innerClasses = useInnerSectionStyles();

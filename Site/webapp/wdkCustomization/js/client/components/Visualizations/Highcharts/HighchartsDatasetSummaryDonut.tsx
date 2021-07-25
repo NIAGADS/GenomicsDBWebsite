@@ -73,8 +73,8 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
                 //align: "right",
                 //verticalAlign: "middle",
                 //layout: "vertical",
-                itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
-                itemHoverStyle: { color: "#ffc665" },
+                //itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
+                //itemHoverStyle: { color: "#ffc665" },
             },
             /*caption: {
                 text: 'Click on chart to find datasets associated with the selected AD-related dementia or neuropathology.',

@@ -1,17 +1,17 @@
 import React from "react";
 import { Box, Grid } from "@material-ui/core";
-import { PrimaryActionButton, PrimaryLink } from "../Shared";
+import { PrimaryActionButton, PrimaryLink } from "../../Shared";
 
-import { useGoto } from "../../hooks";
-import { BaseText, Heading, Subheading } from "../Shared/Typography";
+import { useGoto } from "../../../hooks";
+import { BaseText, Heading, Subheading } from "../../Shared/Typography";
 
 import { WhiteBackgroundSection } from "./Sections";
-import { NarrowerWidthRow } from "./CustomGridElements";
+import { NarrowerWidthRow } from "../CustomGridElements";
 
-import { _news } from "../../data/news";
+import { _news } from "../../../data/news";
 import { truncate } from "lodash";
 
-interface NewsItem {
+interface DatasetItem {
     content: string;
     date: string;
     target: string;
@@ -21,7 +21,7 @@ interface NewsItem {
     truncateContent?: boolean;
 }
 
-const NewsItem: React.FC<NewsItem> = ({ content, date, target, title, subtitle, anchor, truncateContent = true }) => {
+const DatasetItem: React.FC<DatasetItem> = ({ content, date, target, title, subtitle, anchor, truncateContent = true }) => {
     const goto = useGoto();
 
     let maxContentLength: number = 200;
@@ -49,14 +49,14 @@ const NewsItem: React.FC<NewsItem> = ({ content, date, target, title, subtitle, 
                     </Grid>
                 </Grid>
                 <Box pl={1} pr={1} pt={5} pb={5}>
-                    <PrimaryActionButton onClick={goto.bind(null, target)}>Learn More</PrimaryActionButton>
+                    <PrimaryActionButton href={target}>Explore</PrimaryActionButton>
                 </Box>
             </Grid>
         </Grid>
     );
 };
 
-export const LatestDatasetSection: React.FC<{}> = ({}) => {
+export const DatasetReleasesSection: React.FC<{}> = ({}) => {
     return (
         <WhiteBackgroundSection>
             <NarrowerWidthRow>
@@ -71,7 +71,7 @@ export const LatestDatasetSection: React.FC<{}> = ({}) => {
                             .filter((item, idx) => idx < 3)
                             .map((item, idx) => {
                                 return (
-                                    <NewsItem
+                                    <DatasetItem
                                         key={`news-${idx}`}
                                         content={item.content}
                                         date={item.date}

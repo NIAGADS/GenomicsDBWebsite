@@ -1,22 +1,24 @@
 import React from "react";
 import { Box, Grid } from "@material-ui/core";
-import { PrimaryExternalLink } from "../Shared";
+import { PrimaryExternalLink } from "../../Shared";
 
-import { useGoto } from "../../hooks";
-import { BaseText, Heading, Subheading } from "../Shared/Typography";
+import { useGoto } from "../../../hooks";
+import { BaseText, Heading, Subheading } from "../../Shared/Typography";
 
 import { GreyBackgroundSection } from "./Sections";
-import { NarrowerWidthRow } from "./CustomGridElements";
-import { _externalUrls } from "../../data/_externalUrls";
+import { NarrowerWidthRow } from "../CustomGridElements";
+import { _externalUrls } from "../../../data/_externalUrls";
 
 interface AboutSection {
     webAppUrl: string;
 }
+
 export const AboutSection: React.FC<AboutSection> = ({ webAppUrl }) => {
     return (
         <GreyBackgroundSection>
             <NarrowerWidthRow>
                 <Grid container item justify="center">
+                    <a id="about"/>
                     <Heading>About the Project</Heading>
                     <BaseText>
                         The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the
@@ -56,3 +58,4 @@ export const AboutSection: React.FC<AboutSection> = ({ webAppUrl }) => {
         </GreyBackgroundSection>
     );
 };
+

@@ -20,7 +20,7 @@ const menuConfig: MenuElement[] = [
         target: "/visualizations/browser",
     },
     { title: "Documentation", target: "#" }, //this could also be a dropdown with various kinds of documentation
-    { title: "About", target: "#" },
+    { title: "About", target: "#about" },
 ];
 
 const Header: React.FC<Header> = ({ isLoggedIn }) => {

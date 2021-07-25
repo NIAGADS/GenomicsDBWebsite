@@ -19,13 +19,10 @@ import {
 
 import { DarkContrastText, BaseText, Heading, Subheading } from "../Shared/Typography";
 
-import { WhiteBackgroundSection, GreyBackgroundSection} from './Sections';
+import { WhiteBackgroundSection, GreyBackgroundSection} from './Sections/Sections';
 import { NarrowerWidthRow } from './CustomGridElements';
-import { HighlightStatsSection } from './HighlightStatsSection';
-import { LatestDatasetSection } from './NewsSection';
-import { SearchSection } from './SearchSection';
-import { FeaturesSection } from './FeaturesSection';
-import { AboutSection } from './AboutSection';
+import {HighlightStatsSection, DatasetReleasesSection, SearchSection, FeaturesSection, AboutSection}  from './Sections';
+
 
 interface HomePage {
     webAppUrl: string;
@@ -45,9 +42,9 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
         <Grid justify="center" container>
             {/* header */}
             <SearchSection webAppUrl={webAppUrl}/>
-            <FeatureSection webAppUrl={webAppUrl} endpoint={endpoint}/>     
+            <FeaturesSection webAppUrl={webAppUrl} endpoint={endpoint}/>     
             <HighlightStatsSection/>
-            <LatestDatasetSection />
+            <DatasetReleasesSection />
             <AboutSection webAppUrl={webAppUrl}/> 
         </Grid>
     );
