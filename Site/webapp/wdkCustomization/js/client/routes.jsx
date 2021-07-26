@@ -14,7 +14,7 @@ export const wrapRoutes = (ebrcRoutes) => [
         path: "/api",
         component: props =>
           <ExternalContentController
-            url={`${window.location.protocol}://${window.location.host}/genomics/docs/genomics-service-api.html`}
+            url={`${window.location.protocol}//${window.location.host}/genomics/docs/genomics-service-api.html`}
           />
       },
     ...ebrcRoutes,
