@@ -66,12 +66,12 @@
 
     <!-- RESOURCE/DATASETS -->
     <import file="model/datasets/record.xml" /> 
-    <import file="model/datasets/queries/resource_attributes.xml" /> 
     <import file="model/datasets/queries/datasetAttributes.xml" />
     <import file="model/datasets/queries/datasetTables.xml" />
-    
-    <import file="model/datasets/queries/gwas_summary_attributes.xml" /> 
-    <import file="model/datasets/queries/gwas_summary_tables.xml" /> 
+
+    <import file="model/tracks/record.xml" /> 
+    <import file="model/tracks/queries/gwas_summary_attributes.xml" /> 
+    <import file="model/tracks/queries/gwas_summary_tables.xml" /> 
     <!-- <import file="model/datasets/queries/inferno_attributes.xml" />  -->
     <!-- <import file="model/resources/queries/recordFilters.xml" /> -->
     <!-- <import file="model/datasets/questions.xml" />  -->

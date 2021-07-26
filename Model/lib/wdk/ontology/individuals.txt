@@ -142,29 +142,29 @@ DatasetRecordClasses.DatasetRecordClass.gene_function	http://edamontology.org/to
 													
 ## GWAS Dataset Attributes ##													
 													
-DatasetRecordClasses.GWASDatasetRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	name							record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	description						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.category	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	category							record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.is_adsp	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	is_adsp						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.accession_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	accession_link						results	record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.niagads_accession	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	niagads_accession							record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	search_link						results	record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.attribution	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	attribution						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.has_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	has_manhattan_plot					1		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.phenotype_list	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	phenotype_list						results	record-internal	download
-DatasetRecordClasses.GWASDatasetRecordClass.covariate_list	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	attribute	covariate_list						results	record-internal	download
+TrackRecordClasses.TrackRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	name							record-internal	download
+TrackRecordClasses.TrackRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	description						results	record-internal	download
+TrackRecordClasses.TrackRecordClass.category	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	category							record-internal	
+TrackRecordClasses.TrackRecordClass.is_adsp	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	is_adsp						results	record-internal	download
+TrackRecordClasses.TrackRecordClass.accession_link	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	accession_link						results	record-internal	
+TrackRecordClasses.TrackRecordClass.niagads_accession	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	niagads_accession							record-internal	download
+TrackRecordClasses.TrackRecordClass.search_link	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	search_link						results	record-internal	
+TrackRecordClasses.TrackRecordClass.attribution	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	attribution						results	record-internal	download
+TrackRecordClasses.TrackRecordClass.has_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	attribute	has_manhattan_plot					1		record-internal	
+TrackRecordClasses.TrackRecordClass.phenotype_list	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	phenotype_list						results	record-internal	download
+TrackRecordClasses.TrackRecordClass.covariate_list	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	covariate_list						results	record-internal	download
 													
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_expanded_snps					1		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_tag_ideogram	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_tag_ideogram					2		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_tags	http://www.niagadsontology.org/no_04	Linkage mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_tags					3		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_genomic_partitions	http://edamontology.org/operation_0282	Genetic mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_genomic_partitions					1		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_gene_mapping	http://edamontology.org/operation_0282	Genetic mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_gene_mapping					3		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_list_lncRNA_mapping	http://edamontology.org/operation_0282	Genetic mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_list_lncRNA_mapping					4		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_list_mRNA_mapping	http://edamontology.org/operation_0282	Genetic mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_list_mRNA_mapping					2		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_enhancer_overlap_roadmap	http://www.niagadsontology.org/no_03	Functional mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_enhancer_overlap_roadmap					2		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.inferno_highchart_enhancer_overlap_fantom5	http://www.niagadsontology.org/no_03	Functional mapping	DatasetRecordClasses.GWASDatasetRecordClass	table	inferno_highchart_enhancer_overlap_fantom5					1		record-internal	
-DatasetRecordClasses.GWASDatasetRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	DatasetRecordClasses.GWASDatasetRecordClass	table	top_variants					2		record	
-DatasetRecordClasses.GWASDatasetRecordClass.phenotypes	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.GWASDatasetRecordClass	table	phenotypes							record	
+TrackRecordClasses.TrackRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	TrackRecordClasses.TrackRecordClass	table	inferno_expanded_snps					1		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_tag_ideogram	http://www.niagadsontology.org/no_04	Linkage mapping	TrackRecordClasses.TrackRecordClass	table	inferno_tag_ideogram					2		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_tags	http://www.niagadsontology.org/no_04	Linkage mapping	TrackRecordClasses.TrackRecordClass	table	inferno_tags					3		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_genomic_partitions	http://edamontology.org/operation_0282	Genetic mapping	TrackRecordClasses.TrackRecordClass	table	inferno_genomic_partitions					1		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_highchart_gene_mapping	http://edamontology.org/operation_0282	Genetic mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_gene_mapping					3		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_highchart_list_lncRNA_mapping	http://edamontology.org/operation_0282	Genetic mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_list_lncRNA_mapping					4		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_highchart_list_mRNA_mapping	http://edamontology.org/operation_0282	Genetic mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_list_mRNA_mapping					2		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_highchart_enhancer_overlap_roadmap	http://www.niagadsontology.org/no_03	Functional mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_enhancer_overlap_roadmap					2		record-internal	
+TrackRecordClasses.TrackRecordClass.inferno_highchart_enhancer_overlap_fantom5	http://www.niagadsontology.org/no_03	Functional mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_enhancer_overlap_fantom5					1		record-internal	
+TrackRecordClasses.TrackRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	table	top_variants					2		record	
+TrackRecordClasses.TrackRecordClass.phenotypes	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	table	phenotypes							record	
 													
 													
 													

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { HeaderRecordActions, RecordAttributeItem } from "./../Shared";
+import { HeaderRecordActions, RecordAttributeItem } from "../Shared";
 import { RecordHeading } from "../RecordHeadingTypes";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { convertHtmlEntites } from "../../../../util/util";
@@ -22,7 +22,7 @@ import {
 
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-import "./GWASDatasetRecordHeading.scss";
+import "./TrackRecordHeading.scss";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
