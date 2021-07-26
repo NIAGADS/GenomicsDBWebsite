@@ -1,0 +1,14 @@
+displayName: Free text Site Search
+
+get: 
+    description: > 
+        free text search against gene identifiers and datasets / coming soon -- search against gene annotations and variant catalogs
+    queryParameters:
+        term: 
+            description: term to search / NOTE: does not support wild cards at this time
+            example: APOE
+    responses:
+        200:
+            body:
+                application/json:
+                    example: !include examples/apoe.json

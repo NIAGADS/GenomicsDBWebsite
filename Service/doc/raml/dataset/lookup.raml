@@ -1,0 +1,15 @@
+displayName: NIAGADS Accession Lookup
+
+get: 
+    description: > 
+        find data tracks for a specific NIAGADS Accession
+    queryParameters:
+        accession: 
+            description: NIAGADS accession 
+            example: NG00027
+            
+    responses:
+        200:
+            body:
+                application/json:
+                    example: !include examples/NG00027.json

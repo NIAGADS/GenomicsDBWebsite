@@ -1,0 +1,32 @@
+displayName: Variant LD Window
+
+
+get: 
+    description: > 
+        return span of variant LD block
+    queryParameters:
+        id: 
+            displayName: variant
+            description: variant identifier
+            examples: rs6656401 or 19:45411941:T:C
+        population: 
+            displayName: 1000Genomes population
+            required: false
+            description: unique ID for the population
+            example: EUR, SAS, EAS, AMR, AFR
+            default: EUR
+        minRsq: 
+            displayName: minimum r-squared
+            required: false
+            description: only consider variants whose linkage is supported by an r-squared greater than or equal to this value
+            default: 0.05
+        minMaf: 
+            displayName: minimum minor allele frequency
+            required: false
+            description: only consider linked variants whose minor allele frequency is greater than or equal to this value
+            default: 0.0
+    responses:
+        200:
+            body:
+                application/json:
+                    example: {}

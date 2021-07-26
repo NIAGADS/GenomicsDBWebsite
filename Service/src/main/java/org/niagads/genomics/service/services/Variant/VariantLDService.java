@@ -34,7 +34,7 @@ import org.json.JSONObject;
 public class VariantLDService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLDService.class);
 
-    private static final String VARIANT_PARAM = "ids"; 
+    private static final String VARIANT_PARAM = "id"; 
     private static final String POPULATION_PARAM = "population";
     private static final String DEFAULT_POPULATION = "EUR";
 

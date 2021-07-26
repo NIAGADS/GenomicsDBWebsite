@@ -1,0 +1,143 @@
+{
+    "datasets": [
+      {
+        "name": "ADGC LOAD: Stage 1",
+        "phenotypes": [
+          {
+            "diagnosis": "late onset Alzheimer's disease"
+          },
+          {
+            "full_list": "late onset Alzheimer's disease"
+          },
+          {
+            "phenotype_list": "late onset Alzheimer's disease"
+          }
+        ],
+        "description": "late-onset Alzheimer's disease; ADGC discovery stage 1",
+        "dataset_track_identifier": "NG00027_STAGE1"
+      },
+      {
+        "name": "ADGC LOAD: Adjusted Stage 2",
+        "phenotypes": [
+          {
+            "diagnosis": "late onset Alzheimer's disease"
+          },
+          {
+            "covariate specification": "age"
+          },
+          {
+            "covariate specification": "sex"
+          },
+          {
+            "covariate specification": "APOε4 carrier status or allele number"
+          },
+          {
+            "covariate_list": "age, sex, and APOE4 number"
+          },
+          {
+            "full_list": "late onset Alzheimer's disease//age//sex//APOε4 carrier status or allele number//age, sex, and APOE4 number"
+          },
+          {
+            "phenotype_list": "late onset Alzheimer's disease"
+          }
+        ],
+        "description": "late-onset Alzheimer's disease; ADGC replication stage 2; adjusted for age, sex, and APOE4 number",
+        "dataset_track_identifier": "NG00027_ADJ_STAGE2"
+      },
+      {
+        "name": "ADGC LOAD: Stages 1 and 2",
+        "phenotypes": [
+          {
+            "diagnosis": "late onset Alzheimer's disease"
+          },
+          {
+            "full_list": "late onset Alzheimer's disease"
+          },
+          {
+            "phenotype_list": "late onset Alzheimer's disease"
+          }
+        ],
+        "description": "late-onset Alzheimer's disease; ADGC discovery and replication stages (1 and 2, respectively)",
+        "dataset_track_identifier": "NG00027_STAGE12"
+      },
+      {
+        "name": "ADGC LOAD: Stage 2",
+        "phenotypes": [
+          {
+            "diagnosis": "late onset Alzheimer's disease"
+          },
+          {
+            "full_list": "late onset Alzheimer's disease"
+          },
+          {
+            "phenotype_list": "late onset Alzheimer's disease"
+          }
+        ],
+        "description": "late-onset Alzheimer's disease;  ADGC replication stage 2",
+        "dataset_track_identifier": "NG00027_STAGE2"
+      },
+      {
+        "name": "ADGC LOAD: Adjusted Stage 1",
+        "phenotypes": [
+          {
+            "diagnosis": "late onset Alzheimer's disease"
+          },
+          {
+            "covariate specification": "age"
+          },
+          {
+            "covariate specification": "sex"
+          },
+          {
+            "covariate specification": "APOε4 carrier status or allele number"
+          },
+          {
+            "covariate_list": "age, sex, and APOE4 number"
+          },
+          {
+            "full_list": "late onset Alzheimer's disease//age//sex//APOε4 carrier status or allele number//age, sex, and APOE4 number"
+          },
+          {
+            "phenotype_list": "late onset Alzheimer's disease"
+          }
+        ],
+        "description": "late-onset Alzheimer's disease; ADGC discovery stage 1 dataset; adjusted for age, sex, and APOE4 number",
+        "dataset_track_identifier": "NG00027_ADJ_STAGE1"
+      },
+      {
+        "name": "ADGC LOAD: Adjusted Stages 1 and 2",
+        "phenotypes": [
+          {
+            "diagnosis": "late onset Alzheimer's disease"
+          },
+          {
+            "covariate specification": "age"
+          },
+          {
+            "covariate specification": "sex"
+          },
+          {
+            "covariate specification": "APOε4 carrier status or allele number"
+          },
+          {
+            "covariate_list": "age, sex, and APOE4 number"
+          },
+          {
+            "full_list": "late onset Alzheimer's disease//age//sex//APOε4 carrier status or allele number//age, sex, and APOE4 number"
+          },
+          {
+            "phenotype_list": "late onset Alzheimer's disease"
+          }
+        ],
+        "description": "late-onset Alzheimer's disease; ADGC discovery and replication stages (1 and 2, respectively); adjusted for age, sex, and APOE4 number",
+        "dataset_track_identifier": "NG00027_ADJ_STAGE12"
+      }
+    ],
+    "accession": {
+      "name": "ADGC LOAD",
+      "source": "https://www.niagads.org/datasets/NG00027",
+      "accession": "NG00027",
+      "attribution": "Naj et al. 2011",
+      "description": "Summary statistics from a multi-stage Alzheimer's Disease Genetics Consortium (ADGC) GWAS study of late-onset Alzheimer's disease (LOAD)."
+    }
+  }

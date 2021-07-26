@@ -23,8 +23,7 @@ import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
 /**
- * performs LD expansion on one or more variants; expects metaseq_ids, record_pk, or rsids
- * provides no filter on MAF or r2 at this time
+ * returns summary statistics in which provided variants have a hit
  * @author ega
  */
 

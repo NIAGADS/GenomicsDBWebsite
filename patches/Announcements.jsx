@@ -66,7 +66,7 @@ const siteAnnouncements = [
   {
     id: "live-beta",
     renderDisplay: (props) => {
-      if (isGenomicHomePage(props.projectId, props.location)) {
+      if (true /*isGenomicHomePage(props.projectId, props.location)*/) {
         return (
           <div key="live-beta">
             Welcome to NIAGADS Alzheimer's GenomicsDB ({props.projectId}) <i>beta</i> where you will find the
@@ -79,14 +79,18 @@ const siteAnnouncements = [
             >
               www.niagads.org/genomics
             </a>{" "}
-            is still available (to be retired by Fall 2021). Here is a{" "}
+            is still available (to be retired by Fall 2021). Please feel free to provide us with your feedback using this {" "}
             <a
               target="_blank"
               href="https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi"
             >
-              form for sending your feedback
-            </a>{" "}
-            on the beta sites.
+              beta-site feedback form 
+            </a>.
+
+<br/>
+            <span style="color:red"><h5>We are currently experiencing technical difficulties.  Variant record pages and some REST API calls are currently unavailable.</h5></span>
+            <br/>
+            <span>We are working to resolve this as soon as possible.  Apologies for the inconvience.</span>
           </div>
         );
       }

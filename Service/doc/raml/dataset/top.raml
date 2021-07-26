@@ -1,0 +1,24 @@
+displayName: GWAS Summary Statistics Hits
+
+get: 
+    description: > 
+        queries against a summary statistics track and returns the top features (genes or variants).  Filters the data for p-values less than or equal to 0.001
+    queryParameters:
+        track: 
+            description: unique track identifier
+            example: NG00027_STAGE1
+        limit: 
+            required: false
+            description: rank hits and only return top N hits
+            example: 100
+            type: number
+        flank: 
+            required: false
+            description: flank returned feature spans by the specified number of bp / useful when using query result for visualization
+            example: 100000 
+            type: number
+    responses:
+        200:
+            body:
+                application/json:
+                    example: !include /examples/NG00027_STAGE1.json
