@@ -17,7 +17,7 @@ import {
     negLog10pFilter,
     booleanFlagFilter,
 } from "./RecordTableFilters/filters";
-import { PValueFilter, PieChartFilter } from "./RecordTableFilters";
+import { PValueSliderFilter, PieChartFilter } from "./RecordTableFilters";
 
 const filterTypes = {
     global: globalTextFilter,
@@ -109,7 +109,7 @@ const _addColumnFilters = (column: Column, filterType: string) => {
    
     if (filterType === "pvalue") {
         //@ts-ignore
-        column.Filter = PValueFilter;
+        column.Filter = PValueSliderFilter; //PValueFilter;
     }
 
     //@ts-ignore

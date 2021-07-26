@@ -194,11 +194,11 @@
 	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
 
 	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
 	</propertyList>
 
 	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
+	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
 
 	<description>
@@ -227,11 +227,11 @@
 	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="track_name" displayName="Track" type="json_text" />
 
-	
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
-	</propertyList>
 
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
+	</propertyList>
+	
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>

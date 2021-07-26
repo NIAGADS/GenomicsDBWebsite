@@ -19,7 +19,7 @@ const menuConfig: MenuElement[] = [
         title: "Genome Browser",
         target: "/visualizations/browser",
     },
-    { title: "Documentation", target: "#" }, //this could also be a dropdown with various kinds of documentation
+    { title: "API", target: "/api" }, //this could also be a dropdown with various kinds of documentation
     { title: "About", target: "#about" },
 ];
 

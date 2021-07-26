@@ -145,9 +145,10 @@
 	
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
-	<propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+	
       </table>
 
       <table name="motif_consequences" queryRef="VariantTables.MotifConsequences" displayName="Regulatory Motif Consequences">
@@ -165,9 +166,11 @@
 	<columnAttribute name="epigenomes" displayName="Epigenomes" help="ENCODE epigenomes for which this site has been experimentally predicted using ChIP-seq" type="string" />
 
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
-	<propertyList name="type">
-	  <value>default</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
       </table>
       
       <table name="intergenic_consequences" queryRef="VariantTables.IntergenicConsequences" displayName="Intergenic Consequences">
@@ -176,9 +179,10 @@
 	<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for more information" type="json_icon" />
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
-	<propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
       </table> 
 
       <!--
@@ -205,12 +209,12 @@
 	<columnAttribute name="cdna_position" displayName="cDNA Position" help="relative position of the base pair in the cDNA sequence" type="string" />
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
-	<propertyList name="type">
-	  <value>default</value>
+
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
-	<propertyList name="defaultOpen">
-	  <value>true</value>
-	</propertyList>
+
 
       </table>
 
@@ -268,9 +272,10 @@
 	<columnAttribute name="minor_allele_frequency" displayName="MAF" help="minor allele frequency in the population for the linked variant" type="percentage_bar"/>
 	<columnAttribute name="minor_allele_frequency_ld_ref" displayName="LD REF MAF" help="minor allele frequency in the population for the LD reference variant (record being browsed)" type="percentage_bar"/>
 
-	<propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
       </table>
 
       <table name="allele_frequencies" displayName="Population Frequencies" queryRef="VariantTables.AlleleFrequency">
@@ -280,9 +285,11 @@
 	<columnAttribute name="allele" internal="false" displayName="Allele" type="string" />
 	<columnAttribute name="frequency" displayName="Frequency" inReportMaker="true" type="percentage_bar"/>
 
-	<propertyList name="type">
-	  <value>default</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
 
       </table>
 
@@ -293,29 +300,22 @@
       <table name="ad_associations_from_gwas" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromGWAS">
 	<columnAttribute name="allele" displayName="Allele" type="string"/>
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-	<columnAttribute name="track_name" displayName="Track" type="json_text" />
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
+	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
 
-        <propertyList name="type">
-	  <value>chart_filter</value>
-	</propertyList>
-	<propertyList name="filter_field">
-	  <value>pvalue</value>
-	</propertyList>
-	<propertyList name="locus_zoom">
-	  <value>track_name</value>
-	</propertyList>
 
-	<propertyList name="defaultOpen">
-	  <value>true</value>
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue"}</value>
 	</propertyList>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": true, "filter": true}</value>
+	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
 		   <p>Associations for this variant to Alzheimer's disease identified in a NIAGADS GWAS summary statistics dataset.<br/>
 		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the risk-associations.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
+		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/></p>
 	  ]]>
 	</description>	
       </table>
@@ -323,26 +323,22 @@
       <table name="other_associations_from_gwas" displayName="AD-related neuropathologies and biomarkers" queryRef="VariantTables.OtherAssociationsFromGWAS">
 	<columnAttribute name="allele" displayName="Allele" type="string"/>
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-	<columnAttribute name="track_name" displayName="Track" type="json_text" />
-	<columnAttribute name="accession_link" displayName="Accession" type="json_link" />
+	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue"}</value>
+	</propertyList>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
 	
-        <propertyList name="type">
-	  <value>chart_filter</value>
-	</propertyList>
-	<propertyList name="filter_field">
-	  <value>pvalue</value>
-	</propertyList>
-
-	<propertyList name="locus_zoom">
-	  <value>track_name</value>
-	</propertyList>
-
+    
 	<description>
 	  <![CDATA[
 		   <p>Associations for this variant to an AD-related disease, biomarker, or neuropathology identified in a NIAGADS GWAS summary statistics dataset.<br/>
 		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the risk-associations.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
+		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/></p>
+
 	  ]]>
 	</description>
       </table>
@@ -359,13 +355,12 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-       	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	<propertyList name="defaultOpen">
-	  <value>true</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
+      
 	<description>
 	  <![CDATA[   
                    <p>Significant associations for this variant (or a colocated SNP) to Alzheimer's disease from curated 
@@ -388,9 +383,10 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-       	<propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
 
 	<description>
 	  <![CDATA[   

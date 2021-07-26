@@ -184,9 +184,8 @@
     <sqlQuery name="ADAssociationsFromGWAS">
       <column name="source_id"/>
       <column name="allele"/>
-      <column name="track_name"/>
+      <column name="track_name_link"/>
       <column name="pvalue"/>
-      <column name="accession_link"/>
 
       <sql>
 	<![CDATA[
@@ -194,8 +193,7 @@
 
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		 build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
-		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
+		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name_link,
 		 FROM NIAGADS.TrackAttributes ta,
 		 NIAGADS.ProtocolAppNodeCharacteristic c
 		 WHERE ta.protocol_app_node_id = c.protocol_app_node_id
@@ -218,9 +216,9 @@
     <sqlQuery name="OtherAssociationsFromGWAS">
       <column name="source_id"/>
       <column name="allele"/>
-      <column name="track_name"/>
+      <column name="track_name_link"/>
       <column name="pvalue"/>
-      <column name="accession_link"/>
+
 
       <sql>
 	<![CDATA[
@@ -228,8 +226,7 @@
 
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		 build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
-		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
+		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name_link,
 		 FROM NIAGADS.TrackAttributes ta,
 		 NIAGADS.ProtocolAppNodeCharacteristic c
 		 WHERE ta.protocol_app_node_id = c.protocol_app_node_id

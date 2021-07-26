@@ -108,6 +108,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         getTableBodyProps,
         headerGroups,
         prepareRow,
+        setFilter,
         preGlobalFilteredRows,
         setGlobalFilter,
         globalFilter,
@@ -129,6 +130,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
+  
     // Render the UI for your table
     return (
         <>
