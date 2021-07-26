@@ -86,9 +86,7 @@ const siteAnnouncements = [
             >
               beta-site feedback form 
             </a>.
-
-            <span style={{color:"red"}}><h5>We are currently experiencing technical difficulties.  Variant record pages and some REST API calls are currently unavailable.  
-              We are working to resolve this as soon as possible.  Our apologies for the inconvenience.</h5></span>
+           
           </div>
         );
       }
