@@ -116,11 +116,11 @@
 	   <columnAttribute name="msc_is_coding_flag" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
 
 	   <propertyList name="flags">
-	     <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
+	     <value>{"defaultOpen": true, "filter": true}</value>
 	   </propertyList>
 	   
 	   <propertyList name="column_filter">
-	     <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "msc_impact": "pie", "msc_is_coding_flag":"pie", "msc_impact": "pie"}</value>
+	     <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "most_severe_consequence":"pie",  "msc_impact": "pie", "msc_is_coding_flag":"pie", "msc_impact": "pie"}</value>
 	</propertyList>
 	
 	

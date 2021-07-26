@@ -20,9 +20,11 @@ import {
     UnpaddedListItem,
 } from "../../../Shared";
 
+import { _externalUrls } from "../../../../data/_externalUrls";
+
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-import "./TrackRecordHeading.scss";
+import "./GWASDatasetRecordHeading.scss";
 
 const SEARCH_PATH = "../../search/gwas_summary/filter";
 const PVALUE_PARAM_NAME = "param.pvalue";
@@ -146,7 +148,7 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
 
     return (
         <Grid container style={{ marginLeft: "10px" }}>
-            <Grid item container direction="row">
+            <Grid item container direction="row" spacing={5}>
                 <Grid item container direction="column" sm={3} xs={12}>
                     {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
                     <Subheading style={{ paddingBottom: 0 }}>{convertHtmlEntites(record.attributes.name.toString())}</Subheading>
@@ -154,8 +156,8 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
                     <List>
                         <UnpaddedListItem>
                             <RecordAttributeItem
-                                label="Related datasets:"
-                                attribute={resolveJsonInput(record.attributes.accession_link.toString())}
+                                label="Accession:"
+                                attribute={record.attributes.niagads_accession.toString()}
                             />
                         </UnpaddedListItem>
                         <UnpaddedListItem>
@@ -167,18 +169,18 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
                             <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
                         </Subheading>
                     )}
-                    <GWASDatasetSearch
+                   {/* <GWASDatasetSearch
                         accession={record.attributes.niagads_accession.toString()}
                         record={record.id[0].value}
-                    ></GWASDatasetSearch>
+                   ></GWASDatasetSearch> */}
                 </Grid>
-                <Grid item>
-                    <DatasetHeaderImage src={`${imgPrefix}-cmanhattan.png`} type={"circular-manhattan"} />
+                <Grid item sm={6} xs={12}>
+                    {/*<DatasetHeaderImage src={`${imgPrefix}-cmanhattan.png`} type={"circular-manhattan"} />*/}
                     <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
                 </Grid>
             </Grid>
 
-            <Grid item container direction="row">
+            {/*<Grid item container direction="row">
                 <CollapsibleSection
                     id="locuszoom-section"
                     className="wdk-RecordTableContainer"
@@ -197,7 +199,7 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
                 >
                     <GWASDatasetLZPlot dataset={record.id[0].value} />
                 </CollapsibleSection>
-            </Grid>
+                </Grid> */}
         </Grid>
     );
 };
