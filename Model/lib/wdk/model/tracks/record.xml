@@ -120,7 +120,7 @@
 	   </propertyList>
 	   
 	   <propertyList name="column_filter">
-	     <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "most_severe_consequence":"pie",  "msc_impact": "pie", "msc_is_coding_flag":"pie", "msc_impact": "pie"}</value>
+	     <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie",  "msc_impact": "pie", "msc_is_coding_flag":"pie", "msc_impact": "pie"}</value>
 	</propertyList>
 	
 	

@@ -72,7 +72,7 @@
 		 WHEN ta.name LIKE '%ADGC%' THEN 'ADGC'
 		 ELSE NULL END AS consortium,
 		 ta.name,
-		 build_link_attribute(ta.name, '../gwas_summary/', ta.track) AS dataset_record_link,
+		 build_link_attribute(ta.name, '../track/', ta.track) AS dataset_record_link,
 		 split_part(ta.description, '; adjusted', 1) AS description, -- remove covariates from single variant study descriptions
 		 ta.attribution, ta.dataset_accession, 
 		 CASE WHEN n.characteristic IS NULL THEN 'Alzheimer''s disease/late onset AD (AD/LOAD)' ELSE n.characteristic END AS neuropathology,

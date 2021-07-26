@@ -16,6 +16,7 @@ import {
     globalTextFilter,
     negLog10pFilter,
     booleanFlagFilter,
+    includesFilter as recordIncludesFilter
 } from "./RecordTableFilters/filters";
 import { PValueSliderFilter, PieChartFilter } from "./RecordTableFilters";
 
@@ -24,6 +25,7 @@ const filterTypes = {
     fuzzyText: fuzzyRecordTableTextFilter,
     pvalue: negLog10pFilter,
     booleanPie: booleanFlagFilter,
+    pie: recordIncludesFilter
 };
 
 const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
