@@ -16,6 +16,7 @@ export interface CustomTableProps {
     filterTypes?: any; // json object of filter types
     className?: string;
     showAdvancedFilter?: boolean;
+    showHideColumns?: boolean;
 }
 
 

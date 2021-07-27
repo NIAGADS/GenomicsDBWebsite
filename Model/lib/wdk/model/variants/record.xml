@@ -148,6 +148,11 @@
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
+	
+	<propertyList name="hidden_columns">
+	  <value>rank</value>
+	</propertyList>
 	
       </table>
 
@@ -171,6 +176,10 @@
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
+	<propertyList name="hidden_columns">
+	  <value>strand,rank</value>
+	</propertyList>
+
       </table>
       
       <table name="intergenic_consequences" queryRef="VariantTables.IntergenicConsequences" displayName="Intergenic Consequences">
@@ -183,6 +192,10 @@
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
+	<propertyList name="hidden_columns">
+	  <value>rank</value>
+	</propertyList>
+	
       </table> 
 
       <!--
@@ -210,9 +223,12 @@
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
 
-
 	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter": true}</value>
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>is_canonical_transcript,exon,distance,strand,cds_position,cdna_position,protein_position,rank</value>
 	</propertyList>
 
 

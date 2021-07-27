@@ -34,6 +34,7 @@ import { FilterChipBar } from "./TableFilters/FilterChipBar";
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
 
 import { useStyles } from "./TableStyles";
+import TableToolbar from "./TableToolbar";
 
 const hooks = [
     //useColumnOrder,
@@ -55,7 +56,7 @@ const defaultFilterTypes = {
     greater: greaterThanFilter,
     select: includesFilter,
     pie: includesFilter,
-    booleanPie: includesFilter
+    booleanPie: includesFilter,
 };
 
 // fix to force table to always take full width of container
@@ -82,6 +83,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     className,
     canFilter,
     showAdvancedFilter,
+    showHideColumns,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -92,8 +94,14 @@ const CustomTable: React.FC<CustomTableProps> = ({
         {
             columns,
             data,
-            // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
-            initialState: { pageIndex: 0, pageSize: 10 },
+            initialState: {
+                // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
+                pageIndex: 0,
+                pageSize: 10,
+                hiddenColumns: columns
+                    .filter((col: any) => col.show === false)
+                    .map((col) => col.id || col.accessor) as any,
+            },
             defaultCanFilter: false,
             //@ts-ignore
             defaultColumn: _defaultColumn,
@@ -119,7 +127,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const debouncedState = useAsyncDebounce(state, 500);
 
     useEffect(() => {
-        const { sortBy, filters, pageSize, columnResizing, hiddenColumns, globalFilter } = debouncedState;
+        const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
         const val = {
             sortBy,
             filters,
@@ -130,7 +138,6 @@ const CustomTable: React.FC<CustomTableProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
-  
     // Render the UI for your table
     return (
         <>
@@ -145,11 +152,17 @@ const CustomTable: React.FC<CustomTableProps> = ({
                                     setGlobalFilter={setGlobalFilter}
                                 />
                             </Grid>
-                            {showAdvancedFilter && (
+                            {/*showAdvancedFilter && (
                                 <Grid item xs={6}>
                                     <FilterPanel instance={instance} />
                                 </Grid>
-                            )}
+                            )*/}
+                            <TableToolbar
+                                instance={instance}
+                                showAdvancedFilter={showAdvancedFilter}
+                                showHideColumns={showHideColumns}
+                                canFilter={canFilter}
+                            />
                         </Grid>
                     )}
                     <TablePagination instance={instance} />
@@ -157,7 +170,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
 
                 <Grid item>
                     {/*<TableToolbar instance={instance}/>*/}
-                    {(canFilter && showAdvancedFilter) && <FilterChipBar instance={instance} />}
+                    {canFilter && showAdvancedFilter && <FilterChipBar instance={instance} />}
 
                     <MaUTable {...getTableProps()} className={className}>
                         <TableHead>

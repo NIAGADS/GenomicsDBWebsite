@@ -16,7 +16,7 @@ import {
     globalTextFilter,
     negLog10pFilter,
     booleanFlagFilter,
-    includesFilter as recordIncludesFilter
+    includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
 import { PValueSliderFilter, PieChartFilter } from "./RecordTableFilters";
 
@@ -25,24 +25,30 @@ const filterTypes = {
     fuzzyText: fuzzyRecordTableTextFilter,
     pvalue: negLog10pFilter,
     booleanPie: booleanFlagFilter,
-    pie: recordIncludesFilter
+    pie: recordIncludesFilter,
 };
 
 const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
     const { attributes } = table;
 
-    const columns: Column<{}>[] = useMemo(() => _buildColumns(table, data), [table]);
+    let defaultHiddenColumns = get(table, "properties.hidden_columns[0]");
+    defaultHiddenColumns = defaultHiddenColumns && defaultHiddenColumns.split(',');
+    const hasHiddenColumns = defaultHiddenColumns ? true : false;
+
+    const columns: Column<{}>[] = useMemo(() => _buildColumns(table, data, defaultHiddenColumns), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
 
     const canFilter = get(JSON.parse(get(table, "properties.flags[0]", '{"filter":true}')), "filter", true); // default to true if missing
-
     const hasColumnFilters = "column_filter" in table.properties;
+
 
     if (data.length === 0 || columns.length === 0) {
         return (
-          <p><em>No data available</em></p>
+            <p>
+                <em>No data available</em>
+            </p>
         );
-      }
+    }
 
     return (
         <CustomTable
@@ -52,11 +58,12 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
             filterTypes={filterTypes}
             canFilter={canFilter}
             showAdvancedFilter={hasColumnFilters}
+            showHideColumns={hasHiddenColumns}
         />
     );
 };
 
-const _buildColumns = (table: TableField, data: TableValue) => {
+const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
     if (!data) {
         return [];
     }
@@ -89,14 +96,21 @@ const _buildColumns = (table: TableField, data: TableValue) => {
                     column.sortType = flagColumnSort;
                     //@ts-ignore
                     column.disableGlobalFilter = true;
-                    if (filterType && filterType === 'pie') { filterType = 'booleanPie'}
+                    if (filterType && filterType === "pie") {
+                        filterType = "booleanPie";
+                    }
                 }
 
-               
                 if (filterType) {
                     //@ts-ignore
                     column = _addColumnFilters(column, filterType);
                 }
+
+                if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
+                    //@ts-ignore
+                    column.show = false
+                }
+
                 return column;
             })
             .sort((c1, c2) => _indexSort(c1, c2, attributes));
@@ -114,7 +128,7 @@ const _addColumnFilters = (column: Column, filterType: string) => {
         //@ts-ignore
         column.Filter = PieChartFilter;
     }
-   
+
     if (filterType === "pvalue") {
         //@ts-ignore
         column.Filter = PValueSliderFilter; //PValueFilter;
