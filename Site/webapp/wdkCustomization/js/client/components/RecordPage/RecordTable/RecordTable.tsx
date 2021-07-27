@@ -38,6 +38,12 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
 
     const hasColumnFilters = "column_filter" in table.properties;
 
+    if (data.length === 0 || columns.length === 0) {
+        return (
+          <p><em>No data available</em></p>
+        );
+      }
+
     return (
         <CustomTable
             className={table.properties.canShrink ? "shrink" : ""}
