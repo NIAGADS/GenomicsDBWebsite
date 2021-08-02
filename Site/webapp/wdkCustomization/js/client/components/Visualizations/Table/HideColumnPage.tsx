@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Popover, Typography, createStyles, makeStyles } from '@material-ui/core'
+import { Checkbox, FormControlLabel, Popover, Modal, Typography, createStyles, makeStyles } from '@material-ui/core'
 import React, { ReactElement } from 'react'
 import { TableInstance } from 'react-table'
 

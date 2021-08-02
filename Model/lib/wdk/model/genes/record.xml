@@ -268,6 +268,14 @@
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
+	<propertyList name="column_filter">
+	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
+	</propertyList>
+
 	
 	<description>
 	  <![CDATA[    
@@ -298,6 +306,14 @@
 
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="column_filter">
+	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
 	</propertyList>
 
 	<description>

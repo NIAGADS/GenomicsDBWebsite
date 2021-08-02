@@ -2,13 +2,16 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import { countBy, merge } from "lodash";
+
 import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
-import { makeStyles } from "@material-ui/core/styles";
+import InputBase from "@material-ui/core/InputBase";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
+import IconButton from "@material-ui/core/InputLabel";
+import SearchIcon from "@material-ui/icons/Search";
 
 import { Options } from "highcharts";
 import HighchartsPlot from "../../Highcharts/HighchartsPlot";
@@ -21,6 +24,7 @@ import {
 import { _color_blind_friendly_palettes as PALETTES } from "../../palettes";
 
 import { toProperCase } from "../../../../util/util";
+import { useFilterPanelStyles } from "./FilterPanelStyles";
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
 export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
@@ -30,17 +34,23 @@ export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFil
         setGlobalFilter(value || undefined);
     }, 200);
 
+    const classes = useFilterPanelStyles({});
+
     return (
-        <TextField
-            id="outlined-search"
-            label="Search Table"
-            type="search"
-            variant="outlined"
-            onChange={(e) => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-            }}
-        />
+        <>
+            <InputBase
+                className={classes.input}
+                placeholder="Search table"
+                inputProps={{ "aria-label": "search table" }}
+                onChange={(e) => {
+                    setValue(e.target.value);
+                    onChange(e.target.value);
+                }}
+            />
+            <IconButton disabled={true} className={classes.iconButton} aria-label="search">
+                <SearchIcon />
+            </IconButton>
+        </>
     );
 }
 
@@ -59,7 +69,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         let plotOptions: Options = {
             tooltip: {
                 pointFormat: "",
-            }
+            },
         };
 
         plotOptions = merge(plotOptions, addTitle(toProperCase(id), { y: 40 }));

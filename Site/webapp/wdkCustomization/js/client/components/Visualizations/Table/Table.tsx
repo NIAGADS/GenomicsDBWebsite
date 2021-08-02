@@ -10,6 +10,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
 
+import VerticalTabContainer from '../../Tabs/VerticalTabContainer';
+
 import {
     useTable,
     usePagination,
@@ -138,40 +140,42 @@ const CustomTable: React.FC<CustomTableProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
-    // Render the UI for your table
+    let tabs = ['Data'];
+    if (showAdvancedFilter) {
+        tabs.push('AdvancedFilter');
+    }
+    if (showHideColumns) {
+        tabs.push('Select Columns');
+    }
+
+    // Render the UI for the table
     return (
         <>
+        <VerticalTabContainer labels={tabs}>
+
+        </VerticalTabContainer>
+
             <Grid container direction="column">
+                <Grid item alignContent='flex-start'>
+                    <TablePagination instance={instance} />
+                </Grid>
                 <Grid item>
                     {canFilter && (
-                        <Grid container direction="row">
-                            <Grid item xs={3}>
-                                <GlobalFilter
-                                    preGlobalFilteredRows={preGlobalFilteredRows}
-                                    globalFilter={globalFilter}
-                                    setGlobalFilter={setGlobalFilter}
+                        <Grid container direction="row">           
+                            <Grid item xs={12} sm={6} alignContent="flex-end">
+                                <TableToolbar
+                                    instance={instance}
+                                    showAdvancedFilter={showAdvancedFilter}
+                                    showHideColumns={showHideColumns}
+                                    canFilter={canFilter}
                                 />
                             </Grid>
-                            {/*showAdvancedFilter && (
-                                <Grid item xs={6}>
-                                    <FilterPanel instance={instance} />
-                                </Grid>
-                            )*/}
-                            <TableToolbar
-                                instance={instance}
-                                showAdvancedFilter={showAdvancedFilter}
-                                showHideColumns={showHideColumns}
-                                canFilter={canFilter}
-                            />
                         </Grid>
                     )}
-                    <TablePagination instance={instance} />
                 </Grid>
 
                 <Grid item>
-                    {/*<TableToolbar instance={instance}/>*/}
                     {canFilter && showAdvancedFilter && <FilterChipBar instance={instance} />}
-
                     <MaUTable {...getTableProps()} className={className}>
                         <TableHead>
                             {headerGroups.map((headerGroup: HeaderGroup<object>) => (

@@ -89,10 +89,8 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
     return (
         <div className={classes.root}>
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1c-content" id="panel1c-header">
-                    <div className={classes.column}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1c-content" id="panel1c-header">     
                         <Typography className={classes.heading}>Advanced Filter</Typography>
-                    </div>
                 </AccordionSummary>
 
                 <AccordionDetails className={classes.details}>

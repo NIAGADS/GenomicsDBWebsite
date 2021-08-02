@@ -1,132 +1,63 @@
 // modified from https://github.com/ggascoigne/react-table-example
 // @xts-nocheck -- react-table type issues / should be fixed in v8
-import { Button, IconButton, Theme, Toolbar, Tooltip, createStyles, makeStyles } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import CreateIcon from "@material-ui/icons/CreateOutlined";
-import DeleteIcon from "@material-ui/icons/DeleteOutline";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import ViewColumnsIcon from "@material-ui/icons/ViewColumn";
-import classnames from "classnames";
 import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from "react";
+
+import Paper from "@material-ui/core/Paper";
+
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import SearchIcon from "@material-ui/icons/Search";
+import ViewColumnsIcon from "@material-ui/icons/ViewColumn";
+import FilterListIcon from "@material-ui/icons/FilterList";
+
 import { TableInstance } from "react-table";
 
 import { TableMouseEventHandler } from "./TableTypes";
 import { HideColumnPage } from "./HideColumnPage";
 import FilterPanel from "./TableFilters/FilterPanel";
-
-export const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        toolbar: {
-            display: "flex",
-            justifyContent: "space-between",
-        },
-        leftButtons: {},
-        rightButtons: {},
-        leftIcons: {
-            "&:first-of-type": {
-                marginLeft: -12,
-            },
-        },
-        rightIcons: {
-            padding: 12,
-            marginTop: "-6px",
-            width: 48,
-            height: 48,
-            "&:last-of-type": {
-                marginRight: -12,
-            },
-        },
-    })
-);
+import { GlobalFilter } from "./TableFilters/TableFilters";
+import { useFilterPanelStyles } from "./TableFilters/FilterPanelStyles";
 
 type InstanceActionButton = {
     instance: TableInstance;
-    icon?: JSX.Element;
-    onClick: TableMouseEventHandler;
-    enabled?: (instance: TableInstance) => boolean;
-    label: string;
-    variant?: "right" | "left";
+    visible?: boolean;
+    onClick?: any;
 };
 
 type ActionButton = {
-    icon?: JSX.Element;
-    onClick: MouseEventHandler;
-    enabled?: boolean;
-    label: string;
-    variant?: "right" | "left";
+    visible?: boolean;
+    onClick?: MouseEventHandler;
+    className: string;
 };
 
-export const InstanceLabeledActionButton = ({
-    instance,
-    icon,
-    onClick,
-    label,
-    enabled = () => true,
-}: InstanceActionButton): ReactElement => (
-    <Button variant="contained" color="primary" onClick={onClick(instance)} disabled={!enabled(instance)}>
-        {icon}
-        {label}
-    </Button>
-);
-
-export const LabeledActionButton = ({ icon, onClick, label, enabled = true }: ActionButton): ReactElement => (
-    <Button variant="contained" color="primary" onClick={onClick} disabled={!enabled}>
-        {icon}
-        {label}
-    </Button>
-);
-
-export const InstanceSmallIconActionButton = ({
-    instance,
-    icon,
-    onClick,
-    label,
-    enabled = () => true,
-    variant,
-}: InstanceActionButton): ReactElement => {
-    const classes = useStyles({});
-    return (
-        <Tooltip title={label} aria-label={label}>
-            <span>
-                <IconButton
-                    className={classnames({
-                        [classes.rightIcons]: variant === "right",
-                        [classes.leftIcons]: variant === "left",
-                    })}
-                    onClick={onClick(instance)}
-                    disabled={!enabled(instance)}
-                >
-                    {icon}
+const AddRemoveColumnButton = ({ instance, visible, onClick }: InstanceActionButton): ReactElement => {
+    const classes = useFilterPanelStyles();
+    return visible ? (
+        <>
+            <Divider className={classes.divider} orientation="vertical" />
+            <Tooltip title="Add or remove columns" aria-label="Add or remove columns">
+                <IconButton className={classes.iconButton} aria-label="add-remove-columns" onClick={onClick(instance)}>
+                    <ViewColumnsIcon />
                 </IconButton>
-            </span>
-        </Tooltip>
-    );
+            </Tooltip>
+        </>
+    ) : null;
+    return <></>;
 };
 
-export const SmallIconActionButton = ({
-    icon,
-    onClick,
-    label,
-    enabled = true,
-    variant,
-}: ActionButton): ReactElement => {
-    const classes = useStyles({});
-    return (
-        <Tooltip title={label} aria-label={label}>
-            <span>
-                <IconButton
-                    className={classnames({
-                        [classes.rightIcons]: variant === "right",
-                        [classes.leftIcons]: variant === "left",
-                    })}
-                    onClick={onClick}
-                    disabled={!enabled}
-                >
-                    {icon}
+const ToggleAdvancedFiltersButton = ({ visible, onClick }: ActionButton): ReactElement => {
+    const classes = useFilterPanelStyles();
+    return visible ? (
+        <>
+            <Divider className={classes.divider} orientation="vertical" />
+            <Tooltip title="Toggle advanced filter panel" aria-label="Toggle advanced filter panel">
+                <IconButton className={classes.iconButton} aria-label="advanced-filters" color="primary">
+                    <FilterListIcon />
                 </IconButton>
-            </span>
-        </Tooltip>
-    );
+            </Tooltip>
+        </>
+    ) : null;
 };
 
 type TableToolbarProps = {
@@ -136,18 +67,18 @@ type TableToolbarProps = {
     canFilter: boolean;
 };
 
-function TableToolbar({
+export default function TableToolbar({
     instance,
     showAdvancedFilter,
     showHideColumns,
     canFilter,
 }: PropsWithChildren<TableToolbarProps>): ReactElement | null {
-    const { columns } = instance;
-    const classes = useStyles();
+    //@ts-ignore
+    const { columns, preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
+    const classes = useFilterPanelStyles();
     const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
     const [columnsOpen, setColumnsOpen] = useState(false);
     const [filterOpen, setFilterOpen] = useState(false);
-    const hideableColumns = columns.filter((column) => !(column.id === "_selector"));
 
     const handleColumnsClick = useCallback(
         (event: MouseEvent) => {
@@ -163,23 +94,24 @@ function TableToolbar({
     }, []);
 
     return (
-        <Toolbar className={classes.toolbar}>
-            <div className={classes.leftButtons}></div>
-            <div className={classes.rightButtons}>
-                {(canFilter && showAdvancedFilter)  && <FilterPanel instance={instance} />}
-
-                { showHideColumns && <HideColumnPage instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />}
-                { (showHideColumns && hideableColumns.length) > 1 && (
-                    <SmallIconActionButton
-                        icon={<ViewColumnsIcon />}
-                        onClick={handleColumnsClick}
-                        label="Add / Remove Columns"
-                        variant="right"
-                    />
+        <>
+            <Paper component="form" className={classes.root}>
+                {canFilter && (
+                    <>
+                        <GlobalFilter
+                            preGlobalFilteredRows={preGlobalFilteredRows}
+                            globalFilter={globalFilter}
+                            setGlobalFilter={setGlobalFilter}
+                        />
+                        <ToggleAdvancedFiltersButton className={classes.iconButton} visible={showAdvancedFilter} />
+                    </>
                 )}
-            </div>
-        </Toolbar>
+
+                <AddRemoveColumnButton visible={showHideColumns} instance={instance} onClick={handleColumnsClick} />
+            </Paper>
+            {showHideColumns && (
+                <HideColumnPage instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
+            )}
+        </>
     );
 }
-
-export default TableToolbar;
