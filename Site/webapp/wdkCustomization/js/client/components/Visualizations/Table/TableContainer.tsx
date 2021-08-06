@@ -26,7 +26,7 @@ import TablePagination from "./TablePagination";
 import Table from "./Table";
 
 import FilterPanel from "./TableFilters/FilterPanel";
-import { HideColumnPage } from "./HideColumnPage";
+import { TableColumnsPanel } from "./TableColumnsPanel";
 
 import { FilterChipBar } from "./TableFilters/FilterChipBar";
 
@@ -66,6 +66,7 @@ const defaultFilterTypes = {
     select: includesFilter,
     pie: includesFilter,
     booleanPie: includesFilter,
+    pvalue: greaterThanFilter
 };
 
 // fix to force table to always take full width of container
@@ -146,9 +147,9 @@ const TableContainer: React.FC<TableContainerProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
-    let tabs = ["Data"];
+    let tabs = ["Data Table"];
     if (showAdvancedFilter) {
-        tabs.push("AdvancedFilter");
+        tabs.push("Advanced Filter");
     }
     if (showHideColumns) {
         tabs.push("Select Columns");
@@ -180,7 +181,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                             instance={instance}
                         />
                         {(canFilter && showAdvancedFilter) && <FilterPanel instance={instance}/>}
-                        {/* showHideColumns && <HideColumnPage instance={instance}/> */}
+                        {showHideColumns && <TableColumnsPanel instance={instance}/>}
                     </VerticalTabContainer>
                 </Grid>
             </Grid>

@@ -82,30 +82,36 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
     }, [setAllFilters]);
 
     return (
-        <Box>
-            <Grid container direction="row">
-                <Grid item>
-                    <Button color="primary" onClick={resetFilters}>
-                        Clear Advanced Filters
-                    </Button>
-                </Grid>
-                <Grid item>
-                    <form>
-                        <Grid container direction="column">
-                            {/* pvalue */}
-                            {/*allColumns
-                                //@ts-ignore
-                                .filter((item) => item.canFilter && item.filter === "pvalue")
-                                .map((column) => (
-                                    <div key={column.id} className={classes.cell}>
-                                        {column.render("Filter")}
-                                    </div>
-                                ))*/}
+        <Grid container direction="column" style={{ paddingLeft: "20px" }}>
+            <Grid container item alignContent="flex-end">
+                <Button variant="contained" color="primary" onClick={resetFilters}>
+                    Clear Advanced Filters
+                </Button>
+            </Grid>
+            <Grid item>
+                <form>
+                    <Grid container item direction="column">
+                        {/* render pvalue filter */}
+                        <Grid item md={6}>
+                            <div className={classes.grid}>
+                                {allColumns
+                                    .filter(
+                                        //@ts-ignore
+                                        (item) => item.canFilter && item.filter && item.filter.toLowerCase() === "pvalue"                                   
+                                    )
+                                    .map((column) => (
+                                        <div key={column.id} className={classes.cell}>
+                                            {column.render("Filter")}
+                                        </div>
+                                    ))}
+                            </div>
+                        </Grid>
+
+                        <Grid container item direction="row" spacing={4}>
                             {/* render pie charts first ; includes to handle special cases */}
-                            <Grid item>
+                            <Grid item md={6}>
                                 <div className={classes.grid}>
                                     {allColumns
-
                                         .filter(
                                             //@ts-ignore
                                             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pie")
@@ -131,13 +137,13 @@ function FilterPanel({ instance }: FilterPageProps): ReactElement {
                                 </div>
                             </Grid>
                         </Grid>
-                        <Button className={classes.hidden} type={"submit"}>
-                            &nbsp;
-                        </Button>
-                    </form>
-                </Grid>
+                    </Grid>
+                    <Button className={classes.hidden} type={"submit"}>
+                        &nbsp;
+                    </Button>
+                </form>
             </Grid>
-        </Box>
+        </Grid>
     );
 }
 

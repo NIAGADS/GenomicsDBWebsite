@@ -86,6 +86,9 @@
 	<propertyList name="flags">
 	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
+	<propertyList name="hidden_columns">
+	  <value>description,covariates,biomarker,genotype</value>
+	</propertyList>
       </table>
 
       
@@ -119,7 +122,7 @@
 	</propertyList>
 
 	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter":true}</value>
+	  <value>{"defaultOpen": false, "filter":true}</value>
 	</propertyList>
       </table>
 
@@ -151,7 +154,7 @@
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
 
 	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter":false}</value>
+	  <value>{"defaultOpen": false, "filter":false}</value>
 	</propertyList>
       </table>
 
