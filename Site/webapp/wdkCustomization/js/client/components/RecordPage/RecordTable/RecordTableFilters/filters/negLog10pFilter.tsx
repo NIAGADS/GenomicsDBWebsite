@@ -1,5 +1,14 @@
 import { FilterValue, IdType, Row } from 'react-table'
 
+export function negLog10p (displayP: string) {
+  let exponent = parseInt(displayP.split("e-")[1]);
+  if (exponent > 300) { return exponent; } // return exponent as approximate value
+
+  return (-1 * Math.log10(parseFloat(displayP)));
+}
+
+
+
 // -log10 value filter
 export function negLog10pFilter<T extends Record<string, unknown>>(
   rows: Array<Row<T>>,
@@ -7,9 +16,9 @@ export function negLog10pFilter<T extends Record<string, unknown>>(
   filterValue: FilterValue
 ): Array<Row<T>> {
     return rows.filter((row) => {
-        const rowValue = +row.values[id];
-        let logValue = -1 * Math.log10(rowValue);
-        return logValue >= filterValue;
+        const rowValue = row.values[id];
+        let logValue = negLog10p(rowValue);
+        return logValue >= negLog10p(filterValue);
     });
 }
 

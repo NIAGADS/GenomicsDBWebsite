@@ -20,6 +20,8 @@ import {
 } from "./RecordTableFilters/filters";
 import { PValueSliderFilter, PieChartFilter } from "./RecordTableFilters";
 
+const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
+
 const filterTypes = {
     global: globalTextFilter,
     fuzzyText: fuzzyRecordTableTextFilter,
@@ -40,7 +42,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
 
     const canFilter = get(JSON.parse(get(table, "properties.flags[0]", '{"filter":true}')), "filter", true); // default to true if missing
     const hasColumnFilters = "column_filter" in table.properties;
-
+    const initialFilters = _setInitialFilters(table);
 
     if (data.length === 0 || columns.length === 0) {
         return (
@@ -59,9 +61,18 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
             canFilter={canFilter}
             showAdvancedFilter={hasColumnFilters}
             showHideColumns={hasHiddenColumns}
+            initialFilters={initialFilters}
         />
     );
 };
+
+const _setInitialFilters = (table:TableField) => {
+    let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;  
+    if ('pvalue' in columnFilters) {
+        return { id: 'pvalue', value : DEFAULT_PVALUE_FILTER_VALUE }
+    }
+    return null;
+}
 
 const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
     if (!data) {

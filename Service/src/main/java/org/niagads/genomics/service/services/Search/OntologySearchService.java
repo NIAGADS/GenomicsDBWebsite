@@ -38,7 +38,7 @@ public class OntologySearchService extends AbstractWdkService {
     + "SELECT * FROM ontology_text_search((SELECT term FROM st))" + NL
     + "ORDER BY match_rank, record_type, display ASC)" + NL
     + "SELECT jsonb_agg(matches)::text AS result" + NL
-    + "FROM matches WHERE category = ?";
+    + "FROM matches";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,47 +73,7 @@ public class OntologySearchService extends AbstractWdkService {
         return Response.ok(response).build();
     }
 
-    private String buildQuery(Boolean mscOnly, Boolean adspQC) {
-        String lookupCTE = "annotations AS (SELECT" + NL
-            + "jsonb_build_object(d.search_term," + NL
-            + MSC_ONLY_JSON_OBJECT + NL;
-        
-        if (!mscOnly) {
-            lookupCTE = lookupCTE + " || " + FULL_VEP_JSON_OBJECT + NL;
-        }
-
-        if (adspQC) {
-            lookupCTE = lookupCTE + " || " + ADSP_QC_JSON_OBJECT + NL;
-        }
-
-        lookupCTE = lookupCTE + ") AS annotation_json" + NL
-        + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
-        + "WHERE left(v.metaseq_id, 50) = d.indexed_metaseq_id" + NL 
-        + "AND (v.ref_snp_id = d.ref_snp_id OR d.ref_snp_id IS NULL)" + NL 
-        + "AND v.chromosome = d.chrm)";
-        /* + "UNION ALL SELECT" + NL
-        + "jsonb_build_object(search_term, '{}'::jsonb) AS annotation_json" + NL
-        + "FROM unmappedVariants) "; */
-
-        String sql = "WITH" + NL 
-            + VARIANT_ID_CTE + "," + NL 
-            + VARIANT_DETAILS_CTE + "," + NL 
-            + MISSING_VARIANTS_CTE + "," + NL
-            + lookupCTE + NL
-            + "SELECT jsonb_build_object(" + NL
-            + "'paging', jsonb_build_object(" + NL 
-            + "'page'," + getCurrentPageDisplay() + "," + NL
-            + "'total_pages'," + getNumPages() + ")," + NL
-            + "'unmapped_variants', (SELECT json_agg(search_term) FROM unmappedVariants)," + NL
-            + "'result', jsonb_object_agg(t.k, t.v)" + NL
-            + ")::text AS result" + NL            
-            + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
-            
-            
-        // LOG.debug(sql);
-
-        return sql;
-    }
+  
 
     private String lookup(String term, String category) {
 
@@ -121,11 +81,20 @@ public class OntologySearchService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-        // LOG.debug("Fetching details for variant:" + variant);
-        // LOG.debug(buildQuery());
-        SQLRunner runner = new SQLRunner(ds, buildQuery(term, category), "variant-lookup-query");
+        String sql = SEARCH_QUERY;
 
-        runner.executeQuery(new Object[] { term, category }, handler);
+        if (!category.equals("any")) {
+            sql += NL + "WHERE category = ?";
+        }
+        
+        SQLRunner runner = new SQLRunner(ds, sql, "ontology-term-lookup-query");
+
+        if (!category.equals("any")) {
+            runner.executeQuery(new Object[] { term, category }, handler);
+        }
+        else {
+            runner.executeQuery(new Object[] { term }, handler);
+        }
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {

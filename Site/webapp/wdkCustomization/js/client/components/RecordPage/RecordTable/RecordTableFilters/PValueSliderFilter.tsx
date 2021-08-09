@@ -5,17 +5,29 @@ import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
 import { toProperCase } from "../../../../util/util";
 import { extractDisplayText } from "../RecordTableSort";
+import { negLog10p } from "./filters/negLog10pFilter";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-const DEFAULT_FILTER_VALUE = -1 * Math.log10(5e-8); 
+const DEFAULT_FILTER_VALUE = -1 * Math.log10(5e-8);
 
 const getMinMax = (rows: Row[], id: IdType<any>) => {
-    let min = rows.length ? -1 * Math.log10(extractDisplayText(rows[0].values[id])) : 0;
-    let max = rows.length ? -1 * Math.log10(extractDisplayText(rows[0].values[id])) : 0;
+    let min = rows.length ? extractDisplayText(rows[0].values[id]) : 0;
+    let max = rows.length ? extractDisplayText(rows[0].values[id]) : 0;
     rows.forEach((row) => {
-        let value = -1 * Math.log10(extractDisplayText(row.values[id]));
+        let value = extractDisplayText(row.values[id]);
+        min = Math.min(value, min);
+        max = Math.max(value, max);
+    });
+    return [min, max];
+};
+
+const getMinMaxPValue = (rows: Row[], id: IdType<any>) => {
+    let min = rows.length ? negLog10p(extractDisplayText(rows[0].values[id])) : 0;
+    let max = rows.length ? negLog10p(extractDisplayText(rows[0].values[id])) : 0;
+    rows.forEach((row) => {
+        let value = negLog10p(extractDisplayText(row.values[id]));
         min = Math.min(value, min);
         max = Math.max(value, max);
     });
@@ -23,8 +35,16 @@ const getMinMax = (rows: Row[], id: IdType<any>) => {
 };
 
 //@ts-ignore
-export function PValueSliderFilter({ filterValue, render, setFilter, preFilteredRows, id }: Column) {
-    const [min, max] = useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows]);
+export function PValueSliderFilter<T extends Record<string, unknown>>({
+    columns,
+    column,
+}: {
+    columns: Column[];
+    column: Column;
+}) {
+    //@ts-ignore
+    const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const [min, max] = useMemo(() => getMinMaxPValue(preFilteredRows, id), [id, preFilteredRows]);
     return (
         <div
             style={{
@@ -43,7 +63,7 @@ export function PValueSliderFilter({ filterValue, render, setFilter, preFiltered
                 }}
                 value={filterValue || min}
                 onChange={(e) => {
-                    setFilter(parseInt(e.target.value, 10));
+                    setFilter(Math.pow(10, -1 * parseInt(e.target.value, 10)));
                 }}
             />
             <Button variant="outlined" style={{ width: 60, height: 36 }} onClick={() => setFilter(undefined)}>
@@ -52,5 +72,3 @@ export function PValueSliderFilter({ filterValue, render, setFilter, preFiltered
         </div>
     );
 }
-
-

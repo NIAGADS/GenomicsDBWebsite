@@ -43,6 +43,7 @@ export interface TableContainerProps {
     className?: string;
     showAdvancedFilter?: boolean;
     showHideColumns?: boolean;
+    initialFilters?: any;
 }
 
 const hooks = [
@@ -94,6 +95,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
     canFilter,
     showAdvancedFilter,
     showHideColumns,
+    initialFilters
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -107,6 +109,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
                 pageIndex: 0,
                 pageSize: 10,
+                filters: [initialFilters],
                 hiddenColumns: columns
                     .filter((col: any) => col.show === false)
                     .map((col) => col.id || col.accessor) as any,
@@ -127,6 +130,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
         prepareRow,
         setFilter,
         preGlobalFilteredRows,
+        preFilteredRows,
         setGlobalFilter,
         globalFilter,
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
