@@ -1,12 +1,26 @@
 import { FilterValue, IdType, Row } from 'react-table'
 
-export function negLog10p (displayP: string) {
-  let exponent = parseInt(displayP.split("e-")[1]);
-  if (exponent > 300) { return exponent; } // return exponent as approximate value
-
-  return (-1 * Math.log10(parseFloat(displayP)));
+export function negLog10p (displayP: any) {
+    let exponent = parseInt(displayP.toString().split("e-")[1]);
+    if (exponent > 300) { return exponent; } // return exponent as approximate value
+    return parseFloat((-1 * Math.log10(parseFloat(displayP))).toFixed(2));  
 }
 
+export function getMinMaxNegLog10PValue(rows: Row[], id: IdType<any>, upperLimit:number) {
+    let min = rows.length ? negLog10p(rows[0].values[id]) : 0;
+    let max = rows.length ? negLog10p(rows[0].values[id]) : 0;
+    rows.forEach((row) => {
+        let value = negLog10p(row.values[id]);
+        min = Math.min(value, min);
+        max = Math.max(value, max);
+    });
+
+    if (upperLimit && max > upperLimit) {
+        max = upperLimit;
+    }
+
+    return [min, max];
+};
 
 
 // -log10 value filter
@@ -15,10 +29,9 @@ export function negLog10pFilter<T extends Record<string, unknown>>(
   id: IdType<T>,
   filterValue: FilterValue
 ): Array<Row<T>> {
+    let fv = negLog10p(filterValue);
     return rows.filter((row) => {
-        const rowValue = row.values[id];
-        let logValue = negLog10p(rowValue);
-        return logValue >= negLog10p(filterValue);
+        return negLog10p(row.values[id]) >= fv;
     });
 }
 

@@ -1,2 +1,2 @@
 export * from './PieChartFilter';
-export * from './PValueSliderFilter';
+export * from './PValueChartFilter';

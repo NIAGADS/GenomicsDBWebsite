@@ -18,7 +18,7 @@ import {
     booleanFlagFilter,
     includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
-import { PValueSliderFilter, PieChartFilter } from "./RecordTableFilters";
+import { PValueChartFilter, PieChartFilter } from "./RecordTableFilters";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -100,6 +100,8 @@ const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns
                     column.sortType = sciNotationColumnSort;
                     //@ts-ignore
                     column.disableGlobalFilter = true;
+                    //@ts-ignore
+                    column.target= table.name + "_pvalue_chart";
                 }
 
                 if (column.id.includes("flag")) {
@@ -142,7 +144,7 @@ const _addColumnFilters = (column: Column, filterType: string) => {
 
     if (filterType === "pvalue") {
         //@ts-ignore
-        column.Filter = PValueSliderFilter; //PValueFilter;
+        column.Filter = PValueChartFilter; //PValueFilter;
     }
 
     //@ts-ignore
