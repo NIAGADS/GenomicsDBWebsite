@@ -36,7 +36,7 @@ public class OntologySearchService extends AbstractWdkService {
     private static final String SEARCH_QUERY = "WITH st AS (SELECT TRIM(?) AS term)," + NL
     + "matches AS (" + NL
     + "SELECT * FROM ontology_text_search((SELECT term FROM st))" + NL
-    + "ORDER BY match_rank, record_type, display ASC)" + NL
+    + "ORDER BY match_rank, ontology_term ASC)" + NL
     + "SELECT jsonb_agg(matches)::text AS result" + NL
     + "FROM matches";
 

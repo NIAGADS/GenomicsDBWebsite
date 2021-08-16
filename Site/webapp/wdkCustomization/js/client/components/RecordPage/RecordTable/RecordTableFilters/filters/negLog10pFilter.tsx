@@ -1,5 +1,13 @@
 import { FilterValue, IdType, Row } from 'react-table'
 
+
+export function invertNegLog10p(value: any) {
+    if (value > 300) {
+        return "1e-" + value.toString(); 
+    }
+    return Math.pow(10, -1 * parseFloat(value));
+}
+
 export function negLog10p (displayP: any) {
     let exponent = parseInt(displayP.toString().split("e-")[1]);
     if (exponent > 300) { return exponent; } // return exponent as approximate value

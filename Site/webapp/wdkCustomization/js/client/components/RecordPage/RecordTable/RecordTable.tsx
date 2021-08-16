@@ -18,7 +18,7 @@ import {
     booleanFlagFilter,
     includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
-import { PValueChartFilter, PieChartFilter } from "./RecordTableFilters";
+import { PValueFilter, PieChartFilter } from "./RecordTableFilters";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -144,7 +144,7 @@ const _addColumnFilters = (column: Column, filterType: string) => {
 
     if (filterType === "pvalue") {
         //@ts-ignore
-        column.Filter = PValueChartFilter; //PValueFilter;
+        column.Filter = PValueFilter; 
     }
 
     //@ts-ignore

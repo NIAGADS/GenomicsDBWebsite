@@ -8,6 +8,7 @@ import ExternalContentController from 'ebrc-client/controllers/ExternalContentCo
 export const wrapRoutes = (ebrcRoutes) => [
     { path: "/", component: HomePageController },
     { path: "/searchResults", component: ResultsPageController },
+    //{ path: "/dictionary", component: OntologySearchPageController },
     { path: "/query", component: QueryPageController },
     { path: "/visualizations/:type", component: VisualizationPageController },
     {
