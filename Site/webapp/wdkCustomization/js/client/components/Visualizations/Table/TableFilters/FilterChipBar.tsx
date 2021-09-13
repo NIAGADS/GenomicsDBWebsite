@@ -3,6 +3,7 @@
 import React, { ReactElement, useCallback } from "react";
 import { Chip, createStyles, makeStyles } from "@material-ui/core";
 import { ColumnInstance, FilterValue, IdType, TableInstance } from "react-table";
+import { negLog10p } from "../../../RecordPage/RecordTable/RecordTableFilters/filters";
 
 const useStyles = makeStyles(
     createStyles({

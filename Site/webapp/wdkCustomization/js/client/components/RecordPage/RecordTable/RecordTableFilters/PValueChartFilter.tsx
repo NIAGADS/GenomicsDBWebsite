@@ -20,6 +20,8 @@ import { debounce } from "lodash";
 import { useDynamicWidth } from "../../../../hooks";
 import { styled } from "@material-ui/core";
 
+import { negLog10p }  from "../RecordTableFilters/filters/negLog10pFilter";
+
 const X_RANGE = [2, 15];
 
 interface Point {
@@ -63,7 +65,7 @@ const PValueChartFilter: React.FC<PvalFilterProps> = ({ defaultValue, filterValu
         _drawArea(svg, data, area);
         _drawAxes(svg, canvasSpec.height, _buildXAxis(xScale), _buildYAxis(yScale));
         _drawLabels(svg, canvasSpec); 
-        _drawSlider(svg, xScale, defaultValue, canvasSpec, setFilter);
+        _drawSlider(svg, xScale, negLog10p(filterValue), canvasSpec, setFilter);
         //this component is uncontrolled and holds its own state after initialization; it never rerenders...
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);

@@ -2,16 +2,18 @@ import { FilterValue, IdType, Row } from 'react-table'
 
 
 export function invertNegLog10p(value: any) {
-    if (value > 300) {
+    if (value.toString().includes("e")) 
+        return value;
+    if (value > 300) 
         return "1e-" + value.toString(); 
-    }
-    return Math.pow(10, -1 * parseFloat(value));
+    return Math.pow(10, -1 * parseFloat(value)).toExponential(2);
 }
 
-export function negLog10p (displayP: any) {
-    let exponent = parseInt(displayP.toString().split("e-")[1]);
+export function negLog10p (value: any) {
+    if (!value.toString().includes("e")) return value; // assume already negLog10p 
+    let exponent = parseInt(value.toString().split("e-")[1]);
     if (exponent > 300) { return exponent; } // return exponent as approximate value
-    return parseFloat((-1 * Math.log10(parseFloat(displayP))).toFixed(2));  
+    return parseFloat((-1 * Math.log10(parseFloat(value))).toFixed(2));  
 }
 
 export function getMinMaxNegLog10PValue(rows: Row[], id: IdType<any>, upperLimit:number) {
@@ -46,8 +48,8 @@ export function negLog10pFilter<T extends Record<string, unknown>>(
 // This is an autoRemove method on the filter function that
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
-// check, but here, we want to remove the filter if it's not a number
-negLog10pFilter.autoRemove = (val: any) => typeof val !== "number";
+// check
+negLog10pFilter.autoRemove = (val: any) => val === undefined;
 
 
 
