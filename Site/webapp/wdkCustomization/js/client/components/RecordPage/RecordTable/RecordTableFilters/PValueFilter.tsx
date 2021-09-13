@@ -20,7 +20,7 @@ export function PValueFilter<T extends Record<string, unknown>>({
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows, target } = column;
-    const [currentFilterValue, setFilterValue] = useState(filterValue);
+    const [currentFilterValue, setFilterValue] = useState(filterValue === undefined ? DEFAULT_FILTER_VALUE : filterValue); // catch clear filters
     const data = useMemo(() => _binData(preFilteredRows, id), [id]); // only want to do this once
     const [min, max] = useMemo(() => getMinMaxNegLog10PValue(preFilteredRows, id, MAX_ALLOWABLE_PVALUE), [id]);
 
@@ -29,9 +29,9 @@ export function PValueFilter<T extends Record<string, unknown>>({
      }, [currentFilterValue]);
 
     return (
-        <PValueChartFilter
+         <PValueChartFilter
             defaultValue={DEFAULT_FILTER_VALUE}
-            filterValue={currentFilterValue}
+            filterValue={currentFilterValue === undefined ? DEFAULT_FILTER_VALUE : currentFilterValue} // catch clear filters
             data={data}
             target={target}
             setFilter={(val: number) => setFilterValue(Number(val).toString())}

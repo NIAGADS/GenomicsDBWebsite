@@ -6,7 +6,7 @@ export function invertNegLog10p(value: any) {
         return value;
     if (value > 300) 
         return "1e-" + value.toString(); 
-    return Math.pow(10, -1 * parseFloat(value)).toExponential(2);
+    return Math.pow(10, -1 * parseFloat(value)).toExponential(1);
 }
 
 export function negLog10p (value: any) {
