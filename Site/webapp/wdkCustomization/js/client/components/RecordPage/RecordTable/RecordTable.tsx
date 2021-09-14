@@ -68,7 +68,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
 
 const _setInitialFilters = (table:TableField) => {
     let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;  
-    if ('pvalue' in columnFilters) {
+    if (columnFilters && 'pvalue' in columnFilters) {
         return { id: 'pvalue', value : DEFAULT_PVALUE_FILTER_VALUE }
     }
     return null;

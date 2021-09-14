@@ -109,7 +109,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
                 pageIndex: 0,
                 pageSize: 10,
-                filters: [initialFilters],
+                filters: [initialFilters ? initialFilters : {}] ,
                 hiddenColumns: columns
                     .filter((col: any) => col.show === false)
                     .map((col) => col.id || col.accessor) as any,

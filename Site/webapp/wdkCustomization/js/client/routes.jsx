@@ -1,8 +1,8 @@
 import React from 'react';
 import HomePageController from "./controllers/HomePageController";
-import ResultsPageController from "./controllers/ResultsPageController";
+import ResultsPageController from "./controllers/Routes/SiteSearchController";
 import QueryPageController from "./controllers/QueryPageController";
-import VisualizationPageController from "./controllers/VisualizationPageController";
+import VisualizationPageController from "./controllers/Routes/VisualizationPageController";
 import ExternalContentController from 'ebrc-client/controllers/ExternalContentController';
 
 export const wrapRoutes = (ebrcRoutes) => [

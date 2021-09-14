@@ -4,20 +4,20 @@ import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { Loading } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
-import { SearchResult } from "./../Shared";
+import { SearchResult } from "../Shared";
 import { buildRouteFromResult } from '../../util/util';
 import { chain, isEmpty, get } from "lodash";
 import { Box, Grid, List, ListItem, withStyles } from "@material-ui/core";
 import { BaseText, BaseTextSmall, Heading, PrimaryLink, PrimaryExternalLink } from "../Shared";
 
-interface ResultsPageNavProps {
+interface SiteSearchResultsNavProps {
     genes: number;
     variants: number;
     datasets: number;
     accessions: number;
 }
 
-const ResultsPageNav: React.FC<ResultsPageNavProps> = ({ genes, variants, datasets, accessions }) => {
+const SiteSearchResultsNav: React.FC<SiteSearchResultsNavProps> = ({ genes, variants, datasets, accessions }) => {
     return (
         <List disablePadding={true}>
             {genes > 0 && (
@@ -52,7 +52,7 @@ const ResultsPageNav: React.FC<ResultsPageNavProps> = ({ genes, variants, datase
     );
 };
 
-const ResultsPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
+const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
     const [results, setResults] = useState<SearchResult[]>(),
         [loading, setLoading] = useState(false),
         sendRequest = (searchTerm: string) => (service: WdkService) => {
@@ -107,7 +107,7 @@ const ResultsPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
                             <strong>{resultsArray.length}</strong> results were found for the search{" "}
                             <strong>{searchTerm}</strong>
                         </BaseText>
-                        <ResultsPageNav
+                        <SiteSearchResultsNav
                             genes={nGenes}
                             variants={nVariants}
                             datasets={nDatasets}
@@ -167,4 +167,4 @@ const _buildSearchResult = (result: SearchResult, recordType: string) => {
     );
 };
 
-export default withRouter(ResultsPage);
+export default withRouter(SiteSearchResultsPage);
