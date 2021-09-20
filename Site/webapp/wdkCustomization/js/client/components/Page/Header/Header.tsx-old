@@ -3,14 +3,12 @@ import { Box, Grid, Hidden, Menu, MenuItem, Typography, TypographyProps, withSty
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "../../../theme";
 import { useGoto } from "../../../hooks";
-import { MultiSearch, PrimaryActionButton, SearchResult } from "../../Shared";
+import { MultiSearch, PrimaryActionButton, SearchResult } from "../../MaterialUI";
 import { Home } from "@material-ui/icons";
-import { BaseText } from "../../Shared/Typography";
+import { BaseText } from "../../MaterialUI/Typography";
 import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
 
-interface Header {
-    isLoggedIn: boolean;
-}
+
 
 const menuConfig: MenuElement[] = [
     { title: "Home", target: "/" },

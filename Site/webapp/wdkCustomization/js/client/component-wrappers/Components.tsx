@@ -1,5 +1,5 @@
-import Header from "../components/GlobalLayout/Header/Header";
-import footer from "../components/GlobalLayout/Footer/Footer";
+import Header from "../components/Page/Header/Header";
+import footer from "../components/Page/Footer";
 import QuestionForm from "../components/QuestionForm/QuestionForm";
 
 export const DefaultQuestionForm = () => QuestionForm;

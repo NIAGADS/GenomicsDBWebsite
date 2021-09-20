@@ -17,7 +17,7 @@ import { Box, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
 import { groupBy, startCase, truncate, uniq as unique } from "lodash";
 import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
-import { BaseIconButton, UnlabeledTextField } from "../../Shared";
+import { BaseIconButton, UnlabeledTextField } from "../../MaterialUI";
 import ReactTable, { Column } from "react-table";
 //import PaginationComponent from "./../../RecordPage/RecordTable-old/RecordTable/PaginationComponent/PaginationComponent";
 

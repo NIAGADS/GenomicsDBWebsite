@@ -6,7 +6,7 @@ import {
     SvgIconProps,
     withStyles,
 } from "@material-ui/core";
-import {  BaseText, Subheading } from "../Shared/Typography";
+import {  BaseText, Subheading } from "../MaterialUI/Typography";
 
 interface IconCard {
     Icon: React.ComponentType<SvgIconProps>;

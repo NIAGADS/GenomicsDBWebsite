@@ -8,8 +8,8 @@ import { resolveJsonInput, isJson, withTooltip } from "../../../../util/jsonPars
 import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
 import { Box, Grid, List } from "@material-ui/core";
 import { Check, ReportProblemOutlined } from "@material-ui/icons";
-import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../../Shared/Typography";
-import { UnpaddedListItem, PrimaryExternalLink } from "../../../Shared";
+import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../../MaterialUI/Typography";
+import { UnpaddedListItem, PrimaryExternalLink } from "../../../MaterialUI";
 
 import { _externalUrls } from "../../../../data/_externalUrls";
 import { RecordHeading, RecordAttributes } from '../RecordHeadingTypes';

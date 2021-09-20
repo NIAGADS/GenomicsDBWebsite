@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
-import theme from "./../../theme";
+import { theme } from "../MaterialUI";
 import TrackBrowser, { IgvTrackConfig } from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -12,13 +12,13 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import { get } from "lodash";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { PrimaryActionButton } from "../Shared";
+import { PrimaryActionButton } from "../MaterialUI";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 
 
 import {
  Heading
-} from "../Shared";
+} from "../MaterialUI";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 

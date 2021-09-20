@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Grid } from "@material-ui/core";
-import { BaseText, Heading } from "../../Shared/Typography";
+import { BaseText, Heading } from "../../MaterialUI/Typography";
 import { LargeHighlightText } from "../Styles";
 import { GreyBackgroundSection } from "./Sections";
 import { NarrowerWidthRow, DownArrowRow } from "../CustomGridElements";

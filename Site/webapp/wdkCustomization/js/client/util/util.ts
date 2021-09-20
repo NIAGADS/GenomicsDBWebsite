@@ -1,5 +1,5 @@
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { SearchResult } from '../components/Shared/Autocomplete';
+import { SearchResult } from '../components/MaterialUI/Autocomplete';
 
 export function isTrue(stringArg: string) {
     return stringArg === "true" ? true : false;

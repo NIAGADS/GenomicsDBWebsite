@@ -5,7 +5,7 @@ import { assign } from "lodash";
 
 import Grid from "@material-ui/core/Grid";
 
-import VerticalTabContainer from "../../Tabs/VerticalTabContainer";
+import VerticalTabContainer from "../../MaterialUI/Tabs/VerticalTabContainer";
 
 import {
     useTable,

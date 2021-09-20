@@ -1,9 +1,9 @@
 import React from "react";
 import { webAppUrl } from "ebrc-client/config";
 import { Box, Grid, ThemeProvider, withStyles } from "@material-ui/core";
-import theme from "./../../../theme";
-import { DarkContrastGreyText, DarkContrastText } from "../../Shared/Typography";
-import { WhiteExternalLink } from "../../Shared";
+import { theme } from "../MaterialUI";
+import { DarkContrastGreyText, DarkContrastText } from "../MaterialUI/Typography";
+import { WhiteExternalLink } from "../MaterialUI";
 import moment from "wdk-client/Utils/MomentUtils";
 
 const Footer: React.FC = () => {

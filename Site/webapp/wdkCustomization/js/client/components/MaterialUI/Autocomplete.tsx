@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UnlabeledTextField } from "./../Shared";
+import { UnlabeledTextField } from ".";
 import { Autocomplete } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Search from "@material-ui/icons/Search";

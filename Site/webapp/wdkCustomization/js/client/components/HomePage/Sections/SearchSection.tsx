@@ -3,9 +3,9 @@ import { BlueBackgroundSection } from "./Sections";
 import { NarrowerWidthRow, DownArrowRow } from "../CustomGridElements";
 import { Grid, Box } from "@material-ui/core";
 import { MainText } from "../Styles";
-import { DarkContrastText } from "../../Shared/Typography";
+import { DarkContrastText } from "../../MaterialUI/Typography";
 import { HighchartsDatasetSummaryDonut as Donut } from "../../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
-import { MultiSearch, SearchResult, SecondaryLink } from "../../Shared";
+import { MultiSearch, SearchResult, SecondaryLink } from "../../MaterialUI";
 import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
 
 import { useGoto } from "../../../hooks";

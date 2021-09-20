@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { HeaderRecordActions } from "../Shared";
 import { RecordHeading } from "../RecordHeadingTypes";
 import { Grid } from "@material-ui/core";
-import { BaseText, Heading, Subheading } from "../../../Shared";
+import { BaseText, Heading, Subheading } from "../../../MaterialUI";
 import { RecordInstance, RecordClass } from 'wdk-client/Utils/WdkModel';
 
 import './DatasetRecordHeading.scss';

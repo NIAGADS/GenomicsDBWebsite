@@ -1,5 +1,5 @@
 import React from "react";
-import theme from "../theme";
+import { theme } from "../components/MaterialUI";
 import { Container, ThemeProvider } from "@material-ui/core";
 import { getSingleRecordAnswerSpec } from 'wdk-client/Utils/WdkModel';
 import { emptyAction } from 'wdk-client/Core/WdkMiddleware';

@@ -2,8 +2,8 @@ import React from "react";
 import { WhiteBackgroundSection } from "./Sections";
 import { NarrowerWidthRow, DownArrowRow } from "../CustomGridElements";
 import { Grid, Box } from "@material-ui/core";
-import { Heading, BaseText } from "../../Shared/Typography";
-import { PrimaryExternalLink, PrimaryActionButton, PrimaryLink } from "../../Shared";
+import { Heading, BaseText } from "../../MaterialUI/Typography";
+import { PrimaryExternalLink, PrimaryActionButton, PrimaryLink } from "../../MaterialUI";
 
 import { useGoto } from "../../../hooks";
 import { _externalUrls } from "../../../data/_externalUrls";

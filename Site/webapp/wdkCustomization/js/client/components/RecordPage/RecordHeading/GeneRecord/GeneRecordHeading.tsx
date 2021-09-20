@@ -5,7 +5,7 @@ import { RecordHeading } from "../RecordHeadingTypes";
 import { HighchartsTableTrellis } from "../../../Visualizations";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { Grid, List, Typography } from "@material-ui/core";
-import { BaseText, BaseTextSmall, Subheading, UnpaddedListItem } from "../../../Shared";
+import { BaseText, BaseTextSmall, Subheading, UnpaddedListItem } from "../../../MaterialUI";
 
 
 const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {

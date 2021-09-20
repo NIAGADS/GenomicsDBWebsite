@@ -8,7 +8,7 @@ import {
     SearchResult,
     SecondaryLink,
     BoldPrimaryLink,
-} from "../../components/Shared";
+} from "../MaterialUI";
 import { useGoto } from "../../hooks";
 
 import {
@@ -17,7 +17,7 @@ import {
     Typography
 } from "@material-ui/core";
 
-import { DarkContrastText, BaseText, Heading, Subheading } from "../Shared/Typography";
+import { DarkContrastText, BaseText, Heading, Subheading } from "../MaterialUI/Typography";
 
 import { WhiteBackgroundSection, GreyBackgroundSection} from './Sections/Sections';
 import { NarrowerWidthRow } from './CustomGridElements';

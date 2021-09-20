@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Grid } from "@material-ui/core";
-import { PrimaryActionButton, PrimaryLink } from "../../Shared";
+import { PrimaryActionButton, PrimaryLink } from "../../MaterialUI";
 
 import { useGoto } from "../../../hooks";
-import { BaseText, Heading, Subheading } from "../../Shared/Typography";
+import { BaseText, Heading, Subheading } from "../../MaterialUI/Typography";
 
 import { WhiteBackgroundSection } from "./Sections";
 import { NarrowerWidthRow } from "../CustomGridElements";

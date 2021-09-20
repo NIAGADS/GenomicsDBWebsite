@@ -2,11 +2,11 @@ import React from "react";
 import { WhiteBackgroundSection } from "./Sections";
 import { NarrowerWidthRow, DownArrowRow } from "../CustomGridElements";
 import { Grid, Box, Paper, Button } from "@material-ui/core";
-import { Heading, BaseText } from "../../Shared/Typography";
+import { Heading, BaseText } from "../../MaterialUI/Typography";
 
 import Carousel from "react-material-ui-carousel";
 
-import { PrimaryExternalLink, PrimaryActionButton, PrimaryLink } from "../../Shared";
+import { PrimaryExternalLink, PrimaryActionButton, PrimaryLink } from "../../MaterialUI";
 import { _externalUrls } from "../../../data/_externalUrls";
 
 import { GenomeBrowserSection, DatasetOverviewSection } from '../Sections';

@@ -3,7 +3,7 @@ import { Tooltip } from "wdk-client/Components";
 import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import { isString, isPlainObject, isNull } from "lodash";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { PrimaryExternalLink, PrimaryLink } from "../components/Shared";
+import { PrimaryExternalLink, PrimaryLink } from "../components/MaterialUI";
 
 export interface LinkType {
     url: string;
