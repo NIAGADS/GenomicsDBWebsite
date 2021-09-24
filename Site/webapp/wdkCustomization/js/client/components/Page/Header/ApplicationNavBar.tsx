@@ -11,13 +11,22 @@ import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
+import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Fade } from '@material-ui/core';
 
+import StateProps, { webAppUrl, isGuest, wdkModelBuildNumber } from '../../StateProps';
+import { RootState } from 'wdk-client/Core/State/Types';
+import { useSelector } from "react-redux";
+//import logo from "./images/logo.png";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    logo: {
+      maxWidth: 40,
+      marginRight: '10px'
+    },
     grow: {
       flexGrow: 1,
     },
@@ -86,6 +95,8 @@ function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  //const buildNumber = useSelector((state: RootState) => state.globalData?.config?.buildNumber);
+  const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -135,10 +146,8 @@ function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
+        <IconButton aria-label="home" color="inherit">
+            <HomeIcon />
         </IconButton>
         <p>Messages</p>
       </MenuItem>
@@ -176,6 +185,7 @@ function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton>
+          {/*<img src={logo} alt="NIAGADS GenomicsDB" className={classes.logo} />*/}
           <Typography className={classes.title} variant="h6" noWrap>
             GenomicsDB
           </Typography>
@@ -194,10 +204,8 @@ function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
+            <IconButton aria-label="home" color="inherit" href={`${webAppUrl}/`}>
+                <HomeIcon />
             </IconButton>
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
@@ -233,5 +241,6 @@ function PrimarySearchAppBar() {
     </div>
   );
 }
+
 
 export default PrimarySearchAppBar;

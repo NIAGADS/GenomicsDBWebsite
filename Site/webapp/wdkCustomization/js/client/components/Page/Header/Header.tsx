@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "@material-ui/styles";
 import { theme } from "../../MaterialUI";
-import SearchAppBar from "./ApplicationNavMenu";
+import SearchAppBar from "./ApplicationNavBar";
 import Banner from "./Banner";
 
 interface Header {
