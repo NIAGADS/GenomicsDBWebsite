@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 
 
-const Banner: React.FC<any> = ({ isGuest }) => {
+const GenomeBuildBanner: React.FC<any> = ({}) => {
     const buildNumber = useSelector((state: RootState) => state.globalData?.config?.buildNumber);
     return (
         <Typography>{buildNumber}</Typography>
@@ -15,4 +15,4 @@ const Banner: React.FC<any> = ({ isGuest }) => {
 }
 
 
-export default Banner;
+export default GenomeBuildBanner;
