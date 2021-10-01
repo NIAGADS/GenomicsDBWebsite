@@ -1,26 +1,35 @@
 import React from "react";
-import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { useSelector } from "react-redux";
+
+import { fade, makeStyles, Theme, createStyles, styled } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
-import ImageSearchIcon from "@mui/icons-material/ImageSearch";
-import LegendToggleIcon from "@mui/icons-material/LegendToggle";
-import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import MoreIcon from "@mui/icons-material/MoreVert";
+import ImageSearchIcon from "@material-ui/icons/ImageSearch";
+import CodeIcon from "@material-ui/icons/Code";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import LineStyleIcon from "@material-ui/icons/LineStyle";
 
-import StateProps, { webAppUrl, isGuest, wdkModelBuildNumber } from "../../StateProps";
+import { SiteSearch, SearchResult } from "../../Tools";
+import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
+import { useGoto } from "../../../hooks";
 import { RootState } from "wdk-client/Core/State/Types";
-import { useSelector } from "react-redux";
+
+// apply material-ui spacing system to the buttons
+const TextButton = styled(Button)(({ theme }) => ({
+    hover: { color: theme.palette.secondary.main },
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
+}));
+
 //import logo from "./images/logo.png";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -103,6 +112,8 @@ function PrimarySearchAppBar() {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+    const goto = useGoto();
+
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -120,28 +131,28 @@ function PrimarySearchAppBar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
-    const menuId = "primary-search-account-menu";
+    const accountMenuId = "primary-account-menu";
     const renderAccountMenu = (
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            id={menuId}
+            id={accountMenuId}
             keepMounted
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
             {isGuest ? (
-                <MenuItem onClick={handleMenuClose}>Login/Register</MenuItem>
+                <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
             ) : (
-                <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
             )}
             {!isGuest && <MenuItem onClick={handleMenuClose}>My Account</MenuItem>}
             {!isGuest && <MenuItem onClick={handleMenuClose}>Favorites</MenuItem>}
         </Menu>
     );
 
-    const mobileMenuId = "primary-search-account-menu-mobile";
+    const mobileMenuId = "primary-menu-mobile";
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -153,35 +164,43 @@ function PrimarySearchAppBar() {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton aria-label="home" color="inherit">
+                <IconButton aria-label="home" color="inherit" href={`${webAppUrl}`}>
                     <HomeIcon />
                 </IconButton>
                 <p>Home</p>
             </MenuItem>
 
             <MenuItem>
-                <IconButton aria-label="browse datasets" color="inherit">
+                <IconButton
+                    aria-label="browse datasets"
+                    color="inherit"
+                    href={`${webAppUrl}/app/record/dataset/accessions`}
+                >
                     <ImageSearchIcon />
                 </IconButton>
                 <p>Datasets</p>
             </MenuItem>
 
             <MenuItem>
-                <IconButton aria-label="genome browser" color="inherit">
-                    <LegendToggleIcon />
+                <IconButton
+                    aria-label="genome browser"
+                    color="inherit"
+                    href={`${webAppUrl}/app/visualizations/browser`}
+                >
+                    <LineStyleIcon />
                 </IconButton>
                 <p>Genome Browser</p>
             </MenuItem>
 
             <MenuItem>
-                <IconButton aria-label="API" color="inherit">
-                    <MiscellaneousServicesIcon />
+                <IconButton aria-label="API" color="inherit" href={`${webAppUrl}/app/api`}>
+                    <CodeIcon />
                 </IconButton>
                 <p>API</p>
             </MenuItem>
 
             <MenuItem>
-                <IconButton aria-label="Info" color="inherit">
+                <IconButton aria-label="Info" color="inherit" href={`${webAppUrl}`}>
                     <InfoOutlinedIcon />
                 </IconButton>
                 <p>About</p>
@@ -190,15 +209,51 @@ function PrimarySearchAppBar() {
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
                     aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
+                    aria-controls={accountMenuId}
                     aria-haspopup="true"
                     color="inherit"
                 >
                     <AccountCircle />
                 </IconButton>
-                <p>Log In</p>
+                {isGuest ? <p>Sign In</p> : <p>Profile</p>}
             </MenuItem>
         </Menu>
+    );
+
+    const desktopMenuid = "primary-menu-desktop";
+    const renderDesktopMenu = (
+        <div className={classes.sectionDesktop}>
+            <TextButton
+                aria-label="search datasets"
+                color="inherit"
+                href={`${webAppUrl}/app/record/dataset/accessions`}
+            >
+                Browse Datasets
+            </TextButton>
+            <TextButton
+                aria-label="genome browser"
+                color="inherit"
+                href={`${webAppUrl}/app/visualizations/browser`}
+            >
+                Genome Browser
+            </TextButton>
+            <TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`} startIcon={<CodeIcon />}>
+                API
+            </TextButton>
+            <TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
+                About
+            </TextButton>
+            <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={accountMenuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+            >
+                <AccountCircle />
+            </IconButton>
+        </div>
     );
 
     return (
@@ -212,7 +267,19 @@ function PrimarySearchAppBar() {
                     <Typography className={classes.title} variant="h6" noWrap>
                         GenomicsDB
                     </Typography>
-                    <div className={classes.search}>
+                    <IconButton aria-label="home" color="inherit" href={`${webAppUrl}`}>
+                        <HomeIcon />
+                    </IconButton>
+                    <SiteSearch
+                        onSelect={(value: SearchResult, searchTerm: string) =>
+                            goto(
+                                !value || value.type == "summary"
+                                    ? buildSummaryRoute(searchTerm)
+                                    : buildRouteFromResult(value)
+                            )
+                        }
+                    />
+                    {/* <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />
                         </div>
@@ -224,28 +291,9 @@ function PrimarySearchAppBar() {
                             }}
                             inputProps={{ "aria-label": "search" }}
                         />
-                    </div>
+                        </div> */}
                     <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="home" color="inherit" href={`${webAppUrl}/`}>
-                            <HomeIcon />
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    </div>
+                    {renderDesktopMenu}
                     <div className={classes.sectionMobile}>
                         <IconButton
                             aria-label="show more"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UnlabeledTextField } from ".";
+import { UnlabeledTextField } from "../MaterialUI";
 import { Autocomplete } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Search from "@material-ui/icons/Search";
@@ -7,6 +7,63 @@ import { isEmpty } from "lodash";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { useTheme } from "@material-ui/core";
 import { isString, get } from "lodash";
+
+import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import HomeIcon from "@material-ui/icons/Home";
+import ImageSearchIcon from "@material-ui/icons/ImageSearch";
+import CodeIcon from "@material-ui/icons/Code";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import LineStyleIcon from "@material-ui/icons/LineStyle";
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        search: {
+            position: "relative",
+            borderRadius: theme.shape.borderRadius,
+            backgroundColor: fade(theme.palette.primary.dark, 0.15),
+            "&:hover": {
+                backgroundColor: fade(theme.palette.common.white, 0.25),
+            },
+            marginRight: theme.spacing(2),
+            marginLeft: 0,
+            width: "100%",
+            [theme.breakpoints.up("sm")]: {
+                marginLeft: theme.spacing(3),
+                width: "auto",
+            },
+        },
+        searchIcon: {
+            padding: theme.spacing(0, 2),
+            height: "100%",
+            position: "absolute",
+            pointerEvents: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        inputRoot: {
+            color: "inherit",
+        },
+        inputInput: {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+            transition: theme.transitions.create("width"),
+            width: "100%",
+            [theme.breakpoints.up("md")]: {
+                width: "20ch",
+            },
+        },
+    })
+);
 
 export interface SearchResult {
     type?: "result" | "summary";
@@ -18,16 +75,18 @@ export interface SearchResult {
     matched_term: string;
 }
 
-interface MultiSearch {
+interface SiteSearchProps {
     canGrow?: boolean;
     onSelect: (selectedOption: SearchResult, searchTerm: string) => void;
 }
 
-export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
+export const SiteSearch: React.FC<SiteSearchProps> = ({ canGrow, onSelect }) => {
     const [options, setOptions] = useState<SearchResult[]>([]),
         [inputValue, setInputValue] = useState<string>(""),
         [resetKey, setResetKey] = useState(Math.random().toString(32).slice(2)),
         [searchInProgress, setSearchInProgress] = useState(false);
+
+    const classes = useStyles();
 
     useWdkEffect(
         (service) => {
@@ -66,8 +125,6 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
 
         [inputValue]
     );
-
-    const theme = useTheme();
 
     const reset = () => {
         setInputValue("");
@@ -109,16 +166,34 @@ export const MultiSearch: React.FC<MultiSearch> = ({ canGrow, onSelect }) => {
                     reset();
                 }
             }}
+
             renderInput={(params) => {
                 const { InputLabelProps, InputProps, ...rest } = params;
                 return (
-                    <UnlabeledTextField
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            //inputProps={{ "aria-label": "search" }}
+                            {...rest}
+                            {...InputProps}
+                            endAdornment={searchInProgress ? <CircularProgress size={16} /> : null}
+                        />
+                    </div>
+
+                    /* <UnlabeledTextField
                         placeholder="Search by keyword or identifier"
                         {...rest}
                         {...InputProps}
                         startAdornment={<Search fontSize={"small"} htmlColor={theme.palette.grey[600]} />}
-                        endAdornment={searchInProgress ? <CircularProgress size={16} /> : null}
-                    />
+                        
+                  />*/
                 );
             }}
             renderOption={(option) => (

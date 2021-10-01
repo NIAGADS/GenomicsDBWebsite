@@ -5,7 +5,8 @@ import { Grid, Box } from "@material-ui/core";
 import { MainText } from "../Styles";
 import { DarkContrastText } from "../../MaterialUI/Typography";
 import { HighchartsDatasetSummaryDonut as Donut } from "../../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
-import { MultiSearch, SearchResult, SecondaryLink } from "../../MaterialUI";
+import { SiteSearch, SearchResult } from "../../Tools";
+import { SecondaryLink } from "../../MaterialUI";
 import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
 
 import { useGoto } from "../../../hooks";
@@ -39,7 +40,7 @@ export const SearchSection: React.FC<SearchSection> = ({ webAppUrl }) => {
                             </DarkContrastText>
                         </Grid>
                         <Grid item>
-                            <MultiSearch
+                            <SiteSearch
                                 onSelect={(value: SearchResult, searchTerm: string) =>
                                     goto(
                                         !value || value.type == "summary"

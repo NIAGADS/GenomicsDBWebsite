@@ -14,7 +14,6 @@ const themeOptions: ThemeOptions = {
 };
 
 export const theme = createMuiTheme(themeOptions);
-export * from "./Autocomplete";
 export * from "./Buttons";
 export * from "./Inputs";
 export * from "./Links";

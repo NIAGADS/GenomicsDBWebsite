@@ -1,14 +1,5 @@
 import React, { useLayoutEffect } from "react";
 import { connect } from "react-redux";
-import {
-    PrimaryExternalLink,
-    MultiSearch,
-    PrimaryActionButton,
-    PrimaryLink,
-    SearchResult,
-    SecondaryLink,
-    BoldPrimaryLink,
-} from "../MaterialUI";
 import { useGoto } from "../../hooks";
 
 import {
