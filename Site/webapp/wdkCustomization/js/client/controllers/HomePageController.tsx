@@ -1,6 +1,6 @@
 import React from "react";
 import { PageController } from "wdk-client/Controllers";
-import HomePage from "../components/HomePage/HomePage";
+import { HomePage } from "../components/Page";
 import { ThemeProvider } from "@material-ui/styles";
 import { theme } from "../components/MaterialUI";
 

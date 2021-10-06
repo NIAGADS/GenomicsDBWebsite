@@ -5,7 +5,7 @@ import VisualizationPageController from "./controllers/Routes/VisualizationPageC
 import ExternalContentController from 'ebrc-client/controllers/ExternalContentController';
 
 export const wrapRoutes = (ebrcRoutes) => [
-    { path: "/", component: HomePageController },
+    { path: "/", component: HomePageController, rootClassNameModifier: 'no-padding' },
     { path: "/search/site/result", component: SiteSearchController },   
     { path: "/visualizations/:type", component: VisualizationPageController },
     {

@@ -237,7 +237,7 @@ function PrimarySearchAppBar() {
             >
                 Genome Browser
             </TextButton>
-            <TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`} startIcon={<CodeIcon />}>
+            <TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`}>
                 API
             </TextButton>
             <TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
@@ -258,7 +258,7 @@ function PrimarySearchAppBar() {
 
     return (
         <div className={classes.grow}>
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
                         <MenuIcon />

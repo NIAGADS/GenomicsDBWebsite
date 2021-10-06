@@ -1,27 +1,13 @@
 import React, { useState } from "react";
-import { UnlabeledTextField } from "../MaterialUI";
 import { Autocomplete } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Search from "@material-ui/icons/Search";
 import { isEmpty } from "lodash";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { useTheme } from "@material-ui/core";
 import { isString, get } from "lodash";
-
 import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import HomeIcon from "@material-ui/icons/Home";
-import ImageSearchIcon from "@material-ui/icons/ImageSearch";
-import CodeIcon from "@material-ui/icons/Code";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import LineStyleIcon from "@material-ui/icons/LineStyle";
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
