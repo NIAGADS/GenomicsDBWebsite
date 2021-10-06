@@ -9,6 +9,11 @@ import "eupathdb/wdkCustomization/css/client.scss";
 
 import "site/wdkCustomization/sass/client.scss"; //local;
 
+import "@fontsource/libre-franklin/700.css";
+import "@fontsource/libre-franklin";
+import "@fontsource/raleway/700.css";
+import "@fontsource/raleway";
+
 // Initialize the application.
 const context = initialize({
     componentWrappers,

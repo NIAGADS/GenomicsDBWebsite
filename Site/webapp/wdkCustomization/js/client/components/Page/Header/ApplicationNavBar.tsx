@@ -6,7 +6,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -23,20 +22,26 @@ import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
 import { useGoto } from "../../../hooks";
 import { RootState } from "wdk-client/Core/State/Types";
 
+import GenomeBuildBanner from "./GenomeBuildBanner";
+import Announcements from "../Announcements";
+import { ElevationScroll } from "../../MaterialUI";
+
 // apply material-ui spacing system to the buttons
 const TextButton = styled(Button)(({ theme }) => ({
     hover: { color: theme.palette.secondary.main },
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    paddingRight: theme.spacing(2),
 }));
 
-//import logo from "./images/logo.png";
+import logo from "../../../../../images/genomicsdb-logo.svg";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         logo: {
-            maxWidth: 40,
-            marginRight: "10px",
+            maxWidth: "100%",
+        },
+        logoButton: {
+            maxWidth: 200
         },
         grow: {
             flexGrow: 1,
@@ -49,30 +54,6 @@ const useStyles = makeStyles((theme: Theme) =>
             [theme.breakpoints.up("sm")]: {
                 display: "block",
             },
-        },
-        search: {
-            position: "relative",
-            borderRadius: theme.shape.borderRadius,
-            backgroundColor: fade(theme.palette.primary.dark, 0.15),
-            "&:hover": {
-                backgroundColor: fade(theme.palette.common.white, 0.25),
-            },
-            marginRight: theme.spacing(2),
-            marginLeft: 0,
-            width: "100%",
-            [theme.breakpoints.up("sm")]: {
-                marginLeft: theme.spacing(3),
-                width: "auto",
-            },
-        },
-        searchIcon: {
-            padding: theme.spacing(0, 2),
-            height: "100%",
-            position: "absolute",
-            pointerEvents: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
         },
         inputRoot: {
             color: "inherit",
@@ -230,11 +211,7 @@ function PrimarySearchAppBar() {
             >
                 Browse Datasets
             </TextButton>
-            <TextButton
-                aria-label="genome browser"
-                color="inherit"
-                href={`${webAppUrl}/app/visualizations/browser`}
-            >
+            <TextButton aria-label="genome browser" color="inherit" href={`${webAppUrl}/app/visualizations/browser`}>
                 Genome Browser
             </TextButton>
             <TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`}>
@@ -257,19 +234,21 @@ function PrimarySearchAppBar() {
     );
 
     return (
-        <div className={classes.grow}>
-            <AppBar position="fixed">
+        //{/*<div className={classes.grow}>*/}
+        <ElevationScroll> 
+            <>
+            <AppBar position="static">
+                <Announcements />
+                <GenomeBuildBanner />
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
                         <MenuIcon />
                     </IconButton>
-                    {/*<img src={logo} alt="NIAGADS GenomicsDB" className={classes.logo} />*/}
-                    <Typography className={classes.title} variant="h6" noWrap>
-                        GenomicsDB
-                    </Typography>
-                    <IconButton aria-label="home" color="inherit" href={`${webAppUrl}`}>
-                        <HomeIcon />
-                    </IconButton>
+
+                    <Button className={classes.logoButton} aria-label="NIAGADS Alzheimer's GenomicsDB Home" color="inherit" href={`${webAppUrl}`}>
+                        <img src={logo} alt="NIAGADS GenomicsDB" className={classes.logo} />
+                    </Button>
+
                     <SiteSearch
                         onSelect={(value: SearchResult, searchTerm: string) =>
                             goto(
@@ -309,7 +288,8 @@ function PrimarySearchAppBar() {
             </AppBar>
             {renderMobileMenu}
             {renderAccountMenu}
-        </div>
+            </>
+       </ElevationScroll> // {/*</div>*/}
     );
 }
 

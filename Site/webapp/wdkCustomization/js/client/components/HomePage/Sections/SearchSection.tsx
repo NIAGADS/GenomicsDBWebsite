@@ -27,9 +27,7 @@ export const SearchSection: React.FC<SearchSection> = ({ webAppUrl }) => {
                 <Grid item direction="row" container xs={12}>
                     <Grid item container spacing={2} direction="column">
                         <Grid item>
-                            <MainText>
-                                NIAGADS <br /> Alzheimer's Genomics Database
-                            </MainText>
+                           
                         </Grid>
                         <Grid item>
                             <DarkContrastText>

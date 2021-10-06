@@ -7,7 +7,7 @@ import { theme } from "../../MaterialUI";
 
 import Grid from "@material-ui/core/Grid";
 
-import { SearchPanel } from "./Panels";
+import { WelcomePanel } from "./Panels";
 
 import "./HomePage.scss";
 
@@ -18,9 +18,8 @@ export const HomePage: React.FC<any> = ({}) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container direction="column" justifyContent="center" alignItems="center">
-                <SearchPanel webAppUrl={webAppUrl} />
-
+            <Grid container direction="column" alignItems="center">
+                <WelcomePanel webAppUrl={webAppUrl} />
             </Grid>
         </ThemeProvider>
     );
