@@ -21,6 +21,7 @@ $theme-colors: (
 // Import Bootstrap and its default variables
 @import "./marginPaddingLoop.scss";
 
+@import "./fonts";
 @import "./mixins";
 @import "../js/client/components/Components";
 @import "./wdk";
