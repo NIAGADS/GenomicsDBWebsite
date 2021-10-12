@@ -14,18 +14,27 @@ const useStyles = makeStyles((theme: Theme) =>
         search: {
             position: "relative",
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-            //backgroundColor: fade(theme.palette.primary.dark, 0.15),
-            "&:hover": {
-                backgroundColor: fade(theme.palette.primary.dark, 0.15),
-                //backgroundColor: fade(theme.palette.common.white, 0.25),
-            },
             marginRight: theme.spacing(2),
             marginLeft: 0,
-            width: "100%",
+            width: "100%",     
+        },
+        menu: {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+            "&:hover": {
+                backgroundColor: fade(theme.palette.primary.dark, 0.15),
+            },
             [theme.breakpoints.up("sm")]: {
-                marginLeft: theme.spacing(3),
-                width: "auto",
+                marginLeft: theme.spacing(3), //+ "px !important",
+                width: "auto" // !important"
+            },
+        },
+        panel: {
+            backgroundColor: theme.palette.common.white,
+            borderStyle: "solid",
+            borderWeight: "2px",
+            borderColor: fade(theme.palette.common.white, 0.25),
+            "&:hover": {
+                borderColor: theme.palette.secondary.main
             },
         },
         searchIcon: {
@@ -41,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
             color: "inherit",
         },
         inputInput: {
-            padding: theme.spacing(1.5, 1, 1.5, 0),
+            padding: theme.spacing(1, 1, 1, 0),
             // vertical padding + font size from searchIcon
             paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
             transition: theme.transitions.create("width"),
@@ -65,10 +74,11 @@ export interface SearchResult {
 
 interface SiteSearchProps {
     canGrow?: boolean;
+    variant: string;
     onSelect: (selectedOption: SearchResult, searchTerm: string) => void;
 }
 
-export const SiteSearch: React.FC<SiteSearchProps> = ({ canGrow, onSelect }) => {
+export const SiteSearch: React.FC<SiteSearchProps> = ({ canGrow, variant, onSelect }) => {
     const [options, setOptions] = useState<SearchResult[]>([]),
         [inputValue, setInputValue] = useState<string>(""),
         [resetKey, setResetKey] = useState(Math.random().toString(32).slice(2)),
@@ -158,7 +168,8 @@ export const SiteSearch: React.FC<SiteSearchProps> = ({ canGrow, onSelect }) => 
             renderInput={(params) => {
                 const { InputLabelProps, InputProps, ...rest } = params;
                 return (
-                    <div className={classes.search}>
+                
+                    <div className={`${variant === "menu" ? classes.menu : classes.panel} ${classes.search}`}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />
                         </div>

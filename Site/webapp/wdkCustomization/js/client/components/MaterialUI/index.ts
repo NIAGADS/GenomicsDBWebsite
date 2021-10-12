@@ -1,33 +1,5 @@
-import { ThemeOptions, createMuiTheme } from '@material-ui/core/styles';
-
-
-const themeOptions: ThemeOptions = {
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#27333f',
-    },
-    secondary: {
-      main: '#ffc665',
-    },
-  },
-  props: {
-    MuiAppBar: {
-      color: 'transparent',
-    }
-  },
-  typography: {
-    h1: {
-      fontFamily: '"Libre Franklin", "Raleway", "Arial", "sans-serif"'
-    },
-    h2: {
-      fontFamily: '"Libre Franklin", "Raleway", "Arial", "sans-serif"'
-    },
-    h3: {
-      fontFamily: '"Libre Franklin", "Raleway", "Arial", "sans-serif"'
-    },
-  }
-};
+import { createMuiTheme } from '@material-ui/core/styles';
+import { themeOptions } from "./theme";
 
 export const theme = createMuiTheme(themeOptions);
 export * from "./Buttons";

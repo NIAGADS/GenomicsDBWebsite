@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, ButtonProps, IconButton, Theme, withStyles } from "@material-ui/core";
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 //base override of wdk input[type=button]
 const buttonResetStyles = (theme: Theme) =>

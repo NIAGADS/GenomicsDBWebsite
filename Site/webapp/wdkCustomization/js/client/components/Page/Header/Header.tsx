@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { theme } from "../../MaterialUI";
 import SearchAppBar from "./ApplicationNavBar";
 

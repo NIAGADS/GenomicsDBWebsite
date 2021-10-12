@@ -38,7 +38,7 @@ export const SearchSection: React.FC<SearchSection> = ({ webAppUrl }) => {
                             </DarkContrastText>
                         </Grid>
                         <Grid item>
-                            <SiteSearch
+                            <SiteSearch variant="dark"
                                 onSelect={(value: SearchResult, searchTerm: string) =>
                                     goto(
                                         !value || value.type == "summary"

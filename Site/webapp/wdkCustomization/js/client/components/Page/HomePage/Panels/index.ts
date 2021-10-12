@@ -1,6 +1,8 @@
 export * from "./SearchPanel";
-export * from "./WelcomePanel";
+export * from "./PrimaryBackgroundPanel";
 
 export interface PanelProps {
     webAppUrl?: string;    
+    children?: React.ReactNode
+    classes?: any;
 }

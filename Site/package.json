@@ -25,7 +25,8 @@
         "react-native": "^0.64.2",
         "react-table": "7.7.0",
         "@fontsource/libre-franklin": "^4.5.0",
-        "@fontsource/raleway": "^4.5.0"
+        "@fontsource/raleway": "^4.5.0",
+        "@fontsource/roboto": "^4.5.0"
     },
     "devDependencies": {
         "@types/d3": "5.16.0",

@@ -2,23 +2,40 @@ import React, { useLayoutEffect } from "react";
 import { connect } from "react-redux";
 import { useGoto } from "../../hooks";
 
+import { Grid, makeStyles, createStyles, Theme } from "@material-ui/core";
+
 import {
-    Box,
-    Grid,
-    Typography
-} from "@material-ui/core";
-
-import { DarkContrastText, BaseText, Heading, Subheading } from "../MaterialUI/Typography";
-
-import { WhiteBackgroundSection, GreyBackgroundSection} from './Sections/Sections';
-import { NarrowerWidthRow } from './CustomGridElements';
-import {HighlightStatsSection, DatasetReleasesSection, SearchSection, FeaturesSection, AboutSection}  from './Sections';
-
+    HighlightStatsSection,
+    DatasetReleasesSection,
+    SearchSection,
+    FeaturesSection,
+    AboutSection,
+} from "./Sections";
 
 interface HomePage {
     webAppUrl: string;
     endpoint: string;
 }
+
+export const usePanelStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        primaryBackground: {
+            background: theme.palette.primary.main,
+            paddingBottom: theme.spacing(6),
+            paddingTop: theme.spacing(6),
+        },
+        darkContrastText: {
+            color: theme.palette.primary.contrastText,
+        },
+        headingSecondary: {
+            color: theme.palette.secondary.main,
+            fontWeight: "bold",
+        },
+        headingPrimary: {
+            color: theme.palette.primary.main,
+        },
+    })
+);
 
 const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
     const goto = useGoto();
@@ -32,18 +49,16 @@ const HomePage: React.FC<HomePage> = ({ endpoint, webAppUrl }) => {
     return (
         <Grid justify="center" container>
             {/* header */}
-            <SearchSection webAppUrl={webAppUrl}/>
-            <FeaturesSection webAppUrl={webAppUrl} endpoint={endpoint}/>     
-            <HighlightStatsSection/>
+            <SearchSection webAppUrl={webAppUrl} />
+            <FeaturesSection webAppUrl={webAppUrl} endpoint={endpoint} />
+            <HighlightStatsSection />
             <DatasetReleasesSection />
-            <AboutSection webAppUrl={webAppUrl}/> 
+            <AboutSection webAppUrl={webAppUrl} />
         </Grid>
     );
 };
-
 
 export default connect((state: any) => ({
     webAppUrl: state.globalData.siteConfig.webAppUrl,
     endpoint: state.globalData.siteConfig.endpoint,
 }))(HomePage);
-

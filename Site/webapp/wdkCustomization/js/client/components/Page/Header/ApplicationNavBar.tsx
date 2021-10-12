@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
             maxWidth: "100%",
         },
         logoButton: {
-            maxWidth: 200
+            maxWidth: 150
         },
         grow: {
             flexGrow: 1,
@@ -80,6 +80,11 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: "none",
             },
         },
+        toolbar: {
+            borderBottomStyle: "solid",
+            borderBottomWidth: "4px",
+            borderBottomColor: theme.palette.secondary.main
+        }
     })
 );
 
@@ -239,8 +244,8 @@ function PrimarySearchAppBar() {
             <>
             <AppBar position="static">
                 <Announcements />
-                <GenomeBuildBanner />
-                <Toolbar>
+              
+                <Toolbar className={classes.toolbar}>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
                         <MenuIcon />
                     </IconButton>
@@ -249,7 +254,7 @@ function PrimarySearchAppBar() {
                         <img src={logo} alt="NIAGADS GenomicsDB" className={classes.logo} />
                     </Button>
 
-                    <SiteSearch
+                    <SiteSearch variant="menu"
                         onSelect={(value: SearchResult, searchTerm: string) =>
                             goto(
                                 !value || value.type == "summary"
@@ -258,19 +263,6 @@ function PrimarySearchAppBar() {
                             )
                         }
                     />
-                    {/* <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ "aria-label": "search" }}
-                        />
-                        </div> */}
                     <div className={classes.grow} />
                     {renderDesktopMenu}
                     <div className={classes.sectionMobile}>
@@ -285,6 +277,7 @@ function PrimarySearchAppBar() {
                         </IconButton>
                     </div>
                 </Toolbar>
+                <GenomeBuildBanner />
             </AppBar>
             {renderMobileMenu}
             {renderAccountMenu}
