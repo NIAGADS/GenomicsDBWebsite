@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 
 
 import { theme } from "../../MaterialUI";
-import { SearchPanel, PrimaryBackgroundPanel } from "./Panels";
+import { SearchPanel, PrimaryBackgroundPanel, DefaultBackgroundPanel, AboutPanel } from "./Panels";
 
 
 import "./HomePage.scss";
@@ -18,12 +18,16 @@ import "./HomePage.scss";
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         primaryBackground: {
-            background: theme.palette.primary.main,
-            paddingBottom: theme.spacing(6),
+            background: theme.palette.primary.main,      
+        },
+        defaultBackgroundPanel: {
             paddingTop: theme.spacing(6),
         },
         darkContrastText: {
             color: theme.palette.primary.contrastText,
+        },
+        lightContrastText: {
+            color: theme.palette.primary.light
         },
         secondaryText: {
             color: theme.palette.secondary.main,
@@ -36,6 +40,18 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         largeIcon: {
             fontSize: 65
+        },
+        noTopPadding: {
+            paddingTop: "0px"
+        },
+        extraTopPadding: {
+            paddingTop: theme.spacing(6)
+        },
+        upperCase: {
+            textTransform: "uppercase"
+        },
+        donutChart: {
+            maxWidth: "md"
         }
     })
 );
@@ -51,8 +67,11 @@ export const HomePage: React.FC<any> = ({}) => {
         <ThemeProvider theme={theme}>
             <Grid container direction="column" alignItems="center">
                 <PrimaryBackgroundPanel classes={classes}>
-                    <SearchPanel webAppUrl={webAppUrl} classes={classes}/>
+                    <SearchPanel classes={classes}/>
                 </PrimaryBackgroundPanel>
+                <DefaultBackgroundPanel classes={classes} hasBaseArrow={true}>
+                    <AboutPanel classes={classes}/>
+                </DefaultBackgroundPanel>
             </Grid>
         </ThemeProvider>
     );

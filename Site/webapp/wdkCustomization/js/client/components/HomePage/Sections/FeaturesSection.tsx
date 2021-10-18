@@ -9,7 +9,7 @@ import Carousel from "react-material-ui-carousel";
 import { PrimaryExternalLink, PrimaryActionButton, PrimaryLink } from "../../MaterialUI";
 import { _externalUrls } from "../../../data/_externalUrls";
 
-import { GenomeBrowserSection, DatasetOverviewSection } from '../Sections';
+import { GenomeBrowserSection } from '../Sections';
 
 interface FeaturesSection {
     webAppUrl: string;
@@ -21,8 +21,7 @@ export const FeaturesSection: React.FC<FeaturesSection> = ({ webAppUrl, endpoint
         <WhiteBackgroundSection>
             <NarrowerWidthRow>
                 <Carousel animation="fade" timeout={1000} autoPlay={false} navButtonsAlwaysVisible={true}>
-                    <DatasetOverviewSection webAppUrl={webAppUrl}/>
-                    <GenomeBrowserSection webAppUrl={webAppUrl} endpoint={endpoint}/>
+               <GenomeBrowserSection webAppUrl={webAppUrl} endpoint={endpoint}/>
                 </Carousel>
             </NarrowerWidthRow>
         </WhiteBackgroundSection>

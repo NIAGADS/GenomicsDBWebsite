@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { merge } from "lodash";
 import { Options } from "highcharts";
 import HighchartsPlot from "./HighchartsPlot";
@@ -17,18 +17,27 @@ import { Point, PointClickEventObject } from "highcharts";
 
 type ChartData = [string, number, string];
 
-export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
+interface DSDonutProps {
+    className: string;
+}
+
+/* note allowable values for maxWidth come from https://mui.com/system/sizing/ */
+export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({className}) => {
     const buildSeries = (data: ChartData[]) => {
         const series = {
             series: [
                 {
                     name: "Datasets",
                     innerSize: "50%",
-                    showInLegend: true,
+                    showInLegend: false,
                     allowPointSelect: false,
-                    cursor: "pointer",
+                    //cursor: "pointer",
                     dataLabels: {
-                        enabled: false,
+                        enabled: true,
+                        distance: 50,
+                        style: {
+                            color: "black",
+                        },
                     },
 
                     startAngle: -90,
@@ -67,15 +76,15 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         let plotOptions: Options = {
             tooltip: {
                 // pointFormat: "{point.full_name}: <b>{point.y}</b> <br/>Click on chart to browse these datasets.",
-                pointFormat: "{point.full_name}: <b>{point.y}</b>",
+                pointFormat: "{point.full_name}: n = <b>{point.y}</b>",
             },
-            legend: {
+            /*legend: {
                 //align: "right",
                 //verticalAlign: "middle",
                 //layout: "vertical",
                 //itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
                 //itemHoverStyle: { color: "#ffc665" },
-            },
+            },*/
             /*caption: {
                 text: 'Click on chart to find datasets associated with the selected AD-related dementia or neuropathology.',
                 style: {color: "white"}
@@ -92,5 +101,7 @@ export const HighchartsDatasetSummaryDonut: React.FC<{}> = () => {
         return plotOptions;
     };
 
-    return <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} />;
+    return useMemo(() => {
+        return <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} containerProps={{className: {className}}}/>;
+    }, [series]);
 };

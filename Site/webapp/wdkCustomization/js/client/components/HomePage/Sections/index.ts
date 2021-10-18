@@ -5,4 +5,3 @@ export * from './DatasetReleasesSection';
 export * from './SearchSection';
 export * from './Sections';
 export * from './FeaturesSection';
-export * from './DatasetOverviewSection';

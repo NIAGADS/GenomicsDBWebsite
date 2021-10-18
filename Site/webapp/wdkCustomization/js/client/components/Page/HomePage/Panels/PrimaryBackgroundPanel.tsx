@@ -1,17 +1,14 @@
 import React from "react";
 
 import Grid from "@material-ui/core/Grid";
-import DownArrow from "@material-ui/icons/ArrowDropDown";
-
 import { PanelProps } from ".";
+import { DownArrowRow } from "../../../MaterialUI";
 
-export const PrimaryBackgroundPanel: React.FC<PanelProps> = ({ classes, children }) => {
+export const PrimaryBackgroundPanel: React.FC<PanelProps> = ({ classes, children, hasBaseArrow = true }) => {
     return (
-        <Grid item container direction="row" justifyContent="center" className={classes.primaryBackground}>
+        <Grid item container direction="row" justifyContent="center" className={`${classes.primaryBackground} ${classes.defaultBackgroundPanel}`}>
             {children}
-            <Grid direction="row" container item xs={12} justify="center" spacing={8}>
-                <DownArrow className={`${classes.secondaryText} ${classes.largeIcon}`} />
-            </Grid>
+            {hasBaseArrow && <DownArrowRow />}
         </Grid>
     );
 };

@@ -25,9 +25,16 @@ export const themeOptions: ThemeOptions = {
       h3: {
         fontFamily: '"Libre Franklin", "Raleway", "Roboto", "Arial", "sans-serif"'
       },
+      h4: {
+        fontFamily: '"Libre Franklin", "Raleway", "Roboto", "Arial", "sans-serif"'
+      },
       body2: {
           fontSize: "1.25rem",
           fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"'
+      },
+      body1: {
+        fontSize: "1.2rem",
+        fontFamily: '"Roboto", "Arial", "sans-serif"'
       }
     }
   };

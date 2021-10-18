@@ -11,6 +11,12 @@ const secondaryLinkStyles = (theme: Theme) => ({
             color: theme.palette.secondary.light,
         },
     },
+    dark: {
+        color: theme.palette.secondary.dark,
+        "&:hover": {
+            color: theme.palette.secondary.light,
+        },
+    }
 });
 
 const primaryLinkStyles = (theme?: Theme) => ({
@@ -53,6 +59,13 @@ export const LightSecondaryExternalLink = withStyles((theme) => ({
         fontWeight: 200,
     },
 }))(Link);
+
+export const DarkSecondaryExternalLink = withStyles((theme) => ({
+    root: {
+        ...secondaryLinkStyles(theme).dark,
+    },
+}))(Link);
+
 
 export const BoldExternalLink = withStyles(BoldExternalLinkStyles)(Link);
 

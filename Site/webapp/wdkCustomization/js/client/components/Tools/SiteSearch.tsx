@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
             borderWeight: "2px",
             borderColor: fade(theme.palette.common.white, 0.25),
             "&:hover": {
-                borderColor: theme.palette.secondary.main
+                borderColor: theme.palette.secondary.light,
+                boxShadow: "inset 0 0 8px 1px " + theme.palette.secondary.light
             },
         },
         searchIcon: {
