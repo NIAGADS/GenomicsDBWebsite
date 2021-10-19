@@ -15,7 +15,7 @@ import { HighchartsDatasetSummaryDonut as DatasetSummary } from "../../../Visual
 
 export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
     return (
-            <Grid item container xs={10} md={6} justifyContent="center" direction="column" xs={12} sm={10} md={6}>
+            <Grid item container  justifyContent="center" direction="column" xs={12} sm={10} md={6}>
                 <Typography variant="h3" className={classes.headingPrimary} align="center">
                     About the GenomicsDB
                 </Typography>
@@ -38,9 +38,9 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
                 </Box>
             </Grid>
 
-            {/* split 2 columns */}
 
-            <Grid item container direction="row" justifyContent="center" alignItems="center" xs={12} spacing={0}>
+
+        /*    <Grid item container direction="row" justifyContent="center" alignItems="center" xs={12} spacing={0}>
                 <Grid container direction="column" item md={6} xs={12} spacing={0}>
                     <Box sx={{ maxWidth: "sm" }}>
                         <DatasetSummary className={classes.donutChart}/>
@@ -70,6 +70,6 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
                     <Typography>{abbreviateLargeNumber(_siteStatistics.ANNOTATED_GENES, 2)} Annotated Genes</Typography>
                 </Grid>
             </Grid>
-        </Grid>
+    </Grid> */
     );
 };
