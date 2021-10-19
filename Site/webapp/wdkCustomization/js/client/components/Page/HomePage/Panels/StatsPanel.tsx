@@ -18,20 +18,20 @@ export const StatsPanel: React.FC<PanelProps> = ({ classes }) => {
         <Grid item container direction="column" justifyContent="center" alignItems="center" xs={12} spacing={4}>
             <Grid item alignItems="center" xs={12} sm={12} md={4} justifyContent="center">
                 <Typography
-                    align="center"
+                    align="left"
                     variant="h3"
                     className={`${classes.secondaryText} ${classes.bold} ${classes.smallCaps}`}
                 >
                     {abbreviateLargeNumber(_siteStatistics.ANNOTATED_VARIANTS, 2)} Annotated Variants
                 </Typography>
-                <Typography align="center" className={`${classes.highlightStat} ${classes.smallCaps}`}>
+                <Typography align="left" className={`${classes.highlightStat} ${classes.smallCaps}`}>
                     29M from the ADSP
                 </Typography>
-                <Typography align="center" className={`${classes.highlightStat} ${classes.smallCaps}`}>
+                <Typography align="left" className={`${classes.highlightStat} ${classes.smallCaps}`}>
                     {abbreviateLargeNumber(_siteStatistics.SIGNIFICANT_VARIANTS, 2)} with significant AD/ADRD-risk
                     association
                 </Typography>
-                <Typography align="center" className={`${classes.highlightStat} ${classes.smallCaps}`}>
+                <Typography align="left" className={`${classes.highlightStat} ${classes.smallCaps}`}>
                     {abbreviateLargeNumber(_siteStatistics.ANNOTATED_GENES, 2)} Annotated Genes
                 </Typography>
             </Grid>

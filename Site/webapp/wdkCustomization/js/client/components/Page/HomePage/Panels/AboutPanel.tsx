@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
-import { PanelProps } from ".";
+import { PanelProps, DatasetOverviewPanel, StatsPanel } from ".";
 import { DarkSecondaryExternalLink } from "../../../MaterialUI/Links";
 import { _externalUrls } from "../../../../data/_externalUrls";
 import { _siteStatistics } from "../../../../data/_siteStatistics";
@@ -12,7 +12,7 @@ import { _siteStatistics } from "../../../../data/_siteStatistics";
 export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
     return (
         <Grid item container direction="column" spacing={6} xs={12} sm={10} md={6}>
-            <Grid item>
+            <Grid item xs={12}>
                 <Typography variant="h3" className={classes.headingPrimary} align="center">
                     About the GenomicsDB
                 </Typography>
@@ -34,6 +34,12 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
                     </Typography>
                 </Box>
             </Grid>
+
+            <Grid item container direction="row" xs={12} justifyContent="space-evenly" alignItems="center" >
+                <DatasetOverviewPanel classes={classes}/>
+                <StatsPanel classes={classes}/>
+            </Grid>
+
         </Grid>
     );
 };
