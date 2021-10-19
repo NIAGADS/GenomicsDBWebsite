@@ -22,7 +22,7 @@ interface DSDonutProps {
 }
 
 /* note allowable values for maxWidth come from https://mui.com/system/sizing/ */
-export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({className}) => {
+export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({ className }) => {
     const buildSeries = (data: ChartData[]) => {
         const series = {
             series: [
@@ -52,6 +52,20 @@ export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({className
                     },
                     keys: ["name", "y", "full_name"],
                     data: data,
+                    responsive: {
+                        rules: [
+                            {
+                                condition: {
+                                    // below widths of 500 don't display data labels
+                                    maxWidth: 500,
+                                },
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                                showInLegend: true // display legend instead
+                            },
+                        ],
+                    },
                 },
             ],
         };
@@ -78,6 +92,15 @@ export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({className
                 // pointFormat: "{point.full_name}: <b>{point.y}</b> <br/>Click on chart to browse these datasets.",
                 pointFormat: "{point.full_name}: n = <b>{point.y}</b>",
             },
+            /*responsive: {
+                rules: [
+                    {
+                        condition: {
+                            maxWidth: 500,
+                        },
+                    },
+                ],
+            },*/
             /*legend: {
                 //align: "right",
                 //verticalAlign: "middle",
@@ -101,7 +124,14 @@ export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({className
         return plotOptions;
     };
 
-    return useMemo(() => {
-        return <HighchartsPlot data={series} properties={{ type: "pie" }} plotOptions={buildDonutPlotOptions()} containerProps={{className: {className}}}/>;
-    }, [series]);
+   // return useMemo(() => {
+        return (
+            <HighchartsPlot
+                data={series}
+                properties={{ type: "pie" }}
+                plotOptions={buildDonutPlotOptions()}
+                containerProps={{ className }}
+            />
+        );
+ //   }, [series]);
 };
