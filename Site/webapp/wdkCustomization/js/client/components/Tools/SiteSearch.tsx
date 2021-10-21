@@ -24,18 +24,17 @@ const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: fade(theme.palette.primary.dark, 0.15),
             },
             [theme.breakpoints.up("sm")]: {
-                marginLeft: theme.spacing(3), //+ "px !important",
+                marginLeft: theme.spacing(3), 
                 width: "auto" // !important"
             },
         },
         panel: {
             backgroundColor: theme.palette.common.white,
-            borderStyle: "solid",
-            borderWeight: "2px",
-            borderColor: fade(theme.palette.common.white, 0.25),
             "&:hover": {
-                borderColor: theme.palette.secondary.light,
-                boxShadow: "inset 0 0 8px 1px " + theme.palette.secondary.light
+                boxShadow: "inset 0 0 5px 2px " + theme.palette.secondary.light
+            },
+            [theme.breakpoints.down("sm")]: {
+                marginRight: theme.spacing(3)
             },
         },
         searchIcon: {

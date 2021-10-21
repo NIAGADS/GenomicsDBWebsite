@@ -76,15 +76,9 @@ export const HomePage: React.FC<any> = ({}) => {
                 <PrimaryBackgroundPanel classes={classes}>
                     <SearchPanel classes={classes} />
                 </PrimaryBackgroundPanel>
-                <DefaultBackgroundPanel classes={classes} hasBaseArrow={false}>
+                <DefaultBackgroundPanel classes={classes} hasBaseArrow={true}>
                     <AboutPanel classes={classes} />
                 </DefaultBackgroundPanel>
-            {/*    <DefaultBackgroundPanel classes={classes} hasBaseArrow={false}>
-                    <StatsPanel classes={classes} />
-                </DefaultBackgroundPanel>
-                <DefaultBackgroundPanel classes={classes} hasBaseArrow={true}>
-                    <DatasetOverviewPanel classes={classes} />
-    </DefaultBackgroundPanel> */}
                
             </Grid>
         </ThemeProvider>

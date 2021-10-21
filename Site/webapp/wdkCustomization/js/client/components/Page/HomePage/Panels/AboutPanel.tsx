@@ -11,13 +11,13 @@ import { _siteStatistics } from "../../../../data/_siteStatistics";
 
 export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
     return (
-        <Grid item container direction="column" spacing={6} xs={12} sm={10} md={6}>
-            <Grid item xs={12}>
+        <Grid item xs={12} sm={10} spacing={6}>
+            <Grid item spacing={6}>
                 <Typography variant="h3" className={classes.headingPrimary} align="center">
                     About the GenomicsDB
                 </Typography>
 
-                <Box py={6}>
+                <Box py={6} px={2}>
                     <Typography variant="body1" className={classes.lightContrastText} align="left">
                         The NIAGADS Alzheimer's Genomics Database enables browsing, searching, and analysis of publicly
                         available summary statistics from AD/ADRD genome-wide association studies (GWAS) deposited at{" "}
@@ -34,12 +34,10 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
                     </Typography>
                 </Box>
             </Grid>
-
-            <Grid item container direction="row" xs={12} justifyContent="space-evenly" alignItems="center" >
-                <DatasetOverviewPanel classes={classes}/>
-                <StatsPanel classes={classes}/>
+            <Grid container item direction="row" spacing={8} alignItems="center" justifyContent="space-evenly">
+                <DatasetOverviewPanel classes={classes} />
+                <StatsPanel classes={classes} />
             </Grid>
-
         </Grid>
     );
 };

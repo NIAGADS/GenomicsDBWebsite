@@ -15,8 +15,8 @@ import { HighchartsDatasetSummaryDonut as DatasetSummary } from "../../../Visual
 
 export const StatsPanel: React.FC<PanelProps> = ({ classes }) => {
     return (
-        <Grid item container direction="column" justifyContent="center" alignItems="center" xs={12} spacing={4}>
-            <Grid item alignItems="center" xs={12} sm={12} md={4} justifyContent="center">
+     //   <Grid item container direction="column" justifyContent="center" alignItems="center" xs={12} spacing={4}>
+            <Grid item alignItems="center" /*xs={12} sm={12} md={4}*/ justifyContent="center" spacing={6}>
                 <Typography
                     align="left"
                     variant="h3"
@@ -35,6 +35,6 @@ export const StatsPanel: React.FC<PanelProps> = ({ classes }) => {
                     {abbreviateLargeNumber(_siteStatistics.ANNOTATED_GENES, 2)} Annotated Genes
                 </Typography>
             </Grid>
-        </Grid>
+    //    </Grid>
     );
 };
