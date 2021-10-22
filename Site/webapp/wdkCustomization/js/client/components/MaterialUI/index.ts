@@ -9,5 +9,6 @@ export * from "./Links";
 export * from "./Lists";
 export * from "./Typography";
 
+export * from "./Tooltips";
 export * from "./ElevationScroll";
 export * from "./GridElements/DownArrowRow";

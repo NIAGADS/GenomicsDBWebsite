@@ -14,8 +14,7 @@ import {
     PrimaryBackgroundPanel,
     DefaultBackgroundPanel,
     AboutPanel,
-    StatsPanel,
-    DatasetOverviewPanel,
+    AvailableDataPanel
 } from "./Panels";
 
 import "./HomePage.scss";
@@ -46,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
         largeIcon: {
             fontSize: 65,
         },
+        largeButton: {
+            fontSize: "1.1rem"
+        },
         noTopPadding: {
             paddingTop: "0px",
         },
@@ -60,6 +62,18 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         smallCaps: {
             fontVariant: "all-small-caps"
+        },
+        darkBgLink: {
+            color: theme.palette.secondary.main,
+            "&:hover": {
+                color: theme.palette.secondary.light,
+            },
+        },
+        lightBgLink: {
+            color: theme.palette.secondary.dark,
+            "&:hover": {
+                color: theme.palette.secondary.light,
+            },
         }
     })
 );
@@ -77,9 +91,8 @@ export const HomePage: React.FC<any> = ({}) => {
                     <SearchPanel classes={classes} />
                 </PrimaryBackgroundPanel>
                 <DefaultBackgroundPanel classes={classes} hasBaseArrow={true}>
-                    <AboutPanel classes={classes} />
-                </DefaultBackgroundPanel>
-               
+                    <AvailableDataPanel classes={classes} webAppUrl={webAppUrl}/>
+                </DefaultBackgroundPanel>            
             </Grid>
         </ThemeProvider>
     );

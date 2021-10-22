@@ -6,7 +6,7 @@ import { DownArrowRow } from "../../../MaterialUI";
 
 export const PrimaryBackgroundPanel: React.FC<PanelProps> = ({ classes, children, hasBaseArrow = true }) => {
     return (
-        <Grid item container direction="row" justifyContent="center" className={`${classes.primaryBackground} ${classes.defaultBackgroundPanel}`}>
+        <Grid item container justifyContent="center" xs={12} className={`${classes.primaryBackground} ${classes.defaultBackgroundPanel}`}>
             {children}
             {hasBaseArrow && <DownArrowRow />}
         </Grid>
