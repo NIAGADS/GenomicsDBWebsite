@@ -44,7 +44,7 @@ export const AvailableDataPanel: React.FC<PanelProps> = ({ classes, background =
                 </Typography>
             </Grid>
             <Grid item container justifyContent="center">
-                <Grid item container direction="row" alignItems="center" justifyContent="center" spacing={isMobile ? 2 : 10}>
+                <Grid item container direction="row" alignItems="center" justifyContent="center" spacing={isMobile ? 4 : 10}>
                     <Grid item>
                         <DatasetOverviewChart classes={classes} />
                     </Grid>
