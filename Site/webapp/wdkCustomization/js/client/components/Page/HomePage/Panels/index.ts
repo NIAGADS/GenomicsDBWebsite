@@ -1,10 +1,10 @@
 export * from "./AboutPanel";
 export * from "./SearchPanel";
 export * from "./StatsPanel";
-export * from "./DatasetOverviewChart";
 export * from "./PrimaryBackgroundPanel";
-export * from "./DatasetReleasesPanel";
+export * from "./AboutPanel";
 export * from "./AvailableDataPanel";
+export * from "./LightBackgroundPanel";
 export { TransparentBackgroundPanel as DefaultBackgroundPanel } from "./TransparentBackgroundPanel";
 
 export interface PanelProps {

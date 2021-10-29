@@ -3,41 +3,66 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
 
-import { PanelProps, StatsPanel } from ".";
-import { DarkSecondaryExternalLink } from "../../../MaterialUI/Links";
+import { PanelProps, DefaultBackgroundPanel } from ".";
 import { _externalUrls } from "../../../../data/_externalUrls";
 import { _siteStatistics } from "../../../../data/_siteStatistics";
+import { abbreviateLargeNumber } from "../../../../util/util";
 
-export const AboutPanel: React.FC<PanelProps> = ({ classes }) => {
+import { HighchartsDatasetSummaryDonut as DatasetSummary } from "../../../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
+
+export const AboutPanel: React.FC<PanelProps> = ({ classes, background = "light", webAppUrl }) => {
+    const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
+    const headingTextColor = background === "dark" ? classes.headingSecondary : classes.headingPrimary;
+    const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
+
     return (
-        <Grid item container direction="column" xs={12} sm={10} spacing={6}>
-            <Grid item spacing={6}>
-                <Typography variant="h3" className={classes.headingPrimary} align="center">
-                    About the GenomicsDB
-                </Typography>
-
-                <Box py={6} px={2}>
-                    <Typography variant="body1" className={classes.lightContrastText} align="left">
-                        The NIAGADS Alzheimer's Genomics Database enables browsing, searching, and analysis of publicly
-                        available summary statistics from AD/ADRD genome-wide association studies (GWAS) deposited at{" "}
-                        <DarkSecondaryExternalLink href={_externalUrls.NIAGADS_BASE_URL}>
-                            NIAGADS
-                        </DarkSecondaryExternalLink>
-                        . Variants contained within these datasets are annotated using the ADSP Annotation Pipeline
-                        (PMID:{" "}
-                        <DarkSecondaryExternalLink href={`${_externalUrls.PUBMED_URL}/29590295`}>
-                            29590295
-                        </DarkSecondaryExternalLink>
-                        ) and mapped against sequence features and functional genomics data tracks to help researchers
-                        explore the potential impact of risk-associated variants in a broader genomics context.
+        <DefaultBackgroundPanel classes={classes} hasBaseArrow={false}>
+            <Grid item container direction="column" spacing={6} xs={12} sm={10}>
+                <Grid item>
+                    <Typography variant="h3" className={headingTextColor} align="center">
+                        About the Project
                     </Typography>
-                </Box>
+                </Grid>
+
+                <Grid item>
+                    <Typography variant="body1" className={bodyTextColor} align="left">
+                        The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the
+                        University of Pennsylvania as part of the{" "}
+                        <Link className={linkType} href={_externalUrls.NIAGADS_BASE_URL}>
+                            National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site
+                        </Link>{" "}
+                        (NIAGADS), a national genetics repository created by NIA to facilitate access to genotypic data
+                        for the study of the genetics of late-onset Alzheimer's disease. We welcome the involvement of
+                        interested researchers.{" "}
+                        <Link className={linkType} href={`${_externalUrls.NIAGADS_BASE_URL}/data`}>
+                            Click here to learn more
+                        </Link>{" "}
+                        about contributing data or making formal data access requests. Or{" "}
+                        <Link className={linkType} href={`${_externalUrls.NIAGADS_BASE_URL}/contact`}>
+                            contact us
+                        </Link>{" "}
+                        for more information. The GenomicsDB is a collaboration among the following organizations which
+                        may also provide funding or governance:
+                    </Typography>
+                </Grid>
+
+                <Grid item>
+                    <Grid container item spacing={4} direction="row" justify="space-between" alignItems="center">
+                        <Grid item>
+                            <img width="210" src={`${webAppUrl}/images/home/nih-logo.svg`} />
+                        </Grid>
+                        <Grid item>
+                            <img width="145px" src={`${webAppUrl}/images/home/adsp-logo.svg`} />
+                        </Grid>
+                        <Grid item>
+                            <img width="210px" src={`${webAppUrl}/images/home/psom_logo_blue.png`} />
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Grid>
-            <Grid container item direction="row" spacing={8} alignItems="center" justifyContent="space-evenly">
-           
-                <StatsPanel classes={classes} />
-            </Grid>
-        </Grid>
+        </DefaultBackgroundPanel>
     );
 };

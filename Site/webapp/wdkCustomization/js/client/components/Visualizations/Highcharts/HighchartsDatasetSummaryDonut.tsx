@@ -82,13 +82,14 @@ export const HighchartsDatasetSummaryDonut: React.FC<DSDonutProps> = ({ classNam
                 pointFormat: "{point.full_name}: n = <b>{point.y}</b>",
             },
          
-            /*legend: {
-                //align: "right",
-                //verticalAlign: "middle",
-                //layout: "vertical",
+            //legend: {
+                //align: "center",
+                //verticalAlign: "bottom",
+                //layout: "horizontal",
+                //itemMarginTop: -500,
                 //itemStyle: { color: "white", fontSize: "1.15em", fontWeight: "normal" },
                 //itemHoverStyle: { color: "#ffc665" },
-            },*/
+            //},
            
         };
 
