@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 
 import { HtmlTooltip } from "../../../MaterialUI";
 
-import { PanelProps, DefaultBackgroundPanel } from ".";
+import { PanelProps, DefaultBackgroundPanel } from "../../../MaterialUI";
 import { DatasetOverviewChart, DatasetReleases } from "../Cards";
 
 import { _externalUrls } from "../../../../data/_externalUrls";

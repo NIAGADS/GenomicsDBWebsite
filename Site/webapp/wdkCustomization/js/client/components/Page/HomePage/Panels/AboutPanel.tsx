@@ -1,17 +1,13 @@
 import React from "react";
 
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 
-import { PanelProps, DefaultBackgroundPanel } from ".";
+import { PanelProps, DefaultBackgroundPanel } from "../../../MaterialUI";
 import { _externalUrls } from "../../../../data/_externalUrls";
 import { _siteStatistics } from "../../../../data/_siteStatistics";
-import { abbreviateLargeNumber } from "../../../../util/util";
 
-import { HighchartsDatasetSummaryDonut as DatasetSummary } from "../../../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
 
 export const AboutPanel: React.FC<PanelProps> = ({ classes, background = "light", webAppUrl }) => {
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
@@ -50,7 +46,7 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes, background = "light"
                 </Grid>
 
                 <Grid item>
-                    <Grid container item spacing={4} direction="row" justify="space-between" alignItems="center">
+                    <Grid container item spacing={4} direction="row" justifyContent="space-between" alignItems="center">
                         <Grid item>
                             <img width="210" src={`${webAppUrl}/images/home/nih-logo.svg`} />
                         </Grid>

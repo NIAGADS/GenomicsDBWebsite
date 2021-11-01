@@ -5,15 +5,16 @@ import { RecordHeading } from "../RecordHeadingTypes";
 import { Grid } from "@material-ui/core";
 import { BaseText, Heading, Subheading } from "../../../MaterialUI";
 import { RecordInstance, RecordClass } from 'wdk-client/Utils/WdkModel';
+import { DefaultBackgroundPanel } from "../../../MaterialUI";
 
 import './DatasetRecordHeading.scss';
 
 
 const DatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => (
-    <Grid container direction="column" style={{ marginLeft: "10px" }}>
+    <DefaultBackgroundPanel hasBaseArrow={false}>
         <Heading>{record.attributes.name}</Heading>
         <Subheading>{record.attributes.description}</Subheading>
-    </Grid>
+    </DefaultBackgroundPanel>
 );
 
 export default DatasetRecordSummary;

@@ -3,7 +3,7 @@ import React from "react";
 import { Breakpoint, BreakpointProvider } from "react-socks";
 // NOTE: useMediaQuery did not work for changing views on desktop/ react-socks does
 
-import { PanelProps } from "../Panels";
+import { PanelProps } from "../../../MaterialUI";
 import { _externalUrls } from "../../../../data/_externalUrls";
 import { _siteStatistics } from "../../../../data/_siteStatistics";
 

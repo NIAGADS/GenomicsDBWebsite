@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 
-import { PanelProps, LightBackgroundPanel } from ".";
+import { PanelProps, LightBackgroundPanel } from "../../../MaterialUI";
 import { _externalUrls } from "../../../../data/_externalUrls";
 import { _siteStatistics } from "../../../../data/_siteStatistics";
 import { abbreviateLargeNumber } from "../../../../util/util";
@@ -41,7 +41,7 @@ export const StatsPanel: React.FC<PanelProps> = ({ classes, background = "light"
                                 genomics context.
                             </Typography>
                         </Grid>
-                        <Grid item alignItems="center" justifyContent="center" spacing={6}>
+                        <Grid item /*alignItems="center" justifyContent="center" spacing={6}*/>
                             <Typography
                                 align="left"
                                 variant="h3"

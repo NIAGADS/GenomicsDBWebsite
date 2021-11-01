@@ -6,11 +6,11 @@ import { HighchartsTableTrellis } from "../../../Visualizations";
 import { resolveJsonInput } from "../../../../util/jsonParse";
 import { Grid, List, Typography } from "@material-ui/core";
 import { BaseText, BaseTextSmall, Subheading, UnpaddedListItem } from "../../../MaterialUI";
-
+import { DefaultBackgroundPanel } from "../../../MaterialUI";
 
 const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
     return (
-        <Grid container style={{ marginLeft: "10px" }}>
+        <DefaultBackgroundPanel hasBaseArrow={false}>
             <Grid item container direction="column" sm={3}>
                 <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
                 <Subheading style={{ paddingBottom: "0px" }}>
@@ -72,7 +72,7 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
                     />
                 )}
             </Grid>
-        </Grid>
+        </DefaultBackgroundPanel>
     );
 };
 

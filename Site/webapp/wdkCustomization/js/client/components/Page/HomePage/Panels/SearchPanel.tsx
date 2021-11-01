@@ -4,7 +4,7 @@ import { Grid, Typography, Box } from "@material-ui/core";
 
 import { SiteSearch, SearchResult } from "../../../Tools";
 import { buildRouteFromResult, buildSummaryRoute } from "../../../../util/util";
-import { PanelProps, PrimaryBackgroundPanel } from "../Panels";
+import { PanelProps, PrimaryBackgroundPanel } from "../../../MaterialUI";
 import { SecondaryLink } from "../../../MaterialUI/Links";
 
 export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
@@ -31,7 +31,7 @@ export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
                         </Typography>
                     </Box>
                 </Grid>
-                <Grid item justifyContent="center">
+                <Grid item >
                     <SiteSearch
                         variant="panel"
                         onSelect={(value: SearchResult, searchTerm: string) =>

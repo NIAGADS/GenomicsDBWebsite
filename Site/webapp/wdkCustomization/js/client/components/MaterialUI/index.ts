@@ -1,7 +1,7 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { themeOptions } from "./theme";
 
-export const theme = createMuiTheme(themeOptions);
+export const theme = createTheme(themeOptions);
 
 export * from "./Buttons";
 export * from "./Inputs";
@@ -12,3 +12,6 @@ export * from "./Typography";
 export * from "./Tooltips";
 export * from "./ElevationScroll";
 export * from "./GridElements/DownArrowRow";
+export * from "./PersistentDrawerLeft";
+
+export * from "./Panels";

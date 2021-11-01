@@ -1,7 +1,7 @@
 import React from "react";
 import { filter } from 'lodash';
 import { DatasetCard, DatasetRecord } from ".";
-import { PanelProps } from "../Panels";
+import { PanelProps } from "../../../MaterialUI";
 import { _datasetReleases, _currentRelease } from "../../../../data/_datasetReleases";
 import Carousel from 'react-material-ui-carousel';
 

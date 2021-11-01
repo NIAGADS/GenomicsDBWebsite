@@ -6,8 +6,8 @@ import SearchAppBar from "./ApplicationNavBar";
 import CookieConsent, { Cookies, resetCookieConsentValue } from "react-cookie-consent";
 import { _externalUrls } from "../../../data/_externalUrls";
 
-const Header: React.FC<any> = ({}) => {
-    //const goto = useGoto();
+export const Header: React.FC<{}> = () => {
+
     return (
         <ThemeProvider theme={theme}>
             <SearchAppBar />
@@ -27,4 +27,3 @@ const Header: React.FC<any> = ({}) => {
     );
 };
 
-export default Header;

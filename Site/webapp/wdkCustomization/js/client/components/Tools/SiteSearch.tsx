@@ -4,7 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { isEmpty } from "lodash";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { isString, get } from "lodash";
-import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
             width: "100%",     
         },
         menu: {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
             "&:hover": {
-                backgroundColor: fade(theme.palette.primary.dark, 0.15),
+                backgroundColor: alpha(theme.palette.primary.dark, 0.15),
             },
             [theme.breakpoints.up("sm")]: {
                 marginLeft: theme.spacing(3), 

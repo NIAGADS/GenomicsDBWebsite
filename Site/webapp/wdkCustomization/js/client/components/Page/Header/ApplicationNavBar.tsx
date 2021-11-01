@@ -1,7 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import { fade, makeStyles, Theme, createStyles, styled } from "@material-ui/core/styles";
+import clsx from "clsx";
+
+import { makeStyles, Theme, createStyles, styled } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -37,17 +39,24 @@ import logo from "../../../../../images/genomicsdb-logo.svg";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        appBar: {
+            // zindex
+            backgroundColor: "white"
+        },
         logo: {
             maxWidth: "100%",
         },
         logoButton: {
-            maxWidth: 150
+            maxWidth: 150,
         },
         grow: {
             flexGrow: 1,
         },
         menuButton: {
             marginRight: theme.spacing(2),
+        },
+        hide: {
+            display: "none",
         },
         title: {
             display: "none",
@@ -83,8 +92,8 @@ const useStyles = makeStyles((theme: Theme) =>
         toolbar: {
             borderBottomStyle: "solid",
             borderBottomWidth: "4px",
-            borderBottomColor: theme.palette.secondary.main
-        }
+            borderBottomColor: theme.palette.secondary.main,
+        },
     })
 );
 
@@ -239,50 +248,53 @@ function PrimarySearchAppBar() {
     );
 
     return (
-        //{/*<div className={classes.grow}>*/}
-        <ElevationScroll> 
-            <>
-            <AppBar position="static">
-                <Announcements />
-              
-                <Toolbar className={classes.toolbar}>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
-                        <MenuIcon />
-                    </IconButton>
+        <>
+            <ElevationScroll>
+                <>
+                    <AppBar position="fixed" className={classes.appBar}>
+                        <Announcements />
 
-                    <Button className={classes.logoButton} aria-label="NIAGADS Alzheimer's GenomicsDB Home" color="inherit" href={`${webAppUrl}`}>
-                        <img src={logo} alt="NIAGADS GenomicsDB" className={classes.logo} />
-                    </Button>
+                        <Toolbar className={classes.toolbar}>
+                            <Button
+                                className={classes.logoButton}
+                                aria-label="NIAGADS Alzheimer's GenomicsDB Home"
+                                color="inherit"
+                                href={`${webAppUrl}`}
+                            >
+                                <img src={logo} alt="NIAGADS GenomicsDB" className={classes.logo} />
+                            </Button>
 
-                    <SiteSearch variant="menu"
-                        onSelect={(value: SearchResult, searchTerm: string) =>
-                            goto(
-                                !value || value.type == "summary"
-                                    ? buildSummaryRoute(searchTerm)
-                                    : buildRouteFromResult(value)
-                            )
-                        }
-                    />
-                    <div className={classes.grow} />
-                    {renderDesktopMenu}
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </div>
-                </Toolbar>
-                <GenomeBuildBanner />
-            </AppBar>
-            {renderMobileMenu}
-            {renderAccountMenu}
-            </>
-       </ElevationScroll> // {/*</div>*/}
+                            <SiteSearch
+                                variant="menu"
+                                onSelect={(value: SearchResult, searchTerm: string) =>
+                                    goto(
+                                        !value || value.type == "summary"
+                                            ? buildSummaryRoute(searchTerm)
+                                            : buildRouteFromResult(value)
+                                    )
+                                }
+                            />
+                            <div className={classes.grow} />
+                            {renderDesktopMenu}
+                            <div className={classes.sectionMobile}>
+                                <IconButton
+                                    aria-label="show more"
+                                    aria-controls={mobileMenuId}
+                                    aria-haspopup="true"
+                                    onClick={handleMobileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <MoreIcon />
+                                </IconButton>
+                            </div>
+                        </Toolbar>
+                        <GenomeBuildBanner />
+                    </AppBar>
+                    {renderMobileMenu}
+                    {renderAccountMenu}
+                </>
+            </ElevationScroll>{" "}
+        </>
     );
 }
 
