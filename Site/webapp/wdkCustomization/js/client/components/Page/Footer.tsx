@@ -1,7 +1,7 @@
 import React from "react";
 import { webAppUrl } from "ebrc-client/config";
 
-import { ThemeProvider } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
