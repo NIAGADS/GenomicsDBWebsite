@@ -1,0 +1,20 @@
+displayName: GWAS Summary Statistics Hits
+
+
+get: 
+    description: > 
+        queries against all GWAS summary statistics datasets and returns datasets & p-values where the query variants have genome-wide significance at the provided cutoff
+    queryParameters:
+        id: 
+            description: comma separated list of one or more variant identifiers
+            example: rs6656401 or 19:45411941:T:C
+        pvalueCutoff: 
+            required: false
+            description: query only returns hits with genome-wide significance less than or equal to the provided cutoff; minimum cutoff is 1e-3 (0.001).  
+            example: 5e-8
+            default: 0.001
+    responses:
+        200:
+            body:
+                application/json:
+                    example: {}

@@ -455,7 +455,7 @@ export function addCategories(categories: string[], axis: string = "xAxis") {
     return plotOptions;
 }
 
-export function addTitle(title: string) {
+export function addTitle(title: string, layout: any = null ) {
 
     const plotOptions: Options = title !== null
         ? {
@@ -468,6 +468,10 @@ export function addTitle(title: string) {
                 text: undefined
             }
         }
+
+    if (layout) {
+        plotOptions.title = merge(plotOptions.title, layout);
+    }
 
     return plotOptions;
 }

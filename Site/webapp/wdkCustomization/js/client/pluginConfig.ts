@@ -3,7 +3,7 @@ import { StepAnalysisDefaultResult } from "wdk-client/Plugins";
 import DefaultQuestionForm from "wdk-client/Views/Question/DefaultQuestionForm";
 
 import { StepAnalysisGoEnrichmentResults } from "./components/StepAnalysis/StepAnalysisGoEnrichmentResults";
-import GenomeView from "./components/SummaryViews/GenomeView";
+import HistogramIdeogramView from "./components/SummaryViews/VariantGenomeView";
 
 export default [
     /* {
@@ -23,8 +23,8 @@ export default [
     },
     {
         type: "summaryView",
-        name: "ideogram",
-        component: GenomeView,
+        name: "variant-histogram-ideogram",
+        component: HistogramIdeogramView,
     },
 
     {
@@ -37,4 +37,5 @@ export default [
         name: "go-enrichment",
         component: StepAnalysisGoEnrichmentResults,
     },
+  
 ];

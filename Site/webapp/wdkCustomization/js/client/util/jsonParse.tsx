@@ -1,9 +1,9 @@
 import React from "react";
-import { Link, Tooltip } from "wdk-client/Components";
+import { Tooltip } from "wdk-client/Components";
 import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
 import { isString, isPlainObject, isNull } from "lodash";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { PrimaryExternalLink, PrimaryLink } from "../components/Shared";
+import { PrimaryExternalLink, PrimaryLink } from "../components/MaterialUI";
 
 export interface LinkType {
     url: string;
@@ -87,7 +87,7 @@ export const resolveObjectInput = (
 				or just parse, if element, probably want something more specific than current 'description_list'
 				somethiing more like 'page_heading_out_links' so we know exactly what component to return
 			*/
-            return <>obj</>;
+            return <>{obj}</>;
     }
     throw new Error(`no parser for object of type ${obj.type}!`);
 };

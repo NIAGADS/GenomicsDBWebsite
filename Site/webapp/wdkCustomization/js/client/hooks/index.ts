@@ -1,4 +1,5 @@
 import useClickAway from "./useClickAway";
 import useGoto from "./useGoto";
+import useDynamicWidth from "./useDynymicWidth";
 
-export { useClickAway, useGoto };
+export { useClickAway, useDynamicWidth, useGoto };

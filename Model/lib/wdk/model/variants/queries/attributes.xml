@@ -74,15 +74,21 @@
 		 WITH ids AS (##WDK_ID_SQL##),
 		 
 		 gv_flag AS (
-		 SELECT TRUE AS flag FROM NIAGADS.Variant v, ids
+		 SELECT ids.source_id
+		 FROM NIAGADS.Variant v, ids
 		 WHERE ids.source_id = v.record_primary_key),
 		 
+		 av_flag AS (
+		 SELECT ids.source_id
+		 FROM ids
+		 WHERE ids.source_id NOT IN (SELECT source_id FROM gv_flag)),
+	
 		 genomics_variant_attributes AS (
 		 SELECT 
+		 'gv' as type,
 		 '@PROJECT_ID@'::text AS project_id,
 		 record_primary_key AS source_id,
 		 
-		 -- truncate_str(metaseq_id, 27) AS display_metaseq_id,
 		 metaseq_id,
 		 ref_snp_id,
 		 
@@ -109,7 +115,7 @@
 		 qc.is_adsp_wes,
 		 qc.is_adsp_wgs
 		 
-		 FROM NIAGADS.Variant v, ids, adsp_qc_status_niagads(ids.source_id) qc
+		 FROM NIAGADS.Variant v, gv_flag ids, adsp_qc_status_niagads(ids.source_id) qc
 		 WHERE v.record_primary_key = ids.source_id),
 		 
 		 annotated_variant AS (
@@ -119,10 +125,10 @@
 		 split_part(source_id, '_', 1) AS metaseq_id,
 		 split_part(source_id, '_', 2) AS ref_snp_id,
 		 'chr' || split_part(source_id, ':', 1)::text AS chromosome
-		 FROM ids),
+		 FROM av_flag ids),
 		 
 		 annotated_variant_attributes AS (
-		 SELECT 
+		 SELECT 'av' as type,
 		 '@PROJECT_ID@'::text AS project_id,
 		 ids.source_id,
 		 
@@ -153,14 +159,14 @@
 		 qc.is_adsp_wes,
 		 qc.is_adsp_wgs
 	 
-		 FROM annotated_variant av, ids,
+		 FROM annotated_variant av, av_flag ids,
 		 normalize_alleles(av.ref_allele, av.alt_allele) na, 
 		 display_allele_attributes(av.ref_allele, av.alt_allele, na.ref, na.alt, av.position) da,
 		 adsp_qc_status(ids.source_id) qc)
 		 
-		 SELECT * FROM genomics_variant_attributes WHERE EXISTS (SELECT flag FROM gv_flag)
-		 UNION 
-		 SELECT * FROM annotated_variant_attributes WHERE NOT EXISTS (SELECT flag FROM gv_flag)
+		SELECT * FROM genomics_variant_attributes
+		UNION 
+		SELECT * FROM annotated_variant_attributes 
 	]]>
       </sql>
     </sqlQuery>
@@ -179,8 +185,23 @@
       <column name="msc_impacted_transcript" columnType="string"/>
       <sql>
 	<![CDATA[
-		 WITH id AS (##WDK_ID_SQL##)
+		 WITH id AS (##WDK_ID_SQL##),
 		 
+		 gv_flag AS (
+		 SELECT id.source_id
+		 FROM NIAGADS.Variant v, id
+		 WHERE id.source_id = v.record_primary_key),
+		 
+		 av_flag AS (
+		 SELECT id.source_id
+		 FROM id
+		 WHERE id.source_id NOT IN (SELECT source_id FROM gv_flag)),
+
+		 conseq AS (
+		 SELECT id.source_id, adsp_most_severe_consequence(id.source_id) AS msc FROM av_flag id
+		 UNION ALL
+		 SELECT id.source_id, adsp_most_severe_consequence_niagads(id.source_id) AS msc FROM gv_flag id)
+
 		 SELECT msc.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 array_to_string(json_array_cast_to_text((msc->'consequence_terms')::json), ',') AS most_severe_consequence,
@@ -197,7 +218,7 @@
            
 		 msc->>'codons' AS msc_codon_change,
 		 msc->>'amino_acids' AS msc_amino_acid_change		 
-		 FROM (SELECT id.source_id, adsp_most_severe_consequence(id.source_id) AS msc FROM id) msc
+		 FROM conseq msc
 	]]>
       </sql>
     </sqlQuery>

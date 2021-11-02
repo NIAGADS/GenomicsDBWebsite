@@ -4,25 +4,17 @@ import { Tooltip } from "wdk-client/Components";
 import { MostSevereConsequencesSection } from "./Components/index";
 import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "./../Shared";
 import { getAttributeChartProperties } from "./../Shared/HeaderRecordActions/HeaderRecordActions";
-import { resolveJsonInput, isJson } from "../../../../util/jsonParse";
-import { VariantRecordSummary, VariantRecordAttributes } from "./../../types";
+import { resolveJsonInput, isJson, withTooltip } from "../../../../util/jsonParse";
 import { HighchartsTableTrellis } from "../../../Visualizations/Highcharts/HighchartsTrellisPlot";
 import { Box, Grid, List } from "@material-ui/core";
 import { Check, ReportProblemOutlined } from "@material-ui/icons";
-import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../../Shared/Typography";
-import { UnpaddedListItem } from "../../../Shared";
+import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../../MaterialUI/Typography";
+import { UnpaddedListItem, PrimaryExternalLink } from "../../../MaterialUI";
 
-interface StoreProps {
-    externalUrls: { [key: string]: any };
-    webAppUrl: string;
-}
+import { _externalUrls } from "../../../../data/_externalUrls";
+import { RecordHeading, RecordAttributes } from '../RecordHeadingTypes';
 
-const enhance = connect((state: any) => ({
-    externalUrls: state.globalData.siteConfig.externalUrls,
-    webAppUrl: state.globalData.siteConfig.webAppUrl,
-}));
-
-const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props) => {
+const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 
@@ -33,12 +25,18 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
                 <Subheading style={{ paddingBottom: "0px" }}>
                     <strong>
                         {isJson(attributes.display_metaseq_id)
-                            ? resolveJsonInput(attributes.display_metaseq_id)
+                            ? resolveJsonInput(attributes.display_metaseq_id.toString())
                             : attributes.display_metaseq_id}
                     </strong>
                 </Subheading>
 
-                {attributes.ref_snp_id && <SubheadingSmall>{attributes.ref_snp_id}</SubheadingSmall>}
+                {attributes.ref_snp_id 
+                    && <SubheadingSmall>
+                        {attributes.ref_snp_id}
+                        {" "} {withTooltip(<PrimaryExternalLink href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
+                            <i className="fa fa-external-link"></i>
+                        </PrimaryExternalLink>, 'Explore dbSNP record for this variant')}
+                    </SubheadingSmall>}
                 <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
                     <BaseTextSmall>
                         Has this variant been flagged by the ADSP?&nbsp;&nbsp;&nbsp;
@@ -56,20 +54,20 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
                 {attributes.most_severe_consequence && <MostSevereConsequencesSection attributes={attributes} />}
 
                 <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                    <RecordAttributeItem label="Allele:" attribute={attributes.display_allele} />
+                    <RecordAttributeItem label="Allele:" attribute={attributes.display_allele.toString()} />
                     <BaseTextSmall>{attributes.variant_class}</BaseTextSmall>
-                    {attributes.location && <RecordAttributeItem label="Location:" attribute={attributes.location} />}
+                    {attributes.location && <RecordAttributeItem label="Location:" attribute={attributes.location.toString()} />}
                 </Box>
                 {(attributes.alternative_variants || attributes.colocated_variants) && (
                     <Box paddingBottom={1} borderBottom="1px solid">
                         {attributes.alternative_variants && (
-                            <AlternativeVariants altVars={attributes.alternative_variants} />
+                            <AlternativeVariants altVars={attributes.alternative_variants.toString()} />
                         )}
                         {attributes.colocated_variants && (
                             <ColocatedVariants
-                                position={attributes.position}
-                                chromosome={attributes.chromosome}
-                                colVars={attributes.colocated_variants}
+                                position={attributes.position.toString()}
+                                chromosome={attributes.chromosome.toString()}
+                                colVars={attributes.colocated_variants.toString()}
                             />
                         )}
                     </Box>
@@ -85,7 +83,7 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
 
                 {record.attributes.gws_datasets_summary_plot && (
                     <HighchartsTableTrellis
-                        data={JSON.parse(record.attributes.gws_datasets_summary_plot)}
+                        data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}
                         properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_datasets_summary_plot"))}
                     />
                 )}
@@ -94,7 +92,7 @@ const VariantRecordSummary: React.FC<VariantRecordSummary & StoreProps> = (props
     );
 };
 
-const ADSPQCDisplay: React.FC<{ attributes: VariantRecordAttributes }> = ({ attributes }) =>
+const ADSPQCDisplay: React.FC<{ attributes: RecordAttributes }> = ({ attributes }) =>
     (attributes.adsp_wgs_qc_filter_status || attributes.adsp_wes_qc_filter_status) && (
         <Box>
             {attributes.adsp_wes_qc_filter_status &&
@@ -110,11 +108,11 @@ const ADSPQCDisplay: React.FC<{ attributes: VariantRecordAttributes }> = ({ attr
             {attributes.adsp_wgs_qc_filter_status &&
                 (attributes.is_adsp_wgs ? (
                     <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="red">WES</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
+                        <SmallBadge backgroundColor="red">WGS</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
                     </Box>
                 ) : (
                     <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="black">WES</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
+                        <SmallBadge backgroundColor="black">WGS</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
                     </Box>
                 ))}
         </Box>
@@ -157,4 +155,4 @@ const LinkList: React.FC<{ list: string[] }> = ({ list }) => (
     </List>
 );
 
-export default enhance(VariantRecordSummary);
+export default VariantRecordSummary;

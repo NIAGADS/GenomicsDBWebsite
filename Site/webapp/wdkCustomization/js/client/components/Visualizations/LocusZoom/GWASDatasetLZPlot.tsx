@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { Grid, List, ListItem, Typography, withStyles, Select, MenuItem, FormHelperText } from "@material-ui/core";
-import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "../../Shared";
+import { Grid, List, ListItem, Box, Typography, withStyles, Select, MenuItem, FormHelperText } from "@material-ui/core";
+import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "../../MaterialUI";
 import LZPlot from "./LZPlot";
 import { get } from "lodash";
 import { useWdkService } from "wdk-client/Hooks/WdkServiceHook";
@@ -46,7 +46,7 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
 
     useWdkService(
         (service) =>
-            service._fetchJson<TopHit[]>("get", `/dataset/gwas/top?track=${dataset}&limit=10&flank`).then((res) => {
+            service._fetchJson<TopHit[]>("get", `/dataset/gwas/top?track=${dataset}&flank`).then((res) => {
                 setTopHits(res);
                 loadTopHit(res[0]);
             }),
@@ -54,52 +54,55 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
     );
 
     return chromosome && refVariant && range ? (
-        <div className="locuszoom-plot">
-            <Grid container direction="column" spacing={2}>
-                <Grid item container direction="row" justify="center">
-                    <Grid item xs={4}>
-                        <Select
-                            value={population}
-                            onChange={(e) => setPopulation(e.target.value as string)}
-                            input={<UnlabeledTextField fullWidth={true} />}
-                        >
-                            {populationChoices.map((item) => {
-                                return (
-                                    <MenuItem key={Object.keys(item)[0]} value={Object.keys(item)[0]}>
-                                        {Object.values(item)[0]}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
-                        <FormHelperText>Select a population</FormHelperText>
-                    </Grid>
+        <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+            {/* outer */}
+            <Grid container item direction="column" xs={3}>
+                {/* left col -- selectors */}
+                <Grid item>
+                    {/* top row -- population selector */}
+                    <Select
+                        style={{ fontSize: 14.4, width: 100 }}
+                        value={population}
+                        onChange={(e) => setPopulation(e.target.value as string)}
+                        input={<UnlabeledTextField fullWidth={true} />}
+                    >
+                        {populationChoices.map((item) => {
+                            return (
+                                <MenuItem key={Object.keys(item)[0]} value={Object.keys(item)[0]}>
+                                    {Object.values(item)[0]}
+                                </MenuItem>
+                            );
+                        })}
+                    </Select>
+                    <FormHelperText>Select a LD population</FormHelperText>
                 </Grid>
-                <Grid item container wrap="nowrap" justify="center" direction="row" spacing={1}>
-                    <Grid item>
-                        <Typography>Top Hits</Typography>
-                        <List>
-                            {(topHits || []).map((t) => (
-                                //@ts-ignore
-                                <TopHitListItem key={t.ld_reference_variant}>
-                                    <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
-                                </TopHitListItem>
-                            ))}
-                        </List>
-                    </Grid>
-                    <Grid item>
-                        <LZPlot
-                            chromosome={chromosome}
-                            end={get(range, "end")}
-                            population={population}
-                            refVariant={refVariant}
-                            selectClass={selectClass.current}
-                            start={get(range, "start")}
-                            track={dataset}
-                        />
-                    </Grid>
+
+                <Grid item xs={6}>
+                    {/* bottom row - top hits selector */}
+                    <Typography>Top Hits</Typography>
+                    <List style={{ maxHeight: 350, minWidth: 150, overflow: "auto" }}>
+                        {(topHits || []).map((t) => (
+                            //@ts-ignore
+                            <TopHitListItem key={t.ld_reference_variant}>
+                                <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
+                            </TopHitListItem>
+                        ))}
+                    </List>
                 </Grid>
             </Grid>
-        </div>
+            <Grid item>
+                {/* right col - plot */}
+                <LZPlot
+                    chromosome={chromosome}
+                    end={get(range, "end")}
+                    population={population}
+                    refVariant={refVariant}
+                    selectClass={selectClass.current}
+                    start={get(range, "start")}
+                    track={dataset}
+                />
+            </Grid>
+        </Grid>
     ) : (
         <LoadingOverlay />
     );

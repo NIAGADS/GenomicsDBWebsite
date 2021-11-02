@@ -16,8 +16,9 @@ CREATE TABLE announce.projects
   CONSTRAINT "PROJECTS_PKEY" PRIMARY KEY (PROJECT_ID)
 );
 
--- existing projects
-INSERT INTO announce.projects(PROJECT_ID, PROJECT_NAME) VALUES(10, 'PennTurbo');
+-- existing project
+INSERT INTO announce.projects(PROJECT_ID, PROJECT_NAME) VALUES(10, 'GRCh37');
+INSERT INTO announce.projects(PROJECT_ID, PROJECT_NAME) VALUES(20, 'GRCh38');
 
 --==============================================================================
 
@@ -73,3 +74,7 @@ CREATE SEQUENCE announce.projects_id_pkseq INCREMENT BY 10 START WITH 100;
 CREATE SEQUENCE announce.category_id_pkseq INCREMENT BY 10 START WITH 40;
 
 CREATE SEQUENCE announce.messages_id_pkseq INCREMENT BY 10 START WITH 10;
+
+
+GRANT SELECT ON ALL TABLES IN SCHEMA ANNOUNCE TO COMM_WDK_W;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA Announce TO  COMM_WDK_W;

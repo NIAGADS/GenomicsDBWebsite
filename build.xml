@@ -39,54 +39,43 @@
     </ant>
 
     <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt to ${targetDir}/lib/wdk/ontology/annotation.txt"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true"/> 
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true"/>
 
     <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl to ${targetDir}/lib/wdk/ontology/categories.owl"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/> 
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/>
+    
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl to ${targetDir}/lib/wdk/ontology/categories_full.owl"/>
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl" tofile="${targetDir}/lib/wdk/ontology/categories_full.owl" overwrite="true"/>
+
 
     <!-- the following four commands generate the website ontology -->
+
+    <path id="owl-class-path">
+      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
+      <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
+      <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
+      <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
+      <pathelement location="${targetDir}/config/"/>
+    </path>
+
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename individuals.txt -outputFilename individuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/individuals.owl'"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.EuPathAnnotPropAdder">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename annotation.txt -outputFilename annotation.owl  -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/annotation.owl'"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
-    <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
+    <!-- <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename commonIndividuals.txt -outputFilename commonIndividuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/commonIndividuals.owl'"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
-    </java>
+      <classpath refid="owl-class-path"/>
+    </java> -->
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OntologyMerger">
       <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename categories_full.owl -outputFilename categories_merged.owl"/>
-      <classpath>
-        <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-        <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-        <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-        <pathelement location="${targetDir}/config/"/>
-      </classpath>
+      <classpath refid="owl-class-path"/>
     </java>
 
   </target>
@@ -119,7 +108,7 @@
                                                             EbrcWebSvcCommon-WebInstallation,
                                                             GenomicsDBWebsite/View-WebInstallation,
                                                             GenomicsDBWebsite/Site-WebInstallation">
-                                                           <!-- GenomicsDBWebsite/Service-WebInstallation,
+    <!-- GenomicsDBWebsite/Service-WebInstallation,
                                                             checkLinks,docLink">-->
   </target>
 
@@ -133,15 +122,35 @@
     <exec executable="${patch-full-path-wdkclient}"/>
   </target>
 
-  <target name="GenomicsDBWebsite/Site-WebInstallation">
+  <target name="GenomicsDBWebsite/Site-WebInstallation" depends="GenomicsDBWebsite-Website-Patch">
     <ant target="eupathWebComponentInstall">
       <property name="project" value="GenomicsDBWebsite"/>
       <property name="component" value="Site"/>
     </ant>
-    <echo message="Copying ${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp to ${webappTargetDir}/WEB-INF/includes/client/index.jsp"/>
-    <copy file="${projectsDir}/${project}/Site/webapp/WEB-INF/includes/client/index.jsp" tofile="${webappTargetDir}/WEB-INF/includes/client/index.jsp" overwrite="true"/>
+
+    <echo message="Unpack manhattan plots"/>
+    <untar src="${webappTargetDir}/images/manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images"/>
+    <delete file="${webappTargetDir}/images/manhattan.tar.gz" quiet="true"/>
+    
+    <replace dir="${webappTargetDir}/WEB-INF/includes"
+             propertyFile="${webPropFile}" >
+      <include name="client.html" />
+      <replacefilter token="@build@" property="build"/>
+      <replacefilter token="@assetPath@" property="assetPath" />
+      <replacefilter token="@googleAnalyticsId@" property="googleAnalyticsId" />
+      <replacefilter token="@webappCtx@" property="webappCtx" />
+    </replace>
+
+    <!-- <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js; assuming GRCh37 and 38 builds have same model.prop"/>
+    <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstants"/>
+    <exec executable="${extract-urls}">
+      <arg line="-\-modelPropFile ${projectsDir}/${project}/Model/config/GRCh37/model.prop.sample"/>
+      <arg line="-\-outputFile ${webappTargetDir}/wdkCustomization/js/client/data/externalUrls.js"/>
+    </exec> -->
+
   </target>
 
+  
   <target name="GenomicsDBWebsite/View-WebInstallation">
 
     <ant target="defaultComponentInstall">
@@ -156,13 +165,13 @@
 
   </target>
 
-  <!-- <target name="GenomicsDBWebsite/Service-WebInstallation"> -->
-  <!-- <echo message="Generating API documentation"/> -->
-  <!--   <antcall target="runRaml2Html"> -->
-  <!--     <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml"/> -->
-  <!--     <param name="outputFile" value="${htdocsTargetDir}/service-api.html"/> -->
-  <!--   </antcall> -->
-  <!-- </target> -->
+<target name="GenomicsDBWebsite/Service-WebInstallation">
+  <echo message="Generating API documentation"/>
+  <antcall target="runRaml2Html">
+   <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml"/>
+  <param name="outputFile" value="${htdocsTargetDir}/genomics-service-api.html"/> 
+  </antcall>
+</target>
 
   <!-- <target name="checkLinks"> -->
   <!--   <available file="${webappTargetDir}/docs" property="docsLinkExists" /> -->
@@ -170,7 +179,7 @@
 
   <!-- <target name="docLink" unless="docsLinkExists"> -->
   <!--   <symlink link="${htdocsTargetDir}" -->
-  <!--            resource="${webappTargetDir}/docs" /> -->
+  <!-- resource="${webappTargetDir}/docs" /> -->
   <!-- </target> -->
 
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->

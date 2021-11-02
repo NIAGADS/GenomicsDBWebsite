@@ -1,5 +1,5 @@
 import { WdkViewController } from 'wdk-client/Controllers';
-import { SiteHeader } from '../components';
+import { Header } from '../components';
 
 export default class HeaderController extends WdkViewController {
   renderView() {

@@ -5,8 +5,7 @@ import { getTableNames } from "wdk-client/Views/Records/RecordUtils";
 import { setCollapsedSections } from "wdk-client/Actions/RecordActions";
 import RecordMainCategorySection from "../RecordMainCategorySection/RecordMainCategorySection";
 import { CategoryTreeNode, getId, getLabel } from "wdk-client/Utils/CategoryUtils";
-import * as GR from "../types";
-import { RecordClass } from "wdk-client/Utils/WdkModel";
+import { RecordClass, RecordInstance } from "wdk-client/Utils/WdkModel";
 import { flatMap, get, intersection, isEmpty } from "lodash";
 
 interface RecordMainSection {
@@ -14,7 +13,7 @@ interface RecordMainSection {
     depth: number;
     onSectionToggle: { (sectionName: string, isVisible: boolean): any };
     parentEnumeration: string;
-    record: GR.GeneRecord;
+    record: RecordInstance;
     recordClass: RecordClass;
     requestPartialRecord?: any;
     //connected
@@ -35,9 +34,11 @@ const _NiagadsRecordMainSection: React.SFC<RecordMainSection> = ({
 }) => {
     //set all sections collapsed by default
     //using useState instead of useEffect b/c we need it to set collapsed *before* first render
+
     const [loaded, setLoaded] = useState(false),
         defaultOpen = (recordClass.tables || [])
-            .filter((t) => get(t, "properties.defaultOpen[0]") === "true")
+            .filter((t) => 
+                get(JSON.parse(get(t, "properties.flags[0]", '{}')), 'defaultOpen', false))
             .map((t) => t.name),
         defaultClosed = flatMap(categories, getTableNames).filter((n) => !defaultOpen.includes(n));
     if (!loaded) {

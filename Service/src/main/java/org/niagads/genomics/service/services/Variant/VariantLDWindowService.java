@@ -30,15 +30,15 @@ import org.gusdb.wdk.service.service.AbstractWdkService;
 
 
 
-@Path("variant/ldwindow")
+@Path("variant/linkage/window")
 public class VariantLDWindowService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLDWindowService.class);
 
     private static final String RSID_PARAM = "rsid";
-    private static final String VARIANT_PARAM = "variant";
+    private static final String VARIANT_PARAM = "id";
     private static final String POPULATION_PARAM = "population";
-    private static final String R2_THRESHOLD_PARAM = "r2";
-    private static final String MAF_THRESHOLD_PARAM = "maf";
+    private static final String R2_THRESHOLD_PARAM = "minRsq";
+    private static final String MAF_THRESHOLD_PARAM = "minMaf";
     
     private static final String R2_THRESHOLD_DEFAULT = "0.5";
  

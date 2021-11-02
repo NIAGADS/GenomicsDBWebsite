@@ -18,14 +18,6 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
-
-
-    <dependency>
-      <groupId>org.gusdb</groupId>
-      <artifactId>fgputil-util</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.gusdb</groupId>
       <artifactId>wdk-model</artifactId>
@@ -51,12 +43,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.gusdb</groupId>
-      <artifactId>wdk-website-controller</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
     </dependency>
@@ -78,10 +64,14 @@
       <version>2.6</version>
     </dependency>
 
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
+  	<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+		</dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

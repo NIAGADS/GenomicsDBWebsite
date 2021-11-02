@@ -4,8 +4,7 @@ import java.util.Set;
 
 import org.eupathdb.common.service.EuPathServiceApplication;
 
-
-import org.niagads.genomics.service.services.Search.SiteSearchService;
+import org.niagads.genomics.service.services.Search.*;
 import org.niagads.genomics.service.services.LocusZoom.*;
 import org.niagads.genomics.service.services.Dataset.*;
 import org.niagads.genomics.service.services.Variant.*;
@@ -29,6 +28,7 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(LZRecombinationService.class)
 
     .add(SiteSearchService.class)
+    .add(OntologySearchService.class)
 
     .add(DatasetModelRefService.class)
     .add(DatasetLookupService.class)
@@ -38,6 +38,8 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(VariantLDWindowService.class)
     .add(VariantLookupService.class)
     .add(VariantLDService.class)
+    .add(VariantLDExpansionService.class)
+    .add(VariantGWASHitsService.class)
 
     // genome browser tracks
     .add(GWASSummaryStatisticsTrackService.class)

@@ -1,29 +1,56 @@
 # Properties defined here can be referenced in model XML files.
 # For example, this line: NAME=value
 # will cause the WDK to replace  all occurrences of "@NAME@" in the model XML with "value".
-# Properties can also be accessed via jsp pages through the wdkModel bean as follows:
-# ${applicationScope.wdkModel.properties['NAME']}
+
+# NOTE:
+# ===========================================================================================================
+# All External URLS (including references to other NIAGADS resources) must be defined in this 
+# file and assigned a name ending in "_URL".  After updating/adding new _URL macros, please 
+# run `python $PROJECT_HOME/GenomicsDBWebsite/Model/bin/generateExternalUrlConstantsJson` to regenerate 
+# the external url constant file for the front end, setting the --modelPropFile option to this file and the 
+# --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_externalUrls.js.
+# The updated model.prop.sample & externalUrls.js can then be committed to the repository
 
 SITE_ADMIN_EMAIL=
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
+
+#----------------------------------------------------------
+# WDK SETTINGS & INFO
+#----------------------------------------------------------
+
+DONT_EMAIL_NEW_USER=true
+WDK_VERSION=API_BUILD_50
+
+SITE_ADMIN_EMAIL=
+
+STEP_ANALYSIS_JOB_DIR=/www/common/temp
+
+
+#----------------------------------------------------------
+# Production v Dev / Beta
+#----------------------------------------------------------
+
+# Base URL: uncomment https://dev.niagads.org for development
+# only one should be uncommented
+NIAGADS_BASE_URL=https://www.niagads.org 
+# NIAGADS_BASE_URL=https://beta.niagads.org
+WEBAPP=genomics
+
+FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
 
 #----------------------------------------------------------
 # Project Identifiers & Configuration
 #----------------------------------------------------------
 
 PROJECT_ID=GRCh37
-#PROJECT_ID=GRCh38
-DONT_EMAIL_NEW_USER=true
-
 GENOME_BUILD=GRCh37.p13
 GENCODE_VERSION=v19
 dbSNP_VERSION=151
 
-# Base URL: uncomment https://dev.niagads.org for development
-# only one should be uncommented
-# NIAGADS_BASE_URL=https://www.niagads.org 
-NIAGADS_BASE_URL=https://beta.niagads.org
-WEBAPP=genomics
+#PROJECT_ID=GRCh38
+#GENOME_BUILD=GRCh38.p8
+#GENCODE_VERSION=v25
+#dbSNP_VERSION= 
 
 #----------------------------------------------------------
 # Constants
@@ -32,7 +59,7 @@ WEBAPP=genomics
 FLANK_50KB=50000
 FLANK_100KB=100000
 FLANK_200KB=200000
-FLANK_LOCUSZOOM=10000
+FLANK_LOCUSZOOM=20000
 
 LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 
@@ -45,19 +72,22 @@ LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 # DATA INCLUSION/EXCLUSION LISTS
 #----------------------------------------------------------
 
-NON_GWAS_SS_NIAGADS=NG00061
+ADSP_CC_ACCESSION=NG00065
+GWAS_CATALOG_ACCESSIONS=NHGRI_GWAS_CATALOG,ADVP
 INFERNO_PUBMED_ID=30113658
 GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
-
-DATASETS_WITH_RELAXED_PVALUE=NG00027_ADJ_STAGE2|NG00040
 
 #----------------------------------------------------------
 # Internal Urls
 #----------------------------------------------------------
 
+DOCUMENTATION_URL=TBA
+
 #----------------------------------------------------------
 # External URLS
 #----------------------------------------------------------
+
+IDEOGRAM_CYTOBAND_URL=https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/
 
 ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
@@ -73,12 +103,11 @@ DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
 
 KEGG_BASE_URL=http://www.kegg.jp/
 SNP_EFF_URL=http://snpeff.sourceforge.net/
-SNP_EFF_VERSION=4.2
+
 EXAC_URL=http://exac.broadinstitute.org/
 HUGO_URL=https://www.genenames.org
 
 NCBI_ENTREZ_GENE_URL=http://www.ncbi.nlm.nih.gov/gene/
-NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
 NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
 
 ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
@@ -122,3 +151,4 @@ HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
 
 EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
 
+ALPHAFOLDDB_PROTEIN_URL=https://alphafold.ebi.ac.uk/entry/

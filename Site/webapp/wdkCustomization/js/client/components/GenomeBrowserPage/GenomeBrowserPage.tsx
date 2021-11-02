@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
-import theme from "./../../theme";
+import { theme } from "../MaterialUI";
 import TrackBrowser, { IgvTrackConfig } from "./../Visualizations/Igv/IgvTrackBrowser";
 import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -11,9 +11,14 @@ import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import { get } from "lodash";
-import { WdkServiceContext } from "wdk-client/Service/WdkService";
-import { PrimaryActionButton } from "../Shared";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
+import { PrimaryActionButton } from "../MaterialUI";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
+
+
+import {
+ Heading
+} from "../MaterialUI";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
@@ -26,26 +31,28 @@ interface GenomeBrowserPage {
 }
 
 const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
-    const wdkService = useContext(WdkServiceContext);
+    /*useWdkEffect(
+        (service) => {
+            service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
+                setTrackList(
+                    res
+                        .map((res) => transformRawNiagadsTrack(res))
+                        .map((t) =>
+                            //we have to manually attach the reader to the config coming out of the backend
+                            t.track === "ENSEMBL_GENE"
+                                ? {
+                                      ...t,
+                                      reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                                      trackType: "annotation",
+                                  }
+                                : t
+                        )
+                )
+            );
+        },
 
-    useEffect(() => {
-        wdkService._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
-            setTrackList(
-                res
-                    .map((res) => transformRawNiagadsTrack(res))
-                    .map((t) =>
-                        //we have to manually attach the reader to the config coming out of the backend
-                        t.track === "ENSEMBL_GENE"
-                            ? {
-                                  ...t,
-                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                                  trackType: "annotation",
-                              }
-                            : t
-                    )
-            )
-        );
-    }, [wdkService, serviceUrl]);
+        [serviceUrl]
+    );
 
     const [Browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),
@@ -108,13 +115,14 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
         buildBrowser = useCallback((b: any) => {
             setBrowser(b);
         }, []);
-
+*/
     return (
         <Container maxWidth="xl">
             <ThemeProvider theme={theme}>
                 <Grid container item xs={12}>
+                    <Heading>Temporarily Unavailable.  Please check back soon!</Heading>
                     {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
-                    <Box m="10px">
+                 {/*   <Box m="10px">
                         <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
                             <LibraryBooksIcon />
                             Browse Tracks
@@ -139,8 +147,8 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                         loadingTrack={loadingTrack}
                         toggleTracks={toggleTracks}
                         trackList={trackList}
-                    />
-                </Grid>
+    /> */}
+               </Grid> 
             </ThemeProvider>
         </Container>
     );

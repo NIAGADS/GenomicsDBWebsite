@@ -5,11 +5,14 @@ import static org.gusdb.fgputil.FormatUtil.NL;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -19,80 +22,191 @@ import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
-import org.gusdb.wdk.service.service.AbstractWdkService;
-
+import org.json.JSONObject;
+// import org.gusdb.wdk.service.service.AbstractWdkService;
+import org.niagads.genomics.service.services.AbstractPagedWdkService;
 
 @Path("variant")
-public class VariantLookupService extends AbstractWdkService {
-    private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
+public class VariantLookupService extends AbstractPagedWdkService {
+    //private static final Logger LOG = Logger.getLogger(VariantLookupService.class);
 
     private static final String VARIANT_PARAM = "id";
-    private static final String FULL_VEP_PARAM = "full_vep";
+    private static final String MSC_ONLY_PARAM = "mscOnly";
+    private static final String ADSP_QC_PARAM = "adspQC";
 
-    private static final String VARIANT_DETAILS_SQL = "WITH searchTerms AS (SELECT unnest(string_to_array(?, ',')) AS variant_id)," + NL
-	+ "refSnps AS (SELECT r.search_term, v.record_pk FROM NIAGADS.Variant v," + NL
-        + "(SELECT variant_id AS search_term, find_variant_by_refsnp(variant_id) AS variant_id FROM searchTerms) r" + NL
-	+ "WHERE r.variant_id = v.variant_id)," + NL
-        + "marker AS (" +NL
-        + "SELECT variant_id AS search_term, find_variant_primary_key(variant_id) AS record_pk FROM searchTerms" + NL
-        + "UNION SELECT * FROM refSnps)," + NL
-        + "unmapped AS (select jsonb_agg(marker) AS result from marker where record_pk IS NULL OR record_pk LIKE 'rs%')," + NL
-        + "Details AS (" + NL
-        + "SELECT marker.search_term, v.record_pk AS variant, v.source_id AS ref_snp_id, v.metaseq_id," + NL 
-        + "v.variant_class_abbrev AS variant_class, v.source AS variant_source," + NL 
-        + "v.is_adsp_variant, v.is_adsp_wes, v.is_adsp_wgs, v.is_multi_allelic," + NL
-        + "v.most_severe_consequence," + NL
-        + "(v.annotation->'VEP_MS_CONSEQUENCE'->>'impact')::text AS most_severe_consequence_impact," + NL
-        + "(v.annotation->>'GWAS')::boolean AS is_associated_with_NIAGADS_dataset," + NL
-        + "(v.annotation->'VEP_MS_CONSEQUENCE'->>'gene_id')::text || ' // ' || (v.annotation->'VEP_MS_CONSEQUENCE'->>'gene_symbol')::text AS impacted_gene" + NL
-        + "FROM marker, NIAGADS.Variant v" + NL
-        + "WHERE v.record_pk = marker.record_pk)," + NL
-        + "Result AS (" + NL 
-        + "SELECT (jsonb_agg(details))::text AS result FROM details WHERE NOT EXISTS (SELECT result FROM unmapped WHERE result != NULL)" + NL
-        + "UNION" + NL
-        + "SELECT (jsonb_agg(details) || (select jsonb_agg(unmapped) FROM unmapped))::text AS result FROM details WHERE EXISTS (SELECT result FROM unmapped WHERE result != NULL))" + NL
-        + "SELECT * FROM result" + NL
-        + "WHERE result IS NOT NULL";
+    private static final String VARIANT_ID_CTE = "id AS (SELECT search_term, variant_primary_key AS pk FROM get_variant_primary_keys(?))";
 
+    private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL 
+        + "SELECT id.pk AS variant_primary_key," + NL
+        + "split_part(pk, '_', 1) AS metaseq_id," + NL 
+        + "left(split_part(pk, '_', 1), 50) AS indexed_metaseq_id," + NL 
+        + "CASE WHEN split_part(pk, '_', 2) = '' THEN NULL ELSE split_part(pk, '_', 2) END AS ref_snp_id," + NL
+        + "'chr' || split_part(pk, ':', 1)::text AS chrm," + NL
+        + "search_term" + NL
+        + "FROM id)";
 
-        @GET
-        @Produces(MediaType.APPLICATION_JSON)
-        // @OutSchema("niagads.variant.get-response")
-        public Response buildResponse(String body, @QueryParam(FULL_VEP_PARAM) Boolean fullVep, 
-            @QueryParam(VARIANT_PARAM) String variant) throws WdkModelException {
-                                          
-            LOG.info("Starting 'Variant Lookup' Service");
-            String response = "{}";
-            try {
+    private static final String MISSING_VARIANTS_CTE = "unmappedVariants AS (" + NL
+        + "SELECT search_term FROM vdetails" + NL
+        + "WHERE variant_primary_key IS NULL)";
 
-                response = fetchResult(variant);
-                if (response == null) {
-                    response = "{}";
-                }
+    private static final String MSC_ONLY_JSON_OBJECT = "jsonb_build_object(" + NL 
+    + "'chromosome', v.chromosome," + NL
+    + "'location', v.location," + NL 
+    + "'is_adsp_variant', v.is_adsp_variant," + NL
+    + "'matched_variant', jsonb_build_object(" + NL
+    + "'metaseq_id', v.metaseq_id," + NL
+    + "'ref_snp_id', v.ref_snp_id," + NL
+    + "'genomicsdb_id', d.variant_primary_key)," + NL
+    + "'allele_frequencies', v.allele_frequencies," + NL 
+    + "'cadd_scores', CASE WHEN v.cadd_scores::text = '{}' THEN NULL ELSE v.cadd_scores END," + NL
+    + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
+    + "'flagged_genomicsdb_datasets', v.other_annotation->'GenomicsDB')";
+
+    private final static String FULL_VEP_JSON_OBJECT = "jsonb_build_object(" + NL
+        + "'transcript_consequences', v.adsp_ranked_consequences->'transcript_consequences'," + NL
+        + "'regulatory_feature_consequences', v.adsp_ranked_consequences->'regulatory_feature_consequences'," + NL
+        + "'motif_consequences', v.adsp_ranked_consequences->'motif_feature_consequences'," + NL
+        + "'intergenic_consequences', v.adsp_ranked_consequences->'intergenic_consequences')";
+
+    private final static String ADSP_QC_JSON_OBJECT = "jsonb_build_object(" + NL
+        + "'adsp_wgs_qc', v.other_annotation->'ADSP_WGS'," + NL
+        + "'adsp_wes_qc', v.other_annotation->'ADSP_WES')";
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    // @OutSchema("niagads.variant.get-response")
+    public Response buildResponse(@Context HttpServletRequest request, 
+            String body, @QueryParam(MSC_ONLY_PARAM) Boolean mscOnly, 
+            @QueryParam(ADSP_QC_PARAM) Boolean adspQC,
+            @QueryParam(VARIANT_PARAM) String variants,
+            @DefaultValue("1")@QueryParam(PAGE_PARAM) Integer currentPage) throws WdkModelException {
+
+        LOG.info("Starting 'Variant Lookup' Service");
+
+        adspQC = validateBooleanParam(request, ADSP_QC_PARAM);
+        mscOnly = validateBooleanParam(request, MSC_ONLY_PARAM);
+
+        LOG.debug("adspQC: " + adspQC); // not provided: null, provided: false, 
+        LOG.debug("mscOnly: " + mscOnly);
+
+        String response = "{}";
+        try {
+            if (variants == null) {
+                String messageStr = "must supply a comma separated list of one or more variants using the `id` parameter";
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("missing required parameter: `id`", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
             }
-    
-            catch(WdkRuntimeException ex) {
-                throw new WdkModelException(ex);
+
+            Boolean pagingIsValid = initializePaging(variants, currentPage);
+            LOG.debug("paging validation: " + pagingIsValid);
+
+            if (!pagingIsValid) {
+                String messageStr = "invalid value for paging parameter; requested page (" 
+                    + getCurrentPageDisplay() 
+                    + ") > max number of pages (" + getNumPages() + ").";
+
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("invalid paging", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
             }
-              
-            return Response.ok(response).build();
+
+            String pagedVariantIds = getPagedFeatureStr();
+            response = lookup(pagedVariantIds, mscOnly, adspQC);
+
+            if (response == null) {
+                response = "{}";
+            }
         }
 
-        private String fetchResult(String variant) {   
+        catch (WdkRuntimeException ex) {
+            throw new WdkModelException(ex);
+        }
+
+        return Response.ok(response).build();
+    }
+
     
-            WdkModel wdkModel = getWdkModel();
-            DataSource ds = wdkModel.getAppDb().getDataSource();
-            BasicResultSetHandler handler = new BasicResultSetHandler();
+    private Boolean validateBooleanParam(HttpServletRequest request, String param) {
+        if (!request.getParameterMap().containsKey(param)) {
+            return false;
+        }
+
+        String paramValue = request.getParameterValues(param)[0];
+        if (paramValue == "") {
+            return true;
+        }
+        else {
+            return Boolean.valueOf(paramValue);
+        }
+    }    
+
+
+    private String buildQuery(Boolean mscOnly, Boolean adspQC) {
+        String lookupCTE = "annotations AS (SELECT" + NL
+            + "jsonb_build_object(d.search_term," + NL
+            + MSC_ONLY_JSON_OBJECT + NL;
+        
+        if (!mscOnly) {
+            lookupCTE = lookupCTE + " || " + FULL_VEP_JSON_OBJECT + NL;
+        }
+
+        if (adspQC) {
+            lookupCTE = lookupCTE + " || " + ADSP_QC_JSON_OBJECT + NL;
+        }
+
+        lookupCTE = lookupCTE + ") AS annotation_json" + NL
+        + "FROM AnnotatedVDB.Variant v, vdetails d" + NL 
+        + "WHERE left(v.metaseq_id, 50) = d.indexed_metaseq_id" + NL 
+        + "AND (v.ref_snp_id = d.ref_snp_id OR d.ref_snp_id IS NULL)" + NL 
+        + "AND v.chromosome = d.chrm)";
+        /* + "UNION ALL SELECT" + NL
+        + "jsonb_build_object(search_term, '{}'::jsonb) AS annotation_json" + NL
+        + "FROM unmappedVariants) "; */
+
+        String sql = "WITH" + NL 
+            + VARIANT_ID_CTE + "," + NL 
+            + VARIANT_DETAILS_CTE + "," + NL 
+            + MISSING_VARIANTS_CTE + "," + NL
+            + lookupCTE + NL
+            + "SELECT jsonb_build_object(" + NL
+            + "'paging', jsonb_build_object(" + NL 
+            + "'page'," + getCurrentPageDisplay() + "," + NL
+            + "'total_pages'," + getNumPages() + ")," + NL
+            + "'unmapped_variants', (SELECT json_agg(search_term) FROM unmappedVariants)," + NL
+            + "'result', jsonb_object_agg(t.k, t.v)" + NL
+            + ")::text AS result" + NL            
+            + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
             
-            //LOG.debug("Fetching details for variant:" + variant);
+            
+        // LOG.debug(sql);
 
-            SQLRunner runner = new SQLRunner(ds, VARIANT_DETAILS_SQL, "variant-lookup-query");
-            runner.executeQuery(new Object[] {variant}, handler);
-           
-            List <Map <String, Object>> results = handler.getResults();
-	    if (results.isEmpty()) {
-		return null;
-	    }
-            return (String) results.get(0).get("result");
+        return sql;
+    }
+
+    private String lookup(String variant, Boolean mscOnly, Boolean adspQC) {
+
+        WdkModel wdkModel = getWdkModel();
+        DataSource ds = wdkModel.getAppDb().getDataSource();
+        BasicResultSetHandler handler = new BasicResultSetHandler();
+
+        // LOG.debug("Fetching details for variant:" + variant);
+        // LOG.debug(buildQuery());
+        SQLRunner runner = new SQLRunner(ds, buildQuery(mscOnly, adspQC), "variant-lookup-query");
+
+        runner.executeQuery(new Object[] { variant }, handler);
+
+        List<Map<String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return "{}";
         }
+        String resultStr = (String) results.get(0).get("result");
+        if (resultStr == "null" || resultStr == null) {
+            return "{}";
+        }
+        return resultStr;
+    }
+
 }

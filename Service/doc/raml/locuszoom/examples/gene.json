@@ -1,0 +1,1298 @@
+{
+	"data": [
+		{
+			"end": 45392485,
+			"chrom": "19",
+			"exons": [
+				{
+					"end": 45349870,
+					"start": 45349432,
+					"strand": "+",
+					"exon_id": "ENSE00001238515",
+					"chromosome": "19"
+				},
+				{
+					"end": 45349870,
+					"start": 45349783,
+					"strand": "+",
+					"exon_id": "ENSE00002842302",
+					"chromosome": "19"
+				},
+				{
+					"end": 45368917,
+					"start": 45368528,
+					"strand": "+",
+					"exon_id": "ENSE00000711952",
+					"chromosome": "19"
+				},
+				{
+					"end": 45375406,
+					"start": 45375110,
+					"strand": "+",
+					"exon_id": "ENSE00001159595",
+					"chromosome": "19"
+				},
+				{
+					"end": 45377290,
+					"start": 45377173,
+					"strand": "+",
+					"exon_id": "ENSE00002430369",
+					"chromosome": "19"
+				},
+				{
+					"end": 45377290,
+					"start": 45377199,
+					"strand": "+",
+					"exon_id": "ENSE00002753521",
+					"chromosome": "19"
+				},
+				{
+					"end": 45377735,
+					"start": 45377587,
+					"strand": "+",
+					"exon_id": "ENSE00001159580",
+					"chromosome": "19"
+				},
+				{
+					"end": 45377946,
+					"start": 45377587,
+					"strand": "+",
+					"exon_id": "ENSE00002856232",
+					"chromosome": "19"
+				},
+				{
+					"end": 45377719,
+					"start": 45377636,
+					"strand": "+",
+					"exon_id": "ENSE00002897044",
+					"chromosome": "19"
+				},
+				{
+					"end": 45382198,
+					"start": 45381480,
+					"strand": "+",
+					"exon_id": "ENSE00000893914",
+					"chromosome": "19"
+				},
+				{
+					"end": 45382195,
+					"start": 45381630,
+					"strand": "+",
+					"exon_id": "ENSE00002791106",
+					"chromosome": "19"
+				},
+				{
+					"end": 45382195,
+					"start": 45381810,
+					"strand": "+",
+					"exon_id": "ENSE00002775432",
+					"chromosome": "19"
+				},
+				{
+					"end": 45385621,
+					"start": 45385468,
+					"strand": "+",
+					"exon_id": "ENSE00000893918",
+					"chromosome": "19"
+				},
+				{
+					"end": 45385621,
+					"start": 45385595,
+					"strand": "+",
+					"exon_id": "ENSE00002771968",
+					"chromosome": "19"
+				},
+				{
+					"end": 45389257,
+					"start": 45389194,
+					"strand": "+",
+					"exon_id": "ENSE00000893920",
+					"chromosome": "19"
+				},
+				{
+					"end": 45389476,
+					"start": 45389390,
+					"strand": "+",
+					"exon_id": "ENSE00000893924",
+					"chromosome": "19"
+				},
+				{
+					"end": 45392151,
+					"start": 45391367,
+					"strand": "+",
+					"exon_id": "ENSE00002841022",
+					"chromosome": "19"
+				},
+				{
+					"end": 45392485,
+					"start": 45391367,
+					"strand": "+",
+					"exon_id": "ENSE00000893930",
+					"chromosome": "19"
+				}
+			],
+			"start": 45349432,
+			"strand": "+",
+			"gene_id": "ENSG00000130202",
+			"gene_name": "PVRL2",
+			"gene_type": "protein_coding",
+			"transcripts": [
+				{
+					"end": 45382198,
+					"exons": [
+						{
+							"end": 45349870,
+							"start": 45349432,
+							"strand": "+",
+							"exon_id": "ENSE00001238515",
+							"chromosome": "19"
+						},
+						{
+							"end": 45368917,
+							"start": 45368528,
+							"strand": "+",
+							"exon_id": "ENSE00000711952",
+							"chromosome": "19"
+						},
+						{
+							"end": 45375406,
+							"start": 45375110,
+							"strand": "+",
+							"exon_id": "ENSE00001159595",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377290,
+							"start": 45377173,
+							"strand": "+",
+							"exon_id": "ENSE00002430369",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377735,
+							"start": 45377587,
+							"strand": "+",
+							"exon_id": "ENSE00001159580",
+							"chromosome": "19"
+						},
+						{
+							"end": 45382198,
+							"start": 45381480,
+							"strand": "+",
+							"exon_id": "ENSE00000893914",
+							"chromosome": "19"
+						}
+					],
+					"start": 45349432,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000252485"
+				},
+				{
+					"end": 45392485,
+					"exons": [
+						{
+							"end": 45349870,
+							"start": 45349783,
+							"strand": "+",
+							"exon_id": "ENSE00002842302",
+							"chromosome": "19"
+						},
+						{
+							"end": 45368917,
+							"start": 45368528,
+							"strand": "+",
+							"exon_id": "ENSE00000711952",
+							"chromosome": "19"
+						},
+						{
+							"end": 45375406,
+							"start": 45375110,
+							"strand": "+",
+							"exon_id": "ENSE00001159595",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377290,
+							"start": 45377173,
+							"strand": "+",
+							"exon_id": "ENSE00002430369",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377735,
+							"start": 45377587,
+							"strand": "+",
+							"exon_id": "ENSE00001159580",
+							"chromosome": "19"
+						},
+						{
+							"end": 45385621,
+							"start": 45385468,
+							"strand": "+",
+							"exon_id": "ENSE00000893918",
+							"chromosome": "19"
+						},
+						{
+							"end": 45389257,
+							"start": 45389194,
+							"strand": "+",
+							"exon_id": "ENSE00000893920",
+							"chromosome": "19"
+						},
+						{
+							"end": 45389476,
+							"start": 45389390,
+							"strand": "+",
+							"exon_id": "ENSE00000893924",
+							"chromosome": "19"
+						},
+						{
+							"end": 45392485,
+							"start": 45391367,
+							"strand": "+",
+							"exon_id": "ENSE00000893930",
+							"chromosome": "19"
+						}
+					],
+					"start": 45349783,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000252483"
+				},
+				{
+					"end": 45382195,
+					"exons": [
+						{
+							"end": 45375406,
+							"start": 45375110,
+							"strand": "+",
+							"exon_id": "ENSE00001159595",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377290,
+							"start": 45377173,
+							"strand": "+",
+							"exon_id": "ENSE00002430369",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377735,
+							"start": 45377587,
+							"strand": "+",
+							"exon_id": "ENSE00001159580",
+							"chromosome": "19"
+						},
+						{
+							"end": 45382195,
+							"start": 45381810,
+							"strand": "+",
+							"exon_id": "ENSE00002775432",
+							"chromosome": "19"
+						}
+					],
+					"start": 45375110,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000591581"
+				},
+				{
+					"end": 45377946,
+					"exons": [
+						{
+							"end": 45377290,
+							"start": 45377199,
+							"strand": "+",
+							"exon_id": "ENSE00002753521",
+							"chromosome": "19"
+						},
+						{
+							"end": 45377946,
+							"start": 45377587,
+							"strand": "+",
+							"exon_id": "ENSE00002856232",
+							"chromosome": "19"
+						}
+					],
+					"start": 45377199,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000587386"
+				},
+				{
+					"end": 45382195,
+					"exons": [
+						{
+							"end": 45377719,
+							"start": 45377636,
+							"strand": "+",
+							"exon_id": "ENSE00002897044",
+							"chromosome": "19"
+						},
+						{
+							"end": 45382195,
+							"start": 45381630,
+							"strand": "+",
+							"exon_id": "ENSE00002791106",
+							"chromosome": "19"
+						}
+					],
+					"start": 45377636,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000585601"
+				},
+				{
+					"end": 45392151,
+					"exons": [
+						{
+							"end": 45385621,
+							"start": 45385595,
+							"strand": "+",
+							"exon_id": "ENSE00002771968",
+							"chromosome": "19"
+						},
+						{
+							"end": 45392151,
+							"start": 45391367,
+							"strand": "+",
+							"exon_id": "ENSE00002841022",
+							"chromosome": "19"
+						}
+					],
+					"start": 45385595,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000592018"
+				}
+			]
+		},
+		{
+			"end": 45394133,
+			"chrom": "19",
+			"exons": [
+				{
+					"end": 45385595,
+					"start": 45385284,
+					"strand": "-",
+					"exon_id": "ENSE00002766876",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394133,
+					"start": 45394020,
+					"strand": "-",
+					"exon_id": "ENSE00002847595",
+					"chromosome": "19"
+				}
+			],
+			"start": 45385284,
+			"strand": "-",
+			"gene_id": "ENSG00000267282",
+			"gene_name": "CTB-129P6.4",
+			"gene_type": "antisense",
+			"transcripts": [
+				{
+					"end": 45394133,
+					"exons": [
+						{
+							"end": 45385595,
+							"start": 45385284,
+							"strand": "-",
+							"exon_id": "ENSE00002766876",
+							"chromosome": "19"
+						},
+						{
+							"end": 45394133,
+							"start": 45394020,
+							"strand": "-",
+							"exon_id": "ENSE00002847595",
+							"chromosome": "19"
+						}
+					],
+					"start": 45385284,
+					"strand": "-",
+					"chromosome": "19",
+					"transcript_id": "ENST00000585408"
+				}
+			]
+		},
+		{
+			"end": 45406946,
+			"chrom": "19",
+			"exons": [
+				{
+					"end": 45393913,
+					"start": 45393826,
+					"strand": "+",
+					"exon_id": "ENSE00002892936",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394571,
+					"start": 45394477,
+					"strand": "+",
+					"exon_id": "ENSE00001434303",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394571,
+					"start": 45394488,
+					"strand": "+",
+					"exon_id": "ENSE00002823351",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394946,
+					"start": 45394493,
+					"strand": "+",
+					"exon_id": "ENSE00001561858",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394571,
+					"start": 45394494,
+					"strand": "+",
+					"exon_id": "ENSE00002882897",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394782,
+					"start": 45394664,
+					"strand": "+",
+					"exon_id": "ENSE00002855648",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394946,
+					"start": 45394664,
+					"strand": "+",
+					"exon_id": "ENSE00001550538",
+					"chromosome": "19"
+				},
+				{
+					"end": 45394946,
+					"start": 45394667,
+					"strand": "+",
+					"exon_id": "ENSE00001235885",
+					"chromosome": "19"
+				},
+				{
+					"end": 45395717,
+					"start": 45395650,
+					"strand": "+",
+					"exon_id": "ENSE00000893936",
+					"chromosome": "19"
+				},
+				{
+					"end": 45396186,
+					"start": 45396094,
+					"strand": "+",
+					"exon_id": "ENSE00000893938",
+					"chromosome": "19"
+				},
+				{
+					"end": 45397138,
+					"start": 45397037,
+					"strand": "+",
+					"exon_id": "ENSE00000893940",
+					"chromosome": "19"
+				},
+				{
+					"end": 45397138,
+					"start": 45397086,
+					"strand": "+",
+					"exon_id": "ENSE00002849290",
+					"chromosome": "19"
+				},
+				{
+					"end": 45397323,
+					"start": 45397218,
+					"strand": "+",
+					"exon_id": "ENSE00000893942",
+					"chromosome": "19"
+				},
+				{
+					"end": 45397324,
+					"start": 45397218,
+					"strand": "+",
+					"exon_id": "ENSE00002796190",
+					"chromosome": "19"
+				},
+				{
+					"end": 45404109,
+					"start": 45403987,
+					"strand": "+",
+					"exon_id": "ENSE00000893943",
+					"chromosome": "19"
+				},
+				{
+					"end": 45404361,
+					"start": 45404285,
+					"strand": "+",
+					"exon_id": "ENSE00000893944",
+					"chromosome": "19"
+				},
+				{
+					"end": 45404567,
+					"start": 45404465,
+					"strand": "+",
+					"exon_id": "ENSE00000893946",
+					"chromosome": "19"
+				},
+				{
+					"end": 45404709,
+					"start": 45404465,
+					"strand": "+",
+					"exon_id": "ENSE00002816809",
+					"chromosome": "19"
+				},
+				{
+					"end": 45406943,
+					"start": 45404465,
+					"strand": "+",
+					"exon_id": "ENSE00002939061",
+					"chromosome": "19"
+				},
+				{
+					"end": 45406389,
+					"start": 45406287,
+					"strand": "+",
+					"exon_id": "ENSE00002842357",
+					"chromosome": "19"
+				},
+				{
+					"end": 45406885,
+					"start": 45406287,
+					"strand": "+",
+					"exon_id": "ENSE00002820144",
+					"chromosome": "19"
+				},
+				{
+					"end": 45406935,
+					"start": 45406287,
+					"strand": "+",
+					"exon_id": "ENSE00000893948",
+					"chromosome": "19"
+				},
+				{
+					"end": 45406946,
+					"start": 45406287,
+					"strand": "+",
+					"exon_id": "ENSE00002770357",
+					"chromosome": "19"
+				}
+			],
+			"start": 45393826,
+			"strand": "+",
+			"gene_id": "ENSG00000130204",
+			"gene_name": "TOMM40",
+			"gene_type": "protein_coding",
+			"transcripts": [
+				{
+					"end": 45394782,
+					"exons": [
+						{
+							"end": 45393913,
+							"start": 45393826,
+							"strand": "+",
+							"exon_id": "ENSE00002892936",
+							"chromosome": "19"
+						},
+						{
+							"end": 45394782,
+							"start": 45394664,
+							"strand": "+",
+							"exon_id": "ENSE00002855648",
+							"chromosome": "19"
+						}
+					],
+					"start": 45393826,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000589253"
+				},
+				{
+					"end": 45406935,
+					"exons": [
+						{
+							"end": 45394571,
+							"start": 45394477,
+							"strand": "+",
+							"exon_id": "ENSE00001434303",
+							"chromosome": "19"
+						},
+						{
+							"end": 45394946,
+							"start": 45394664,
+							"strand": "+",
+							"exon_id": "ENSE00001550538",
+							"chromosome": "19"
+						},
+						{
+							"end": 45395717,
+							"start": 45395650,
+							"strand": "+",
+							"exon_id": "ENSE00000893936",
+							"chromosome": "19"
+						},
+						{
+							"end": 45396186,
+							"start": 45396094,
+							"strand": "+",
+							"exon_id": "ENSE00000893938",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397138,
+							"start": 45397037,
+							"strand": "+",
+							"exon_id": "ENSE00000893940",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397323,
+							"start": 45397218,
+							"strand": "+",
+							"exon_id": "ENSE00000893942",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404109,
+							"start": 45403987,
+							"strand": "+",
+							"exon_id": "ENSE00000893943",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404361,
+							"start": 45404285,
+							"strand": "+",
+							"exon_id": "ENSE00000893944",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404567,
+							"start": 45404465,
+							"strand": "+",
+							"exon_id": "ENSE00000893946",
+							"chromosome": "19"
+						},
+						{
+							"end": 45406935,
+							"start": 45406287,
+							"strand": "+",
+							"exon_id": "ENSE00000893948",
+							"chromosome": "19"
+						}
+					],
+					"start": 45394477,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000405636"
+				},
+				{
+					"end": 45406946,
+					"exons": [
+						{
+							"end": 45394571,
+							"start": 45394477,
+							"strand": "+",
+							"exon_id": "ENSE00001434303",
+							"chromosome": "19"
+						},
+						{
+							"end": 45394946,
+							"start": 45394667,
+							"strand": "+",
+							"exon_id": "ENSE00001235885",
+							"chromosome": "19"
+						},
+						{
+							"end": 45395717,
+							"start": 45395650,
+							"strand": "+",
+							"exon_id": "ENSE00000893936",
+							"chromosome": "19"
+						},
+						{
+							"end": 45396186,
+							"start": 45396094,
+							"strand": "+",
+							"exon_id": "ENSE00000893938",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397138,
+							"start": 45397037,
+							"strand": "+",
+							"exon_id": "ENSE00000893940",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397323,
+							"start": 45397218,
+							"strand": "+",
+							"exon_id": "ENSE00000893942",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404109,
+							"start": 45403987,
+							"strand": "+",
+							"exon_id": "ENSE00000893943",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404361,
+							"start": 45404285,
+							"strand": "+",
+							"exon_id": "ENSE00000893944",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404567,
+							"start": 45404465,
+							"strand": "+",
+							"exon_id": "ENSE00000893946",
+							"chromosome": "19"
+						},
+						{
+							"end": 45406946,
+							"start": 45406287,
+							"strand": "+",
+							"exon_id": "ENSE00002770357",
+							"chromosome": "19"
+						}
+					],
+					"start": 45394477,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000252487"
+				},
+				{
+					"end": 45406943,
+					"exons": [
+						{
+							"end": 45394571,
+							"start": 45394488,
+							"strand": "+",
+							"exon_id": "ENSE00002823351",
+							"chromosome": "19"
+						},
+						{
+							"end": 45394946,
+							"start": 45394664,
+							"strand": "+",
+							"exon_id": "ENSE00001550538",
+							"chromosome": "19"
+						},
+						{
+							"end": 45395717,
+							"start": 45395650,
+							"strand": "+",
+							"exon_id": "ENSE00000893936",
+							"chromosome": "19"
+						},
+						{
+							"end": 45396186,
+							"start": 45396094,
+							"strand": "+",
+							"exon_id": "ENSE00000893938",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397138,
+							"start": 45397037,
+							"strand": "+",
+							"exon_id": "ENSE00000893940",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397323,
+							"start": 45397218,
+							"strand": "+",
+							"exon_id": "ENSE00000893942",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404109,
+							"start": 45403987,
+							"strand": "+",
+							"exon_id": "ENSE00000893943",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404361,
+							"start": 45404285,
+							"strand": "+",
+							"exon_id": "ENSE00000893944",
+							"chromosome": "19"
+						},
+						{
+							"end": 45406943,
+							"start": 45404465,
+							"strand": "+",
+							"exon_id": "ENSE00002939061",
+							"chromosome": "19"
+						}
+					],
+					"start": 45394488,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000592434"
+				},
+				{
+					"end": 45406885,
+					"exons": [
+						{
+							"end": 45394946,
+							"start": 45394493,
+							"strand": "+",
+							"exon_id": "ENSE00001561858",
+							"chromosome": "19"
+						},
+						{
+							"end": 45395717,
+							"start": 45395650,
+							"strand": "+",
+							"exon_id": "ENSE00000893936",
+							"chromosome": "19"
+						},
+						{
+							"end": 45396186,
+							"start": 45396094,
+							"strand": "+",
+							"exon_id": "ENSE00000893938",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397138,
+							"start": 45397037,
+							"strand": "+",
+							"exon_id": "ENSE00000893940",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397323,
+							"start": 45397218,
+							"strand": "+",
+							"exon_id": "ENSE00000893942",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404109,
+							"start": 45403987,
+							"strand": "+",
+							"exon_id": "ENSE00000893943",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404361,
+							"start": 45404285,
+							"strand": "+",
+							"exon_id": "ENSE00000893944",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404567,
+							"start": 45404465,
+							"strand": "+",
+							"exon_id": "ENSE00000893946",
+							"chromosome": "19"
+						},
+						{
+							"end": 45406885,
+							"start": 45406287,
+							"strand": "+",
+							"exon_id": "ENSE00002820144",
+							"chromosome": "19"
+						}
+					],
+					"start": 45394493,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000426677"
+				},
+				{
+					"end": 45397324,
+					"exons": [
+						{
+							"end": 45394571,
+							"start": 45394494,
+							"strand": "+",
+							"exon_id": "ENSE00002882897",
+							"chromosome": "19"
+						},
+						{
+							"end": 45394946,
+							"start": 45394664,
+							"strand": "+",
+							"exon_id": "ENSE00001550538",
+							"chromosome": "19"
+						},
+						{
+							"end": 45395717,
+							"start": 45395650,
+							"strand": "+",
+							"exon_id": "ENSE00000893936",
+							"chromosome": "19"
+						},
+						{
+							"end": 45396186,
+							"start": 45396094,
+							"strand": "+",
+							"exon_id": "ENSE00000893938",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397138,
+							"start": 45397037,
+							"strand": "+",
+							"exon_id": "ENSE00000893940",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397324,
+							"start": 45397218,
+							"strand": "+",
+							"exon_id": "ENSE00002796190",
+							"chromosome": "19"
+						}
+					],
+					"start": 45394494,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000589649"
+				},
+				{
+					"end": 45406389,
+					"exons": [
+						{
+							"end": 45397138,
+							"start": 45397086,
+							"strand": "+",
+							"exon_id": "ENSE00002849290",
+							"chromosome": "19"
+						},
+						{
+							"end": 45397323,
+							"start": 45397218,
+							"strand": "+",
+							"exon_id": "ENSE00000893942",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404109,
+							"start": 45403987,
+							"strand": "+",
+							"exon_id": "ENSE00000893943",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404361,
+							"start": 45404285,
+							"strand": "+",
+							"exon_id": "ENSE00000893944",
+							"chromosome": "19"
+						},
+						{
+							"end": 45404709,
+							"start": 45404465,
+							"strand": "+",
+							"exon_id": "ENSE00002816809",
+							"chromosome": "19"
+						},
+						{
+							"end": 45406389,
+							"start": 45406287,
+							"strand": "+",
+							"exon_id": "ENSE00002842357",
+							"chromosome": "19"
+						}
+					],
+					"start": 45397086,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000592041"
+				}
+			]
+		},
+		{
+			"end": 45412650,
+			"chrom": "19",
+			"exons": [
+				{
+					"end": 45409098,
+					"start": 45409011,
+					"strand": "+",
+					"exon_id": "ENSE00001815473",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409098,
+					"start": 45409048,
+					"strand": "+",
+					"exon_id": "ENSE00001768924",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409098,
+					"start": 45409053,
+					"strand": "+",
+					"exon_id": "ENSE00001048576",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409180,
+					"start": 45409069,
+					"strand": "+",
+					"exon_id": "ENSE00001601606",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409924,
+					"start": 45409617,
+					"strand": "+",
+					"exon_id": "ENSE00001620702",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409924,
+					"start": 45409844,
+					"strand": "+",
+					"exon_id": "ENSE00001667751",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409924,
+					"start": 45409859,
+					"strand": "+",
+					"exon_id": "ENSE00003463686",
+					"chromosome": "19"
+				},
+				{
+					"end": 45409924,
+					"start": 45409859,
+					"strand": "+",
+					"exon_id": "ENSE00003577086",
+					"chromosome": "19"
+				},
+				{
+					"end": 45410583,
+					"start": 45409859,
+					"strand": "+",
+					"exon_id": "ENSE00001943579",
+					"chromosome": "19"
+				},
+				{
+					"end": 45411209,
+					"start": 45411017,
+					"strand": "+",
+					"exon_id": "ENSE00000893952",
+					"chromosome": "19"
+				},
+				{
+					"end": 45412201,
+					"start": 45411790,
+					"strand": "+",
+					"exon_id": "ENSE00001664168",
+					"chromosome": "19"
+				},
+				{
+					"end": 45412211,
+					"start": 45411790,
+					"strand": "+",
+					"exon_id": "ENSE00001599675",
+					"chromosome": "19"
+				},
+				{
+					"end": 45412282,
+					"start": 45411790,
+					"strand": "+",
+					"exon_id": "ENSE00001700162",
+					"chromosome": "19"
+				},
+				{
+					"end": 45412650,
+					"start": 45411790,
+					"strand": "+",
+					"exon_id": "ENSE00000893954",
+					"chromosome": "19"
+				}
+			],
+			"start": 45409011,
+			"strand": "+",
+			"gene_id": "ENSG00000130203",
+			"gene_name": "APOE",
+			"gene_type": "protein_coding",
+			"transcripts": [
+				{
+					"end": 45412650,
+					"exons": [
+						{
+							"end": 45409098,
+							"start": 45409011,
+							"strand": "+",
+							"exon_id": "ENSE00001815473",
+							"chromosome": "19"
+						},
+						{
+							"end": 45409924,
+							"start": 45409859,
+							"strand": "+",
+							"exon_id": "ENSE00003577086",
+							"chromosome": "19"
+						},
+						{
+							"end": 45411209,
+							"start": 45411017,
+							"strand": "+",
+							"exon_id": "ENSE00000893952",
+							"chromosome": "19"
+						},
+						{
+							"end": 45412650,
+							"start": 45411790,
+							"strand": "+",
+							"exon_id": "ENSE00000893954",
+							"chromosome": "19"
+						}
+					],
+					"start": 45409011,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000252486"
+				},
+				{
+					"end": 45412201,
+					"exons": [
+						{
+							"end": 45409098,
+							"start": 45409048,
+							"strand": "+",
+							"exon_id": "ENSE00001768924",
+							"chromosome": "19"
+						},
+						{
+							"end": 45409924,
+							"start": 45409844,
+							"strand": "+",
+							"exon_id": "ENSE00001667751",
+							"chromosome": "19"
+						},
+						{
+							"end": 45411209,
+							"start": 45411017,
+							"strand": "+",
+							"exon_id": "ENSE00000893952",
+							"chromosome": "19"
+						},
+						{
+							"end": 45412201,
+							"start": 45411790,
+							"strand": "+",
+							"exon_id": "ENSE00001664168",
+							"chromosome": "19"
+						}
+					],
+					"start": 45409048,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000446996"
+				},
+				{
+					"end": 45410583,
+					"exons": [
+						{
+							"end": 45409098,
+							"start": 45409053,
+							"strand": "+",
+							"exon_id": "ENSE00001048576",
+							"chromosome": "19"
+						},
+						{
+							"end": 45410583,
+							"start": 45409859,
+							"strand": "+",
+							"exon_id": "ENSE00001943579",
+							"chromosome": "19"
+						}
+					],
+					"start": 45409053,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000485628"
+				},
+				{
+					"end": 45412282,
+					"exons": [
+						{
+							"end": 45409180,
+							"start": 45409069,
+							"strand": "+",
+							"exon_id": "ENSE00001601606",
+							"chromosome": "19"
+						},
+						{
+							"end": 45409924,
+							"start": 45409859,
+							"strand": "+",
+							"exon_id": "ENSE00003463686",
+							"chromosome": "19"
+						},
+						{
+							"end": 45411209,
+							"start": 45411017,
+							"strand": "+",
+							"exon_id": "ENSE00000893952",
+							"chromosome": "19"
+						},
+						{
+							"end": 45412282,
+							"start": 45411790,
+							"strand": "+",
+							"exon_id": "ENSE00001700162",
+							"chromosome": "19"
+						}
+					],
+					"start": 45409069,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000434152"
+				},
+				{
+					"end": 45412211,
+					"exons": [
+						{
+							"end": 45409924,
+							"start": 45409617,
+							"strand": "+",
+							"exon_id": "ENSE00001620702",
+							"chromosome": "19"
+						},
+						{
+							"end": 45411209,
+							"start": 45411017,
+							"strand": "+",
+							"exon_id": "ENSE00000893952",
+							"chromosome": "19"
+						},
+						{
+							"end": 45412211,
+							"start": 45411790,
+							"strand": "+",
+							"exon_id": "ENSE00001599675",
+							"chromosome": "19"
+						}
+					],
+					"start": 45409617,
+					"strand": "+",
+					"chromosome": "19",
+					"transcript_id": "ENST00000425718"
+				}
+			]
+		}
+	]
+}

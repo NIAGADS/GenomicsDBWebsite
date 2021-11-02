@@ -1,7 +1,13 @@
 #%RAML 1.0
-title: NIAGADS Genomics Database REST API
+title: NIAGADS Alzheimer's Genomics Database REST API
 version: 1.0
-baseUri: // {siteUrl}/{webApp}/service
+baseUri: // {siteUrl}/genomics/service
 
+/search: !include ./search-api.raml
+/variant: !include ./variant-api.raml
+/dataset: !include ./dataset-api.raml
+/track: !include ./track-api.raml
 /locuszoom: !include ./locuszoom-api.raml
+
+
   

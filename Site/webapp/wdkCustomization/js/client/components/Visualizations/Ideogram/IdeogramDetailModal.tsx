@@ -2,8 +2,14 @@ import React from "react";
 import { Dialog } from "wdk-client/Components";
 import { Link } from "wdk-client/Components";
 import LinkagePlot from "../Linkage/Linkage";
-import { Feature } from "./Ideogram";
-
+export interface Feature {
+    display_label: string;
+    location_end: number;
+    location_start: number;
+    record_primary_key: string;
+    record_type: string;
+    span_length: number;
+}
 interface IdeogramDetailModal {
     open: boolean;
     onClose: () => void;

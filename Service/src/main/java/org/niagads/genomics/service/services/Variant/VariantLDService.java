@@ -30,11 +30,11 @@ import org.json.JSONObject;
  * @author ega
  */
 
-@Path("variant/linkage")
+@Path("variant/linkage/block")
 public class VariantLDService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(VariantLDService.class);
 
-    private static final String VARIANT_PARAM = "variants"; 
+    private static final String VARIANT_PARAM = "id"; 
     private static final String POPULATION_PARAM = "population";
     private static final String DEFAULT_POPULATION = "EUR";
 

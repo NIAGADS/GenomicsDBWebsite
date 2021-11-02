@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="GWASDatasetVocab" queryType="vocab" isCacheable="true">
+
+    <sqlQuery name="NeuropathologyCategory">
+      <column name="internal"/>
+      <column name="display"/>
+      <column name="term"/>
+      <sql>
+	<![CDATA[
+		 SELECT DISTINCT category_abbrev AS internal,
+		 category_abbrev AS term,
+		 category AS display
+		 FROM NIAGADS.NeuropathologyTrackCategories
+	]]>
+      </sql>
+    </sqlQuery>
+    
+    <sqlQuery name="TrackFilterMetadata">
+      <column name="internal"/>
+      <column name="ontology_term_name"/>
+      <column name="number_value"/>
+      <column name="string_value"/>
+      <column name="date_value"/>
+      <sql>
+        <![CDATA[
+            SELECT track AS internal,
+            filter_category AS ontology_term_name,
+            characteristic AS string_value,
+            CAST(NULL AS numeric(10)) AS number_value,
+            CAST(NULL AS numeric(10)) AS date_value
+            FROM NIAGADS.ProtocolAppNodeCharacteristic
+            WHERE track LIKE 'NG0%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
+
+
+            UNION ALL
+
+            SELECT track AS internal,
+            'Consortium' AS ontology_term_name,
+            CASE WHEN name LIKE '%ADGC%' THEN 'ADGC' 
+            WHEN name LIKE '%IGAP%' THEN  'IGAP'
+            WHEN name LIKE '%ADSP%' THEN 'ADSP' ELSE 'OTHER' END AS string_value,
+            CAST(NULL AS numeric(10)) AS number_value,
+            CAST(NULL AS numeric(10)) AS date_value
+            FROM NIAGADS.TrackAttributes ta
+            WHERE name SIMILAR TO'%(IGAP|ADGC|ADSP)%'
+            AND (ta.track LIKE 'NG0%' AND ta.track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%')
+
+            ORDER BY ontology_term_name, string_value
+         ]]>
+      </sql>
+    </sqlQuery>
+
+
+
+    <sqlQuery name="TrackFilterOntology">
+      <column name="ontology_term_name"/>
+      <column name="parent_ontology_term_name"/>
+      <column name="display_name"/>
+      <column name="description"/>
+      <column name="type"/>
+      <column name="units"/>
+      <column name="precision"/>
+      <column name="is_range"/>
+      <sql>
+        <![CDATA[
+            SELECT DISTINCT filter_category AS ontology_term_name,
+            filter_category AS display_name,
+            'string' AS type,
+            CAST(0 AS NUMERIC(10)) AS is_range,
+            CASE WHEN filter_category = filter_category_parent THEN NULL ELSE filter_category_parent END AS parent_ontology_term_name,
+            CASE WHEN filter_category = 'Covariate' THEN 'association test was adjusted for the selected covariates'
+            ELSE CAST(NULL AS CHARACTER VARYING(10)) END AS description,
+            CAST(NULL AS CHARACTER VARYING(10)) AS units,
+            CAST(NULL AS NUMERIC(10)) AS precision,
+            array_position(string_to_array('@GWAS_ORDERED_FILTER_CATEGORY_PARENTS@', ','), filter_category_parent) AS order_num
+            FROM NIAGADS.ProtocolAppNodeCharacteristic pan
+            WHERE track LIKE 'NG0%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
+            AND filter_category NOT SIMILAR TO  '%' || '(Tissue)' || '%'
+
+            UNION ALL
+
+            SELECT 'Consortium' AS ontology_term_name,
+            'Consortium' AS display_name,
+            'string' AS type,
+            CAST(0 AS NUMERIC(10)) AS is_range,
+            NULL AS parent_ontology_term_name,
+            'summary statistics analysis performed by members of and/or generated from data attributed to the selected consortium or research consortium' AS description,
+            CAST(NULL AS CHARACTER VARYING(10)) AS units,
+            CAST(NULL AS NUMERIC(10)) AS precision,
+            array_position(string_to_array('@GWAS_ORDERED_FILTER_CATEGORY_PARENTS@', ','), 'Project') AS order_num
+                            
+            UNION ALL
+
+            -- parent placeholders 
+            SELECT DISTINCT filter_category_parent AS ontology_term_name,
+            filter_category_parent AS display_name,
+            NULL AS type,
+            CAST(0 AS NUMERIC(10)) AS is_range,
+            NULL AS parent_ontology_term_name,
+            CAST(NULL AS CHARACTER VARYING(10)) AS description,
+            CAST(NULL AS CHARACTER VARYING(10)) AS units,
+            CAST(NULL AS NUMERIC(10)) AS precision,
+            array_position(string_to_array('@GWAS_ORDERED_FILTER_CATEGORY_PARENTS@', ','), filter_category_parent) AS order_num
+            FROM NIAGADS.ProtocolAppNodeCharacteristic pan
+            WHERE track LIKE 'NG0%' AND track NOT SIMILAR TO '%' || '(@NON_GWAS_SS_NIAGADS@)' || '%'
+            AND filter_category NOT SIMILAR TO  '%' || '(Tissue)' || '%'
+            AND filter_category != filter_category_parent
+
+            ORDER BY order_num, ontology_term_name
+           ]]>
+      </sql>
+    </sqlQuery>
+
+  
+  </querySet>
+
+</wdkModel>

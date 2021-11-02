@@ -17,13 +17,15 @@
   
   <constant name="defaultGene">ABCA7</constant>
   <constant name="defaultTextExpression">*beta-amyloid*</constant>
+
+  <exampleStratsAuthor name="NIAGADS"/>
   
-  <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB" 
+  <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh37" 
 	     version="%%releaseVersion37%%"
 	     releaseDate="%%releaseDate%%"
 	     buildNumber="%%buildNumber37%%" />
 
-  <modelName includeProjects="GRCh38" displayName="model Alzheimer's GenomicsDB" 
+  <modelName includeProjects="GRCh38" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh38" 
 	     version="%%releaseVersion38%%"
 	     releaseDate="%%releaseDate%%"
 	     buildNumber="%%buildNumber38%%" />
@@ -64,16 +66,18 @@
 
     <!-- RESOURCE/DATASETS -->
     <import file="model/datasets/record.xml" /> 
-    <import file="model/datasets/queries/resource_attributes.xml" /> 
-    <import file="model/datasets/queries/niagads_accession_attributes.xml" /> 
-    <import file="model/datasets/queries/gwas_summary_attributes.xml" /> 
-    <import file="model/datasets/queries/gwas_summary_tables.xml" /> 
-    <import file="model/datasets/queries/inferno_attributes.xml" /> 
+    <import file="model/datasets/queries/datasetAttributes.xml" />
+    <import file="model/datasets/queries/datasetTables.xml" />
+
+    <import file="model/tracks/record.xml" /> 
+    <import file="model/tracks/queries/gwas_summary_attributes.xml" /> 
+    <import file="model/tracks/queries/gwas_summary_tables.xml" /> 
+    <!-- <import file="model/datasets/queries/inferno_attributes.xml" />  -->
     <!-- <import file="model/resources/queries/recordFilters.xml" /> -->
-    <import file="model/datasets/questions.xml" /> 
-    <import file="model/datasets/queries/questions.xml" /> 
-    <import file="model/datasets/params.xml" />
-    <import file="model/datasets/queries/vocab.xml"/>
+    <!-- <import file="model/datasets/questions.xml" />  -->
+    <!-- <import file="model/datasets/queries/questions.xml" />  -->
+    <!-- <import file="model/datasets/params.xml" /> -->
+    <!-- <import file="model/datasets/queries/vocab.xml"/> -->
     
     <!-- SHARED/COMMON -->
     <import file="model/shared/params.xml"/> 

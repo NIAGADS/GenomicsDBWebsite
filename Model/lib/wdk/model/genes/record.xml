@@ -114,44 +114,37 @@
       <table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	<propertyList name="canShrink">
-	  <value>true</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
 	</propertyList>
       </table>
 
       <table name="sequence_link_outs" displayName="Nucleotide Sequences" inReportMaker="false" queryRef="GeneTables.DbRefs_NSeq">
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-	<propertyList name="type">
-	  <value>default</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
 	</propertyList>
-	<propertyList name="canShrink">
-	  <value>true</value>
-	</propertyList>
+
       </table>
 
       <table name="protein_link_outs" displayName="Proteins" inReportMaker="false" queryRef="GeneTables.DbRefs_Proteins">
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-	<propertyList name="type">
-	  <value>default</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
 	</propertyList>
-	<propertyList name="canShrink">
-	  <value>true</value>
-	</propertyList>
+
       </table>
 
       <table name="clinical_link_outs" displayName="Clinical" inReportMaker="false" queryRef="GeneTables.DbRefs_Clinical">
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	<propertyList name="canShrink">
-	  <value>true</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
 	</propertyList>
       </table>
 
@@ -160,12 +153,11 @@
 	<columnAttribute name="transcript_accession_link" displayName="Ensembl Transcript" type="json_link" />
 	<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
 	<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
-	<propertyList name="type">
-	  <value>default</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
 	</propertyList>
-	<propertyList name="canShrink">
-	  <value>true</value>
-	</propertyList>
+	
       </table>
 
       <!-- =============================================================== -->
@@ -192,33 +184,34 @@
       <!-- GWAS -->
       <table name="ad_variants_from_gwas" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromGWAS">
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="variant_link" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
 	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
 	<columnAttribute name="gene_impact" displayName="Impact" type="string" help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
-	<columnAttribute name="track_name" displayName="Track" type="json_text" />
+	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
 
-	<propertyList name="type">
-	  <value>chart_filter</value>
-	</propertyList>
-	<propertyList name="filter_field">
-	  <value>pvalue</value>
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
 	</propertyList>
 
-	<propertyList name="defaultOpen">
-	  <value>true</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
 
 	<description>
 	  <![CDATA[
-		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for Alzheimer's disease.<br/>
-		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the AD risk-associated
+		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS 
+		   summary statistics dataset for Alzheimer's disease.<br/>
+		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts 
+		   the <em>p</em>-value distribution for the AD risk-associated
 		   variants co-located with this gene.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
+		   By default, the table is filtered for variants whose risk-association is supported by a 
+		   <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
+		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about 
+		   the dataset or to request access to the full GWAS dataset.</p>
 	  ]]>
 	</description>
       </table>
@@ -234,11 +227,13 @@
 	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="track_name" displayName="Track" type="json_text" />
 
-        <propertyList name="type">
-	  <value>chart_filter</value>
+
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
 	</propertyList>
-	<propertyList name="filter_field">
-	  <value>pvalue</value>
+	
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
 	<description>
@@ -269,10 +264,19 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-        <propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
+	<propertyList name="column_filter">
+	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
+	</propertyList>
+
+	
 	<description>
 	  <![CDATA[    
                    <p>Variants contained within &plusmn;10kb of this gene from curated collections (NHGRI or NIAGADS) of SNPs 
@@ -300,8 +304,16 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-       	<propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="column_filter">
+	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
 	</propertyList>
 
 	<description>
@@ -317,29 +329,29 @@
       <!-- =============================================================== -->
       <!-- Functional Genomics -->
       <!-- =============================================================== -->
-      <table name="functional_genomics_enhancers"
-	     displayName="Overlapping and Proximal Expressed Enhancers (+/-50kb)"
-	     queryRef="GeneTables.FG_Enhancers">
-	<columnAttribute name="track" displayName="FILER Accession" type="string"/>
-	<columnAttribute name="track_name" displayName="Track" type="string"/>
-	<columnAttribute name="data_source" displayName="Data Source" type="string"/>
-	<columnAttribute name="relative_position" displayName="Relative Position" help="position relative to the gene (in the gene, upstream, downstream, etc)" type="string"/>
-	<columnAttribute name="feature" displayName="Location" help="list of more of more spans defining peaks" type="string"/>
-	<columnAttribute name="feature_type" displayName="Chromatin State" help="active or bivalent (poised) chromatin state" type="string"/>
-	<columnAttribute name="technology_type" displayName="Assay" type="string"/>
-	<columnAttribute name="classification" displayName="FILER Cell/Tissue Classification" help="generalized biosample classification from FILER" type="string"/>
-	<columnAttribute name="cell" displayName="Cell" help="cell or cultured cell type; standardized using OBO foundary ontologies" type="string"/>
-	<columnAttribute name="cell_line" displayName="Cell Line" type="string"/>
-	<columnAttribute name="tissue" displayName="Tissue"  help="tissues; standardized using OBO foundary ontologies"  type="string"/>
-
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
-	
-	<propertyList name="defaultOpen">
-	  <value>true</value>
-	</propertyList>
-      </table>
+      <!-- <table name="functional_genomics_enhancers"
+	   displayName="Overlapping and Proximal Expressed Enhancers (+/-50kb)"
+	   queryRef="GeneTables.FG_Enhancers">
+	   <columnAttribute name="track" displayName="FILER Accession" type="string"/>
+	   <columnAttribute name="track_name" displayName="Track" type="string"/>
+	   <columnAttribute name="data_source" displayName="Data Source" type="string"/>
+	   <columnAttribute name="relative_position" displayName="Relative Position" help="position relative to the gene (in the gene, upstream, downstream, etc)" type="string"/>
+	   <columnAttribute name="feature" displayName="Location" help="list of more of more spans defining peaks" type="string"/>
+	   <columnAttribute name="feature_type" displayName="Chromatin State" help="active or bivalent (poised) chromatin state" type="string"/>
+	   <columnAttribute name="technology_type" displayName="Assay" type="string"/>
+	   <columnAttribute name="classification" displayName="FILER Cell/Tissue Classification" help="generalized biosample classification from FILER" type="string"/>
+	   <columnAttribute name="cell" displayName="Cell" help="cell or cultured cell type; standardized using OBO foundary ontologies" type="string"/>
+	   <columnAttribute name="cell_line" displayName="Cell Line" type="string"/>
+	   <columnAttribute name="tissue" displayName="Tissue"  help="tissues; standardized using OBO foundary ontologies"  type="string"/>
+	   <propertyList name="column_filter">
+	   <value>{"go_evidence_code": "select", "ontology":"select"}</value>
+	   </propertyList>
+	   
+	   <propertyList name="flags">
+	   <value>{"defaultOpen": false, "filter": true}</value>
+	   </propertyList>
+	   
+	   </table>-->
       
       <!-- =============================================================== -->
       <!-- Functional Annotation -->
@@ -352,11 +364,12 @@
 	<columnAttribute displayName="Evidence Code" name="go_evidence_code" type="string" />
 	<columnAttribute displayName="Ontology" name="ontology" type="string" />
 
-        <propertyList name="type">
-	  <value>subtable</value>
+	<propertyList name="column_filter">
+	  <value>{"go_evidence_code": "select", "ontology":"select"}</value>
 	</propertyList>
-	<propertyList name="subtable_field">
-	  <value>evidence_table_dropdown</value>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 
 	<description>
@@ -378,9 +391,10 @@
 	-->
 	<columnAttribute name="source" displayName="Resource" type="string" />
 
-	<propertyList name="type">
-	  <value>default</value>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
+
 
 	<description>
 	  <![CDATA[
@@ -390,6 +404,6 @@
 	</description>
       </table>
 
-    </recordClass>
-  </recordClassSet>
+</recordClass>
+</recordClassSet>
 </wdkModel>

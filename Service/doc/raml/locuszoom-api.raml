@@ -1,3 +1,9 @@
-displayName: LocusZoom DataSources
+displayName: LocusZoom.js Visualization DataSources
 
-/linkage: !include ./locuszoom/linkage-api.raml
+ description: > 
+    used as data source plugins to LocusZoom.js on the NIAGADS Alzheimer's GenomicsDB Website / can be used to add NIAGADS GWAS summary statistics datasets to LocusZoom.js views in third-party applications; e.g. Jupyter notebooks.
+
+/linkage: !include ./locuszoom/linkage.raml
+/gene: !include ./locuszoom/gene.raml
+/recomb: !include ./locuszoom/recomb.raml
+/gwas: !include ./locuszoom/gwas.raml

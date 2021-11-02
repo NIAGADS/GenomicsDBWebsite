@@ -1,0 +1,245 @@
+[
+    {
+      "end": 45422606,
+      "hit": "APOC1",
+      "start": 45417504,
+      "chromosome": "chr19",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 265.958607314842,
+      "ld_reference_variant": "19:45422946:A:G_rs4420638"
+    },
+    {
+      "end": 45392485,
+      "hit": "PVRL2",
+      "start": 45349432,
+      "chromosome": "chr19",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 205.657577319178,
+      "ld_reference_variant": "19:45392254:C:T_rs6857"
+    },
+    {
+      "end": 45406946,
+      "hit": "TOMM40",
+      "start": 45393826,
+      "chromosome": "chr19",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 183.206209615309,
+      "ld_reference_variant": "19:45395619:A:G_rs2075650"
+    },
+    {
+      "end": 127889637,
+      "hit": "rs7561528",
+      "start": 127889637,
+      "chromosome": "chr2",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 10.5440897596173,
+      "ld_reference_variant": "2:127889637:G:A_rs7561528"
+    },
+    {
+      "end": 127888757,
+      "hit": "rs11680911",
+      "start": 127888757,
+      "chromosome": "chr2",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 10.5022412817127,
+      "ld_reference_variant": "2:127888757:A:C_rs11680911"
+    },
+    {
+      "end": 127894615,
+      "hit": "rs744373",
+      "start": 127894615,
+      "chromosome": "chr2",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 9.52360317327467,
+      "ld_reference_variant": "2:127894615:A:G_rs744373"
+    },
+    {
+      "end": 207813992,
+      "hit": "CR1",
+      "start": 207669492,
+      "chromosome": "chr1",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 7.83893161452882,
+      "ld_reference_variant": "1:207786289:A:G_rs6701713"
+    },
+    {
+      "end": 60034429,
+      "hit": "rs4938933",
+      "start": 60034429,
+      "chromosome": "chr11",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 7.28458167740494,
+      "ld_reference_variant": "11:60034429:C:T_rs4938933"
+    },
+    {
+      "end": 60041296,
+      "hit": "rs7107627",
+      "start": 60041296,
+      "chromosome": "chr11",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 7.26177455185749,
+      "ld_reference_variant": "11:60041296:T:A_rs7107627"
+    },
+    {
+      "end": 143220542,
+      "hit": "EPHA1-AS1",
+      "start": 143104906,
+      "chromosome": "chr7",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 7.13501453934021,
+      "ld_reference_variant": "7:143109139:T:C_rs11767557"
+    },
+    {
+      "end": 60028142,
+      "hit": "rs7108663",
+      "start": 60028142,
+      "chromosome": "chr11",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 7.12470717462899,
+      "ld_reference_variant": "11:60028142:C:T_rs7108663"
+    },
+    {
+      "end": 63611354,
+      "hit": "rs2588969",
+      "start": 63611354,
+      "chromosome": "chr10",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 5.94500413847086,
+      "ld_reference_variant": "10:63611354:C:A_rs2588969"
+    },
+    {
+      "end": 47594999,
+      "hit": "CD2AP",
+      "start": 47445525,
+      "chromosome": "chr6",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.93070198788447,
+      "ld_reference_variant": "6:47453378:G:C_rs9349407"
+    },
+    {
+      "end": 6394723,
+      "hit": "DKFZP667F0711",
+      "start": 6392278,
+      "chromosome": "chr10",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.63041310926365,
+      "ld_reference_variant": "10:6394995:C:T_rs725206"
+    },
+    {
+      "end": 63607143,
+      "hit": "rs2588963",
+      "start": 63607143,
+      "chromosome": "chr10",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 5.5654310959658,
+      "ld_reference_variant": "10:63607143:C:A_rs2588963"
+    },
+    {
+      "end": 86211499,
+      "hit": "RNU4-15P",
+      "start": 86211359,
+      "chromosome": "chr9",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.18949865223347,
+      "ld_reference_variant": "9:86216008:C:T_rs10113885"
+    },
+    {
+      "end": 47445308,
+      "hit": "RP11-385F7.1",
+      "start": 47444979,
+      "chromosome": "chr6",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.13259144347721,
+      "ld_reference_variant": "6:47445017:C:T_rs1004173"
+    },
+    {
+      "end": 47430652,
+      "hit": "AL355353.1",
+      "start": 47430587,
+      "chromosome": "chr6",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.12662126359086,
+      "ld_reference_variant": "6:47427281:T:A_rs1931833"
+    },
+    {
+      "end": 51058005,
+      "hit": "SPPL2A",
+      "start": 50999506,
+      "chromosome": "chr15",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.11227020271197,
+      "ld_reference_variant": "15:50997304:C:A_rs12437770"
+    },
+    {
+      "end": 70694585,
+      "hit": "IL34",
+      "start": 70613798,
+      "chromosome": "chr16",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.1120452961912,
+      "ld_reference_variant": "16:70694000:C:A_rs4985556"
+    },
+    {
+      "end": 15955723,
+      "hit": "SAMSN1",
+      "start": 15857549,
+      "chromosome": "chr21",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.10941133229451,
+      "ld_reference_variant": "21:15894980:T:C_rs8132898"
+    },
+    {
+      "end": 131697476,
+      "hit": "RP11-638F5.1",
+      "start": 131649556,
+      "chromosome": "chr12",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.10941133229451,
+      "ld_reference_variant": "12:131689072:G:C_rs7980440"
+    },
+    {
+      "end": 48251349,
+      "hit": "RP11-191L9.4",
+      "start": 48027423,
+      "chromosome": "chr22",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.09221255688938,
+      "ld_reference_variant": "22:48196022:C:A_rs5767998"
+    },
+    {
+      "end": 143105985,
+      "hit": "EPHA1",
+      "start": 143087382,
+      "chromosome": "chr7",
+      "feature_type": "gene",
+      "neg_log10_pvalue": 5.04890544315834,
+      "ld_reference_variant": "7:143101984:C:T_rs4726618"
+    },
+    {
+      "end": 50992311,
+      "hit": "rs12592778",
+      "start": 50992311,
+      "chromosome": "chr15",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 4.94769090035268,
+      "ld_reference_variant": "15:50992311:G:A_rs12592778"
+    },
+    {
+      "end": 152631729,
+      "hit": "rs11718068",
+      "start": 152631729,
+      "chromosome": "chr3",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 4.91757369913923,
+      "ld_reference_variant": "3:152631729:A:G_rs11718068"
+    },
+    {
+      "end": 42428487,
+      "hit": "rs11718659",
+      "start": 42428487,
+      "chromosome": "chr3",
+      "feature_type": "variant",
+      "neg_log10_pvalue": 4.83061950468805,
+      "ld_reference_variant": "3:42428487:C:T_rs11718659"
+    }
+  ]

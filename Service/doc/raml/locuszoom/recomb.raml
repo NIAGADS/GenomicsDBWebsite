@@ -1,0 +1,14 @@
+displayName: LocusZoom DataSource API - Recombination Rate Track
+
+get: 
+    description: > 
+        return Recombination rates for LocusZoom.js
+    queryParameters:
+        chromosome: chromosome (chrN)
+        start: start of span / display window
+        end: end of span / display window
+    responses:
+        200:
+            body:
+                application/json:
+                    example: !include examples/recomb.json

@@ -8,7 +8,6 @@ export const {
   buildNumber,
   releaseDate,
   webAppUrl,
-  externalUrls,
   recordClassesWithProjectId
 } = window.__SITE_CONFIG__;
 

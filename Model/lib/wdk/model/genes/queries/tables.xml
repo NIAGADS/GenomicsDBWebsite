@@ -179,7 +179,7 @@
 		 ELSE 'Caribbean Hispanic' END AS population,
 		 ffunction.characteristic AS filter_function,
 		 trim(covariates.characteristic) AS covariates,
-		 build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
+		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name,
 		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS resource_accession
 
 		 FROM Results.GeneAssociation ga,
@@ -206,12 +206,12 @@
     <sqlQuery name="ADVariantsFromGWAS">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
 
       <column name="relative_position"/>
-      <column name="track_name"/>
+      <column name="track_name_link"/>
       <column name="pvalue"/>
       <column name="accession_link"/>
       <column name="adsp_variant_flag"/>
@@ -224,7 +224,7 @@
 
 		tracks AS (
 		SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
+		build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name_link,
 		build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
 		FROM NIAGADS.TrackAttributes ta,
 		NIAGADS.ProtocolAppNodeCharacteristic c
@@ -241,7 +241,7 @@
 		build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
 		'/record/variant/', r.variant_record_primary_key,
 		CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+		THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant_link,
 		
 		CASE WHEN r.variant_record_primary_key LIKE '%_%'
 		THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
@@ -296,7 +296,7 @@
 
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		 build_link_attribute(ta.name, '/record/gwas_summary/', ta.track, ta.description) AS track_name,
+		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name,
 		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
 		 FROM NIAGADS.TrackAttributes ta,
 		 NIAGADS.ProtocolAppNodeCharacteristic c
