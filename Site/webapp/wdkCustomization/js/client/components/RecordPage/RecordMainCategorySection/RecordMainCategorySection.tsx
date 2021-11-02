@@ -7,7 +7,7 @@ import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { RecordInstance, RecordClass } from "wdk-client/Utils/WdkModel";
 import { isEmpty } from "lodash";
 import { Box } from "@material-ui/core";
-import { BaseText } from "../../Shared";
+import { BaseText } from "../../MaterialUI";
 import { PartialRecordRequest } from 'wdk-client/Views/Records/RecordUtils';
 
 interface RecordMainCategorySection {

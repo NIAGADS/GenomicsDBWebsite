@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { merge } from "lodash";
+import { merge, omit } from "lodash";
 
 import { buildChartOptions, addCategories, addTitle, addSeries } from "./HighchartsOptions";
 
@@ -30,6 +30,7 @@ export interface HighchartsPlotProps {
     noDataMessage?: string;
     displayNoDataMessage?: boolean;
     plotOptions?: Options;
+    containerProps?: any; // e.g., pass className see https://www.npmjs.com/package/highcharts-react-official
     callback?: ChartCallbackFunc;
 }
 
@@ -58,7 +59,7 @@ export function buildOptions(data: any, properties: any, options: Options) {
 }
 
 const HighchartsPlot: React.FC<HighchartsPlotProps> = (props) => {
-    const { data, properties, noDataMessage, displayNoDataMessage, plotOptions, callback } = props;
+    const { data, properties, noDataMessage, displayNoDataMessage, plotOptions, callback, containerProps } = props;
     const [options, setOptions] = useState(plotOptions);
 
     useLayoutEffect(() => {
@@ -68,12 +69,11 @@ const HighchartsPlot: React.FC<HighchartsPlotProps> = (props) => {
     const message = options ? "Loading..." : noDataMessage ? noDataMessage : "None reported.";
     const displayMessage = displayNoDataMessage === false ? false : true;
 
+    const omittedProps = ["data", "properties", "noDataMessage", "displayNoDataMessage", "plotOptions"];
+    const chartComponentProps = omit(props, omittedProps);
+
     return options ? (
-        callback ? (
-            <HighchartsReact highcharts={Highcharts} options={options} callback={callback} />
-        ) : (
-            <HighchartsReact highcharts={Highcharts} options={options} />
-        )
+        <HighchartsReact highcharts={Highcharts} options={options} {...chartComponentProps} />
     ) : displayMessage ? (
         <div>{message}</div>
     ) : null;

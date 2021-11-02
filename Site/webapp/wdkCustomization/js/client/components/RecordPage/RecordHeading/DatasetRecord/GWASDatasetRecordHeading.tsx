@@ -18,7 +18,7 @@ import {
     SubheadingSmall,
     UnlabeledTextFieldOutlined,
     UnpaddedListItem,
-} from "../../../Shared";
+} from "../../../MaterialUI";
 
 import { _externalUrls } from "../../../../data/_externalUrls";
 

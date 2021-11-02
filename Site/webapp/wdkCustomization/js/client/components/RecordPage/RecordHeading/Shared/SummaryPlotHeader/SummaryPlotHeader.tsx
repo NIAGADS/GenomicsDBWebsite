@@ -1,6 +1,6 @@
 import { Box } from "@material-ui/core";
 import React from "react";
-import { BaseText, PrimaryExternalLink } from "../../../../Shared";
+import { BaseText, PrimaryExternalLink } from "../../../../MaterialUI";
 
 interface SummaryPlotHeader {
     labelText: string;

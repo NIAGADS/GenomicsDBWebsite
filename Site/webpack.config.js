@@ -10,16 +10,17 @@ module.exports = configure({
     optimization: {
         //runtimeChunk: 'single',
         splitChunks: {
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: "vendors",
-              chunks: "all",
-              filename: '[name].bundle.js'
+            cacheGroups: {
+                vendor: {
+                    test:  /[\\/]node_modules[\\/]((?!(@fontsource)).*)[\\/]/, // anything from node modules, except the fonts
+                    // /[\\/]node_modules[\\/](?!lodash)(.[a-zA-Z0-9.\-_]+)[\\/]/
+                    name: "vendors",
+                    chunks: "all",
+                    filename: "[name].bundle.js",
+                },
             },
-          },
         },
-      },    
+    },
     stats: {
         children: false, // hide mini css plugin verbiage
     },
@@ -29,7 +30,7 @@ module.exports = configure({
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
-                    //path.join(__dirname, "/webapp/wdkCustomization/js/client/components/RecordPage/RecordTable-old"),
+                //path.join(__dirname, "/webapp/wdkCustomization/js/client/components/RecordPage/RecordTable-old"),
                 use: [
                     {
                         loader: "babel-loader",

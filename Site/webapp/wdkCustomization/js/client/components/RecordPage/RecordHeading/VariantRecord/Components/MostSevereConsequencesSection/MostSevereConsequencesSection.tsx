@@ -2,7 +2,7 @@ import React from "react";
 import { resolveJsonInput } from "./../../../../../../util/jsonParse";
 import { ImpactIndicator } from "../../../Shared/index";
 import { Box, List } from "@material-ui/core";
-import { BaseTextSmall, UnpaddedListItem } from "../../../../../Shared";
+import { BaseTextSmall, UnpaddedListItem } from "../../../../../MaterialUI";
 import { RecordAttributes } from '../../../RecordHeadingTypes';
 
 const MostSevereConsequencesSection: React.FC<{ attributes: RecordAttributes }> = ({ attributes }) => (

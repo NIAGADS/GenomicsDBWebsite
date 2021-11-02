@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseTextSmall } from "../../../../Shared";
+import { BaseTextSmall } from "../../../../MaterialUI";
 
 interface RecordAttributeItem {
     label: string;

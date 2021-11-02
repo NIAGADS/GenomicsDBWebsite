@@ -4,6 +4,9 @@
     "main": "index.js",
     "license": "MIT",
     "dependencies": {
+        "@fontsource/libre-franklin": "^4.5.0",
+        "@fontsource/raleway": "^4.5.0",
+        "@fontsource/roboto": "^4.5.0",
         "@material-ui/core": "^4.11.0",
         "@material-ui/data-grid": "^4.0.0-alpha.31",
         "@material-ui/icons": "^4.9.1",
@@ -19,9 +22,11 @@
         "match-sorter": "^6.3.0",
         "prettier": "^2.0.4",
         "qs": "^6.9.4",
+        "react-cookie-consent": "^6.4.1",
         "react-csv": "^1.0.19",
         "react-material-ui-carousel": "^2.2.7",
         "react-native": "^0.64.2",
+        "react-socks": "^2.2.0",
         "react-table": "7.7.0"
     },
     "devDependencies": {
