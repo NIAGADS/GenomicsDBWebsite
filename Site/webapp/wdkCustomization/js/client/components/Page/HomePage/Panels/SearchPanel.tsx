@@ -23,7 +23,7 @@ export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
                         Alzheimer's Genomics Database
                     </Typography>
                     <Box pt={4}>
-                        <Typography className={classes.darkContrastText} variant="body2">
+                        <Typography className={`${classes.darkContrastText} ${classes.fancyBody}`} variant="body2">
                             The NIAGADS Alzhemier's GenomicsDB is an interactive knowledgebase for Alzheimer's disease
                             (AD) genetics. It provides a platform for data sharing, discovery, and analysis to help
                             advance the understanding of the complex genetic underpinnings of AD neurodegeneration and

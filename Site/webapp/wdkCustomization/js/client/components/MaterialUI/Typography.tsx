@@ -55,7 +55,7 @@ export const Subheading = withStyles((theme) =>
             paddingBottom: theme.spacing(2),
         },
     })
-)((props: TypographyProps) => <Typography {...props} variant="h5" />);
+)((props: TypographyProps) => <Typography {...props} variant="h4" />);
 
 export const SubheadingSmall = withStyles((theme) =>
     createStyles({

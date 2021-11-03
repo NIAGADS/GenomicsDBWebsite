@@ -7,8 +7,13 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 export const DRAWER_WIDTH = 240;
+export interface DrawerState {
+    isOpen: boolean;
+    handleClose?: any;
+    handleOpen?: any;
+}
 
-const useStyles = makeStyles((theme: Theme) =>
+export const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
         drawer: {
             width: DRAWER_WIDTH,
@@ -24,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
             // necessary for content to be below app bar
             ...theme.mixins.toolbar,
             justifyContent: "flex-end",
+            marginTop: "90px"
         },
         content: {
             flexGrow: 1,
@@ -44,15 +50,12 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface DrawerProps {
+export interface DrawerProps {
     children?: React.ReactNode;
-    isOpen: boolean;
-    // handleDrawerOpen:MouseEvent<HTMLButtonElement>;
-    handleDrawerClose: any;
 }
 
-export const PersistentDrawerLeft: React.FC<DrawerProps> = ({ children, isOpen, handleDrawerClose }) => {
-    const classes = useStyles();
+export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
+    const classes = useDrawerStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(isOpen);
 
@@ -62,7 +65,7 @@ export const PersistentDrawerLeft: React.FC<DrawerProps> = ({ children, isOpen, 
 
     const onDrawerClose = () => {
         setOpen(false);
-        handleDrawerClose();
+        handleClose();
     };
 
     return (

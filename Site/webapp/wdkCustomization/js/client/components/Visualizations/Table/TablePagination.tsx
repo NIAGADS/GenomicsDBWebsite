@@ -4,6 +4,8 @@ import { TablePagination as _MuiTablePagination } from '@material-ui/core'
 import React, { PropsWithChildren, ReactElement, useCallback } from 'react'
 import { TableInstance,  UsePaginationOptions } from 'react-table';
 
+import { useStyles } from './TableStyles'
+
 const rowsPerPageOptions = [10, 20, 50, { label: 'All', value: -1 }]
 
 // avoid all of the redraws caused by the internal withStyles
@@ -49,11 +51,14 @@ export default function TablePagination<T extends Record<string, unknown>>({
     [setPageSize]
   )
 
+  const classes = useStyles();
+
   return rowCount ? (
     //@ts-ignore -- versioning issue
     <MuiTablePagination
       rowsPerPageOptions={rowsPerPageOptions}
       component='div'
+      className={classes.pagination}
       count={rowCount}
       rowsPerPage={pageSize}
       page={pageIndex}

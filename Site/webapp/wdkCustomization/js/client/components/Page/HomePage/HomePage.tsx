@@ -30,6 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
         lightContrastText: {
             color: theme.palette.primary.light,
         },
+        fancyBody: {
+            fontSize: "1.7rem",
+             fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"'
+        },
+        largeBody: {
+            fontSize: "1.2rem"
+        },
         secondaryText: {
             color: theme.palette.secondary.main,
         },

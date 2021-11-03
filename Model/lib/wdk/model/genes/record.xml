@@ -3,7 +3,7 @@
   <recordClassSet name="GeneRecordClasses">
     <recordClass name="GeneRecordClass" displayName="Gene"
 		 displayNamePlural="Genes" shortDisplayName="Gene"
-		 useBasket="true" urlName="gene">
+		 useBasket="false" urlName="gene">
       <!-- =================================================================== -->
       <!-- Primary Key -->
       <!-- =================================================================== -->

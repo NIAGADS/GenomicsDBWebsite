@@ -13,7 +13,8 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes, background = "light"
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.headingSecondary : classes.headingPrimary;
     const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
-
+    const bodyText = bodyTextColor + " " + classes.largeBody;
+    
     return (
         <DefaultBackgroundPanel classes={classes} hasBaseArrow={false}>
             <Grid item container direction="column" spacing={6} xs={12} sm={10}>
@@ -24,7 +25,7 @@ export const AboutPanel: React.FC<PanelProps> = ({ classes, background = "light"
                 </Grid>
 
                 <Grid item>
-                    <Typography variant="body1" className={bodyTextColor} align="left">
+                    <Typography variant="body1" className={bodyText} align="left">
                         The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the
                         University of Pennsylvania as part of the{" "}
                         <Link className={linkType} href={_externalUrls.NIAGADS_BASE_URL}>

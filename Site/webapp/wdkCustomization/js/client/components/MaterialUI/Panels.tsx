@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme: Theme) =>
             background: lighten(theme.palette.primary.main, 0.95),
         },
         defaultBackgroundPanel: {
-            paddingTop: theme.spacing(6),
+            background: "white"
+            //paddingTop: theme.spacing(6),
         }
     })
 );

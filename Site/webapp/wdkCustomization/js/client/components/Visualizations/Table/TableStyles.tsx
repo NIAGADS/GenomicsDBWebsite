@@ -3,8 +3,12 @@ import React from "react";
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        pagination: {
+            fontFamily: "Roboto"
+        },
         tableHeadCell: {
-            // fontSize: "0.875rem",
+            fontSize: "0.9rem",
+            fontFamily: "Roboto",
             borderRight: "1px solid rgba(224, 224, 224, 1)",
             "&:last-child": {
                 borderRight: "none",
@@ -52,6 +56,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         }, */
         tableCell: {
             fontSize: "0.875rem",
+            fontFamily: "Roboto",
             /*padding: 16,
             textAlign: "left",
             fontWeight: 300,

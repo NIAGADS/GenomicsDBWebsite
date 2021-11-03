@@ -29,11 +29,12 @@ export const themeOptions: ThemeOptions = {
         fontFamily: '"Libre Franklin", "Raleway", "Roboto", "Arial", "sans-serif"'
       },
       body2: {
-          fontSize: "1.5rem",
-          fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"'
+          //fontSize: "1.5rem",
+          fontFamily: '"Roboto", "Arial", "sans-serif"'
+         
       },
       body1: {
-        fontSize: "1.2rem",
+        // fontSize: "1.2rem",
         fontFamily: '"Roboto", "Arial", "sans-serif"'
       }
     }

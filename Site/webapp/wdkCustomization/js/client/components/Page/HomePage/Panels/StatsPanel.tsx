@@ -17,6 +17,7 @@ export const StatsPanel: React.FC<PanelProps> = ({ classes, background = "light"
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.headingSecondary : classes.headingPrimary;
     const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
+    const bodyText = bodyTextColor + " " + classes.largeBody;
 
     return (
         <LightBackgroundPanel classes={classes} hasBaseArrow={true}>
@@ -29,7 +30,7 @@ export const StatsPanel: React.FC<PanelProps> = ({ classes, background = "light"
                 <Grid item>
                     <Grid item container direction="row" alignItems="center" justifyContent="space-evenly" spacing={4}>
                         <Grid item>
-                            <Typography variant="body1" className={bodyTextColor} align="left">
+                            <Typography variant="body1" className={bodyText} align="left">
                                 For each dataset we provide a detailed interactive report summarizing the top
                                 risk-associated variants. These variants are are annotated using the ADSP Annotation
                                 Pipeline (PMID:{" "}
