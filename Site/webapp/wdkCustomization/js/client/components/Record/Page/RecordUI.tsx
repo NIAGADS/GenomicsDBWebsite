@@ -15,12 +15,13 @@ import RecordNavigationSection from "wdk-client/Views/Records/RecordNavigation/R
 
 import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/core/styles";
 
 import {
     RecordNavigationButton,
     RecordNavigationSection as RecordNavigationPanel,
 } from "../Page/Sections/RecordNavigationSection";
-import { useDrawerStyles } from "../../MaterialUI";
+import { contentStyles as drawerPanelStyles } from "../../MaterialUI/PersistentDrawerLeft";
 /**
  * Renders the main UI for the WDK Record page.
  */
@@ -119,16 +120,14 @@ class RecordUI extends Component {
         this._updateNavigationOpen(false);
     }
 
-    classes = useDrawerStyles();
-
     render() {
         //@ts-ignore
-        let navigationStatusClassName = clsx(classes.content, { [classes.contentShift]: open });
-        let classNames = clsx(
+        let classes = this.props.classes; 
+        let navigationStatusClassName = clsx(classes.content, { [classes.contentShift]: this.state.navigationIsOpen });
+        let classNames = classnames(
             "wdk-RecordContainer",
-            "wdk-RecordContainer__" + this.props.recordClass.fullName,
-            navigationStatusClassName
-        );
+            "wdk-RecordContainer__" + this.props.recordClass.fullName
+        ) + " " + navigationStatusClassName;
 
         return (
             <div className={classNames}>
@@ -183,4 +182,4 @@ class RecordUI extends Component {
     }
 }
 
-export default RecordUI;
+export default withStyles(drawerPanelStyles, { withTheme: true })(RecordUI);

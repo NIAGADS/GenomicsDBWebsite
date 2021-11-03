@@ -23,13 +23,18 @@ import { constant } from 'wdk-client/Utils/Json'; */
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        drawerContents: {
+            padding: theme.spacing(1)
+        },
         menuButton: {
             //marginRight: 36,
-            background: "rgba(0, 0, 0, 0.19) none repeat scroll 0% 0%",
+            borderRadius: "10%",
             color: "white", 
-            fontSize: "2rem",
-            "&hover": {
-              background: "rgba(0, 0, 0, 0.05) none repeat scroll 0% 0%",
+            fontSize: "2rem",    
+            padding: "8px",
+            background: "rgba(0, 0, 0, 0.19) none repeat scroll 0% 0%",
+            "&:hover": {
+                background: "rgba(0, 0, 0, 0.5) none repeat scroll 0% 0% !important"
             }
         },
         hide: {
@@ -40,7 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
           //background: theme.palette.grey[50], 
         }, 
         menu: {
-          position: "fixed"
+          position: "fixed",
+          height: "80px",
+          zIndex: 1
         }
     })
 );
@@ -58,7 +65,6 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
                 }
             >
                 <IconButton
-                    color="inherit"
                     aria-label="open record navigation / table of contents panel on the left"
                     onClick={handleOpen}
                     edge="start"
@@ -67,15 +73,15 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
                     <MenuIcon className={classes.menuIcon} />
                 </IconButton>
             </HtmlTooltip>
-            <Typography variant="body1" className={clsx(isOpen && classes.hide)}>Contents</Typography>
         </Toolbar>
     );
 };
 
 export const RecordNavigationSection: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
+    const classes = useStyles();
     return (
-        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose}>
-            <Box mt="90px">
+        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Contents">
+            <Box className={classes.drawerContents}>
                 {children}
             </Box>
         </PersistentDrawerLeft>

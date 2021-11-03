@@ -6,16 +6,28 @@ import { getAttributeChartProperties } from "../Shared/HeaderRecordActions/Heade
 
 import { RecordHeading } from "../RecordHeadingTypes";
 import { HighchartsTableTrellis } from "../../../../Visualizations";
-import { resolveJsonInput } from "../../../../../util/jsonParse";
 
-import { BaseText, BaseTextSmall, Subheading, UnpaddedListItem } from "../../../../MaterialUI";
-import { DefaultBackgroundPanel } from "../../../../MaterialUI";
+import { CustomPanel } from "../../../../MaterialUI";
 
 import AttributeList from "./GeneRecordAttributeList";
 
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        panel: {
+            background: "transparent",
+            position: "relative",
+            top: "10px",
+            paddingLeft: "50px"
+        }
+    })
+);
+
 const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
+    const classes = useStyles();
     return (
-        <DefaultBackgroundPanel hasBaseArrow={false}>
+        <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
             <Grid item container direction="column" sm={3}>
                 <Grid item>
                     <Typography variant="h5">
@@ -44,7 +56,7 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
                     />
                 )}
             </Grid>
-        </DefaultBackgroundPanel>
+        </CustomPanel>
     );
 };
 

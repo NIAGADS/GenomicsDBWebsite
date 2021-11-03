@@ -8,8 +8,8 @@ interface SummaryPlotHeader {
 }
 
 const SummaryPlotHeader: React.FC<SummaryPlotHeader> = ({ labelText, linkTarget }) => (
-    <Box marginTop="45px">
-        <Typography variant="h5">{labelText}</Typography>
+    <Box>
+        <Typography variant="h6">{labelText}</Typography>
         <PrimaryExternalLink href={linkTarget}>
             Browse the association evidence <i className="fa fa-level-down"></i>
         </PrimaryExternalLink>

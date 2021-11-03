@@ -5,6 +5,7 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Typography from "@material-ui/core/Typography";
 
 export const DRAWER_WIDTH = 240;
 export interface DrawerState {
@@ -12,6 +13,25 @@ export interface DrawerState {
     handleClose?: any;
     handleOpen?: any;
 }
+
+export const contentStyles = (theme:Theme) => ({
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: 0,
+    },
+    contentShift: {
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: DRAWER_WIDTH,
+    },
+});
 
 export const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -52,9 +72,10 @@ export const useDrawerStyles = makeStyles((theme: Theme) =>
 
 export interface DrawerProps {
     children?: React.ReactNode;
+    title?: string;
 }
 
-export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
+export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ title, children, isOpen, handleClose }) => {
     const classes = useDrawerStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(isOpen);
@@ -79,6 +100,7 @@ export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ chil
             }}
         >
             <div className={classes.drawerHeader}>
+                {title && <Typography variant="h5">{title}</Typography>}
                 <IconButton onClick={onDrawerClose}>
                     {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                 </IconButton>
