@@ -10,6 +10,7 @@ import ErrorBoundary from "wdk-client/Core/Controllers/ErrorBoundary";
 import { useScrollUpOnRouteChange } from "wdk-client/Hooks/Page";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { theme } from "../MaterialUI";
+import Announcements from "./Announcements";
 
 // import clsx from "clsx";
 //import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -57,7 +58,10 @@ function CustomPageLayout(props: Props) {
                 <ErrorBoundary>
                     <Header />
                 </ErrorBoundary>
-                <div className="wdk-PageContent">{props.children}</div>
+                <div className="wdk-PageContent">
+                    <Announcements />
+                    {props.children}
+                </div>
                 <ErrorBoundary>
                     <Footer />
                 </ErrorBoundary>

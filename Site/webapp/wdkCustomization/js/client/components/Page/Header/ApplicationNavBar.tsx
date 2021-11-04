@@ -252,8 +252,7 @@ function PrimarySearchAppBar() {
             <ElevationScroll>
                 <>
                     <AppBar position="fixed" className={classes.appBar}>
-                        <Announcements />
-
+                     
                         <Toolbar className={classes.toolbar}>
                             <Button
                                 className={classes.logoButton}
