@@ -1,6 +1,7 @@
 import React  from "react";
 import { isString, isObject, findIndex, forIn, get, toNumber } from "lodash";
-import { resolveObjectInput, withTooltip } from "../../../../util/jsonParse";
+import { resolveObjectInput } from "../../../../util/jsonParse";
+import { withTooltip } from "../../../MaterialUI";
 import CssBarChart from "./CssBarChart/CssBarChart";
 
 
