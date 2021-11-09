@@ -19,7 +19,7 @@
       <sql>
         <![CDATA[
 		 SELECT 'NDD' AS ontology, 
-		 build_link_attribute('', uri) AS external_link,
+		 build_link_attribute(uri, uri, '') AS external_link,
 		 *
 		 FROM NIAGADS.DataDictionary
 	]]>

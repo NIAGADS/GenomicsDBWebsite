@@ -1,44 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
   <recordClassSet name="OntologyRecordClasses">
-    <recordClass name="OntologyRecordClass"
-		 displayName="Ontology"
-		 displayNamePlural="Ontologies"
-		 shortDisplayName="Ontology"
-		 useBasket="false"
-		 urlName="ontology">
-      
+    <recordClass name="OntologyRecordClass" displayName="Ontology" displayNamePlural="Ontologies" shortDisplayName="Ontology" useBasket="false" urlName="ontology">
+
       <!-- =================================================================== -->
       <!-- Primary Key -->
       <!-- =================================================================== -->
 
       <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
-	<columnRef>ontology</columnRef>
+        <columnRef>ontology</columnRef>
       </primaryKey>
 
       <idAttribute name="primary_key" displayName="Ontology">
-	<text>
-	  <![CDATA[$$ontology$$]]>
-	</text>
+        <text>
+          <![CDATA[$$ontology$$]]>
+        </text>
       </idAttribute>
 
       <testParamValues>
-	<paramValue name="ontology"></paramValue>
+        <paramValue name="ontology"></paramValue>
       </testParamValues>
 
       <!-- =================================================================== -->
       <!-- Reporters -->
       <!-- =================================================================== -->
-      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%"
-		scopes="record"
-		implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter">
+      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter">
       </reporter>
 
 
       <reporter name="json" displayName="JSON: choose from columns
-					 and/or tables"
-		scopes="record"
-		implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+					 and/or tables" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
       </reporter>
 
 
@@ -46,15 +37,15 @@
       <!-- Header Summary Information -->
       <!-- =============================================================== -->
 
-      
-      
+
+
       <attributeQueryRef ref="OntologyAttributes.BasicAttributes">
-	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
-	<columnAttribute name="description" displayName="Description" type="string" />
-	<columnAttribute name="name" displayName="Name" type="string" />
+        <columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
+        <columnAttribute name="description" displayName="Description" type="string" />
+        <columnAttribute name="name" displayName="Name" type="string" />
       </attributeQueryRef>
 
-         <!-- =============================================================== -->
+      <!-- =============================================================== -->
       <!-- One table for each "type" of dataset:  -->
       <!-- GWAS, Gene-Risk, Single Variant, eQTL, etc. -->
       <!-- =============================================================== -->
@@ -63,24 +54,24 @@
       <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
       <!-- GWAS Summary Statistics -->
       <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-   <table name="terms" displayName="Data Dictionary" queryRef="OntologyTables.terms">
-	<description>Curated terms in the NIAGADS Data Dictionary</description>
-	<columnAttribute name="term_source_id" displayName="ID" type="string" inReportMaker="true"/>
-	<columnAttribute name="name" displayName="Term" type="string" inReportMaker="true"/>
-	<columnAttribute name="definition" displayName="Definition" type="string" inReportMaker="true"/>
-	<columnAttribute name="uri" displayName="URI" type="string" internal="true" inReportMaker="true"/>
-	<columnAttribute name="external_link" displayName="json_link" type="string" inReportMaker="false"/>
-	<columnAttribute name="category_level_1" displayName="Category" type="string" inReportMaker="true"/>	
-	<columnAttribute name="category_level_2" displayName="Subcategory" type="string" inReportMaker="true"/>
-	
+      <table name="terms" displayName="Data Dictionary" queryRef="OntologyTables.terms">
+        <description>Curated terms in the NIAGADS Data Dictionary</description>
+        <columnAttribute name="term_source_id" displayName="ID" type="string" inReportMaker="true"/>
+        <columnAttribute name="name" displayName="Term" type="string" inReportMaker="true"/>
+        <columnAttribute name="definition" displayName="Definition" type="string" inReportMaker="true"/>
+        <columnAttribute name="uri" displayName="URI" type="string" internal="true" inReportMaker="true"/>
+        <columnAttribute name="external_link" displayName="URI" type="string" inReportMaker="false"/>
+        <columnAttribute name="category_level_1" displayName="Category" type="string" inReportMaker="true"/>
+        <columnAttribute name="category_level_2" displayName="Subcategory" type="string" inReportMaker="true"/>
 
-	<propertyList name="column_filter">
-	  <value>{"Category": "select","Subcategory": "select" }</value>
-	</propertyList>
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter": true}</value>
-	</propertyList>
+        <propertyList name="column_filter">
+          <value>{"category_level_1": "select","category_level_2": "select" }</value>
+        </propertyList>
+
+        <propertyList name="flags">
+          <value>{"defaultOpen": true, "filter": true}</value>
+        </propertyList>
 
       </table>
 
