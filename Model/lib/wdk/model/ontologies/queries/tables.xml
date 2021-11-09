@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+   <querySet name="OntologyTables" queryType="table" isCacheable="false">
+
+    
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="terms">
+      <column name="ontology" columnType="string"/>
+      <column name="term_source_id" columnType="string"/>
+      <column name="uri" columnType="string"/>
+      <column name="name" columnType="string"/>
+      <column name="definition" columnType="string"/>
+      <column name="category_level_1" columnType="string"/>
+      <column name="category_level_2" columnType="string"/>
+      <sql>
+        <![CDATA[
+		 SELECT 'NDD' AS ontology, 
+		 build_link_attribute('', uri) AS external_link,
+		 *
+		 FROM NIAGADS.DataDictionary
+	]]>
+      </sql>
+    </sqlQuery>
+   </querySet>
+</wdkModel>

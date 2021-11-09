@@ -43,7 +43,13 @@
     <import file="model/variants/queries/questions.xml" />
     <import file="model/variants/params.xml" /> 
     <!-- <import file="model/variants/queries/vocab.xml"/> -->
-   
+
+
+    <!-- ONTOLOGIES -->
+    <import file="model/ontologies/record.xml"/>
+    <import file="model/ontologies/queries/attributes.xml" />
+    <import file="model/ontologies/queries/tables.xml" />
+    
     <!-- GENES  -->
     <import file="model/genes/record.xml" />
     <import file="model/genes/queries/attributes.xml" />
