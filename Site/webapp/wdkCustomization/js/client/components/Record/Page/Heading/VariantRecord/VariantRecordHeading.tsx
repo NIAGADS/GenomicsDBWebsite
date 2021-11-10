@@ -1,54 +1,63 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Tooltip } from "wdk-client/Components";
+
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
+import { Box, Grid, List, Typography } from "@material-ui/core";
+import { Check, ReportProblemOutlined } from "@material-ui/icons";
+
 import { MostSevereConsequencesSection } from "./Components/index";
 import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "../Shared";
+
 import { getAttributeChartProperties } from "../Shared/HeaderRecordActions/HeaderRecordActions";
-import { resolveJsonInput, isJson, withTooltip } from "../../../../../util/jsonParse";
 import { HighchartsTableTrellis } from "../../../../Visualizations/Highcharts/HighchartsTrellisPlot";
-import { Box, Grid, List } from "@material-ui/core";
-import { Check, ReportProblemOutlined } from "@material-ui/icons";
-import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall } from "../../../../MaterialUI/Typography";
-import { UnpaddedListItem, PrimaryExternalLink } from "../../../../MaterialUI";
+
+import { resolveJsonInput, isJson } from "../../../../../util/jsonParse";
+import { RecordHeading, RecordAttributes } from "../RecordHeadingTypes";
+
+import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall, CustomPanel } from "../../../../MaterialUI";
+
+import { VariantRecordAttributesList as AttributeList } from "./VariantRecordAttributes";
 
 import { _externalUrls } from "../../../../../data/_externalUrls";
-import { RecordHeading, RecordAttributes } from '../RecordHeadingTypes';
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        panel: {
+            background: "transparent",
+            position: "relative",
+            top: "10px",
+            paddingLeft: "50px",
+        },
+    })
+);
 
 const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
+    const classes = useStyles();
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 
     return (
-        <Grid container style={{ marginLeft: "10px" }}>
+        <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
             <Grid item container direction="column" sm={3}>
+                <Grid item>
+                    <Typography variant="h5">
+                        <strong>
+                            {isJson(attributes.display_metaseq_id)
+                                ? resolveJsonInput(attributes.display_metaseq_id.toString())
+                                : attributes.display_metaseq_id}
+                        </strong>
+                    </Typography>
+                </Grid>
                 <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-                <Subheading style={{ paddingBottom: "0px" }}>
-                    <strong>
-                        {isJson(attributes.display_metaseq_id)
-                            ? resolveJsonInput(attributes.display_metaseq_id.toString())
-                            : attributes.display_metaseq_id}
-                    </strong>
-                </Subheading>
+                <Grid item>
+                    <AttributeList record={record} />
+                </Grid>
 
-                {attributes.ref_snp_id 
-                    && <SubheadingSmall>
-                        {attributes.ref_snp_id}
-                        {" "} {withTooltip(<PrimaryExternalLink href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
-                            <i className="fa fa-external-link"></i>
-                        </PrimaryExternalLink>, 'Explore dbSNP record for this variant')}
-                    </SubheadingSmall>}
-                <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                    <BaseTextSmall>
-                        Has this variant been flagged by the ADSP?&nbsp;&nbsp;&nbsp;
-                        {attributes.is_adsp_variant ? (
-                            <strong>
-                                <Check style={{ color: "red" }} />
-                                &nbsp;Yes
-                            </strong>
-                        ) : (
-                            <strong>No</strong>
-                        )}
-                    </BaseTextSmall>
+            </Grid>
+        </CustomPanel>
+
+        /* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+                 
                     <ADSPQCDisplay attributes={record.attributes} />
                 </Box>
                 {attributes.most_severe_consequence && <MostSevereConsequencesSection attributes={attributes} />}
@@ -71,7 +80,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                             />
                         )}
                     </Box>
-                )}
+                        )} 
             </Grid>
             <Grid item sm={9} container>
                 {record.attributes.gws_datasets_summary_plot && (
@@ -88,71 +97,16 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                     />
                 )}
             </Grid>
-        </Grid>
+                </Grid> */
     );
 };
 
-const ADSPQCDisplay: React.FC<{ attributes: RecordAttributes }> = ({ attributes }) =>
-    (attributes.adsp_wgs_qc_filter_status || attributes.adsp_wes_qc_filter_status) && (
-        <Box>
-            {attributes.adsp_wes_qc_filter_status &&
-                (attributes.is_adsp_wes ? (
-                    <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="red">WES</SmallBadge> {attributes.adsp_wes_qc_filter_status}
-                    </Box>
-                ) : (
-                    <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="black">WES</SmallBadge> {attributes.adsp_wes_qc_filter_status}
-                    </Box>
-                ))}
-            {attributes.adsp_wgs_qc_filter_status &&
-                (attributes.is_adsp_wgs ? (
-                    <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="red">WGS</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
-                    </Box>
-                ) : (
-                    <Box marginBottom={1} display="flex" alignItems="center">
-                        <SmallBadge backgroundColor="black">WGS</SmallBadge> {attributes.adsp_wgs_qc_filter_status}
-                    </Box>
-                ))}
-        </Box>
-    );
-
-const AlternativeVariants: React.FC<{ altVars: string }> = ({ altVars }) => (
-    <div>
-        <ReportProblemOutlined fontSize="small" /> This variant is&nbsp;
-        <Tooltip content={"Use the links below to view annotations for additional alt alleles"}>
-            <span className="wdk-tooltip">multi-allelic:</span>
-        </Tooltip>
-        <LinkList list={JSON.parse(altVars)} />
-    </div>
-);
-
-const ColocatedVariants: React.FC<{ colVars: string; position: string; chromosome: string }> = ({
-    colVars,
-    position,
-    chromosome,
-}) => (
-    <div>
-        <ReportProblemOutlined fontSize="small" />
-        This position ({`${chromosome}: ${position}`}) coincides with&nbsp;
-        <Tooltip
-            content={
-                "use the links below to view annotations for co-located/overlapping variants (e.g., indels, structural variants, co-located SNVs not annotated by dbSNP)"
-            }
-        >
-            <span className="wdk-tooltip">additional variants:</span>
-        </Tooltip>
-        <LinkList list={JSON.parse(colVars)} />
-    </div>
-);
-
-const LinkList: React.FC<{ list: string[] }> = ({ list }) => (
+/* const LinkList: React.FC<{ list: string[] }> = ({ list }) => (
     <List disablePadding={true}>
         {list.map((item, i) => (
             <UnpaddedListItem key={i}>{resolveJsonInput(item)}</UnpaddedListItem>
         ))}
     </List>
-);
+);*/
 
 export default VariantRecordSummary;

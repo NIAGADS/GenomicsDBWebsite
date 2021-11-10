@@ -126,7 +126,7 @@ class RecordUI extends Component {
         let navigationStatusClassName = clsx(classes.content, { [classes.contentShift]: this.state.navigationIsOpen });
         let classNames = classnames(
             "wdk-RecordContainer",
-            "wdk-RecordContainer__" + this.props.recordClass.fullName
+            "wdk-RecordContainer__" + this.props.recordClass.fullName.replace('.', '_')
         ) + " " + navigationStatusClassName;
 
         return (

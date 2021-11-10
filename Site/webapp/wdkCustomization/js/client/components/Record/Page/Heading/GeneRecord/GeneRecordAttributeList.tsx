@@ -36,6 +36,7 @@ const GeneRecordAttributesList: React.FC<{ record: RecordInstance }> = ({ record
                     } `}
                 />
             </UnpaddedListItem>
+
             {record.attributes.has_genetic_evidence_for_ad_risk && (
                 <UnpaddedListItem>
                     <BaseTextSmall>

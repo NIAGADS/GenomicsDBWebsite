@@ -1,7 +1,7 @@
 import React from "react";
-import { Grid, List, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
-import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "../Shared";
+import { HeaderRecordActions, SummaryPlotHeader } from "../Shared";
 import { getAttributeChartProperties } from "../Shared/HeaderRecordActions/HeaderRecordActions";
 
 import { RecordHeading } from "../RecordHeadingTypes";

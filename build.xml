@@ -19,53 +19,53 @@
 						                                             GenomicsDBWebsite/View-Installation,
 						                                             GenomicsDBWebsite/Site-Installation">
     <ant target="defaultProjectInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
+      <property name="project" value="GenomicsDBWebsite" />
     </ant>
   </target>
 
   <target name="GenomicsDBWebsite-MavenInstallation">
     <ant target="mavenBuildProject">
-      <property name="project" value="GenomicsDBWebsite"/>
+      <property name="project" value="GenomicsDBWebsite" />
     </ant>
-    <property name="alreadyBuilt" value="true"/>
+    <property name="alreadyBuilt" value="true" />
   </target>
 
   <!-- ooooooooooooooooooooooo  Install Components  ooooooooooooooooooooooo -->
 
   <target name="GenomicsDBWebsite/Model-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="Model"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="Model" />
     </ant>
 
-    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt to ${targetDir}/lib/wdk/ontology/annotation.txt"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true"/>
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt to ${targetDir}/lib/wdk/ontology/annotation.txt" />
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/annotation.txt" tofile="${targetDir}/lib/wdk/ontology/annotation.txt" overwrite="true" />
 
-    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl to ${targetDir}/lib/wdk/ontology/categories.owl"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true"/>
-    
-    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl to ${targetDir}/lib/wdk/ontology/categories_full.owl"/>
-    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl" tofile="${targetDir}/lib/wdk/ontology/categories_full.owl" overwrite="true"/>
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl to ${targetDir}/lib/wdk/ontology/categories.owl" />
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories.owl" tofile="${targetDir}/lib/wdk/ontology/categories.owl" overwrite="true" />
+
+    <echo message="Copying ${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl to ${targetDir}/lib/wdk/ontology/categories_full.owl" />
+    <copy file="${projectsDir}/${project}/Model/lib/wdk/ontology/categories_full.owl" tofile="${targetDir}/lib/wdk/ontology/categories_full.owl" overwrite="true" />
 
 
     <!-- the following four commands generate the website ontology -->
 
     <path id="owl-class-path">
-      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar"/>
-      <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar"/>
-      <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar"/>
-      <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar"/>
-      <pathelement location="${targetDir}/config/"/>
+      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar" />
+      <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar" />
+      <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar" />
+      <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar" />
+      <pathelement location="${targetDir}/config/" />
     </path>
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
-      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename individuals.txt -outputFilename individuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/individuals.owl'"/>
-      <classpath refid="owl-class-path"/>
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename individuals.txt -outputFilename individuals.owl -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/individuals.owl'" />
+      <classpath refid="owl-class-path" />
     </java>
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.EuPathAnnotPropAdder">
-      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename annotation.txt -outputFilename annotation.owl  -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/annotation.owl'"/>
-      <classpath refid="owl-class-path"/>
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename annotation.txt -outputFilename annotation.owl  -ontoIRIstr 'http://purl.obolibrary.org/obo/eupath/category/annotation.owl'" />
+      <classpath refid="owl-class-path" />
     </java>
 
     <!-- <java failonerror="true" classname="org.eupathdb.common.model.ontology.OwlClassGenerator">
@@ -74,30 +74,30 @@
     </java> -->
 
     <java failonerror="true" classname="org.eupathdb.common.model.ontology.OntologyMerger">
-      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename categories_full.owl -outputFilename categories_merged.owl"/>
-      <classpath refid="owl-class-path"/>
+      <arg line="-path ${targetDir}/lib/wdk/ontology/ -inputFilename categories_full.owl -outputFilename categories_merged.owl" />
+      <classpath refid="owl-class-path" />
     </java>
 
   </target>
 
   <target name="GenomicsDBWebsite/Service-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="Service"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="Service" />
     </ant>
   </target>
 
   <target name="GenomicsDBWebsite/Site-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="Site"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="Site" />
     </ant>
   </target>
 
   <target name="GenomicsDBWebsite/View-Installation">
     <ant target="defaultComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="View"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="View" />
     </ant>
   </target>
 
@@ -113,29 +113,28 @@
   </target>
 
   <target name="GenomicsDBWebsite-Website-Patch">
-    <echo message="Applying patches from ${projectsDir}/${project}/patches"/>
-    <echo message="Patching: EbrcWebsiteCommon"/>
-    <property name="patch-full-path-ebrc" location="${projectsDir}/${project}/patches/patch_EbrcWebsiteCommon.bash"/>
-    <exec executable="${patch-full-path-ebrc}"/>
-    <echo message="Patching: WDKClient"/>
-    <property name="patch-full-path-wdkclient" location="${projectsDir}/${project}/patches/patch_WDKClient.bash"/>
-    <exec executable="${patch-full-path-wdkclient}"/>
+    <echo message="Applying patches from ${projectsDir}/${project}/patches" />
+    <echo message="Patching: EbrcWebsiteCommon" />
+    <property name="patch-full-path-ebrc" location="${projectsDir}/${project}/patches/patch_EbrcWebsiteCommon.bash" />
+    <exec executable="${patch-full-path-ebrc}" />
+    <echo message="Patching: WDKClient" />
+    <property name="patch-full-path-wdkclient" location="${projectsDir}/${project}/patches/patch_WDKClient.bash" />
+    <exec executable="${patch-full-path-wdkclient}" />
   </target>
 
   <target name="GenomicsDBWebsite/Site-WebInstallation" depends="GenomicsDBWebsite-Website-Patch">
     <ant target="eupathWebComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="Site"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="Site" />
     </ant>
 
-    <echo message="Unpack manhattan plots"/>
-    <untar src="${webappTargetDir}/images/manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images"/>
-    <delete file="${webappTargetDir}/images/manhattan.tar.gz" quiet="true"/>
-    
-    <replace dir="${webappTargetDir}/WEB-INF/includes"
-             propertyFile="${webPropFile}" >
+    <echo message="Unpack manhattan plots" />
+    <untar src="${webappTargetDir}/images/manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
+    <delete file="${webappTargetDir}/images/manhattan.tar.gz" quiet="true" />
+
+    <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />
-      <replacefilter token="@build@" property="build"/>
+      <replacefilter token="@build@" property="build" />
       <replacefilter token="@assetPath@" property="assetPath" />
       <replacefilter token="@googleAnalyticsId@" property="googleAnalyticsId" />
       <replacefilter token="@webappCtx@" property="webappCtx" />
@@ -150,28 +149,28 @@
 
   </target>
 
-  
+
   <target name="GenomicsDBWebsite/View-WebInstallation">
 
     <ant target="defaultComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="View"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="View" />
     </ant>
 
     <ant target="defaultWebComponentInstall">
-      <property name="project" value="GenomicsDBWebsite"/>
-      <property name="component" value="View"/>
+      <property name="project" value="GenomicsDBWebsite" />
+      <property name="component" value="View" />
     </ant>
 
   </target>
 
-<target name="GenomicsDBWebsite/Service-WebInstallation">
-  <echo message="Generating API documentation"/>
-  <antcall target="runRaml2Html">
-   <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml"/>
-  <param name="outputFile" value="${htdocsTargetDir}/genomics-service-api.html"/> 
-  </antcall>
-</target>
+  <target name="GenomicsDBWebsite/Service-WebInstallation">
+    <echo message="Generating API documentation" />
+    <antcall target="runRaml2Html">
+      <param name="inputFile" value="${targetDir}/doc/GenomicsDBWebsite/Service/raml/api.raml" />
+      <param name="outputFile" value="${htdocsTargetDir}/genomics-service-api.html" />
+    </antcall>
+  </target>
 
   <!-- <target name="checkLinks"> -->
   <!--   <available file="${webappTargetDir}/docs" property="docsLinkExists" /> -->
@@ -188,7 +187,7 @@
 
   <target name="GenomicsDBWebsite-Release">
     <ant target="defaultProjectRelease">
-      <property name="cvsroot" value=":ext:cvs.sanger.ac.uk:/cvsroot/GUS"/>
+      <property name="cvsroot" value=":ext:cvs.sanger.ac.uk:/cvsroot/GUS" />
     </ant>
   </target>
 
