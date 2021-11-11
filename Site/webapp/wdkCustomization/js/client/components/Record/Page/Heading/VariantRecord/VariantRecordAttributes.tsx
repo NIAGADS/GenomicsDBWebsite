@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, List, Typography, Box, Chip, Avatar } from "@material-ui/core";
+import { List, Typography, Box } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
@@ -11,13 +11,11 @@ import {
     BaseTextSmall,
     UnpaddedListItem,
     DarkSecondaryExternalLink,
-    withTooltip,
-    WhiteExternalLink,
+    withTooltip
 } from "../../../../MaterialUI";
-import { RecordAttributeItem } from "../Shared";
+import { ImpactIndicator, RecordAttributeItem } from "../Shared";
 import { _externalUrls } from "../../../../../data/_externalUrls";
-import { CheckCircleOutline } from "@material-ui/icons";
-import AttributeSelector from "wdk-client/Views/Answer/AnswerAttributeSelector";
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,20 +29,16 @@ const useStyles = makeStyles((theme: Theme) =>
         failText: {
             color: theme.palette.primary.main,
         },
-        avatarPass: {
-            background: "red",
-            color: '"white" !important',
-        },
         fail: {
             borderColor: theme.palette.primary.main,
             backgroundColor: "white",
-        },
-        avatarFail: {
-            background: theme.palette.primary.main,
-            color: '"white" !important',
-        },
+        },  
         small: {
             fontSize: "0.8rem",
+        },
+        textWithTooltip: {
+            borderBottom: "1px dashed",
+            borderBottomColor: theme.palette.secondary.dark,
         },
         chipRoot: {
             display: "flex",
@@ -76,6 +70,19 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
                 </UnpaddedListItem>
             )}
             <UnpaddedListItem>
+                <RecordAttributeItem label="Allele:" attribute={attributes.display_allele.toString()} />
+            </UnpaddedListItem>
+
+            <UnpaddedListItem>
+                <BaseTextSmall>{attributes.variant_class}</BaseTextSmall>
+            </UnpaddedListItem>
+            {attributes.location && (
+                <UnpaddedListItem>
+                    <RecordAttributeItem label="Location:" attribute={attributes.location.toString()} />
+                </UnpaddedListItem>
+            )}
+
+            <UnpaddedListItem>
                 <BaseText>
                     Has this variant been flagged by the ADSP?{"   "}
                     {attributes.is_adsp_variant ? (
@@ -91,7 +98,70 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
             <UnpaddedListItem>
                 <ADSPQCDisplay record={record} />
             </UnpaddedListItem>
+            {attributes.most_severe_consequence && <MostSevereConsequencesSection record={record} />}
         </List>
+    );
+};
+
+const MostSevereConsequencesSection: React.FC<{ record: RecordInstance }> = ({ record }) => {
+    const attributes = record.attributes;
+    return (
+        <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+            <List disablePadding={true}>
+                <UnpaddedListItem>
+                    <BaseTextSmall variant="caption">
+                        <strong>Consequence:</strong>&nbsp;
+                        {attributes.most_severe_consequence}&nbsp;
+                        {attributes.msc_is_coding && resolveJsonInput(attributes.msc_is_coding.toString())}
+                    </BaseTextSmall>
+                </UnpaddedListItem>
+                {attributes.msc_impact && (
+                    <UnpaddedListItem>
+                        <BaseTextSmall variant="caption">
+                            <strong>Impact:</strong>&nbsp;
+                            <ImpactIndicator impact={attributes.msc_impact.toString()} />
+                        </BaseTextSmall>
+                    </UnpaddedListItem>
+                )}
+            </List>
+            <Box marginLeft={1}>
+                <List disablePadding={true}>
+                    {attributes.msc_amino_acid_change && (
+                        <UnpaddedListItem>
+                            <BaseTextSmall variant="caption">
+                                Amino Acid Change:&nbsp;
+                                {attributes.msc_amino_acid_change}
+                            </BaseTextSmall>
+                        </UnpaddedListItem>
+                    )}
+                    {attributes.msc_codon_change && (
+                        <UnpaddedListItem>
+                            <BaseTextSmall variant="caption">
+                                Codon Change:&nbsp;
+                                {attributes.msc_codon_change}
+                            </BaseTextSmall>
+                        </UnpaddedListItem>
+                    )}
+
+                    {attributes.msc_impacted_gene_link && (
+                        <UnpaddedListItem>
+                            <BaseTextSmall variant="caption">
+                                Impacted Gene:&nbsp;
+                                {resolveJsonInput(attributes.msc_impacted_gene_link.toString())}
+                            </BaseTextSmall>
+                        </UnpaddedListItem>
+                    )}
+                    {attributes.msc_impacted_transcript && (
+                        <UnpaddedListItem>
+                            <BaseTextSmall variant="caption">
+                                Impacted Transcript:&nbsp;
+                                {resolveJsonInput(attributes.msc_impacted_transcript.toString())}
+                            </BaseTextSmall>
+                        </UnpaddedListItem>
+                    )}
+                </List>
+            </Box>
+        </Box>
     );
 };
 
@@ -124,27 +194,29 @@ const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
     const classes = useStyles();
     return (
         <>
-            {didPass
-                ? withTooltip(
-                      <Chip
-                          variant="outlined"
-                          className={classes.pass}
-                          size="small"
-                          avatar={<Avatar className={classes.avatarPass}>P</Avatar>}
-                          label={label}
-                      />,
-                      status.toString()
-                  )
-                : withTooltip(
-                      <Chip
-                          variant="outlined"
-                          className={classes.fail}
-                          size="small"
-                          avatar={<Avatar className={classes.avatarFail}>F</Avatar>}
-                          label={label}
-                      />,
-                      status.toString()
-                  )}
+            {didPass ? (
+                <Typography>
+                    {label}
+                    {": "}
+                    {withTooltip(
+                        <Typography component="span" className={`${classes.passText} ${classes.textWithTooltip}`}>
+                            PASS
+                        </Typography>,
+                        status.toString()
+                    )}
+                </Typography>
+            ) : (
+                <Typography>
+                    {label}
+                    {": "}
+                    {withTooltip(
+                        <Typography component="span" className={`${classes.failText} ${classes.textWithTooltip}`}>
+                            FAIL
+                        </Typography>,
+                        status.toString()
+                    )}
+                </Typography>
+            )}
         </>
     );
 };

@@ -8,7 +8,7 @@ export const HtmlTooltip = withStyles((theme: Theme) => ({
         backgroundColor: "#f5f5f9",
         color: "rgba(0, 0, 0, 0.87)",
         maxWidth: 220,
-        fontSize: "12px",
+        fontSize: "16px",
         border: "1px solid #dadde9",
     },
 }))(Tooltip);

@@ -52,35 +52,6 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                 <Grid item>
                     <AttributeList record={record} />
                 </Grid>
-
-            </Grid>
-        </CustomPanel>
-
-        /* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                 
-                    <ADSPQCDisplay attributes={record.attributes} />
-                </Box>
-                {attributes.most_severe_consequence && <MostSevereConsequencesSection attributes={attributes} />}
-
-                <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                    <RecordAttributeItem label="Allele:" attribute={attributes.display_allele.toString()} />
-                    <BaseTextSmall>{attributes.variant_class}</BaseTextSmall>
-                    {attributes.location && <RecordAttributeItem label="Location:" attribute={attributes.location.toString()} />}
-                </Box>
-                {(attributes.alternative_variants || attributes.colocated_variants) && (
-                    <Box paddingBottom={1} borderBottom="1px solid">
-                        {attributes.alternative_variants && (
-                            <AlternativeVariants altVars={attributes.alternative_variants.toString()} />
-                        )}
-                        {attributes.colocated_variants && (
-                            <ColocatedVariants
-                                position={attributes.position.toString()}
-                                chromosome={attributes.chromosome.toString()}
-                                colVars={attributes.colocated_variants.toString()}
-                            />
-                        )}
-                    </Box>
-                        )} 
             </Grid>
             <Grid item sm={9} container>
                 {record.attributes.gws_datasets_summary_plot && (
@@ -97,6 +68,31 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                     />
                 )}
             </Grid>
+        </CustomPanel>
+
+        /* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+                
+                
+
+                <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+                  
+                </Box>
+                {(attributes.alternative_variants || attributes.colocated_variants) && (
+                    <Box paddingBottom={1} borderBottom="1px solid">
+                        {attributes.alternative_variants && (
+                            <AlternativeVariants altVars={attributes.alternative_variants.toString()} />
+                        )}
+                        {attributes.colocated_variants && (
+                            <ColocatedVariants
+                                position={attributes.position.toString()}
+                                chromosome={attributes.chromosome.toString()}
+                                colVars={attributes.colocated_variants.toString()}
+                            />
+                        )}
+                    </Box>
+                        )} 
+            </Grid>
+           
                 </Grid> */
     );
 };
