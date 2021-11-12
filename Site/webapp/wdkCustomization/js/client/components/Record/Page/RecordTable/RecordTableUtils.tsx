@@ -1,7 +1,6 @@
 import React  from "react";
-import { isString, isObject, findIndex, forIn, get, toNumber } from "lodash";
-import { resolveObjectInput } from "../../../../util/jsonParse";
-import { withTooltip } from "../../../MaterialUI";
+import { isString, isObject, forIn } from "lodash";
+import { resolveObjectInput } from "genomics-client/util/jsonParse";
 import CssBarChart from "./CssBarChart/CssBarChart";
 
 

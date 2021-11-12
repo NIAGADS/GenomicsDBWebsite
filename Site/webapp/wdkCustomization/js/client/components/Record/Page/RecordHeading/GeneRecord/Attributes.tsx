@@ -1,32 +1,35 @@
 import React from "react";
-import { Grid, List, Typography } from "@material-ui/core";
+
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { resolveJsonInput } from "../../../../../util/jsonParse";
-import { BaseText, BaseTextSmall, UnpaddedListItem } from "../../../../MaterialUI";
+import { resolveJsonInput } from "genomics-client/util/jsonParse";
+
+import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { RecordAttributeItem } from "../Shared";
 
-const GeneRecordAttributesList: React.FC<{ record: RecordInstance }> = ({ record }) => {
+const AttributeList: React.FC<{ record: RecordInstance }> = ({ record }) => {
     return (
-        <List>
-            <UnpaddedListItem>
-                <BaseText>
+        <List disablePadding={true} dense={true}>
+            <ListItem>
+                <Typography>
                     <em>{record.attributes.gene_name}</em>
-                </BaseText>
-            </UnpaddedListItem>
+                </Typography>
+            </ListItem>
 
             {record.attributes.synonyms && (
-                <UnpaddedListItem>
+                <ListItem>
                     <RecordAttributeItem label="Also known as:" attribute={record.attributes.synonyms.toString()} />
-                </UnpaddedListItem>
+                </ListItem>
             )}
 
-            <UnpaddedListItem>
+            <ListItem>
                 <RecordAttributeItem label="Gene Type:" attribute={record.attributes.gene_type.toString()} />
-            </UnpaddedListItem>
+            </ListItem>
 
-            <UnpaddedListItem>
+            <ListItem>
                 <RecordAttributeItem
                     label="Location:"
                     attribute={`${record.attributes.span}${
@@ -35,18 +38,18 @@ const GeneRecordAttributesList: React.FC<{ record: RecordInstance }> = ({ record
                             : ""
                     } `}
                 />
-            </UnpaddedListItem>
+            </ListItem>
 
             {record.attributes.has_genetic_evidence_for_ad_risk && (
-                <UnpaddedListItem>
-                    <BaseTextSmall>
+                <ListItem>
+                    <Typography>
                         Genetic Evidence for AD?&nbsp;
                         {resolveJsonInput(record.attributes.has_genetic_evidence_for_ad_risk_display.toString())}
-                    </BaseTextSmall>
-                </UnpaddedListItem>
+                    </Typography>
+                </ListItem>
             )}
         </List>
     );
 };
 
-export default GeneRecordAttributesList;
+export default AttributeList;

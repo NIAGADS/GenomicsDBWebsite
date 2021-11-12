@@ -1,3 +1,4 @@
+//@ts-nocheck
 let re = /\.(js|jsx|ts|tsx)$/;
 let req = require.context("./", true);
 Object.defineProperty(exports, "__esModule", { value: true });

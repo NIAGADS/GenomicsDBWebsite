@@ -2,13 +2,11 @@ import React from "react";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import InfoIcon from "@material-ui/icons/Info";
 
 import { RecordHeading } from "../RecordHeadingTypes";
-import { BaseText, BaseTextSmall, CustomPanel, DarkSecondaryExternalLink, withTooltip } from "../../../../MaterialUI";
-import { _externalUrls } from "../../../../../data/_externalUrls";
+import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 import "./DatasetRecordHeading.scss";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,7 +44,7 @@ const DatasetRecordSummary: React.FC<RecordHeading> = (props) => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <BaseText>{record.attributes.description}</BaseText>
+                    <Typography>{record.attributes.description}</Typography>
                 </Grid>
             </Grid>
         </CustomPanel>

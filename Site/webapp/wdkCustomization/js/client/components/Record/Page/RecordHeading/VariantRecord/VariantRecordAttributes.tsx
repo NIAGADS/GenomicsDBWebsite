@@ -1,45 +1,23 @@
 import React from "react";
-import { List, Typography, Box } from "@material-ui/core";
+
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import CheckIcon from "@material-ui/icons/Check";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { resolveJsonInput } from "../../../../../util/jsonParse";
-import {
-    BaseText,
-    BaseTextSmall,
-    UnpaddedListItem,
-    DarkSecondaryExternalLink,
-    withTooltip
-} from "../../../../MaterialUI";
 import { ImpactIndicator, RecordAttributeItem } from "../Shared";
-import { _externalUrls } from "../../../../../data/_externalUrls";
 
+import { withTooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";
+import { useTypographyStyles } from "@components/MaterialUI/styles";
+
+import { resolveJsonInput } from "genomics-client/util/jsonParse";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        pass: {
-            borderColor: "red",
-            color: "red",
-        },
-        passText: {
-            color: "red",
-        },
-        failText: {
-            color: theme.palette.primary.main,
-        },
-        fail: {
-            borderColor: theme.palette.primary.main,
-            backgroundColor: "white",
-        },  
-        small: {
-            fontSize: "0.8rem",
-        },
-        textWithTooltip: {
-            borderBottom: "1px dashed",
-            borderBottomColor: theme.palette.secondary.dark,
-        },
         chipRoot: {
             display: "flex",
             justifyContent: "flex-start",
@@ -53,51 +31,38 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const { attributes } = record;
-    const classes = useStyles();
+    const classes = useTypographyStyles();
     return (
         <List>
-            {attributes.ref_snp_id && (
-                <UnpaddedListItem>
-                    <BaseText>
-                        {attributes.ref_snp_id}{" "}
-                        {withTooltip(
-                            <DarkSecondaryExternalLink href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
-                                <i className={`${classes.small} fa fa-external-link`}></i>
-                            </DarkSecondaryExternalLink>,
-                            "Explore dbSNP record for this variant"
-                        )}
-                    </BaseText>
-                </UnpaddedListItem>
-            )}
-            <UnpaddedListItem>
-                <RecordAttributeItem label="Allele:" attribute={attributes.display_allele.toString()} />
-            </UnpaddedListItem>
+            <ListItem>
+                <RecordAttributeItem label="Allele" attribute={attributes.display_allele.toString()} />
+            </ListItem>
 
-            <UnpaddedListItem>
-                <BaseTextSmall>{attributes.variant_class}</BaseTextSmall>
-            </UnpaddedListItem>
+            <ListItem>
+                <Typography className={classes.small}>{attributes.variant_class}</Typography>
+            </ListItem>
             {attributes.location && (
-                <UnpaddedListItem>
+                <ListItem>
                     <RecordAttributeItem label="Location:" attribute={attributes.location.toString()} />
-                </UnpaddedListItem>
+                </ListItem>
             )}
 
-            <UnpaddedListItem>
-                <BaseText>
+            <ListItem>
+                <Typography>
                     Has this variant been flagged by the ADSP?{"   "}
                     {attributes.is_adsp_variant ? (
                         <strong>
-                            <CheckIcon className={classes.passText} />
+                            <CheckIcon className={classes.pass} />
                             &nbsp;Yes
                         </strong>
                     ) : (
                         <strong>No</strong>
                     )}
-                </BaseText>
-            </UnpaddedListItem>
-            <UnpaddedListItem>
+                </Typography>
+            </ListItem>
+            <ListItem>
                 <ADSPQCDisplay record={record} />
-            </UnpaddedListItem>
+            </ListItem>
             {attributes.most_severe_consequence && <MostSevereConsequencesSection record={record} />}
         </List>
     );
@@ -105,59 +70,60 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
 
 const MostSevereConsequencesSection: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const attributes = record.attributes;
+    // const typographyStyles = useTypographyStyles();
     return (
         <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
             <List disablePadding={true}>
-                <UnpaddedListItem>
-                    <BaseTextSmall variant="caption">
+                <ListItem>
+                    <Typography variant="caption">
                         <strong>Consequence:</strong>&nbsp;
                         {attributes.most_severe_consequence}&nbsp;
                         {attributes.msc_is_coding && resolveJsonInput(attributes.msc_is_coding.toString())}
-                    </BaseTextSmall>
-                </UnpaddedListItem>
+                    </Typography>
+                </ListItem>
                 {attributes.msc_impact && (
-                    <UnpaddedListItem>
-                        <BaseTextSmall variant="caption">
+                    <ListItem>
+                        <Typography variant="caption">
                             <strong>Impact:</strong>&nbsp;
                             <ImpactIndicator impact={attributes.msc_impact.toString()} />
-                        </BaseTextSmall>
-                    </UnpaddedListItem>
+                        </Typography>
+                    </ListItem>
                 )}
             </List>
             <Box marginLeft={1}>
                 <List disablePadding={true}>
                     {attributes.msc_amino_acid_change && (
-                        <UnpaddedListItem>
-                            <BaseTextSmall variant="caption">
+                        <ListItem>
+                            <Typography variant="caption">
                                 Amino Acid Change:&nbsp;
                                 {attributes.msc_amino_acid_change}
-                            </BaseTextSmall>
-                        </UnpaddedListItem>
+                            </Typography>
+                        </ListItem>
                     )}
                     {attributes.msc_codon_change && (
-                        <UnpaddedListItem>
-                            <BaseTextSmall variant="caption">
+                        <ListItem>
+                            <Typography variant="caption">
                                 Codon Change:&nbsp;
                                 {attributes.msc_codon_change}
-                            </BaseTextSmall>
-                        </UnpaddedListItem>
+                            </Typography>
+                        </ListItem>
                     )}
 
                     {attributes.msc_impacted_gene_link && (
-                        <UnpaddedListItem>
-                            <BaseTextSmall variant="caption">
+                        <ListItem>
+                            <Typography variant="caption">
                                 Impacted Gene:&nbsp;
                                 {resolveJsonInput(attributes.msc_impacted_gene_link.toString())}
-                            </BaseTextSmall>
-                        </UnpaddedListItem>
+                            </Typography>
+                        </ListItem>
                     )}
                     {attributes.msc_impacted_transcript && (
-                        <UnpaddedListItem>
-                            <BaseTextSmall variant="caption">
+                        <ListItem>
+                            <Typography variant="caption">
                                 Impacted Transcript:&nbsp;
                                 {resolveJsonInput(attributes.msc_impacted_transcript.toString())}
-                            </BaseTextSmall>
-                        </UnpaddedListItem>
+                            </Typography>
+                        </ListItem>
                     )}
                 </List>
             </Box>
@@ -191,7 +157,7 @@ export const ADSPQCDisplay: React.FC<{ record: RecordInstance }> = ({ record }) 
 };
 
 const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
-    const classes = useStyles();
+    const classes = useTypographyStyles();
     return (
         <>
             {didPass ? (
@@ -199,7 +165,7 @@ const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
                     {label}
                     {": "}
                     {withTooltip(
-                        <Typography component="span" className={`${classes.passText} ${classes.textWithTooltip}`}>
+                        <Typography component="span" className={`${classes.pass} ${classes.withTooltip}`}>
                             PASS
                         </Typography>,
                         status.toString()
@@ -210,7 +176,7 @@ const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
                     {label}
                     {": "}
                     {withTooltip(
-                        <Typography component="span" className={`${classes.failText} ${classes.textWithTooltip}`}>
+                        <Typography component="span" className={`${classes.fail} ${classes.withTooltip}`}>
                             FAIL
                         </Typography>,
                         status.toString()

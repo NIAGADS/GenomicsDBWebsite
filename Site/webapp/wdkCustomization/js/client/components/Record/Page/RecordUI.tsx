@@ -21,7 +21,7 @@ import {
     RecordNavigationButton,
     RecordNavigationSection as RecordNavigationPanel,
 } from "../Page/Sections/RecordNavigationSection";
-import { contentStyles as drawerPanelStyles } from "../../MaterialUI/PersistentDrawerLeft";
+import { contentStyles as drawerPanelStyles } from "@components/MaterialUI/PersistentDrawerLeft";
 /**
  * Renders the main UI for the WDK Record page.
  */

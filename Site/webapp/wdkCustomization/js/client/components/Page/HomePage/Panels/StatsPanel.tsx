@@ -1,17 +1,13 @@
 import React from "react";
 
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 
-import { PanelProps, LightBackgroundPanel } from "../../../MaterialUI";
-import { _externalUrls } from "../../../../data/_externalUrls";
-import { _siteStatistics } from "../../../../data/_siteStatistics";
-import { abbreviateLargeNumber } from "../../../../util/util";
-
-import { HighchartsDatasetSummaryDonut as DatasetSummary } from "../../../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
+import { PanelProps, LightBackgroundPanel } from "@components/MaterialUI";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { _siteStatistics } from "genomics-client/data/_siteStatistics";
+import { abbreviateLargeNumber } from "genomics-client/util/util";
 
 export const StatsPanel: React.FC<PanelProps> = ({ classes, background = "light" }) => {
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;

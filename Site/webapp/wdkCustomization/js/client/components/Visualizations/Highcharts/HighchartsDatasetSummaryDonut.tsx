@@ -12,8 +12,8 @@ import {
 } from "./HighchartsOptions";
 import { _color_blind_friendly_palettes as PALETTES } from "../palettes";
 import WdkService, { useWdkEffect } from "wdk-client/Service/WdkService";
-import { useGoto } from "../../../hooks";
-import { Point, PointClickEventObject } from "highcharts";
+import { useGoto } from "genomics-client/hooks";
+import { Point } from "highcharts";
 
 type ChartData = [string, number, string];
 

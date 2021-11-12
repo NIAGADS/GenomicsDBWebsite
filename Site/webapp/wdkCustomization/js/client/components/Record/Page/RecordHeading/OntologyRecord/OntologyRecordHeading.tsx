@@ -7,19 +7,14 @@ import Typography from "@material-ui/core/Typography";
 import InfoIcon from "@material-ui/icons/Info";
 
 import { RecordHeading } from "../RecordHeadingTypes";
-import { BaseText, BaseTextSmall, CustomPanel, DarkSecondaryExternalLink, withTooltip } from "../../../../MaterialUI";
-import { _externalUrls } from "../../../../../data/_externalUrls";
+import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
+import { useHeadingStyles } from "../Shared";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 import "./OntologyRecordHeading.scss";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        panel: {
-            background: "transparent",
-            position: "relative",
-            top: "10px",
-            paddingLeft: "50px",
-        },
         infoBlock: {
             borderColor: theme.palette.info.main,
             borderStyle: "solid",
@@ -35,11 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const OntologyRecordSummary: React.FC<RecordHeading> = (props) => {
     const classes = useStyles();
+    const hClasses = useHeadingStyles();
+
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 
     return (
-        <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
+        <CustomPanel hasBaseArrow={false} className={hClasses.panel} alignItems="flex-start">
             <Grid item container direction="column" sm={6}>
                 <Grid item>
                     <Typography variant="h3">
@@ -47,7 +44,7 @@ const OntologyRecordSummary: React.FC<RecordHeading> = (props) => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <BaseText>{record.attributes.description}</BaseText>
+                    <Typography>{record.attributes.description}</Typography>
                 </Grid>
             </Grid>
             <Grid item container xs={12} sm={4}>

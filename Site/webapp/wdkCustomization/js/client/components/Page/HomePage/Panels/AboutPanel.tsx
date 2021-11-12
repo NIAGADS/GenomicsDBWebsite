@@ -4,9 +4,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 
-import { PanelProps, DefaultBackgroundPanel } from "../../../MaterialUI";
-import { _externalUrls } from "../../../../data/_externalUrls";
-import { _siteStatistics } from "../../../../data/_siteStatistics";
+import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
 
 export const AboutPanel: React.FC<PanelProps> = ({ classes, background = "light", webAppUrl }) => {

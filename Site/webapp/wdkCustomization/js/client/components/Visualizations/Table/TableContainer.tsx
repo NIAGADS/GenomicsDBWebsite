@@ -5,7 +5,7 @@ import { assign } from "lodash";
 
 import Grid from "@material-ui/core/Grid";
 
-import VerticalTabContainer from "../../MaterialUI/Tabs/VerticalTabContainer";
+import VerticalTabContainer from "@components/MaterialUI/Tabs/VerticalTabContainer";
 
 import {
     useTable,
@@ -21,7 +21,7 @@ import {
     TableInstance,
 } from "react-table";
 
-import useLocalStorage from "../../../hooks/useLocalStorage";
+import useLocalStorage from "../..//useLocalStorage";
 import TablePagination from "./TablePagination";
 import Table from "./Table";
 

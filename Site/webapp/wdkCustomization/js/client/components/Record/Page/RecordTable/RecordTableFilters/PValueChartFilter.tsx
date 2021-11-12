@@ -17,7 +17,7 @@ import {
     Selection,
 } from "d3";
 import { debounce } from "lodash";
-import { useDynamicWidth } from "../../../../../hooks";
+import { useDynamicWidth } from "genomics-client/hooks";
 import { styled } from "@material-ui/core";
 
 import { negLog10p }  from "./filters/negLog10pFilter";

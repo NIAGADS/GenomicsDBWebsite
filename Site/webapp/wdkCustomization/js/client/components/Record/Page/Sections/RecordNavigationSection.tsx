@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 
-import { PersistentDrawerLeft, DrawerState, HtmlTooltip, DrawerProps } from "../../../MaterialUI";
+import { PersistentDrawerLeft, DrawerState, HtmlTooltip, DrawerProps } from "@components/MaterialUI";
 
 /* import PropTypes from 'prop-types';
 import { includes, memoize, throttle } from 'lodash';

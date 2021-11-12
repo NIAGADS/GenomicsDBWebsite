@@ -1,31 +1,20 @@
 import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 
+import { useHeadingStyles } from "../Shared";
 import { HeaderRecordActions, SummaryPlotHeader } from "../Shared";
-import { getAttributeChartProperties } from "../Shared/HeaderRecordActions/HeaderRecordActions";
+import { getAttributeChartProperties } from "../Shared/HeaderRecordActions";
 
 import { RecordHeading } from "../RecordHeadingTypes";
-import { HighchartsTableTrellis } from "../../../../Visualizations";
+import { HighchartsTableTrellis } from "@viz";
 
-import { CustomPanel } from "../../../../MaterialUI";
+import { CustomPanel } from "@components/MaterialUI";
 
-import AttributeList from "./GeneRecordAttributeList";
+import AttributeList from "./Attributes";
 
-import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        panel: {
-            background: "transparent",
-            position: "relative",
-            top: "10px",
-            paddingLeft: "50px"
-        }
-    })
-);
-
-const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
-    const classes = useStyles();
+const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
+    const classes = useHeadingStyles();
     return (
         <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
             <Grid item container direction="column" sm={3}>
@@ -60,4 +49,4 @@ const GeneRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, heade
     );
 };
 
-export default GeneRecordSummary;
+export default Heading;

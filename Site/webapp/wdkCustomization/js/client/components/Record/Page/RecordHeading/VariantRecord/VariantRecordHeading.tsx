@@ -1,38 +1,25 @@
 import React from "react";
-import { connect } from "react-redux";
 
-import { makeStyles, createStyles, Theme } from "@material-ui/core";
-import { Box, Grid, List, Typography } from "@material-ui/core";
-import { Check, ReportProblemOutlined } from "@material-ui/icons";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
-import { MostSevereConsequencesSection } from "./Components/index";
-import { HeaderRecordActions, RecordAttributeItem, SummaryPlotHeader } from "../Shared";
-
-import { getAttributeChartProperties } from "../Shared/HeaderRecordActions/HeaderRecordActions";
-import { HighchartsTableTrellis } from "../../../../Visualizations/Highcharts/HighchartsTrellisPlot";
-
-import { resolveJsonInput, isJson } from "../../../../../util/jsonParse";
-import { RecordHeading, RecordAttributes } from "../RecordHeadingTypes";
-
-import { Subheading, SubheadingSmall, SmallBadge, BaseTextSmall, CustomPanel } from "../../../../MaterialUI";
-
+import { HeaderRecordActions, SummaryPlotHeader } from "../Shared";
+import { getAttributeChartProperties } from "../Shared/HeaderRecordActions";
+import { useHeadingStyles } from "../Shared";
+import { RecordHeading } from "../RecordHeadingTypes";
 import { VariantRecordAttributesList as AttributeList } from "./VariantRecordAttributes";
 
-import { _externalUrls } from "../../../../../data/_externalUrls";
+import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        panel: {
-            background: "transparent",
-            position: "relative",
-            top: "10px",
-            paddingLeft: "50px",
-        },
-    })
-);
+import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
+import { useTypographyStyles } from "@components/MaterialUI/styles";
+
+import { resolveJsonInput, isJson } from "genomics-client/util/jsonParse";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
-    const classes = useStyles();
+    const classes = useHeadingStyles();
+    const tClasses = useTypographyStyles();
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 
@@ -47,6 +34,17 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                                 : attributes.display_metaseq_id}
                         </strong>
                     </Typography>
+                    {attributes.ref_snp_id && (
+                        <Typography>
+                            {attributes.ref_snp_id}{" "}
+                            {withTooltip(
+                                <DarkSecondaryExternalLink href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
+                                    <i className={`${tClasses.small} fa fa-external-link`}></i>
+                                </DarkSecondaryExternalLink>,
+                                "Explore dbSNP record for this variant"
+                            )}
+                        </Typography>
+                    )}
                 </Grid>
                 <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
                 <Grid item>

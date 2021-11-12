@@ -1,5 +1,5 @@
 
-import RecordHeading from '../Page/Heading/GeneRecord/GeneRecordHeading';
+import RecordHeading from '../Page/RecordHeading/GeneRecord/Heading';
 import RecordMainSection from '../Page/Sections/RecordMainSection';
 import RecordUI from "../Page/RecordUI";
 

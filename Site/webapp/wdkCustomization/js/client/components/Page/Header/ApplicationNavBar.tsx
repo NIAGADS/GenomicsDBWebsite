@@ -19,14 +19,14 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
 
-import { SiteSearch, SearchResult } from "../../Tools";
-import { buildRouteFromResult, buildSummaryRoute } from "../../../util/util";
-import { useGoto } from "../../../hooks";
+import { SiteSearch, SearchResult } from "@components/Tools";
+import { buildRouteFromResult, buildSummaryRoute } from "genomics-client/util/util";
+import { useGoto } from "genomics-client/hooks";
 import { RootState } from "wdk-client/Core/State/Types";
 
 import GenomeBuildBanner from "./GenomeBuildBanner";
-import Announcements from "../Announcements";
-import { ElevationScroll } from "../../MaterialUI";
+
+import { ElevationScroll } from "@components/MaterialUI";
 
 // apply material-ui spacing system to the buttons
 const TextButton = styled(Button)(({ theme }) => ({
@@ -35,7 +35,7 @@ const TextButton = styled(Button)(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
-import logo from "../../../../../images/genomicsdb-logo.svg";
+import logo from "@images/genomicsdb-logo.svg";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

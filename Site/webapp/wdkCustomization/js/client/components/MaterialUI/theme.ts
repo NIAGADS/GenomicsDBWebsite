@@ -30,8 +30,7 @@ export const themeOptions: ThemeOptions = {
       },
       body2: {
           //fontSize: "1.5rem",
-          fontFamily: '"Roboto", "Arial", "sans-serif"'
-         
+          fontFamily: '"Roboto", "Arial", "sans-serif"'  
       },
       body1: {
         // fontSize: "1.2rem",

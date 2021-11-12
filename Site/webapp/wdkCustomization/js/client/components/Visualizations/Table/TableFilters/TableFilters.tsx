@@ -15,16 +15,16 @@ import IconButton from "@material-ui/core/InputLabel";
 import SearchIcon from "@material-ui/icons/Search";
 
 import { Options } from "highcharts";
-import HighchartsPlot from "../../Highcharts/HighchartsPlot";
+import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";
 import {
     addTitle,
     disableExport,
     applyCustomSeriesColor,
     backgroundTransparent,
-} from "../../Highcharts/HighchartsOptions";
-import { _color_blind_friendly_palettes as PALETTES } from "../../palettes";
+} from "@viz/Highcharts/HighchartsOptions";
+import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
-import { toProperCase } from "../../../../util/util";
+import { toProperCase } from "genomics-client/util/util";
 import { useFilterPanelStyles } from "./FilterPanelStyles";
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js

@@ -3,16 +3,16 @@ import React, { useMemo, useState, useEffect } from "react";
 import { countBy, merge } from "lodash";
 import { Column, HeaderProps } from "react-table";
 import { Options } from "highcharts";
-import HighchartsPlot from "../../../../Visualizations/Highcharts/HighchartsPlot";
+import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";
 import {
     addTitle,
     disableExport,
     applyCustomSeriesColor,
     backgroundTransparent,
-} from "../../../../Visualizations/Highcharts/HighchartsOptions";
-import { _color_blind_friendly_palettes as PALETTES } from "../../../../Visualizations/palettes";
+} from "@viz/Highcharts/HighchartsOptions";
+import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
-import { toProperCase } from "../../../../../util/util";
+import { toProperCase } from "genomics-client/util/util";
 import { extractDisplayText } from "../RecordTableSort";
 
 //@ts-ignore

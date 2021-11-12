@@ -1,11 +1,11 @@
 import React from "react";
-import { useGoto } from "../../../../hooks";
+import { useGoto } from "genomics-client/hooks";
 import { Grid, Typography, Box } from "@material-ui/core";
 
-import { SiteSearch, SearchResult } from "../../../Tools";
-import { buildRouteFromResult, buildSummaryRoute } from "../../../../util/util";
-import { PanelProps, PrimaryBackgroundPanel } from "../../../MaterialUI";
-import { SecondaryLink } from "../../../MaterialUI/Links";
+import { SiteSearch, SearchResult } from "@components/Tools";
+import { buildRouteFromResult, buildSummaryRoute } from "genomics-client/util/util";
+import { PanelProps, PrimaryBackgroundPanel, SecondaryLink } from "@components/MaterialUI";
+
 
 export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
     const goto = useGoto();

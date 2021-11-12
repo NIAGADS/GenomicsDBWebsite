@@ -4,7 +4,7 @@ import Grid, { GridItemsAlignment } from "@material-ui/core/Grid";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import { lighten } from "@material-ui/core/styles";
-import { DownArrowRow } from "../MaterialUI";
+import { DownArrowRow } from "@components/MaterialUI";
 
 export interface PanelProps {
     webAppUrl?: string;    

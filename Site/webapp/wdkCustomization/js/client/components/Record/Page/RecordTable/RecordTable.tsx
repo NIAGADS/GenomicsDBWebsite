@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { Column, TableInstance, HeaderProps } from "react-table";
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
-import TableContainer /*, { SortIconGroup } */ from "../../../Visualizations/Table/TableContainer";
+
 import { Box } from "@material-ui/core";
 import { resolveAccessor, resolveData } from "./RecordTableUtils";
 import { RecordTableProps } from "./RecordTableTypes";
@@ -9,7 +9,8 @@ import { findIndex, has, get } from "lodash";
 import { HelpIcon } from "wdk-client/Components";
 import { linkColumnSort, sciNotationColumnSort, flagColumnSort, defaultColumnSort } from "./RecordTableSort";
 
-import { SelectColumnFilter } from "../../../Visualizations/Table/TableFilters/TableFilters";
+import { SelectColumnFilter } from "@viz/Table/TableFilters/TableFilters";
+import TableContainer /*, { SortIconGroup } */ from "@viz/Table/TableContainer";
 
 import {
     fuzzyRecordTableTextFilter,

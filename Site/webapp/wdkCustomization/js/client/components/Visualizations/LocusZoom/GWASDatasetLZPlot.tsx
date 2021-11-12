@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import { Grid, List, ListItem, Box, Typography, withStyles, Select, MenuItem, FormHelperText } from "@material-ui/core";
-import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "../../MaterialUI";
+import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "@components/MaterialUI";
 import LZPlot from "./LZPlot";
 import { get } from "lodash";
 import { useWdkService } from "wdk-client/Hooks/WdkServiceHook";

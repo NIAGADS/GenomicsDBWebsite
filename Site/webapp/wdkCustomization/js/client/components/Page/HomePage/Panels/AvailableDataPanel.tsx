@@ -4,16 +4,12 @@ import { useTheme, useMediaQuery } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import Button from "@material-ui/core/Button";
 
-import { HtmlTooltip } from "../../../MaterialUI";
-
-import { PanelProps, DefaultBackgroundPanel } from "../../../MaterialUI";
+import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
 import { DatasetOverviewChart, DatasetReleases } from "../Cards";
 
-import { _externalUrls } from "../../../../data/_externalUrls";
-import { _siteStatistics } from "../../../../data/_siteStatistics";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
 export const AvailableDataPanel: React.FC<PanelProps> = ({ classes, background = "light", webAppUrl }) => {
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;

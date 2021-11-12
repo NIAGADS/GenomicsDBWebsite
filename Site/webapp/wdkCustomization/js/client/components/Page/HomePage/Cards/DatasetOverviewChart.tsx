@@ -3,11 +3,11 @@ import React from "react";
 import { Breakpoint, BreakpointProvider } from "react-socks";
 // NOTE: useMediaQuery did not work for changing views on desktop/ react-socks does
 
-import { PanelProps } from "../../../MaterialUI";
-import { _externalUrls } from "../../../../data/_externalUrls";
-import { _siteStatistics } from "../../../../data/_siteStatistics";
+import { PanelProps } from "@components/MaterialUI";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
-import { HighchartsDatasetSummaryDonut as DatasetSummary } from "../../../Visualizations/Highcharts/HighchartsDatasetSummaryDonut";
+import { HighchartsDatasetSummaryDonut as DatasetSummary } from "@viz/Highcharts/HighchartsDatasetSummaryDonut";
 
 export const DatasetOverviewChart: React.FC<PanelProps> = ({ classes }) => {
     //const theme = useTheme();
