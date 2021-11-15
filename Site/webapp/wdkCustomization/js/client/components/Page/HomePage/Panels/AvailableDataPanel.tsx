@@ -7,13 +7,15 @@ import Link from "@material-ui/core/Link";
 
 import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
 import { DatasetOverviewChart, DatasetReleases } from "../Cards";
+import useHomePageStyles from "../styles";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
-export const AvailableDataPanel: React.FC<PanelProps> = ({ classes, background = "light", webAppUrl }) => {
+export const AvailableDataPanel: React.FC<PanelProps> = ({ background = "light", webAppUrl }) => {
+    const classes = useHomePageStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
-    const headingTextColor = background === "dark" ? classes.headingSecondary : classes.headingPrimary;
+    const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
     const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
     const bodyText = bodyTextColor + " " + classes.largeBody;
 

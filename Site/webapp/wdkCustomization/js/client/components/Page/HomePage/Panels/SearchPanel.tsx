@@ -5,11 +5,11 @@ import { Grid, Typography, Box } from "@material-ui/core";
 import { SiteSearch, SearchResult } from "@components/Tools";
 import { buildRouteFromResult, buildSummaryRoute } from "genomics-client/util/util";
 import { PanelProps, PrimaryBackgroundPanel, SecondaryLink } from "@components/MaterialUI";
+import useHomePageStyles from "../styles";
 
-
-export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
+export const SearchPanel: React.FC<PanelProps> = ({ }) => {
     const goto = useGoto();
-    //const classes = useStyles();
+    const classes = useHomePageStyles();
     return (
         <PrimaryBackgroundPanel classes={classes}>
             <Grid item container direction="column" spacing={6} xs={12} sm={10} md={6}>

@@ -70,8 +70,10 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                 )}
             </Grid>
         </CustomPanel>
+    );
+};
 
-        /* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+   /* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
                 
                 
 
@@ -92,8 +94,6 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
             </Grid>
            
                 </Grid> */
-    );
-};
 
 /* const LinkList: React.FC<{ list: string[] }> = ({ list }) => (
     <List disablePadding={true}>

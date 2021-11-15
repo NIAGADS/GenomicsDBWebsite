@@ -1,7 +1,7 @@
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 export * from "./HeaderRecordActions";
-export * from "./ImpactIndicator/ImpactIndicator";
+export * from "./ImpactIndicator";
 export * from "./RecordAttributeItem";
 export * from "./SummaryPlotHeader";
 
