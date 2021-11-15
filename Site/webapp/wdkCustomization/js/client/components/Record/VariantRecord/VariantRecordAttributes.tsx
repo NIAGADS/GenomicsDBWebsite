@@ -8,7 +8,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { ImpactIndicator, RecordAttributeItem } from "../Shared";
+import { ImpactIndicator, RecordAttributeItem } from "../RecordHeading";
 
 import { withTooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";

@@ -5,7 +5,6 @@ import classnames from "classnames";
 import { debounce, get } from "lodash";
 import { findDOMNode } from "react-dom";
 import { getId } from "wdk-client/Utils/CategoryUtils";
-import { wrappable } from "wdk-client/Utils/ComponentUtils";
 import { addScrollAnchor } from "wdk-client/Utils/DomUtils";
 import { postorderSeq } from "wdk-client/Utils/TreeUtils";
 import "wdk-client/Views/Records/Record.css";
@@ -20,7 +19,7 @@ import { withStyles } from "@material-ui/core/styles";
 import {
     RecordNavigationButton,
     RecordNavigationSection as RecordNavigationPanel,
-} from "../Page/Sections/RecordNavigationSection";
+} from "./Sections/RecordNavigationSection";
 import { contentStyles as drawerPanelStyles } from "@components/MaterialUI/PersistentDrawerLeft";
 /**
  * Renders the main UI for the WDK Record page.

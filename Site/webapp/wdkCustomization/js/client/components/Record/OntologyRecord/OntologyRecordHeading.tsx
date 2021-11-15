@@ -6,9 +6,11 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import InfoIcon from "@material-ui/icons/Info";
 
-import { RecordHeading } from "../RecordHeadingTypes";
 import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
-import { useHeadingStyles } from "../Shared";
+
+import { RecordHeading } from "../Types";
+import { useHeadingStyles } from "../RecordHeading";
+
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 import "./OntologyRecordHeading.scss";

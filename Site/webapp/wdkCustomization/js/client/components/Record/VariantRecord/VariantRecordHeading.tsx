@@ -3,16 +3,19 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-import { HeaderRecordActions, SummaryPlotHeader } from "../Shared";
-import { getAttributeChartProperties } from "../Shared/HeaderRecordActions";
-import { useHeadingStyles } from "../Shared";
-import { RecordHeading } from "../RecordHeadingTypes";
+import {
+    HeaderRecordActions,
+    SummaryPlotHeader,
+    getAttributeChartProperties,
+    useHeadingStyles,
+} from "../RecordHeading";
+import { RecordHeading } from "../Types";
 import { VariantRecordAttributesList as AttributeList } from "./VariantRecordAttributes";
 
 import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
 import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
-import { useTypographyStyles } from "@components/MaterialUI/styles";
+import { useTypographyStyles } from "@components/MaterialUI";
 
 import { resolveJsonInput, isJson } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
@@ -54,8 +57,8 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
             <Grid item sm={9} container>
                 {record.attributes.gws_datasets_summary_plot && (
                     <SummaryPlotHeader
-                        labelText="Summary of AD/ADRD associations for this variant:"
-                        linkTarget="#category:phenomics"
+                        text="Summary of AD/ADRD associations for this variant:"
+                        anchor="#category:phenomics"
                     />
                 )}
 
@@ -72,9 +75,6 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                 
                 
 
-                <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                  
-                </Box>
                 {(attributes.alternative_variants || attributes.colocated_variants) && (
                     <Box paddingBottom={1} borderBottom="1px solid">
                         {attributes.alternative_variants && (

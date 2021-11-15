@@ -1,4 +1,4 @@
-import RecordHeading from "../Page/RecordHeading/DatasetRecord/GWASDatasetRecordHeading";
-import RecordMainSection from "../Page/Sections/RecordMainSection";
+import RecordHeading from "../TrackRecord/TrackRecordHeading";
+import RecordMainSection from "../Sections/RecordMainSection";
 
 export { RecordHeading, RecordMainSection };

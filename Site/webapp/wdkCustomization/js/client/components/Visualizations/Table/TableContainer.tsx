@@ -21,7 +21,7 @@ import {
     TableInstance,
 } from "react-table";
 
-import useLocalStorage from "../..//useLocalStorage";
+import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 import TablePagination from "./TablePagination";
 import Table from "./Table";
 

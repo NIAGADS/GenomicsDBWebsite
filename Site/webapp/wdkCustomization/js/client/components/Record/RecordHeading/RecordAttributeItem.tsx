@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, createStyles, Theme } from "@material-ui/core";
+import { useTypographyStyles } from "@components/MaterialUI";
 
 interface RecordAttributeItem {
     label: string;
@@ -8,13 +8,8 @@ interface RecordAttributeItem {
     small?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        small: { fontSize: "12px" },
-    })
-);
-const RecordAttributeItem: React.FC<RecordAttributeItem> = ({ label, attribute, small }) => {
-    const classes = useStyles();
+export const RecordAttributeItem: React.FC<RecordAttributeItem> = ({ label, attribute, small }) => {
+    const classes = useTypographyStyles();
     const className = small ? classes.small : "";
 
     return (
@@ -28,4 +23,3 @@ const RecordAttributeItem: React.FC<RecordAttributeItem> = ({ label, attribute, 
     );
 };
 
-export default RecordAttributeItem;

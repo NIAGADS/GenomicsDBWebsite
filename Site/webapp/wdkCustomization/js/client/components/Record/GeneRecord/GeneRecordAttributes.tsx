@@ -8,30 +8,24 @@ import { RecordInstance } from "wdk-client/Utils/WdkModel";
 import { resolveJsonInput } from "genomics-client/util/jsonParse";
 
 import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
-import { RecordAttributeItem } from "../Shared";
+import { RecordAttributeItem } from "../RecordHeading";
 
-const AttributeList: React.FC<{ record: RecordInstance }> = ({ record }) => {
+export const GeneAttributeList: React.FC<{ record: RecordInstance }> = ({ record }) => {
     return (
         <List disablePadding={true} dense={true}>
-            <ListItem>
-                <Typography>
-                    <em>{record.attributes.gene_name}</em>
-                </Typography>
-            </ListItem>
-
             {record.attributes.synonyms && (
                 <ListItem>
-                    <RecordAttributeItem label="Also known as:" attribute={record.attributes.synonyms.toString()} />
+                    <RecordAttributeItem label="Also known as" attribute={record.attributes.synonyms.toString()} />
                 </ListItem>
             )}
 
             <ListItem>
-                <RecordAttributeItem label="Gene Type:" attribute={record.attributes.gene_type.toString()} />
+                <RecordAttributeItem label="Gene Type" attribute={record.attributes.gene_type.toString()} />
             </ListItem>
 
             <ListItem>
                 <RecordAttributeItem
-                    label="Location:"
+                    label="Location"
                     attribute={`${record.attributes.span}${
                         record.attributes.cytogenetic_location
                             ? "/ ".concat(record.attributes.cytogenetic_location.toString())
@@ -52,4 +46,3 @@ const AttributeList: React.FC<{ record: RecordInstance }> = ({ record }) => {
     );
 };
 
-export default AttributeList;

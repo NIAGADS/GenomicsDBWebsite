@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { RecordMainSection } from "wdk-client/Components";
 import { getTableNames } from "wdk-client/Views/Records/RecordUtils";
 import { setCollapsedSections } from "wdk-client/Actions/RecordActions";
-import RecordMainCategorySection from "../Sections/MainCategorySection";
+import RecordMainCategorySection from "./MainCategorySection";
 import { CategoryTreeNode, getId, getLabel } from "wdk-client/Utils/CategoryUtils";
 import { RecordClass, RecordInstance } from "wdk-client/Utils/WdkModel";
 import { flatMap, get, intersection, isEmpty } from "lodash";

@@ -1,8 +1,10 @@
 import React from "react";
-import { HeaderActions } from "../RecordHeadingTypes";
-import { RecordActionLink } from "wdk-client/Components";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+
+import { HeaderActions } from "../Types";
+import { RecordActionLink } from "wdk-client/Components";
+
 
 interface HeaderRecordActions {
     record: any;
@@ -13,7 +15,7 @@ interface HeaderRecordActions {
     showLabel?: boolean;
 }
 
-const HeaderRecordActions: React.FC<HeaderRecordActions> = (props) => {
+export const HeaderRecordActions: React.FC<HeaderRecordActions> = (props) => {
     return (
         <Grid item>
             <Box mt="5px">
@@ -51,4 +53,3 @@ export function getAttributeChartProperties(recordClass: any, attributeName: str
     return targetAttribute[0].properties.chartProperties;
 }
 
-export default HeaderRecordActions;

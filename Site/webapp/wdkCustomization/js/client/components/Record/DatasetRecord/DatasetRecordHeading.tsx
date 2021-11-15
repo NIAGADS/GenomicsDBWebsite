@@ -4,34 +4,17 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-import { RecordHeading } from "../RecordHeadingTypes";
-import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
+import { RecordHeading } from "../Types";
+import { useHeadingStyles } from "../RecordHeading";
+import { CustomPanel } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
-import "./DatasetRecordHeading.scss";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        panel: {
-            background: "transparent",
-            position: "relative",
-            top: "10px",
-            paddingLeft: "50px",
-        },
-        infoBlock: {
-            borderColor: theme.palette.info.main,
-            borderStyle: "solid",
-            borderWidth: "1px",
-            borderRadius: "12px",
-        },
-        infoText: {
-            color: theme.palette.info.dark,
-            fontSize: "0.9rem",
-        },
-    })
-);
+
+// import "./DatasetRecordHeading.scss";
+
 
 const DatasetRecordSummary: React.FC<RecordHeading> = (props) => {
-    const classes = useStyles();
+    const classes = useHeadingStyles();
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 

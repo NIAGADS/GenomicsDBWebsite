@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { RecordAttributeItem } from "../Shared";
-import { RecordHeading } from "../RecordHeadingTypes";
+import { RecordAttributeItem } from "../RecordHeading";
+import { RecordHeading } from "../Types";
 import { resolveJsonInput } from "genomics-client/util/jsonParse";
 import { convertHtmlEntites } from "genomics-client/util/util";
 
@@ -11,14 +11,13 @@ import GWASDatasetLZPlot from "@viz/LocusZoom/GWASDatasetLZPlot";
 
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-import { PrimaryExternalLink } from "@components/MaterialUI";
+import { PrimaryExternalLink, UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
-import "./GWASDatasetRecordHeading.scss";
-import Typography from "@material-ui/core/Typography";
-import ListItem from "@material-ui/core/ListItem";
+import "./TrackRecordHeading.scss";
 
 const cx = makeClassNameHelper("gwas-RecordHeading");
 interface HeaderImage {
@@ -64,7 +63,7 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
                     <List>
                         <ListItem>
                             <RecordAttributeItem
-                                label="Accession:"
+                                label="Accession"
                                 attribute={record.attributes.niagads_accession.toString()}
                             />
                         </ListItem>
@@ -74,7 +73,7 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
                     </List>
                     {record.attributes.is_adsp && (
                         <Typography>
-                            <strong>&nbsp;{resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
+                            <strong>{" "}{resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
                         </Typography>
                     )}
                 </Grid>

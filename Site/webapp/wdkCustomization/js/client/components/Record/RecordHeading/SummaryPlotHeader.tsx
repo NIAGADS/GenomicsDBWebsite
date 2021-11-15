@@ -3,17 +3,16 @@ import React from "react";
 import { PrimaryExternalLink } from "@components/MaterialUI";
 
 interface SummaryPlotHeader {
-    labelText: string;
-    linkTarget: string;
+    text: string;
+    anchor: string;
 }
 
-const SummaryPlotHeader: React.FC<SummaryPlotHeader> = ({ labelText, linkTarget }) => (
+export const SummaryPlotHeader: React.FC<SummaryPlotHeader> = ({ text, anchor }) => (
     <Box>
-        <Typography variant="h6">{labelText}</Typography>
-        <PrimaryExternalLink href={linkTarget}>
+        <Typography variant="h6">{text}</Typography>
+        <PrimaryExternalLink href={anchor}>
             Browse the association evidence <i className="fa fa-level-down"></i>
         </PrimaryExternalLink>
     </Box>
 );
 
-export default SummaryPlotHeader;
