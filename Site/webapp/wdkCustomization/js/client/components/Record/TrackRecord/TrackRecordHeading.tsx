@@ -11,10 +11,11 @@ import GWASDatasetLZPlot from "@viz/LocusZoom/GWASDatasetLZPlot";
 
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-import { PrimaryExternalLink, UnpaddedListItem as ListItem } from "@components/MaterialUI";
+import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 import "./TrackRecordHeading.scss";
@@ -40,9 +41,9 @@ const DatasetHeaderImage: React.FC<HeaderImage> = ({ src, type }) => {
                 <img className={cx(`--${type}`)} src={src} onError={handleImgError} />
             </Grid>
             <Grid>
-                <PrimaryExternalLink href={src}>
+                <Link color="initial" href={src}>
                     View HighRes Image <GetAppIcon fontSize="small" />
-                </PrimaryExternalLink>
+                </Link>
             </Grid>
         </Grid>
     );

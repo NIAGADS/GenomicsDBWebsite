@@ -8,7 +8,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { ImpactIndicator, RecordAttributeItem } from "../RecordHeading";
+import { ImpactIndicator, RecordAttributeItem, useHeadingStyles } from "../RecordHeading";
 
 import { withTooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";
@@ -35,25 +35,30 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
     return (
         <List>
             <ListItem>
-                <RecordAttributeItem label="Allele" attribute={attributes.display_allele.toString()} />
+                <Typography className={classes.small}>
+                    <strong>
+                        <em>{attributes.variant_class_abbrev}</em>
+                    </strong>{" "}
+                    {attributes.variant_class}
+                </Typography>
             </ListItem>
 
             <ListItem>
-                <Typography className={classes.small}>{attributes.variant_class}</Typography>
+                <Box pb={1}>
+                    <RecordAttributeItem
+                        small={true}
+                        label="Alleles"
+                        attribute={attributes.display_allele.toString()}
+                    />
+                </Box>
             </ListItem>
-            {attributes.location && (
-                <ListItem>
-                    <RecordAttributeItem label="Location:" attribute={attributes.location.toString()} />
-                </ListItem>
-            )}
 
             <ListItem>
-                <Typography>
-                    Has this variant been flagged by the ADSP?{"   "}
+                <Typography className={classes.small}>
+                    <em>Has this variant been flagged by the ADSP?&nbsp;&nbsp;</em>
                     {attributes.is_adsp_variant ? (
                         <strong>
-                            <CheckIcon className={classes.pass} />
-                            &nbsp;Yes
+                            Yes <CheckIcon className={classes.pass} />
                         </strong>
                     ) : (
                         <strong>No</strong>
@@ -63,35 +68,52 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
             <ListItem>
                 <ADSPQCDisplay record={record} />
             </ListItem>
-            {attributes.most_severe_consequence && <MostSevereConsequencesSection record={record} />}
+            {attributes.most_severe_consequence && (
+                <ListItem>
+                    <MostSevereConsequencesSection record={record} />
+                </ListItem>
+            )}
         </List>
     );
 };
 
 const MostSevereConsequencesSection: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const attributes = record.attributes;
-    // const typographyStyles = useTypographyStyles();
+    const classes = useTypographyStyles();
+
     return (
-        <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+        <Box paddingTop={1} paddingBottom={1}>
             <List disablePadding={true}>
                 <ListItem>
-                    <Typography variant="caption">
-                        <strong>Consequence:</strong>&nbsp;
-                        {attributes.most_severe_consequence}&nbsp;
+                    <Typography className={classes.small}>
+                        <strong>Consequence:</strong> {attributes.most_severe_consequence}{" "}
                         {attributes.msc_is_coding && resolveJsonInput(attributes.msc_is_coding.toString())}
                     </Typography>
                 </ListItem>
-                {attributes.msc_impact && (
-                    <ListItem>
-                        <Typography variant="caption">
-                            <strong>Impact:</strong>&nbsp;
-                            <ImpactIndicator impact={attributes.msc_impact.toString()} />
-                        </Typography>
-                    </ListItem>
-                )}
+                {attributes.msc_impact && <ListItem></ListItem>}
             </List>
             <Box marginLeft={1}>
                 <List disablePadding={true}>
+                    <Typography variant="caption">
+                        Impact:&nbsp;
+                        <ImpactIndicator impact={attributes.msc_impact.toString()} />
+                    </Typography>
+                    {attributes.msc_impacted_gene_link && (
+                        <ListItem>
+                            <Typography variant="caption">
+                                Impacted Gene:&nbsp;
+                                {resolveJsonInput(attributes.msc_impacted_gene_link.toString())}
+                            </Typography>
+                        </ListItem>
+                    )}
+                    {attributes.msc_impacted_transcript && (
+                        <ListItem>
+                            <Typography variant="caption">
+                                Impacted Transcript:&nbsp;
+                                {resolveJsonInput(attributes.msc_impacted_transcript.toString())}
+                            </Typography>
+                        </ListItem>
+                    )}
                     {attributes.msc_amino_acid_change && (
                         <ListItem>
                             <Typography variant="caption">
@@ -109,22 +131,7 @@ const MostSevereConsequencesSection: React.FC<{ record: RecordInstance }> = ({ r
                         </ListItem>
                     )}
 
-                    {attributes.msc_impacted_gene_link && (
-                        <ListItem>
-                            <Typography variant="caption">
-                                Impacted Gene:&nbsp;
-                                {resolveJsonInput(attributes.msc_impacted_gene_link.toString())}
-                            </Typography>
-                        </ListItem>
-                    )}
-                    {attributes.msc_impacted_transcript && (
-                        <ListItem>
-                            <Typography variant="caption">
-                                Impacted Transcript:&nbsp;
-                                {resolveJsonInput(attributes.msc_impacted_transcript.toString())}
-                            </Typography>
-                        </ListItem>
-                    )}
+                   
                 </List>
             </Box>
         </Box>
@@ -161,22 +168,28 @@ const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
     return (
         <>
             {didPass ? (
-                <Typography>
+                <Typography className={classes.small}>
                     {label}
                     {": "}
                     {withTooltip(
-                        <Typography component="span" className={`${classes.pass} ${classes.withTooltip}`}>
+                        <Typography
+                            component="span"
+                            className={`${classes.small} ${classes.pass} ${classes.withTooltip}`}
+                        >
                             PASS
                         </Typography>,
                         status.toString()
                     )}
                 </Typography>
             ) : (
-                <Typography>
+                <Typography className={classes.small}>
                     {label}
                     {": "}
                     {withTooltip(
-                        <Typography component="span" className={`${classes.fail} ${classes.withTooltip}`}>
+                        <Typography
+                            component="span"
+                            className={`${classes.small} ${classes.fail} ${classes.withTooltip}`}
+                        >
                             FAIL
                         </Typography>,
                         status.toString()

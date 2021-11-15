@@ -1,6 +1,6 @@
 import { Box, Typography } from "@material-ui/core";
 import React from "react";
-import { PrimaryExternalLink } from "@components/MaterialUI";
+import Link from "@material-ui/core/Link";
 
 interface SummaryPlotHeader {
     text: string;
@@ -10,9 +10,9 @@ interface SummaryPlotHeader {
 export const SummaryPlotHeader: React.FC<SummaryPlotHeader> = ({ text, anchor }) => (
     <Box>
         <Typography variant="h6">{text}</Typography>
-        <PrimaryExternalLink href={anchor}>
+        <Link color="initial" href={anchor}>
             Browse the association evidence <i className="fa fa-level-down"></i>
-        </PrimaryExternalLink>
+        </Link>
     </Box>
 );
 

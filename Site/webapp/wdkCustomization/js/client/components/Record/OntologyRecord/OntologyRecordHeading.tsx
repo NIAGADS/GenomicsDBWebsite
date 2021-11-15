@@ -3,10 +3,12 @@ import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import InfoIcon from "@material-ui/icons/Info";
 
-import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
+
+import { CustomPanel, withTooltip } from "@components/MaterialUI";
 
 import { RecordHeading } from "../Types";
 import { useHeadingStyles } from "../RecordHeading";
@@ -61,9 +63,9 @@ const OntologyRecordSummary: React.FC<RecordHeading> = (props) => {
                             <Typography variant="body1">
                                 Visit our{" "}
                                 {withTooltip(
-                                    <DarkSecondaryExternalLink href="#">
+                                    <Link color="initial" href="#">
                                         ontology lookup service (OLS)
-                                    </DarkSecondaryExternalLink>,
+                                    </Link>,
                                     "Coming Soon"
                                 )}
                                 {" "}to search across all ontologies used to annotate NIAGADS resources.

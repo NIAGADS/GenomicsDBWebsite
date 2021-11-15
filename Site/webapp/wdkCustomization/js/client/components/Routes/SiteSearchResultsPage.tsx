@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { Link as RouterLink, withRouter, RouteComponentProps } from "react-router-dom";
 import { chain, isEmpty, get } from "lodash";
 
 import { useWdkEffect } from "wdk-client/Service/WdkService";
@@ -15,8 +15,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-
-import { PrimaryLink, PrimaryExternalLink } from "@components/MaterialUI";
+import Link from "@material-ui/core/Link";
 
 interface SiteSearchResultsNavProps {
     genes: number;
@@ -30,30 +29,30 @@ const SiteSearchResultsNav: React.FC<SiteSearchResultsNavProps> = ({ genes, vari
         <List disablePadding={true}>
             {genes > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#genes">
+                    <Link color="initial" href="#genes">
                         {genes} Gene{genes > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
             {variants > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#variants">
+                    <Link color="initial" href="#variants">
                         {variants} Variant{variants > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
             {accessions > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#accessions">
+                    <Link color="initial" href="#accessions">
                         {accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
             {datasets > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#datasets">
+                    <Link color="initial" href="#datasets">
                         {datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
         </List>
@@ -165,7 +164,7 @@ const _buildSearchResult = (result: SearchResult, recordType: string) => {
     return (
         result.record_type === recordType && (
             <Box key={result.primary_key} mb={3}>
-                <PrimaryLink to={buildRouteFromResult(result)}>{safeHtml(result.display)}</PrimaryLink>
+                <RouterLink to={buildRouteFromResult(result)}>{safeHtml(result.display)}</RouterLink>
                 {result.record_type === "variant" && result.matched_term.indexOf("merge") > -1 && (
                     <em>{result.matched_term}</em>
                 )}

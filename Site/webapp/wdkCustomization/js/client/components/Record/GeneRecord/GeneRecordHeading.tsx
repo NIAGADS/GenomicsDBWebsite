@@ -15,7 +15,7 @@ import {
 } from "../RecordHeading";
 
 import { RecordHeading } from "../Types";
-import { GeneAttributeList as AttributeList} from "./GeneRecordAttributes";
+import { GeneAttributeList as AttributeList } from "./GeneRecordAttributes";
 
 const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
     const classes = useHeadingStyles();
@@ -32,7 +32,9 @@ const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }
                         <em>{record.attributes.gene_name}</em>
                     </Typography>
                 </Grid>
-                <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+                <Box pb={2} pt={1}>
+                    <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+                </Box>
                 <Grid item>
                     <AttributeList record={record} />
                 </Grid>

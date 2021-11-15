@@ -16,7 +16,7 @@ export const AvailableDataPanel: React.FC<PanelProps> = ({ background = "light",
     const classes = useHomePageStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
-    const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
+    const linkType = background === "dark" ? "secondary" : "initial";
     const bodyText = bodyTextColor + " " + classes.largeBody;
 
     const theme = useTheme();
@@ -35,7 +35,7 @@ export const AvailableDataPanel: React.FC<PanelProps> = ({ background = "light",
                         The NIAGADS Alzheimer's Genomics Database enables browsing, searching, and analysis of
                         <strong>{_siteStatistics.DATASETS}</strong> publicly available summary statistics from AD/ADRD
                         genome-wide association studies (GWAS) deposited at{" "}
-                        <Link href={_externalUrls.NIAGADS_BASE_URL} className={linkType}>
+                        <Link href={_externalUrls.NIAGADS_BASE_URL} color={linkType}>
                             NIAGADS
                         </Link>
                         .

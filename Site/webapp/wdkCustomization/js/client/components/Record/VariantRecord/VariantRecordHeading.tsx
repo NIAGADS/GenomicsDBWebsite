@@ -2,6 +2,8 @@ import React from "react";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
 
 import {
     HeaderRecordActions,
@@ -14,11 +16,12 @@ import { VariantRecordAttributesList as AttributeList } from "./VariantRecordAtt
 
 import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
-import { CustomPanel, DarkSecondaryExternalLink, withTooltip } from "@components/MaterialUI";
+import { CustomPanel, withTooltip } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI";
 
 import { resolveJsonInput, isJson } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
+
 
 const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
     const classes = useHeadingStyles();
@@ -41,39 +44,43 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                         <Typography>
                             {attributes.ref_snp_id}{" "}
                             {withTooltip(
-                                <DarkSecondaryExternalLink href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
+                                <Link href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
                                     <i className={`${tClasses.small} fa fa-external-link`}></i>
-                                </DarkSecondaryExternalLink>,
+                                </Link>,
                                 "Explore dbSNP record for this variant"
                             )}
                         </Typography>
                     )}
                 </Grid>
-                <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+                <Box pb={2} pt={1}>
+                    <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
+                </Box>
                 <Grid item>
                     <AttributeList record={record} />
                 </Grid>
             </Grid>
-            <Grid item sm={9} container>
-                {record.attributes.gws_datasets_summary_plot && (
-                    <SummaryPlotHeader
-                        text="Summary of AD/ADRD associations for this variant:"
-                        anchor="#category:phenomics"
-                    />
-                )}
 
-                {record.attributes.gws_datasets_summary_plot && (
-                    <HighchartsTableTrellis
-                        data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}
-                        properties={JSON.parse(getAttributeChartProperties(recordClass, "gws_datasets_summary_plot"))}
-                    />
-                )}
-            </Grid>
+            {record.attributes.gws_datasets_summary_plot && (
+                <Grid item container xs={9}>
+                    <Box>
+                        <SummaryPlotHeader
+                            text="Summary of AD/ADRD associations for this variant:"
+                            anchor="#category:phenomics"
+                        />
+                        <HighchartsTableTrellis
+                            data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}
+                            properties={JSON.parse(
+                                getAttributeChartProperties(recordClass, "gws_datasets_summary_plot")
+                            )}
+                        />
+                    </Box>
+                </Grid>
+            )}
         </CustomPanel>
     );
 };
 
-   /* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
+/* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
                 
                 
 

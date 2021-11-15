@@ -17,7 +17,7 @@ export const StatsPanel: React.FC<PanelProps> = ({ background = "light" }) => {
     const classes = useHomePageStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
-    const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
+    const linkType = background === "dark" ? "secondary" : "initial";
     const bodyText = bodyTextColor + " " + classes.largeBody;
 
     return (
@@ -35,7 +35,7 @@ export const StatsPanel: React.FC<PanelProps> = ({ background = "light" }) => {
                                 For each dataset we provide a detailed interactive report summarizing the top
                                 risk-associated variants. These variants are are annotated using the ADSP Annotation
                                 Pipeline (PMID:{" "}
-                                <Link className={linkType} href={`${_externalUrls.PUBMED_URL}/29590295`}>
+                                <Link color={linkType} href={`${_externalUrls.PUBMED_URL}/29590295`}>
                                     29590295
                                 </Link>
                                 ) and mapped against sequence features and functional genomics data tracks to help

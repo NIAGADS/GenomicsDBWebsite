@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         fancyBody: {
             fontSize: "1.7rem",
-             fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"'
+            fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"',
         },
         largeBody: {
-            fontSize: "1.2rem"
+            fontSize: "1.2rem",
         },
         secondaryText: {
             color: theme.palette.secondary.main,
@@ -59,14 +59,8 @@ const useStyles = makeStyles((theme: Theme) =>
         smallCaps: {
             fontVariant: "all-small-caps",
         },
-        darkBgLink: {
+        secondaryLink: {
             color: theme.palette.secondary.main,
-            "&:hover": {
-                color: theme.palette.secondary.light,
-            },
-        },
-        lightBgLink: {
-            color: theme.palette.secondary.dark,
             "&:hover": {
                 color: theme.palette.secondary.light,
             },

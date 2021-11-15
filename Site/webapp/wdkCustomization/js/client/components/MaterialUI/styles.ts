@@ -9,12 +9,17 @@ export const useTypographyStyles = makeStyles((theme: Theme) =>
             color: theme.palette.primary.main,
         },
         small: {
-            fontSize: "12px",
+            fontSize: "14px",
         },
         withTooltip: {
             borderBottom: "1px dashed",
             borderBottomColor: theme.palette.secondary.dark,
         },
-     
+    })
+);
+
+export const useLayoutStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        noPadding: { padding: 0 },
     })
 );

@@ -1,7 +1,12 @@
 import React from "react";
+import {Link as RouterLink } from "react-router-dom";
 import { isString, isPlainObject, isNull } from "lodash";
+
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { PrimaryExternalLink, PrimaryLink, withTooltip } from "../components/MaterialUI";
+
+import { withTooltip } from "@components/MaterialUI";
+import Link from "@material-ui/core/Link";
+
 
 export interface LinkType {
     url: string;
@@ -58,13 +63,13 @@ export const resolveObjectInput = (
         case "link":
             //probably need to designate outlinks and routelinks formally, but for now using a regex
             const el = /^http/.test(obj.url) ? (
-                <PrimaryExternalLink key={obj.url} href={obj.url}>
+                <Link key={obj.url} href={obj.url} color="initial">
                     {obj.value}
-                </PrimaryExternalLink>
+                </Link>
             ) : (
-                <PrimaryLink key={obj.url} to={obj.url}>
+                <RouterLink key={obj.url} to={obj.url}>
                     {obj.value}
-                </PrimaryLink>
+                </RouterLink>
             );
             return withTooltip(el, obj.tooltip);
         case "text":

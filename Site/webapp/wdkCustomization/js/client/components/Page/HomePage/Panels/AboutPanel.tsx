@@ -14,7 +14,7 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
     const classes = useHomePageStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
-    const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
+    const linkType = background === "dark" ? "secondary" : "initial";
     const bodyText = bodyTextColor + " " + classes.largeBody;
     
     return (
@@ -30,17 +30,17 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
                     <Typography variant="body1" className={bodyText} align="left">
                         The NIAGADS Alzheimer's Genomics Database is developed by a team of researchers at the
                         University of Pennsylvania as part of the{" "}
-                        <Link className={linkType} href={_externalUrls.NIAGADS_BASE_URL}>
+                        <Link color={linkType} href={_externalUrls.NIAGADS_BASE_URL}>
                             National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site
                         </Link>{" "}
                         (NIAGADS), a national genetics repository created by NIA to facilitate access to genotypic data
                         for the study of the genetics of late-onset Alzheimer's disease. We welcome the involvement of
                         interested researchers.{" "}
-                        <Link className={linkType} href={`${_externalUrls.NIAGADS_BASE_URL}/data`}>
+                        <Link color={linkType} href={`${_externalUrls.NIAGADS_BASE_URL}/data`}>
                             Click here to learn more
                         </Link>{" "}
                         about contributing data or making formal data access requests. Or{" "}
-                        <Link className={linkType} href={`${_externalUrls.NIAGADS_BASE_URL}/contact`}>
+                        <Link color={linkType} href={`${_externalUrls.NIAGADS_BASE_URL}/contact`}>
                             contact us
                         </Link>{" "}
                         for more information. The GenomicsDB is a collaboration among the following organizations which
