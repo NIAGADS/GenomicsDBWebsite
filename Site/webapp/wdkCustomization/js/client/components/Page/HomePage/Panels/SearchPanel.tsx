@@ -1,15 +1,21 @@
 import React from "react";
-import { useGoto } from "../../../../hooks";
-import { Grid, Typography, Box } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
 
-import { SiteSearch, SearchResult } from "../../../Tools";
-import { buildRouteFromResult, buildSummaryRoute } from "../../../../util/util";
-import { PanelProps, PrimaryBackgroundPanel } from "../../../MaterialUI";
-import { SecondaryLink } from "../../../MaterialUI/Links";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
 
-export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
+import { SiteSearch, SearchResult } from "@components/Tools";
+import { buildRouteFromResult, buildSummaryRoute } from "genomics-client/util/util";
+import { PanelProps, PrimaryBackgroundPanel } from "@components/MaterialUI";
+import useHomePageStyles from "../styles";
+
+import { useGoto } from "genomics-client/hooks";
+
+export const SearchPanel: React.FC<PanelProps> = ({}) => {
     const goto = useGoto();
-    //const classes = useStyles();
+    const classes = useHomePageStyles();
     return (
         <PrimaryBackgroundPanel classes={classes}>
             <Grid item container direction="column" spacing={6} xs={12} sm={10} md={6}>
@@ -31,7 +37,7 @@ export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
                         </Typography>
                     </Box>
                 </Grid>
-                <Grid item >
+                <Grid item>
                     <SiteSearch
                         variant="panel"
                         onSelect={(value: SearchResult, searchTerm: string) =>
@@ -44,10 +50,18 @@ export const SearchPanel: React.FC<PanelProps> = ({ classes }) => {
                     />
                     <Box mt={1}>
                         <Typography variant="caption" className={classes.darkContrastText}>
-                            Examples - Gene: <SecondaryLink to={"record/gene/ENSG00000130203"}> APOE</SecondaryLink> -
-                            Variant by RefSNP: <SecondaryLink to="record/variant/rs6656401">rs6656401</SecondaryLink> -
-                            Variant:{" "}
-                            <SecondaryLink to="record/variant/19:45411941:T:C_rs429358">19:45411941:T:C</SecondaryLink>
+                            Examples - Gene:{" "}
+                            <RouterLink className={classes.secondaryLink} to={"record/gene/ENSG00000130203"}>
+                                APOE
+                            </RouterLink>{" "}
+                            - Variant by RefSNP:{" "}
+                            <RouterLink className={classes.secondaryLink} to="record/variant/rs6656401">
+                                rs6656401
+                            </RouterLink>{" "}
+                            - Variant:{" "}
+                            <RouterLink className={classes.secondaryLink} to="record/variant/19:45411941:T:C_rs429358">
+                                19:45411941:T:C
+                            </RouterLink>
                         </Typography>
                     </Box>
                 </Grid>

@@ -1,8 +1,8 @@
 import React from "react";
 import { filter } from 'lodash';
 import { DatasetCard, DatasetRecord } from ".";
-import { PanelProps } from "../../../MaterialUI";
-import { _datasetReleases, _currentRelease } from "../../../../data/_datasetReleases";
+import { PanelProps } from "@components/MaterialUI";
+import { _datasetReleases, _currentRelease } from "genomics-client/data/_datasetReleases";
 import Carousel from 'react-material-ui-carousel';
 
 export const DatasetReleases: React.FC<PanelProps> = ({ classes, webAppUrl }) => {

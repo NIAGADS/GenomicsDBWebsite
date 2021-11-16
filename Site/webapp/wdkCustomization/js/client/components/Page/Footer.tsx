@@ -5,11 +5,10 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
 import moment from "wdk-client/Utils/MomentUtils";
-import { _externalUrls } from "../../data/_externalUrls";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

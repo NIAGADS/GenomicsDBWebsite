@@ -8,7 +8,7 @@ import DetailModal from "./IdeogramDetailModal";
 import { webAppUrl } from "../../../config";
 import { LayersOutlined } from "@material-ui/icons";
 
-import { _externalUrls } from "../../../data/_externalUrls";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 interface IdeogramProps {
     annotations: any;

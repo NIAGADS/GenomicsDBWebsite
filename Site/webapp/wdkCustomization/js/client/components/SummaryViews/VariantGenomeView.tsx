@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { IdeogramPlot } from "../Visualizations";
+import { IdeogramPlot } from "@viz";
 import { LoadingOverlay } from "wdk-client/Components";
 import { getCustomReport } from "wdk-client/Utils/WdkResult";
 

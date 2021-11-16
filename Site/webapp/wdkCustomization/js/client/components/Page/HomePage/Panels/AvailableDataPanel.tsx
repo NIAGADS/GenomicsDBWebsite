@@ -4,21 +4,19 @@ import { useTheme, useMediaQuery } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import Button from "@material-ui/core/Button";
 
-import { HtmlTooltip } from "../../../MaterialUI";
-
-import { PanelProps, DefaultBackgroundPanel } from "../../../MaterialUI";
+import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
 import { DatasetOverviewChart, DatasetReleases } from "../Cards";
+import useHomePageStyles from "../styles";
 
-import { _externalUrls } from "../../../../data/_externalUrls";
-import { _siteStatistics } from "../../../../data/_siteStatistics";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
-export const AvailableDataPanel: React.FC<PanelProps> = ({ classes, background = "light", webAppUrl }) => {
+export const AvailableDataPanel: React.FC<PanelProps> = ({ background = "light", webAppUrl }) => {
+    const classes = useHomePageStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
-    const headingTextColor = background === "dark" ? classes.headingSecondary : classes.headingPrimary;
-    const linkType = background === "dark" ? classes.darkBgLink : classes.lightBgLink;
+    const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
+    const linkType = background === "dark" ? "secondary" : "initial";
     const bodyText = bodyTextColor + " " + classes.largeBody;
 
     const theme = useTheme();
@@ -37,7 +35,7 @@ export const AvailableDataPanel: React.FC<PanelProps> = ({ classes, background =
                         The NIAGADS Alzheimer's Genomics Database enables browsing, searching, and analysis of
                         <strong>{_siteStatistics.DATASETS}</strong> publicly available summary statistics from AD/ADRD
                         genome-wide association studies (GWAS) deposited at{" "}
-                        <Link href={_externalUrls.NIAGADS_BASE_URL} className={linkType}>
+                        <Link href={_externalUrls.NIAGADS_BASE_URL} color={linkType}>
                             NIAGADS
                         </Link>
                         .

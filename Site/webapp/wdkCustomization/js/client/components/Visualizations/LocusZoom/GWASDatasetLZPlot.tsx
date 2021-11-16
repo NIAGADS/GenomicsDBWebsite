@@ -1,11 +1,22 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { Grid, List, ListItem, Box, Typography, withStyles, Select, MenuItem, FormHelperText } from "@material-ui/core";
-import { PrimaryExternalLink, PseudoLink, UnlabeledTextField } from "../../MaterialUI";
-import LZPlot from "./LZPlot";
 import { get } from "lodash";
+
+import Grid from "@material-ui/core/Grid";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { withStyles } from "@material-ui/core";
+
 import { useWdkService } from "wdk-client/Hooks/WdkServiceHook";
 import { LoadingOverlay } from "wdk-client/Components";
+
+import { UnlabeledTextField } from "@components/MaterialUI";
+import LZPlot from "./LZPlot";
 
 interface GWASDatasetLZPlotProps {
     dataset: string;
@@ -84,7 +95,7 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
                         {(topHits || []).map((t) => (
                             //@ts-ignore
                             <TopHitListItem key={t.ld_reference_variant}>
-                                <PseudoLink onClick={() => loadTopHit(t)}>{t.hit}</PseudoLink>
+                                <Button variant="text" onClick={() => loadTopHit(t)}>{t.hit}</Button>
                             </TopHitListItem>
                         ))}
                     </List>

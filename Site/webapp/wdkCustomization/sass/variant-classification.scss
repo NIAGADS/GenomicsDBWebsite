@@ -1,0 +1,19 @@
+@import "./variables";
+
+.impact-indicator{
+	&.high {
+		color: $high;
+	}
+	&.moderate {
+		color: $moderate;
+	}
+	&.low{
+		color: $low;
+	}
+	&.modifier {
+		color: $modifier;
+	}
+	&.notreported {
+		color: $notReported;
+	}
+}

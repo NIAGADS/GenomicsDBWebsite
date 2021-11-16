@@ -1,8 +1,36 @@
 {
-  "extends": "../../EbrcWebsiteCommon/Site/tsconfig.json",
-  "include": ["./webapp/**/*", "../../WDKClient/Client/src/index.d.ts"],
+  "extends": "../../install/base.tsconfig.json",
   "compilerOptions": {
     "sourceMap": true,
-    "strictNullChecks": false
-  }
+    "strictNullChecks": false,
+    "paths": {
+      "wdk-client/*": [ "WDKClient/Client/src/*" ],
+      "ebrc-client/*": [ "EbrcWebsiteCommon/Site/webapp/wdkCustomization/js/client/*" ],
+      "genomics-client/*": ["GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/*"],
+      "@components/*": ["GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/components/*"],
+      "@viz/*": ["GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/components/Visualizations/*"],
+      "@images/*" : ["GenomicsDBWebsite/Site/webapp/images/*"],
+      "@sass/*" : ["GenomicsDBWebsite/Site/webapp/wdkCustomization/sass/*"],
+      "*": [
+        "WDKClient/Client/node_modules/*",
+        "WDKClient/Client/node_modules/@types/*",
+        "EbrcWebsiteCommon/Site/node_modules/*",
+        "EbrcWebsiteCommon/Site/node_modules/@types/*",
+        "GenomicsDBWebsite/Site/node_modules/*",
+        "GenomicsDBWebsite/Site/node_modules/@types/*"
+      ]
+    },
+    "typeRoots": [
+      "../../WDKClient/Client/node_modules/@types",
+      "../../EbrcWebsiteCommon/Site/node_modules/@types",
+      "GenomicsDBWebsite/Site/node_modules/@types",
+    ]
+  },
+  "include": [
+    "./webapp/wdkCustomization/js/client/**/*",
+    "./webapp/**/*",
+    "../../WDKClient/Client/src/index.d.ts"
+  ]
 }
+
+//  include: "../../EbrcWebsiteCommon/Site/webapp/wdkCustomization/js/client/**/*"

@@ -8,8 +8,8 @@
 # file and assigned a name ending in "_URL".  After updating/adding new _URL macros, please 
 # run `python $PROJECT_HOME/GenomicsDBWebsite/Model/bin/generateExternalUrlConstantsJson` to regenerate 
 # the external url constant file for the front end, setting the --modelPropFile option to this file and the 
-# --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_externalUrls.js.
-# The updated model.prop.sample & externalUrls.js can then be committed to the repository
+# --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_externalUrls.ts.
+# The updated model.prop.sample & externalUrls.ts can then be committed to the repository
 
 SITE_ADMIN_EMAIL=
 STEP_ANALYSIS_JOB_DIR=/www/common/temp

@@ -9,14 +9,14 @@ import Footer from "wdk-client/Components/Layout/Footer";
 import ErrorBoundary from "wdk-client/Core/Controllers/ErrorBoundary";
 import { useScrollUpOnRouteChange } from "wdk-client/Hooks/Page";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { theme } from "../MaterialUI";
+import { theme } from "@components/MaterialUI";
 import Announcements from "./Announcements";
 
 // import clsx from "clsx";
 //import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 //import { DrawerState } from "../Page";
-//import { DRAWER_WIDTH } from "../MaterialUI";
+//import { DRAWER_WIDTH } from "@components/MaterialUI";
 
 /* const useStyles = makeStyles((theme: Theme) =>
     createStyles({

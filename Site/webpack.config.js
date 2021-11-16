@@ -2,10 +2,22 @@ var configure = require("../../EbrcWebsiteCommon/Site/site.webpack.config");
 var path = require("path");
 //const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+// Create webpack alias configuration object
+var alias = {
+    'genomics-client': __dirname + '/webapp/wdkCustomization/js/client',
+    '@components': __dirname + '/webapp/wdkCustomization/js/client/components',
+    '@viz': __dirname + '/webapp/wdkCustomization/js/client/components/Visualizations',
+    '@images': __dirname + '/webapp/images',
+    '@sass': __dirname + '/webapp/wdkCustomization/sass'
+  };
+
 module.exports = configure({
     //plugins: [new BundleAnalyzerPlugin()],
     entry: {
         "site-client": path.join(__dirname, "/webapp/wdkCustomization/js/client/main.ts"),
+    },
+    resolve: {
+        alias
     },
     optimization: {
         //runtimeChunk: 'single',

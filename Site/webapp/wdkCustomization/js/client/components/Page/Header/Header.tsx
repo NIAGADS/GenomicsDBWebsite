@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { theme } from "../../MaterialUI";
+import { theme } from "@components/MaterialUI";
 import SearchAppBar from "./ApplicationNavBar";
 
 import CookieConsent, { Cookies, resetCookieConsentValue } from "react-cookie-consent";
-import { _externalUrls } from "../../../data/_externalUrls";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 export const Header: React.FC<{}> = () => {
 

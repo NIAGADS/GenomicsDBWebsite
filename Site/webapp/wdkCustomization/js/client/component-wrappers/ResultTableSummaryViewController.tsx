@@ -1,6 +1,6 @@
 import React from "react";
-import { isJson, resolveJsonInput } from "../util/jsonParse";
 import { forIn } from "lodash";
+import { isJson, resolveJsonInput } from "genomics-client/util/jsonParse";
 
 export const ResultTableSummaryViewController = (Comp: React.ComponentType) => {
     return (props: any) => {

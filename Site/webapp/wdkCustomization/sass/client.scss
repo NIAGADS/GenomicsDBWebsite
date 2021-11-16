@@ -1,23 +1,6 @@
 @import "./api-common-client.scss";
 @import "./variables";
 
-// Override default bootstrap variables before the bootstrap import
-//$body-bg: #000;
-$font-size-base: 0.75rem;
-
-$theme-colors: (
-    //"primary": $primary,
-        "light": $light,
-    "secondary": $secondary,
-    "dark": $dark,
-    "warning": $warning,
-    "success": $bluegrey
-);
-
-.StepBoxes--InsertStepButton {
-    display: none;
-}
-
 // Import Bootstrap and its default variables
 @import "./marginPaddingLoop.scss";
 
@@ -26,4 +9,4 @@ $theme-colors: (
 @import "../js/client/components/Components";
 @import "./wdk";
 @import "./style";
-
+@import "./variant-classification";

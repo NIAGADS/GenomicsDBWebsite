@@ -4,7 +4,7 @@ import { TablePagination as _MuiTablePagination } from '@material-ui/core'
 import React, { PropsWithChildren, ReactElement, useCallback } from 'react'
 import { TableInstance,  UsePaginationOptions } from 'react-table';
 
-import { useStyles } from './TableStyles'
+import { useTableStyles } from '.'
 
 const rowsPerPageOptions = [10, 20, 50, { label: 'All', value: -1 }]
 
@@ -13,15 +13,15 @@ const interestingPropsEqual = (prevProps: any, nextProps: any) =>
   prevProps.count === nextProps.count &&
   prevProps.rowsPerPage === nextProps.rowsPerPage &&
   prevProps.page === nextProps.page &&
-  prevProps.onChangePage === nextProps.onChangePage &&
-  prevProps.onChangeRowsPerPage === nextProps.onChangeRowsPerPage
+  prevProps.onPageChange === nextProps.onPageChange &&
+  prevProps.onRowsPerPageChange === nextProps.onRowsPerPageChange
 
 
 // a bit of a type hack to keep OverridableComponent working as desired
 type T = typeof _MuiTablePagination
 const MuiTablePagination: T = React.memo(_MuiTablePagination, interestingPropsEqual) as T
 
-export default function TablePagination<T extends Record<string, unknown>>({
+export function TablePagination<T extends Record<string, unknown>>({
   instance,
 }: PropsWithChildren<{ instance: TableInstance<T> }>): ReactElement | null {
   const {
@@ -44,14 +44,14 @@ export default function TablePagination<T extends Record<string, unknown>>({
     [gotoPage, nextPage, pageIndex, previousPage]
   )
 
-  const onChangeRowsPerPage = useCallback(
+  const onRowsPerPageChange = useCallback(
     (e) => {
       setPageSize(Number(e.target.value))
     },
     [setPageSize]
   )
 
-  const classes = useStyles();
+  const classes = useTableStyles();
 
   return rowCount ? (
     //@ts-ignore -- versioning issue
@@ -62,8 +62,8 @@ export default function TablePagination<T extends Record<string, unknown>>({
       count={rowCount}
       rowsPerPage={pageSize}
       page={pageIndex}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={onChangeRowsPerPage}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={onRowsPerPageChange}
     />
   ) : null
 }

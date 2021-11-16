@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { Link as RouterLink, withRouter, RouteComponentProps } from "react-router-dom";
+import { chain, isEmpty, get } from "lodash";
+
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { Loading } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
-import { SearchResult } from "../Tools";
-import { buildRouteFromResult } from '../../util/util';
-import { chain, isEmpty, get } from "lodash";
-import { Box, Grid, List, ListItem, withStyles } from "@material-ui/core";
-import { BaseText, BaseTextSmall, Heading, PrimaryLink, PrimaryExternalLink } from "../MaterialUI";
+import { SearchResult } from "@components/Tools";
+import { buildRouteFromResult } from 'genomics-client/util/util';
+
+import { withStyles } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import Link from "@material-ui/core/Link";
 
 interface SiteSearchResultsNavProps {
     genes: number;
@@ -22,30 +29,30 @@ const SiteSearchResultsNav: React.FC<SiteSearchResultsNavProps> = ({ genes, vari
         <List disablePadding={true}>
             {genes > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#genes">
+                    <Link color="initial" href="#genes">
                         {genes} Gene{genes > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
             {variants > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#variants">
+                    <Link color="initial" href="#variants">
                         {variants} Variant{variants > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
             {accessions > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#accessions">
+                    <Link color="initial" href="#accessions">
                         {accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
             {datasets > 0 && (
                 <ListItem>
-                    <PrimaryExternalLink href="#datasets">
+                    <Link color="initial" href="#datasets">
                         {datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}
-                    </PrimaryExternalLink>
+                    </Link>
                 </ListItem>
             )}
         </List>
@@ -91,10 +98,10 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
     ) : searchTerm.length < 3 ? (
         <Grid>
             <Box marginTop={3}>
-                <BaseText>
+                <Typography>
                     <strong>{searchTerm}</strong> is too short to search. Please enter a search term that is at least 3
                     characters long.
-                </BaseText>
+                </Typography>
             </Box>
         </Grid>
     ) : (
@@ -102,11 +109,11 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
             {resultsArray.length ? (
                 <>
                     <Grid item xs={3}>
-                        <Heading>Search Results</Heading>
-                        <BaseText>
+                        <Typography variant="h5">Search Results</Typography>
+                        <Typography>
                             <strong>{resultsArray.length}</strong> results were found for the search{" "}
                             <strong>{searchTerm}</strong>
-                        </BaseText>
+                        </Typography>
                         <SiteSearchResultsNav
                             genes={nGenes}
                             variants={nVariants}
@@ -136,9 +143,9 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
             ) : (
                 <Grid>
                     <Box marginTop={3}>
-                        <BaseText>
+                        <Typography>
                             <strong>No</strong> results were found for the search <strong>{searchTerm}</strong>
-                        </BaseText>
+                        </Typography>
                     </Box>
                 </Grid>
             )}
@@ -151,17 +158,17 @@ const ResultSectionTitle = withStyles({
         fontVariant: "small-caps",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
     },
-})(BaseText);
+})(Typography);
 
 const _buildSearchResult = (result: SearchResult, recordType: string) => {
     return (
         result.record_type === recordType && (
             <Box key={result.primary_key} mb={3}>
-                <PrimaryLink to={buildRouteFromResult(result)}>{safeHtml(result.display)}</PrimaryLink>
+                <RouterLink to={buildRouteFromResult(result)}>{safeHtml(result.display)}</RouterLink>
                 {result.record_type === "variant" && result.matched_term.indexOf("merge") > -1 && (
                     <em>{result.matched_term}</em>
                 )}
-                <BaseTextSmall>{safeHtml(result.description)}</BaseTextSmall>
+                <Typography>{safeHtml(result.description)}</Typography>
             </Box>
         )
     );

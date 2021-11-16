@@ -11,7 +11,6 @@ enum Category {
     BIOMARKER = "biomarker"
 }
 
-
 export const Glossary: Term[] = [
     {
         abbrev: "AD",

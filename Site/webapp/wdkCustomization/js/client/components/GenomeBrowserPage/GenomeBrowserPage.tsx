@@ -3,22 +3,18 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
-import { theme } from "../MaterialUI";
-import TrackBrowser, { IgvTrackConfig } from "./../Visualizations/Igv/IgvTrackBrowser";
-import IGVBrowser from "./../Visualizations/Igv/IgvBrowser";
+import { theme } from "@components/MaterialUI";
+import TrackBrowser, { IgvTrackConfig } from "@viz/Igv/IgvTrackBrowser";
+import IGVBrowser from "@viz/Igv/IgvBrowser";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import { get } from "lodash";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { PrimaryActionButton } from "../MaterialUI";
+import { PrimaryActionButton } from "@components/MaterialUI";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 
-
-import {
- Heading
-} from "../MaterialUI";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
@@ -120,7 +116,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
         <Container maxWidth="xl">
             <ThemeProvider theme={theme}>
                 <Grid container item xs={12}>
-                    <Heading>Temporarily Unavailable.  Please check back soon!</Heading>
+                    <h1>Temporarily Unavailable.  Please check back soon!</h1>
                     {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
                  {/*   <Box m="10px">
                         <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>

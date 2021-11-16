@@ -10,22 +10,24 @@ import InputBase from "@material-ui/core/InputBase";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/InputLabel";
 import SearchIcon from "@material-ui/icons/Search";
 
 import { Options } from "highcharts";
-import HighchartsPlot from "../../Highcharts/HighchartsPlot";
+import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";
 import {
     addTitle,
     disableExport,
     applyCustomSeriesColor,
     backgroundTransparent,
-} from "../../Highcharts/HighchartsOptions";
-import { _color_blind_friendly_palettes as PALETTES } from "../../palettes";
+} from "@viz/Highcharts/HighchartsOptions";
+import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
-import { toProperCase } from "../../../../util/util";
-import { useFilterPanelStyles } from "./FilterPanelStyles";
+import { toProperCase } from "genomics-client/util/util";
+import { useFilterStyles } from ".";
+
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
 export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
@@ -35,11 +37,39 @@ export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFil
         setGlobalFilter(value || undefined);
     }, 200);
 
-    const classes = useFilterPanelStyles({});
+    const classes = useFilterStyles();
 
     return (
         <>
-          <Paper component="form" className={classes.root}>
+            <Paper component="form" className={`${classes.paper} ${classes.limitedWidthPaper}`}>
+                <InputBase
+                    className={classes.input}
+                    placeholder="Search table"
+                    inputProps={{ "aria-label": "search table" }}
+                    onChange={(e) => {
+                        setValue(e.target.value);
+                        onChange(e.target.value);
+                    }}
+                />
+                <IconButton disabled={true} className={classes.iconButton} aria-label="search">
+                    <SearchIcon />
+                </IconButton>
+            </Paper>
+        </>
+    );
+}
+
+export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
+    const count = preGlobalFilteredRows.length;
+    const [value, setValue] = useState(globalFilter);
+    const onChange = useAsyncDebounce((value) => {
+        setGlobalFilter(value || undefined);
+    }, 200);
+
+    const classes = useFilterStyles();
+
+    return (
+        <>
             <InputBase
                 className={classes.input}
                 placeholder="Search table"
@@ -52,7 +82,6 @@ export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFil
             <IconButton disabled={true} className={classes.iconButton} aria-label="search">
                 <SearchIcon />
             </IconButton>
-            </Paper>
         </>
     );
 }
