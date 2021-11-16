@@ -69,7 +69,7 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
     const classes = useFilterStyles();
 
     return (
-        <Box>
+        <>
             <InputBase
                 className={classes.input}
                 placeholder="Search table"
@@ -82,7 +82,7 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
             <IconButton disabled={true} className={classes.iconButton} aria-label="search">
                 <SearchIcon />
             </IconButton>
-        </Box>
+        </>
     );
 }
 

@@ -13,6 +13,9 @@ export const themeOptions: ThemeOptions = {
     props: {
       MuiAppBar: {
         color: 'transparent'
+      },
+      MuiTablePagination: {
+        labelRowsPerPage: 'Results per page:'
       }
     },
     typography: {

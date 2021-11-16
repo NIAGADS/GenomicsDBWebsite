@@ -1,7 +1,9 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { assign } from "lodash";
+
+import clsx from "clsx";
 
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -91,8 +93,14 @@ const TableContainer: React.FC<TableContainerProps> = ({
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
+
+    const [showFilterPanel, setShowFilterPanel] = useState(false);
+    const [showColumnPanel, setShowColumnPanel] = useState(false);
+
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
     const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
+    const classes = useTableStyles();
+
     const instance = useTable(
         {
             columns,
@@ -143,35 +151,55 @@ const TableContainer: React.FC<TableContainerProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
+    function toggleFilterPanel(status: boolean) {
+        setShowFilterPanel(status);
+    }
+
+    function toggleColumnPanel(status: boolean) {
+        setShowColumnPanel(status);
+    }
+
     // Render the UI for the table
     return (
         <DefaultBackgroundPanel>
-            <Grid item container direction="row">
+            <Grid item container direction="row" xs={12} justifyContent="flex-start" alignItems="center">
                 <Grid item>
-                    <Box>
-                        <FilterToolbar
-                            instance={instance}
-                            canFilter={canFilter}
-                            showAdvancedFilter={showAdvancedFilter}
-                            showHideColumns={showHideColumns}
-                        />
-                        {canFilter && showAdvancedFilter && <FilterChipBar instance={instance} />}
-                    </Box>
+                    <FilterToolbar
+                        instance={instance}
+                        canFilter={canFilter}
+                        hasAdvancedFilter={showAdvancedFilter}
+                        hasHideColumns={showHideColumns}
+                        onToggleFilterPanel={toggleFilterPanel}
+                        onToggleColumnPanel={toggleColumnPanel}
+                    />
                 </Grid>
-                <Grid item>
-                    <TablePagination instance={instance} />
-                </Grid>
+
+                <Grid item>{canFilter && showAdvancedFilter && <FilterChipBar instance={instance} />}</Grid>
+                
+                {canFilter && showAdvancedFilter && (
+                    <Grid item className={clsx("", { [classes.hide]: showFilterPanel })}>
+                        <FilterPanel instance={instance} />
+                    </Grid>
+                )}
+
+                {showHideColumns && (
+                    <Grid item className={clsx("", { [classes.hide]: showColumnPanel })}>
+                        <TableColumnsPanel instance={instance} />
+                    </Grid>
+                )}
             </Grid>
 
-            <Grid item>
+            <Grid item xs={12}>
+                <TablePagination instance={instance} />
+            </Grid>
+
+            <Grid item xs={12}>
                 <Table
                     showAdvancedFilter={showAdvancedFilter}
                     canFilter={canFilter}
                     className={className}
                     instance={instance}
                 />
-                {canFilter && showAdvancedFilter && <FilterPanel instance={instance} />}
-                {showHideColumns && <TableColumnsPanel instance={instance} />}
             </Grid>
         </DefaultBackgroundPanel>
     );

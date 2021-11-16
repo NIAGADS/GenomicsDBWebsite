@@ -2,6 +2,9 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 export const useTableStyles = makeStyles((theme: Theme) =>
     createStyles({
+        hide: {
+            display: "none"
+        },
         pagination: {
             fontFamily: "Roboto"
         },

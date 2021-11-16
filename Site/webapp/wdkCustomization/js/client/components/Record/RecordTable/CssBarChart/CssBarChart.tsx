@@ -29,7 +29,7 @@ const IndicatorPart = withStyles((theme) => ({
     root: {
         height: "100%",
         backgroundColor: (props: IndicatorPartProps) =>
-            props.type === "filled" ? theme.palette.primary.dark : theme.palette.primary.light,
+            props.type === "filled" ? theme.palette.secondary.main : theme.palette.primary.main,
     },
 }))(({ width, type, ...rest }: IndicatorPartProps) => <Box {...rest} flexBasis={`${width}%`} />);
 

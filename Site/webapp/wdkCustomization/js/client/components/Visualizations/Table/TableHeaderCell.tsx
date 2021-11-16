@@ -34,7 +34,7 @@ export const BaseTableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) 
 };
 
 export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
-    const classes = useStyles();
+    const classes = useTableStyles();
     return column.canSort ? (
         <TableCell {...column.getHeaderProps()} className={cx({[classes.tableHeadCell]: true})}>
             <TableSortLabel

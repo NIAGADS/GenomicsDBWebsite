@@ -13,8 +13,8 @@ const interestingPropsEqual = (prevProps: any, nextProps: any) =>
   prevProps.count === nextProps.count &&
   prevProps.rowsPerPage === nextProps.rowsPerPage &&
   prevProps.page === nextProps.page &&
-  prevProps.onChangePage === nextProps.onChangePage &&
-  prevProps.onChangeRowsPerPage === nextProps.onChangeRowsPerPage
+  prevProps.onPageChange === nextProps.onPageChange &&
+  prevProps.onRowsPerPageChange === nextProps.onRowsPerPageChange
 
 
 // a bit of a type hack to keep OverridableComponent working as desired
@@ -44,7 +44,7 @@ export function TablePagination<T extends Record<string, unknown>>({
     [gotoPage, nextPage, pageIndex, previousPage]
   )
 
-  const onChangeRowsPerPage = useCallback(
+  const onRowsPerPageChange = useCallback(
     (e) => {
       setPageSize(Number(e.target.value))
     },
@@ -62,8 +62,8 @@ export function TablePagination<T extends Record<string, unknown>>({
       count={rowCount}
       rowsPerPage={pageSize}
       page={pageIndex}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={onChangeRowsPerPage}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={onRowsPerPageChange}
     />
   ) : null
 }
