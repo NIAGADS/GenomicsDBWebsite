@@ -10,7 +10,7 @@ import { HelpIcon } from "wdk-client/Components";
 import { linkColumnSort, sciNotationColumnSort, flagColumnSort, defaultColumnSort } from "./RecordTableSort";
 
 import { SelectColumnFilter } from "@viz/Table/TableFilters/TableFilters";
-import TableContainer /*, { SortIconGroup } */ from "@viz/Table/TableContainer";
+import TableContainer /*, { SortIconGroup } */ from "@viz/Table/VerticalTabTableContainer";
 
 import {
     fuzzyRecordTableTextFilter,

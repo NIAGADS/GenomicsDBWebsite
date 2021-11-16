@@ -1,7 +1,6 @@
-import { Checkbox, Theme, createStyles, makeStyles, styled } from "@material-ui/core";
-import React from "react";
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
-export const useStyles = makeStyles((theme: Theme) =>
+export const useTableStyles = makeStyles((theme: Theme) =>
     createStyles({
         pagination: {
             fontFamily: "Roboto"

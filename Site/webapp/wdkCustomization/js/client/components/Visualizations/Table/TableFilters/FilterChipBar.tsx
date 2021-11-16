@@ -1,11 +1,13 @@
 // credit to https://github.com/ggascoigne/react-table-example
 // @ts-nocheck -- react-table type issues / should be fixed in v8
 import React, { ReactElement, useCallback } from "react";
-import { Chip, createStyles, makeStyles } from "@material-ui/core";
-import { ColumnInstance, FilterValue, IdType, TableInstance } from "react-table";
-import { negLog10p } from "../../../RecordPage/RecordTable/RecordTableFilters/filters";
 
-const useStyles = makeStyles(
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
+
+import { ColumnInstance, FilterValue, IdType, TableInstance } from "react-table";
+
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         filtersActiveLabel: {
             color: "#998",

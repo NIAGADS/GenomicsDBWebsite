@@ -12,8 +12,7 @@ import Box from "@material-ui/core/Box";
 
 import { HeaderGroup, Column, TableInstance } from "react-table";
 
-import { useStyles } from "./TableStyles";
-import TableHeaderCell  from "./TableHeaderCell";
+import { TableHeaderCell, useTableStyles }   from ".";
 
 interface TableProps {
     instance: TableInstance;
@@ -22,9 +21,9 @@ interface TableProps {
     className?: string;
 }
 
-const Table: React.FC<TableProps> = ({ instance, canFilter, showAdvancedFilter, className }) => {
+export const Table: React.FC<TableProps> = ({ instance, canFilter, showAdvancedFilter, className }) => {
 
-    const classes = useStyles();
+    const classes = useTableStyles();
     const {
         getTableProps,
         getTableBodyProps,
@@ -72,4 +71,3 @@ const Table: React.FC<TableProps> = ({ instance, canFilter, showAdvancedFilter, 
     );
 };
 
-export default Table;
