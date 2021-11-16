@@ -19,9 +19,10 @@ import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 import { CustomPanel, withTooltip } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI";
 
+import { AlternativeVariantsSection, ColocatedVariantsSection } from "./VariantHeaderSections";
+
 import { resolveJsonInput, isJson } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
-
 
 const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
     const classes = useHeadingStyles();
@@ -29,8 +30,15 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
     const { record, headerActions, recordClass } = props,
         { attributes } = record;
 
+    const hasRelatedVariants = record.attributes.alternative_variants || record.attributes.colocated_variants;
+
     return (
-        <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
+        <CustomPanel
+            hasBaseArrow={false}
+            className={classes.panel}
+            alignItems="flex-start"
+            justifyContent="space-between"
+        >
             <Grid item container direction="column" sm={3}>
                 <Grid item>
                     <Typography variant="h5">
@@ -61,7 +69,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
             </Grid>
 
             {record.attributes.gws_datasets_summary_plot && (
-                <Grid item container xs={9}>
+                <Grid item container xs={9} sm={6}>
                     <Box>
                         <SummaryPlotHeader
                             text="Summary of AD/ADRD associations for this variant:"
@@ -76,38 +84,22 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                     </Box>
                 </Grid>
             )}
+            {hasRelatedVariants && (
+                <Grid item>
+                    {record.attributes.alternative_variants && (
+                        <AlternativeVariantsSection variants={record.attributes.alternative_variants.toString()} />
+                    )}
+                    {record.attributes.colocated_variants && (
+                        <ColocatedVariantsSection
+                            variants={record.attributes.colocated_variants.toString()}
+                            position={record.attributes.position.toString()}
+                            chromosome={record.attributes.chromosome.toString()}
+                        />
+                    )}
+                </Grid>
+            )}
         </CustomPanel>
     );
 };
-
-/* <Box paddingTop={1} paddingBottom={1} borderBottom="1px solid">
-                
-                
-
-                {(attributes.alternative_variants || attributes.colocated_variants) && (
-                    <Box paddingBottom={1} borderBottom="1px solid">
-                        {attributes.alternative_variants && (
-                            <AlternativeVariants altVars={attributes.alternative_variants.toString()} />
-                        )}
-                        {attributes.colocated_variants && (
-                            <ColocatedVariants
-                                position={attributes.position.toString()}
-                                chromosome={attributes.chromosome.toString()}
-                                colVars={attributes.colocated_variants.toString()}
-                            />
-                        )}
-                    </Box>
-                        )} 
-            </Grid>
-           
-                </Grid> */
-
-/* const LinkList: React.FC<{ list: string[] }> = ({ list }) => (
-    <List disablePadding={true}>
-        {list.map((item, i) => (
-            <UnpaddedListItem key={i}>{resolveJsonInput(item)}</UnpaddedListItem>
-        ))}
-    </List>
-);*/
 
 export default VariantRecordSummary;

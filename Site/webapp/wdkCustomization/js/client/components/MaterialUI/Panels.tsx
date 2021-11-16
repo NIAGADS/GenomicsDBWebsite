@@ -1,6 +1,6 @@
 import React from "react";
 
-import Grid, { GridItemsAlignment } from "@material-ui/core/Grid";
+import Grid, { GridItemsAlignment, GridJustification } from "@material-ui/core/Grid";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import { lighten } from "@material-ui/core/styles";
@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface Custom { className: string, alignItems?: GridItemsAlignment };
-export const CustomPanel: React.FC<PanelProps & Custom> = ({ className, children, hasBaseArrow=false }) => { 
+interface Custom { className: string, alignItems?: GridItemsAlignment, justifyContent?: GridJustification };
+export const CustomPanel: React.FC<PanelProps & Custom> = ({ className, children, alignItems="center", justifyContent="center", hasBaseArrow=false }) => { 
     return (
-        <Grid item container justifyContent="center" className={className} xs={12}>
+        <Grid item container justifyContent={justifyContent} alignItems={alignItems} className={className} xs={12}>
             {children}
             {hasBaseArrow && <DownArrowRow color="primary" />}
         </Grid>
