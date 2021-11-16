@@ -40,7 +40,7 @@ export const resolveAccessor = (key: string, attributeType: string) => {
         case "json_table":
             return (row: any) => JSON.stringify(row[key]);
         case "percentage_bar":
-            return (row: any) => <CssBarChart original={row[key]} pctFull={row[key] * 100} />;
+            return (row: any) => <CssBarChart value={row[key]} percentage={row[key] * 100} />;
         case "json_link":
         case "json_icon":
         case "json_text_or_link":

@@ -2,35 +2,35 @@ import { Box, BoxProps, Grid, withStyles } from "@material-ui/core";
 import React from "react";
 
 interface CssBarChart {
-    pctFull: number;
-    original: any;
+    percentage: number;
+    value: any;
 }
 
-const CssBarChart: React.FC<CssBarChart> = ({ original, pctFull }) => {
+const CssBarChart: React.FC<CssBarChart> = ({ value, percentage }) => {
     return (
         <Grid container wrap="nowrap">
-            <Grid item>{original}&nbsp;</Grid>
-            <Box clone maxWidth="150px" maxHeight="1.4em">
+            <Grid item>{value}&nbsp;</Grid>
+            <Box clone maxWidth="100px" maxHeight="1.4em">
                 <Grid item container wrap="nowrap">
-                    <IndicatorPart type="filled" width={pctFull} />
-                    <IndicatorPart type="remaining" width={100 - pctFull} />
+                    <SparkBar type="filled" width={percentage} />
+                    <SparkBar type="remaining" width={100 - percentage} />
                 </Grid>
             </Box>
         </Grid>
     );
 };
 
-interface IndicatorPartProps extends BoxProps {
+interface SparkBarProps extends BoxProps {
     type: "filled" | "remaining";
     width: number;
 }
 
-const IndicatorPart = withStyles((theme) => ({
+const SparkBar = withStyles((theme) => ({
     root: {
         height: "100%",
-        backgroundColor: (props: IndicatorPartProps) =>
-            props.type === "filled" ? theme.palette.secondary.main : theme.palette.primary.main,
+        backgroundColor: (props: SparkBarProps) =>
+            props.type === "filled" ? theme.palette.secondary.main : theme.palette.primary.light,
     },
-}))(({ width, type, ...rest }: IndicatorPartProps) => <Box {...rest} flexBasis={`${width}%`} />);
+}))(({ width, type, ...rest }: SparkBarProps) => <Box {...rest} flexBasis={`${width}%`} />);
 
 export default CssBarChart;
