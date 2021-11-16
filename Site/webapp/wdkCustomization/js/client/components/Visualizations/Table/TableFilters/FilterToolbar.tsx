@@ -61,6 +61,7 @@ export const FilterToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                         <ToggleButton
                             aria-label="open or hide advanced table filters"
                             value="advanced-filter"
+                            color="primary"
                             selected={showFilterPanel}
                             onChange={() => {
                                 toggleFilterPanel(!showFilterPanel);
@@ -76,6 +77,7 @@ export const FilterToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                         <ToggleButton
                             aria-label="open show / hide columns selector"
                             value="column"
+                            color="secondary"
                             selected={showColumnPanel}
                             onChange={() => {
                                 toggleColumnPanel(!showColumnPanel);
@@ -87,7 +89,7 @@ export const FilterToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                     )}
 
                 {withHtmlTooltip(
-                    <IconButton aria-label="download table data">
+                    <IconButton aria-label="download table data" >
                         <DownloadIcon />
                     </IconButton>,
                     "Download (filtered) table data"

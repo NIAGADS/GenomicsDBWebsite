@@ -175,19 +175,19 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 </Grid>
 
                 <Grid item>{canFilter && showAdvancedFilter && <FilterChipBar instance={instance} />}</Grid>
-                
-                {canFilter && showAdvancedFilter && (
-                    <Grid item className={clsx("", { [classes.hide]: showFilterPanel })}>
-                        <FilterPanel instance={instance} />
-                    </Grid>
-                )}
-
-                {showHideColumns && (
-                    <Grid item className={clsx("", { [classes.hide]: showColumnPanel })}>
-                        <TableColumnsPanel instance={instance} />
-                    </Grid>
-                )}
             </Grid>
+
+            {canFilter && showAdvancedFilter && (
+                <Grid item className={showFilterPanel ? "" : classes.hide}>
+                    <FilterPanel instance={instance} />
+                </Grid>
+            )}
+
+            {showHideColumns && (
+                <Grid item className={clsx(classes.hide, { [""]: showColumnPanel })}>
+                    <TableColumnsPanel instance={instance} />
+                </Grid>
+            )}
 
             <Grid item xs={12}>
                 <TablePagination instance={instance} />
