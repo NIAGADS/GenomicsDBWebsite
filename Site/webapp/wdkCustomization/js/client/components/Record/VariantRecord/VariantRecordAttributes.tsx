@@ -1,17 +1,19 @@
 import React from "react";
 
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import CheckIcon from "@material-ui/icons/Check";
-import { makeStyles, createStyles, Theme } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
+import InfoIcon from "@material-ui/icons/Info";
+import WarningIcon from "@material-ui/icons/Warning";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
 import { RecordAttributeItem, useHeadingStyles } from "../RecordHeading";
 import { MostSevereConsequenceSection } from "./VariantHeaderSections";
 
-import { withTooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";
+import { withTooltip, HtmlTooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
@@ -54,17 +56,9 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
             </ListItem>
 
             <ListItem>
-                <Typography className={classes.small}>
-                    <em>Has this variant been flagged by the ADSP?&nbsp;&nbsp;</em>
-                    {attributes.is_adsp_variant ? (
-                        <strong>
-                            Yes <CheckIcon className={classes.pass} />
-                        </strong>
-                    ) : (
-                        <strong>No</strong>
-                    )}
-                </Typography>
+                <ADSPStatusDisplay is_adsp_variant={attributes.is_adsp_variant} />
             </ListItem>
+
             <ListItem>
                 <ADSPQCDisplay record={record} />
             </ListItem>
@@ -77,6 +71,43 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
     );
 };
 
+const ADSPStatusDisplay: React.FC<any> = ({ is_adsp_variant }) => {
+    return is_adsp_variant ? (
+        <HtmlTooltip
+            arrow
+            title={
+                <>
+                    <Typography variant="caption">
+                        This variant was present in ADSP samples and PASSED the ADSP quality control checks.
+                    </Typography>
+                    <Typography variant="caption" className="red">
+                        <WarningIcon /> This is not an indicator of AD-risk association. Please view summary statistics
+                        results or ADSP Case/Control single-variant results to make that determination.
+                    </Typography>
+                </>
+            }
+        >
+            <Chip color="secondary" icon={<InfoIcon />} label="ADSP Variant" />
+        </HtmlTooltip>
+    ) : (
+        <HtmlTooltip
+            arrow
+            title={
+                <>
+                    <Typography variant="caption">
+                        This variant was present in ADSP samples and but did NOT pass the ADSP quality control checks.
+                    </Typography>
+                    <Typography variant="caption" className="red">
+                        <WarningIcon/> This is not an indicator of AD-risk association. Please view summary statistics
+                        results or ADSP Case/Control single-variant results to make that determination.
+                    </Typography>
+                </>
+            }
+        >
+            <Chip color="secondary" icon={<InfoIcon />} label="variant flagged by the ADSP" />
+        </HtmlTooltip>
+    );
+};
 
 const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
     const classes = useTypographyStyles();
@@ -117,7 +148,7 @@ const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {
 
 export const ADSPQCDisplay: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const { attributes } = record;
-    const hasFilterStatus = attributes.adsp_wgs_qc_filter_status && attributes.adsp_wes_qc_filter_status;
+    const hasFilterStatus = attributes.adsp_wgs_qc_filter_status || attributes.adsp_wes_qc_filter_status;
     const classes = useStyles();
 
     return hasFilterStatus ? (
