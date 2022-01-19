@@ -1,4 +1,4 @@
-package org.niagads.genomics.service.services.Search;
+package org.niagads.genomics.service.services.Ontology;
 
 import static org.gusdb.fgputil.FormatUtil.NL;
 
@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
 
-@Path("dictionary")
+@Path("ontology/search")
 public class OntologySearchService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(OntologySearchService.class);
 
