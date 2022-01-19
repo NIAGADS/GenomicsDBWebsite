@@ -119,8 +119,8 @@ public class DataDictionaryValidationService extends AbstractWdkService {
         else if (idResult != null && termResult == null) { // only id invalid
             response.put("message", "ID Valid, but unable to match term.");
             response.put("result", "PARTIAL");
-            response.put("valid_term", true);
-            response.put("valid_id", false);
+            response.put("valid_term", false);
+            response.put("valid_id", true);
         }
 
         else if (idResult == null && termResult != null) { // only term invalid
