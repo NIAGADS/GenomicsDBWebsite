@@ -101,7 +101,7 @@ public class DataDictionaryValidationService extends AbstractWdkService {
         response.put("matched_id", irJson);
 
         String suggestedTerm = suggestedTerm(term, trJson);
-        response.put("suggested_term", suggestedTerm);
+        response.put("lookup_value", suggestedTerm);
 
         if (termResult != null && idResult != null) { // both valid
             if (idTermMatch(trJson, irJson)) {
