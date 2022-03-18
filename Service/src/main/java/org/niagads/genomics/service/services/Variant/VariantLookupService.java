@@ -60,7 +60,8 @@ public class VariantLookupService extends AbstractPagedWdkService {
     + "'allele_frequencies', v.allele_frequencies," + NL 
     + "'cadd_scores', CASE WHEN v.cadd_scores::text = '{}' THEN NULL ELSE v.cadd_scores END," + NL
     + "'most_severe_consequence', v.adsp_most_severe_consequence," + NL
-    + "'flagged_genomicsdb_datasets', v.other_annotation->'GenomicsDB')";
+    + "'flagged_genomicsdb_datasets', v.other_annotation->'GenomicsDB'," + NL
+    + "'GRCh38', v.other_annotation->'GRCh38')";
 
     private final static String FULL_VEP_JSON_OBJECT = "jsonb_build_object(" + NL
         + "'transcript_consequences', v.adsp_ranked_consequences->'transcript_consequences'," + NL
