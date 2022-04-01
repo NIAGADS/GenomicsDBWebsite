@@ -5,10 +5,35 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Typography from "@material-ui/core/Typography";
 
 export const DRAWER_WIDTH = 240;
+export interface DrawerState {
+    isOpen: boolean;
+    handleClose?: any;
+    handleOpen?: any;
+}
 
-const useStyles = makeStyles((theme: Theme) =>
+export const contentStyles = (theme:Theme) => ({
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: 0,
+    },
+    contentShift: {
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: DRAWER_WIDTH,
+    },
+});
+
+export const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
         drawer: {
             width: DRAWER_WIDTH,
@@ -24,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
             // necessary for content to be below app bar
             ...theme.mixins.toolbar,
             justifyContent: "flex-end",
+            marginTop: "90px"
         },
         content: {
             flexGrow: 1,
@@ -44,15 +70,13 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface DrawerProps {
+export interface DrawerProps {
     children?: React.ReactNode;
-    isOpen: boolean;
-    // handleDrawerOpen:MouseEvent<HTMLButtonElement>;
-    handleDrawerClose: any;
+    title?: string;
 }
 
-export const PersistentDrawerLeft: React.FC<DrawerProps> = ({ children, isOpen, handleDrawerClose }) => {
-    const classes = useStyles();
+export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ title, children, isOpen, handleClose }) => {
+    const classes = useDrawerStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(isOpen);
 
@@ -62,7 +86,7 @@ export const PersistentDrawerLeft: React.FC<DrawerProps> = ({ children, isOpen, 
 
     const onDrawerClose = () => {
         setOpen(false);
-        handleDrawerClose();
+        handleClose();
     };
 
     return (
@@ -76,6 +100,7 @@ export const PersistentDrawerLeft: React.FC<DrawerProps> = ({ children, isOpen, 
             }}
         >
             <div className={classes.drawerHeader}>
+                {title && <Typography variant="h5">{title}</Typography>}
                 <IconButton onClick={onDrawerClose}>
                     {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                 </IconButton>

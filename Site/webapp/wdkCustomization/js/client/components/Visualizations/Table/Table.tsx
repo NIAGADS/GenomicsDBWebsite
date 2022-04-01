@@ -2,6 +2,7 @@
 import React from "react";
 import cx from "classnames";
 import { assign } from "lodash";
+import clsx from "clsx";
 
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,22 +10,20 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
+import { withStyles } from "@material-ui/core/styles";
 
 import { HeaderGroup, Column, TableInstance } from "react-table";
 
-import { useStyles } from "./TableStyles";
-import TableHeaderCell  from "./TableHeaderCell";
+import { TableHeaderCell, useTableStyles }   from ".";
 
 interface TableProps {
     instance: TableInstance;
-    showAdvancedFilter: boolean;
-    canFilter: boolean;
     className?: string;
 }
 
-const Table: React.FC<TableProps> = ({ instance, canFilter, showAdvancedFilter, className }) => {
+export const Table: React.FC<TableProps> = ({ instance, className }) => {
 
-    const classes = useStyles();
+    const classes = useTableStyles();
     const {
         getTableProps,
         getTableBodyProps,
@@ -35,8 +34,8 @@ const Table: React.FC<TableProps> = ({ instance, canFilter, showAdvancedFilter, 
     } = instance;
 
     return (
-        <Box> 
-            <MaUTable {...getTableProps()} className={className}>
+        <Box className={className}> 
+            <MaUTable {...getTableProps()}>
                 <TableHead>
                     {headerGroups.map((headerGroup: HeaderGroup<object>) => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -72,4 +71,4 @@ const Table: React.FC<TableProps> = ({ instance, canFilter, showAdvancedFilter, 
     );
 };
 
-export default Table;
+//export default withStyles(drawerPanelStyles, { withTheme: true })(Table);

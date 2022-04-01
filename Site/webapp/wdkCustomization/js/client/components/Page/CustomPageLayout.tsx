@@ -8,13 +8,15 @@ import Header from "wdk-client/Components/Layout/Header";
 import Footer from "wdk-client/Components/Layout/Footer";
 import ErrorBoundary from "wdk-client/Core/Controllers/ErrorBoundary";
 import { useScrollUpOnRouteChange } from "wdk-client/Hooks/Page";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { theme } from "@components/MaterialUI";
+import Announcements from "./Announcements";
 
 // import clsx from "clsx";
 //import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 //import { DrawerState } from "../Page";
-//import { DRAWER_WIDTH } from "../MaterialUI";
-
+//import { DRAWER_WIDTH } from "@components/MaterialUI";
 
 /* const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -44,22 +46,27 @@ type Props = RouteComponentProps<any> & {
 
 const cx = makeClassNameHelper("wdk-RootContainer");
 
-function CustomPageLayout(props: Props ) {
+function CustomPageLayout(props: Props) {
     //const classes = useStyles();
 
     useScrollUpOnRouteChange();
     let contentClass = cx("", props.classNameModifier); // + " " + clsx(classes.content, {[classes.contentShift]: drawerIsOpen,})
 
     return (
-        <div className={contentClass}>
-            <ErrorBoundary>
-                <Header />
-            </ErrorBoundary>
-            <div className="wdk-PageContent">{props.children}</div>
-            <ErrorBoundary>
-                <Footer />
-            </ErrorBoundary>
-        </div>
+        <ThemeProvider theme={theme}>
+            <div className={contentClass}>
+                <ErrorBoundary>
+                    <Header />
+                </ErrorBoundary>
+                <div className="wdk-PageContent">
+                    <Announcements />
+                    {props.children}
+                </div>
+                <ErrorBoundary>
+                    <Footer />
+                </ErrorBoundary>
+            </div>
+        </ThemeProvider>
     );
 }
 

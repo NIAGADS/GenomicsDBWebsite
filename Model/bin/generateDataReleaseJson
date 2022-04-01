@@ -2,6 +2,7 @@
 
 """ 
 queries against the db for dataset releases
+target file is $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_datasetReleases.ts
 """
 
 import argparse

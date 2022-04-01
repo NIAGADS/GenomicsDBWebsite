@@ -8,7 +8,7 @@ import registry from "locuszoom/esm/registry/adapters";
 import { cloneDeep, get, noop } from "lodash";
 import { Grid } from "@material-ui/core";
 import { selectAll } from "d3";
-import { useDynamicWidth } from "../../../hooks";
+import { useDynamicWidth } from "genomics-client/hooks";
 
 const LZ = lz.default as any;
 

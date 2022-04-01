@@ -1,9 +1,12 @@
 import React from "react";
-import { Tooltip } from "wdk-client/Components";
-import { TooltipPosition } from "wdk-client/Components/Overlays/Tooltip";
+import {Link as RouterLink } from "react-router-dom";
 import { isString, isPlainObject, isNull } from "lodash";
+
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { PrimaryExternalLink, PrimaryLink } from "../components/MaterialUI";
+
+import { withTooltip } from "@components/MaterialUI";
+import Link from "@material-ui/core/Link";
+
 
 export interface LinkType {
     url: string;
@@ -60,13 +63,13 @@ export const resolveObjectInput = (
         case "link":
             //probably need to designate outlinks and routelinks formally, but for now using a regex
             const el = /^http/.test(obj.url) ? (
-                <PrimaryExternalLink key={obj.url} href={obj.url}>
+                <Link key={obj.url} href={obj.url} color="initial">
                     {obj.value}
-                </PrimaryExternalLink>
+                </Link>
             ) : (
-                <PrimaryLink key={obj.url} to={obj.url}>
+                <RouterLink key={obj.url} to={obj.url}>
                     {obj.value}
-                </PrimaryLink>
+                </RouterLink>
             );
             return withTooltip(el, obj.tooltip);
         case "text":
@@ -75,8 +78,7 @@ export const resolveObjectInput = (
                 <span key={Math.random().toString(36).slice(2)} className={className}>
                     {safeHtml(obj.value)}
                 </span>,
-                obj.tooltip,
-                "wdk-tooltip"
+                obj.tooltip
             );
         case "icon":
             className = obj.color ? `${obj.color} fa ${obj.icon}` : `fa ${obj.icon}`;
@@ -92,24 +94,6 @@ export const resolveObjectInput = (
     throw new Error(`no parser for object of type ${obj.type}!`);
 };
 
-//todo: move
-export const withTooltip = (
-    element: React.ReactElement<any>,
-    content: string,
-    classes?: string,
-    position?: TooltipPosition
-) => {
-    const className = classes ? classes : "", //removing wdk-tooltip class, caller will need to be explicit!
-        pos = position ? position : { my: "top left", at: "bottom left" };
-    if (content) {
-        return (
-            <Tooltip key={Math.random().toString(36).slice(2)} content={safeHtml(content)} showDelay={0} position={pos}>
-                <span className={className}>{element}</span>
-            </Tooltip>
-        );
-    }
-    return element;
-};
 
 export const isJson = (item: any) => {
     //not reallly a json test, more like a check to see if the backend is sending us something we assume we can treat as json

@@ -70,6 +70,7 @@ const HighchartsPlot: React.FC<HighchartsPlotProps> = (props) => {
     const displayMessage = displayNoDataMessage === false ? false : true;
 
     const omittedProps = ["data", "properties", "noDataMessage", "displayNoDataMessage", "plotOptions"];
+
     const chartComponentProps = omit(props, omittedProps);
 
     return options ? (

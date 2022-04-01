@@ -2,6 +2,7 @@
 
 """ 
 queries against the db for site statistics that should be static per release / creates json file to be referenced by the build
+target file is $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_siteStatistics.ts
 """
 
 import argparse

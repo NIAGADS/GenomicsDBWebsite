@@ -4,7 +4,3 @@ export * from "./HomePage/HomePage";
 export * from "./Header/Header";
 export * from "./CustomPageLayout";
 
-export interface DrawerState {
-    drawerIsOpen: boolean;
-    handleDrawerClose: any;
-}

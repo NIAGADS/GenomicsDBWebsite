@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
   <recordClassSet name="VariantRecordClasses">
-    <recordClass name="VariantRecordClass" displayName="Variant" displayNamePlural="Variants" shortDisplayName="Variant" useBasket="true" urlName="variant">
+    <recordClass name="VariantRecordClass" displayName="Variant" displayNamePlural="Variants" shortDisplayName="Variant" useBasket="false" urlName="variant">
       <!-- =============================================================== -->
       <!-- Primary Key -->
       <!-- =============================================================== -->

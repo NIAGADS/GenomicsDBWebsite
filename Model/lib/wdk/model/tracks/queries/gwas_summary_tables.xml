@@ -70,19 +70,17 @@
                 <![CDATA[
                         SELECT r.dataset_id AS track
                         , '@PROJECT_ID@'::text AS project_id
-                        , build_link_attribute(truncate_str(v.metaseq_id, 30), '../variant/', v.record_primary_key) AS variant_link
-                        , v.ref_snp_id
-                        , adsp_variant_display_flag(v.is_adsp_variant) AS adsp_variant_flag
-                        , v.most_severe_consequence
-			            , v.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'vep_impact' AS msc_impact
-                        , v.msc_impacted_gene_link -- virtual column
-                        , v.msc_is_coding AS msc_is_coding_flag
+                        , build_link_attribute(truncate_str(r.metaseq_id, 30), '../variant/', r.variant_record_primary_key) AS variant_link
+                        , r.ref_snp_id
+                        , adsp_variant_display_flag(r.is_adsp_variant) AS adsp_variant_flag
+                        , r.most_severe_consequence
+			            , r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'vep_impact' AS msc_impact
+                        , r.msc_impacted_gene_link -- virtual column
+                        , r.msc_is_coding AS msc_is_coding_flag
                         , r.neg_log10_pvalue
                         , r.pvalue_display AS pvalue
                         FROM 
-                        NIAGADS.VariantGWASTopHits r,
-                        NIAGADS.Variant v
-                        WHERE v.record_primary_key = r.variant_record_primary_key
+                        NIAGADS.VariantGWASTopHits r
                         ORDER BY neg_log10_pvalue DESC
                     ]]>
             </sql>

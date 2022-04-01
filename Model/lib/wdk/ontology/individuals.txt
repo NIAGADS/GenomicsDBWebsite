@@ -173,3 +173,8 @@ DatasetRecordClasses.NIAGADSDatasetRecordClass.description	http://edamontology.o
 DatasetRecordClasses.NIAGADSDatasetRecordClass.external_link	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	attribute	external_link						result	record-internal	download
 DatasetRecordClasses.NIAGADSDatasetRecordClass.is_adsp	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	attribute	is_adsp						result	record-internal	download
 DatasetRecordClasses.NIAGADSDatasetRecordClass.datasets	http://edamontology.org/topic_0219	Curation and Annotation	DatasetRecordClasses.NIAGADSDatasetRecordClass	table	datasets						result	record	
+													
+OntologyRecordClasses.OntologyRecordClass.name	http://edamontology.org/topic_0219	Curation and Annotation	OntologyRecordClasses.OntologyRecordClass	attribute	name							record-internal	download
+OntologyRecordClasses.OntologyRecordClass.description	http://edamontology.org/topic_0219	Curation and Annotation	OntologyRecordClasses.OntologyRecordClass	attribute	description							record-internal	download
+OntologyRecordClasses.OntologyRecordClass.ontology	http://edamontology.org/topic_0219	Curation and Annotation	OntologyRecordClasses.OntologyRecordClass	attribute	ontology							record-internal	download
+OntologyRecordClasses.OntologyRecordClass.terms	http://edamontology.org/topic_0219	Curation and Annotation	OntologyRecordClasses.OntologyRecordClass	table	terms							record	download

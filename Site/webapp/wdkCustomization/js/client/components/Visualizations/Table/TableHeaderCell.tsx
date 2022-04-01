@@ -5,14 +5,14 @@ import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import cx from 'classnames';
 
-import { useStyles } from './TableStyles'
+import { useTableStyles } from '.'
 
 interface TableHeaderCellProps {
     column: Column;
 }
 
 const ResizeHandle: React.FC<TableHeaderCellProps> = ({ column }) =>  {
-  const classes = useStyles()
+  const classes = useTableStyles()
   return (
     <div
       {...column.getResizerProps()}
@@ -25,7 +25,7 @@ const ResizeHandle: React.FC<TableHeaderCellProps> = ({ column }) =>  {
   )
 }
 
-const BaseTableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
+export const BaseTableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
     return (
         <>
             {column.render("Header")}
@@ -33,8 +33,8 @@ const BaseTableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
     );
 };
 
-const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
-    const classes = useStyles();
+export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
+    const classes = useTableStyles();
     return column.canSort ? (
         <TableCell {...column.getHeaderProps()} className={cx({[classes.tableHeadCell]: true})}>
             <TableSortLabel
@@ -59,4 +59,3 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
     );
 };
 
-export default TableHeaderCell;

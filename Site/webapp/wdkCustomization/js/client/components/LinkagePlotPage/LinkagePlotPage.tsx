@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import LinkagePlot from "../Visualizations/Linkage/Linkage";
+import LinkagePlot from "@viz/Linkage/Linkage";
 
 interface LinkagePlotPage {}
 
