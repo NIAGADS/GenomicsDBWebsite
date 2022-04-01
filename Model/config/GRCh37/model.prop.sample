@@ -49,8 +49,8 @@ dbSNP_VERSION=151
 
 #PROJECT_ID=GRCh38
 #GENOME_BUILD=GRCh38.p8
-#GENCODE_VERSION=v25
-#dbSNP_VERSION= 
+#GENCODE_VERSION=v36
+#dbSNP_VERSION=155
 
 #----------------------------------------------------------
 # Constants
