@@ -43,7 +43,7 @@ const siteAnnouncements = [
                         <a target="_blank" href="https://www.niagads.org/genomics">
                             www.niagads.org/genomics
                         </a>{" "}
-                        is still available (to be retired by Fall 2021). Please feel free to provide us with your
+                        is still available (to be retired by Spring 2022). Please feel free to provide us with your
                         feedback using this{" "}
                         <a target="_blank" href="https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi">
                             beta-site feedback form

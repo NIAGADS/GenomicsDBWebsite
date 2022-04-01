@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { RootState } from "wdk-client/Core/State/Types";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,12 +14,22 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         currentBuild: {
             color: theme.palette.secondary.light,
-            fontWeight: "bold"
+            fontWeight: "bold",
+        },
+        altBuild: {
+            color: theme.palette.grey[100],
+            fontWeight: "bold",
         },
         banner: {
             //display: "flex",
             //justifyContent: "center",
             backgroundColor: theme.palette.primary.light,
+        },
+        secondaryLink: {
+            color: theme.palette.secondary.main,
+            "&:hover": {
+                color: theme.palette.secondary.light,
+            },
         },
     })
 );
@@ -28,17 +39,28 @@ const GenomeBuildBanner: React.FC<any> = ({}) => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const classes = useStyles();
-    return (
+
+    const [buildInfo, setBuildInfo] = useState(null);
+
+    useEffect(() => {
+        if (buildNumber) {
+            setBuildInfo(JSON.parse(buildNumber));
+        }
+    }, [buildNumber]);
+
+    return buildInfo ? (
         <Box p={1} className={classes.banner} textAlign="center">
             <Typography className={classes.label}>
-                <Box component="span" className={classes.currentBuild}>v. {buildNumber}</Box>
-                {" "}
-                {projectId === "GRCh37"
-                    ? '/ v. GRCh38 Coming Soon.'
-                    : `{/ Looking for <a href="${webAppUrl}">GRCh37</a>?}`}
+                <Box component="span" className={classes.currentBuild}>
+                    v. {buildInfo.build}
+                </Box>
+                {" / "}
+                <Box component="span">
+                    Looking for <Link className={classes.secondaryLink} href={buildInfo.alt_build_target}>{buildInfo.alt_build}</Link>?
+                </Box>
             </Typography>
         </Box>
-    );
+    ) : null;
 };
 
 export default GenomeBuildBanner;
