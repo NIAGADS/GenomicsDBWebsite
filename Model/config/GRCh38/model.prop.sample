@@ -21,11 +21,6 @@ STEP_ANALYSIS_JOB_DIR=/www/common/temp
 DONT_EMAIL_NEW_USER=true
 WDK_VERSION=API_BUILD_50
 
-SITE_ADMIN_EMAIL=
-
-STEP_ANALYSIS_JOB_DIR=/www/common/temp
-
-
 #----------------------------------------------------------
 # Production v Dev / Beta
 #----------------------------------------------------------
@@ -42,15 +37,17 @@ FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
 # Project Identifiers & Configuration
 #----------------------------------------------------------
 
-PROJECT_ID=GRCh37
-GENOME_BUILD=GRCh37.p13
-GENCODE_VERSION=v19
-dbSNP_VERSION=151
+#PROJECT_ID=GRCh37
+#GENOME_BUILD=GRCh37.p13
+#GENCODE_VERSION=v19
+#dbSNP_VERSION=151
+#ALT_BUILD_LINK=
 
-#PROJECT_ID=GRCh38
-#GENOME_BUILD=GRCh38.p8
-#GENCODE_VERSION=v36
-#dbSNP_VERSION=155
+PROJECT_ID=GRCh38
+GENOME_BUILD=GRCh38.p8
+GENCODE_VERSION=v36
+dbSNP_VERSION=155
+ALT_BUILD_LINK=
 
 #----------------------------------------------------------
 # Constants
