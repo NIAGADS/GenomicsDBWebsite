@@ -5,9 +5,10 @@
   <constant name="releaseVersion37"
 	    includeProjects="GRCh37">3.5</constant>
   <constant name="releaseVersion38" includeProjects="GRCh38">1.0</constant>
-  <constant name="buildNumber37" includeProjects="GRCh37">GRCh37.p13/hg19</constant>
-  <constant name="buildNumber38" includeProjects="GRCh38">GRCh38.p10</constant>
+  <constant name="buildNumber37" includeProjects="GRCh37,GRCh38">GRCh37.p13/hg19</constant> 
+  <constant name="buildNumber38" includeProjects="GRCh38,GRCh37">GRCh38</constant>
   
+
   <constant name="fullReporterDisplayName">Text: choose from columns and/or tables</constant>
   <constant name="attributesReporterDisplayName">Search Result Table</constant>
   <constant name="tableReporterDisplayName">Additional Tabular Data</constant>
@@ -23,12 +24,14 @@
   <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh37" 
 	     version="%%releaseVersion37%%"
 	     releaseDate="%%releaseDate%%"
-	     buildNumber="%%buildNumber37%%" />
+	     buildNumber='{"build":"%%buildNumber37%%", "alt_build": "%%buildNumber38%%", "alt_build_target": "@ALT_BUILD_LINK@"}'
+       />
 
   <modelName includeProjects="GRCh38" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh38" 
 	     version="%%releaseVersion38%%"
 	     releaseDate="%%releaseDate%%"
-	     buildNumber="%%buildNumber38%%" />
+  buildNumber='{"build":"%%buildNumber38%%", "alt_build": "%%buildNumber37%%", "alt_build_target": "@ALT_BUILD_LINK@"}'
+       />
 
  
 
