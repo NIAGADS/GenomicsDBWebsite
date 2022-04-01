@@ -8,6 +8,7 @@ export * from "./Tooltips";
 export * from "./ElevationScroll";
 export * from "./GridElements/DownArrowRow";
 export * from "./PersistentDrawerLeft";
+export * from "./EncapsulatedDrawer";
 export * from "./Lists";
 export * from "./Panels";
 

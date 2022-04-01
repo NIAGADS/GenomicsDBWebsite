@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { FilterValue } from "react-table";
 import {
     area,
     drag,

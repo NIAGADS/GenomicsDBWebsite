@@ -2,6 +2,8 @@ import React, { useMemo, useRef } from "react";
 import { Column, TableInstance, HeaderProps } from "react-table";
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
 
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+
 import { Box } from "@material-ui/core";
 import { resolveAccessor, resolveData } from "./RecordTableUtils";
 import { RecordTableProps } from "./RecordTableTypes";
@@ -20,6 +22,7 @@ import {
     includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
 import { PValueFilter, PieChartFilter } from "./RecordTableFilters";
+import classNames from "classnames";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -30,6 +33,21 @@ const filterTypes = {
     booleanPie: booleanFlagFilter,
     pie: recordIncludesFilter,
 };
+
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        table: {
+          minHeight: 500,
+          maxHeight: 500,
+          overflowY: "scroll",
+          overflowX: "hidden"
+        },
+        fullWidth: {
+            width: "100%"
+        }
+    })
+);
 
 const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
     const { attributes } = table;
@@ -45,6 +63,8 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
     const hasColumnFilters = "column_filter" in table.properties;
     const initialFilters = _setInitialFilters(table);
 
+    const classes = useStyles();
+
     if (data.length === 0 || columns.length === 0) {
         return (
             <p>
@@ -55,7 +75,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
 
     return (
         <TableContainer
-            className={table.properties.canShrink ? "shrink" : ""}
+            className={classNames(table.properties.canShrink ? "shrink" : classes.fullWidth, classes.table)}
             columns={columns}
             data={resolvedData}
             filterTypes={filterTypes}
@@ -179,3 +199,5 @@ const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) =>
 };
 
 export default RecordTable;
+
+

@@ -12,7 +12,7 @@ public abstract class AbstractPagedWdkService extends AbstractWdkService {
     protected final Logger LOG = Logger.getLogger(this.getClass().getName());
 
     protected final static String PAGE_PARAM = "page";
-    protected final static Integer PAGE_SIZE = 200; // number of recortdds
+    protected final static Integer PAGE_SIZE = 500; // number of recordds
     protected int _numPages;
     protected int _currentPage;
     protected int _numFeatureLookups = -1;

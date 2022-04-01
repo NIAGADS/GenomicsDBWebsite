@@ -39,6 +39,9 @@ body {
 }
 
 .wdk-CollapsibleSectionContent {
+    &.wdk-RecordTableContainer {
+        min-height: 500px;
+    }
     &.wdk-RecordTableContainerContent {
         display: flex;
         justify-content: center;

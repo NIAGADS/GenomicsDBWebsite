@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/InputLabel";
 import SearchIcon from "@material-ui/icons/Search";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 import { Options } from "highcharts";
 import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";
@@ -26,39 +27,11 @@ import {
 import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
 import { toProperCase } from "genomics-client/util/util";
-import { useFilterStyles } from ".";
+import { useFilterStyles, useGlobalFilterStyles } from ".";
+
 
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
-export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
-    const count = preGlobalFilteredRows.length;
-    const [value, setValue] = useState(globalFilter);
-    const onChange = useAsyncDebounce((value) => {
-        setGlobalFilter(value || undefined);
-    }, 200);
-
-    const classes = useFilterStyles();
-
-    return (
-        <>
-            <Paper component="form" className={`${classes.paper} ${classes.limitedWidthPaper}`}>
-                <InputBase
-                    className={classes.input}
-                    placeholder="Search table"
-                    inputProps={{ "aria-label": "search table" }}
-                    onChange={(e) => {
-                        setValue(e.target.value);
-                        onChange(e.target.value);
-                    }}
-                />
-                <IconButton disabled={true} className={classes.iconButton} aria-label="search">
-                    <SearchIcon />
-                </IconButton>
-            </Paper>
-        </>
-    );
-}
-
 export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
     const count = preGlobalFilteredRows.length;
     const [value, setValue] = useState(globalFilter);
@@ -66,22 +39,27 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
         setGlobalFilter(value || undefined);
     }, 200);
 
-    const classes = useFilterStyles();
+    const classes = useGlobalFilterStyles();
 
     return (
         <>
+        <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
             <InputBase
-                className={classes.input}
-                placeholder="Search table"
-                inputProps={{ "aria-label": "search table" }}
-                onChange={(e) => {
-                    setValue(e.target.value);
-                    onChange(e.target.value);
-                }}
+              placeholder="Filter table..."
+              inputProps={{ "aria-label": "search table" }}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              onChange={(e) => {
+                setValue(e.target.value);
+                onChange(e.target.value);
+            }}
             />
-            <IconButton disabled={true} className={classes.iconButton} aria-label="search">
-                <SearchIcon />
-            </IconButton>
+          </div>
         </>
     );
 }
@@ -172,6 +150,7 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const classes = useFilterStyles();
     const options = useMemo(() => {
         const options = new Set<any>();
         preFilteredRows.forEach((row: any) => {
@@ -193,8 +172,10 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
     return (
         <TextField
             select
+            className={classes.select}
             label={render("Header")}
             value={filterValue || ""}
+            variant="outlined"
             onChange={(e) => {
                 setFilter(e.target.value || undefined);
             }}

@@ -2,6 +2,12 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 export const useTableStyles = makeStyles((theme: Theme) =>
     createStyles({
+        root: {
+            height: 500
+        },
+        fullWidth: {
+            width: "100%"
+        },
         hide: {
             display: "none"
         },
@@ -9,7 +15,8 @@ export const useTableStyles = makeStyles((theme: Theme) =>
             fontFamily: "Roboto"
         },
         tableHeadCell: {
-            fontSize: "0.9rem",
+            fontSize: theme.typography.pxToRem(14),
+            padding: theme.spacing(2),
             fontFamily: "Roboto",
             borderRight: "1px solid rgba(224, 224, 224, 1)",
             "&:last-child": {
@@ -57,7 +64,7 @@ export const useTableStyles = makeStyles((theme: Theme) =>
             },
         }, */
         tableCell: {
-            fontSize: "0.875rem",
+            fontSize: theme.typography.pxToRem(12),
             fontFamily: "Roboto",
             /*padding: 16,
             textAlign: "left",

@@ -4,7 +4,6 @@ import { TableInstance } from "react-table";
 export * from "./TableFilters";
 export * from "./FilterPanel";
 export * from "./FilterChipBar";
-export * from "./FilterToolbar";
 
 export * from "./styles";
 

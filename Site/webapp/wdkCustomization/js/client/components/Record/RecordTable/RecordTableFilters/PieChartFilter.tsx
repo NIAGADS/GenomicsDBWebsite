@@ -14,6 +14,7 @@ import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
 import { toProperCase } from "genomics-client/util/util";
 import { extractDisplayText } from "../RecordTableSort";
+import Box from "@material-ui/core/Box";
 
 //@ts-ignore
 export function PieChartFilter<T extends Record<string, unknown>>({
@@ -31,6 +32,9 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         let plotOptions: Options = {
             tooltip: {
                 pointFormat: "",
+            },
+            chart:{
+                width: 250
             }
         };
 
@@ -45,8 +49,10 @@ export function PieChartFilter<T extends Record<string, unknown>>({
     const series = useMemo(() => {
         let values = new Array<String>(); // assumming pie filter is only for categorical values
         preFilteredRows.forEach((row: any) => {
-            let value = id.endsWith('flag') ? // handle badges, which are in html / if present, value is true
-                row.values[id] ? "Yes" : "No" 
+            let value = id.endsWith("flag") // handle badges, which are in html / if present, value is true
+                ? row.values[id]
+                    ? "Yes"
+                    : "No"
                 : extractDisplayText(row.values[id]);
             //counts[num] = counts[num] ? counts[num] + 1 : 1;
             if (value) {
@@ -88,9 +94,5 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         return series;
     }, [id, preFilteredRows]);
 
-    return (
-        <>
-            <HighchartsPlot data={{ series: series }} properties={{ type: "pie" }} plotOptions={buildPlotOptions()} />
-        </>
-    );
+    return <HighchartsPlot data={{ series: series }} properties={{ type: "pie" }} plotOptions={buildPlotOptions()} />;
 }
