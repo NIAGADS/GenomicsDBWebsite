@@ -5,8 +5,8 @@ grants usage on foreign schema to specified user; login in gus.config file must 
 """
 
 import argparse
-from CBILDataCommon.Util.postgres_dbi import Database
-from CBILDataCommon.Util.utils import warning, die, xstr
+from GenomicsDBData.Util.postgres_dbi import Database
+from GenomicsDBData.Util.utils import warning, die, xstr
 
 
 def grant_usage():

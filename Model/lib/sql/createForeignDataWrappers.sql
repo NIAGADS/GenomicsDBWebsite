@@ -5,6 +5,8 @@ GRANT SELECT ON ALL TABLES IN SCHEMA Announce TO <user>;
 
 */ 
 
+CREATE EXTENSION postgres_fdw;
+
 -- create database links to user database in app database
 -- "<dbuser>", "<dbpassword>", "<port>", and "<dbversion>" must be replaced by the actual values before this is run
 
@@ -20,7 +22,7 @@ CREATE SERVER wdk_userdb
 
 GRANT USAGE ON FOREIGN SERVER wdk_userdb TO COMM_WDK_W;
 
-CREATE USER MAPPING FOR <user>
+CREATE USER MAPPING FOR <user> -- superuser & genomicsdb
         SERVER wdk_userdb
         OPTIONS (user '<>', password '<>');
 
@@ -34,7 +36,7 @@ GRANT USAGE ON SCHEMA UserDatastore TO COMM_WDK_W;
 IMPORT FOREIGN SCHEMA UserDatastore
     FROM SERVER wdk_userdb INTO UserDatastore;
 
-GRANT INSERT, UPDATE, DELETE, SELECT ON ALL FOREIGN TABLES IN SCHEMA UserDatastore TO COMM_WDK_W;
+GRANT INSERT, UPDATE, DELETE, SELECT ON ALL TABLES IN SCHEMA UserDatastore TO COMM_WDK_W;
 
 -- defaults not being set
 ALTER FOREIGN TABLE UserDatastore.Strategies ALTER COLUMN create_time SET DEFAULT CURRENT_TIMESTAMP;
@@ -62,7 +64,7 @@ GRANT USAGE ON SCHEMA UserAccounts TO COMM_WDK_W;
 IMPORT FOREIGN SCHEMA UserAccounts
     FROM SERVER wdk_userdb INTO UserAccounts;
 
-GRANT INSERT, UPDATE, DELETE, SELECT ON ALL FOREIGN TABLES IN SCHEMA UserAccounts TO COMM_WDK_W;
+GRANT INSERT, UPDATE, DELETE, SELECT ON ALL TABLES IN SCHEMA UserAccounts TO COMM_WDK_W;
 
 CREATE SEQUENCE UserAccounts.Accounts_PKSEQ;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA UserAccounts TO COMM_WDK_W;
@@ -77,7 +79,7 @@ GRANT USAGE ON SCHEMA Announce TO COMM_WDK_W;
 IMPORT FOREIGN SCHEMA Announce
     FROM SERVER wdk_userdb INTO Announce;
 
-GRANT INSERT, UPDATE, DELETE, SELECT ON ALL FOREIGN TABLES IN SCHEMA Announce TO COMM_WDK_W;
+GRANT INSERT, UPDATE, DELETE, SELECT ON ALL TABLES IN SCHEMA Announce TO COMM_WDK_W;
 
 CREATE SEQUENCE Announce.Accounts_PKSEQ;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA Announce TO COMM_WDK_W;
