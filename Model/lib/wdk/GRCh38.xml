@@ -38,63 +38,63 @@
     <!-- order is the order in strategies/favorites tables -->
    
     <!-- VARIANTS -->
-    <import file="model/variants/record.xml" /> 
-    <import file="model/variants/queries/attributes.xml" />
-    <import file="model/variants/queries/tables.xml" />
-    <!-- <import file="model/variants/queries/filters.xml" /> -->
-    <import file="model/variants/questions.xml" />
-    <import file="model/variants/queries/questions.xml" />
-    <import file="model/variants/params.xml" /> 
-    <!-- <import file="model/variants/queries/vocab.xml"/> -->
+    <import file="GRCh38/variants/record.xml" /> 
+    <import file="GRCh38/variants/queries/attributes.xml" />
+    <import file="GRCh38/variants/queries/tables.xml" />
+    <!-- <import file="GRCh38/variants/queries/filters.xml" /> -->
+    <import file="GRCh38/variants/questions.xml" />
+    <import file="GRCh38/variants/queries/questions.xml" />
+    <import file="GRCh38/variants/params.xml" /> 
+    <!-- <import file="GRCh38/variants/queries/vocab.xml"/> -->
 
 
     <!-- ONTOLOGIES -->
-    <import file="model/ontologies/record.xml"/>
-    <import file="model/ontologies/queries/attributes.xml" />
-    <import file="model/ontologies/queries/tables.xml" />
+    <import file="GRCh38/ontologies/record.xml"/>
+    <import file="GRCh38/ontologies/queries/attributes.xml" />
+    <import file="GRCh38/ontologies/queries/tables.xml" />
     
     <!-- GENES  -->
-    <import file="model/genes/record.xml" />
-    <import file="model/genes/queries/attributes.xml" />
-    <import file="model/genes/queries/tables.xml" />
-    <!-- <import file="model/genes/queries/filters.xml" /> -->
-    <import file="model/genes/questions.xml" /> 
-    <import file="model/genes/queries/questions.xml" /> 
-    <import file="model/genes/params.xml" /> 
-    <import file="model/genes/queries/vocab.xml"/>
+    <import file="GRCh38/genes/record.xml" />
+    <import file="GRCh38/genes/queries/attributes.xml" />
+    <import file="GRCh38/genes/queries/tables.xml" />
+    <!-- <import file="GRCh38/genes/queries/filters.xml" /> -->
+    <import file="GRCh38/genes/questions.xml" /> 
+    <import file="GRCh38/genes/queries/questions.xml" /> 
+    <import file="GRCh38/genes/params.xml" /> 
+    <import file="GRCh38/genes/queries/vocab.xml"/>
 
     <!-- SPANS -->
-    <!-- <import file="model/spans/record.xml" /> -->
-    <!-- <import file="model/spans/queries/attributes.xml" /> -->
-    <!-- <import file="model/spans/queries/tables.xml" /> -->
-    <!-- <!-\- <import file="model/spans/queries/recordFilters.xml" /> -\-> -->
-    <!-- <import file="model/spans/questions.xml" /> -->
-    <!-- <import file="model/spans/queries/questions.xml" /> -->
-    <!-- <import file="model/spans/params.xml" /> -->
-    <!-- <import file="model/spans/queries/vocab.xml"/> -->
+    <!-- <import file="GRCh38/spans/record.xml" /> -->
+    <!-- <import file="GRCh38/spans/queries/attributes.xml" /> -->
+    <!-- <import file="GRCh38/spans/queries/tables.xml" /> -->
+    <!-- <!-\- <import file="GRCh38/spans/queries/recordFilters.xml" /> -\-> -->
+    <!-- <import file="GRCh38/spans/questions.xml" /> -->
+    <!-- <import file="GRCh38/spans/queries/questions.xml" /> -->
+    <!-- <import file="GRCh38/spans/params.xml" /> -->
+    <!-- <import file="GRCh38/spans/queries/vocab.xml"/> -->
 
     <!-- RESOURCE/DATASETS -->
-    <import file="model/datasets/record.xml" /> 
-    <import file="model/datasets/queries/datasetAttributes.xml" />
-    <import file="model/datasets/queries/datasetTables.xml" />
+    <import file="GRCh38/datasets/record.xml" /> 
+    <import file="GRCh38/datasets/queries/datasetAttributes.xml" />
+    <import file="GRCh38/datasets/queries/datasetTables.xml" />
 
-    <import file="model/tracks/record.xml" /> 
-    <import file="model/tracks/queries/gwas_summary_attributes.xml" /> 
-    <import file="model/tracks/queries/gwas_summary_tables.xml" /> 
-    <!-- <import file="model/datasets/queries/inferno_attributes.xml" />  -->
-    <!-- <import file="model/resources/queries/recordFilters.xml" /> -->
-    <!-- <import file="model/datasets/questions.xml" />  -->
-    <!-- <import file="model/datasets/queries/questions.xml" />  -->
-    <!-- <import file="model/datasets/params.xml" /> -->
-    <!-- <import file="model/datasets/queries/vocab.xml"/> -->
+    <import file="GRCh38/tracks/record.xml" /> 
+    <import file="GRCh38/tracks/queries/gwas_summary_attributes.xml" /> 
+    <import file="GRCh38/tracks/queries/gwas_summary_tables.xml" /> 
+    <!-- <import file="GRCh38/datasets/queries/inferno_attributes.xml" />  -->
+    <!-- <import file="GRCh38/resources/queries/recordFilters.xml" /> -->
+    <!-- <import file="GRCh38/datasets/questions.xml" />  -->
+    <!-- <import file="GRCh38/datasets/queries/questions.xml" />  -->
+    <!-- <import file="GRCh38/datasets/params.xml" /> -->
+    <!-- <import file="GRCh38/datasets/queries/vocab.xml"/> -->
     
     <!-- SHARED/COMMON -->
-    <import file="model/shared/params.xml"/> 
-    <import file="model/shared/queries/vocab.xml" />
+    <import file="GRCh38/shared/params.xml"/> 
+    <import file="GRCh38/shared/queries/vocab.xml" />
 
     <!-- XML Records -->
-    <!-- <import file="model/xml/records.xml" /> -->
-    <!-- <import file="model/xml/questions.xml" /> -->
+    <!-- <import file="GRCh38/xml/records.xml" /> -->
+    <!-- <import file="GRCh38/xml/questions.xml" /> -->
 
     <!-- SPAN LOGIC -->
     <!-- <import file="CBIL/span_logic/questions.xml" /> -->
@@ -103,21 +103,21 @@
 
 
      <!-- Step Analysis Plugins -->
-    <import file="model/step_analysis/stepAnalysisPlugins.xml"/> 
-    <import file="model/step_analysis/stepAnalysisParams.xml"/> 
-    <import file="model/step_analysis/stepAnalysisVocabQueries.xml"/> 
+    <import file="GRCh38/step_analysis/stepAnalysisPlugins.xml"/> 
+    <import file="GRCh38/step_analysis/stepAnalysisParams.xml"/> 
+    <import file="GRCh38/step_analysis/stepAnalysisVocabQueries.xml"/> 
 
     <stepAnalysisPlugins>
       <executionConfig fileStoreDirectory="@STEP_ANALYSIS_JOB_DIR@"/>
     </stepAnalysisPlugins>
 
     <!-- import common pieces -->
-    <import file="model/categories.xml"/>
-    <import file="model/shared/parameterGroups.xml"/>
+    <import file="GRCh38/categories.xml"/>
+    <import file="GRCh38/shared/parameterGroups.xml"/>
   
     <!-- UTILITIES for heartbeat/etc -->
-    <!-- <import file="model/utility/record.xml"/>  -->
-    <!-- <import file="model/utility/queries/attributes.xml"/> -->
+    <!-- <import file="GRCh38/utility/record.xml"/>  -->
+    <!-- <import file="GRCh38/utility/queries/attributes.xml"/> -->
 
 
 </wdkModel>
