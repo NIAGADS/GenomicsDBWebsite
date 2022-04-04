@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="GWASDatasetIds" queryType="id" isCacheable="true">
+
+    <!-- =============================================================== -->
+    <!-- By Identifier -->
+    <!-- =============================================================== -->
+    <sqlQuery name="Browse">
+      <paramRef ref="datasetParams.gwas_summary_tracks"/>
+      
+      <column name="track"/>
+      <column name="project_id"/>
+      <sql>
+	<![CDATA[
+		 SELECT track, '@PROJECT_ID'::text AS project_id FROM NIAGADS.TrackAttributes 
+		 WHERE track IN ($$gwas_summary_tracks$$)
+	]]>
+      </sql>
+    </sqlQuery>
+
+     <sqlQuery name="Neuropathology">
+       <paramRef ref="datasetParams.phenotype"/>
+      
+      <column name="track"/>
+      <column name="project_id"/>
+      <sql>
+	<![CDATA[
+		 SELECT DISTINCT track, '@PROJECT_ID'::text AS project_id 
+		 FROM NIAGADS.NeuropathologyTrackCategories
+		 WHERE category_abbrev = $$phenotype$$
+	]]>
+      </sql>
+    </sqlQuery>
+
+
+  </querySet>
+</wdkModel>

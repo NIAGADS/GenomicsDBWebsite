@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+	<paramSet name="variantParams">
+
+		<!-- =============================================================== -->
+		<!-- ID Search Params -->
+		<!-- =============================================================== -->
+
+	
+		<stringParam name="generic_variant_identifier" 
+			prompt="Identifier" number="false">
+			<help>Enter a variant identifier</help>
+		</stringParam>
+
+		<datasetParam name="ds_variant_identifiers" prompt="Variant ID List"
+			recordClassRef="VariantRecordClasses.VariantRecordClass" >
+			<help>	
+		 		Enter a list of one or more comma or new-line separated dbSNP refSNP (rs) ids or positional-based identifiers (chr:pos:ref:alt), or select a file to upload.
+			</help>
+			<suggest default=""/>
+		</datasetParam>
+
+		
+		<!-- =============================================================== -->
+		<!-- Spans -->
+		<!-- =============================================================== -->
+
+		<stringParam name="feature_identifier" prompt="Identifier" number="false">
+			<help>Enter a gene identifier (NCBI EntrezGene or ENSEMBL), symbol or RefSeq transcript ID.</help>
+			<suggest default="APOE"/>
+		</stringParam>
+
+		<enumParam name="flanking" prompt="Flanking" multiPick="false">
+			<enumList>
+				<enumValue default="true">
+					<display>0kb</display>
+					<term>0kb</term>
+					<internal>0</internal>
+				</enumValue>
+				<enumValue>
+					<display>1kb</display>
+					<term>1kb</term>
+					<internal>1000</internal>
+				</enumValue>
+				<enumValue>
+					<display>10kb</display>
+					<term>10kb</term>
+					<internal>10000</internal>
+				</enumValue>
+
+			</enumList>
+			<help>
+		  		Expand search to include a flanking region around the gene or transcript.
+			</help>
+		</enumParam>
+
+		<!-- =============================================================== -->
+		<!-- Transform/Filter Params -->
+		<!-- =============================================================== -->
+
+		<answerParam name="variant_answer" readonly="true" visible="false">
+			<recordClass ref="VariantRecordClasses.VariantRecordClass" />
+		</answerParam>
+
+		<enumParam name="variant_source_enum" 
+			multiPick="false">
+			<enumList>
+				<enumValue>
+					<term>dbSNP</term>
+					<internal>dbSNP</internal>
+				</enumValue>
+				<enumValue>
+					<term>ADSP</term>
+					<internal>ADSP</internal>
+				</enumValue>
+				<enumValue>
+					<term>ADSP_NOVEL</term>
+					<internal>ADSP_NOVEL</internal>
+				</enumValue>
+				<enumValue>
+					<term>ADSP_WES</term>
+					<internal>ADSP_WES</internal>
+				</enumValue>
+				<enumValue>
+					<term>ADSP_WGS</term>
+					<internal>ADSP_WGS</internal>
+				</enumValue>
+				<enumValue>
+					<term>NIAGADS</term>
+					<internal>NIAGADS</internal>
+				</enumValue>
+			</enumList>
+		</enumParam>
+
+		<enumParam name="impact_enum" 
+			multiPick="false">
+			<enumList>
+				<enumValue>
+					<display>HIGH</display>
+					<term>HIGH</term>
+					<internal>HIGH</internal>
+				</enumValue>
+				<enumValue>
+					<term>LOW</term>
+					<internal>LOW</internal>
+				</enumValue>
+				<enumValue>
+					<term>MODERATE</term>
+					<internal>MODERATE</internal>
+				</enumValue>
+				<enumValue>
+					<term>LOW_TO_HIGH</term>
+					<internal>LOW|MODERATE|HIGH</internal>
+				</enumValue>
+				<enumValue>
+					<term>MODERATE_TO_HIGH</term>
+					<internal>MODERATE|HIGH</internal>
+				</enumValue>
+			</enumList>
+		</enumParam>
+
+	</paramSet>
+</wdkModel>

@@ -1,0 +1,99 @@
+<wdkModel>
+  <stepAnalysisPlugins>
+
+    <executionConfig threadPoolSize="25" 
+      fileStoreDirectory="@STEP_ANALYSIS_JOB_DIR@"/>
+
+
+    <stepAnalysisPlugin name="custom-go-enrichment" 
+      displayName="Gene Ontology Enrichment" 
+      customThumbnail="images/go-analysis-logo.png" 
+      releaseVersion="22" 
+      formViewName="goEnrichmentForm" 
+      analysisViewName="goEnrichmentResult" 
+      analyzerClass="org.niagads.genomics.model.stepanalysis.enrichment.GoEnrichmentPlugin">
+
+      <paramRef ref="stepAnalysisParams.answerIdSql"/>
+      <paramRef ref="stepAnalysisParams.organism"/>
+      <paramRef ref="enrichmentAnalysisParams.ontology"/>
+      <paramRef ref="enrichmentAnalysisParams.pvalue_threshold"/>
+      <shortDescription>
+        <![CDATA[
+          Find Gene Ontology terms that are enriched in your gene result.
+        ]]>
+      </shortDescription>
+      <description>
+        <![CDATA[
+		 <p>The Gene Ontology (GO) is a public resource that develops organism 
+		 independent ontologies (structured controlled vocabularies) that describe 
+		 gene function.</p>
+<p>GO terms are classified according to three aspects:</p>
+
+<ol>
+<li><strong>Molecular Function</strong>: molecular activities of gene products</li>
+<li><strong>Cellular Component</strong>: where gene products are active</li>
+<li><strong>Biological Process</strong>: processes (incl. pathways) dependent on the activity of multiple gene products</li>
+</ol>
+<p>This tool identifies GO terms that are over-represented (enriched) in the annotations of the genes in your result, providing
+		  insight into shared gene function.</p>
+        ]]>
+      </description>
+      <property name="goTermPageUrl"><![CDATA[%%goTermPageUrl%%]]></property>
+      <property name="revigoBaseUrl"><![CDATA[%%revigoBaseUrl%%]]></property>
+    </stepAnalysisPlugin>
+
+    <!-- <stepAnalysisPlugin -->
+    <!-- name="pathway-enrichment" displayName="Metabolic Pathway Enrichment" -->
+    <!-- customThumbnail="images/pathway-analysis-logo2.png" -->
+    <!-- releaseVersion="22" -->
+    <!-- formViewName="pathwayEnrichmentForm" -->
+    <!-- analysisViewName="pathwayEnrichmentResult" -->
+    <!-- analyzerClass="org.apidb.apicommon.model.stepanalysis.PathwaysEnrichmentPlugin"> -->
+    <!--   <shortDescription> -->
+    <!--     <![CDATA[ -->
+    <!--       Find Metabolic Pathways that are enriched in your Genes result. -->
+    <!--     ]]> -->
+    <!--   </shortDescription> -->
+    <!--   <description/> -->
+    <!--   <property name="pathwayPageUrl"><![CDATA[@WEBAPP_BASE_URL@/record/pathway/]]></property> -->
+    <!-- </stepAnalysisPlugin> -->
+
+    <!-- <stepAnalysisPlugin -->
+    <!-- name="word-enrichment" displayName="Word Enrichment" -->
+    <!-- customThumbnail="wdkCustomization/images/word-analysis-logo.png" -->
+    <!-- releaseVersion="22" -->
+    <!-- formViewName="wordEnrichmentForm" -->
+    <!-- analysisViewName="wordEnrichmentResult" -->
+    <!-- analyzerClass="org.apidb.apicommon.model.stepanalysis.WordEnrichmentPlugin"> -->
+    <!--   <shortDescription> -->
+    <!--     <![CDATA[ -->
+    <!--       Find words (from the product description)  that are enriched in your Genes result. -->
+    <!--     ]]> -->
+    <!--   </shortDescription> -->
+    <!--   <description/> -->
+    <!--  </stepAnalysisPlugin> -->
+
+
+    <!-- <stepAnalysisPlugin -->
+    <!-- name="alpha_diversity" displayName="Alpha Diversity" -->
+    <!-- releaseVersion="1" -->
+    <!-- analysisViewName="eupathExternalAnalysisResult" -->
+    <!-- analyzerClass="org.eupathdb.common.model.analysis.EuPathExternalAnalyzer"> -->
+    <!--   <shortDescription> -->
+    <!--     <![CDATA[ -->
+    <!--       Shiny application to display alpha diversity plots for these samples -->
+    <!--     ]]> -->
+    <!--   </shortDescription> -->
+    <!--   <description/> -->
+    <!--   <property name="externalAppUrl"><![CDATA[/shiny/alpha_diversity]]></property> -->
+    <!--   <property name="tablesToExtract">Characteristics,TaxaRelativeAbundance</property> -->
+    <!--   <property name="addHeader">true</property> -->
+    <!--   <property name="iframeWidthPx">1000</property> -->
+    <!--   <property name="iframeLengthPx">800</property> -->
+    <!-- </stepAnalysisPlugin> -->
+
+
+
+
+  </stepAnalysisPlugins>
+</wdkModel>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+  <paramSet name="sharedParams">
+
+    <!-- =============================================================== -->
+    <!-- Identifiers -->
+    <!-- =============================================================== -->
+
+    <stringParam name="checkbox_include_synonyms" prompt="Include Synonyms?" number="false">
+      <help><![CDATA[Check to match against known synonyms as well as official gene symbols.]]></help>
+      <suggest allowEmpty="true" emptyValue="false" default="true"/>
+    </stringParam>
+
+    <!-- =============================================================== -->
+    <!-- Spans -->
+    <!-- =============================================================== -->
+
+    <stringParam name="span" prompt="Region" number="false">
+      <help>
+        <![CDATA[
+		      Enter a chromsome (e.g., 19) or a genomic region in the format chrN:start-end (e.g., 19:45309039-45512650)
+	      ]]>
+      </help>
+      <suggest default="19:35309039-65512650" allowEmpty="false" />
+    </stringParam>
+
+    <!-- =============================================================== -->
+    <!-- GWAS Results Params -->
+    <!-- =============================================================== -->
+
+    <stringParam name="pvalue" prompt="p-value" number="false">
+      <help>
+        <![CDATA[
+              <p>Set the adjusted p-value threshold for GWAS significant.
+              The search will return all genes supported by an p-value &le; the specified threshold.</p>
+              <br/>
+              <p>p-values may be specified in decimal (e.g., 0.000003) or scientific (e.g., 3e-6 or 3^-6 or 3 x 10^-6) notation.</p>
+              <p>For exome array studies a p-value threshold of 1e-3 is recommended.</p>
+          ]]>
+        </help>
+        <suggest default="5e-8" allowEmpty="false"/>
+    </stringParam>
+
+    <flatVocabParam name="gwas_accession" prompt="Accession" 
+      queryRef="SharedVocabQueries.GWASAccession"   
+      multiPick="false">
+      <suggest selectMode="none" allowEmpty="false"/>
+      <help>Select a NIAGADs accession.  More information about each searchable NIAGADs resource is listed below (data sources).</help>
+    </flatVocabParam>
+
+    <flatVocabParam name="gwas_dataset" prompt="Dataset" 
+      queryRef="SharedVocabQueries.GWASDataset"   
+      multiPick="false" 
+      dependedParamRef="sharedParams.gwas_accession">
+      <suggest selectMode="none" />
+      <help>Individual summary statistic datasets associated with the selected accession.  
+            For more information on individual datasets follow the link for the associated accession below (data sources).</help>
+    </flatVocabParam>
+
+  </paramSet>
+</wdkModel>
