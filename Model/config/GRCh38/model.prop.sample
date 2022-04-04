@@ -1,50 +1,64 @@
 # Properties defined here can be referenced in model XML files.
 # For example, this line: NAME=value
 # will cause the WDK to replace  all occurrences of "@NAME@" in the model XML with "value".
-# Properties can also be accessed via jsp pages through the wdkModel bean as follows:
-# ${applicationScope.wdkModel.properties['NAME']}
+
+# NOTE:
+# ===========================================================================================================
+# All External URLS (including references to other NIAGADS resources) must be defined in this 
+# file and assigned a name ending in "_URL".  After updating/adding new _URL macros, please 
+# run `python $PROJECT_HOME/GenomicsDBWebsite/Model/bin/generateExternalUrlConstantsJson` to regenerate 
+# the external url constant file for the front end, setting the --modelPropFile option to this file and the 
+# --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_externalUrls.ts.
+# The updated model.prop.sample & externalUrls.ts can then be committed to the repository
+
+SITE_ADMIN_EMAIL=
+STEP_ANALYSIS_JOB_DIR=/www/common/temp
+
+#----------------------------------------------------------
+# WDK SETTINGS & INFO
+#----------------------------------------------------------
+
+DONT_EMAIL_NEW_USER=true
+WDK_VERSION=API_BUILD_50
+
+#----------------------------------------------------------
+# Production v Dev / Beta
+#----------------------------------------------------------
+
+# Base URL: uncomment https://dev.niagads.org for development
+# only one should be uncommented
+NIAGADS_BASE_URL=https://www.niagads.org 
+# NIAGADS_BASE_URL=https://beta.niagads.org
+WEBAPP=genomics
+
+FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
 
 #----------------------------------------------------------
 # Project Identifiers & Configuration
 #----------------------------------------------------------
 
-PROJECT_ID=GRCh37
-#PROJECT_ID=GRCh38
-DONT_EMAIL_NEW_USER=true
-WDK_VERSION=API_BLD_42
-JBROWSE_VERSION=1.11.6
+#PROJECT_ID=GRCh37
+#GENOME_BUILD=GRCh37.p13
+#GENCODE_VERSION=v19
+#dbSNP_VERSION=151
+#ALT_BUILD_LINK=
 
-SITE_ADMIN_EMAIL=
-
-STEP_ANALYSIS_JOB_DIR=/www/common/temp
-
-# uncomment to display banner at top of every page warning users that site is under active development
-IS_DEV_SITE=true
-IGNORE_LOGIN_RESTRICTIONS=true
-
-# Base URL: uncomment https://dev.niagads.org for development
-# only one should be uncommented
-# NIAGADS_BASE_URL=https://www.niagads.org 
-NIAGADS_BASE_URL=https://dev.niagads.org
-
-# bypass reporter selection since we only have one type; remove to reinstate normal WDK behavior
-# also will have to uncomment drop-down select in reporter.tag (site)
-DEFAULT_REPORTER=tabular
+PROJECT_ID=GRCh38
+GENOME_BUILD=GRCh38.p8
+GENCODE_VERSION=v36
+dbSNP_VERSION=155
+ALT_BUILD_LINK=
 
 #----------------------------------------------------------
 # Constants
 #----------------------------------------------------------
 
-DEFAULT_JBROWSE_TRACKS=ENSEMBL_GENE,ADSP_WES,ADSP_WGS,dbSNP_COMMON
-DEFAULT_JBROWSE_LOCATION=chr19:45342451..45430750
+FLANK_50KB=50000
+FLANK_100KB=100000
+FLANK_200KB=200000
+FLANK_LOCUSZOOM=20000
 
-# 1Mbp
-# REGION_FLANKING=1,000,000
-# 1kbp
-# REGION_FLANKING=1000
-# 100kbp
-REGION_FLANKING=100000
-
+LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 
 #----------------------------------------------------------
 # External Database Release Ids (as referenced in appDb)
@@ -52,105 +66,86 @@ REGION_FLANKING=100000
 
 
 #----------------------------------------------------------
-# Internal Identifiers (as referenced in appDb)
+# DATA INCLUSION/EXCLUSION LISTS
 #----------------------------------------------------------
 
-NHGRI_GWAS_CATALOG=27
-
-POPULATION_ONTOLOGY_TERM_ID=6589
-
-FREQUENCY_RESULT_SUBTYPE_ID=981034
-
-CATO_SOURCE_ID=ADSP_WES_R3_SNV_CATO
-
-EXOME_ARRAY_ACCESSION=NG00040
-
-AD_ACCESSION=NG00048|NG00036|NG00027|NG00039|NG00053|NG00056
+ADSP_CC_ACCESSION=NG00065
+GWAS_CATALOG_ACCESSIONS=NHGRI_GWAS_CATALOG,ADVP
+INFERNO_PUBMED_ID=30113658
+GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
 
 #----------------------------------------------------------
 # Internal Urls
 #----------------------------------------------------------
 
-DOCUMENTATION_URL=showXmlDataContent.do?name=XmlQuestions.Documentation
-GENE_RECORD=showRecord.do?name=GeneRecordClasses.GeneRecordClass&primary_key=
-RESOURCE_RECORD=showRecord.do?name=ResourceRecordClasses.Resource&primary_key=
-VARIANT_RECORD=showRecord.do?name=VariantRecordClasses.VariantRecordClass&primary_key=
-SPAN_RECORD=showRecord.do?name=DynSpanRecordClasses.DynSpanRecordClass&primary_key=
-GENE_COLOCATED_VARIANT_SEARCH=processQuestion.do?questionFullName=VariantQuestions.VariantsByGeneOrTranscript&checkbox_include_synonyms=false&flanking=0kb&feature_identifier=
-GENE_IN_REGION_SEARCH=processQuestion.do?questionFullName=GeneQuestions.GenesByRegion&span=
-GWAS_SEARCH=processQuestion.do?questionFullName=VariantQuestions.VariantsByNiagadsDataset
-REGION_COLOCATED_VARIANT_SEARCH=processQuestion.do?questionFullName=VariantQuestions.VariantsByRegion&span=
+DOCUMENTATION_URL=TBA
 
 #----------------------------------------------------------
 # External URLS
 #----------------------------------------------------------
 
+IDEOGRAM_CYTOBAND_URL=https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/
+
+ADSP_URL=https://www.niagads.org/adsp/content/about
+INFERNO_URL=http://inferno.lisanwanglab.org/
+FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB
+
+ENSEMBL_URL=http://www.ensembl.org/
+ENSEMBL_URL_GRCh37=http://grch37.ensembl.org
+
+GENE_ONTOLOGY_URL=http://www.geneontology.org/
+NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
+
+DBSNP_URL=http://www.ncbi.nlm.nih.gov/snp/
+
+KEGG_BASE_URL=http://www.kegg.jp/
+SNP_EFF_URL=http://snpeff.sourceforge.net/
+
+EXAC_URL=http://exac.broadinstitute.org/
+HUGO_URL=https://www.genenames.org
+
 NCBI_ENTREZ_GENE_URL=http://www.ncbi.nlm.nih.gov/gene/
 NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
 
-NCBI_SEQUENCE_ACCESSION_URL=http://www.ncbi.nlm.nih.gov/nuccore/
-
-NHGRI_GWAS_CATALOG_URL=https://www.ebi.ac.uk/gwas/
-
-ENSEMBL_URL=http://www.ensembl.org/
-ENSEMBL_GRCH37_URL=http://grch37.ensembl.org
-ENSEMBL_GENE_URL=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
-ENSEMBL_TRANSCRIPT_URL=http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
-ENSEMBL_VARIANT_URL=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
+ENSEMBL_GENE_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
+ENSEMBL_TRANSCRIPT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
+ENSEMBL_VARIANT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
+ENSEMBL_REGULATORY_FEATURE_URL_GRCh37=https://grch37.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
+ENSEMBL_MOTIF_FEATURE_URL_GRCh37=https://grch37.ensembl.org/motifWidget.htm?id=
 
 VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
 OMIM_URL=http://omim.org/entry/
-IMGT_URL=http://www.imgt.org/genedb/GENElect?query=2+
-IMGT_SPECIES=&species=Homo+sapiens
-
-HPRD_URL=http://www.hprd.org/protein/
-MIRBASE_URL=http://www.mirbase.org/cgi-bin/mirna_entry.pl?acc=
 
 STRINGDB_URL=http://string-db.org/newstring_cgi/show_network_section.pl?all_channels_on=1&interactive=yes&network_flavor=evidence&targetmode=proteins&species=9606&identifier=
 
-HUGO_URL=https://www.genenames.org/tools/search/#!/genes?query=
-HUGO_HGNC_ID_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
-
+PUBMED_URL=http://www.ncbi.nlm.nih.gov/pubmed/
 PUBMED_GENE_SEARCH_URL=http://www.ncbi.nlm.nih.gov/pubmed?LinkName=gene_pubmed&from_uid=
 
-PUBMED_URL=http://www.ncbi.nlm.nih.gov/pubmed/
+UNIPROT_URL=https://www.uniprot.org/uniprot/
 
 DOI_URL=https://www.doi.org/
 
-DBSNP_URL=http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?searchType=adhoc_search&type=rs&rs=
-
-GENE_ONTOLOGY_URL=http://www.geneontology.org/
-
 AMIGO_URL=http://amigo.geneontology.org/amigo/term/
 
-DBSNP_BASE_URL=http://www.ncbi.nlm.nih.gov/SNP/
-KEGG_BASE_URL=http://www.kegg.jp/
 KEGG_PATHWAY_IMG_URL=http://www.kegg.jp/kegg-bin/show_pathway?
 KEGG_PATHWAY_LINK_URL=http://www.kegg.jp/dbget-bin/www_bget?pathway+
 
 REACTOME_PATHWAY_URL=https://reactome.org/content/detail/
 
-SNP_EFF_URL=http://snpeff.sourceforge.net/
-SNP_EFF_VERSION=4.2
-
 GTEX_GENE_URL=http://www.gtexportal.org/home/gene/
 GTEX_VARIANT_URL=http://www.gtexportal.org/home/snp/
 
-EXAC_URL=http://exac.broadinstitute.org/
 EXAC_VARIANT_URL=http://exac.broadinstitute.org/variant/
+EXAC_GENE_URL=http://exac.broadinstitute.org/gene/
+
 HUMAN_PROTEIN_ATLAS_URL=http://www.proteinatlas.org/
 
 EMBL_EXPRESSION_ATLAS_URL=https://www.ebi.ac.uk/gxa/search?exactMatch=true&_exactMatch=on&organism=Homo+sapiens&geneQuery=
 
-UCSC_BROWSER_URL=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=
+UCSC_BROWSER_URL_GRCh37=https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=
 
-JASPAR_MOTIF_URL=http://jaspar.genereg.net/cgi-bin/jaspar_db.pl?collection=CORE&rm=present&ID=
-JASPAR_URL=http://jaspar.genereg.net
+HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
 
-#----------------------------------------------------------
-# DATA INCLUSION/EXCLUSION LISTS
-#----------------------------------------------------------
+EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
 
-SNP_DATASET_TYPES=245206
-SPAN_DATASET_TYPES=86312,86311
-
+ALPHAFOLDDB_PROTEIN_URL=https://alphafold.ebi.ac.uk/entry/
