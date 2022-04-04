@@ -6,8 +6,8 @@ creates foreign datawrapper server and user mappings
 
 import argparse
 from psycopg2.errors import lookup as elookup
-from CBILDataCommon.Util.postgres_dbi import Database
-from CBILDataCommon.Util.utils import warning, die, xstr
+from GenomicsDBData.Util.postgres_dbi import Database
+from GenomicsDBData.Util.utils import warning, die, xstr
 
 
 def alter_server():

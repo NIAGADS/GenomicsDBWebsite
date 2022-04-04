@@ -141,7 +141,7 @@
     </replace>
 
     <!-- <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js; assuming GRCh37 and 38 builds have same model.prop"/>
-    <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstants"/>
+    <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstantsJson"/>
     <exec executable="${extract-urls}">
       <arg line="-\-modelPropFile ${projectsDir}/${project}/Model/config/GRCh37/model.prop.sample"/>
       <arg line="-\-outputFile ${webappTargetDir}/wdkCustomization/js/client/data/externalUrls.js"/>
