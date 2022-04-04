@@ -1,14 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-//the below would expose lz (as lz.default) in the window for tooltip, but it seems latest lz has drooped the functionality altogether?
-//import * as lz from "expose-loader?lz!locuszoom";
+import { useSelector } from "react-redux";
+
 import * as lz from "locuszoom";
 import "locuszoom/dist/locuszoom.css";
-import { connect } from "react-redux";
 import registry from "locuszoom/esm/registry/adapters";
+
 import { cloneDeep, get, noop } from "lodash";
 import { Grid } from "@material-ui/core";
+
 import { selectAll } from "d3";
+
 import { useDynamicWidth } from "genomics-client/hooks";
+import { RootState } from "wdk-client/Core/State/Types";
+import { Loading } from "wdk-client/Components";
+
+const DEFAULT_FLANK = 100000;
 
 const LZ = lz.default as any;
 
@@ -17,51 +23,77 @@ const AssociationLZ = registry.get("AssociationLZ"),
     GeneLZ = registry.get("GeneLZ"),
     RecombLZ = registry.get("RecombLZ");
 
-interface LzProps {
+interface LocusZoomState {
+    chromosome: string;
+    end: number;
+    ldrefvar?: string;
+    start: number;
+}
+
+interface LocusZoomProps {
     chromosome?: string;
     end?: number;
-    endpoint: string;
     maxWidthAsRatioToBody?: number;
     population: string;
-    refVariant: string;
+    variant: string;
     selectClass: string;
     start?: number;
+    span?: string;
+    flank?: number;
     track: string;
 }
 
-const LzPlot: React.FC<LzProps> = ({
+export const LocusZoomPlot: React.FC<LocusZoomProps> = ({
     chromosome,
     end,
-    endpoint,
     maxWidthAsRatioToBody,
     population,
-    refVariant,
+    variant,
     selectClass,
     start,
     track,
+    span,
+    flank,
 }) => {
-    const [loading, setLoading] = useState(false),
-        interval: NodeJS.Timeout = useRef().current,
-        layoutRendered = useRef(false);
+    const [loading, setLoading] = useState(false);
+    const interval: NodeJS.Timeout = useRef().current;
+    const layoutRendered = useRef(false);
 
     const width = useDynamicWidth() * (maxWidthAsRatioToBody || 0.5);
+    const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
 
     useEffect(() => {
         if (layoutRendered.current) {
-            initPlot();
+            initializeLocusZoom();
             return () => clearInterval(interval);
         }
         return noop;
-    }, [refVariant, population, track, width]);
+    }, [variant, population, track, width, span, chromosome, start, end]);
 
     useLayoutEffect(() => {
-        initPlot();
+        initializeLocusZoom();
         layoutRendered.current = true;
     }, []);
 
-    const initPlot = () => {
-        const state = buildPlotState(chromosome, start, end, refVariant),
-            plot = buildPlot(selectClass, state, population, track, endpoint, width);
+    function initializeLocusZoomState() {
+        if (chromosome && start && end) {
+            
+            return { chromosome: chromosome.includes("chr") ? chromosome : "chr" + chromosome , start: start, end: end, ldrefvar: variant };
+        }
+
+        return initializeLocusZoomStateFromSpan(span ? span : variant, flank, variant);
+    }
+
+    const initializeLocusZoomStateFromSpan = (span: string, flank: number, variant: string) => ({
+        chromosome: "chr" + span.split(":")[0],
+        start: parseInt(span.split(":")[1]) - (flank ? flank : DEFAULT_FLANK),
+        end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
+        ldrefvar: variant,
+    });
+
+    const initializeLocusZoom = () => {
+        const lzState = initializeLocusZoomState();
+        const plot = buildPlot(selectClass, lzState, population, track, webAppUrl + "/locuszoom", width);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -85,47 +117,15 @@ const LzPlot: React.FC<LzProps> = ({
     });
     return (
         <Grid container alignItems="center" direction="column">
-            <LoadingIndicator loading={loading} />
+            {loading && <Loading />}
             <div id={selectClass} />
         </Grid>
     );
 };
 
-interface LzState {
-    chromosome: string;
-    end: number;
-    ldrefvar?: string;
-    start: number;
-}
-
-export default connect((state: any) => ({
-    endpoint: state.globalData.siteConfig.endpoint,
-}))(LzPlot);
-
-const buildPlotState = (chromosome: string, start: number, end: number, refVariant: string) => ({
-    //seems like we might not need chromosome if it will always be derivable from refVar
-    chromosome: chromosome ? chromosome : "chr" + refVariant.split(":")[0],
-    ldrefvar: refVariant,
-    start: start ? start : +refVariant.split(":")[1] - 100000,
-    end: end ? end : +refVariant.split(":")[1] + 100000,
-});
-
-interface LoadingIndicator {
-    loading: boolean;
-}
-
-const LoadingIndicator: React.FC<LoadingIndicator> = (props) => {
-    const { loading } = props;
-    return loading ? (
-        <div className="alert alert-warning" style={{ position: "absolute" }}>
-            Loading!
-        </div>
-    ) : null;
-};
-
 const buildPlot = (
     selector: string,
-    state: LzState,
+    lzState: LocusZoomState,
     population: string,
     track: string,
     endpoint: string,
@@ -137,10 +137,6 @@ const buildPlot = (
             super(...args);
         }
     }
-
-    AssocSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/gwas?track=${track}&chromosome=${state.chromosome}&start=${state.start}&end=${state.end}`;
-    };
 
     class LDLZSource extends LDLZ2 {
         constructor(...args: any[]) {
@@ -154,21 +150,25 @@ const buildPlot = (
         }
     }
 
-    RecombSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/recomb?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(state.end)}`;
+    RecombSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
+        return `${endpoint}/recomb?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(
+            state.end
+        )}`;
     };
 
-    AssocSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/gwas?track=${track}&chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(state.end)}`;
+    AssocSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
+        return `${endpoint}/gwas?track=${track}&chromosome=${state.chromosome}&start=${Math.trunc(
+            state.start
+        )}&end=${Math.trunc(state.end)}`;
     };
 
-    //note that other sources have to be transformed into array of objects, but not ld source....
+    //note that other sources have to be transformed into array of objects, but not LD source....
     LDLZSource.prototype.normalizeResponse = function (data: { value: number[]; id2: string[] }) {
         const position = data.id2.map((datum) => +/\:(\d+):/.exec(datum)[1]),
-            chr = state.chromosome.replace("chr", ""),
+            chr = lzState.chromosome.replace("chr", ""),
             chromosome = data.id2.map(() => chr);
         return {
-            variant1: data.id2.map(() => state.ldrefvar),
+            variant1: data.id2.map(() => lzState.ldrefvar),
             variant2: data.id2,
             chromosome1: chromosome,
             chromosome2: chromosome,
@@ -178,7 +178,7 @@ const buildPlot = (
         };
     };
 
-    LDLZSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
+    LDLZSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
         const refVar = this.getRefvar(state, chain, fields);
         chain.header.ldrefvar = refVar;
         return `${endpoint}/locuszoom/linkage?population=${population}&variant=${refVar}`;
@@ -190,11 +190,13 @@ const buildPlot = (
         }
     }
 
-    GeneSource.prototype.getURL = function (state: LzState, chain: any, fields: string[]) {
-        return `${endpoint}/locuszoom/gene?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(state.end)}`;
+    GeneSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
+        return `${endpoint}/gene?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(
+            state.end
+        )}`;
     };
 
-    const layout = _buildLayout(state, width);
+    const layout = _buildLayout(lzState, width);
 
     const dataSources = new LZ.DataSources();
     dataSources.add("assoc", new AssocSource({ url: "asdf" }));
@@ -205,7 +207,24 @@ const buildPlot = (
     return LZ.populate(`#${selector}`, dataSources, layout);
 };
 
-const _buildLayout = (state: LzState, containerWidth: number) => {
+const _buildLayout = (state: LocusZoomState, containerWidth: number) => {
+    return LZ.Layouts.add('plot', 'standard_association', {
+        state: {},
+        width: 800,
+        responsive_resize: true,
+        min_region_scale: 20000,
+        max_region_scale: 1000000,
+        toolbar: LZ.Layouts.get('toolbar_widgets', 'standard_plot'),
+        panels: [
+            LZ.Layouts.get('panel', 'association', { height: 225 }),
+            LZ.Layouts.get('panel', 'genes', { height: 225 })
+        ]
+    });
+};
+
+/*
+
+const _buildLayout = (state: LocusZoomState, containerWidth: number) => {
     return LZ.Layouts.merge(
         { state },
         {
@@ -261,7 +280,7 @@ const _buildLayout = (state: LzState, containerWidth: number) => {
         }
     );
 };
-
+*/
 const standardPanelToolbar = {
     widgets: [
         {

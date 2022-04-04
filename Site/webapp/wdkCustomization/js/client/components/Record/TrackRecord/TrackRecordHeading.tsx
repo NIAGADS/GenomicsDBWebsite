@@ -1,30 +1,52 @@
-import React, { useCallback, useState, useRef } from "react";
-import { connect } from "react-redux";
-import { RecordAttributeItem } from "../RecordHeading";
-import { RecordHeading } from "../Types";
-import { resolveJsonInput } from "genomics-client/util/jsonParse";
-import { convertHtmlEntites } from "genomics-client/util/util";
-
-import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
-
-import GWASDatasetLZPlot from "@viz/LocusZoom/GWASDatasetLZPlot";
+import React, { useState, useRef } from "react";
+import { useSelector } from "react-redux";
 
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
 import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import GetAppIcon from "@material-ui/icons/GetApp";
+
+import { HeaderRecordActions, useHeadingStyles, RecordAttributeItem } from "../RecordHeading";
+import { RecordHeading } from "../Types";
+
+import { RootState } from "wdk-client/Core/State/Types";
+import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
+
+import { CustomPanel, withTooltip } from "@components/MaterialUI";
+import { useTypographyStyles } from "@components/MaterialUI";
+
+import { convertHtmlEntites } from "genomics-client/util/util";
+import { resolveJsonInput } from "genomics-client/util/jsonParse";
+
+import { GWASDatasetLZPlot } from "@viz/LocusZoom";
+
+import "./TrackRecordHeading.scss";
+
+/*
+
+
+
+import Grid from "@material-ui/core/Grid";
+
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import GetAppIcon from "@material-ui/icons/GetApp";
+
 
 import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
-import "./TrackRecordHeading.scss";
 
-const cx = makeClassNameHelper("gwas-RecordHeading");
+
+ */
 interface HeaderImage {
     src: string;
     type?: string;
 }
+
+const cx = makeClassNameHelper("gwas-RecordHeading");
 
 const DatasetHeaderImage: React.FC<HeaderImage> = ({ src, type }) => {
     const enclosingGrid = useRef(0);
@@ -49,13 +71,23 @@ const DatasetHeaderImage: React.FC<HeaderImage> = ({ src, type }) => {
     );
 };
 
-const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions, webAppUrl }) => {
+const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+
+    const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
+
+    const classes = useHeadingStyles();
+    const tClasses = useTypographyStyles();
 
     let imgPrefix = `${webAppUrl}/images/manhattan/${record.attributes.niagads_accession}/png/${record.id[0].value}`;
 
     return (
-        <Grid container style={{ marginLeft: "10px" }}>
+        <CustomPanel
+            hasBaseArrow={false}
+            className={classes.panel}
+            alignItems="flex-start"
+            justifyContent="space-between"
+        >
             <Grid item container direction="row" spacing={5}>
                 <Grid item container direction="column" sm={3} xs={12}>
                     {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
@@ -74,40 +106,19 @@ const GWASDatasetRecordSummary: React.FC<RecordHeading> = ({ record, recordClass
                     </List>
                     {record.attributes.is_adsp && (
                         <Typography>
-                            <strong>{" "}{resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
+                            <strong> {resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
                         </Typography>
                     )}
+                    <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
                 </Grid>
                 <Grid item sm={6} xs={12}>
-                    {/*<DatasetHeaderImage src={`${imgPrefix}-cmanhattan.png`} type={"circular-manhattan"} />*/}
-                    <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
+                    <GWASDatasetLZPlot dataset={record.id[0].value} />
                 </Grid>
             </Grid>
 
-            {/*<Grid item container direction="row">
-                <CollapsibleSection
-                    id="locuszoom-section"
-                    className="wdk-RecordTableContainer"
-                    headerComponent="h3"
-                    headerContent={
-                        <Box display="flex" justifyContent="space-between" alignItems="baseline">
-                            <BaseText>Browse Top Loci</BaseText>
-                            <HelpIcon>
-                                Use this interactive LocusZoom plot to browse genomic loci associated with the variants
-                                exhibiting the most genome-wide significance in this study.
-                            </HelpIcon>
-                        </Box>
-                    }
-                    isCollapsed={isCollapsed}
-                    onCollapsedChange={setIsCollapsed}
-                >
-                    <GWASDatasetLZPlot dataset={record.id[0].value} />
-                </CollapsibleSection>
-                </Grid> */}
-        </Grid>
+          
+        </CustomPanel>
     );
 };
 
-export default connect((state: any) => ({
-    webAppUrl: state.globalData.siteConfig.webAppUrl,
-}))(GWASDatasetRecordSummary);
+export default TrackRecordSummary;
