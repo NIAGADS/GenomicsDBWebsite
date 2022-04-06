@@ -126,6 +126,14 @@
 	<columnAttribute name="msc_impacted_transcript" displayName="Impacted Transcript" help="transcript impacted by most severe predicted consequence" type="json_link" />
       </attributeQueryRef>
 
+      <!-- <table name="record_link_outs" displayName="Related Variant Records" inReportMaker="false" queryRef="VariantTables.DbRefs_Variant"> -->
+      <!-- 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/> -->
+      <!-- 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/> -->
+      <!-- 	<propertyList name="flags"> -->
+      <!-- 	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value> -->
+      <!-- 	</propertyList> -->
+      <!-- </table> -->
+
     
       <!-- =============================================================== -->
       <!-- Genomic Location -->

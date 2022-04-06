@@ -18,7 +18,7 @@
         "highcharts-react-official": "^2.2.2",
         "ideogram": "^1.29.0",
         "igv": "^2.7.4",
-        "locuszoom": "^0.12.2",
+        "locuszoom": "^0.14.0",
         "match-sorter": "^6.3.0",
         "prettier": "^2.0.4",
         "qs": "^6.9.4",

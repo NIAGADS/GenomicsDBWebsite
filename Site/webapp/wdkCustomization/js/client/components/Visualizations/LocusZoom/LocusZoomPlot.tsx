@@ -1,9 +1,15 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import * as lz from "locuszoom";
+import {
+    LocusZoom,
+    CustomAssociationAdapter,
+    CustomGeneAdapter,
+    CustomRecombAdapter,
+    CustomLZServerAdapter,
+    RequestOptions as LocusZoomPlotState
+} from "../LocusZoom";
 import "locuszoom/dist/locuszoom.css";
-import registry from "locuszoom/esm/registry/adapters";
 
 import { cloneDeep, get, noop } from "lodash";
 import { Grid } from "@material-ui/core";
@@ -16,21 +22,8 @@ import { Loading } from "wdk-client/Components";
 
 const DEFAULT_FLANK = 100000;
 
-const LZ = lz.default as any;
 
-const AssociationLZ = registry.get("AssociationLZ"),
-    LDLZ2 = registry.get("LDLZ2"),
-    GeneLZ = registry.get("GeneLZ"),
-    RecombLZ = registry.get("RecombLZ");
-
-interface LocusZoomState {
-    chromosome: string;
-    end: number;
-    ldrefvar?: string;
-    start: number;
-}
-
-interface LocusZoomProps {
+interface LocusZoomPlotProps {
     chromosome?: string;
     end?: number;
     maxWidthAsRatioToBody?: number;
@@ -43,7 +36,7 @@ interface LocusZoomProps {
     track: string;
 }
 
-export const LocusZoomPlot: React.FC<LocusZoomProps> = ({
+export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     chromosome,
     end,
     maxWidthAsRatioToBody,
@@ -64,36 +57,44 @@ export const LocusZoomPlot: React.FC<LocusZoomProps> = ({
 
     useEffect(() => {
         if (layoutRendered.current) {
-            initializeLocusZoom();
+            initializeLocusZoomState();
             return () => clearInterval(interval);
         }
         return noop;
     }, [variant, population, track, width, span, chromosome, start, end]);
 
     useLayoutEffect(() => {
-        initializeLocusZoom();
+        initializeLocusZoomPlot();
         layoutRendered.current = true;
     }, []);
 
     function initializeLocusZoomState() {
         if (chromosome && start && end) {
-            
-            return { chromosome: chromosome.includes("chr") ? chromosome : "chr" + chromosome , start: start, end: end, ldrefvar: variant };
+            return {
+                chromosome: chromosome.includes("chr") ? chromosome : "chr" + chromosome,
+                start: start,
+                end: end,
+                ldrefvar: variant,
+                track: track,
+                population: population
+            };
         }
 
-        return initializeLocusZoomStateFromSpan(span ? span : variant, flank, variant);
+        return initializeLocusZoomStateFromSpan(span ? span : variant);
     }
 
-    const initializeLocusZoomStateFromSpan = (span: string, flank: number, variant: string) => ({
+    const initializeLocusZoomStateFromSpan = (span: string) => ({
         chromosome: "chr" + span.split(":")[0],
         start: parseInt(span.split(":")[1]) - (flank ? flank : DEFAULT_FLANK),
         end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
         ldrefvar: variant,
+        track: track,
+        population: population
     });
 
-    const initializeLocusZoom = () => {
+    const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
-        const plot = buildPlot(selectClass, lzState, population, track, webAppUrl + "/locuszoom", width);
+        const plot = _buildLocusZoomPlot(selectClass, lzState, population, track, webAppUrl + "/locuszoom", width);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -115,6 +116,7 @@ export const LocusZoomPlot: React.FC<LocusZoomProps> = ({
         //d.getPlot().panels.association_panel.x_scale(d.position) will give x coordinate
         //leaving this in b/c we can use it to create our own tooltip if we want to keep setNewRef behavior
     });
+
     return (
         <Grid container alignItems="center" direction="column">
             {loading && <Loading />}
@@ -123,109 +125,52 @@ export const LocusZoomPlot: React.FC<LocusZoomProps> = ({
     );
 };
 
-const buildPlot = (
+const _buildLocusZoomPlot = (
     selector: string,
-    lzState: LocusZoomState,
+    lzState: LocusZoomPlotState,
     population: string,
     track: string,
     endpoint: string,
     width: number
 ) => {
-    class AssocSource extends AssociationLZ {
-        //typescript boilerplate
-        constructor(...args: any[]) {
-            super(...args);
-        }
-    }
+    // Register Adaptors
+    LocusZoom.Adapters.add("NIAGADS_assoc", CustomAssociationAdapter);
+    LocusZoom.Adapters.add("NIAGADS_gene", CustomGeneAdapter);
+    LocusZoom.Adapters.add("NIAGADS_recomb", CustomRecombAdapter);
+    LocusZoom.Adapters.add("NIAGADS_ldserver", CustomLZServerAdapter);
 
-    class LDLZSource extends LDLZ2 {
-        constructor(...args: any[]) {
-            super(...args);
-        }
-    }
-
-    class RecombSource extends RecombLZ {
-        constructor(...args: any[]) {
-            super(...args);
-        }
-    }
-
-    RecombSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
-        return `${endpoint}/recomb?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(
-            state.end
-        )}`;
-    };
-
-    AssocSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
-        return `${endpoint}/gwas?track=${track}&chromosome=${state.chromosome}&start=${Math.trunc(
-            state.start
-        )}&end=${Math.trunc(state.end)}`;
-    };
-
-    //note that other sources have to be transformed into array of objects, but not LD source....
-    LDLZSource.prototype.normalizeResponse = function (data: { value: number[]; id2: string[] }) {
-        const position = data.id2.map((datum) => +/\:(\d+):/.exec(datum)[1]),
-            chr = lzState.chromosome.replace("chr", ""),
-            chromosome = data.id2.map(() => chr);
-        return {
-            variant1: data.id2.map(() => lzState.ldrefvar),
-            variant2: data.id2,
-            chromosome1: chromosome,
-            chromosome2: chromosome,
-            correlation: data.value,
-            position1: position,
-            position2: position,
-        };
-    };
-
-    LDLZSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
-        const refVar = this.getRefvar(state, chain, fields);
-        chain.header.ldrefvar = refVar;
-        return `${endpoint}/locuszoom/linkage?population=${population}&variant=${refVar}`;
-    };
-
-    class GeneSource extends GeneLZ {
-        constructor(...args: any[]) {
-            super(...args);
-        }
-    }
-
-    GeneSource.prototype.getURL = function (state: LocusZoomState, chain: any, fields: string[]) {
-        return `${endpoint}/gene?chromosome=${state.chromosome}&start=${Math.trunc(state.start)}&end=${Math.trunc(
-            state.end
-        )}`;
-    };
+    // set data sources
+    const dataSources = new LocusZoom.DataSources();
+    dataSources.add("assoc", ['NIAGADS_assoc', {url: endpoint}]);
+    dataSources.add("ld", ['NIAGADS_ldserver', {url: endpoint}]);
+    dataSources.add("gene", ['NIAGADS_gene', {url: endpoint}]);
+    dataSources.add("recomb", ['NIAGADS_recomb', {url: endpoint}]);
 
     const layout = _buildLayout(lzState, width);
 
-    const dataSources = new LZ.DataSources();
-    dataSources.add("assoc", new AssocSource({ url: "asdf" }));
-    dataSources.add("ld", new LDLZSource({ url: "asdf" }));
-    dataSources.add("genes", new GeneSource({ url: "asdf" }));
-    dataSources.add("recomb", new RecombSource({ url: "asdf" }));
-
-    return LZ.populate(`#${selector}`, dataSources, layout);
+    return LocusZoom.populate(`#${selector}`, dataSources, layout);
 };
 
-const _buildLayout = (state: LocusZoomState, containerWidth: number) => {
-    return LZ.Layouts.add('plot', 'standard_association', {
-        state: {},
-        width: 800,
+const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
+    return LocusZoom.Layouts.get("plot", "standard_association", {
+        // Override select fields of a pre-made layout
         responsive_resize: true,
-        min_region_scale: 20000,
-        max_region_scale: 1000000,
-        toolbar: LZ.Layouts.get('toolbar_widgets', 'standard_plot'),
         panels: [
-            LZ.Layouts.get('panel', 'association', { height: 225 }),
-            LZ.Layouts.get('panel', 'genes', { height: 225 })
-        ]
+            LocusZoom.Layouts.get("panel", "association", {
+                namespace: { assoc: "assoc" },
+                height: 400,
+                id: "association_panel", // Give each panel a unique ID
+            }),
+            // Even though genes are part of the original "standard association plot" layout, overriding the panels array means replacing *all* of the panels.
+            //LocusZoom.Layouts.get('panel', 'genes', { height: 400 })
+            //genesPanel,
+        ],
     });
 };
 
 /*
-
 const _buildLayout = (state: LocusZoomState, containerWidth: number) => {
-    return LZ.Layouts.merge(
+    return LocusZoom.Layouts.merge(
         { state },
         {
             id: "association_layout",
@@ -281,6 +226,7 @@ const _buildLayout = (state: LocusZoomState, containerWidth: number) => {
     );
 };
 */
+
 const standardPanelToolbar = {
     widgets: [
         {
@@ -333,6 +279,7 @@ const standardsGeneTooltip = {
         "Transcript ID: <strong>{{transcript_id|htmlescape}}</strong><br>",
 };
 
+/* custom gene panel needed to bypass "gnomad_constraint" datasource */
 const genesLayer = {
     id: "genes",
     id_field: "gene_id",
@@ -498,7 +445,7 @@ const associationLayer = {
             "<strong>{{assoc:id}}</strong><br>" +
             "P Value: <strong>{{assoc:pvalue}}</strong><br>" +
             "Test Allele: <strong>{{assoc:testAllele}}</strong><br>" +
-            '<a href="javascript:void(0);" onclick="lz.default.getToolTipDataLayer(this).makeLDReference(lz.default.getToolTipData(this));">Make LD Reference</a><br>',
+            '<a href="javascript:void(0);" onclick="LocusZoom.default.getToolTipDataLayer(this).makeLDReference(LocusZoom.default.getToolTipData(this));">Make LD Reference</a><br>',
     },
 };
 
@@ -567,3 +514,50 @@ const getRegionNavPlotToolbar = () => {
     );
     return base;
 };
+
+/* LZ Layouts LocusZoom 0.14.0
+{
+  "tooltip": [
+    "standard_association",
+    "standard_association_with_label",
+    "standard_genes",
+    "catalog_variant",
+    "coaccessibility"
+  ],
+  "toolbar_widgets": [
+    "ldlz2_pop_selector",
+    "gene_selector_menu"
+  ],
+  "toolbar": [
+    "standard_panel",
+    "standard_plot",
+    "standard_association",
+    "region_nav_plot"
+  ],
+  "data_layer": [
+    "significance",
+    "recomb_rate",
+    "association_pvalues",
+    "coaccessibility",
+    "association_pvalues_catalog",
+    "phewas_pvalues",
+    "genes",
+    "genes_filtered",
+    "annotation_catalog"
+  ],
+  "panel": [
+    "association",
+    "coaccessibility",
+    "association_catalog",
+    "genes",
+    "phewas",
+    "annotation_catalog"
+  ],
+  "plot": [
+    "standard_association",
+    "association_catalog",
+    "standard_phewas",
+    "coaccessibility"
+  ]
+}
+*/
