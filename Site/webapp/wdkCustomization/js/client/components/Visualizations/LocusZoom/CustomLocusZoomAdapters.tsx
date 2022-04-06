@@ -3,7 +3,7 @@ export const LocusZoom = lz.default as any;
 
 
 export interface RequestOptions {
-    chromosome?: string;
+    chr?: string;
     start?: number;
     end?: number;
     population?: string;
@@ -20,20 +20,37 @@ export class CustomAssociationAdapter extends AssociationLZ {
     _getURL(request_options: RequestOptions) {
         // Every adapter receives the info from plot.state, plus any additional request options calculated/added in the function `_buildrequest_options`
         // The inputs to the function can be used to influence what query is constructed. Eg, since the current view region is stored in `plot.state`:
-        const { chromosome, start, end, track } = request_options;
+        let { chr, start, end, track } = request_options;
         // Fetch the region of interest from a hypothetical REST API that uses query parameters to define the region query, for a given study URL such as `data.example/gwas/<id>/?chr=_&start=_&end=_`
-        return `${this._url}/gwas?track=${track}&chromosome=${chromosome}&start=${Math.trunc(start)}&end=${Math.trunc(end)}`;
+        return `${this._url}/gwas?track=${track}&chromosome=${chr}&start=${Math.trunc(start)}&end=${Math.trunc(end)}`;
     }
 
-    _buildRequestOptions(state: RequestOptions) {
-        return state;
+    _buildRequestOptions(plot_state: any, ...dependent_data: any) {
+        const initialState = this._config.initial_state;
+        const requestOptions = { 
+            'chr' : plot_state.chr ? plot_state.chr : initialState.chr,
+            'start' : plot_state.start ? plot_state.start : initialState.start,
+            'end' : plot_state.end ? plot_state.end : initialState.end,
+            'track' : this._config.track
+        }
+        return requestOptions;
     }
 }
 
 export class CustomRecombAdapter extends RecombLZ {
     _getURL(request_options: RequestOptions) {
-        const { chromosome, start, end } = request_options;
-        return `${this._url}/recomb?chromosome=${chromosome}&start=${Math.trunc(start)}&end=${Math.trunc(end)}`;
+        const { chr, start, end } = request_options;
+        return `${this._url}/recomb?chromosome=${chr}&start=${Math.trunc(start)}&end=${Math.trunc(end)}`;
+    }
+
+    _buildRequestOptions(plot_state: any, ...dependent_data: any) {
+        const initialState = this._config.initial_state;
+        const requestOptions = { 
+            'chr' : plot_state.chr ? plot_state.chr : initialState.chr,
+            'start' : plot_state.start ? plot_state.start : initialState.start,
+            'end' : plot_state.end ? plot_state.end : initialState.end,
+        }
+        return requestOptions;
     }
 }
 
@@ -44,7 +61,6 @@ export class CustomLZServerAdapter extends LDServer {
     }
 
     // _normalizeResponse 
-
 }
 
 //note that other sources have to be transformed into array of objects, but not LD source....
@@ -65,7 +81,7 @@ export class CustomLZServerAdapter extends LDServer {
 
 export class CustomGeneAdapter extends GeneLZ {
     _getURL(request_options: RequestOptions) {
-        const { chromosome, start, end } = request_options;
-        return `${this._url}/gene?chromosome=${chromosome}&start=${Math.trunc(start)}&end=${Math.trunc(end)}`;
+        const { chr, start, end } = request_options;
+        return `${this._url}/gene?chromosome=${chr}&start=${Math.trunc(start)}&end=${Math.trunc(end)}`;
     }
 }

@@ -6,8 +6,7 @@ import {
     CustomAssociationAdapter,
     CustomGeneAdapter,
     CustomRecombAdapter,
-    CustomLZServerAdapter,
-    RequestOptions as LocusZoomPlotState
+    CustomLZServerAdapter
 } from "../LocusZoom";
 import "locuszoom/dist/locuszoom.css";
 
@@ -21,6 +20,13 @@ import { RootState } from "wdk-client/Core/State/Types";
 import { Loading } from "wdk-client/Components";
 
 const DEFAULT_FLANK = 100000;
+
+interface LocusZoomPlotState {
+    chr?: string;
+    start?: number;
+    end?: number;
+    ldrefvar?: string;
+}
 
 
 interface LocusZoomPlotProps {
@@ -71,30 +77,26 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     function initializeLocusZoomState() {
         if (chromosome && start && end) {
             return {
-                chromosome: chromosome.includes("chr") ? chromosome : "chr" + chromosome,
+                chr: chromosome.includes("chr") ? chromosome : "chr" + chromosome,
                 start: start,
                 end: end,
                 ldrefvar: variant,
-                track: track,
-                population: population
             };
         }
 
-        return initializeLocusZoomStateFromSpan(span ? span : variant);
+        return initializeLocusZoomStateFromSpan(span ? span : variant, flank, variant);
     }
 
-    const initializeLocusZoomStateFromSpan = (span: string) => ({
-        chromosome: "chr" + span.split(":")[0],
+    const initializeLocusZoomStateFromSpan = (span: string, flank:number, variant: string) => ({
+        chr: "chr" + span.split(":")[0],
         start: parseInt(span.split(":")[1]) - (flank ? flank : DEFAULT_FLANK),
         end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
         ldrefvar: variant,
-        track: track,
-        population: population
     });
 
     const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
-        const plot = _buildLocusZoomPlot(selectClass, lzState, population, track, webAppUrl + "/locuszoom", width);
+        const plot = _buildLocusZoomPlot(selectClass, lzState, population, track, webAppUrl + "/service/locuszoom", width);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -141,10 +143,10 @@ const _buildLocusZoomPlot = (
 
     // set data sources
     const dataSources = new LocusZoom.DataSources();
-    dataSources.add("assoc", ['NIAGADS_assoc', {url: endpoint}]);
-    dataSources.add("ld", ['NIAGADS_ldserver', {url: endpoint}]);
-    dataSources.add("gene", ['NIAGADS_gene', {url: endpoint}]);
-    dataSources.add("recomb", ['NIAGADS_recomb', {url: endpoint}]);
+    dataSources.add("assoc", ['NIAGADS_assoc', {url: endpoint, initial_state: lzState, track: track}]);
+    dataSources.add("ld", ['NIAGADS_ldserver', {url: endpoint, initial_state: lzState}]);
+    dataSources.add("gene", ['NIAGADS_gene', {url: endpoint, initial_state: lzState}]);
+    dataSources.add("recomb", ['NIAGADS_recomb', {url: endpoint, initial_state: lzState}]);
 
     const layout = _buildLayout(lzState, width);
 
