@@ -52,10 +52,10 @@ public class LZGWASService extends AbstractWdkService {
         + "<@ int8range(?, ?))" + NL
         + "SELECT jsonb_build_object('data', jsonb_build_object('chromosome', jsonb_agg(chromosome)," + NL
         + "'position', jsonb_agg(position ORDER BY variant_gwas_id)," + NL
-        + "'id', jsonb_agg(variant_record_primary_key ORDER BY variant_gwas_id)," + NL
+        + "'variant', jsonb_agg(variant_record_primary_key ORDER BY variant_gwas_id)," + NL
         + "'pvalue', jsonb_agg(pvalue_display ORDER BY variant_gwas_id)," + NL
-        + "'neg_log10_pvalue', jsonb_agg(neg_log10_pvalue ORDER BY variant_gwas_id)," + NL
-        + "'testAllele', jsonb_agg(test_allele ORDER BY variant_gwas_id)))::text AS result" + NL
+        + "'log_pvalue', jsonb_agg(neg_log10_pvalue ORDER BY variant_gwas_id)," + NL
+        + "'test_allele', jsonb_agg(test_allele ORDER BY variant_gwas_id)))::text AS result" + NL
         + "FROM gwas";
   
     @GET

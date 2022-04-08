@@ -6,9 +6,8 @@ import {
     CustomAssociationAdapter,
     CustomGeneAdapter,
     CustomRecombAdapter,
-    CustomLZServerAdapter
+    CustomLDServerAdapter
 } from "../LocusZoom";
-import "locuszoom/dist/locuszoom.css";
 
 import { cloneDeep, get, noop } from "lodash";
 import { Grid } from "@material-ui/core";
@@ -19,7 +18,10 @@ import { useDynamicWidth } from "genomics-client/hooks";
 import { RootState } from "wdk-client/Core/State/Types";
 import { Loading } from "wdk-client/Components";
 
+import "locuszoom/dist/locuszoom.css";
+
 const DEFAULT_FLANK = 100000;
+
 
 interface LocusZoomPlotState {
     chr?: string;
@@ -63,11 +65,11 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
 
     useEffect(() => {
         if (layoutRendered.current) {
-            initializeLocusZoomState();
+            initializeLocusZoomPlot();
             return () => clearInterval(interval);
         }
         return noop;
-    }, [variant, population, track, width, span, chromosome, start, end]);
+    }, [variant, track, width, span, chromosome, start, end]);
 
     useLayoutEffect(() => {
         initializeLocusZoomPlot();
@@ -93,6 +95,10 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
         ldrefvar: variant,
     });
+
+    const buildLocusZoomPlot = () => {
+      
+    }
 
     const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
@@ -136,10 +142,10 @@ const _buildLocusZoomPlot = (
     width: number
 ) => {
     // Register Adaptors
-    LocusZoom.Adapters.add("NIAGADS_assoc", CustomAssociationAdapter);
-    LocusZoom.Adapters.add("NIAGADS_gene", CustomGeneAdapter);
-    LocusZoom.Adapters.add("NIAGADS_recomb", CustomRecombAdapter);
-    LocusZoom.Adapters.add("NIAGADS_ldserver", CustomLZServerAdapter);
+    LocusZoom.Adapters.add("NIAGADS_assoc", CustomAssociationAdapter, true); //override if exists
+    LocusZoom.Adapters.add("NIAGADS_gene", CustomGeneAdapter, true);
+    LocusZoom.Adapters.add("NIAGADS_recomb", CustomRecombAdapter, true);
+    LocusZoom.Adapters.add("NIAGADS_ldserver", CustomLDServerAdapter, true);
 
     // set data sources
     const dataSources = new LocusZoom.DataSources();
@@ -155,6 +161,7 @@ const _buildLocusZoomPlot = (
 
 const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
     return LocusZoom.Layouts.get("plot", "standard_association", {
+        state: state,
         // Override select fields of a pre-made layout
         responsive_resize: true,
         panels: [

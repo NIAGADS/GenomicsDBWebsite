@@ -24,8 +24,8 @@ module.exports = configure({
         splitChunks: {
             cacheGroups: {
                 vendor: {
-                    test:  /[\\/]node_modules[\\/]((?!(@fontsource)).*)[\\/]/, // anything from node modules, except the fonts
-                    // /[\\/]node_modules[\\/](?!lodash)(.[a-zA-Z0-9.\-_]+)[\\/]/
+                    test:  /[\\/]node_modules[\\/]((?!(@fontsource)).*)[\\/](?=.*\.js$)/, // any JS from node modules, except the fonts
+                    // /[\\/]node_modules[\\/](?!lodash)(.[a-zA-Z0-9.\-_]+)[\\/](?=.*\.js$)/
                     name: "vendors",
                     chunks: "all",
                     filename: "[name].bundle.js",

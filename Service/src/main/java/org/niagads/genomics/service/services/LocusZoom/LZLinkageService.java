@@ -41,17 +41,20 @@ public class LZLinkageService extends AbstractWdkService {
         + "SELECT CASE WHEN v.pattern = r.variants[1]" + NL
         + "THEN find_variant_primary_key(r.variants[2])" + NL
         + "ELSE find_variant_primary_key(r.variants[1])" + NL
-        + "END AS variant, r.r_squared" + NL
+        + "END AS variant, r.r_squared, r.chromosome" + NL
         + "FROM Results.VariantLD r," + NL
         + "variant v" + NL
         + "WHERE r.variants @> ARRAY[v.pattern]" + NL
         + "AND r.chromosome = ?" + NL
         + "AND r.population_protocol_app_node_id = ?" + NL
         + "UNION" + NL
-        + "SELECT id.source_id AS variant, 1.0 AS r_squared FROM id)" + NL
+        + "SELECT id.source_id AS variant, 1.0 AS r_squared," + NL
+        + "split_part(id.source_id, ':', 1) AS chromosome FROM id)" + NL
         + "SELECT jsonb_build_object('data'," + NL
-        + "jsonb_build_object('id2', jsonb_agg(variant ORDER BY variant)) || " + NL
-        + "jsonb_build_object('value', jsonb_agg(r_squared ORDER BY variant)))::text AS result" + NL
+        + "jsonb_build_object('variant2', jsonb_agg(variant ORDER BY variant)) || " + NL
+        + "jsonb_build_object('chromosome2', jsonb_agg(replace(chromosome, 'chr', ''))) || " + NL
+        + "jsonb_build_object('position2', jsonb_agg(split_part(variant, ':', 2) ORDER BY variant)) || " + NL
+        + "jsonb_build_object('rsquare', jsonb_agg(r_squared ORDER BY variant)))::text AS result" + NL
         + "FROM LDResult";
 
     @GET

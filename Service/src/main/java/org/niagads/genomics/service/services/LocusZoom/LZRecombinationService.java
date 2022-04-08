@@ -35,11 +35,11 @@ public class LZRecombinationService extends AbstractWdkService {
         + "bin AS (SELECT find_bin_index(?::text, ?, ?) AS bin_index)" + NL
         + "SELECT jsonb_build_object('data', " + NL
         + "jsonb_build_object(" + NL
-        + "'chromosome', jsonb_agg(replace(fs.chromosome, 'chr', '')::text)," + NL
-        + "'id', jsonb_agg('HR'::text)," + NL
-        + "'pos_cm', jsonb_agg(position_cm ORDER BY location_start ASC)," + NL
-        + "'position', jsonb_agg(location_start ORDER BY location_start ASC)," + NL
-        + "'recomb_rate', jsonb_agg(score ORDER BY location_start ASC)))::text" + NL
+        + "'chromosome', coalesce(jsonb_agg(replace(fs.chromosome, 'chr', '')::text), '[]'::jsonb)," + NL
+        + "'id', coalesce(jsonb_agg('HR'::text), '[]'::jsonb)," + NL
+        + "'pos_cm', coalesce(jsonb_agg(position_cm ORDER BY location_start ASC), '[]'::jsonb)," + NL
+        + "'position', coalesce(jsonb_agg(location_start ORDER BY location_start ASC), '[]'::jsonb)," + NL
+        + "'recomb_rate', coalesce(jsonb_agg(score ORDER BY location_start ASC), '[]'::jsonb)))::text" + NL
         + "AS result" + NL
         + "FROM Results.FeatureScore fs," + NL
         + "Study.ProtocolAppNode pan," + NL
