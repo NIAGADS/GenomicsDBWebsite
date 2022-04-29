@@ -10,7 +10,6 @@
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooo  Installation  oooooooooooooooooooooooooo -->
   <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
-
   <target name="GenomicsDBWebsite-Installation" depends="EbrcModelCommon-Installation,
                                                          EbrcWebSvcCommon-Installation,
 				                                                 GenomicsDBWebsite-MavenInstallation,
@@ -149,9 +148,7 @@
 
   </target>
 
-
   <target name="GenomicsDBWebsite/View-WebInstallation">
-
     <ant target="defaultComponentInstall">
       <property name="project" value="GenomicsDBWebsite" />
       <property name="component" value="View" />
@@ -161,7 +158,6 @@
       <property name="project" value="GenomicsDBWebsite" />
       <property name="component" value="View" />
     </ant>
-
   </target>
 
   <target name="GenomicsDBWebsite/Service-WebInstallation">

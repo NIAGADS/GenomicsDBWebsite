@@ -68,19 +68,19 @@
             <column name="pvalue" />
             <sql>
                 <![CDATA[
-                        SELECT r.dataset_id AS track
+                        SELECT track
                         , '@PROJECT_ID@'::text AS project_id
-                        , build_link_attribute(truncate_str(r.metaseq_id, 30), '../variant/', r.variant_record_primary_key) AS variant_link
-                        , r.ref_snp_id
-                        , adsp_variant_display_flag(r.is_adsp_variant) AS adsp_variant_flag
-                        , r.most_severe_consequence
-			            , r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'vep_impact' AS msc_impact
-                        , r.msc_impacted_gene_link -- virtual column
-                        , r.msc_is_coding AS msc_is_coding_flag
-                        , r.neg_log10_pvalue
-                        , r.pvalue_display AS pvalue
+			, record_link('variant', variant_record_primary_key, metaseq_id, TRUE) AS variant_link
+                        , ref_snp_id
+                        , adsp_variant_flag(is_adsp_variant) AS adsp_variant_flag
+			, most_severe_consequence(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE')
+			, annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'vep_impact' AS msc_impact
+                        , msc_impacted_gene_link(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_impacted_gene_link
+                        , msc_is_coding_flag(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_is_coding_flag
+                        , neg_log10_pvalue
+                        , pvalue_display AS pvalue
                         FROM 
-                        NIAGADS.VariantGWASTopHits r
+                        NIAGADS.VariantGWASTopHits
                         ORDER BY neg_log10_pvalue DESC
                     ]]>
             </sql>
