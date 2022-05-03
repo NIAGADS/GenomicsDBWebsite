@@ -392,7 +392,7 @@
 		 FROM id)
 
 		 SELECT source_id, 
-		 CASE WHEN conseq = adsp_most_severe_consequence(source_id) 
+		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
 		 THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') 
 		 ELSE NULL END AS is_most_severe_consequence,
 
@@ -413,7 +413,7 @@
 		 THEN ' @PROJECT_ID@ Archive' ELSE '' END) AS protein_link,
 		 
 		 conseq->>'distance' AS distance,
-		 replace(array_to_string(json_array_cast_to_text((conseq->'consequence_terms')::json), ','), '_', ' ') AS consequence,
+		 consequence_terms(conseq) AS consequence,
 		 conseq->>'amino_acids' AS amino_acid_change,
 		 conseq->>'codons' AS codon_change,
 
@@ -456,7 +456,7 @@
 
 		 SELECT source_id, 
 
-		 CASE WHEN conseq = adsp_most_severe_consequence(source_id) 
+		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
 		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
 		 ELSE NULL END AS is_most_severe_consequence,
 
@@ -469,7 +469,7 @@
 		 NULL, 'view feature details from Ensembl' || CASE WHEN '@PROJECT_ID@' = 'GRCh37' 
 		 THEN ' @PROJECT_ID@ Archive' ELSE '' END) AS feature_link,
 
-		 replace(array_to_string(json_array_cast_to_text((conseq->'consequence_terms')::json), ','), '_', ' ') AS consequence
+		 consequence_terms(conseq) AS consequence
 		 FROM cjson
 		 ORDER BY rank
 	]]>
@@ -495,13 +495,13 @@
 
 		 SELECT source_id, 
 
-		 CASE WHEN conseq = adsp_most_severe_consequence(source_id) 
+		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
 		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
 		 ELSE NULL END AS is_most_severe_consequence,
 
 		 conseq->>'rank' AS rank,
 		 conseq->>'impact' AS impact,		
-		 replace(array_to_string(json_array_cast_to_text((conseq->'consequence_terms')::json), ','), '_', ' ') AS consequence
+		 consequence_terms(conseq) AS consequence
 		 FROM cjson
 		 ORDER BY rank
 	]]>
@@ -535,13 +535,13 @@
 
 		 SELECT source_id, 
 
-		 CASE WHEN conseq = adsp_most_severe_consequence(source_id) 
+		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
 		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
 		 ELSE NULL END AS is_most_severe_consequence,
 
 		 conseq->>'rank' AS rank,
-		 conseq->>'impact' AS impact,		
-		 replace(array_to_string(json_array_cast_to_text((conseq->'consequence_terms')::json), ','), '_',' ') AS consequence,
+		 conseq->>'impact' AS impact,
+		 consequence_terms(conseq) AS consequence,
 
 		 array_to_string(json_array_cast_to_text((m.annotation->'transcription_factor_complex')::json), ',') 
 		 AS transcription_factor_complex,
