@@ -202,8 +202,8 @@
 		 AND c.characteristic_type = 'diagnosis'
 		 AND c.characteristic LIKE '%Alzh%')
 		 
-		 SELECT id.source_id, t.*, r.allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
-		 FROM id, Results.VariantGWAS r, tracks t
+		 SELECT id.source_id, t.*, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
+		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key
 		 AND r.neg_log10_pvalue > 3
@@ -235,8 +235,8 @@
 		 AND c.characteristic_type = 'full_list'
 		 AND c.characteristic NOT ILIKE '%Alzh%')
 		 
-		 SELECT id.source_id, t.*, r.allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
-		 FROM id, Results.VariantGWAS r, tracks t
+		 SELECT id.source_id, t.*, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
+		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key
 		 AND r.neg_log10_pvalue > 3
