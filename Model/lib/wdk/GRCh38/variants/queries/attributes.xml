@@ -44,18 +44,14 @@
     <sqlQuery name="BasicAttributes">
       <column name="project_id" columnType="string"/>
       <column name="source_id" columnType="string"/>
-      <column name="metaseq_id" columnType="string"/>
       <column name="ref_snp_id" columnType="string"/>
+      <column name="metaseq_id" columnType="string"/>
 
       <column name="chromosome" columnType="string"/>
       <column name="position" columnType="number"/>
       <column name="location" columnType="string"/>
 
-      <column name="ref_allele" columnType="string"/>
-      <column name="alt_allele" columnType="string"/>
       <column name="display_allele" columnType="string"/>
-      <column name="sequence_allele" columnType="string"/>
-      <column name="sequence_allele_display" columnType="string"/>
       
       <column name="variant_class_abbrev" columnType="string"/>
       <column name="variant_class" columnType="string"/>
@@ -63,110 +59,34 @@
       <column name="adsp_display_flag" columnType="string"/>
 
       <column name="is_adsp_variant" columnType="boolean"/>
-      <column name="is_adsp_wes" columnType="boolean"/>
-      <column name="is_adsp_wgs" columnType="boolean"/>
 
-      <column name="adsp_wgs_qc_filter_status" columnType="boolean"/>
-      <column name="adsp_wes_qc_filter_status" columnType="boolean"/>
+      <column name="adsp_qc_status" columnType="string"/>
+      <column name="adsp_qc_flags" columnType="string"/>
       
       <sql>
 	<![CDATA[
-		 WITH ids AS (##WDK_ID_SQL##),
-		 
-		 gv_flag AS (
-		 SELECT ids.source_id
-		 FROM NIAGADS.Variant v, ids
-		 WHERE ids.source_id = v.record_primary_key),
-		 
-		 av_flag AS (
-		 SELECT ids.source_id
-		 FROM ids
-		 WHERE ids.source_id NOT IN (SELECT source_id FROM gv_flag)),
-	
-		 genomics_variant_attributes AS (
-		 SELECT 
-		 'gv' as type,
-		 '@PROJECT_ID@'::text AS project_id,
+		 SELECT '@PROJECT_ID@'::TEXT AS project_id,
 		 record_primary_key AS source_id,
-		 
-		 metaseq_id,
 		 ref_snp_id,
+		 metaseq_id,
+		 truncate_str(metaseq_id, 30) AS display_metaseq_id,
 		 
-		 ref_allele,
-		 alt_allele,
+		 display_attributes->>'display_allele' AS display_allele,
+		 display_attributes->>'variant_class' AS variant_class,
+		 display_attributes->>'variant_class_abbrev' AS variant_class_abbrev,
 		 
 		 chromosome,
 		 position,
-		 CASE WHEN location_start = location_end THEN NULL ELSE location_start::text || ' - ' || location_end::text END AS location,
+		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN NULL 
+		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS location,
 		 
-		 display_allele,
-		 sequence_allele,
-		 variant_class_abbrev,
-		 variant_class(variant_class_abbrev, ref_allele, alt_allele) AS variant_class,
+		 is_adsp_variant,
+		 adsp_variant_flag(is_adsp_variant) AS adsp_display_flag,
 		 
-		 sequence_allele_display(sequence_allele::TEXT) AS sequence_allele_display, 
+		 adsp_qc_status(record_primary_key) AS adsp_qc_status,
+		 adsp_qc_call(record_primary_key) AS adsp_qc_flags
 		 
-		 qc.wes_filter->>'text'::text AS adsp_wes_qc_filter_status,		 
-		 qc.wgs_filter->>'text'::text AS adsp_wgs_qc_filter_status,
-
-		 qc.is_adsp_variant,
-		 adsp_variant_display_flag(v.is_adsp_variant) AS adsp_display_flag,
-
-		 qc.is_adsp_wes,
-		 qc.is_adsp_wgs
-		 
-		 FROM NIAGADS.Variant v, gv_flag ids, adsp_qc_status_niagads(ids.source_id) qc
-		 WHERE v.record_primary_key = ids.source_id),
-		 
-		 annotated_variant AS (
-		 SELECT split_part(source_id, ':', 3) AS ref_allele,
-		 split_part(split_part(source_id, '_', 1), ':', 4) AS alt_allele,
-		 split_part(source_id, ':', 2)::integer AS position,
-		 split_part(source_id, '_', 1) AS metaseq_id,
-		 split_part(source_id, '_', 2) AS ref_snp_id,
-		 'chr' || split_part(source_id, ':', 1)::text AS chromosome
-		 FROM av_flag ids),
-		 
-		 annotated_variant_attributes AS (
-		 SELECT 'av' as type,
-		 '@PROJECT_ID@'::text AS project_id,
-		 ids.source_id,
-		 
-		 --truncate_str(av.metaseq_id, 27) AS display_metaseq_id,
-		 av.metaseq_id,
-		 av.ref_snp_id,
-		 
-		 av.ref_allele,
-		 av.alt_allele,
-		 
-		 av.chromosome,
-		 av.position, 
-		 CASE WHEN da.location_start = da.location_end THEN NULL ELSE da.location_start::text || ' - ' || da.location_end::text END AS location,
-		 
-		 da.display_allele,
-		 da.sequence_allele,
-		 da.variant_class_abbrev,
-		 da.variant_class,
-
-		 sequence_allele_display(da.sequence_allele::TEXT) AS sequence_allele_display, 
-
-		 qc.wes_filter->>'text'::text AS adsp_wes_qc_filter_status,
-		 qc.wgs_filter->>'text'::text AS adsp_wgs_qc_filter_status,
-
-		 qc.is_adsp_variant,
-		 adsp_variant_display_flag(qc.is_adsp_variant) AS adsp_display_flag,
-
-		 qc.is_adsp_wes,
-		 qc.is_adsp_wgs
-	 
-		 FROM annotated_variant av, av_flag ids,
-		 normalize_alleles(av.ref_allele, av.alt_allele) na, 
-		 display_allele_attributes(av.ref_allele, av.alt_allele, na.ref, na.alt, av.position) da,
-		 adsp_qc_status(ids.source_id) qc)
-		 
-		SELECT * FROM genomics_variant_attributes
-		UNION 
-		SELECT * FROM annotated_variant_attributes 
+		 FROM AnnotatedVDB.Variant
 	]]>
       </sql>
     </sqlQuery>
@@ -186,39 +106,27 @@
       <sql>
 	<![CDATA[
 		 WITH id AS (##WDK_ID_SQL##),
-		 
-		 gv_flag AS (
-		 SELECT id.source_id
-		 FROM NIAGADS.Variant v, id
-		 WHERE id.source_id = v.record_primary_key),
-		 
-		 av_flag AS (
-		 SELECT id.source_id
-		 FROM id
-		 WHERE id.source_id NOT IN (SELECT source_id FROM gv_flag)),
 
-		 conseq AS (
-		 SELECT id.source_id, adsp_most_severe_consequence(id.source_id) AS msc FROM av_flag id
-		 UNION ALL
-		 SELECT id.source_id, adsp_most_severe_consequence_niagads(id.source_id) AS msc FROM gv_flag id)
+		 msc AS (
+		 SELECT id.source_id, most_severe_consequence(id.source_id), most_severe_consequence(source_id, TRUE)::jsonb AS conseq FROM id)
 
 		 SELECT msc.source_id,
-		 '@PROJECT_ID@'::text AS project_id,
-		 array_to_string(json_array_cast_to_text((msc->'consequence_terms')::json), ',') AS most_severe_consequence,
-		 msc->>'gene_id' AS msc_impacted_gene,
-		 msc->>'gene_symbol' AS msc_impacted_gene_symbol,
-		 build_link_attribute(msc->>'gene_symbol', '/record/gene/', msc->>'gene_id', 'view gene annotations')::text AS msc_impacted_gene_link,
-		 msc->>'impact' AS msc_impact,
+		 'GRCh38'::text AS project_id,
+		 msc.most_severe_consequence AS most_severe_consequence,
+		 msc.conseq->>'gene_id' AS msc_impacted_gene,
+		 msc.conseq->>'gene_symbol' AS msc_impacted_gene_symbol,
+		 build_link_attribute(msc.conseq->>'gene_symbol', '/record/gene/', msc.conseq->>'gene_id', 'view gene annotations')::text AS msc_impacted_gene_link,
+		 msc.conseq->>'impact' AS msc_impact,
 
-		 CASE WHEN (msc->>'consequence_is_coding')::boolean THEN 
+		 CASE WHEN (msc.conseq->>'consequence_is_coding')::boolean THEN 
 		 build_icon_attribute('Coding', 'fa-check', 'green', NULL, 'true') ELSE NULL END AS msc_is_coding,
 
-		 replace(replace(msc_impacted_transcript(msc->>'transcript_id', '@PROJECT_ID@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh38+', 
-		 '@ENSEMBL_TRANSCRIPT_URL_GRCh38@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh37+', '@ENSEMBL_TRANSCRIPT_URL_GRCh37@') AS msc_impacted_transcript,  
+		 replace(replace(msc_impacted_transcript(msc.conseq->>'transcript_id', 'GRCh38'), '+ENSEMBL_TRANSCRIPT_URL_GRCh38+', 
+		 '@ENSEMBL_TRANSCRIPT_URL_GRCh38@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh37+', 'http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=') AS msc_impacted_transcript,  
            
-		 msc->>'codons' AS msc_codon_change,
-		 msc->>'amino_acids' AS msc_amino_acid_change		 
-		 FROM conseq msc
+		 msc.conseq->>'codons' AS msc_codon_change,
+		 msc.conseq->>'amino_acids' AS msc_amino_acid_change		 
+		 FROM msc
 	]]>
       </sql>
     </sqlQuery>
@@ -392,55 +300,47 @@
 	<![CDATA[
 		 WITH id AS ( ##WDK_ID_SQL## ),
 
-		 vid AS (SELECT source_id,
-		 'chr' || split_part(id.source_id, ':', 1) AS chromosome,
-		 split_part(id.source_id, ':', 3) AS ref_allele,
-		 split_part(split_part(id.source_id, '_', 1), ':',4) AS alt_allele,
-		 split_part(id.source_id, '_', 2) AS ref_snp_id,
-		 split_part(id.source_id, ':', 2)::bigint AS location
-		 FROM id),
-
 		 bi AS (
-		 SELECT source_id,
-		 find_bin_index(chromosome, da.location_start, da.location_end) AS  bin,
-		 location,
-		 chromosome,
-		 da.location_start,
-		 da.location_end
-		 FROM vid,
-		 normalize_alleles(vid.ref_allele, vid.alt_allele) na, 
-		 display_allele_attributes(vid.ref_allele, vid.alt_allele, na.ref, na.alt, location::integer) da),
+		 SELECT id.source_id AS record_primary_key, 
+		 v.bin_index, 
+		 (v.display_attributes->>'location_start')::int AS location_start,
+		 (v.display_attributes->>'location_end')::int AS location_end,
+		 v.position AS location,
+		 v.chromosome
+		 FROM AnnotatedVDB.Variant v, id 
+		 WHERE record_primary_key = id.source_id),
+		 
 		 
 		 cv AS (
-		 SELECT bi.source_id, v.record_primary_key, 
-		 v.ref_snp_id, v.metaseq_id, v.location  
-		 FROM AnnotatedVDB.Variant v, bi ,
-		 normalize_alleles(split_part(v.metaseq_id, ':', 3), split_part(v.metaseq_id, ':', 4)) na, 
-		 display_allele_attributes(split_part(v.metaseq_id, ':', 3), split_part(v.metaseq_id, ':', 4), na.ref, na.alt, v.location::integer) da
-		 WHERE bi.bin @> bin_index
-		 AND v.chromosome = bi.chromosome
-		 AND int8range(bi.location_start, bi.location_end, '[]') && int8range(da.location_start, da.location_end, '[]')
-		 AND v.record_primary_key != bi.source_id),
+		 SELECT v.record_primary_key, v.ref_snp_id, v.metaseq_id, v.position AS location
+		 FROM AnnotatedVDB.Variant v
+		 WHERE v.bin_index @> (SELECT bin_index FROM bi)
+		 AND int8range((SELECT bi.location_start FROM bi), (SELECT bi.location_end FROM bi), '[]') 
+		 && int8range((v.display_attributes->>'location_start')::int, (v.display_attributes->>'location_end')::int, '[]')
+		 AND v.record_primary_key NOT IN (SELECT record_primary_key FROM bi)	 
+		 ) ,
 
 		 flags AS (
-		 SELECT vid.source_id, 
-		 CASE WHEN SUM((cv.location = vid.location)::integer) > 0 THEN TRUE ELSE FALSE END AS is_multi_allelic,
-		 SUM((cv.location != vid.location)::integer) AS num_colocated_variants
-		 FROM cv, vid GROUP BY vid.source_id),
+		 SELECT bi.record_primary_key AS source_id, cv.record_primary_key, 
+		 CASE WHEN SUM((cv.location = bi.location)::integer) > 0 THEN TRUE ELSE FALSE END AS is_multi_allelic,
+		 SUM((cv.location != bi.location)::integer) AS num_colocated_variants
+		 FROM cv, bi GROUP BY bi.record_primary_key, cv.record_primary_key),
 		 
 		 colocv AS (
-		 SELECT flags.source_id,
+		 SELECT flags.record_primary_key,
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
 		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS colocated_variants
-		 FROM flags LEFT OUTER JOIN cv ON cv.source_id = flags.source_id
-		 AND split_part(flags.source_id, '_', 2) != split_part(cv.record_primary_key, '_', 2)),
-		 
+		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
+		 AND split_part(flags.record_primary_key, ':', 2) != split_part(cv.record_primary_key, ':', 2)),
+
+		
 		 altv AS (
-		 SELECT DISTINCT flags.source_id, 
+		 SELECT DISTINCT flags.record_primary_key, 
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
 		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS alternative_variants
-		 FROM flags LEFT OUTER JOIN cv ON cv.source_id = flags.source_id
-		 AND split_part(flags.source_id, '_', 2) = split_part(cv.record_primary_key, '_', 2)),
+		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
+		 AND split_part(flags.record_primary_key, ':', 2) = split_part(cv.record_primary_key, ':', 2)
+		 ),
 
 		 result AS (
 		 SELECT flags.source_id,
@@ -449,7 +349,7 @@
 		 NULLIF(jsonb_agg(DISTINCT altv.alternative_variants)::text, '[null]') AS alternative_variants,
 		 NULLIF(jsonb_agg(DISTINCT colocv.colocated_variants)::text, '[null]') AS colocated_variants
 		 FROM flags, colocv, altv
-		 WHERE flags.source_id = colocv.source_id AND flags.source_id = altv.source_id
+		 WHERE flags.record_primary_key = colocv.record_primary_key AND flags.record_primary_key = altv.record_primary_key
 		 GROUP BY flags.source_id, is_multi_allelic, num_colocated_variants)
 
 		 SELECT id.source_id,
@@ -458,7 +358,7 @@
 		 r.is_multi_allelic,
 		 r.alternative_variants,
 		 r.colocated_variants
-		 FROM id LEFT OUTER JOIN result r ON id.source_id = r.source_id
+		 FROM id LEFT OUTER JOIN result r ON id.source_id = r.source_id	
 	]]>
       </sql>
     </sqlQuery>
@@ -476,13 +376,13 @@
 
       <sql>
 	<![CDATA[
-		 WITH id AS (##WDK_ID_SQL##),
-		 cs AS (SELECT id.source_id, cadd(id.source_id) AS score FROM id)
-		 SELECT cs.source_id,
+		 WITH id AS (##WDK_ID_SQL##)
+		 SELECT id.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
-		 (score->>'CADD_phred')::numeric AS cadd_phred_score,
-		 (score->>'CADD_raw_score')::numeric AS cadd_raw_score
-		 FROM cs
+		 (cadd_scores->>'CADD_phred')::numeric AS cadd_phred_score,
+		 (cadd_scores->>'CADD_raw_score')::numeric AS cadd_raw_score
+		 FROM AnnotatedVDB.Variant v, id 
+		 WHERE id.source_id = v.record_primary_key
 	]]>
       </sql>
     </sqlQuery>

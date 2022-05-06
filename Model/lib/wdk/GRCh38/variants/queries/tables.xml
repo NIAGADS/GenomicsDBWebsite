@@ -145,21 +145,21 @@
 	<![CDATA[	
 		 WITH id AS (##WDK_ID_SQL##),
 
-		 freq AS (
-		 SELECT id.source_id, allele_frequencies(source_id) FROM id),
+		 freq AS (SELECT record_primary_key AS source_id, allele_frequencies 
+		 FROM AnnotatedVDB.Variant WHERE record_primary_key IN (SELECT source_id FROM id)),
 
 		 freq_elements AS (
 		 SELECT source_id, key AS datasource, 
-		 jsonb_array_elements(value) AS freq_json 
-		 FROM freq, jsonb_each(allele_frequencies)),
+		 value AS freq_json 
+		 FROM freq, jsonb_each(allele_frequencies)) ,
 
 		 freq_values AS (
 		 SELECT source_id,
-		 CASE WHEN key SIMILAR TO 'aa|ea' THEN 'ESP' -- need to patch annotationvdb as these are misclassified as 1000Genomes
-		 ELSE datasource END AS datasource, 
+		 datasource, 
 		 key AS population_source_id, 
 		 value::numeric AS frequency 
 		 FROM freq_elements, jsonb_each(freq_json))
+		 
 
 		 SELECT v.source_id,
 		 p.datasource AS population_source, -- TODO: add version

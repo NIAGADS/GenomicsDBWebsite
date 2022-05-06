@@ -86,28 +86,21 @@
 	<columnAttribute name="position" displayName="Position" type="integer" />
 	<columnAttribute name="location" displayName="Location" type="string" />
 	
-	<columnAttribute name="ref_allele" displayName="Ref Allele" type="string" />
-	<columnAttribute name="alt_allele" displayName="Alt Allele" type="string" />
 	<columnAttribute name="display_allele" displayName="Allele" type="string" />	
-	<columnAttribute name="sequence_allele" internal="true" inReportMaker="false" type="string" />
-	<columnAttribute name="sequence_allele_display" internal="true" inReportMaker="false" type="json_text" />
+
 
 	<columnAttribute name="variant_class_abbrev" displayName="Variant Class" type="string" />
 	<columnAttribute name="variant_class" displayName="variant_class" type="string" />
 	
 	<columnAttribute name="adsp_display_flag" displayName="ADSP Variant?" inReportMaker="false" 
-			 help="variant identified during the Discovery Phase of the ADSP (see NG00061)" type="json_icon" />
+			 help="variant identified during an ADSP sequencing effort" type="json_icon" />
 
-	<columnAttribute name="is_adsp_variant" displayName="ADSP Variant?" inReportMaker="true" help="variant identified during the Discovery Phase of the ADSP (see NG00061)" type="boolean" internal="true"/>
-	<columnAttribute name="is_adsp_wes" displayName="ADSP WES?"  inReportMaker="true"
-			 help="variant identified from whole exome sequencing of the Discovery Phase case/control study by the ADSP (see NG00061)"
-			 type="boolean" internal="true" />
-	<columnAttribute name="is_adsp_wgs" displayName="ADSP WGS?"  inReportMaker="true"
-			 help="variant identified from whole genome sequencing of the Discovery Phase family study by the ADSP (see NG00061)"
+	<columnAttribute name="is_adsp_variant" displayName="ADSP Variant?" inReportMaker="true" help="variant identifier during an ADSP sequencing effort"
 			 type="boolean" internal="true"/>
 
-	<columnAttribute name="adsp_wes_qc_filter_status" displayName="ADSP QC Filter Status (WES)" internal="true" inReportMaker="true" type="string" />
-	<columnAttribute name="adsp_wgs_qc_filter_status" displayName="ADSP QC Filter Status (WGS)" internal="true" inReportMaker="true" type="string" />
+
+	<columnAttribute name="adsp_qc_status" displayName="ADSP QC Filter Value" internal="true" inReportMaker="true" type="json" />
+	<columnAttribute name="adsp_qc_flags" displayName="ADSP QC Filter Status" internal="true" inReportMaker="true" type="json" />
 
       </attributeQueryRef>
 

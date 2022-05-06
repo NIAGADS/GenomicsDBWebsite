@@ -59,8 +59,8 @@ export const SearchPanel: React.FC<PanelProps> = ({}) => {
                                 rs6656401
                             </RouterLink>{" "}
                             - Variant:{" "}
-                            <RouterLink className={classes.secondaryLink} to="record/variant/19:45411941:T:C_rs429358">
-                                19:45411941:T:C
+                            <RouterLink className={classes.secondaryLink} to="record/variant/19:44908684:T:C:rs429358">
+                                19:44908684:T:C
                             </RouterLink>
                         </Typography>
                     </Box>
