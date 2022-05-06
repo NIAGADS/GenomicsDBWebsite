@@ -79,7 +79,7 @@ const siteAnnouncements = [
             >
               www.niagads.org/genomics
             </a>{" "}
-            is still available (to be retired by Fall 2021). Please feel free to provide us with your feedback using this {" "}
+            is still available (to be retired by 2022). Please feel free to provide us with your feedback using this {" "}
             <a
               target="_blank"
               href="https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi"
