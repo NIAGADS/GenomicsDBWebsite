@@ -21,6 +21,7 @@ export interface PanelProps {
     hasBaseArrow?: boolean;
     background?: string;
     classes?: any;
+    options?: any;
 }
 
 export interface CollapsablePanelProps {

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState} from "react";
+import { useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+
+import { RootState } from "wdk-client/Core/State/Types";
 
 import { SiteSearch, SearchResult } from "@components/Tools";
 import { buildRouteFromResult, buildSummaryRoute } from "genomics-client/util/util";
@@ -16,6 +20,15 @@ import { useGoto } from "genomics-client/hooks";
 export const SearchPanel: React.FC<PanelProps> = ({}) => {
     const goto = useGoto();
     const classes = useHomePageStyles();
+    const buildNumber = useSelector((state: RootState) => state.globalData?.config?.buildNumber);
+    const [buildInfo, setBuildInfo] = useState(null);
+
+    useEffect(() => {
+        if (buildNumber) {
+            setBuildInfo(JSON.parse(buildNumber));
+        }
+    }, [buildNumber]);
+
     return (
         <PrimaryBackgroundPanel classes={classes}>
             <Grid item container direction="column" spacing={6} xs={12} sm={10} md={6}>
@@ -27,6 +40,9 @@ export const SearchPanel: React.FC<PanelProps> = ({}) => {
                     </Box>
                     <Typography variant="h2" className={`${classes.secondaryText} ${classes.bold}`}>
                         Alzheimer's Genomics Database
+                    </Typography>
+                    <Typography variant="h5" className ={`${classes.secondaryText} ${classes.bold}`}>
+                        {buildInfo ? `v. ${buildInfo.build}` : <CircularProgress color="secondary"/>}
                     </Typography>
                     <Box pt={4}>
                         <Typography className={`${classes.darkContrastText} ${classes.fancyBody}`} variant="body2">
