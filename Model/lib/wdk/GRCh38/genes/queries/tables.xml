@@ -179,8 +179,8 @@
 		 ELSE 'Caribbean Hispanic' END AS population,
 		 ffunction.characteristic AS filter_function,
 		 trim(covariates.characteristic) AS covariates,
-		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name,
-		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS resource_accession
+		 record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
+		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS resource_accession,
 
 		 FROM Results.GeneAssociation ga,
 		 NIAGADS.GeneAssociationCorrection gac,
@@ -224,8 +224,8 @@
 
 		tracks AS (
 		SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name_link,
-		build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
+		record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
+		build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link
 		FROM NIAGADS.TrackAttributes ta,
 		NIAGADS.ProtocolAppNodeCharacteristic c
 		WHERE ta.protocol_app_node_id = c.protocol_app_node_id
@@ -236,19 +236,14 @@
 
 		Result AS (
 		SELECT id.source_id,
-		r.dataset_id AS track,
-
-		build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
-		'/record/variant/', r.variant_record_primary_key,
-		CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant_link,
+		r.track,
 		
-		CASE WHEN r.variant_record_primary_key LIKE '%_%'
-		THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+		record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant_link,
+		r.ref_snp_id,
 		
-		adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
-		adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
-		adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
+		adsp_variant_flag(r.is_adsp_variant) AS adsp_variant_flag,
+		variant_msc_gene_impact(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_impact,
+		variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		
 		CASE WHEN r.position::bigint < ga.location_start 
 		THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -267,7 +262,7 @@
 		AND ga.bin_index_100kb_flank @> r.bin_index
 		AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
 		@> r.position::bigint
-		AND t.track = r.dataset_id)
+		AND t.track = r.track)
 
 		SELECT * FROM result 
 		ORDER BY neg_log10_pvalue DESC
@@ -296,8 +291,8 @@
 
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name,
-		 build_link_attribute(ta.dataset_accession, '/record/dataset/', NULL, 'view accession details') AS accession_link
+		 record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
+		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link
 		 FROM NIAGADS.TrackAttributes ta,
 		 NIAGADS.ProtocolAppNodeCharacteristic c
 		 WHERE ta.protocol_app_node_id = c.protocol_app_node_id
@@ -308,19 +303,14 @@
 
 		 Result AS (
 		 SELECT id.source_id,
-		 r.dataset_id AS track,
+		 r.track,
 		 
-		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
-		 '/record/variant/', r.variant_record_primary_key,
-		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
-		 
-		 CASE WHEN r.variant_record_primary_key LIKE '%_%'
-		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
-		 
-		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
-		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
-		 adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
+		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant,
+		 r.ref_snp_id,
+		
+ 		 adsp_variant_flag(r.is_adsp_variant) AS adsp_variant_flag,
+		 variant_msc_gene_impact(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_impact,
+		 variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN r.position::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -339,7 +329,7 @@
 		 AND ga.bin_index_100kb_flank @> r.bin_index
 		 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
 		 @> split_part(variant_record_primary_key, ':', 2)::bigint
-		 AND t.track = r.dataset_id)
+		 AND t.track = r.track)
 		 
 		 SELECT * FROM result 
 		 ORDER BY neg_log10_pvalue DESC
@@ -351,7 +341,7 @@
     <sqlQuery name="ADVariantsFromCatalog">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
       <column name="frequency"/>
@@ -381,19 +371,14 @@
 		 
 		 SELECT id.source_id,
 		 t.datasource AS source,
-		 r.allele,
+		 r.test_allele AS allele,
 		 
-		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),'/record/variant/', 
-		 r.variant_record_primary_key,
-		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
-		
-		 CASE WHEN r.variant_record_primary_key LIKE '%_%'
-		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant_link,
+		 r.ref_snp_id,
 		 
-		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
-		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
-		 adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
+		 adsp_variant_flag(r.is_adsp_variant) AS adsp_variant_flag,
+		 variant_msc_gene_impact(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_impact,
+		 variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -418,7 +403,7 @@
 		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
 		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
 		 
-		 FROM Results.VariantGWAS r, tracks t, id, CBIL.GeneAttributes ga
+		 FROM NIAGADS.VariantGWASTopHits r, tracks t, id, CBIL.GeneAttributes ga
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND r.restricted_stats->>'DISEASE/TRAIT' ILIKE '%Alzheimer%'
                  AND id.source_id = ga.source_id
@@ -432,7 +417,7 @@
     <sqlQuery name="OtherVariantsFromCatalog">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
       <column name="frequency"/>
@@ -463,19 +448,14 @@
 		 
 		 SELECT id.source_id,
 		 t.datasource AS source,
-		 r.allele,
+		 r.test_allele AS allele,
 		 
-		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),'/record/variant/', 
-		 r.variant_record_primary_key,
-		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
-
-		 CASE WHEN r.variant_record_primary_key LIKE '%_%' 
-		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
+		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant_link,
+		 r.ref_snp_id,
 		 
-		 adsp_variant_display_flag_niagads(r.variant_record_primary_key) AS adsp_variant_flag,
-		 adsp_msc_impact_niagads(r.variant_record_primary_key, id.source_id) AS gene_impact,
-		 adsp_msc_consequence_niagads(r.variant_record_primary_key, id.source_id) AS gene_consequence,
+		 adsp_variant_flag(r.is_adsp_variant) AS adsp_variant_flag,
+		 variant_msc_gene_impact(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_impact,
+		 variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
 		 THEN build_text_attribute('upstream', NULL, 'red')::text
@@ -500,7 +480,7 @@
 		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
 		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
 		 
-		 FROM Results.VariantGWAS r, tracks t, id, CBIL.GeneAttributes ga
+		 FROM NIAGADS.VariantGWASTopHits r, tracks t, id, CBIL.GeneAttributes ga
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND r.restricted_stats->>'DISEASE/TRAIT' NOT ILIKE '%Alzheimer%'
                  AND id.source_id = ga.source_id
