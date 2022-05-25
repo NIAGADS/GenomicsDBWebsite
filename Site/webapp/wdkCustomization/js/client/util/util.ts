@@ -14,7 +14,7 @@ export const convertHtmlEntites = (html: string) => {
 };
 
 export const buildRouteFromResult = (result: SearchResult) => `/record/${result.record_type}/${result.primary_key}`,
-    buildSummaryRoute = (searchTerm: string) => `/searchResults?searchTerm=${searchTerm}`;
+    buildSummaryRoute = (searchTerm: string) => `/search/site?term=${searchTerm}`;
 
 export const toProperCase = function (str: string) {
     return str.replace(/\w\S*/g, function (txt) {

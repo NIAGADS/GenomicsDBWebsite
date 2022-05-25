@@ -32,6 +32,7 @@ public class SiteSearchService extends AbstractWdkService {
         + "UNION SELECT * FROM variant_text_search((SELECT term FROM st))" + NL
         + "UNION SELECT * FROM niagads_dataset_text_search((SELECT term FROM st))" + NL
         + "UNION SELECT * FROM gwas_dataset_text_search((SELECT term FROM st))" + NL
+        + "UNION SELECT * FROM span_feature_search((SELECT term FROM st))" + NL
         + "ORDER BY match_rank, record_type, display ASC)" + NL
         + "SELECT jsonb_agg(matches)::text AS result" + NL
         + "FROM matches";
