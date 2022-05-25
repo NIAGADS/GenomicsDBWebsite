@@ -356,9 +356,9 @@
       <!-- =============================================================== -->
       <!-- Functional Annotation -->
       <!-- =============================================================== -->
-      
+<!--  	<columnAttribute displayName="Association" name="evidence_table_dropdown" help="click on links to reveal supporting evidence for this association" type="json_table" /> -->     
       <table name="go_terms" displayName="Gene Ontology" queryRef="GeneTables.GoTerms">
-	<columnAttribute displayName="Association" name="evidence_table_dropdown" help="click on links to reveal supporting evidence for this association" type="json_table" />
+
 	<columnAttribute displayName="Term" name="term" type="json_text" />
 	<columnAttribute displayName="GO Accession" name="go_accession" help="follow link for more information from AmIGO" type="json_link" />
 	<columnAttribute displayName="Evidence Code" name="go_evidence_code" type="string" />
@@ -377,7 +377,6 @@
                    <p>Annotations of gene function from the Gene Ontology Consortium.<br/>
                    Mouse over term names to view a full definition.<br/>
                    Click on the <span class="blue">GO Accession</sp> link to view the term in the GO hierarchy on the AMIGO website.<br/>
-                   Click on the <i class="fa fa-caret-down"></i> icon in the <span class="blue">Association</sp> field to view details about the evidence used to define the GO-gene association.</p>
 	  ]]>
 	</description>		
       </table>
