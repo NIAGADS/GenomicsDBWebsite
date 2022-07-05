@@ -8,6 +8,8 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
+
 import { RootState } from "wdk-client/Core/State/Types";
 
 import { SiteSearch, SearchResult } from "@components/Tools";
@@ -17,9 +19,25 @@ import useHomePageStyles from "../styles";
 
 import { useGoto } from "genomics-client/hooks";
 
+const useTypographyStyles = makeStyles((theme:Theme) => 
+    createStyles({
+        heading: {
+            fontSize: "3rem",
+        },
+        subheading: {
+            fontSize: "2.5rem"
+        },
+        body: {
+            fontSize: "1.5rem",
+            fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"',
+        },
+    })
+);
+
 export const SearchPanel: React.FC<PanelProps> = ({}) => {
     const goto = useGoto();
     const classes = useHomePageStyles();
+    const tClasses = useTypographyStyles();
     const buildNumber = useSelector((state: RootState) => state.globalData?.config?.buildNumber);
     const [buildInfo, setBuildInfo] = useState(null);
 
@@ -31,22 +49,22 @@ export const SearchPanel: React.FC<PanelProps> = ({}) => {
 
     return (
         <PrimaryBackgroundPanel classes={classes}>
-            <Grid item container direction="column" spacing={6} xs={12} sm={10} md={6}>
+            <Grid item container direction="column" spacing={6} xs={12} sm={10}>
                 <Grid item>
                     <Box pt={3}>
-                        <Typography variant="h3" className={`${classes.secondaryText} ${classes.bold}`}>
-                            NIAGADS
+                        <Typography variant="h3" className={`${classes.secondaryText} ${classes.bold} ${tClasses.heading}`}>
+                            The NIAGADS
                         </Typography>
                     </Box>
-                    <Typography variant="h2" className={`${classes.secondaryText} ${classes.bold}`}>
+                    <Typography variant="h2" className={`${classes.secondaryText} ${classes.bold} ${tClasses.subheading}`}>
                         Alzheimer's Genomics Database
                     </Typography>
                     <Typography variant="h5" className ={`${classes.secondaryText} ${classes.bold}`}>
-                        {buildInfo ? `v. ${buildInfo.build}` : <CircularProgress color="secondary"/>}
+                        {buildInfo ? `(v. ${buildInfo.build})` : <CircularProgress color="secondary"/>}
                     </Typography>
                     <Box pt={4}>
-                        <Typography className={`${classes.darkContrastText} ${classes.fancyBody}`} variant="body2">
-                            The NIAGADS Alzhemier's GenomicsDB is an interactive knowledgebase for Alzheimer's disease
+                        <Typography className={`${classes.darkContrastText} ${tClasses.body}`} variant="body2">
+                            is an interactive knowledgebase for Alzheimer's disease
                             (AD) genetics. It provides a platform for data sharing, discovery, and analysis to help
                             advance the understanding of the complex genetic underpinnings of AD neurodegeneration and
                             accelerate the progress of research on AD and AD related dementias (ADRD).

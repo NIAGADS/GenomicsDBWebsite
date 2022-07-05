@@ -1,6 +1,14 @@
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import { lighten } from "@material-ui/core/styles";
 
+export const useTypographyStyles = makeStyles((theme:Theme) => 
+    createStyles({
+        largeBody: {
+            fontSize: "1.2rem",
+        },
+    })
+);
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         primaryBackground: {
@@ -17,13 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         lightContrastText: {
             color: theme.palette.primary.light,
-        },
-        fancyBody: {
-            fontSize: "1.7rem",
-            fontFamily: '"Raleway", "Roboto", "Arial", "sans-serif"',
-        },
-        largeBody: {
-            fontSize: "1.2rem",
         },
         secondaryText: {
             color: theme.palette.secondary.main,
