@@ -7,17 +7,18 @@ import Link from "@material-ui/core/Link";
 
 import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
 import { DatasetOverviewChart, DatasetReleases } from "../Cards";
-import useHomePageStyles from "../styles";
+import useHomePageStyles, { useTypographyStyles as useHomePageTypographyStyles } from "../styles";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
 export const AvailableDataPanel: React.FC<PanelProps> = ({ background = "light", webAppUrl }) => {
     const classes = useHomePageStyles();
+    const tClasses = useHomePageTypographyStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
     const linkType = background === "dark" ? "secondary" : "initial";
-    const bodyText = bodyTextColor + " " + classes.largeBody;
+    const bodyText = bodyTextColor + " " + tClasses.largeBody;
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 
 import { PanelProps, LightBackgroundPanel } from "@components/MaterialUI";
-import useHomePageStyles from "../styles";
+import useHomePageStyles, { useTypographyStyles as useHomePageTypographyStyles } from "../styles";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 import { _siteStatistics } from "genomics-client/data/_siteStatistics";
@@ -15,10 +15,11 @@ import { abbreviateLargeNumber } from "genomics-client/util/util";
 
 export const StatsPanel: React.FC<PanelProps> = ({ background = "light" }) => {
     const classes = useHomePageStyles();
+    const tClasses = useHomePageTypographyStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
     const linkType = background === "dark" ? "secondary" : "initial";
-    const bodyText = bodyTextColor + " " + classes.largeBody;
+    const bodyText = bodyTextColor + " " + tClasses.largeBody;
 
     return (
         <LightBackgroundPanel classes={classes} hasBaseArrow={true}>
