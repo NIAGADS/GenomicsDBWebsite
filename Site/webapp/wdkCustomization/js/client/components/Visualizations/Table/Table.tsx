@@ -14,7 +14,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { HeaderGroup, Column, TableInstance } from "react-table";
 
-import { TableHeaderCell, useTableStyles }   from ".";
+import { TableHeaderCell, useTableStyles } from ".";
 
 interface TableProps {
     instance: TableInstance;
@@ -22,7 +22,6 @@ interface TableProps {
 }
 
 export const Table: React.FC<TableProps> = ({ instance, className }) => {
-
     const classes = useTableStyles();
     const {
         getTableProps,
@@ -34,9 +33,9 @@ export const Table: React.FC<TableProps> = ({ instance, className }) => {
     } = instance;
 
     return (
-        <Box className={className}> 
-            <MaUTable {...getTableProps()}>
-                <TableHead>
+        <Box className={className}>
+            <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
+                <TableHead classes={{ root: classes.tableHead }}>
                     {headerGroups.map((headerGroup: HeaderGroup<object>) => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column) => (

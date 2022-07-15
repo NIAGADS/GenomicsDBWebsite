@@ -318,7 +318,9 @@
 	<propertyList name="flags">
 	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
-	
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
 
 	<description>
 	  <![CDATA[

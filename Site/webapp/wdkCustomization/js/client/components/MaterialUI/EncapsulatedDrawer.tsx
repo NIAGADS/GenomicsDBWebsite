@@ -1,22 +1,19 @@
 // modified from https://raw.githubusercontent.com/Jon20111/drawer-inside-div/main/src/components/DrawerInsideDiv.jsx
 
 import React, { useEffect, useState, useRef } from "react";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Drawer from "@material-ui/core/Drawer";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Divider from "@material-ui/core/Divider";
-import Box from "@material-ui/core/Box";
+
+import clsx from "clsx";
 
 import { makeStyles, useTheme, Theme, createStyles } from "@material-ui/core/styles";
 
 import { withHtmlTooltip } from "@components/MaterialUI";
 
-import clsx from "clsx";
-import Grid from "@material-ui/core/Grid";
+
 
 const DRAWER_WIDTH = 400;
 const MAX_HEIGHT = 750;

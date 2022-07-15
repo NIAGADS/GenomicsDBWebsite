@@ -41,6 +41,7 @@ export interface TableContainerProps {
     showAdvancedFilter?: boolean;
     showHideColumns?: boolean;
     initialFilters?: any;
+    initialSort?: any;
 }
 
 const hooks = [
@@ -93,6 +94,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
     showAdvancedFilter,
     showHideColumns,
     initialFilters,
+    initialSort
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -110,6 +112,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 pageIndex: 0,
                 pageSize: 10,
                 filters: [initialFilters ? initialFilters : {}],
+                sortBy: [initialSort ? initialSort : []],
                 hiddenColumns: columns
                     .filter((col: any) => col.show === false)
                     .map((col) => col.id || col.accessor) as any,
@@ -129,6 +132,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
         headerGroups,
         prepareRow,
         setFilter,
+        setSortBy,
         preGlobalFilteredRows,
         preFilteredRows,
         setGlobalFilter,
@@ -167,7 +171,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
         <DefaultBackgroundPanel>
             <EncapsulatedDrawer
                 navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
-                toggleAnchor="left"
+                toggleAnchor="top"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Show/Hide Filters"
                 //navigationProps={{ color: "primary" }}
@@ -175,7 +179,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 drawerCloseLabel="Close"
             >
                 <FilterChipBar instance={instance} />
-                <Table className={className} instance={instance} />
+                <Table className={className} instance={instance}/>
             </EncapsulatedDrawer>
         </DefaultBackgroundPanel>
     );

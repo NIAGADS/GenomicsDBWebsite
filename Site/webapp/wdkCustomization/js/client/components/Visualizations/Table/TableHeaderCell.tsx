@@ -35,6 +35,7 @@ export const BaseTableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) 
 
 export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
     const classes = useTableStyles();
+
     return column.canSort ? (
         <TableCell {...column.getHeaderProps()} className={cx({[classes.tableHeadCell]: true})}>
             <TableSortLabel
@@ -42,10 +43,10 @@ export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
                 active={column.isSorted}
                 //@ts-ignore --react-table
                 direction={column.isSortedDesc ? "desc" : "asc"}
+                hideSortIcon={false}
                 //@ts-ignore --react-table
                 {...column.getSortByToggleProps()}
-                //className={classes.tableSortLabel}
-                //style={style}
+
             >
                 <BaseTableHeaderCell column={column} />
             </TableSortLabel>

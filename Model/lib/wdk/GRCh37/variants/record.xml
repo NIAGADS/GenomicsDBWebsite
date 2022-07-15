@@ -326,12 +326,14 @@
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
 	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
 
-
 	<propertyList name="column_filter">
 	  <value>{"pvalue":"pvalue"}</value>
 	</propertyList>
 	<propertyList name="flags">
 	  <value>{"defaultOpen": true, "filter": true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+		<value>["id":"pvalue", "desc":false]</value>
 	</propertyList>
 	
 

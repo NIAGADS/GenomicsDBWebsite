@@ -23,6 +23,7 @@ import {
 } from "./RecordTableFilters/filters";
 import { PValueFilter, PieChartFilter } from "./RecordTableFilters";
 import classNames from "classnames";
+import { SortByAlpha } from "@material-ui/icons";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -38,10 +39,10 @@ const filterTypes = {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
-          minHeight: 500,
+          /* minHeight: 500,
           maxHeight: 500,
           overflowY: "scroll",
-          overflowX: "hidden"
+          overflowX: "hidden" */
         },
         fullWidth: {
             width: "100%"
@@ -62,6 +63,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
     const canFilter = get(JSON.parse(get(table, "properties.flags[0]", '{"filter":true}')), "filter", true); // default to true if missing
     const hasColumnFilters = "column_filter" in table.properties;
     const initialFilters = _setInitialFilters(table);
+    const initialSort = _setInitialSort(table);
 
     const classes = useStyles();
 
@@ -83,6 +85,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
             showAdvancedFilter={hasColumnFilters}
             showHideColumns={hasHiddenColumns}
             initialFilters={initialFilters}
+            initialSort={initialSort}
         />
     );
 };
@@ -95,6 +98,12 @@ const _setInitialFilters = (table:TableField) => {
     return null;
 }
 
+const _setInitialSort = (table:TableField) => {
+    let sortBy: any = table.properties.sorted_by ? JSON.parse(table.properties.sorted_by[0]) : null;  
+    return useMemo(() => sortBy, []);
+}
+
+
 const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
     if (!data) {
         return [];
@@ -103,6 +112,7 @@ const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns
         return [];
     } else {
         let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;
+       
         let attributes: AttributeField[] = table.attributes;
         let columns: Column<{}>[] = Object.keys(data[0])
             .filter((k) => {
@@ -112,7 +122,7 @@ const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns
             .map((k): Column => {
                 const attribute: AttributeField = attributes.find((item) => item.name === k);
                 let filterType =
-                    columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
+                columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
                 let column = _buildColumn(attribute, attribute.isSortable, filterType);
                 //@ts-ignore
                 if (column.id.endsWith("link")) column.sortType = linkColumnSort;

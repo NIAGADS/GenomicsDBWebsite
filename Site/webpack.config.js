@@ -4,12 +4,12 @@ var path = require("path");
 
 // Create webpack alias configuration object
 var alias = {
-    'genomics-client': __dirname + '/webapp/wdkCustomization/js/client',
-    '@components': __dirname + '/webapp/wdkCustomization/js/client/components',
-    '@viz': __dirname + '/webapp/wdkCustomization/js/client/components/Visualizations',
-    '@images': __dirname + '/webapp/images',
-    '@sass': __dirname + '/webapp/wdkCustomization/sass'
-  };
+    "genomics-client": __dirname + "/webapp/wdkCustomization/js/client",
+    "@components": __dirname + "/webapp/wdkCustomization/js/client/components",
+    "@viz": __dirname + "/webapp/wdkCustomization/js/client/components/Visualizations",
+    "@images": __dirname + "/webapp/images",
+    "@sass": __dirname + "/webapp/wdkCustomization/sass",
+};
 
 module.exports = configure({
     //plugins: [new BundleAnalyzerPlugin()],
@@ -17,19 +17,21 @@ module.exports = configure({
         "site-client": path.join(__dirname, "/webapp/wdkCustomization/js/client/main.ts"),
     },
     resolve: {
-        alias
+        alias,
     },
     optimization: {
         //runtimeChunk: 'single',
         splitChunks: {
             cacheGroups: {
                 vendor: {
-                    test:  /[\\/]node_modules[\\/]((?!(@fontsource)).*)[\\/](?=.*\.js$)/, // any JS from node modules, except the fonts
+                    test: /[\\/]node_modules[\\/]((?!(@fontsource)).*)[\\/](?=.*\.(js|mjs|jsx|ts|tsx)$)/, // any JS from node modules, except the fonts
+                    // /[\\/]node_modules[\\/]((?!(@fontsource)).*)[\\/]/, // anything from node modules, except the fonts
                     // /[\\/]node_modules[\\/](?!lodash)(.[a-zA-Z0-9.\-_]+)[\\/](?=.*\.js$)/
                     name: "vendors",
                     chunks: "all",
                     filename: "[name].bundle.js",
                 },
+             
             },
         },
     },
