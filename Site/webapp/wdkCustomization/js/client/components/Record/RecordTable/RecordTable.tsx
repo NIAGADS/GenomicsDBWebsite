@@ -98,6 +98,7 @@ const _setInitialFilters = (table:TableField) => {
     return null;
 }
 
+
 const _setInitialSort = (table:TableField) => {
     let sortBy: any = table.properties.sorted_by ? JSON.parse(table.properties.sorted_by[0]) : null;  
     return useMemo(() => sortBy, []);

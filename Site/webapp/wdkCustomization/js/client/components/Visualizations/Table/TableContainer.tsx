@@ -112,7 +112,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 pageIndex: 0,
                 pageSize: 10,
                 filters: [initialFilters ? initialFilters : {}],
-                sortBy: [initialSort ? initialSort : []],
+                sortBy: initialSort ? initialSort : [],
                 hiddenColumns: columns
                     .filter((col: any) => col.show === false)
                     .map((col) => col.id || col.accessor) as any,
@@ -174,7 +174,6 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 toggleAnchor="top"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Show/Hide Filters"
-                //navigationProps={{ color: "primary" }}
                 drawerContents={renderDrawerContents}
                 drawerCloseLabel="Close"
             >
