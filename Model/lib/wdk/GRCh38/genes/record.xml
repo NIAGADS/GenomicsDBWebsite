@@ -200,6 +200,9 @@
 	<propertyList name="flags">
 	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":true}]</value>
+	</propertyList>
 
 	<description>
 	  <![CDATA[
@@ -234,6 +237,9 @@
 	
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":true}]</value>
 	</propertyList>
 
 	<description>

@@ -11,8 +11,7 @@ import clsx from "clsx";
 
 import { makeStyles, useTheme, Theme, createStyles } from "@material-ui/core/styles";
 
-import { withHtmlTooltip } from "@components/MaterialUI";
-
+import { withHtmlTooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
 
 
 const DRAWER_WIDTH = 400;
@@ -28,7 +27,7 @@ const useContentStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.leavingScreen,
             }),
             marginLeft: 0,
-            //maxHeight: MAX_HEIGHT,
+            maxHeight: MAX_HEIGHT,
         },
         contentShift: {
             transition: theme.transitions.create("margin", {
@@ -36,17 +35,19 @@ const useContentStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.enteringScreen,
             }),
             marginLeft: DRAWER_WIDTH,
-            //maxHeight: MAX_HEIGHT,
+            maxHeight: MAX_HEIGHT,
         },
+        topDrawerContentShift: {},
     })
 );
 
 interface StyleProps {
-    height: number;
+    height?: number;
 }
 
 const useDrawerStyles = makeStyles<Theme, StyleProps>((theme: Theme) =>
     createStyles({
+        topDrawer: {},
         drawer: {
             width: DRAWER_WIDTH,
             borderRight: `1px solid ${theme.palette.primary.light}`,
@@ -89,27 +90,11 @@ const useDrawerStyles = makeStyles<Theme, StyleProps>((theme: Theme) =>
     })
 );
 
-interface DrawerProps {
-    navigation: React.ReactNode;
-    drawerContents: React.ReactNode;
-    drawerProps?: any;
-    navigationProps?: any; //appBarProps
-    toggleAnchor: string;
-    toggleIcon: React.ReactNode;
-    toggleHelp: string;
-    drawerCloseLabel: string;
-    drawerHeaderContents?: React.ReactNode;
-    handleClose?: any;
-    handleOpen?: any;
-}
-
-interface DrawerContentsProps {
-    children?: React.ReactNode; // what goes in the div (e.g., a table)
-}
 
 const DrawerContents: React.FC<DrawerContentsProps> = ({ children }) => {
     return <>{children}</>;
 };
+
 
 export const EncapsulatedDrawer: React.FC<DrawerProps & DrawerContentsProps> = ({
     navigation,

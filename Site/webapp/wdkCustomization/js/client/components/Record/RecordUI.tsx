@@ -20,7 +20,7 @@ import {
     RecordNavigationButton,
     RecordNavigationSection as RecordNavigationPanel,
 } from "./Sections/RecordNavigationSection";
-import { contentStyles as drawerPanelStyles } from "@components/MaterialUI/PersistentDrawerLeft";
+import { contentStyles as drawerPanelStyles } from "genomics-client/components/MaterialUI/Drawer/PersistentDrawerLeft";
 /**
  * Renders the main UI for the WDK Record page.
  */

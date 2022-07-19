@@ -7,6 +7,8 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Typography from "@material-ui/core/Typography";
 
+import { DrawerProps } from "@components/MaterialUI";
+
 export const DRAWER_WIDTH = 240;
 export interface DrawerState {
     isOpen: boolean;
@@ -33,7 +35,7 @@ export const contentStyles = (theme:Theme) => ({
     },
 });
 
-export const useDrawerStyles = makeStyles((theme: Theme) =>
+const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
         drawer: {
             width: DRAWER_WIDTH,
@@ -70,10 +72,6 @@ export const useDrawerStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export interface DrawerProps {
-    children?: React.ReactNode;
-    title?: string;
-}
 
 export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ title, children, isOpen, handleClose }) => {
     const classes = useDrawerStyles();

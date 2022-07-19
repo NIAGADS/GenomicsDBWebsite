@@ -28,12 +28,13 @@ import { Table, TableToolbar, TablePagination, TableColumnsPanel } from ".";
 import { FilterPanel, FilterChipBar, ClearFiltersButton } from "./TableFilters";
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
 
-import { DefaultBackgroundPanel, EncapsulatedDrawer } from "@components/MaterialUI";
+import { DefaultBackgroundPanel, NavigationDrawer } from "@components/MaterialUI";
 
 import { useTableStyles } from "./styles";
 
 export interface TableContainerProps {
     columns: Column<{}>[];
+    title?:string;
     data: any;
     canFilter: boolean;
     filterTypes?: any; // json object of filter types
@@ -94,7 +95,8 @@ const TableContainer: React.FC<TableContainerProps> = ({
     showAdvancedFilter,
     showHideColumns,
     initialFilters,
-    initialSort
+    initialSort,
+    title
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -159,27 +161,45 @@ const TableContainer: React.FC<TableContainerProps> = ({
         <>
             {showHideColumns || showAdvancedFilter ? (
                 <Grid container alignItems="stretch">
-                    {showHideColumns && <Grid item><TableColumnsPanel instance={instance} /></Grid>}
-                    {showAdvancedFilter && <Grid item><FilterPanel instance={instance} /></Grid>}
+                    {showHideColumns && (
+                        <Grid item>
+                            <TableColumnsPanel instance={instance} />
+                        </Grid>
+                    )}
+                    {showAdvancedFilter && (
+                        <Grid item>
+                            <FilterPanel instance={instance} />
+                        </Grid>
+                    )}
                 </Grid>
             ) : null}
+        </>
+    );
+
+    const renderDrawerHeaderContents = (    
+        <>
+        <Grid container justifyContent="flex-start" alignItems="flex-start">
+        <h5>Filter or modify table: <em>{title}</em> </h5>
+        </Grid>
         </>
     );
 
     // Render the UI for the table
     return (
         <DefaultBackgroundPanel>
-            <EncapsulatedDrawer
+            <NavigationDrawer
                 navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
-                toggleAnchor="top"
+                toggleAnchor="bottom"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Show/Hide Filters"
                 drawerContents={renderDrawerContents}
                 drawerCloseLabel="Close"
+                drawerHeaderContents={title ? renderDrawerHeaderContents : null}
             >
                 <FilterChipBar instance={instance} />
-                <Table className={className} instance={instance}/>
-            </EncapsulatedDrawer>
+            </NavigationDrawer>
+       
+            <Table className={className} instance={instance} />
         </DefaultBackgroundPanel>
     );
 };

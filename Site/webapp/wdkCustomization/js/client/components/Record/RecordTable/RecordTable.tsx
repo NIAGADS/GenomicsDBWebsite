@@ -86,6 +86,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
             showHideColumns={hasHiddenColumns}
             initialFilters={initialFilters}
             initialSort={initialSort}
+            title={table.displayName}
         />
     );
 };
