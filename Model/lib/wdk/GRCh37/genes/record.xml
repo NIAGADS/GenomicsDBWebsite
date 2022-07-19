@@ -201,6 +201,10 @@
 	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
 
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+
 	<description>
 	  <![CDATA[
 		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS 
@@ -234,6 +238,10 @@
 	
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
 	</propertyList>
 
 	<description>
@@ -276,6 +284,10 @@
 	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
 	</propertyList>
 
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+
 	
 	<description>
 	  <![CDATA[    
@@ -310,6 +322,10 @@
 
 	<propertyList name="column_filter">
 	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	</propertyList>
+
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
 	</propertyList>
 
 	<propertyList name="hidden_columns">

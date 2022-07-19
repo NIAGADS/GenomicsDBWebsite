@@ -201,7 +201,7 @@
 	  <value>{"defaultOpen": true, "filter": true}</value>
 	</propertyList>
 	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":true}]</value>
+		<value>[{"id":"pvalue", "desc":false}]</value>
 	</propertyList>
 
 	<description>
@@ -239,7 +239,7 @@
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":true}]</value>
+		<value>[{"id":"pvalue", "desc":false}]</value>
 	</propertyList>
 
 	<description>
@@ -282,6 +282,10 @@
 	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
 	</propertyList>
 
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+
 	
 	<description>
 	  <![CDATA[    
@@ -320,6 +324,10 @@
 
 	<propertyList name="hidden_columns">
 	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
+	</propertyList>
+
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
 	</propertyList>
 
 	<description>

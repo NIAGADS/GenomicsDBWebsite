@@ -112,6 +112,15 @@ ENSEMBL_TRANSCRIPT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Transcript/
 ENSEMBL_VARIANT_URL_GRCh37=http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=
 ENSEMBL_REGULATORY_FEATURE_URL_GRCh37=https://grch37.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
 ENSEMBL_MOTIF_FEATURE_URL_GRCh37=https://grch37.ensembl.org/motifWidget.htm?id=
+ENSEMBL_PROTEIN_URL_GRCh37=https://grch37.ensembl.org/Human/Search/Results?site=ensembl;facet_species=Human;q=
+
+ENSEMBL_GENE_URL_GRCh38=http://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
+ENSEMBL_TRANSCRIPT_URL_GRCh38=http://www.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
+ENSEMBL_VARIANT_URL_GRCh38=http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=
+ENSEMBL_REGULATORY_FEATURE_URL_GRCh38=https://www.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
+ENSEMBL_MOTIF_FEATURE_URL_GRCh38=https://www.ensembl.org/motifWidget.htm?id=
+ENSEMBL_PROTEIN_URL_GRCh38=https://www.ensembl.org/Human/Search/Results?site=ensembl;facet_species=Human;q=
+
 
 VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
 OMIM_URL=http://omim.org/entry/
