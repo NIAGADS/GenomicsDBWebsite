@@ -1,6 +1,6 @@
 // modified from https://github.com/ggascoigne/react-table-example
 import React, { ReactElement, useCallback } from "react";
-
+import {countBy} from 'lodash';
 import { Theme, createStyles, makeStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -33,14 +33,20 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
         setAllFilters([]);
     }, [setAllFilters]);
 
+    const hasSelects = allColumns.filter(
+        //@ts-ignore
+        (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("select")
+    );
+
     return (
-        <CollapsableCardPanel title="Table Filters" defaultOpen={true}>
+        <CollapsableCardPanel title="Advanced Filters" defaultOpen={false}>
             <Grid
                 container
-                direction="column"
+                //direction="column"
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 className={classes.root}
+                spacing={3}
             >
                 <Grid item>
                     <ClearFiltersButton instance={instance} />

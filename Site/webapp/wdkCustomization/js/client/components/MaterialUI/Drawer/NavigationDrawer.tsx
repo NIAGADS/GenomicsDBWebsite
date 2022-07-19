@@ -8,7 +8,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-
+import Grid from "@material-ui/core/Grid";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { withHtmlTooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
 
@@ -35,16 +36,12 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
         title: {
             fontSize: theme.typography.pxToRem(12),
         },
-        content: {
-         
-        },
+        content: {},
         fullWidth: {
             width: "auto",
-        }
-        
+        },
     })
 );
-
 
 export const NavigationDrawer: React.FC<DrawerProps> = ({
     navigation,
@@ -65,15 +62,11 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
         setOpen(!open);
     };
 
-    const onDrawerClose = () => {
-        setOpen(false);
-    };
 
     const drawerClasses = useDrawerStyles();
     return (
         <div>
             <React.Fragment key={toggleAnchor}>
-                
                 <AppBar position="static" elevation={0} {...navigationProps}>
                     <Toolbar /*style={{ display: "flex" }} */ variant="dense">
                         {toggleIcon &&
@@ -82,7 +75,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
                                     className={drawerClasses.button}
                                     style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
                                     color="inherit"
-                                    aria-label="open-close-submenu"
+                                    aria-label="open-close-filter-menu"
                                     onClick={handleToggleClick}
                                 >
                                     {toggleIcon}
@@ -97,18 +90,32 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
                     anchor={toggleAnchor}
                     open={open}
                     className={clsx("", {
-                        [classes.fullWidth]: toggleAnchor === 'top' || toggleAnchor === 'bottom',
-                      })}
+                        [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
+                    })}
                     variant="temporary"
-                    onBackdropClick={onDrawerClose}
-                    onEscapeKeyDown={onDrawerClose}
+                    onClose={(event, reason) => {if (reason === 'backdropClick' || reason === 'escapeKeyDown') {setOpen(false);}}}
                     {...drawerProps}
-                >        
-                    {drawerHeaderContents}
+                >
+                    <Grid container justifyContent="flex-start" alignItems="center">
+                        {drawerHeaderContents}
+                        <Grid item>
+                            {withHtmlTooltip(
+                                <IconButton
+                                    className={drawerClasses.button}
+                                    color="inherit"
+                                    aria-label="close-filter-menu"
+                                    onClick={handleToggleClick}
+                                >
+                                    <CloseIcon></CloseIcon>
+                                </IconButton>,
+                                "Close advanced filters"
+                            )}
+                        </Grid>
+                    </Grid>
                     <Divider></Divider>
                     {drawerContents}
                 </Drawer>
-                {children}
+                {children} {/*} && <Box className={drawerClasses.drawerHeader}>{children}</Box>}*/}
             </React.Fragment>
         </div>
     );

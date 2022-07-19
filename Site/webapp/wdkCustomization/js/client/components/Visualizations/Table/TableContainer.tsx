@@ -178,8 +178,8 @@ const TableContainer: React.FC<TableContainerProps> = ({
 
     const renderDrawerHeaderContents = (    
         <>
-        <Grid container justifyContent="flex-start" alignItems="flex-start">
-        <h5>Filter or modify table: <em>{title}</em> </h5>
+        <Grid item>
+        <h3>Filter or modify table: <em>{title}</em> </h3>
         </Grid>
         </>
     );
