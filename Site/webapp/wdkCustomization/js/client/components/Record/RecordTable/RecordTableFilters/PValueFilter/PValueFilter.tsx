@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { countBy, merge, chain } from "lodash";
 import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
-import { negLog10p, getMinMaxNegLog10PValue, invertNegLog10p } from "./filters/negLog10pFilter";
+import { negLog10p, getMinMaxNegLog10PValue, invertNegLog10p } from "../filters/negLog10pFilter";
 
 import * as d3 from "d3";
 

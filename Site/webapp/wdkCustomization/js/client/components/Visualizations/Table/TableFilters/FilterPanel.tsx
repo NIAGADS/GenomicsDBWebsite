@@ -39,7 +39,7 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
     );
 
     return (
-        <CollapsableCardPanel title="Advanced Filters" defaultOpen={false}>
+        <CollapsableCardPanel title="Advanced Filters" defaultOpen={true}>
             <Grid
                 container
                 //direction="column"

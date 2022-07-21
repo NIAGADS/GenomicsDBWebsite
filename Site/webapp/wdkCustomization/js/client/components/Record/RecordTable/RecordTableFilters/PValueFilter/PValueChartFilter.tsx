@@ -19,7 +19,7 @@ import { debounce } from "lodash";
 import { useDynamicWidth } from "genomics-client/hooks";
 import { styled } from "@material-ui/core";
 
-import { negLog10p }  from "./filters/negLog10pFilter";
+import { negLog10p }  from "../filters/negLog10pFilter";
 
 const X_RANGE = [2, 15];
 

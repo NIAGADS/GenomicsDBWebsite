@@ -21,7 +21,7 @@ import {
     booleanFlagFilter,
     includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
-import { PValueFilter, PieChartFilter } from "./RecordTableFilters";
+import { PValueSliderFilter as PValueFilter, PieChartFilter } from "./RecordTableFilters";
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 
