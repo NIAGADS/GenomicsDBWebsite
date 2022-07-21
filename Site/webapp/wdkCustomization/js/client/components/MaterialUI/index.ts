@@ -10,7 +10,6 @@ export * from "./GridElements/DownArrowRow";
 export * from "./Drawer";
 export * from "./Lists";
 export * from "./Panels";
-export * from "./InputSlider";
 
 // TODO: Clean-up/Remove
 export * from "./Buttons";
