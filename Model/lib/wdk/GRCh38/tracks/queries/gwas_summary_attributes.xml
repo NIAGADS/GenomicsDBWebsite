@@ -82,6 +82,22 @@
 	  </sql>
 	</sqlQuery>
 
+   <sqlQuery name="RelatedTracks">
+            <column name="track" columnType="string"/>
+            <column name="project_id" columnType="string"/>
+            <column name="related_tracks" columnType="string"/>
+            <sql>
+            <![CDATA[
+            WITH id AS (##WDK_ID_SQL##)
+SELECT id.track, '@PROJECT_ID@'::text AS project_id,
+jsonb_agg(record_link('track', ta.track, name, true)::jsonb ORDER BY name) AS related_tracks
+FROM NIAGADS.TrackAttributes ta, id
+WHERE split_part(id.track, '_', 1) = ta.dataset_accession
+AND ta.track != id.track
+GROUP BY id.track
+            ]]>
+            </sql>
+            </sqlQuery>
 
 	
         <sqlQuery name="HasManhattanPlot">

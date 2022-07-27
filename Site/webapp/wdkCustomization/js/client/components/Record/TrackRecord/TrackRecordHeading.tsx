@@ -20,8 +20,9 @@ import { useTypographyStyles } from "@components/MaterialUI";
 
 import { convertHtmlEntites } from "genomics-client/util/util";
 import { resolveJsonInput } from "genomics-client/util/jsonParse";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
-import { GWASDatasetLZPlot } from "@viz/LocusZoom";
+//import { GWASDatasetLZPlot } from "@viz/LocusZoom";
 
 import "./TrackRecordHeading.scss";
 
@@ -93,30 +94,44 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                     {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
                     <Typography variant="h5">{convertHtmlEntites(record.attributes.name.toString())}</Typography>
                     <Typography>{record.attributes.attribution}</Typography>
-                    <List>
-                        <ListItem>
-                            <RecordAttributeItem
-                                label="Accession"
-                                attribute={record.attributes.niagads_accession.toString()}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <Typography>{record.attributes.description}</Typography>
-                        </ListItem>
-                    </List>
+                    <Typography>{record.attributes.description}</Typography>
+
                     {record.attributes.is_adsp && (
                         <Typography>
                             <strong> {resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
                         </Typography>
                     )}
+
+                    <List>
+                        <ListItem>
+                            <RecordAttributeItem
+                                label="Accession"
+                                attribute={withTooltip(
+                                    <span>
+                                        {record.attributes.niagads_accession}{" "}
+                                        <Link href={`${_externalUrls.NIAGADS_BASE_URL}${record.attributes.niagads_accession}`}>
+                                            <i className={`${tClasses.small} fa fa-external-link`}></i>
+                                        </Link>
+                                    </span>,
+                                    "View NIAGADS Accession / Request Access to full summary statistics"
+                                )}
+                            ></RecordAttributeItem>
+                        </ListItem>
+                        <ListItem>
+                            {record.attributes.related_tracks && (
+                                <RecordAttributeItem
+                                    label="Related Tracks"
+                                    attribute={resolveJsonInput(record.attributes.related_tracks.toString())}
+                                />
+                            )}
+                        </ListItem>
+                    </List>
                     <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
                 </Grid>
-               {/* <Grid item sm={6} xs={12}>
+                {/* <Grid item sm={6} xs={12}>
                     <GWASDatasetLZPlot dataset={record.id[0].value} /> 
                     </Grid>*/}
             </Grid>
-
-          
         </CustomPanel>
     );
 };

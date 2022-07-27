@@ -11,14 +11,15 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Dialog from "@material-ui/core/Dialog";
-import Checkbox from "@material-ui/core/Checkbox";
+
 import { TransitionProps } from "@material-ui/core/transitions";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
-import { groupBy, startCase, truncate, uniq as unique } from "lodash";
-import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
+import { groupBy, uniq as unique } from "lodash";
+import { NiagadsBrowserTrackConfig } from "../../GenomeBrowserPage/GenomeBrowserPage";
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
-import ReactTable, { Column } from "react-table";
+
+import { TrackTable, UnpaddedCheckbox, tracksToTrackConfigs } from "@viz/GenomeBrowser";
 
 //import PaginationComponent from "./../../RecordPage/RecordTable-old/RecordTable/PaginationComponent/PaginationComponent";
 
@@ -45,7 +46,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="right" ref={ref} {...props} />;
 });
 
-interface TrackBrowser {
+interface TrackSelectorProps {
     activeTracks: string[];
     handleClose: () => void;
     loadingTrack: string;
@@ -54,7 +55,7 @@ interface TrackBrowser {
     trackList: NiagadsBrowserTrackConfig[];
 }
 
-const TrackBrowser: React.FC<TrackBrowser> = ({
+export const TrackSelector: React.FC<TrackSelectorProps> = ({
     activeTracks,
     handleClose,
     isOpen,
@@ -126,24 +127,6 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
             } else {
                 setDisplayTypes(displayTypes.concat([type]));
             }
-        },
-        tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
-            return tracks.map((track) => {
-                const base = {
-                    displayMode: "expanded",
-                    format: track.format,
-                    url: track.url,
-                    indexURL: `${track.url}.tbi`,
-                    name: track.name,
-                    type: track.trackType,
-                    id: track.trackType,
-                    visibilityWindow: -1,
-                } as IgvTrackConfig;
-                if (track.reader) {
-                    base.reader = track.reader;
-                }
-                return base;
-            });
         };
 
     return trackList ? (
@@ -173,23 +156,24 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <FilterList>
-                                        {activeTracks && activeTracks
-                                            .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
-                                            .map((t) => (
-                                                <UnpaddedListItem key={t}>
-                                                    <UnpaddedCheckbox
-                                                        color="primary"
-                                                        checked={true}
-                                                        onChange={toggleTracks.bind(
-                                                            null,
-                                                            tracksToTrackConfigs([
-                                                                _trackList.find((track) => track.name === t),
-                                                            ])
-                                                        )}
-                                                    />
-                                                    &nbsp;{t}
-                                                </UnpaddedListItem>
-                                            ))}
+                                        {activeTracks &&
+                                            activeTracks
+                                                .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
+                                                .map((t) => (
+                                                    <UnpaddedListItem key={t}>
+                                                        <UnpaddedCheckbox
+                                                            color="primary"
+                                                            checked={true}
+                                                            onChange={toggleTracks.bind(
+                                                                null,
+                                                                tracksToTrackConfigs([
+                                                                    _trackList.find((track) => track.name === t),
+                                                                ])
+                                                            )}
+                                                        />
+                                                        &nbsp;{t}
+                                                    </UnpaddedListItem>
+                                                ))}
                                     </FilterList>
                                 </AccordionDetails>
                             </Accordion>
@@ -267,45 +251,13 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </BaseIconButton>
                             </Grid>
                         </Grid>
-                        <Box className="browser-table">
-                            {/*<ReactTable
-                                style={{
-                                    height: "500px", // This will force the table body to overflow and scroll
-                                }}
-                                columns={[
-                                    {
-                                        id: "select",
-                                        accessor: (row: any) => {
-                                            return (
-                                                <UnpaddedCheckbox
-                                                    color="primary"
-                                                    checked={activeTracks.includes(row.name)}
-                                                    onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]))}
-                                                    disabled={!!loadingTrack}
-                                                />
-                                            );
-                                        },
-                                        Header: () => "Select",
-                                        width: 50,
-                                    } as Column,
-                                ].concat(
-                                    getColumns().map((col: Column) => {
-                                        col.Header = () => startCase(col.id);
-                                        col.accessor = (row: any) => {
-                                            if (col.id === "description") {
-                                                return <ShowMore str={row[col.id] ? row[col.id] : ""} />;
-                                            } else {
-                                                return row[col.id];
-                                            }
-                                        };
-                                        return col;
-                                    })
-                                )}
-                                data={trackList}
-                                //PaginationComponent={PaginationComponent}
-                                minRows={0}
-                                />*/}
-                        </Box>
+
+                        <TrackTable
+                            data={trackList}
+                            activeTracks={activeTracks}
+                            toggleTracks={toggleTracks}
+                            loadingTrack={loadingTrack}
+                        ></TrackTable>
                     </Grid>
                 </Grid>
             </DialogContent>
@@ -313,7 +265,6 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
     ) : null;
 };
 
-export default TrackBrowser;
 
 export interface IgvTrackConfig {
     name: string;
@@ -327,41 +278,6 @@ export interface IgvTrackConfig {
     url: string;
     visibilityWindow: number;
 }
-
-const getColumns = (): Column[] => [
-    { id: "name", maxWidth: 300 } as Column,
-    { id: "description" },
-    { id: "source", width: 100 },
-    { id: "featureType", width: 120 },
-];
-
-const ShowMore: React.FC<{ str: string }> = ({ str }) => {
-    const [fullStringVisible, setFullStringVisible] = useState(false);
-
-    if (str.length < 150) return <span>{str}</span>;
-
-    return fullStringVisible ? (
-        <span>
-            {str}&nbsp;
-            <span className="link" onClick={() => setFullStringVisible(false)}>
-                less
-            </span>
-        </span>
-    ) : (
-        <span>
-            {truncate(str, { length: 150 })}{" "}
-            <span className="link" onClick={() => setFullStringVisible(true)}>
-                more
-            </span>
-        </span>
-    );
-};
-
-const UnpaddedCheckbox = withStyles(() => ({
-    root: {
-        padding: "0px",
-    },
-}))(Checkbox);
 
 const FilterList = withStyles((theme) => ({
     root: {

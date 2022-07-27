@@ -1,19 +1,18 @@
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
-import { noop } from "lodash";
+import { noop, assign } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
 import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
-import {_genomes} from '../../../data/_igvGenomes';
 
 interface IgvBrowser {
     defaultSpan: string;
     defaultTracks?: TrackConfig[];
     disableRefTrack?: boolean;
+    options: any;
     onBrowserLoad?: (Browser: any) => void;
     searchUrl: string;
     serviceUrl: string;
     webappUrl: string;
-    projectId: string;
 }
 
 export interface TrackConfig {
@@ -37,7 +36,7 @@ export interface TrackConfig {
     visibilityWindow?: number;
 }
 
-const IgvBrowser: React.FC<IgvBrowser> = ({
+export const IgvBrowser: React.FC<IgvBrowser> = ({
     defaultSpan,
     defaultTracks,
     disableRefTrack,
@@ -45,55 +44,20 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
     searchUrl,
     serviceUrl,
     webappUrl,
-    projectId
+    options,
 }) => {
-
-    const [referenceTrackId, setReferenceTrackId] = useState(null);
-    const [referenceTrackConfig, setReferenceTrackConfig] = useState(null);
-
-
-    useEffect(() => {
-        if (projectId) {
-           setReferenceTrackId(projectId === 'GRCh37' ? 'hg19' : 'hg38');
-           setReferenceTrackConfig(_genomes[referenceTrackId]);
-        }
-    }, [projectId]);
+    const igvDiv = document.getElementById("igv-div");
 
     useLayoutEffect(() => {
         window.addEventListener("error", (event) => {
             console.log(event);
         });
 
+        assign({}, options, { locus: defaultSpan || "ABCA7" });
+        assign({}, options, { tracks: defaultTracks || [] });
+        assign({}, options, { url: `${searchUrl}$FEATURE$` });
+        
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
-        const igvDiv = document.getElementById("igv-div"),
-            options = {
-                reference: {
-                    id: referenceTrackId,
-                    name: referenceTrackConfig.name,
-                    fastaURL: referenceTrackConfig.fastaURL,
-                    indexURL: referenceTrackConfig.indexURL,
-                    cytobandURL: referenceTrackConfig.cytobandURL,
-                    tracks: disableRefTrack
-                        ? []
-                        : [
-                              {
-                                  name: "Ensembl Genes",
-                                  displayMode: "expanded",
-                                  visibilityWindow: 100000000,
-                                  format: "refgene",
-                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                                  url: `${serviceUrl}/track/gene`,
-                                  id: "niagadsgenetrack",
-                              },
-                          ],
-                },
-                locus: defaultSpan || "ABCA7",
-                tracks: defaultTracks || [],
-                search: {
-                    url: `${searchUrl}$FEATURE$`,
-                },
-            };
-
         igv.createBrowser(igvDiv, options).then((browser: any) => {
             browser.addTrackToFactory(
                 "niagadsgwas",

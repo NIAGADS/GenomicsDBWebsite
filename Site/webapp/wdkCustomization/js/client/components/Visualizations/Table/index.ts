@@ -5,3 +5,4 @@ export * from "./TableHeaderCell";
 export * from "./TableColumnsPanel";
 export * from "./styles";
 export * from "./TableToolbar";
+export * from "./TableFilters"

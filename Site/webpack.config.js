@@ -19,6 +19,7 @@ module.exports = configure({
     resolve: {
         alias,
     },
+
     optimization: {
         //runtimeChunk: 'single',
         splitChunks: {
@@ -31,7 +32,6 @@ module.exports = configure({
                     chunks: "all",
                     filename: "[name].bundle.js",
                 },
-             
             },
         },
     },

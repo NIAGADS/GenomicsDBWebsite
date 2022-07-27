@@ -45,7 +45,7 @@ export const DatasetCard: React.FC<CardProps & PanelProps> = (props) => {
     const { title, description, accession, date, attribution, tracks } = props.dataset;
 
     const img = props.webAppUrl + "/images/manhattan/" + accession + "/png/" + tracks[0] + "-manhattan.png";
-    const url = props.webAppUrl + "/app/record/accession/" + accession;
+    const url = props.webAppUrl + "/app/record/track/" + tracks[0];
     return (
         <Card className={classes.root}>
             <CardActionArea>

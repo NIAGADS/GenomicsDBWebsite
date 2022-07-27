@@ -6,8 +6,7 @@ import { useLocation } from "react-router-dom";
 import qs from "qs";
 import Container from "@material-ui/core/Container";
 import { theme } from "@components/MaterialUI";
-import TrackBrowser, { IgvTrackConfig } from "@viz/Igv/IgvTrackBrowser";
-import IGVBrowser from "@viz/Igv/IgvBrowser";
+import { IgvBrowser, IgvTrackConfig, TrackSelector } from "@viz/GenomeBrowser";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
@@ -17,11 +16,12 @@ import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { PrimaryActionButton } from "@components/MaterialUI";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { _genomes } from "../../data/_igvGenomes";
 
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
-const MemoBroswer = React.memo(IGVBrowser);
+const MemoBroswer = React.memo(IgvBrowser);
 
 interface GenomeBrowserPage {
 
@@ -31,6 +31,43 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({  }) => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
+
+    const [referenceTrackId, setReferenceTrackId] = useState(null);
+    const [referenceTrackConfig, setReferenceTrackConfig] = useState(null);
+    const [browserOptions, setBrowserOptions] = useState(null);
+
+    useEffect(() => {
+        if (projectId) {
+            setReferenceTrackId(projectId === "GRCh37" ? "hg19" : "hg38");         
+        }
+        if (referenceTrackId) {
+            setReferenceTrackConfig(_genomes[referenceTrackId]);
+        }
+
+        if (referenceTrackId && referenceTrackConfig && serviceUrl) {
+            setBrowserOptions({
+                reference: {
+                    id: referenceTrackId,
+                    name: referenceTrackConfig.name,
+                    fastaURL: referenceTrackConfig.fastaURL,
+                    indexURL: referenceTrackConfig.indexURL,
+                    cytobandURL: referenceTrackConfig.cytobandURL,
+                    tracks: [
+                              {
+                                  name: "Ensembl Genes",
+                                  displayMode: "expanded",
+                                  visibilityWindow: 100000000,
+                                  format: "refgene",
+                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                                  url: `${serviceUrl}/track/gene`,
+                                  id: "niagadsgenetrack",
+                              },
+                          ],
+                }
+            });
+        }
+
+    }, [browserOptions, webAppUrl, serviceUrl]);
 
     useWdkEffect(
         (service) => {
@@ -129,18 +166,18 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({  }) => {
                     </Box>
                 </Grid>
                 <Grid>
-                    <MemoBroswer
+                   {browserOptions ? <MemoBroswer
                         defaultSpan={defaultSpan}
                         disableRefTrack={true}
                         onBrowserLoad={buildBrowser}
                         searchUrl={`${serviceUrl}/track/feature?id=`}
                         serviceUrl={serviceUrl}
                         webappUrl={webAppUrl}
-                        projectId={projectId}
-                    />
+                        options={browserOptions}
+                    /> : <CircularProgress></CircularProgress>}
                 </Grid>
                 <Grid item xs={12}>
-                    <TrackBrowser
+                    <TrackSelector
                         activeTracks={getLoadedTracks(Browser)}
                         handleClose={setListVisible.bind(null, false)}
                         isOpen={listVisible}

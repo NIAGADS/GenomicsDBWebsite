@@ -78,6 +78,9 @@
       <!-- help="phenotypes assessed in the study, may incl.: population, diagnosis, neuropathology, biomarker, APOE allele carrier status"/> -->
       <!-- </attributeQueryRef> -->
 
+	<attributeQueryRef ref="GwasDatasetAttributes.RelatedTracks">
+	<columnAttribute name="related_tracks" displayName="Related Tracks" type="json"/>
+	</attributeQueryRef>
 
       <!-- <table name="phenotypes" displayName="Phenotypes" queryRef="GwasDatasetTables.Phenotypes">
 	   <columnAttribute name="phenotype_category" displayName="Category" type="string"/>
