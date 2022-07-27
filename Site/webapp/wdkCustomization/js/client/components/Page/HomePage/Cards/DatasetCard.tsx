@@ -32,6 +32,7 @@ export interface DatasetRecord {
     date: string;
     attribution: string;
     tracks: string[];
+    genomeBuild?: string;
 }
 
 interface CardProps {

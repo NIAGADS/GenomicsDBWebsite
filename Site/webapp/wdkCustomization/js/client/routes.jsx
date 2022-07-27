@@ -6,7 +6,7 @@ import ExternalContentController from 'ebrc-client/controllers/ExternalContentCo
 
 export const wrapRoutes = (ebrcRoutes) => [
     { path: "/", component: HomePageController, rootClassNameModifier: 'no-padding' },
-    { path: "/search/site/result", component: SiteSearchController },   
+    { path: "/search/site", component: SiteSearchController },   
     { path: "/visualizations/:type", component: VisualizationPageController },
     {
         path: "/api",

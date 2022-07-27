@@ -13,13 +13,15 @@ import { abbreviateLargeNumber } from "genomics-client/util/util";
 
 
 
-export const StatsPanel: React.FC<PanelProps> = ({ background = "light" }) => {
+export const StatsPanel: React.FC<PanelProps> = ({ background = "light", projectId }) => {
     const classes = useHomePageStyles();
     const tClasses = useHomePageTypographyStyles();
     const bodyTextColor = background === "dark" ? classes.darkContrastText : classes.lightContrastText;
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
     const linkType = background === "dark" ? "secondary" : "initial";
     const bodyText = bodyTextColor + " " + tClasses.largeBody;
+    //@ts-ignore
+    const stats = _siteStatistics[projectId];
 
     return (
         <LightBackgroundPanel classes={classes} hasBaseArrow={true}>
@@ -50,17 +52,17 @@ export const StatsPanel: React.FC<PanelProps> = ({ background = "light" }) => {
                                 variant="h3"
                                 className={`${classes.secondaryText} ${classes.bold} ${classes.smallCaps}`}
                             >
-                                {abbreviateLargeNumber(_siteStatistics.ANNOTATED_VARIANTS, 2)} Annotated Variants
+                                {abbreviateLargeNumber(stats.ANNOTATED_VARIANTS)} Annotated Variants
                             </Typography>
                             <Typography align="left" className={`${classes.highlightStat} ${classes.smallCaps}`}>
-                                29M from the ADSP
+                                232M from the ADSP
                             </Typography>
                             <Typography align="left" className={`${classes.highlightStat} ${classes.smallCaps}`}>
-                                {abbreviateLargeNumber(_siteStatistics.SIGNIFICANT_VARIANTS, 2)} with significant
+                                {abbreviateLargeNumber(stats.SIGNIFICANT_VARIANTS)} with significant
                                 AD/ADRD-risk association
                             </Typography>
                             <Typography align="left" className={`${classes.highlightStat} ${classes.smallCaps}`}>
-                                {abbreviateLargeNumber(_siteStatistics.ANNOTATED_GENES, 2)} Annotated Genes
+                                {abbreviateLargeNumber(stats.ANNOTATED_GENES)} Annotated Genes
                             </Typography>
                         </Grid>
                     </Grid>

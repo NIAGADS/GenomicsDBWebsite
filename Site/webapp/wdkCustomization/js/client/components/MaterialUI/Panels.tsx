@@ -22,6 +22,7 @@ export interface PanelProps {
     background?: string;
     classes?: any;
     options?: any;
+    projectId?: string;
 }
 
 export interface CollapsablePanelProps {

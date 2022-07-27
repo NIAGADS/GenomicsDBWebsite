@@ -90,7 +90,7 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
 
     const nGenes = get(counts, "gene"),
         nVariants = get(counts, "variant"),
-        nDatasets = get(counts, "gwas_summary"),
+        nDatasets = get(counts, "track"),
         nAccessions = get(counts, "dataset");
 
     return loading ? (
@@ -107,7 +107,7 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
     ) : (
         <Grid container spacing={2}>
             {resultsArray.length ? (
-                <>
+                <Box marginTop={3}>
                     <Grid item xs={3}>
                         <Typography variant="h5">Search Results</Typography>
                         <Typography>
@@ -137,9 +137,9 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
 
                         <a id="datasets" />
                         {nDatasets > 0 && <ResultSectionTitle>GWAS Summary Statistics Datasets</ResultSectionTitle>}
-                        {nDatasets > 0 && resultsArray.map((res) => _buildSearchResult(res, "gwas_summary"))}
+                        {nDatasets > 0 && resultsArray.map((res) => _buildSearchResult(res, "track"))}
                     </Grid>
-                </>
+                </Box>
             ) : (
                 <Grid>
                     <Box marginTop={3}>
