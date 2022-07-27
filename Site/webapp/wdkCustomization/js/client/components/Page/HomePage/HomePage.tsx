@@ -5,13 +5,14 @@ import { RootState } from "wdk-client/Core/State/Types";
 
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { SearchPanel, AvailableDataPanel, StatsPanel, AboutPanel } from "./Panels";
 import useHomePageStyles from "./styles";
-import { Loading } from "wdk-client/Components";
 
 import "./HomePage.scss";
-import Icon from "@material-ui/core/Icon";
+
+
 
  export const HomePage: React.FC<any> = ({}) => {
     //const endpoint = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
@@ -33,6 +34,6 @@ import Icon from "@material-ui/core/Icon";
             <StatsPanel projectId={project} />
             <AboutPanel webAppUrl={webAppUrl} />
             <Box pb={4} />
-        </Grid>: <Icon className="fa fa-spinner fa-spin" />
+        </Grid>: <CircularProgress color="secondary"/> 
     );
 };

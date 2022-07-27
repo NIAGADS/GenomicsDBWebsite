@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "wdk-client/Core/State/Types";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
@@ -14,6 +16,7 @@ import { get } from "lodash";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { PrimaryActionButton } from "@components/MaterialUI";
 import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
@@ -21,12 +24,14 @@ const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(IGVBrowser);
 
 interface GenomeBrowserPage {
-    //connected
-    webAppUrl: string;
-    serviceUrl: string;
+
 }
 
-const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl }) => {
+const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({  }) => {
+    const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
+    const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
+    const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
+
     useWdkEffect(
         (service) => {
             service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
@@ -113,10 +118,8 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
         }, []);
 
     return (
-        <Container maxWidth="xl">
-            <ThemeProvider theme={theme}>
+        projectId ? <Container maxWidth="xl">
                 <Grid container item xs={12}>
-                    <h1>Temporarily Unavailable.  Please check back soon!</h1>
                     {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
                   <Box m="10px">
                         <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
@@ -133,6 +136,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                         searchUrl={`${serviceUrl}/track/feature?id=`}
                         serviceUrl={serviceUrl}
                         webappUrl={webAppUrl}
+                        projectId={projectId}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -145,15 +149,11 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({ serviceUrl, webAppUrl 
                         trackList={trackList}
     /> 
                </Grid> 
-            </ThemeProvider>
-        </Container>
+        </Container>: <CircularProgress color="secondary"/> 
     );
 };
 
-export default connect((state: any) => ({
-    webAppUrl: state.globalData.siteConfig.webAppUrl,
-    serviceUrl: state.globalData.siteConfig.endpoint,
-}))(GenomeBrowserPage);
+
 
 export interface TrackConfig {
     name: string;

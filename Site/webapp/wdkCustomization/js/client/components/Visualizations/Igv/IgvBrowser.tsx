@@ -12,6 +12,7 @@ interface IgvBrowser {
     searchUrl: string;
     serviceUrl: string;
     webappUrl: string;
+    projectId: string;
 }
 
 export interface TrackConfig {
@@ -43,7 +44,9 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
     searchUrl,
     serviceUrl,
     webappUrl,
+    projectId
 }) => {
+    const referenceTrack = projectId === 'GRCh37' ? 'hg19' : 'hg38';
     useLayoutEffect(() => {
         window.addEventListener("error", (event) => {
             console.log(event);
@@ -53,14 +56,14 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
         const igvDiv = document.getElementById("igv-div"),
             options = {
                 reference: {
-                    id: "hg19",
-                    name: "Human (GRCh37/hg19)",
+                    id: referenceTrack,
+                    name: `Human (${projectId}/${referenceTrack})`,
                     fastaURL:
-                        "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta",
+                        `https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/${referenceTrack}/${referenceTrack}.fasta`,
                     indexURL:
-                        "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/hg19.fasta.fai",
+                        `https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/${referenceTrack}/${referenceTrack}.fasta.fai`,
                     cytobandURL:
-                        "https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/cytoBand.txt",
+                        `https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/${referenceTrack}/cytoBand.txt`,
                     tracks: disableRefTrack
                         ? []
                         : [

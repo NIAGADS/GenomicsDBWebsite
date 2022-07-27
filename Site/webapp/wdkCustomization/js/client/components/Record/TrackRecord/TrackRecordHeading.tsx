@@ -111,9 +111,9 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                     )}
                     <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
                 </Grid>
-                <Grid item sm={6} xs={12}>
+               {/* <Grid item sm={6} xs={12}>
                     <GWASDatasetLZPlot dataset={record.id[0].value} /> 
-                </Grid>
+                    </Grid>*/}
             </Grid>
 
           

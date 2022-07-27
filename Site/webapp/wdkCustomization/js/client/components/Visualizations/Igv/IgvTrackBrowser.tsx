@@ -172,7 +172,7 @@ const TrackBrowser: React.FC<TrackBrowser> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.AccordionDetails}>
                                     <FilterList>
-                                        {activeTracks
+                                        {activeTracks && activeTracks
                                             .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
                                             .map((t) => (
                                                 <UnpaddedListItem key={t}>
