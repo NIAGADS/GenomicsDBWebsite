@@ -1,8 +1,9 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
 import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
+import genomes from '../../../data/_igvGenomes';
 
 interface IgvBrowser {
     defaultSpan: string;
@@ -46,7 +47,18 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
     webappUrl,
     projectId
 }) => {
-    const referenceTrack = projectId === 'GRCh37' ? 'hg19' : 'hg38';
+
+    const [referenceTrackId, setReferenceTrackId] = useState(null);
+    const [referenceTrackConfig, setReferenceTrackConfig] = useState(null);
+
+
+    useEffect(() => {
+        if (projectId) {
+           setReferenceTrackId(projectId === 'GRCh37' ? 'hg19' : 'hg38');
+           setReferenceTrackConfig(genomes[referenceTrackId]);
+        }
+    }, [projectId]);
+
     useLayoutEffect(() => {
         window.addEventListener("error", (event) => {
             console.log(event);
@@ -56,14 +68,11 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
         const igvDiv = document.getElementById("igv-div"),
             options = {
                 reference: {
-                    id: referenceTrack,
-                    name: `Human (${projectId}/${referenceTrack})`,
-                    fastaURL:
-                        `https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/${referenceTrack}/${referenceTrack}.fasta`,
-                    indexURL:
-                        `https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/${referenceTrack}/${referenceTrack}.fasta.fai`,
-                    cytobandURL:
-                        `https://s3.dualstack.us-east-1.amazonaws.com/igv.broadinstitute.org/genomes/seq/${referenceTrack}/cytoBand.txt`,
+                    id: referenceTrackId,
+                    name: referenceTrackConfig.name,
+                    fastaURL: referenceTrackConfig.fastaURL,
+                    indexURL: referenceTrackConfig.indexURL,
+                    cytobandURL: referenceTrackConfig.cytobandURL,
                     tracks: disableRefTrack
                         ? []
                         : [

@@ -220,3 +220,5 @@ export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
     trackTypeDisplay: string;
     url: string;
 }
+
+export default GenomeBrowserPage;

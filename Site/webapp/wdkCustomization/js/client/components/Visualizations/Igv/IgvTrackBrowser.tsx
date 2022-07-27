@@ -19,6 +19,7 @@ import { groupBy, startCase, truncate, uniq as unique } from "lodash";
 import { NiagadsBrowserTrackConfig } from "./../../GenomeBrowserPage/GenomeBrowserPage";
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
 import ReactTable, { Column } from "react-table";
+
 //import PaginationComponent from "./../../RecordPage/RecordTable-old/RecordTable/PaginationComponent/PaginationComponent";
 
 const useBrowserStyles = makeStyles(() =>
