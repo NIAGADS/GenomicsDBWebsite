@@ -36,7 +36,7 @@
     <sqlQuery name="Linkage">
       <column name="source_id"/>
       <column name="variant"/>
-      <column name="ref_snp_id"/>
+      <column name="linked_ref_snp_id"/>
       <column name="adsp_variant_flag"/>
       <column name="distance"/>
       <column name="r_squared"/>
@@ -44,90 +44,87 @@
       <column name="population"/>
       <column name="minor_allele_frequency"/>
       <column name="minor_allele_frequency_ld_ref"/>
-      <column name="is_annotated_flag"/>
 
       <sql>
 	<![CDATA[
 		 WITH id AS (##WDK_ID_SQL##),
 
-		 variant AS (SELECT source_id,
-		 'chr' || split_part(source_id, ':', 1)::text AS chromosome,
-		 truncate_str(split_part(source_id, '_', 1), 27) AS metaseq_id,
-		 CASE WHEN split_part(source_id, '_', 2) IS NULL 
-		 THEN split_part(source_id, '_', 1) 
-		 ELSE split_part(source_id, '_', 2) END AS pattern,
-		 split_part(source_id, '_', 2) AS ref_snp_id
-		 FROM id),
+	variant AS (SELECT * FROM id, get_variant_display_details(id.source_id) v),
 
-		 LDResult AS (
-		 SELECT v.source_id, p.display_value AS population,  
-		 r.distance, r.r_squared, r.d_prime,
-		 CASE WHEN v.pattern= r.variants[1] 
-		 THEN r.minor_allele_frequency[1] 
-		 ELSE minor_allele_frequency[2] END AS minor_allele_frequency_ld_ref,
+linkage AS (
+SELECT v.details->>'chromosome' AS chromosome, 
+(v.details->>'position')::int AS position, 
+v.details->>'ref_snp_id' AS ref_snp_id,
+vl.* 
+FROM variant v, get_variant_linkage(v.record_primary_key) vl),
 
-		 CASE WHEN v.pattern = r.variants[1] 
-		 THEN r.minor_allele_frequency[2] 
-		 ELSE minor_allele_frequency[1] END AS minor_allele_frequency,
+ExpandedLinkage AS (
+SELECT record_primary_key, 
+chromosome,
+(r.linkage->>'population_id')::int AS population_id,
+build_text_attribute(p.abbreviation, p.display_value, NULL)::text AS population,
+(r.linkage->>'d_prime')::numeric AS d_prime,
+(r.linkage->>'r_squared')::numeric AS r_squared,
+(r.linkage->>'distance')::int AS distance,
 
-		 CASE WHEN v.pattern = r.variants[1] 
-		 THEN r.variants[2] ELSE r.variants[1] END AS linked_variant_ref_snp_id
+CASE WHEN r.position = ((r.linkage->'locations')[0])::int 
+THEN ((r.linkage->'locations')[1])::int ELSE ((r.linkage->'locations')[0])::int
+END AS linked_position,
 
-		 FROM Results.VariantLD r, variant v, 
-		 Study.ProtocolAppNode pan, NIAGADS.Population p
-		 WHERE r.variants @> ARRAY[v.pattern]
-		 AND r.chromosome = v.chromosome
-		 AND pan.protocol_app_node_id = r.population_protocol_app_node_id
-		 AND p.abbreviation = split_part(pan.name, ': ', 2) AND p.datasource = '1000Genomes'),
+CASE WHEN r.position = ((r.linkage->'locations')[0])::int 
+THEN ((r.linkage->'minor_allele_frequency')[0])::numeric ELSE ((r.linkage->'minor_allele_frequency')[1])::numeric
+END AS minor_allele_frequency_ld_ref,
 
-		 NiagadsVariants AS (
-		 SELECT v.record_primary_key, v.ref_snp_id, 
-		 v.metaseq_id, TRUE AS is_niagads_variant
-		 FROM NIAGADS.Variant v
-		 WHERE ref_snp_id = ANY(ARRAY(SELECT DISTINCT linked_variant_ref_snp_id FROM LDResult))),
+CASE WHEN r.position = ((r.linkage->'locations')[0])::int 
+THEN ((r.linkage->'minor_allele_frequency')[1])::numeric ELSE ((r.linkage->'minor_allele_frequency')[0])::numeric
+END AS minor_allele_frequency,
 
-		 ADSPVariants AS (
-		 SELECT v.record_primary_key, v.ref_snp_id, 
-		 v.metaseq_id, is_adsp_variant
-		 FROM AnnotatedVDB.Variant v
-		 WHERE v.chromosome = (SELECT chromosome FROM variant)
-		 AND v.ref_snp_id = ANY(ARRAY(SELECT DISTINCT linked_variant_ref_snp_id FROM LDResult))
-		 ),
+CASE WHEN r.position = ((r.linkage->'locations')[0])::int 
+THEN (r.linkage->'variants')[1] ELSE (r.linkage->'variants')[0] 
+END AS linked_variant
 
-		 AnnotatedVariants AS (
-		 SELECT a.record_primary_key, a.ref_snp_id, 
-		 build_link_attribute(truncate_str(a.metaseq_id, 27), '../variant/', a.record_primary_key, 
-		 CASE WHEN length(a.metaseq_id) > 27 THEN a.metaseq_id ELSE NULL END) AS variant,
+FROM linkage r, NIAGADS.Population p, NIAGADS.ProtocolAppNodeCharacteristic pc
+WHERE (r.linkage->>'population_id')::int = pc.protocol_app_node_id
+AND pc.characteristic_type = 'population'
+AND (p.source_id = pc.characteristic OR p.ontology_term_id = pc.ontology_term_id)
+AND p.datasource IN ('ADSP', '1000Genomes')),
 
-		 CASE WHEN is_adsp_variant 
-		 THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true')
-		 ELSE NULL END AS adsp_variant_flag,
+MappedLinkage AS (
+SELECT r.* , 
+CASE WHEN r.linked_variant IS NULL 
+THEN position_pk.record_primary_key
+ELSE r.linked_variant::text END AS linked_variant_record_primary_key
+FROM ExpandedLinkage r, 
+get_variant_pk_by_position(replace(r.chromosome::text, 'chr', '') || ':' || r.linked_position::text, false) position_pk)
 
-		 CASE WHEN is_niagads_variant 
-		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
-		 ELSE NULL END AS is_annotated_flag
+SELECT m.record_primary_key AS source_id,
+m.population,
+m.d_prime,
+m.distance,
+m.r_squared,
 
-		 FROM ADSPVariants a LEFT OUTER JOIN NiagadsVariants n
-		 ON a.record_primary_key = n.record_primary_key)
-
-		 SELECT r.source_id, v.*, 
-		 r.distance, r.r_squared, r.d_prime, r.population,
+CASE WHEN m.minor_allele_frequency_ld_ref < 0.001 AND m.minor_allele_frequency_ld_ref > 0 
+THEN to_char(m.minor_allele_frequency_ld_ref, '9.9EEEE')
+WHEN m.minor_allele_frequency_ld_ref = 0 THEN 0::text
+ELSE round(m.minor_allele_frequency_ld_ref::numeric, 3)::text 
+END AS minor_allele_frequency_ld_ref,
 		 
-		 CASE WHEN r.minor_allele_frequency_ld_ref < 0.001 AND r.minor_allele_frequency_ld_ref > 0 
-		 THEN to_char(r.minor_allele_frequency_ld_ref, '9.9EEEE')
-		 WHEN r.minor_allele_frequency_ld_ref = 0 THEN 0::text
-		 ELSE round(r.minor_allele_frequency_ld_ref::numeric, 3)::text 
-		 END AS minor_allele_frequency_ld_ref,
-		 
-		 CASE WHEN r.minor_allele_frequency < 0.001 AND r.minor_allele_frequency > 0 
-		 THEN to_char(r.minor_allele_frequency, '9.9EEEE')
-		 WHEN r.minor_allele_frequency = 0 THEN 0::text
-		 ELSE round(r.minor_allele_frequency::numeric, 3)::text 
-		 END AS minor_allele_frequency
-		 
-		 FROM AnnotatedVariants v, LDResult r
-		 WHERE r.linked_variant_ref_snp_id = v.ref_snp_id
-		 ORDER BY r.population, r.r_squared DESC
+CASE WHEN m.minor_allele_frequency < 0.001 AND m.minor_allele_frequency > 0 
+THEN to_char(m.minor_allele_frequency, '9.9EEEE')
+WHEN m.minor_allele_frequency = 0 THEN 0::text
+ELSE round(m.minor_allele_frequency::numeric, 3)::text 
+END AS minor_allele_frequency,                                  
+
+v.details->>'metaseq_id' AS linked_metaseq_id,
+v.details->>'ref_snp_id' AS linked_ref_snp_id,
+
+record_link('variant', m.linked_variant_record_primary_key, 
+truncate_str(v.details->>'metaseq_id', 30), true) AS variant,
+
+(v.details->>'is_adsp_variant')::boolean AS is_adsp_variant,
+adsp_variant_flag((v.details->>'is_adsp_variant')::boolean) AS adsp_variant_flag
+FROM MappedLinkage m,
+get_variant_display_details(m.linked_variant_record_primary_key) v
 	]]>
       </sql>
     </sqlQuery>
@@ -276,7 +273,7 @@
 		 
 		 SELECT id.source_id,
 		 t.datasource AS source,
-		 r.allele,
+		 CASE WHEN r.allele = 'N' THEN '?' ELSE r.allele END AS allele,
 		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
 		 r.neg_log10_pvalue,
 		 r.frequency,
@@ -333,7 +330,7 @@
 		 
 		 SELECT id.source_id,
 		 t.datasource AS source,
-		 r.allele,
+		 CASE WHEN r.allele = 'N' THEN '?' ELSE r.allele END AS allele,
 		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
 		 r.frequency,
 		 r.restricted_stats->>'STUDY' AS study,

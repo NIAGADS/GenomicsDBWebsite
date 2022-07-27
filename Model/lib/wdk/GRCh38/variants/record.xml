@@ -269,20 +269,25 @@
 	<description><![CDATA[coming soon]]></description>
       </table> -->
 
-      <table name="linkage" displayName="Linkage" queryRef="VariantTables.Linkage">
+     <table name="linkage" displayName="Linkage" queryRef="VariantTables.Linkage">
+       	<columnAttribute name="population" displayName="Population" help="1000Genomes Phase 3 population" type="string"/>
 	<columnAttribute name="variant" displayName="Variant" type="json_link"/>
-	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
-	<columnAttribute name="is_annotated_flag" displayName="Annotation" type="json_icon" help="variant is annotated in the GenomicsDB by ADSP or AD-related GWAS results" />
+	<columnAttribute name="linked_ref_snp_id" displayName="RefSNP ID" type="string" />
 	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="distance" displayName="Distance" help="distance between the two loci" type="numeric"/>
 	<columnAttribute name="r_squared" displayName="r2" help="r-squared value; ranges from [0,1]; a value 0 indicates that the two loci are not coinherited" type="numeric"/>
 	<columnAttribute name="d_prime" displayName="D'" help="D' value (scaled 'D'); ranges from [-1,1]; if allele frequencies are high, high D' indicates that the two loci are coinherited. With low allele frequencies D' values may be inflated." type="numeric"/>
-	<columnAttribute name="population" displayName="Population" help="1000Genomes Phase 3 population" type="string"/>
 	<columnAttribute name="minor_allele_frequency" displayName="MAF" help="minor allele frequency in the population for the linked variant" type="percentage_bar"/>
 	<columnAttribute name="minor_allele_frequency_ld_ref" displayName="LD REF MAF" help="minor allele frequency in the population for the LD reference variant (record being browsed)" type="percentage_bar"/>
 
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+	  <value>[{"id":"r_squared", "desc":true}]</value>
+	</propertyList>
+	<propertyList name="hidden_columns">
+	  <value>d_prime</value>
 	</propertyList>
 
       </table>
@@ -375,6 +380,12 @@
 	<propertyList name="sorted_by">
 		<value>[{"id":"pvalue", "desc":false}]</value>
 	</propertyList>
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue", "source":"select"}</value>
+	</propertyList>
+	<propertyList name="hidden_columns">
+	  <value>study,sample,replicate_sample,mapped_efo_trait</value>
+	</propertyList>
 
       
 	<description>
@@ -399,11 +410,18 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
+
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
 	<propertyList name="sorted_by">
 		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue", "source":"select"}</value>
+	</propertyList>
+	<propertyList name="hidden_columns">
+	  <value>source,study,sample,replicate_sample,mapped_efo_trait</value>
 	</propertyList>
 
 

@@ -273,9 +273,9 @@
 	<propertyList name="flags">
 	  <value>{"defaultOpen": false, "filter": true}</value>
 	</propertyList>
-
+	
 	<propertyList name="column_filter">
-	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+		  <value>{"pvalue":"pvalue", "adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie", "source":"select"}</value>
 	</propertyList>
 
 	<propertyList name="hidden_columns">
@@ -319,7 +319,7 @@
 	</propertyList>
 
 	<propertyList name="column_filter">
-	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
+	  <value>{"pvalue":"pvalue", "adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie", "source":"select"}</value>
 	</propertyList>
 
 	<propertyList name="hidden_columns">

@@ -28,6 +28,7 @@ export interface CollapsablePanelProps {
     className?: string;
     title?: string;
     defaultOpen?: boolean;
+    headerContents?: React.ReactNode;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -123,6 +124,7 @@ export const PrimaryBackgroundPanel: React.FC<PanelProps> = ({ classes, children
 export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> = ({
     className,
     title,
+    headerContents,
     children,
     hasBaseArrow = false,
     defaultOpen = false
@@ -136,7 +138,8 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
     return children ? (
         <Card elevation={0}>
             <CardActions disableSpacing>
-                <Typography>{title}</Typography>
+                {title && <Typography>{title}</Typography>}
+                {headerContents && headerContents}
                 <IconButton
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: expanded,

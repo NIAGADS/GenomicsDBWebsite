@@ -25,7 +25,7 @@ import {
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 import { Table, TableToolbar, TablePagination, TableColumnsPanel } from ".";
-import { FilterPanel, FilterChipBar, ClearFiltersButton } from "./TableFilters";
+import { FilterPanel, FilterChipBar } from "./TableFilters";
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
 
 import { DefaultBackgroundPanel, NavigationDrawer } from "@components/MaterialUI";

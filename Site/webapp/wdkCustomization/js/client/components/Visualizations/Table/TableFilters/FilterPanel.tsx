@@ -1,27 +1,16 @@
 // modified from https://github.com/ggascoigne/react-table-example
 import React, { ReactElement, useCallback } from "react";
-import {countBy} from 'lodash';
+import { countBy } from "lodash";
 import { Theme, createStyles, makeStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { CollapsableCardPanel } from "@components/MaterialUI";
 
-import { useFilterPanelStyles, FilterPageProps, GlobalFilterFlat } from ".";
-
-export function ClearFiltersButton({ instance }: FilterPageProps): ReactElement {
-    const classes = useFilterPanelStyles();
-    //@ts-ignore
-    const { allColumns, setAllFilters } = instance;
-    const resetFilters = useCallback(() => {
-        setAllFilters([]);
-    }, [setAllFilters]);
-    return (
-        <Button variant="contained" color="primary" onClick={resetFilters}>
-            Clear Filters
-        </Button>
-    );
-}
+import { useFilterPanelStyles, FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
+import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
+import { setOpenedStrategies } from "wdk-client/Actions/StrategyWorkspaceActions";
 
 export function FilterPanel({ instance }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
@@ -29,17 +18,42 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
     const { allColumns, setAllFilters } = instance;
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
+
     const resetFilters = useCallback(() => {
-        setAllFilters([]);
+        if (hasPvalueFilter) {
+            setAllFilters([{ id: "pvalue", value: DEFAULT_PVALUE_FILTER_VALUE }]);
+        } else {
+            setAllFilters([]);
+        }
     }, [setAllFilters]);
 
-    const hasSelects = allColumns.filter(
-        //@ts-ignore
-        (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("select")
+    const hasSelectFilters =
+        allColumns.filter(
+            //@ts-ignore
+            (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("select")
+        ).length > 0;
+
+    const hasPvalueFilter =
+        allColumns.filter(
+            //@ts-ignore
+            (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
+        ).length > 0;
+
+    const renderFilterHeader = (
+        <Grid item container spacing={4} justifyContent="flex-start" alignItems="center">
+            <Grid item>
+                <Typography>Advanced Filters</Typography>
+            </Grid>
+            <Grid item>
+                <Button variant="contained" color="secondary" onClick={resetFilters}>
+                    Reset
+                </Button>
+            </Grid>
+        </Grid>
     );
 
     return (
-        <CollapsableCardPanel title="Advanced Filters" defaultOpen={true}>
+        <CollapsableCardPanel headerContents={renderFilterHeader} defaultOpen={true}>
             <Grid
                 container
                 //direction="column"
@@ -48,9 +62,6 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
                 className={classes.root}
                 spacing={3}
             >
-                <Grid item>
-                    <ClearFiltersButton instance={instance} />
-                </Grid>
                 {/* render pvalue filter */}
                 {/* <form> */}
                 {allColumns

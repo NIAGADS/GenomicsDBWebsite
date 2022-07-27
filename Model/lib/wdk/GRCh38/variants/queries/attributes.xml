@@ -331,7 +331,7 @@
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
 		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS colocated_variants
 		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
-		 AND split_part(flags.record_primary_key, ':', 2) != split_part(cv.record_primary_key, ':', 2)),
+		 AND split_part(flags.source_id, ':', 2) != split_part(cv.record_primary_key, ':', 2)),
 
 		
 		 altv AS (
@@ -339,7 +339,7 @@
 		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
 		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS alternative_variants
 		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
-		 AND split_part(flags.record_primary_key, ':', 2) = split_part(cv.record_primary_key, ':', 2)
+		 AND split_part(flags.source_id, ':', 2) = split_part(cv.record_primary_key, ':', 2)
 		 ),
 
 		 result AS (

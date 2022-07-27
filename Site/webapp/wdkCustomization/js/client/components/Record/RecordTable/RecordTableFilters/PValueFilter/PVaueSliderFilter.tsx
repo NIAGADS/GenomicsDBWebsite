@@ -9,10 +9,12 @@ import Button from "@material-ui/core/Button";
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import PinDropIcon from '@material-ui/icons/PinDrop';
+import { theme } from "genomics-client/components/MaterialUI";
 
-const DEFAULT_FILTER_VALUE = negLog10p(5e-8);
+export const DEFAULT_FILTER_VALUE = negLog10p(5e-8);
 const MAX_ALLOWABLE_PVALUE = 15;
-const MIN_ALLOWABLE_PVALUE = 0;
+const MIN_ALLOWABLE_PVALUE = 1;
 
 const useStyles = makeStyles({
     root: {
@@ -20,7 +22,17 @@ const useStyles = makeStyles({
       padding: "2px"
     },
     valueLabel: {
-        fontSize: "0.5rem"
+        fontSize: "0.7rem",
+        color: theme.palette.secondary.dark,
+        //padding: "2px"
+    },
+    filterLabel: {
+        marginBottom: "2em"
+    },
+    markLabel: {
+    },
+    filterLabelIcon: {
+        fontSize: "20px"
     }
   });
   
@@ -44,17 +56,17 @@ export function PValueSliderFilter<T extends Record<string, unknown>>({
 
     const marks = [
         {
-            value: 0,
-            label: "0",
+            value: 1.0,
+            label: "1",
         },
         {
             value: 3,
             label: "1e⁻³",
         },
-       /* {
+       {
             value: 6,
             label: "1e⁻⁶",
-        }, */
+        },
         {
             value: 7.3,
             label: "5e⁻⁸",
@@ -76,21 +88,22 @@ export function PValueSliderFilter<T extends Record<string, unknown>>({
 
     return (
         <Box className={classes.root}>
-            <Typography id="pvalue-filter" gutterBottom>
-                p-value
+            <Typography id="pvalue-filter" className={classes.filterLabel}>
+                p-value (<PinDropIcon className={classes.filterLabelIcon}></PinDropIcon> = negLog10p)
             </Typography>
             <Slider
-                classes={{valueLabel : classes.valueLabel}}
+                classes={{valueLabel : classes.valueLabel, markLabel: classes.markLabel}}
                 color="secondary"
                 track="inverted"
                 aria-labelledby="pvalue-filter"
                 getAriaValueText={ariaValueText}
                 getAriaLabel={ariaValueText}
-                defaultValue={7.3}
+                defaultValue={currentFilterValue}
                 marks={marks}
+                //value={negLog10p(currentFilterValue)}
                 min={MIN_ALLOWABLE_PVALUE}
                 max={MAX_ALLOWABLE_PVALUE}
-                valueLabelFormat={ariaValueText}
+                //valueLabelFormat={ariaValueText}
                 valueLabelDisplay="on"
                 step={0.1}
                 onChange={(e, v) => {
