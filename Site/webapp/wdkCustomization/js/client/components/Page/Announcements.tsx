@@ -38,12 +38,7 @@ const siteAnnouncements = [
                 return (
                     <div key="live-beta">
                         Welcome to NIAGADS Alzheimer's GenomicsDB ({props.projectId}) <i>beta</i> where you will find
-                        the newest versions of our interface, features, tools and data. While we transition to making
-                        this beta site permanent,{" "}
-                        <a target="_blank" href="https://www.niagads.org/genomics">
-                            www.niagads.org/genomics
-                        </a>{" "}
-                        is still available (to be retired by Spring 2022). Please feel free to provide us with your
+                        the newest versions of our interface, features, tools and data. Please feel free to provide us with your
                         feedback using this{" "}
                         <a target="_blank" href="https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi">
                             beta-site feedback form
