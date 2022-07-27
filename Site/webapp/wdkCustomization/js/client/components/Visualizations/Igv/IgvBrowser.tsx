@@ -3,7 +3,7 @@ import igv from "igv/dist/igv.esm";
 import { noop } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
 import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
-import genomes from '../../../data/_igvGenomes';
+import {_genomes} from '../../../data/_igvGenomes';
 
 interface IgvBrowser {
     defaultSpan: string;
@@ -55,7 +55,7 @@ const IgvBrowser: React.FC<IgvBrowser> = ({
     useEffect(() => {
         if (projectId) {
            setReferenceTrackId(projectId === 'GRCh37' ? 'hg19' : 'hg38');
-           setReferenceTrackConfig(genomes[referenceTrackId]);
+           setReferenceTrackConfig(_genomes[referenceTrackId]);
         }
     }, [projectId]);
 

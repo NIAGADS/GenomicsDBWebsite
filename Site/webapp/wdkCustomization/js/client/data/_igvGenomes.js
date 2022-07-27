@@ -1,4 +1,4 @@
-export default genomes = [
+export const _genomes = [
     {
       "id": "chm13v2.0",
       "name": "Human (T2T CHM13-v2.0)",
