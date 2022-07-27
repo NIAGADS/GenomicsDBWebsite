@@ -32,6 +32,7 @@ public class TrackConfigService extends AbstractWdkService {
     private static final String TYPE_PARAM = "feature_type";
     private static final String TRACK_PARAM = "track"; 
     private static final String DATASOURCE_PARAM = "source";
+    private static final String GENOME_BUILD = "assembly";
 
     private static final String GENE_TRACK_SQL = "GeneTracks AS (" + NL
         + "SELECT 'GENCODE_V19_GENE'::text AS track, 'gene'::text AS track_type, 'GENCODE|ENSEMBL'::text AS datasource," + NL
@@ -244,7 +245,8 @@ public class TrackConfigService extends AbstractWdkService {
     public Response buildResponse(String body
         , @QueryParam(TYPE_PARAM) String trackType
         , @QueryParam(TRACK_PARAM) String tracks
-        , @QueryParam(DATASOURCE_PARAM) String dataSources ) throws WdkModelException {
+        , @QueryParam(DATASOURCE_PARAM) String dataSources
+        , @QueryParam(GENOME_BUILD) String assembly ) throws WdkModelException {
         
         LOG.info("Starting 'TrackConfig' Service");
         String response = "{}";

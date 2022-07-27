@@ -34,7 +34,7 @@ import { useTableStyles } from "./styles";
 
 export interface TableContainerProps {
     columns: Column<{}>[];
-    title?:string;
+    title?: string;
     data: any;
     canFilter: boolean;
     filterTypes?: any; // json object of filter types
@@ -69,23 +69,6 @@ const defaultFilterTypes = {
     pvalue: greaterThanFilter,
 };
 
-// fix to force table to always take full width of container
-// https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
-// https://spectrum.chat/react-table/general/v7-resizing-columns-no-longer-fit-to-width~4ea8a7c3-b21a-49a0-8582-baf0a6202d43
-const _defaultColumn = React.useMemo(
-    () => ({
-        // When using the useFlexLayout:
-        minWidth: 30, // minWidth is only used as a limit for resizing
-        width: 150, // width is used for both the flex-basis and flex-grow
-        maxWidth: 300, // maxWidth is only used as a limit for resizing
-        //@ts-ignore
-        Filter: () => null, // overcome the issue that useGlobalFilter sets canFilter to true
-        //Cell: ,
-        //Header: DefaultHeader,
-    }),
-    []
-);
-
 const TableContainer: React.FC<TableContainerProps> = ({
     columns,
     data,
@@ -96,7 +79,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
     showHideColumns,
     initialFilters,
     initialSort,
-    title
+    title,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -104,6 +87,23 @@ const TableContainer: React.FC<TableContainerProps> = ({
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
     const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
     const classes = useTableStyles();
+
+    // fix to force table to always take full width of container
+    // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
+    // https://spectrum.chat/react-table/general/v7-resizing-columns-no-longer-fit-to-width~4ea8a7c3-b21a-49a0-8582-baf0a6202d43
+    const _defaultColumn = React.useMemo(
+        () => ({
+            // When using the useFlexLayout:
+            minWidth: 30, // minWidth is only used as a limit for resizing
+            width: 150, // width is used for both the flex-basis and flex-grow
+            maxWidth: 300, // maxWidth is only used as a limit for resizing
+            //@ts-ignore
+            Filter: () => null, // overcome the issue that useGlobalFilter sets canFilter to true
+            //Cell: ,
+            //Header: DefaultHeader,
+        }),
+        []
+    );
 
     const instance = useTable(
         {
@@ -176,11 +176,13 @@ const TableContainer: React.FC<TableContainerProps> = ({
         </>
     );
 
-    const renderDrawerHeaderContents = (    
+    const renderDrawerHeaderContents = (
         <>
-        <Grid item>
-        <h3>Filter or modify table: <em>{title}</em> </h3>
-        </Grid>
+            <Grid item>
+                <h3>
+                    Filter or modify table: <em>{title}</em>{" "}
+                </h3>
+            </Grid>
         </>
     );
 
@@ -198,7 +200,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
             >
                 <FilterChipBar instance={instance} />
             </NavigationDrawer>
-       
+
             <Table className={className} instance={instance} />
         </DefaultBackgroundPanel>
     );

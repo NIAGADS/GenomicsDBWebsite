@@ -3,10 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
-    "peerDependencies": {
-        "react": ">=16.8.0",
-        "react-dom": ">=16.8.0"
-    },
+
     "dependencies": {
         "@fontsource/libre-franklin": "^4.5.0",
         "@fontsource/raleway": "^4.5.0",

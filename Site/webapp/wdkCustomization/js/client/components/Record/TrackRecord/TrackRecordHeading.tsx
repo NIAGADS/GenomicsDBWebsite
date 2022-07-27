@@ -109,7 +109,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                                 attribute={withTooltip(
                                     <span>
                                         {record.attributes.niagads_accession}{" "}
-                                        <Link href={`${_externalUrls.NIAGADS_BASE_URL}${record.attributes.niagads_accession}`}>
+                                        <Link href={`${_externalUrls.NIAGADS_BASE_URL}/${record.attributes.niagads_accession}`}>
                                             <i className={`${tClasses.small} fa fa-external-link`}></i>
                                         </Link>
                                     </span>,

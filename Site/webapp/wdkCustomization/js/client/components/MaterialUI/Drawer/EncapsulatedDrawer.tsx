@@ -58,7 +58,7 @@ const useDrawerStyles = makeStyles<Theme, StyleProps>((theme: Theme) =>
             "& .MuiDrawer-paper": {
                 width: DRAWER_WIDTH,
                 position: "absolute",
-                height: ({ height }) => height,
+                //height: ({ height }) => height,
                 maxHeight: MAX_HEIGHT,
                 //transition: "none !important",
             },
