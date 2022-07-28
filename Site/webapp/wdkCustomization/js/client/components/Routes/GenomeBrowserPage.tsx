@@ -75,7 +75,8 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                             displayMode: "expanded",
                             visibilityWindow: 100000000,
                             format: "refgene",
-                            url: "http://localhost:8080/genomics38/gencode.v36.annotation.gff3.gz",
+                            url: "http://localhost:8080/genomics38/gencode.v36.annotation.sorted.gff3.gz",
+                            indexURL: "http://localhost:8080/genomics38/gencode.v36.annotation.sorted.gff3.gz.tbi",
                             id: "gene_track_file",
                             colorBy: "biotype",
                             colorTable: {
