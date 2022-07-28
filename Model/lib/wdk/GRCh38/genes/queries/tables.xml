@@ -371,7 +371,7 @@
 		 
 		 SELECT id.source_id,
 		 t.datasource AS source,
-		 r.test_allele AS allele,
+		 CASE WHEN r.test_allele ='N' THEN '?' ELSE r.test_allele END AS allele,
 		 
 		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant_link,
 		 r.ref_snp_id,
@@ -448,7 +448,7 @@
 		 
 		 SELECT id.source_id,
 		 t.datasource AS source,
-		 r.test_allele AS allele,
+		 CASE WHEN r.test_allele = 'N' THEN '?' ELSE r.test_allele END AS allele,
 		 
 		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant_link,
 		 r.ref_snp_id,

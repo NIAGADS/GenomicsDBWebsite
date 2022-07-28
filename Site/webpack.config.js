@@ -7,6 +7,7 @@ var alias = {
     "genomics-client": __dirname + "/webapp/wdkCustomization/js/client",
     "@components": __dirname + "/webapp/wdkCustomization/js/client/components",
     "@viz": __dirname + "/webapp/wdkCustomization/js/client/components/Visualizations",
+    "@routes": __dirname + "/webapp/wdkCustomization/js/client/components/Routes",
     "@images": __dirname + "/webapp/images",
     "@sass": __dirname + "/webapp/wdkCustomization/sass",
 };

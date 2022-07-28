@@ -19,8 +19,7 @@ import { PieChartFilter } from "@viz/Table/TableFilters";
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 
-import { NiagadsBrowserTrackConfig } from "@components/GenomeBrowserPage/GenomeBrowserPage";
-import { IgvTrackConfig } from "@viz/GenomeBrowser";
+import { IgvTrackConfig, NiagadsBrowserTrackConfig } from "@viz/GenomeBrowser";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 

@@ -105,6 +105,7 @@ public class GeneTrackService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
+        LOG.debug("SQL: " + SPAN_SQL);
         SQLRunner runner = new SQLRunner(ds, SPAN_SQL, "track-gene-data-query");
         runner.executeQuery(new Object[] { chromosome, locationStart, locationEnd, chromosome, locationStart, locationEnd }, handler);
         
@@ -118,7 +119,7 @@ public class GeneTrackService extends AbstractWdkService {
             return new JSONArray();
         }
 
-        //LOG.debug("RESULT:  " + resultStr);
+        LOG.debug("RESULT:  " + resultStr);
         return new JSONArray(resultStr);
     }
 }

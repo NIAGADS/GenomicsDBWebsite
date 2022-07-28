@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
-import { noop, assign } from "lodash";
+import { noop, merge } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
 import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
 
@@ -42,21 +42,24 @@ export const IgvBrowser: React.FC<IgvBrowser> = ({
     disableRefTrack,
     onBrowserLoad,
     searchUrl,
-    serviceUrl,
     webappUrl,
     options,
 }) => {
-    const igvDiv = document.getElementById("igv-div");
-
     useLayoutEffect(() => {
         window.addEventListener("error", (event) => {
             console.log(event);
         });
 
-        assign({}, options, { locus: defaultSpan || "ABCA7" });
-        assign({}, options, { tracks: defaultTracks || [] });
-        assign({}, options, { url: `${searchUrl}$FEATURE$` });
-        
+        options = merge(options, {
+            locus: defaultSpan || "ABCA7",
+            tracks: defaultTracks || [],
+            search: {
+                url: `${searchUrl}$FEATURE$`,
+            }
+        });
+
+        const igvDiv = document.getElementById("igv-div");
+
         //https://github.com/igvteam/igv.js/wiki/Browser-Creation
         igv.createBrowser(igvDiv, options).then((browser: any) => {
             browser.addTrackToFactory(

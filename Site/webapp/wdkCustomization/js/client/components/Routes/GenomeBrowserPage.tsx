@@ -1,51 +1,49 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "wdk-client/Core/State/Types";
-import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { get, find } from "lodash";
 import qs from "qs";
+
+import { RootState } from "wdk-client/Core/State/Types";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
+
 import Container from "@material-ui/core/Container";
-import { theme } from "@components/MaterialUI";
-import { IgvBrowser, IgvTrackConfig, TrackSelector } from "@viz/GenomeBrowser";
-import { ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
-import { get } from "lodash";
-import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { PrimaryActionButton } from "@components/MaterialUI";
-import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { _genomes } from "../../data/_igvGenomes";
 
+import {
+    IgvBrowser,
+    IgvTrackConfig,
+    TrackSelector,
+    NiagadsBrowserTrackConfig,
+    NiagadsRawTrackConfig,
+} from "@viz/GenomeBrowser";
+import { NiagadsGeneReader } from "../../../lib/igv/NiagadsTracks";
+
+import { PrimaryActionButton } from "@components/MaterialUI";
+
+import { _genomes } from "../../data/_igvGenomes";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 
 const MemoBroswer = React.memo(IgvBrowser);
 
-interface GenomeBrowserPage {
+interface GenomeBrowserPage {}
 
-}
-
-const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({  }) => {
+const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
 
-    const [referenceTrackId, setReferenceTrackId] = useState(null);
-    const [referenceTrackConfig, setReferenceTrackConfig] = useState(null);
-    const [browserOptions, setBrowserOptions] = useState(null);
+    const [options, setOptions] = useState(null);
 
     useEffect(() => {
-        if (projectId) {
-            setReferenceTrackId(projectId === "GRCh37" ? "hg19" : "hg38");         
-        }
-        if (referenceTrackId) {
-            setReferenceTrackConfig(_genomes[referenceTrackId]);
-        }
-
-        if (referenceTrackId && referenceTrackConfig && serviceUrl) {
-            setBrowserOptions({
+        if (projectId && serviceUrl) {
+            let referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
+            let referenceTrackConfig = find(_genomes, {"id" : referenceTrackId});
+            setOptions({
                 reference: {
                     id: referenceTrackId,
                     name: referenceTrackConfig.name,
@@ -53,21 +51,49 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({  }) => {
                     indexURL: referenceTrackConfig.indexURL,
                     cytobandURL: referenceTrackConfig.cytobandURL,
                     tracks: [
-                              {
-                                  name: "Ensembl Genes",
-                                  displayMode: "expanded",
-                                  visibilityWindow: 100000000,
-                                  format: "refgene",
-                                  reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                                  url: `${serviceUrl}/track/gene`,
-                                  id: "niagadsgenetrack",
-                              },
-                          ],
-                }
+                        {
+                            name: "Ensembl Genes",
+                            displayMode: "expanded",
+                            visibilityWindow: 100000000,
+                            format: "refgene",
+                            reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
+                            url: `${serviceUrl}/track/gene`,
+                            id: "niagadsgenetrack",
+                            colorBy: "biotype",
+                            colorTable: {
+                               "antisense": "blueviolet",
+                               "protein_coding": "blue",
+                               "retained_intron": "rgb(0, 150, 150)",
+                               "processed_transcript": "purple",
+                               "processed_pseudogene": "#7fff00",
+                               "unprocessed_pseudogene": "#d2691e",
+                               "*": "black"
+                            }
+                        },
+                        {
+                            name: "Ensembl Genes - File",
+                            displayMode: "expanded",
+                            visibilityWindow: 100000000,
+                            format: "refgene",
+                            url: "http://localhost:8080/genomics38/gencode.v36.annotation.gff3.gz",
+                            id: "gene_track_file",
+                            colorBy: "biotype",
+                            colorTable: {
+                               "antisense": "blueviolet",
+                               "protein_coding": "blue",
+                               "retained_intron": "rgb(0, 150, 150)",
+                               "processed_transcript": "purple",
+                               "processed_pseudogene": "#7fff00",
+                               "unprocessed_pseudogene": "#d2691e",
+                               "*": "black"
+                            }
+                        },
+                    ],
+                },
             });
         }
+    }, [projectId, serviceUrl]);
 
-    }, [browserOptions, webAppUrl, serviceUrl]);
 
     useWdkEffect(
         (service) => {
@@ -154,43 +180,47 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({  }) => {
             setBrowser(b);
         }, []);
 
-    return (
-        projectId ? <Container maxWidth="xl">
-                <Grid container item xs={12}>
-                    {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
-                  <Box m="10px">
-                        <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
-                            <LibraryBooksIcon />
-                            Browse Tracks
-                        </PrimaryActionButton>
-                    </Box>
-                </Grid>
-                <Grid>
-                   {browserOptions ? <MemoBroswer
+    return projectId ? (
+        <Box marginTop={4}>
+            <Grid container item xs={12}>
+                {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
+                <Box m="10px">
+                    <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
+                        <LibraryBooksIcon />
+                        Browse Tracks
+                    </PrimaryActionButton>
+                </Box>
+            </Grid>
+            <Grid>
+                {options ? (
+                    <MemoBroswer
                         defaultSpan={defaultSpan}
                         disableRefTrack={true}
                         onBrowserLoad={buildBrowser}
                         searchUrl={`${serviceUrl}/track/feature?id=`}
                         serviceUrl={serviceUrl}
                         webappUrl={webAppUrl}
-                        options={browserOptions}
-                    /> : <CircularProgress></CircularProgress>}
-                </Grid>
-                <Grid item xs={12}>
-                    <TrackSelector
-                        activeTracks={getLoadedTracks(Browser)}
-                        handleClose={setListVisible.bind(null, false)}
-                        isOpen={listVisible}
-                        loadingTrack={loadingTrack}
-                        toggleTracks={toggleTracks}
-                        trackList={trackList}
-    /> 
-               </Grid> 
-        </Container>: <CircularProgress color="secondary"/> 
+                        options={options}
+                    />
+                ) : (
+                    <CircularProgress color="secondary"></CircularProgress>
+                )}
+            </Grid>
+            <Grid item xs={12}>
+               {/* <TrackSelector
+                    activeTracks={getLoadedTracks(Browser)}
+                    handleClose={setListVisible.bind(null, false)}
+                    isOpen={listVisible}
+                    loadingTrack={loadingTrack}
+                    toggleTracks={toggleTracks}
+                    trackList={trackList}
+                />*/}
+            </Grid>
+        </Box>
+    ) : (
+        <CircularProgress color="secondary" />
     );
 };
-
-
 
 export interface TrackConfig {
     name: string;
@@ -208,7 +238,7 @@ const getLoadedTracks = (browser: any): string[] =>
 
 const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig): NiagadsBrowserTrackConfig => {
     const { endpoint, feature_type, path, phenotypes, track_type, track_type_display, ...rest } = track,
-        niagadsConfig = (rest as unknown) as NiagadsBrowserTrackConfig;
+        niagadsConfig = rest as unknown as NiagadsBrowserTrackConfig;
 
     if (track.endpoint) {
         niagadsConfig.url = `${track.endpoint}?track=${track.track}`;
@@ -229,33 +259,5 @@ const transformRawNiagadsTrack = (track: NiagadsRawTrackConfig): NiagadsBrowserT
 
     return niagadsConfig;
 };
-
-interface NiagadsBaseTrackConfig {
-    description?: string; //for browser
-    format?: string; //bed, etc
-    label: string; // for track popover
-    name: string; //for display in track browser
-    source: string; //for display in track browser
-}
-
-interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
-    endpoint?: string; //for async tracks only
-    feature_type: string; //gene, variant, enhancer, etc., for categorizing
-    path?: string; //for filer -- can pass in as url
-    phenotypes: { [key: string]: string }[]; //for browser filter
-    track: string; //unique id (pass to backend for async), for instance
-    track_type: string; //igv track type
-    track_type_display: string; //niagads track type
-}
-
-export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
-    featureType: string;
-    phenotypes: string;
-    reader?: any;
-    track: string;
-    trackType: string;
-    trackTypeDisplay: string;
-    url: string;
-}
 
 export default GenomeBrowserPage;

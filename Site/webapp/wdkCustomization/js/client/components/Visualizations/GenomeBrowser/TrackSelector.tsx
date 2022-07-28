@@ -1,40 +1,49 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { groupBy, uniq as unique } from "lodash";
+
 import Slide from "@material-ui/core/Slide";
 import DialogContent from "@material-ui/core/DialogContent";
-import SearchIcon from "@material-ui/icons/Search";
-import CloseIcon from "@material-ui/icons/Close";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Dialog from "@material-ui/core/Dialog";
+import Grid from "@material-ui/core/Grid";
+import List from "@material-ui/core/List";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+
+import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@material-ui/icons/Close";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { TransitionProps } from "@material-ui/core/transitions";
-import { Box, Typography } from "@material-ui/core";
-import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
-import { groupBy, uniq as unique } from "lodash";
-import { NiagadsBrowserTrackConfig } from "../../GenomeBrowserPage/GenomeBrowserPage";
+import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/styles";
+
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
 
-import { TrackTable, UnpaddedCheckbox, tracksToTrackConfigs } from "@viz/GenomeBrowser";
+import { TrackTable, tracksToTrackConfigs, NiagadsBrowserTrackConfig, IgvTrackConfig } from "@viz/GenomeBrowser";
 
-//import PaginationComponent from "./../../RecordPage/RecordTable-old/RecordTable/PaginationComponent/PaginationComponent";
-
-const useBrowserStyles = makeStyles(() =>
+const useBrowserStyles = makeStyles((theme: Theme) =>
     createStyles({
-        Accordion: {
+        accordion: {
             flexGrow: 1,
             padding: "0px",
         },
-        AccordionDetails: {
+        accordionDetails: {
             padding: "0px",
             flexDirection: "column",
         },
-        DialogContent: {
+        dialogContent: {
             display: "flex",
+        },
+        formControl: {
+            margin: theme.spacing(3),
         },
     })
 );
@@ -64,17 +73,17 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
     trackList: _trackList,
 }) => {
     const [searchTerm, setSearchTerm] = useState(""),
-        [sources, setSources] = useState<string[]>([]),
-        [types, setTypes] = useState<string[]>([]),
-        [displayTypes, setDisplayTypes] = useState<string[]>([]),
+        [dataSources, setDataSources] = useState<string[]>([]),
+        [sequenceFeatureTypes, setSequenceFeatureTypes] = useState<string[]>([]),
+        [trackTypes, setTrackTypes] = useState<string[]>([]),
         [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
         classes = useBrowserStyles(),
-        sourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
-        typeList = useMemo(() => unique((_trackList || []).map((t) => t.featureType)), [_trackList]),
-        displayTypeList = useMemo(() => unique((_trackList || []).map((t) => t.trackTypeDisplay)), [_trackList]),
-        sourceCounts = useMemo(() => groupBy(_trackList || [], (t) => t.source), [_trackList]),
-        typeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.featureType), [_trackList]),
-        displayTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.trackTypeDisplay), [_trackList]);
+        dataSourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
+        sequenceFeatureTypeList = useMemo(() => unique((_trackList || []).map((t) => t.featureType)), [_trackList]),
+        trackTypeList = useMemo(() => unique((_trackList || []).map((t) => t.trackTypeDisplay)), [_trackList]),
+        dataSourceCounts = useMemo(() => groupBy(_trackList || [], (t) => t.source), [_trackList]),
+        sequenceFeatureTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.featureType), [_trackList]),
+        trackTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.trackTypeDisplay), [_trackList]);
 
     useEffect(() => {
         const st = searchTerm.toLowerCase();
@@ -91,41 +100,41 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                     .filter(
                         (t) =>
                             !!(
-                                sources.includes(t.source) ||
-                                types.includes(t.featureType) ||
-                                displayTypes.includes(t.trackTypeDisplay) ||
-                                (!sources.length && !types.length && !displayTypes.length)
+                                dataSources.includes(t.source) ||
+                                sequenceFeatureTypes.includes(t.featureType) ||
+                                trackTypes.includes(t.trackTypeDisplay) ||
+                                (!dataSources.length && !sequenceFeatureTypes.length && !trackTypes.length)
                             )
                     )
             );
         }
-    }, [searchTerm, _trackList, sources, types, displayTypes]);
+    }, [searchTerm, _trackList, dataSources, sequenceFeatureTypes, trackTypes]);
 
     const closeSelf = () => {
             setSearchTerm("");
-            setSources([]);
-            setTypes([]);
+            setDataSources([]);
+            setSequenceFeatureTypes([]);
             handleClose();
         },
-        toggleSource = (source: string) => {
-            if (sources.includes(source)) {
-                setSources(sources.filter((s) => s != source));
+        toggleDataSource = (source: string) => {
+            if (dataSources.includes(source)) {
+                setDataSources(dataSources.filter((s) => s != source));
             } else {
-                setSources(sources.concat([source]));
+                setDataSources(dataSources.concat([source]));
             }
         },
-        toggleType = (type: string) => {
-            if (types.includes(type)) {
-                setTypes(types.filter((s) => s != type));
+        toggleSequenceFeatureType = (type: string) => {
+            if (sequenceFeatureTypes.includes(type)) {
+                setSequenceFeatureTypes(sequenceFeatureTypes.filter((s) => s != type));
             } else {
-                setTypes(types.concat([type]));
+                setSequenceFeatureTypes(sequenceFeatureTypes.concat([type]));
             }
         },
-        toggleDisplayType = (type: string) => {
-            if (displayTypes.includes(type)) {
-                setDisplayTypes(displayTypes.filter((s) => s != type));
+        toggleTrackType = (type: string) => {
+            if (trackTypes.includes(type)) {
+                setTrackTypes(trackTypes.filter((s) => s != type));
             } else {
-                setDisplayTypes(displayTypes.concat([type]));
+                setTrackTypes(trackTypes.concat([type]));
             }
         };
 
@@ -140,98 +149,130 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
             keepMounted
             onClose={closeSelf}
         >
-            <DialogContent className={classes.DialogContent}>
+            <DialogContent className={classes.dialogContent}>
                 <Grid container alignItems="flex-start" direction="row" spacing={3}>
                     <Grid item container direction="column" spacing={2} xs={4} lg={2}>
                         <Grid container>
-                            <Typography variant="h4">Browse Tracks</Typography>
+                            <Typography variant="h4">Select Tracks</Typography>
                         </Grid>
                         <Grid item>
                             <Typography variant="h5">Filters</Typography>
                         </Grid>
                         <Grid item>
-                            <Accordion className={classes.Accordion}>
+                            <Accordion className={classes.accordion}>
                                 <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Loaded Tracks</Typography>
                                 </FilterAccordionSummary>
-                                <AccordionDetails className={classes.AccordionDetails}>
-                                    <FilterList>
-                                        {activeTracks &&
-                                            activeTracks
-                                                .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
-                                                .map((t) => (
-                                                    <UnpaddedListItem key={t}>
-                                                        <UnpaddedCheckbox
+                                <AccordionDetails className={classes.accordionDetails}>
+                                    <FormControl component="fieldset" className={classes.formControl}>
+                                        <FormLabel component="legend">
+                                            Tracks currently displayed on the genome browser
+                                        </FormLabel>
+                                        <FormGroup>
+                                            {activeTracks.length > 0 &&
+                                                activeTracks
+                                                    .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
+                                                    .map((t) => (
+                                                        <FormControlLabel
+                                                            key={t}
                                                             color="primary"
-                                                            checked={true}
-                                                            onChange={toggleTracks.bind(
-                                                                null,
-                                                                tracksToTrackConfigs([
-                                                                    _trackList.find((track) => track.name === t),
-                                                                ])
-                                                            )}
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={true}
+                                                                    onChange={toggleTracks.bind(
+                                                                        null,
+                                                                        tracksToTrackConfigs([
+                                                                            _trackList.find(
+                                                                                (track) => track.name === t
+                                                                            ),
+                                                                        ])
+                                                                    )}
+                                                                    name={t}
+                                                                />
+                                                            }
+                                                            label={t}
                                                         />
-                                                        &nbsp;{t}
-                                                    </UnpaddedListItem>
-                                                ))}
-                                    </FilterList>
+                                                    ))}
+                                        </FormGroup>
+                                    </FormControl>
                                 </AccordionDetails>
                             </Accordion>
-                            <Accordion className={classes.Accordion}>
+                            <Accordion className={classes.accordion}>
                                 <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Source</Typography>
                                 </FilterAccordionSummary>
-                                <AccordionDetails className={classes.AccordionDetails}>
-                                    <FilterList>
-                                        {sourceList.map((a: string) => (
-                                            <UnpaddedListItem key={a}>
-                                                <UnpaddedCheckbox
+                                <AccordionDetails className={classes.accordionDetails}>
+                                    <FormControl component="fieldset" className={classes.formControl}>
+                                        <FormLabel component="legend">Filter tracks by original data source</FormLabel>
+                                        <FormGroup>
+                                            {dataSourceList.map((a: string) => (
+                                                <FormControlLabel
+                                                    key={a}
                                                     color="primary"
-                                                    checked={sources.includes(a)}
-                                                    onChange={toggleSource.bind(null, a)}
-                                                />{" "}
-                                                {`${a} (${sourceCounts[a].length})`}
-                                            </UnpaddedListItem>
-                                        ))}
-                                    </FilterList>
+                                                    control={
+                                                        <Checkbox
+                                                            checked={dataSources.includes(a)}
+                                                            onChange={toggleDataSource.bind(null, a)}
+                                                            name={a}
+                                                        />
+                                                    }
+                                                    label={`${a} (${dataSourceCounts[a].length})`}
+                                                />
+                                            ))}
+                                        </FormGroup>
+                                    </FormControl>
                                 </AccordionDetails>
                             </Accordion>
-                            <Accordion className={classes.Accordion}>
+                            <Accordion className={classes.accordion}>
                                 <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>Feature Type</Typography>
+                                    <Typography>Sequence Feature</Typography>
                                 </FilterAccordionSummary>
-                                <AccordionDetails className={classes.AccordionDetails}>
-                                    <FilterList>
-                                        {typeList.map((a: string) => (
-                                            <UnpaddedListItem key={a}>
-                                                <UnpaddedCheckbox
-                                                    color="primary"
-                                                    checked={types.includes(a)}
-                                                    onChange={toggleType.bind(null, a)}
-                                                />{" "}
-                                                {`${a} (${typeCounts[a].length})`}
-                                            </UnpaddedListItem>
+                                <AccordionDetails className={classes.accordionDetails}>
+                                    <FormControl component="fieldset" className={classes.formControl}>
+                                        <FormLabel component="legend">Filter tracks by type of sequence feature annotated</FormLabel>
+                                        <FormGroup>
+                                        {sequenceFeatureTypeList.map((a: string) => (
+                                             <FormControlLabel
+                                             key={a}
+                                             color="primary"
+                                             control={
+                                                 <Checkbox
+                                                     checked={sequenceFeatureTypes.includes(a)}
+                                                     onChange={toggleSequenceFeatureType.bind(null, a)}
+                                                     name={a}
+                                                 />
+                                             }
+                                             label={`${a} (${sequenceFeatureTypeCounts[a].length})`}
+                                         />
                                         ))}
-                                    </FilterList>
+                                    </FormGroup>
+                                    </FormControl>
                                 </AccordionDetails>
                             </Accordion>
-                            <Accordion className={classes.Accordion}>
+                            <Accordion className={classes.accordion}>
                                 <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography>Track Type</Typography>
                                 </FilterAccordionSummary>
-                                <AccordionDetails className={classes.AccordionDetails}>
-                                    <FilterList>
-                                        {displayTypeList.map((a: string) => (
-                                            <UnpaddedListItem key={a}>
-                                                <UnpaddedCheckbox
-                                                    color="primary"
-                                                    checked={displayTypes.includes(a)}
-                                                    onChange={toggleDisplayType.bind(null, a)}
-                                                />{" "}
-                                                {`${a} (${displayTypeCounts[a].length})`}
-                                            </UnpaddedListItem>
+                                <AccordionDetails className={classes.accordionDetails}>
+                                <FormControl component="fieldset" className={classes.formControl}>
+                                        <FormLabel component="legend">Filter tracks by type</FormLabel>
+                                        <FormGroup>
+                                        {trackTypeList.map((a: string) => (
+                                              <FormControlLabel
+                                              key={a}
+                                              color="primary"
+                                              control={
+                                                  <Checkbox
+                                                      checked={trackTypes.includes(a)}
+                                                      onChange={toggleTrackType.bind(null, a)}
+                                                      name={a}
+                                                  />
+                                              }
+                                              label={`${a} (${trackTypeCounts[a].length})`}
+                                          />
                                         ))}
-                                    </FilterList>
+                                    </FormGroup>
+                                    </FormControl>
                                 </AccordionDetails>
                             </Accordion>
                         </Grid>
@@ -265,33 +306,9 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
     ) : null;
 };
 
-
-export interface IgvTrackConfig {
-    name: string;
-    format?: string;
-    displayMode: string;
-    height?: number;
-    id: string;
-    indexURL?: string;
-    reader?: any;
-    type: string;
-    url: string;
-    visibilityWindow: number;
-}
-
-const FilterList = withStyles((theme) => ({
-    root: {
-        paddingTop: "0px",
-        paddingBottom: "10px",
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
-    },
-}))(List);
-
 //typescript flaw in material ui prevents this from working
 //const UnpaddedListItem = stripPadding(ListItem);
 // @ts-ignore
-const UnpaddedListItem = (props: ListItemProps) => <ListItem {...props} style={{ padding: "0px" }} />;
 
 const FilterAccordionSummary = withStyles(() => ({
     root: {
