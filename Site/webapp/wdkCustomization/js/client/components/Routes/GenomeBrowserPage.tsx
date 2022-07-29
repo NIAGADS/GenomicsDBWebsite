@@ -57,13 +57,13 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     }, [projectId, serviceUrl]);
 
 
-    /*useWdkEffect(
+    useWdkEffect(
         (service) => {
             service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
                 setTrackList(
                     res
                         .map((res) => transformRawNiagadsTrack(res))
-                        .map((t) =>
+                        /*.map((t) =>
                             //we have to manually attach the reader to the config coming out of the backend
                             t.track === "ENSEMBL_GENE"
                                 ? {
@@ -72,13 +72,13 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                                       trackType: "annotation",
                                   }
                                 : t
-                        )
+                        )*/
                 )
             );
         },
 
         [serviceUrl]
-    ); */
+    );
 
     const [Browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),
@@ -114,13 +114,13 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     //since we're going to treat the ref track like any other track in our track list
     //we're not going to load it from the start but rather wait till the list comes in,
     //grab it from the list, and load it ourselves
-    useEffect(() => {
+   /*  useEffect(() => {
         if (trackList && Browser && refGeneTrack) {
             if (!getTrackIsLoaded(refGeneTrack)) {
                 loadTrack(refGeneTrack);
             }
         }
-    }, [trackList, Browser, refGeneTrack]);
+    }, [trackList, Browser, refGeneTrack]); */
 
     const location = useLocation();
 
