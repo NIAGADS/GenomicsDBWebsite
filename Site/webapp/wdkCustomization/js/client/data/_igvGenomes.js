@@ -64,7 +64,8 @@ export const _genomes = [
     "aliasURL": "https://s3.amazonaws.com/igv.org.genomes/hg38/hg38_alias.tab",
     "tracks": [
       {
-        "name": "Refseq Genes",
+        "name": "Genes (RefSeq)",
+        "id": "REFSEQ_GENE",
         "format": "refgene",
         "url": "https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq.txt.gz",
         "indexURL": "https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq.txt.gz.tbi",

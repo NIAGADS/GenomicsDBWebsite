@@ -45,6 +45,9 @@ const useBrowserStyles = makeStyles((theme: Theme) =>
         formControl: {
             margin: theme.spacing(3),
         },
+        formControlLabel: {
+            fontSize: "0.8rem"
+        }
     })
 );
 
@@ -165,13 +168,13 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.accordionDetails}>
                                     <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend">
+                                        <FormLabel component="legend" className={classes.formControlLabel}>
                                             Tracks currently displayed on the genome browser
                                         </FormLabel>
                                         <FormGroup>
                                             {activeTracks.length > 0 &&
                                                 activeTracks
-                                                    .filter((t) => !["ideogram", "ruler", "sequence"].includes(t))
+                                                    .filter((t) => !["ideogram", "ruler", "Sequence"].includes(t))
                                                     .map((t) => (
                                                         <FormControlLabel
                                                             key={t}
@@ -203,7 +206,8 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.accordionDetails}>
                                     <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend">Filter tracks by original data source</FormLabel>
+                                        <FormLabel component="legend" className={classes.formControlLabel}>
+                                            Filter tracks by original data source</FormLabel>
                                         <FormGroup>
                                             {dataSourceList.map((a: string) => (
                                                 <FormControlLabel
@@ -229,7 +233,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.accordionDetails}>
                                     <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend">Filter tracks by type of sequence feature annotated</FormLabel>
+                                        <FormLabel component="legend" className={classes.formControlLabel}>Filter tracks by type of sequence feature annotated</FormLabel>
                                         <FormGroup>
                                         {sequenceFeatureTypeList.map((a: string) => (
                                              <FormControlLabel
@@ -255,7 +259,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                                 </FilterAccordionSummary>
                                 <AccordionDetails className={classes.accordionDetails}>
                                 <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend">Filter tracks by type</FormLabel>
+                                        <FormLabel component="legend" className={classes.formControlLabel}>Filter tracks by type</FormLabel>
                                         <FormGroup>
                                         {trackTypeList.map((a: string) => (
                                               <FormControlLabel

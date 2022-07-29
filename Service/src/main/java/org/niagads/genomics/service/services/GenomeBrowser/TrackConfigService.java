@@ -35,37 +35,33 @@ public class TrackConfigService extends AbstractWdkService {
     private static final String GENOME_BUILD = "assembly";
 
     private static final String GENE_TRACK_SQL = "GeneTracks AS (" + NL
-        + "SELECT 'GENCODE_V19_GENE'::text AS track, 'gene'::text AS track_type, 'GENCODE|ENSEMBL'::text AS datasource," + NL
+        + "SELECT track, 'gene'::text AS track_type, source AS datasource," + NL
         + "jsonb_build_object(" + NL
-        + "'track', 'ENSEMBL_GENE'," + NL
+        + "'track', track," + NL
         + "'feature_type', 'Gene'," + NL
         + "'track_type_display', 'Gene Annotation'," + NL
         + "'track_type', 'annotation'," + NL  // refseq
         + "'endpoint', '@SERVICE_BASE_URI@/track/gene'," + NL
-        + "'label', 'Ensembl Genes'," + NL
-        + "'source', 'GENCODE|ENSEMBL'," + NL
-        + "'name', 'Ensembl Genes'," + NL
-        + "'description', 'Ensembl genes mapped to the @GENOME_BUILD@ gene reference; annotations from GENCODE @GENCODE_VERSION@'" + NL
+        + "'label', label," + NL
+        + "'source', source," + NL
+        + "'name', name," + NL
+        + "'description', description" + NL
+        + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE feature_type = 'gene'"
         + ") AS track_config)";
 
     private static final String VARIANT_TRACK_SQL = "VariantTracks AS (" + NL
         + "SELECT track, 'variant'::text AS track_type, CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END AS datasource," + NL
         + "jsonb_build_object(" + NL
         + "'track', track," + NL
-        + "'feature_type', 'Variant'," + NL
+        + "'feature_type', feature_type," + NL
         + "'track_type_display', 'Variant Annotation'," + NL
         + "'track_type', 'niagadsvariant'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
-        + "'label', track_name," +  NL
-        + "'name', track_name," +  NL
+        + "'label', label," +  NL
+        + "'name', name," +  NL
         + "'source', CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END," + NL
         + "'description', description) AS track_config" + NL
-        + "FROM (SELECT * FROM (VALUES" + NL 
-        + "('ADSP', 'ADSP', 'Variants from the Alzheimer''s Disease Sequencing Project (ADSP) Whole Genome Sequencing (WGS) and Whole Exome Sequencing (WES) efforts that passed the ADSP biallelic quality control (QC) criteria. Variants are annotated by the ADSP Annotation Pipeline.')," + NL 
-        + "('ADSP_WES', 'ADSP (WES)', 'Variants from the Alzheimer''s Disease Sequencing Project (ADSP) Whole Exome Sequencing (WES) effort - INDELs and SNVs that passed the ADSP biallelic quality control (QC) criteria. Variants are annotated by the ADSP Annotation Pipeline.'), " + NL
-        + "('dbSNP', 'dbSNP bld @dbSNP_VERSION@', 'All variants from the NCBI dbSNP database of single nucleotide polymorphisms and small-scale variations. Variants are annotated by the ADSP Annotation Pipeline.')," + NL
-        + "('dbSNP_COMMON', 'dbSNP bld @dbSNP_VERSION@ (COMMON)', 'Variants from the NCBI dbSNP database that are flagged as COMMON. Variants are annotated by the ADSP Annotation Pipeline.')" + NL
-        + ") AS t (track, track_name, description))  a" + NL
+        + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
         + "ORDER BY track)";
     
     private static final String GWAS_TRACK_PHENOTYPE_CTE = "GwasPhenotypes AS (" + NL
@@ -177,13 +173,13 @@ public class TrackConfigService extends AbstractWdkService {
                 String sql = "WITH" + NL 
                     + VARIANT_TRACK_SQL + ',' + NL
                     + GWAS_TRACK_SQL + ',' + NL
-                    + GENE_TRACK_SQL + ',' + NL
+                    //+ GENE_TRACK_SQL + ',' + NL
                     + ENHANCER_TRACK_SQL + NL
                     + "SELECT * FROM VariantTracks" + NL
                     + "UNION ALL" + NL
                     + "SELECT * FROM GwasTracks" + NL
-                    + "UNION ALL" + NL
-                    + "SELECT * FROM GeneTracks" + NL
+                    //+ "UNION ALL" + NL
+                    //+ "SELECT * FROM GeneTracks" + NL
                     + "UNION ALL" + NL
                     + "SELECT * FROM EnhancerTracks";
                 return sql;
@@ -337,7 +333,7 @@ public class TrackConfigService extends AbstractWdkService {
         return sql.replace("@FILER_TRACK_URL@", filerUrl);
     }
 
-    private String replaceVersions(String sql) throws WdkModelException {
+    private String replaceVersions(String response) throws WdkModelException {
         String genomeBuild = getWdkModel().getProperties().get("GENOME_BUILD");
         if (genomeBuild == null) {
             throw new WdkModelException("Need to specify GENOME_BUILD in model.prop");
@@ -353,9 +349,9 @@ public class TrackConfigService extends AbstractWdkService {
             throw new WdkModelException("Need to specify dbSNP_VERSION in model.prop");
         }
 
-        return sql.replace("@GENOME_BUILD@", genomeBuild)
-            .replace("@GENCODE_VERSION@", gencodeVersion)
-            .replace("@dbSNP_VERSION@", dbSnpVersion);
+        return response.replace("+GENOME_BUILD+", genomeBuild)
+            .replace("+GENCODE_VERSION+", gencodeVersion)
+            .replace("+DBSNP_VERSION+", dbSnpVersion);
     }
 
     private String buildQuery(String trackType, String tracks, String dataSources) throws WdkModelException {
@@ -367,21 +363,21 @@ public class TrackConfigService extends AbstractWdkService {
             sql = sql + NL + "WHERE datasource ~* '" + dataSources + "'";
         }
 
-        return replaceFilerUrl(replaceEndpoints(replaceVersions(sql)));
+        return replaceFilerUrl(replaceEndpoints(sql));
     }
 
-    private String lookup(String querySql) {   
+    private String lookup(String querySql) throws WdkModelException {   
         
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
-
+        //LOG.debug(querySql);    
         SQLRunner runner = new SQLRunner(ds, querySql, "track-lookup-query");
         runner.executeQuery(handler);
-        
+    
         List <Map <String, Object>> results = handler.getResults();
         if (!results.isEmpty())
-            return (String) results.get(0).get("result");
+            return replaceVersions((String) results.get(0).get("result"));
     
         return null;
     }

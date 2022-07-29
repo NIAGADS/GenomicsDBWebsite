@@ -169,14 +169,14 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                 )}
             </Grid>
             <Grid item xs={12}>
-               {/* <TrackSelector
+               {<TrackSelector
                     activeTracks={getLoadedTracks(Browser)}
                     handleClose={setListVisible.bind(null, false)}
                     isOpen={listVisible}
                     loadingTrack={loadingTrack}
                     toggleTracks={toggleTracks}
                     trackList={trackList}
-                />*/}
+                />}
             </Grid>
         </Box>
     ) : (

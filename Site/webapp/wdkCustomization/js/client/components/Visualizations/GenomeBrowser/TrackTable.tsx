@@ -119,7 +119,9 @@ const _setInitialFilters = (table: TableField) => {
 }; */
 
 export const tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
+    if (!tracks) { console.log('here');}
     return tracks.map((track) => {
+        if (!track) {console.log('no track');}
         const base = {
             displayMode: "expanded",
             format: track.format,
