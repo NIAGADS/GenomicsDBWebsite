@@ -50,53 +50,14 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                     fastaURL: referenceTrackConfig.fastaURL,
                     indexURL: referenceTrackConfig.indexURL,
                     cytobandURL: referenceTrackConfig.cytobandURL,
-                    tracks: [
-                        {
-                            name: "Ensembl Genes",
-                            displayMode: "expanded",
-                            visibilityWindow: 100000000,
-                            format: "refgene",
-                            reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                            url: `${serviceUrl}/track/gene`,
-                            id: "niagadsgenetrack",
-                            colorBy: "biotype",
-                            colorTable: {
-                               "antisense": "blueviolet",
-                               "protein_coding": "blue",
-                               "retained_intron": "rgb(0, 150, 150)",
-                               "processed_transcript": "purple",
-                               "processed_pseudogene": "#7fff00",
-                               "unprocessed_pseudogene": "#d2691e",
-                               "*": "black"
-                            }
-                        },
-                        {
-                            name: "Ensembl Genes - File",
-                            displayMode: "expanded",
-                            visibilityWindow: 100000000,
-                            format: "refgene",
-                            url: "http://localhost:8080/genomics38/gencode.v36.annotation.sorted.gff3.gz",
-                            indexURL: "http://localhost:8080/genomics38/gencode.v36.annotation.sorted.gff3.gz.tbi",
-                            id: "gene_track_file",
-                            colorBy: "biotype",
-                            colorTable: {
-                               "antisense": "blueviolet",
-                               "protein_coding": "blue",
-                               "retained_intron": "rgb(0, 150, 150)",
-                               "processed_transcript": "purple",
-                               "processed_pseudogene": "#7fff00",
-                               "unprocessed_pseudogene": "#d2691e",
-                               "*": "black"
-                            }
-                        },
-                    ],
+                    tracks: referenceTrackConfig.tracks
                 },
             });
         }
     }, [projectId, serviceUrl]);
 
 
-    useWdkEffect(
+    /*useWdkEffect(
         (service) => {
             service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
                 setTrackList(
@@ -117,7 +78,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         },
 
         [serviceUrl]
-    );
+    ); */
 
     const [Browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),
