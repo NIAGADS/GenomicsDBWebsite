@@ -96,8 +96,9 @@ public class VariantTrackService extends AbstractWdkService {
 
         String sql = buildDataQuery(track);
 
-        //LOG.debug(DATA_QUERY);
-        //LOG.debug("track = " + track + " // chr = " + chromosome + " // start = " + locationStart.toString() + " // end = " + locationEnd.toString());
+        
+        LOG.debug("track = " + track + " // chr = " + chromosome + " // start = " + locationStart.toString() + " // end = " + locationEnd.toString());
+        LOG.debug("sql: " + sql);
         SQLRunner runner = new SQLRunner(ds, sql, "track-variant-data-query");
         runner.executeQuery(new Object[] { chromosome, locationStart, locationEnd, locationStart, locationEnd, chromosome }, handler);
         

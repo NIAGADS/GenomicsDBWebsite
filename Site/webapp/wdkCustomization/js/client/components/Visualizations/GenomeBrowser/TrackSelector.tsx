@@ -31,6 +31,9 @@ import { TrackTable, tracksToTrackConfigs, NiagadsBrowserTrackConfig, IgvTrackCo
 
 const useBrowserStyles = makeStyles((theme: Theme) =>
     createStyles({
+        flexRight: {
+            marginLeft: "auto",
+        },
         accordion: {
             flexGrow: 1,
             padding: "0px",
@@ -45,9 +48,14 @@ const useBrowserStyles = makeStyles((theme: Theme) =>
         formControl: {
             margin: theme.spacing(3),
         },
+        formLabel: {
+            fontSize: "0.8rem",
+            // marginTop: "-150px",
+            marginBottom: "10px",
+        },
         formControlLabel: {
-            fontSize: "0.8rem"
-        }
+            fontSize: "0.85rem",
+        },
     })
 );
 
@@ -141,6 +149,141 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
             }
         };
 
+    const renderActiveTrackChoices = (
+            <Accordion className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>Loaded Tracks</Typography>
+                </AccordionSummary>
+                <AccordionDetails className={classes.accordionDetails}>
+                    <FormControl component="fieldset" className={classes.formControl}>
+                        <FormLabel component="legend" className={classes.formLabel}>
+                            Tracks currently loaded on the browser
+                        </FormLabel>
+
+                        <FormGroup>
+                            {activeTracks.length > 0 &&
+                                activeTracks
+                                    .filter((t) => !["ideogram", "ruler", "Sequence"].includes(t))
+                                    .map((t) => (
+                                        <FormControlLabel
+                                            classes={{ label: classes.formControlLabel }}
+                                            key={t}
+                                            color="primary"
+                                            control={
+                                                <Checkbox
+                                                    checked={true}
+                                                    onChange={toggleTracks.bind(
+                                                        null,
+                                                        tracksToTrackConfigs([
+                                                            _trackList.find((track) => track.name === t),
+                                                        ])
+                                                    )}
+                                                    name={t}
+                                                />
+                                            }
+                                            label={t}
+                                        />
+                                    ))}
+                        </FormGroup>
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+        ),
+        renderDataSourceChoices = (
+            <Accordion className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>Source</Typography>
+                </AccordionSummary>
+                <AccordionDetails className={classes.accordionDetails}>
+                    <FormControl component="fieldset" className={classes.formControl}>
+                        <FormLabel component="legend" className={classes.formLabel}>
+                            Filter tracks by original data source
+                        </FormLabel>
+                        <FormGroup>
+                            {dataSourceList.map((a: string) => (
+                                <FormControlLabel
+                                    classes={{ label: classes.formControlLabel }}
+                                    key={a}
+                                    color="primary"
+                                    control={
+                                        <Checkbox
+                                            checked={dataSources.includes(a)}
+                                            onChange={toggleDataSource.bind(null, a)}
+                                            name={a}
+                                        />
+                                    }
+                                    label={`${a} (${dataSourceCounts[a].length})`}
+                                />
+                            ))}
+                        </FormGroup>
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+        ),
+        renderSequenceFeatureTypeChoices = (
+            <Accordion className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>Sequence Feature</Typography>
+                </AccordionSummary>
+                <AccordionDetails className={classes.accordionDetails}>
+                    <FormControl component="fieldset" className={classes.formControl}>
+                        <FormLabel component="legend" className={classes.formLabel}>
+                            Filter tracks by type of sequence feature annotated
+                        </FormLabel>
+                        <FormGroup>
+                            {sequenceFeatureTypeList.map((a: string) => (
+                                <FormControlLabel
+                                    classes={{ label: classes.formControlLabel }}
+                                    key={a}
+                                    color="primary"
+                                    control={
+                                        <Checkbox
+                                            checked={sequenceFeatureTypes.includes(a)}
+                                            onChange={toggleSequenceFeatureType.bind(null, a)}
+                                            name={a}
+                                        />
+                                    }
+                                    label={`${a} (${sequenceFeatureTypeCounts[a].length})`}
+                                />
+                            ))}
+                        </FormGroup>
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+        ),
+        renderTrackTypeChoices = (
+            <Accordion className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>Track Type</Typography>
+                </AccordionSummary>
+                <AccordionDetails className={classes.accordionDetails}>
+                    <FormControl component="fieldset" className={classes.formControl}>
+                        <FormLabel component="legend" className={classes.formLabel}>
+                            Filter tracks by type
+                        </FormLabel>
+
+                        <FormGroup>
+                            {trackTypeList.map((a: string) => (
+                                <FormControlLabel
+                                    classes={{ label: classes.formControlLabel }}
+                                    key={a}
+                                    color="primary"
+                                    control={
+                                        <Checkbox
+                                            checked={trackTypes.includes(a)}
+                                            onChange={toggleTrackType.bind(null, a)}
+                                            name={a}
+                                        />
+                                    }
+                                    label={`${a} (${trackTypeCounts[a].length})`}
+                                />
+                            ))}
+                        </FormGroup>
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+        );
+
     return trackList ? (
         <Dialog
             onBackdropClick={closeSelf}
@@ -156,147 +299,23 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                 <Grid container alignItems="flex-start" direction="row" spacing={3}>
                     <Grid item container direction="column" spacing={2} xs={4} lg={2}>
                         <Grid container>
-                            <Typography variant="h4">Select Tracks</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h5">Filters</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Accordion className={classes.accordion}>
-                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>Loaded Tracks</Typography>
-                                </FilterAccordionSummary>
-                                <AccordionDetails className={classes.accordionDetails}>
-                                    <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend" className={classes.formControlLabel}>
-                                            Tracks currently displayed on the genome browser
-                                        </FormLabel>
-                                        <FormGroup>
-                                            {activeTracks.length > 0 &&
-                                                activeTracks
-                                                    .filter((t) => !["ideogram", "ruler", "Sequence"].includes(t))
-                                                    .map((t) => (
-                                                        <FormControlLabel
-                                                            key={t}
-                                                            color="primary"
-                                                            control={
-                                                                <Checkbox
-                                                                    checked={true}
-                                                                    onChange={toggleTracks.bind(
-                                                                        null,
-                                                                        tracksToTrackConfigs([
-                                                                            _trackList.find(
-                                                                                (track) => track.name === t
-                                                                            ),
-                                                                        ])
-                                                                    )}
-                                                                    name={t}
-                                                                />
-                                                            }
-                                                            label={t}
-                                                        />
-                                                    ))}
-                                        </FormGroup>
-                                    </FormControl>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion className={classes.accordion}>
-                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>Source</Typography>
-                                </FilterAccordionSummary>
-                                <AccordionDetails className={classes.accordionDetails}>
-                                    <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend" className={classes.formControlLabel}>
-                                            Filter tracks by original data source</FormLabel>
-                                        <FormGroup>
-                                            {dataSourceList.map((a: string) => (
-                                                <FormControlLabel
-                                                    key={a}
-                                                    color="primary"
-                                                    control={
-                                                        <Checkbox
-                                                            checked={dataSources.includes(a)}
-                                                            onChange={toggleDataSource.bind(null, a)}
-                                                            name={a}
-                                                        />
-                                                    }
-                                                    label={`${a} (${dataSourceCounts[a].length})`}
-                                                />
-                                            ))}
-                                        </FormGroup>
-                                    </FormControl>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion className={classes.accordion}>
-                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>Sequence Feature</Typography>
-                                </FilterAccordionSummary>
-                                <AccordionDetails className={classes.accordionDetails}>
-                                    <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend" className={classes.formControlLabel}>Filter tracks by type of sequence feature annotated</FormLabel>
-                                        <FormGroup>
-                                        {sequenceFeatureTypeList.map((a: string) => (
-                                             <FormControlLabel
-                                             key={a}
-                                             color="primary"
-                                             control={
-                                                 <Checkbox
-                                                     checked={sequenceFeatureTypes.includes(a)}
-                                                     onChange={toggleSequenceFeatureType.bind(null, a)}
-                                                     name={a}
-                                                 />
-                                             }
-                                             label={`${a} (${sequenceFeatureTypeCounts[a].length})`}
-                                         />
-                                        ))}
-                                    </FormGroup>
-                                    </FormControl>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion className={classes.accordion}>
-                                <FilterAccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>Track Type</Typography>
-                                </FilterAccordionSummary>
-                                <AccordionDetails className={classes.accordionDetails}>
-                                <FormControl component="fieldset" className={classes.formControl}>
-                                        <FormLabel component="legend" className={classes.formControlLabel}>Filter tracks by type</FormLabel>
-                                        <FormGroup>
-                                        {trackTypeList.map((a: string) => (
-                                              <FormControlLabel
-                                              key={a}
-                                              color="primary"
-                                              control={
-                                                  <Checkbox
-                                                      checked={trackTypes.includes(a)}
-                                                      onChange={toggleTrackType.bind(null, a)}
-                                                      name={a}
-                                                  />
-                                              }
-                                              label={`${a} (${trackTypeCounts[a].length})`}
-                                          />
-                                        ))}
-                                    </FormGroup>
-                                    </FormControl>
-                                </AccordionDetails>
-                            </Accordion>
-                        </Grid>
-                    </Grid>
-                    <Grid item container direction="column" xs={8} lg={10} spacing={2}>
-                        <Grid item container direction="row" wrap="nowrap" alignItems="center">
-                            <UnlabeledTextField
-                                fullWidth={false}
-                                onChange={(e) => setSearchTerm(e.currentTarget.value)}
-                                placeholder="Search for a track"
-                                startAdornment={<SearchIcon />}
-                                value={searchTerm}
-                            />
-                            <Grid container item justify="flex-end">
+                            <Grid item>
+                                <Typography variant="h4">Select Tracks</Typography>
+                            </Grid>
+                            <Grid item className={classes.flexRight}>
                                 <BaseIconButton onClick={closeSelf} size={"small"}>
                                     <CloseIcon />
                                 </BaseIconButton>
                             </Grid>
                         </Grid>
-
+                        <Grid item>
+                            {renderActiveTrackChoices}
+                            {renderDataSourceChoices}
+                            {renderSequenceFeatureTypeChoices}
+                            {renderTrackTypeChoices}
+                        </Grid>
+                    </Grid>
+                    <Grid item container direction="column" xs={8} lg={10} spacing={2}>
                         <TrackTable
                             data={trackList}
                             activeTracks={activeTracks}
@@ -313,25 +332,3 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
 //typescript flaw in material ui prevents this from working
 //const UnpaddedListItem = stripPadding(ListItem);
 // @ts-ignore
-
-const FilterAccordionSummary = withStyles(() => ({
-    root: {
-        "&$expanded": {
-            minHeight: "50px",
-        },
-    },
-    content: {
-        "&$expanded": {
-            paddingTop: "0px",
-            paddingBottom: "0px",
-            marginTop: "0px",
-            marginBottom: "0px",
-        },
-    },
-    expanded: {
-        paddingTop: "0px",
-        paddingBottom: "0px",
-        marginTop: "0px",
-        marginBottom: "0px",
-    },
-}))(AccordionSummary);
