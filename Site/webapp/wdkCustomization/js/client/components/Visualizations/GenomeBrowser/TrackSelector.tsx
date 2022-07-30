@@ -297,31 +297,32 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
         >
             <DialogContent className={classes.dialogContent}>
                 <Grid container alignItems="flex-start" direction="row" spacing={3}>
-                    <Grid item container direction="column" spacing={2} xs={4} lg={2}>
-                        <Grid container>
-                            <Grid item>
-                                <Typography variant="h4">Select Tracks</Typography>
-                            </Grid>
-                            <Grid item className={classes.flexRight}>
-                                <BaseIconButton onClick={closeSelf} size={"small"}>
-                                    <CloseIcon />
-                                </BaseIconButton>
-                            </Grid>
-                        </Grid>
+                    <Grid item container>
                         <Grid item>
+                            <Typography variant="h4">Select Tracks</Typography>
+                        </Grid>
+                        <Grid item className={classes.flexRight}>
+                            <BaseIconButton onClick={closeSelf} size={"small"}>
+                                <CloseIcon />
+                            </BaseIconButton>
+                        </Grid>
+                    </Grid>
+                    <Grid item container spacing={2} justifyContent="flex-start" alignItems="flex-start">
+                        <Grid item xs={2}>
                             {renderActiveTrackChoices}
                             {renderDataSourceChoices}
                             {renderSequenceFeatureTypeChoices}
                             {renderTrackTypeChoices}
                         </Grid>
-                    </Grid>
-                    <Grid item container direction="column" xs={8} lg={10} spacing={2}>
-                        <TrackTable
-                            data={trackList}
-                            activeTracks={activeTracks}
-                            toggleTracks={toggleTracks}
-                            loadingTrack={loadingTrack}
-                        ></TrackTable>
+
+                        <Grid item xs={6} lg={10}>
+                            <TrackTable
+                                data={trackList}
+                                activeTracks={activeTracks}
+                                toggleTracks={toggleTracks}
+                                loadingTrack={loadingTrack}
+                            ></TrackTable>
+                        </Grid>
                     </Grid>
                 </Grid>
             </DialogContent>
