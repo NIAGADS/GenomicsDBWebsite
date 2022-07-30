@@ -31,6 +31,8 @@ export interface IgvTrackConfig {
     format?: string;
     displayMode: string;
     height?: number;
+    description?: string;
+    track?:string;
     id: string;
     indexURL?: string;
     reader?: any;

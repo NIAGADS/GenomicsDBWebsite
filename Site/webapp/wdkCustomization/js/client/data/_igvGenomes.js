@@ -66,6 +66,8 @@ export const _genomes = [
       {
         "name": "Genes (RefSeq)",
         "id": "REFSEQ_GENE",
+        "track": "REFSEQ_GENE",
+        "description": "Gene models from NCBI Gene (RefSeq)",
         "format": "refgene",
         "url": "https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq.txt.gz",
         "indexURL": "https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq.txt.gz.tbi",

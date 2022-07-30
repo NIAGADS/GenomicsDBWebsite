@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { get, find } from "lodash";
+import { get, find, merge } from "lodash";
 import qs from "qs";
 
 import { RootState } from "wdk-client/Core/State/Types";
@@ -36,13 +36,17 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
-
-    const [options, setOptions] = useState(null);
+    const [Browser, setBrowser] = useState<any>(),
+        [listVisible, setListVisible] = useState(false),
+        [loadingTrack, setLoadingTrack] = useState<string>(),
+        [reloadKey, setReloadKey] = useState(makeReloadKey()),
+        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>(),
+        [options, setOptions] = useState(null);
 
     useEffect(() => {
         if (projectId && serviceUrl) {
             let referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
-            let referenceTrackConfig = find(_genomes, {"id" : referenceTrackId});
+            let referenceTrackConfig = find(_genomes, { id: referenceTrackId });
             setOptions({
                 reference: {
                     id: referenceTrackId,
@@ -50,59 +54,26 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                     fastaURL: referenceTrackConfig.fastaURL,
                     indexURL: referenceTrackConfig.indexURL,
                     cytobandURL: referenceTrackConfig.cytobandURL,
-                    tracks: referenceTrackConfig.tracks
+                    tracks: referenceTrackConfig.tracks,
                 },
             });
         }
     }, [projectId, serviceUrl]);
 
-
     useWdkEffect(
         (service) => {
-            service._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`).then((res) =>
-                setTrackList(
-                    res
-                        .map((res) => transformRawNiagadsTrack(res))
-                        /*.map((t) =>
-                            //we have to manually attach the reader to the config coming out of the backend
-                            t.track === "ENSEMBL_GENE"
-                                ? {
-                                      ...t,
-                                      reader: new NiagadsGeneReader(`${serviceUrl}/track/gene`),
-                                      trackType: "annotation",
-                                  }
-                                : t
-                        )*/
-                )
-            );
+            service
+                ._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`)
+                .then((res) => setTrackList(res.map((res) => transformRawNiagadsTrack(res))));
         },
-
         [serviceUrl]
     );
 
-    const [Browser, setBrowser] = useState<any>(),
-        [listVisible, setListVisible] = useState(false),
-        [loadingTrack, setLoadingTrack] = useState<string>(),
-        [reloadKey, setReloadKey] = useState(makeReloadKey()),
-        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>();
-
-    const refGeneTrack = useMemo(() => {
-        if (trackList) {
-            const refGeneTrack = trackList.find((t) => t.track === "ENSEMBL_GENE"),
-                { url, format, reader, name } = refGeneTrack,
-                trackConfig: IgvTrackConfig = {
-                    displayMode: "expanded",
-                    format,
-                    id: name,
-                    name,
-                    reader,
-                    type: "annotation",
-                    url,
-                    visibilityWindow: -1,
-                };
-            return trackConfig;
-        } else return null;
-    }, [trackList]);
+    useEffect(() => {
+        if (options && trackList) {
+            setTrackList(merge(trackList, options.reference.tracks));
+        }
+    }, [options, trackList]);
 
     const loadTrack = async (config: TrackConfig) => {
             setLoadingTrack(config.name);
@@ -114,14 +85,6 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     //since we're going to treat the ref track like any other track in our track list
     //we're not going to load it from the start but rather wait till the list comes in,
     //grab it from the list, and load it ourselves
-   /*  useEffect(() => {
-        if (trackList && Browser && refGeneTrack) {
-            if (!getTrackIsLoaded(refGeneTrack)) {
-                loadTrack(refGeneTrack);
-            }
-        }
-    }, [trackList, Browser, refGeneTrack]); */
-
     const location = useLocation();
 
     const defaultSpan = useMemo(() => {
@@ -169,14 +132,16 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                 )}
             </Grid>
             <Grid item xs={12}>
-               {<TrackSelector
-                    activeTracks={getLoadedTracks(Browser)}
-                    handleClose={setListVisible.bind(null, false)}
-                    isOpen={listVisible}
-                    loadingTrack={loadingTrack}
-                    toggleTracks={toggleTracks}
-                    trackList={trackList}
-                />}
+                {
+                    <TrackSelector
+                        activeTracks={getLoadedTracks(Browser)}
+                        handleClose={setListVisible.bind(null, false)}
+                        isOpen={listVisible}
+                        loadingTrack={loadingTrack}
+                        toggleTracks={toggleTracks}
+                        trackList={trackList}
+                    />
+                }
             </Grid>
         </Box>
     ) : (
