@@ -71,8 +71,9 @@ interface TrackSelectorProps {
     handleClose: () => void;
     loadingTrack: string;
     isOpen: boolean;
-    toggleTracks: (t: IgvTrackConfig[]) => void;
+    toggleTracks: (t: IgvTrackConfig[], b:any) => void;
     trackList: NiagadsBrowserTrackConfig[];
+    browser: any;
 }
 
 export const TrackSelector: React.FC<TrackSelectorProps> = ({
@@ -82,6 +83,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
     loadingTrack,
     toggleTracks,
     trackList: _trackList,
+    browser
 }) => {
     const [searchTerm, setSearchTerm] = useState(""),
         [dataSources, setDataSources] = useState<string[]>([]),
@@ -163,23 +165,27 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                         <FormGroup>
                             {activeTracks.length > 0 &&
                                 activeTracks
-                                    .filter((t) => !["ideogram", "ruler", "Sequence"].includes(t))
+                                    .filter((t) => !["ideogram", "ruler", "Sequence", "Genes (RefSeq)"].includes(t))
                                     .map((t) => (
                                         <FormControlLabel
                                             classes={{ label: classes.formControlLabel }}
                                             key={t}
                                             color="primary"
                                             control={
-                                                <Checkbox
-                                                    checked={true}
-                                                    onChange={toggleTracks.bind(
-                                                        null,
-                                                        tracksToTrackConfigs([
-                                                            _trackList.find((track) => track.name === t),
-                                                        ])
-                                                    )}
-                                                    name={t}
-                                                />
+                                                t === "Genes (RefSeq)" ? (
+                                                    <Checkbox checked={true} name={t} disabled={true}></Checkbox>
+                                                ) : (
+                                                    <Checkbox
+                                                        checked={true}
+                                                        onChange={toggleTracks.bind(
+                                                            null,
+                                                            tracksToTrackConfigs([
+                                                                _trackList.find((track) => track.name === t),
+                                                            ]), browser
+                                                        )}
+                                                        name={t}
+                                                    />
+                                                )
                                             }
                                             label={t}
                                         />
@@ -320,6 +326,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                                 data={trackList}
                                 activeTracks={activeTracks}
                                 toggleTracks={toggleTracks}
+                                browser={browser}
                                 loadingTrack={loadingTrack}
                             ></TrackTable>
                         </Grid>

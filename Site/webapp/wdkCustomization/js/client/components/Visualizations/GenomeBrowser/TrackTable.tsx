@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 
 import { IgvTrackConfig, NiagadsBrowserTrackConfig } from "@viz/GenomeBrowser";
+import { CircularProgress } from "@material-ui/core";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -46,26 +47,30 @@ const useStyles = makeStyles((theme: Theme) =>
 interface TrackTableProps {
     data: NiagadsBrowserTrackConfig[];
     activeTracks: string[];
-    toggleTracks: (t: IgvTrackConfig[]) => void;
+    toggleTracks: (t: IgvTrackConfig[], b: any) => void;
     loadingTrack: string;
+    browser: any;
 }
 
-export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, toggleTracks, loadingTrack }) => {
+export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, toggleTracks, loadingTrack, browser }) => {
     const buildColumns = () => {
         let columns = [
             {
                 id: "select",
                 accessor: (row: any) => {
                     return (
-                        <UnpaddedCheckbox
+                        !!loadingTrack ? <CircularProgress size="0.9rem"></ CircularProgress>
+                            :<UnpaddedCheckbox
                             color="primary"
                             checked={activeTracks.includes(row.name)}
-                            onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]))}
-                            disabled={!!loadingTrack}
+                            onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]), browser)}
+                            //disabled={!!loadingTrack}
                         />
                     );
                 },
                 Header: () => "Select",
+                //@ts-ignore
+                disableGlobalFilter: true,
                 width: 50,
             } as Column,
         ].concat(
@@ -119,10 +124,15 @@ const _setInitialFilters = (table: TableField) => {
 }; */
 
 export const tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
-    if (!tracks) { console.log('here');}
+   
     return tracks.map((track) => {
-        if (!track) {console.log('no track');}
-        const base = {
+      
+        if (track.track === "REFSEQ_GENE") {
+            return track as unknown as IgvTrackConfig;
+        }
+
+        const base =
+        {
             displayMode: "expanded",
             format: track.format,
             url: track.url,
@@ -130,73 +140,14 @@ export const tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTr
             name: track.name,
             type: track.trackType,
             id: track.trackType,
-            visibilityWindow: -1,
+            supportsWholeGenome: false,
+            visibilityWindow: track.trackType === 'variant' ? 1000000 : -1
         } as IgvTrackConfig;
         if (track.reader) {
             base.reader = track.reader;
         }
         return base;
     });
-};
-
-/*
-    
-        let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;
-       
-   
-            .map((k): Column => {
-                const attribute: AttributeField = attributes.find((item) => item.name === k);
-                let filterType =
-                columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
-                let column = _buildColumn(attribute, attribute.isSortable, filterType);
-                //@ts-ignore
-                if (column.id.endsWith("link")) column.sortType = linkColumnSort;
-             
-
-                if (column.id.includes("flag")) {
-                    //@ts-ignore
-                    column.sortType = flagColumnSort;
-                    //@ts-ignore
-                    column.disableGlobalFilter = true;
-                    if (filterType && filterType === "pie") {
-                        filterType = "booleanPie";
-                    }
-                }
-
-                if (filterType) {
-                    //@ts-ignore
-                    column = _addColumnFilters(column, filterType);
-                }
-
-                if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
-                    //@ts-ignore
-                    column.show = false
-                }
-
-                return column;
-            })
-
-*/
-
-const _addColumnFilters = (column: Column, filterType: string) => {
-    if (filterType === "select") {
-        //@ts-ignore
-        column.Filter = SelectColumnFilter;
-    }
-    if (filterType.toLowerCase().includes("pie")) {
-        //@ts-ignore
-        column.Filter = PieChartFilter;
-    }
-
-    if (filterType === "pvalue") {
-        //@ts-ignore
-        column.Filter = PValueFilter;
-    }
-
-    //@ts-ignore
-    column.filter = filterType;
-
-    return column;
 };
 
 
@@ -207,12 +158,6 @@ const _getColumns = (): Column[] => [
     { id: "featureType", width: 120 },
 ];
 
-
-const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) => {
-    const idx1 = findIndex(attributes, (att) => att.name === col1.id),
-        idx2 = findIndex(attributes, (att) => att.name === col2.id);
-    return idx2 > idx1 ? -1 : 1;
-};
 
 export const UnpaddedCheckbox = withStyles(() => ({
     root: {

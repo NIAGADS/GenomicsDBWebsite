@@ -14,6 +14,7 @@ export interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
     track: string; //unique id (pass to backend for async), for instance
     track_type: string; //igv track type
     track_type_display: string; //niagads track type
+    visibilityWindow?: number;
 }
 
 export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
@@ -39,4 +40,6 @@ export interface IgvTrackConfig {
     type: string;
     url: string;
     visibilityWindow: number;
+    supportsWholeGenome: boolean;
+    removable?: boolean;
 }

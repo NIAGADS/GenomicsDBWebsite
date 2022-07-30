@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { get, find, merge } from "lodash";
+import { get, find, concat, merge } from "lodash";
 import qs from "qs";
 
 import { RootState } from "wdk-client/Core/State/Types";
@@ -41,7 +41,8 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         [loadingTrack, setLoadingTrack] = useState<string>(),
         [reloadKey, setReloadKey] = useState(makeReloadKey()),
         [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>(),
-        [options, setOptions] = useState(null);
+        [options, setOptions] = useState(null),
+        [test, setTest] = useState(false);
 
     useEffect(() => {
         if (projectId && serviceUrl) {
@@ -62,25 +63,30 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
 
     useWdkEffect(
         (service) => {
-            service
+            options && service
                 ._fetchJson<NiagadsRawTrackConfig[]>("GET", `/track/config`)
-                .then((res) => setTrackList(res.map((res) => transformRawNiagadsTrack(res))));
+                .then((res) => 
+                setTrackList(res.map((res) => transformRawNiagadsTrack(res))));
+                //setTrackList(concat(res.map((res) => transformRawNiagadsTrack(res)), 
+                //merge(options.reference.tracks[0], { featureType: "Gene", source: "NCBI Gene" }))));
         },
-        [serviceUrl]
+        [serviceUrl, options]
     );
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (options && trackList) {
-            setTrackList(merge(trackList, options.reference.tracks));
+            let refGeneTrack = options.reference.tracks[0];
+            refGeneTrack = merge(refGeneTrack, { featureType: "Gene", source: "NCBI Gene" });
+            setTrackList(concat(trackList, [refGeneTrack]));
         }
-    }, [options, trackList]);
+    }, [options, trackList]); */
 
-    const loadTrack = async (config: TrackConfig) => {
+    const loadTrack = async (config: TrackConfig, browser: any) => {
             setLoadingTrack(config.name);
-            await Browser.loadTrack(config);
+            await browser.loadTrack(config);
             setLoadingTrack(undefined);
         },
-        getTrackIsLoaded = (config: TrackConfig) => getLoadedTracks(Browser).includes(config.name);
+        getTrackIsLoaded = (config: TrackConfig, browser: any) => getLoadedTracks(browser).includes(config.name);
 
     //since we're going to treat the ref track like any other track in our track list
     //we're not going to load it from the start but rather wait till the list comes in,
@@ -91,18 +97,18 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         return get(qs.parse(location.search), "locus") as string;
     }, [location.search]);
 
-    const toggleTracks = (config: TrackConfig[]) => {
+    const toggleTracks = (config: TrackConfig[], browser: any) => {
             config.forEach((c) => {
-                getTrackIsLoaded(c) ? unloadTrack(c) : loadTrack(c);
+                getTrackIsLoaded(c, browser) ? unloadTrack(c, browser) : loadTrack(c, browser);
             });
         },
-        unloadTrack = (config: TrackConfig) => {
-            Browser.removeTrackByName(config.name);
+        unloadTrack = (config: TrackConfig, browser: any) => {
+            browser.removeTrackByName(config.name);
             //force react to update based on imperative change // i dont think we need this?
             setReloadKey(makeReloadKey());
         },
         buildBrowser = useCallback((b: any) => {
-            setBrowser(b);
+           setBrowser(b);
         }, []);
 
     return projectId ? (
@@ -133,14 +139,15 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
             </Grid>
             <Grid item xs={12}>
                 {
-                    <TrackSelector
+                    Browser ? <TrackSelector
                         activeTracks={getLoadedTracks(Browser)}
                         handleClose={setListVisible.bind(null, false)}
                         isOpen={listVisible}
                         loadingTrack={loadingTrack}
                         toggleTracks={toggleTracks}
                         trackList={trackList}
-                    />
+                        browser={Browser}
+                    /> : null
                 }
             </Grid>
         </Box>

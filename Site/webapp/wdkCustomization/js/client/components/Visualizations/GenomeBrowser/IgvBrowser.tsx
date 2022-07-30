@@ -95,7 +95,7 @@ export const IgvBrowser: React.FC<IgvBrowser> = ({
                             },
                         ],
                     },
-                    {
+               /*     {
                         trackType: "niagadsgenetrack",
                         fields: [
                             {
@@ -120,7 +120,7 @@ export const IgvBrowser: React.FC<IgvBrowser> = ({
                             },
                         ],
                         remove: ["Delim", "AttributeString"],
-                    },
+                    }, */
                     {
                         trackType: "niagadsvariant",
                         fields: [

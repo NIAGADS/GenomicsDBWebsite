@@ -33,6 +33,7 @@ public class VariantTrackService extends AbstractWdkService {
     private static final String ADSP_TRACK = "ADSP";
     private static final String ADSP_WES_TRACK = "ADSP_WES";
     private static final String ADSP_WGS_TRACK = "ADSP_WGS";
+    private static final String ADSP_GRCh38_TRACK = "ADSP_17K"; // temp solution
 
     private static final String CHROMOSOME_PARAM = "chromosome";
     private static final String TRACK_PARAM = "track";
@@ -129,12 +130,12 @@ public class VariantTrackService extends AbstractWdkService {
         String projectId = getWdkModel().getProperties().get("PROJECT_ID");
 
         if (projectId.equals("GRCh38")) {
-            if (track.equals(ADSP_TRACK)) {
-                return "SELECT get_adsp_variants(?,?,?)";
+            if (track.equals(ADSP_GRCh38_TRACK)) {
+                return "SELECT get_adsp_variants(?,?::int,?::int)::text AS result";
             } else if (track.equals(DBSNP_TRACK)) {
-                return "SELECT get_dbsnp_variants(?,?,?)";
+                return "SELECT get_dbsnp_variants(?,?::int,?::int)::text AS result";
             } else if (track.equals(DBSNP_COMMON_TRACK)) {
-                return "SELECT get_dbsnp_common_variants(?,?,?)";
+                return "SELECT get_dbsnp_common_variants(?,?::int,?::int)::text AS result";
             }
 
         } else {
