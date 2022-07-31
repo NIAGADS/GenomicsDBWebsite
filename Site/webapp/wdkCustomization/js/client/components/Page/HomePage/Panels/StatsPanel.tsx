@@ -37,7 +37,7 @@ export const StatsPanel: React.FC<PanelProps> = ({ background = "light", project
                             <Typography variant="body1" className={bodyText} align="left">
                                 For each dataset we provide a detailed interactive report summarizing the top
                                 risk-associated variants. These variants are are annotated using the ADSP Annotation
-                                Pipeline (PMID:{" "}
+                                Pipeline (Butkiewicz et al. Bioinformatics 2018 / PMID:{" "}
                                 <Link color={linkType} href={`${_externalUrls.PUBMED_URL}/29590295`}>
                                     29590295
                                 </Link>

@@ -56,10 +56,10 @@
 		implementation="org.gusdb.wdk.model.report.reporter.XMLReporter">
       </reporter>
 
-      <reporter name="json" displayName="JSON: choose from columns
+      <!-- <reporter name="json" displayName="JSON: choose from columns
 					 and/or tables"
 		scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-      </reporter>
+      </reporter> -->
 
 
       <!-- =============================================================== -->
@@ -222,7 +222,7 @@
 
       <table name="other_variants_from_gwas" displayName="AD-related neuropathologies and biomarkers" queryRef="GeneTables.OtherVariantsFromGWAS">
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="variant_link" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
 	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
@@ -258,7 +258,7 @@
       <table name="ad_variants_from_catalog" displayName="Alzheimer's Disease" queryRef="GeneTables.ADVariantsFromCatalog">
 	<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="variant_link" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
 	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
@@ -302,7 +302,7 @@
       <table name="other_variants_from_catalog" displayName="Other Traits (incl. related neuropathologies and AD biomarkers)" queryRef="GeneTables.OtherVariantsFromCatalog">
 	<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
 	<columnAttribute name="relative_position" displayName="Relative Position" type="string" />
-	<columnAttribute name="variant" displayName="Variant" type="json_link" />
+	<columnAttribute name="variant_link" displayName="Variant" type="json_link" />
 	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
 	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />

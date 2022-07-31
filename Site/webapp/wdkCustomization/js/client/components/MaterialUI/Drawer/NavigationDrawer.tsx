@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
 
 import { withHtmlTooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
+import Button from "@material-ui/core/Button";
 
 const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,6 +54,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
     toggleAnchor,
     toggleIcon,
     toggleHelp,
+    toggleText,
     children,
 }) => {
     const classes = useDrawerStyles();
@@ -71,15 +73,15 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
                     <Toolbar /*style={{ display: "flex" }} */ variant="dense">
                         {toggleIcon &&
                             withHtmlTooltip(
-                                <IconButton
+                                <Button
                                     className={drawerClasses.button}
                                     style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
                                     color="inherit"
                                     aria-label="open-close-filter-menu"
                                     onClick={handleToggleClick}
-                                >
-                                    {toggleIcon}
-                                </IconButton>,
+                                    endIcon={toggleIcon}>
+                                    {toggleText}
+                                </Button>,
                                 toggleHelp
                             )}
 
@@ -98,6 +100,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
                 >
                     <Grid container justifyContent="flex-start" alignItems="center">
                         {drawerHeaderContents}
+                        <Grid item></Grid>
                         <Grid item>
                             {withHtmlTooltip(
                                 <IconButton

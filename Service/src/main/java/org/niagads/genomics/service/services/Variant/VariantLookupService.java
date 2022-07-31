@@ -34,20 +34,10 @@ public class VariantLookupService extends AbstractPagedWdkService {
     private static final String MSC_ONLY_PARAM = "mscOnly";
     private static final String ADSP_QC_PARAM = "adspQC";
 
-    private static final String VARIANT_ID_CTE = "id AS (SELECT search_term, variant_primary_key AS pk FROM get_variant_primary_keys(?))";
-
-    private static final String VARIANT_DETAILS_CTE = "vdetails AS (" + NL 
-        + "SELECT id.pk AS variant_primary_key," + NL
-        + "split_part(pk, '_', 1) AS metaseq_id," + NL 
-        + "left(split_part(pk, '_', 1), 50) AS indexed_metaseq_id," + NL 
-        + "CASE WHEN split_part(pk, '_', 2) = '' THEN NULL ELSE split_part(pk, '_', 2) END AS ref_snp_id," + NL
-        + "'chr' || split_part(pk, ':', 1)::text AS chrm," + NL
-        + "search_term" + NL
-        + "FROM id)";
-
-    private static final String MISSING_VARIANTS_CTE = "unmappedVariants AS (" + NL
-        + "SELECT search_term FROM vdetails" + NL
-        + "WHERE variant_primary_key IS NULL)";
+    private static final String VARIANT_DETAILS_CTE= "lookup AS" + NL
+        + "(SELECT * from get_variant_primary_keys_and_annotations(?, false))," + NL
+        + "unmapped AS (" + NL
+        + "SELECT m.key AS search_term FROM lookup, jsonb_each(lookup.mappings::jsonb) m WHERE m.value = 'null')";
 
     private static final String MSC_ONLY_JSON_OBJECT = "jsonb_build_object(" + NL 
     + "'chromosome', v.chromosome," + NL
@@ -146,7 +136,7 @@ public class VariantLookupService extends AbstractPagedWdkService {
 
 
     private String buildQuery(Boolean mscOnly, Boolean adspQC) {
-        String lookupCTE = "annotations AS (SELECT" + NL
+        /*String lookupCTE = "annotations AS (SELECT" + NL
             + "jsonb_build_object(d.search_term," + NL
             + MSC_ONLY_JSON_OBJECT + NL;
         
@@ -163,23 +153,19 @@ public class VariantLookupService extends AbstractPagedWdkService {
         + "WHERE left(v.metaseq_id, 50) = d.indexed_metaseq_id" + NL 
         + "AND (v.ref_snp_id = d.ref_snp_id OR d.ref_snp_id IS NULL)" + NL 
         + "AND v.chromosome = d.chrm)";
-        /* + "UNION ALL SELECT" + NL
+        + "UNION ALL SELECT" + NL
         + "jsonb_build_object(search_term, '{}'::jsonb) AS annotation_json" + NL
         + "FROM unmappedVariants) "; */
 
         String sql = "WITH" + NL 
-            + VARIANT_ID_CTE + "," + NL 
-            + VARIANT_DETAILS_CTE + "," + NL 
-            + MISSING_VARIANTS_CTE + "," + NL
-            + lookupCTE + NL
+            + VARIANT_DETAILS_CTE + NL 
             + "SELECT jsonb_build_object(" + NL
             + "'paging', jsonb_build_object(" + NL 
             + "'page'," + getCurrentPageDisplay() + "," + NL
             + "'total_pages'," + getNumPages() + ")," + NL
-            + "'unmapped_variants', (SELECT json_agg(search_term) FROM unmappedVariants)," + NL
-            + "'result', jsonb_object_agg(t.k, t.v)" + NL
-            + ")::text AS result" + NL            
-            + "FROM annotations, jsonb_each(annotation_json) AS t(k,v)";
+            + "'unmapped_variants', (SELECT json_agg(search_term) FROM unmapped)," + NL
+            + "'result', (SELECT mappings::jsonb FROM lookup)" + NL
+            + ")::text AS result";
             
             
         // LOG.debug(sql);

@@ -278,7 +278,7 @@
     <sqlQuery name="OtherVariantsFromGWAS">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
 
@@ -313,7 +313,7 @@
 		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),
 		 '/record/variant/', r.variant_record_primary_key,
 		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant_link,
 		 
 		 CASE WHEN r.variant_record_primary_key LIKE '%_%'
 		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
@@ -351,7 +351,7 @@
     <sqlQuery name="ADVariantsFromCatalog">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
       <column name="frequency"/>
@@ -386,7 +386,7 @@
 		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),'/record/variant/', 
 		 r.variant_record_primary_key,
 		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant_link,
 		
 		 CASE WHEN r.variant_record_primary_key LIKE '%_%'
 		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,
@@ -432,7 +432,7 @@
     <sqlQuery name="OtherVariantsFromCatalog">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
       <column name="frequency"/>
@@ -468,7 +468,7 @@
 		 build_link_attribute( truncate_str(split_part(r.variant_record_primary_key, '_', 1), 27),'/record/variant/', 
 		 r.variant_record_primary_key,
 		 CASE WHEN length(split_part(r.variant_record_primary_key, '_', 1)) > 27 
-		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant,
+		 THEN split_part(r.variant_record_primary_key, '_', 1) ELSE NULL END) AS variant_link,
 
 		 CASE WHEN r.variant_record_primary_key LIKE '%_%' 
 		 THEN split_part(r.variant_record_primary_key, '_', 2) ELSE NULL END AS ref_snp_id,

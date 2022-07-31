@@ -46,8 +46,8 @@
 
       <reporter name="xml" displayName="XML: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter"/>
 
-      <reporter name="json" displayName="JSON: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter"/>
-
+      <!-- <reporter name="json" displayName="JSON: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter"/>
+-->
       <!-- =============================================================== -->
       <!-- Step Analysis Plugins -->
       <!-- =============================================================== -->

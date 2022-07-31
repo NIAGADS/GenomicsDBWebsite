@@ -78,13 +78,13 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         sectionDesktop: {
-            display: "none",
+            display: "flex", //none
             [theme.breakpoints.up("md")]: {
                 display: "flex",
             },
         },
         sectionMobile: {
-            display: "flex",
+            display: "none", // flex
             [theme.breakpoints.up("md")]: {
                 display: "none",
             },
@@ -275,7 +275,7 @@ function PrimarySearchAppBar() {
                             />
                             <div className={classes.grow} />
                             {renderDesktopMenu}
-                            <div className={classes.sectionMobile}>
+                            {/*<div className={classes.sectionMobile}>
                                 <IconButton
                                     aria-label="show more"
                                     aria-controls={mobileMenuId}
@@ -285,11 +285,11 @@ function PrimarySearchAppBar() {
                                 >
                                     <MoreIcon />
                                 </IconButton>
-                            </div>
+                            </div> */}
                         </Toolbar>
                         <GenomeBuildBanner />
                     </AppBar>
-                    {renderMobileMenu}
+                    {/*renderMobileMenu*/}
                     {renderAccountMenu}
                 </>
             </ElevationScroll>{" "}

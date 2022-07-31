@@ -21,6 +21,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Chip from "@material-ui/core/Chip";
+import WarningIcon from "@material-ui/icons/Warning";
 
 import { TransitionProps } from "@material-ui/core/transitions";
 import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/styles";
@@ -28,6 +30,7 @@ import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/s
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
 
 import { TrackTable, tracksToTrackConfigs, NiagadsBrowserTrackConfig, IgvTrackConfig } from "@viz/GenomeBrowser";
+
 
 const useBrowserStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -305,6 +308,8 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                 <Grid container alignItems="flex-start" direction="row" spacing={3}>
                     <Grid item container>
                         <Grid item>
+                           <Chip color="secondary" icon={<WarningIcon/>} 
+                           label="Please pardon our dust; in the table below, tracks will load when selected, even though toggled state(checkboxes) will not change"/>
                             <Typography variant="h4">Select Tracks</Typography>
                         </Grid>
                         <Grid item className={classes.flexRight}>

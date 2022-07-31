@@ -260,8 +260,9 @@
 		FROM id, NIAGADS.VariantGWASTopHits r, tracks t, CBIL.GeneAttributes ga
 		WHERE id.source_id = ga.source_id
 		AND ga.bin_index_100kb_flank @> r.bin_index
-		AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
-		@> r.position::bigint
+		AND int4range(ga.location_start - 100000, ga.location_end + 100000, '[]')
+		@> r.position
+		AND ga.chromosome = r.chromosome
 		AND t.track = r.track)
 
 		SELECT * FROM result 
@@ -273,7 +274,7 @@
     <sqlQuery name="OtherVariantsFromGWAS">
       <column name="source_id"/>
       <column name="project_id"/>
-      <column name="variant"/>
+      <column name="variant_link"/>
       <column name="ref_snp_id"/>
       <column name="allele"/>
 
@@ -305,7 +306,7 @@
 		 SELECT id.source_id,
 		 r.track,
 		 
-		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant,
+		 record_link('variant', r.variant_record_primary_key, r.metaseq_id, TRUE, NULL) AS variant_link,
 		 r.ref_snp_id,
 		
  		 adsp_variant_flag(r.is_adsp_variant) AS adsp_variant_flag,
@@ -327,8 +328,9 @@
 		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t, CBIL.GeneAttributes ga
 		 WHERE id.source_id = ga.source_id
 		 AND ga.bin_index_100kb_flank @> r.bin_index
-		 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]')
-		 @> split_part(variant_record_primary_key, ':', 2)::bigint
+		 AND int4range(ga.location_start - 100000, ga.location_end + 100000, '[]')
+		 @> r.position
+		 AND ga.chromosome = r.chromosome
 		 AND t.track = r.track)
 		 
 		 SELECT * FROM result 
@@ -408,7 +410,9 @@
 		 AND r.restricted_stats->>'DISEASE/TRAIT' ILIKE '%Alzheimer%'
                  AND id.source_id = ga.source_id
                  AND ga.bin_index_100kb_flank @> r.bin_index
-                 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]') @> split_part(variant_record_primary_key, ':', 2)::bigint
+                 AND int4range(ga.location_start - 100000, ga.location_end + 100000, '[]') 
+				 @> r.position
+				 AND ga.chromosome = r.chromosome
 		 ORDER BY neg_log10_pvalue DESC
 	]]>
       </sql>
@@ -485,7 +489,9 @@
 		 AND r.restricted_stats->>'DISEASE/TRAIT' NOT ILIKE '%Alzheimer%'
                  AND id.source_id = ga.source_id
                  AND ga.bin_index_100kb_flank @> r.bin_index
-                 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]') @> split_part(variant_record_primary_key, ':', 2)::bigint
+                 AND int4range(ga.location_start - 100000, ga.location_end + 100000, '[]') 
+				 @> r.position
+				 AND ga.chromosome = r.chromosome
 		 ORDER BY neg_log10_pvalue DESC
 	]]>
       </sql>

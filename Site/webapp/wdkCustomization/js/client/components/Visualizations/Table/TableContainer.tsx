@@ -193,7 +193,8 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
                 toggleAnchor="bottom"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
-                toggleHelp="Show/Hide Filters"
+                toggleHelp="Display table summary and advanced filters"
+                toggleText="Summary and Filter"
                 drawerContents={renderDrawerContents}
                 drawerCloseLabel="Close"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}

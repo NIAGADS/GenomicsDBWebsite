@@ -8,6 +8,7 @@ export interface DrawerProps {
     toggleAnchor?: Anchor;
     toggleIcon?: React.ReactNode;
     toggleHelp?: string;
+    toggleText?: string;
     drawerCloseLabel?: string;
     drawerHeaderContents?: React.ReactNode;
     handleClose?: any;

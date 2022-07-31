@@ -37,7 +37,7 @@ class RecordUI extends Component {
         //@ts-ignore
         this.activeSectionTop = null;
         //@ts-ignore
-        this.state = { navigationIsOpen: false };
+        this.state = { navigationIsOpen: true }; // default open
     }
 
     componentDidMount() {
@@ -148,7 +148,7 @@ class RecordUI extends Component {
                     handleClose={this._handleNavigationClose.bind(this)}
                 >
                     <RecordNavigationSection
-                        heading={this.props.record.displayName}
+                       // heading={this.props.record.displayName}
                         record={this.props.record}
                         recordClass={this.props.recordClass}
                         categoryTree={this.props.categoryTree}

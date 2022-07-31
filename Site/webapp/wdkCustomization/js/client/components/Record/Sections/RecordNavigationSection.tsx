@@ -80,7 +80,7 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
 export const RecordNavigationSection: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
     const classes = useStyles();
     return (
-        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Contents">
+        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Close">
             <Box className={classes.drawerContents}>
                 {children}
             </Box>

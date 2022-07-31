@@ -5,7 +5,13 @@
  */
 
 body {
-  min-width: 360px; // 1070px; // override wdk-Common.css
+  min-width: 1070px; // override wdk-Common.css
+  width: 100%;
+//    width: 100vw;
+ //   height: 100vh;
+  //  display: flex;
+  //  align-items: flex-start;
+  //  justify-content: center;
 }
 
 /** This image messes with layout */
