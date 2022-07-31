@@ -111,9 +111,11 @@ export const _genomes = [
     "aliasURL": "https://s3.amazonaws.com/igv.org.genomes/hg19/hg19_alias.tab",
     "tracks": [
       {
-        "name": "Refseq Genes",
+        "name": "Genes (RefSeq)",
+        "id": "REFSEQ_GENE",
+        "track": "REFSEQ_GENE",
+        "description": "Gene models from NCBI Gene (RefSeq)",
         "format": "refgene",
-        "id": "hg19_genes",
         "url": "https://s3.amazonaws.com/igv.org.genomes/hg19/ncbiRefSeq.sorted.txt.gz",
         "indexURL": "https://s3.amazonaws.com/igv.org.genomes/hg19/ncbiRefSeq.sorted.txt.gz.tbi",
         "visibilityWindow": -1,
