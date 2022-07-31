@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { groupBy, noop } from "lodash";
 
@@ -27,31 +27,6 @@ const infoIcon = (
     </span>
 );
 
-// Array of announcements to show. Each element of the array is an object which specifies
-// a unique id for the announcement, and a function that takes props and returns a React Element.
-// Use props as an opportunity to determine if the message should be displayed for the given context.
-const siteAnnouncements = [
-    {
-        id: "live-beta",
-        renderDisplay: (props: any) => {
-            if (param("beta", window.location) === "true" || /^(beta|b1|b2)/.test(window.location.hostname)) {
-                return (
-                    <div key="live-beta">
-                        Welcome to NIAGADS Alzheimer's GenomicsDB ({props.projectId}) <i>beta</i> where you will find
-                        the newest versions of our interface, features, tools and data. Please feel free to provide us with your
-                        feedback using this{" "}
-                        <a target="_blank" href="https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi">
-                            beta-site feedback form
-                        </a>
-                        .
-                    </div>
-                );
-            }
-            return null;
-        },
-    },
-];
-
 //@ts-ignore
 const fetchAnnouncementsData = async (wdkService) => {
     const [config, announcements] = await Promise.all([wdkService.getConfig(), wdkService.getSiteMessages()]);
@@ -62,6 +37,28 @@ const fetchAnnouncementsData = async (wdkService) => {
     };
 };
 
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+        width,
+        height,
+    };
+}
+
+const useWindowDimensions = () => {
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions());
+        }
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return windowDimensions;
+};
 /**
  * Info boxes containing announcements.
  */
@@ -72,6 +69,55 @@ export default function Announcements({
 }) {
     const location = useLocation();
     const data = useWdkService(fetchAnnouncementsData, []);
+    const { height, width } = useWindowDimensions();
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Array of announcements to show. Each element of the array is an object which specifies
+    // a unique id for the announcement, and a function that takes props and returns a React Element.
+    // Use props as an opportunity to determine if the message should be displayed for the given context.
+    const siteAnnouncements = [
+        {
+            id: "live-beta",
+            renderDisplay: (props: any) => {
+                if (param("beta", window.location) === "true" || /^(beta|b1|b2)/.test(window.location.hostname)) {
+                    return (
+                        <div key="live-beta">
+                            Welcome to NIAGADS Alzheimer's GenomicsDB ({props.projectId}) <i>beta</i> where you will
+                            find the newest versions of our interface, features, tools and data. Please feel free to
+                            provide us with your feedback using this{" "}
+                            <a target="_blank" href="https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi">
+                                beta-site feedback form
+                            </a>
+                            .
+                        </div>
+                    );
+                }
+                return null;
+            },
+        },
+        {id: "mobile-warning",
+        renderDisplay: (props: any) => {
+            if (window.innerHeight > window.innerWidth && window.innerWidth < 800) {
+                return (
+                    <div key="mobile-warning">
+                        <p>
+                        Our apologies, but this site is not responsive
+                        </p>
+                        <p>For best experience please view in landscape mode or select the "Desktop Site" option from your mobile browser window.
+                            </p>
+                    </div>
+                );
+            }
+            return null;
+        },},
+    ];
+    useEffect(() => {
+        if (height > width && width < 480) {
+            setIsMobile(true);
+        } else {
+            setIsMobile(false);
+        }
+    }, [height, width]);
 
     const onCloseFactory = useCallback(
         (id) => () => {
