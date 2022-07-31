@@ -3,10 +3,13 @@ displayName: Free text Site Search
 get: 
     description: > 
         free text search against gene identifiers and datasets / coming soon -- search against gene annotations and variant catalogs
+        
+        /site/search?term=apoe
     queryParameters:
         term: 
-            description: term to search / NOTE: does not support wild cards at this time
-            example: APOE
+            description: term to search / NOTE - does not support wild cards at this time
+            example: apoe
+            required: true
     responses:
         200:
             body:

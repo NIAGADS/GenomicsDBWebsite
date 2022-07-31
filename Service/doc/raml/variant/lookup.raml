@@ -2,23 +2,23 @@ displayName: Variant Lookup
 
 get: 
     description: > 
-        return basic summary annotation for a variant, including ADSP QC status, ADSP annotation, and a list of NIAGADS accessions in which the variant has genome-wide significance
+        return basic summary annotation for a variant, including ADSP QC status, ADSP annotation, and a list of NIAGADS accessions in which the variant has genome-wide significance; results are paged so bulk lookups possible
     queryParameters:
         id: 
-            description: comma separated list of one or more variant identifiers
-            example: rs6656401 or 19:45411941:T:C
+            description: comma separated list of one or more variant identifiers or chr:pos
+            example: rs10189885,6:421281:G:T,rs438811
         page: 
             description: results from inquiries for > 200 ids will be returned paged, use this parameter to specify which page to fetch
             required: false
-        mscOnly:
-            description: return only the most severe consequence only for the variant(s).  If not specified will return all ADSP annotations
-            required: false
-        adspQC: 
-            description: return full ADSP QC for the variants(s).  If not specified will only return QC status (PASS/FAIL)
-            required: false
-            
+       # mscOnly:
+       #     description: return only the most severe consequence only for the variant(s).  If not specified will return all ADSP annotations
+       #     required: false
+       # adspQC: 
+        #    description: return full ADSP QC for the variants(s).  If not specified will only return QC status (PASS/FAIL)
+        #    required: false
     responses:
         200:
             body:
                 application/json:
-                    example: {}
+                    example: !include examples/variants.json        
+    

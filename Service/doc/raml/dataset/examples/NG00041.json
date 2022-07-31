@@ -1,0 +1,253 @@
+{
+  "datasets": [
+    {
+      "name": "Neuritic plaques (presence vs. absence) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "neuritic plaques" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//neuritic plaques//population stratification//population stratification"
+        },
+        { "phenotype_list": "autopsy-based diagnosis//neuritic plaques" }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence vs. absence) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_NP"
+    },
+    {
+      "name": "Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "neurofibrillary tangles" },
+        { "neuropathology": "Braak Stages" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//neurofibrillary tangles//Braak Stages//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//neurofibrillary tangles//Braak Stages"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NFTs (Braak stages) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_NFT_BSTAGES"
+    },
+    {
+      "name": "Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "cerebral amyloid angiopathy" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//cerebral amyloid angiopathy//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//cerebral amyloid angiopathy"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: CAA (presence vs. absence) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_CAA"
+    },
+    {
+      "name": "Vascular brain injury (3 category ranking) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "vascular brain injury" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//vascular brain injury//population stratification//population stratification"
+        },
+        { "phenotype_list": "autopsy-based diagnosis//vascular brain injury" }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: VBI (none, any microinfarcts, any lacunar or territorial infarcts) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_VBI_3"
+    },
+    {
+      "name": "Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "neuritic plaques" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//neuritic plaques//population stratification//population stratification"
+        },
+        { "phenotype_list": "autopsy-based diagnosis//neuritic plaques" }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_NP_RELAX"
+    },
+    {
+      "name": "Vascular brain injury (presence vs. absence); relaxed (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "vascular brain injury" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//vascular brain injury//population stratification//population stratification"
+        },
+        { "phenotype_list": "autopsy-based diagnosis//vascular brain injury" }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: VBI (presence vs. absence) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_VBI"
+    },
+    {
+      "name": "Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "neurofibrillary tangles" },
+        { "neuropathology": "Braak Stages" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//neurofibrillary tangles//Braak Stages//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//neurofibrillary tangles//Braak Stages"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NFTs (Braak stages) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_NFT_BGROUPS"
+    },
+    {
+      "name": "Neuritic plaques (ranked by CERAD score) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "neuritic plaques" },
+        { "neuropathology": "CERAD score" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//neuritic plaques//CERAD score//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//neuritic plaques//CERAD score"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (CERAD score) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_NP_CERAD"
+    },
+    {
+      "name": "Lewy body disease (3 category ranking) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "diagnosis": "Lewy body dementia" },
+        { "neuropathology": "Lewy body" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//Lewy body dementia//Lewy body//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//Lewy body dementia//Lewy body"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: LBD (none, brainstem-predominant, and all other regions or not specified) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_LEWY_3"
+    },
+    {
+      "name": "Hippocampal sclerosis of the elderly (presence vs. absence) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "hippocampal sclerosis of aging" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//hippocampal sclerosis of aging//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//hippocampal sclerosis of aging"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: HS (presence vs. absence) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_HS"
+    },
+    {
+      "name": "Neuropathologic features of AD and related dementias (case/control) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "diagnosis": "late onset Alzheimer's disease" },
+        { "diagnosis": "dementia" },
+        { "diagnosis": "Lewy body dementia" },
+        { "neuropathology": "neuritic plaques" },
+        { "neuropathology": "vascular brain injury" },
+        { "neuropathology": "neurofibrillary tangles" },
+        { "neuropathology": "hippocampal sclerosis of aging" },
+        { "neuropathology": "Lewy body" },
+        { "neuropathology": "cerebral amyloid angiopathy" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//late onset Alzheimer's disease//dementia//Lewy body dementia//neuritic plaques//vascular brain injury//neurofibrillary tangles//hippocampal sclerosis of aging//Lewy body//cerebral amyloid angiopathy//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//late onset Alzheimer's disease//dementia//Lewy body dementia//neuritic plaques//vascular brain injury//neurofibrillary tangles//hippocampal sclerosis of aging//Lewy body//cerebral amyloid angiopathy"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: general case/control analysis comparing individuals with dementia and AD neuropathologies  (cases) to those without clinical dementia and none or minimal AD neuropathologic changes (controls); includes both primary (relaxed documentation) and conservative (strict documentation) datasets (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_STATUS"
+    },
+    {
+      "name": "Lewy body disease (presence vs. absence) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "diagnosis": "Lewy body dementia" },
+        { "neuropathology": "Lewy body" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//Lewy body dementia//Lewy body//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//Lewy body dementia//Lewy body"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: LBD (presence vs. absence) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_LEWY"
+    },
+    {
+      "name": "Neuritic plaques (presence vs. absence); conservative (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "neuropathology": "neuritic plaques" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//neuritic plaques//population stratification//population stratification"
+        },
+        { "phenotype_list": "autopsy-based diagnosis//neuritic plaques" }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence) restricted to cases and controls with complete documentation (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_NP_CONS"
+    },
+    {
+      "name": "Lewy body disease (5 category ranking) (GRCh38)",
+      "phenotypes": [
+        { "diagnosis": "autopsy-based diagnosis" },
+        { "diagnosis": "Lewy body dementia" },
+        { "neuropathology": "Lewy body" },
+        { "covariate specification": "population stratification" },
+        { "covariate_list": "population stratification" },
+        {
+          "full_list": "autopsy-based diagnosis//Lewy body dementia//Lewy body//population stratification//population stratification"
+        },
+        {
+          "phenotype_list": "autopsy-based diagnosis//Lewy body dementia//Lewy body"
+        }
+      ],
+      "description": "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: LBD (none, brainstem-predominant, limbic, neocortical, and other regions or not specified) (Lifted Over from GRCh37 to GRCh38)",
+      "dataset_track_identifier": "NG00041_GRCh38_LEWY_5"
+    }
+  ],
+  "accession": {
+    "name": "Neuropathologic Features of AD and Related Dementias",
+    "source": null,
+    "accession": "NG00041",
+    "attribution": "Beecham et al. 2014|PMID:25188341",
+    "description": "Summary statistics from a GWAS study of known genetic risk loci for Alzheimer's disease dementia using neuropathologic data from 4,914 brain autopsies. Lifted Over from GRCh37 to GRCh38."
+  }
+}

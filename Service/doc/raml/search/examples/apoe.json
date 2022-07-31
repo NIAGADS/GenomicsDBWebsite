@@ -1,266 +1,106 @@
 [
-    {
-      "display": "APOE",
-      "match_rank": -1,
-      "description": "Gene // protein coding // apolipoprotein E // Also Known As: AD2 // Location: 19q13.32",
-      "primary_key": "ENSG00000130203",
-      "record_type": "gene",
-      "matched_term": "APOE"
-    },
-    {
-      "display": "NG00078: IGAP APOE-Stratified Analysis (Jun et al. 2016)",
-      "match_rank": 0,
-      "description": "NIAGADS ACCESSION // Summary statistics from an APOE-stratified genome-wide association meta-analysis for AD status was performed using the IGAP discov...",
-      "primary_key": "NG00078",
-      "record_type": "dataset",
-      "matched_term": "IGAP APOE-Stratified Analysis"
-    },
-    {
-      "display": "NG00039: ADGC LOAD: African Americans - APOE Adj (Reitz et al. 2013)",
-      "match_rank": 1,
-      "description": "TRACK // summary statistics from an ADGC (2013) GWAS study of African Americans and their genetic risk for late-onset Alzheimer's disease (...",
-      "primary_key": "NG00039_ADJ",
-      "record_type": "gwas_summary",
-      "matched_term": "ADGC LOAD: African Americans - APOE Adj"
-    },
-    {
-      "display": "NG00056: Transethnic LOAD: All Samples, adjusted for APOE ε4 (Jun et al. 2017)",
-      "match_rank": 1,
-      "description": "TRACK // summary statistics for a transethnic GWAS study of late-onset AD, adjusted for age, sex, population stratification, and APOE ε4 st...",
-      "primary_key": "NG00056_ALL_APOE_ADJ",
-      "record_type": "gwas_summary",
-      "matched_term": "Transethnic LOAD: All Samples, adjusted for APOE ε4"
-    },
-    {
-      "display": "NG00056: Transethnic LOAD: APOE ε4 Carriers (Jun et al. 2017)",
-      "match_rank": 1,
-      "description": "TRACK // summary statistics for APOE ε4 carriers in a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population strati...",
-      "primary_key": "NG00056_APOE_E4",
-      "record_type": "gwas_summary",
-      "matched_term": "Transethnic LOAD: APOE ε4 Carriers"
-    },
-    {
-      "display": "NG00056: Transethnic LOAD: APOE ε4 Non-Carriers (Jun et al. 2017)",
-      "match_rank": 1,
-      "description": "TRACK // summary statistics for APOE ε4 non-carriers in a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population st...",
-      "primary_key": "NG00056_NON_APOE_E4",
-      "record_type": "gwas_summary",
-      "matched_term": "Transethnic LOAD: APOE ε4 Non-Carriers"
-    },
-    {
-      "display": "NG00078: IGAP APOE-Stratified Analysis: All Samples (Jun et al. 2016)",
-      "match_rank": 1,
-      "description": "TRACK // Summary statistics from an APOE-stratified GWAS of the IGAP discovery phase dataset.",
-      "primary_key": "NG00078_ALL",
-      "record_type": "gwas_summary",
-      "matched_term": "IGAP APOE-Stratified Analysis: All Samples"
-    },
-    {
-      "display": "NG00078: IGAP APOE-Stratified Analysis: APOEε4 Carriers (Jun et al. 2016)",
-      "match_rank": 1,
-      "description": "TRACK // Summary statistics from an APOE-stratified GWAS of the APOEε4+ (10,352 cases and 9,207 controls) subgroup of the IGAP discovery ph...",
-      "primary_key": "NG00078_APOE4_CARRIERS",
-      "record_type": "gwas_summary",
-      "matched_term": "IGAP APOE-Stratified Analysis: APOEε4 Carriers"
-    },
-    {
-      "display": "NG00078: IGAP APOE-Stratified Analysis: APOEε4 Non-Carriers (Jun et al. 2016)",
-      "match_rank": 1,
-      "description": "TRACK // Summary statistics from an APOE-stratified GWAS of the APOEε4- (7,184 cases and 26,968 controls) subgroup of the IGAP discovery ph...",
-      "primary_key": "NG00078_APOE4_NON_CARRIERS",
-      "record_type": "gwas_summary",
-      "matched_term": "IGAP APOE-Stratified Analysis: APOEε4 Non-Carriers"
-    },
-    {
-      "display": "NG00078: IGAP APOE-Stratified Analysis: SNP - APOEε4 Status Interaction (Jun et al. 2016)",
-      "match_rank": 1,
-      "description": "TRACK // Summary statistics from a genome-wide interaction test between SNPs and APOEε4 status in the IGAP discovery phase dataset.",
-      "primary_key": "NG00078_INT",
-      "record_type": "gwas_summary",
-      "matched_term": "IGAP APOE-Stratified Analysis: SNP - APOEε4 Status Interaction"
-    },
-    {
-      "display": "NG00056: Transethnic LOAD (Jun et al. 2017)",
-      "match_rank": 4,
-      "description": "NIAGADS ACCESSION // Summary statistics from a genome-wide association study examining the effect of APOE ε4 carrier status on late-onset Alzheimer's D...",
-      "primary_key": "NG00056",
-      "record_type": "dataset",
-      "matched_term": "Summary statistics from a genome-wide association study examining the effect of APOE ε4 carrier status on late-onset Alzheimer's Disease conducted among multiple populations, including whites of European Ancestry, African-Americans, Japanese, and Israeli-Arabs."
-    },
-    {
-      "display": "NG00027: ADGC LOAD: Adjusted Stage 1 (Naj et al. 2011)",
-      "match_rank": 5,
-      "description": "TRACK // late-onset Alzheimer's disease; ADGC discovery stage 1 dataset; adjusted for age, sex, and APOE4 number",
-      "primary_key": "NG00027_ADJ_STAGE1",
-      "record_type": "gwas_summary",
-      "matched_term": "late-onset Alzheimer's disease; ADGC discovery stage 1 dataset; adjusted for age, sex, and APOE4 number"
-    },
-    {
-      "display": "NG00027: ADGC LOAD: Adjusted Stage 2 (Naj et al. 2011)",
-      "match_rank": 5,
-      "description": "TRACK // late-onset Alzheimer's disease; ADGC replication stage 2; adjusted for age, sex, and APOE4 number",
-      "primary_key": "NG00027_ADJ_STAGE2",
-      "record_type": "gwas_summary",
-      "matched_term": "late-onset Alzheimer's disease; ADGC replication stage 2; adjusted for age, sex, and APOE4 number"
-    },
-    {
-      "display": "NG00027: ADGC LOAD: Adjusted Stages 1 and 2 (Naj et al. 2011)",
-      "match_rank": 5,
-      "description": "TRACK // late-onset Alzheimer's disease; ADGC discovery and replication stages (1 and 2, respectively); adjusted for age, sex, and APOE4 nu...",
-      "primary_key": "NG00027_ADJ_STAGE12",
-      "record_type": "gwas_summary",
-      "matched_term": "late-onset Alzheimer's disease; ADGC discovery and replication stages (1 and 2, respectively); adjusted for age, sex, and APOE4 number"
-    },
-    {
-      "display": "NG00048: ADGC LOAD: Age at Onset (Naj et al. 2014)",
-      "match_rank": 5,
-      "description": "TRACK // Summary statistics from a GWAS study of the effects of known Alzheimer's disease risk loci in modifying age-at-onset using LOAD da...",
-      "primary_key": "NG00048",
-      "record_type": "gwas_summary",
-      "matched_term": "Summary statistics from a GWAS study of the effects of known Alzheimer's disease risk loci in modifying age-at-onset using LOAD datasets from ADGC, adjusted for sex, APOE number, and population stratification"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Caribbean Hispanic (Model 2;CADD≥15) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_HA_SKATO_CADD15_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Caribbean Hispanic); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with CADD score ≥15"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Caribbean Hispanic (Model 2;CADD≥20) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_HA_SKATO_CADD20_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Caribbean Hispanic); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with CADD score ≥20"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Caribbean Hispanic (Model 2;LOF) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_HA_SKATO_LOF_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Caribbean Hispanic); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with predicted Loss of Function (LOF) impact (snpEff)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Caribbean Hispanic (Model 2;VEP HIGH) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_HA_SKATO_HIGH_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Caribbean Hispanic); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with HIGH predicted impact (VEP v80)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Caribbean Hispanic (Model 2;VEP MOD-HIGH) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_HA_SKATO_MOD_HIGH_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Caribbean Hispanic); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with MOD-HIGH predicted impact (VEP v80)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: European (Model 2;CADD≥15) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_EA_SKATO_CADD15_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (European); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with CADD score ≥15"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: European (Model 2;CADD≥20) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_EA_SKATO_CADD20_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (European); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with CADD score ≥20"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: European (Model 2;LOF) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_EA_SKATO_LOF_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (European); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with predicted Loss of Function (LOF) impact (snpEff)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: European (Model 2;VEP HIGH) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_EA_SKATO_HIGH_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (European); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with HIGH predicted impact (VEP v80)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: European (Model 2;VEP MOD-HIGH) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_EA_SKATO_MOD_HIGH_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (European); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with MOD-HIGH predicted impact (VEP v80)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Meta-analysis (Model 2;CADD≥15) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_META_SKATO_CADD15_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with CADD score ≥15"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Meta-analysis (Model 2;CADD≥20) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_META_SKATO_CADD20_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with CADD score ≥20"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Meta-analysis (Model 2;LOF) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_META_SKATO_LOF_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with predicted Loss of Function (LOF) impact (snpEff)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Meta-analysis (Model 2;VEP HIGH) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_META_SKATO_HIGH_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with HIGH predicted impact (VEP v80)"
-    },
-    {
-      "display": "NG00065: ADSP Gene Risk: Meta-analysis (Model 2;VEP MOD-HIGH) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-...",
-      "primary_key": "NG00065_META_SKATO_MOD_HIGH_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes and filtered for variants with MOD-HIGH predicted impact (VEP v80)"
-    },
-    {
-      "display": "NG00065: ADSP Single-Variant Risk Association: Caribbean Hispanic (Model 2) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease (Caribbean Hispanic); adjusted fo...",
-      "primary_key": "NG00065_HA_SV_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease (Caribbean Hispanic); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes"
-    },
-    {
-      "display": "NG00065: ADSP Single-Variant Risk Association: European (Model 2) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease (European); adjusted for PCs, seq...",
-      "primary_key": "NG00065_EA_SV_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease (European); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes"
-    },
-    {
-      "display": "NG00065: ADSP Single-Variant Risk Association: Meta-analysis (Model 2) (Bis et al. 2018)",
-      "match_rank": 5,
-      "description": "TRACK // test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs...",
-      "primary_key": "NG00065_META_SV_M2",
-      "record_type": "gwas_summary",
-      "matched_term": "test for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease (Meta-analysis); adjusted for PCs, sequencing center, sex, age at AD onset or last-known dementia-free age (for controls), and APOE ε2 and ε4 genotypes"
-    }
-  ]
+  {
+    "display": "APOE",
+    "match_rank": 0,
+    "description": "Gene // protein coding // apolipoprotein E // Also Known As: AD2 // Location: 19q13.32",
+    "primary_key": "ENSG00000130203",
+    "record_type": "gene",
+    "matched_term": "APOE"
+  },
+  {
+    "display": "NG00039: ADGC LOAD: African Americans - APOE Adj (GRCh38) (Reitz et al. 2013)",
+    "match_rank": 1,
+    "description": "Track // summary statistics from an ADGC (2013) GWAS study of African Americans and their genetic risk for late-onset Alzheimer's disease (...",
+    "primary_key": "NG00039_GRCh38_ADJ",
+    "record_type": "track",
+    "matched_term": "ADGC LOAD: African Americans - APOE Adj (GRCh38)"
+  },
+  {
+    "display": "NG00056: Transethnic LOAD: All Samples, adjusted for APOE ε4 (GRCh38) (Jun et al. 2017)",
+    "match_rank": 1,
+    "description": "Track // summary statistics for a transethnic GWAS study of late-onset AD, adjusted for age, sex, population stratification, and APOE ε4 st...",
+    "primary_key": "NG00056_GRCh38_ALL_APOE_ADJ",
+    "record_type": "track",
+    "matched_term": "Transethnic LOAD: All Samples, adjusted for APOE ε4 (GRCh38)"
+  },
+  {
+    "display": "NG00056: Transethnic LOAD: APOE ε4 Carriers (GRCh38) (Jun et al. 2017)",
+    "match_rank": 1,
+    "description": "Track // summary statistics for APOE ε4 carriers in a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population strati...",
+    "primary_key": "NG00056_GRCh38_APOE_E4",
+    "record_type": "track",
+    "matched_term": "Transethnic LOAD: APOE ε4 Carriers (GRCh38)"
+  },
+  {
+    "display": "NG00056: Transethnic LOAD: APOE ε4 Non-Carriers (GRCh38) (Jun et al. 2017)",
+    "match_rank": 1,
+    "description": "Track // summary statistics for APOE ε4 non-carriers in a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population st...",
+    "primary_key": "NG00056_GRCh38_NON_APOE_E4",
+    "record_type": "track",
+    "matched_term": "Transethnic LOAD: APOE ε4 Non-Carriers (GRCh38)"
+  },
+  {
+    "display": "NG00078: IGAP APOE-Stratified Analysis: All Samples (GRCh38) (Jun et al. 2016)",
+    "match_rank": 1,
+    "description": "Track // Summary statistics from an APOE-stratified GWAS of the IGAP discovery phase dataset. (Lifted Over from GRCh37 to GRCh38)",
+    "primary_key": "NG00078_GRCh38_ALL",
+    "record_type": "track",
+    "matched_term": "IGAP APOE-Stratified Analysis: All Samples (GRCh38)"
+  },
+  {
+    "display": "NG00078: IGAP APOE-Stratified Analysis: APOEε4 Carriers (GRCh38) (Jun et al. 2016)",
+    "match_rank": 1,
+    "description": "Track // Summary statistics from an APOE-stratified GWAS of the APOEε4+ subgroup of the IGAP discovery phase dataset. (Lifted Over from GRC...",
+    "primary_key": "NG00078_GRCh38_APOE4_CARRIERS",
+    "record_type": "track",
+    "matched_term": "IGAP APOE-Stratified Analysis: APOEε4 Carriers (GRCh38)"
+  },
+  {
+    "display": "NG00078: IGAP APOE-Stratified Analysis: APOEε4 Non-Carriers (GRCh38) (Jun et al. 2016)",
+    "match_rank": 1,
+    "description": "Track // Summary statistics from an APOE-stratified GWAS of the APOEε4- subgroup of the IGAP discovery phase dataset. (Lifted Over from GRC...",
+    "primary_key": "NG00078_GRCh38_APOE4_NON_CARRIERS",
+    "record_type": "track",
+    "matched_term": "IGAP APOE-Stratified Analysis: APOEε4 Non-Carriers (GRCh38)"
+  },
+  {
+    "display": "NG00078: IGAP APOE-Stratified Analysis: SNP - APOEε4 Status Interaction (GRCh38) (Jun et al. 2016)",
+    "match_rank": 1,
+    "description": "Track // Summary statistics from a genome-wide interaction test between SNPs and APOEε4 status in the IGAP discovery phase dataset. (Lifted...",
+    "primary_key": "NG00078_GRCh38_INT",
+    "record_type": "track",
+    "matched_term": "IGAP APOE-Stratified Analysis: SNP - APOEε4 Status Interaction (GRCh38)"
+  },
+  {
+    "display": "NG00027: ADGC LOAD: Adjusted Stage 1 (GRCh38) (Naj et al. 2011)",
+    "match_rank": 5,
+    "description": "Track // late-onset Alzheimer's disease; ADGC discovery stage 1 dataset; adjusted for age, sex, and APOE4 number (Lifted Over from GRCh37 t...",
+    "primary_key": "NG00027_GRCh38_ADJ_STAGE1",
+    "record_type": "track",
+    "matched_term": "late-onset Alzheimer's disease; ADGC discovery stage 1 dataset; adjusted for age, sex, and APOE4 number (Lifted Over from GRCh37 to GRCh38)"
+  },
+  {
+    "display": "NG00027: ADGC LOAD: Adjusted Stage 2 (GRCh38) (Naj et al. 2011)",
+    "match_rank": 5,
+    "description": "Track // late-onset Alzheimer's disease; ADGC replication stage 2; adjusted for age, sex, and APOE4 number (Lifted Over from GRCh37 to GRCh...",
+    "primary_key": "NG00027_GRCh38_ADJ_STAGE2",
+    "record_type": "track",
+    "matched_term": "late-onset Alzheimer's disease; ADGC replication stage 2; adjusted for age, sex, and APOE4 number (Lifted Over from GRCh37 to GRCh38)"
+  },
+  {
+    "display": "NG00027: ADGC LOAD: Adjusted Stages 1 and 2 (GRCh38) (Naj et al. 2011)",
+    "match_rank": 5,
+    "description": "Track // late-onset Alzheimer's disease; ADGC discovery and replication stages (1 and 2, respectively); adjusted for age, sex, and APOE4 nu...",
+    "primary_key": "NG00027_GRCh38_ADJ_STAGE12",
+    "record_type": "track",
+    "matched_term": "late-onset Alzheimer's disease; ADGC discovery and replication stages (1 and 2, respectively); adjusted for age, sex, and APOE4 number (Lifted Over from GRCh37 to GRCh38)"
+  },
+  {
+    "display": "NG00048: ADGC LOAD: Age at Onset (GRCh38) (Naj et al. 2014)",
+    "match_rank": 5,
+    "description": "Track // Summary statistics from a GWAS study of the effects of known Alzheimer's disease risk loci in modifying age-at-onset using LOAD da...",
+    "primary_key": "NG00048_GRCh38",
+    "record_type": "track",
+    "matched_term": "Summary statistics from a GWAS study of the effects of known Alzheimer's disease risk loci in modifying age-at-onset using LOAD datasets from ADGC, adjusted for sex, APOE number, and population stratification (Lifted Over from GRCh37 to GRCh38)"
+  }
+]

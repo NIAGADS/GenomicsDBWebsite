@@ -1,0 +1,595 @@
+{
+  "result": {
+    "rs438811": {
+      "hits": [
+        {
+          "track": "NG00056_GRCh38_ALL",
+          "pvalue": "1.49e-307",
+          "test_allele": "T",
+          "neg_log10_pvalue": 307
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "4.00e-230",
+          "test_allele": "T",
+          "neg_log10_pvalue": 229.397940008672
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "9.00e-154",
+          "test_allele": "T",
+          "neg_log10_pvalue": 153.045757490561
+        },
+        {
+          "track": "NG00115_GRCh38_FEMALE",
+          "pvalue": "4.41e-120",
+          "test_allele": "T",
+          "neg_log10_pvalue": 119.355266072553
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7.00e-101",
+          "test_allele": "T",
+          "neg_log10_pvalue": 100.154901959986
+        },
+        {
+          "track": "NG00076_GRCh38",
+          "pvalue": "2.98e-77",
+          "test_allele": "T",
+          "neg_log10_pvalue": 76.525929496785
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-75",
+          "test_allele": "C",
+          "neg_log10_pvalue": 74.5228787452803
+        },
+        {
+          "track": "NG00115_GRCh38_MALE",
+          "pvalue": "1.00e-70",
+          "test_allele": "T",
+          "neg_log10_pvalue": 69.9991322784688
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-69",
+          "test_allele": "C",
+          "neg_log10_pvalue": 69
+        },
+        {
+          "track": "NG00058_GRCh38",
+          "pvalue": "2.32e-65",
+          "test_allele": "T",
+          "neg_log10_pvalue": 64.6339507901998
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "9.00e-47",
+          "test_allele": "T",
+          "neg_log10_pvalue": 46.0457574905607
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-45",
+          "test_allele": "C",
+          "neg_log10_pvalue": 44.2218487496163
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-42",
+          "test_allele": "C",
+          "neg_log10_pvalue": 41.5228787452803
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-37",
+          "test_allele": "T",
+          "neg_log10_pvalue": 36.2218487496164
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "9.00e-37",
+          "test_allele": "T",
+          "neg_log10_pvalue": 36.0457574905607
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-35",
+          "test_allele": "T",
+          "neg_log10_pvalue": 34.698970004336
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "8.00e-34",
+          "test_allele": "T",
+          "neg_log10_pvalue": 33.096910013008
+        },
+        {
+          "track": "NG00056_GRCh38_ALL_APOE_ADJ",
+          "pvalue": "1.29e-29",
+          "test_allele": "T",
+          "neg_log10_pvalue": 28.8907590314118
+        },
+        {
+          "track": "NG00073_GRCh38_NONE",
+          "pvalue": "4.93e-26",
+          "test_allele": "T",
+          "neg_log10_pvalue": 25.3071530807228
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7.00e-26",
+          "test_allele": "T",
+          "neg_log10_pvalue": 25.1549019599857
+        },
+        {
+          "track": "NG00056_GRCh38_APOE_E4",
+          "pvalue": "1.96e-23",
+          "test_allele": "T",
+          "neg_log10_pvalue": 22.7086311495484
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-20",
+          "test_allele": "T",
+          "neg_log10_pvalue": 19.698970004336
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-16",
+          "test_allele": "T",
+          "neg_log10_pvalue": 16
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-16",
+          "test_allele": "T",
+          "neg_log10_pvalue": 15.2218487496164
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-15",
+          "test_allele": "T",
+          "neg_log10_pvalue": 14.698970004336
+        },
+        {
+          "track": "NG00055_GRCh38_PTAU",
+          "pvalue": "9.56e-15",
+          "test_allele": "T",
+          "neg_log10_pvalue": 14.0193604325563
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "5.00e-14",
+          "test_allele": "T",
+          "neg_log10_pvalue": 13.301029995664
+        },
+        {
+          "track": "NG00039_GRCh38",
+          "pvalue": "3.41e-13",
+          "test_allele": "T",
+          "neg_log10_pvalue": 12.4671182805926
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-13",
+          "test_allele": "T",
+          "neg_log10_pvalue": 12.2218487496164
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7.00e-13",
+          "test_allele": "T",
+          "neg_log10_pvalue": 12.1549019599857
+        },
+        {
+          "track": "NG00073_GRCh38_VSP",
+          "pvalue": "8.11e-12",
+          "test_allele": "T",
+          "neg_log10_pvalue": 11.0909791457888
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-11",
+          "test_allele": "C",
+          "neg_log10_pvalue": 11
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-11",
+          "test_allele": "T",
+          "neg_log10_pvalue": 10.5228787452803
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-11",
+          "test_allele": "T",
+          "neg_log10_pvalue": 10.2218487496164
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "5.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.30102999566398
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.22184874961636
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.22184874961636
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.15490195998574
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "8.00e-10",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9.09691001300805
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-09",
+          "test_allele": "T",
+          "neg_log10_pvalue": 9
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-09",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-09",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8.52287874528034
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "5.00e-09",
+          "test_allele": "C",
+          "neg_log10_pvalue": 8.30102999566398
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "5.00e-09",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8.30102999566398
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "6.00e-09",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8.22184874961636
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "8.00e-09",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8.09691001300806
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 8
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.52287874528034
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.52287874528034
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.52287874528034
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.52287874528034
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "4.00e-08",
+          "test_allele": "T",
+          "neg_log10_pvalue": 7.39794000867204
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7.00e-08",
+          "test_allele": "N",
+          "neg_log10_pvalue": 7.15490195998574
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "1.00e-07",
+          "test_allele": "C",
+          "neg_log10_pvalue": 7
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-07",
+          "test_allele": "C",
+          "neg_log10_pvalue": 6.69897000433602
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-07",
+          "test_allele": "C",
+          "neg_log10_pvalue": 6.52287874528034
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "3.00e-06",
+          "test_allele": "C",
+          "neg_log10_pvalue": 5.52287874528034
+        },
+        {
+          "track": "NG00073_GRCh38_LANG",
+          "pvalue": "3.79e-06",
+          "test_allele": "T",
+          "neg_log10_pvalue": 5.42136079003193
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "9.00e-06",
+          "test_allele": "C",
+          "neg_log10_pvalue": 5.04575749056067
+        },
+        {
+          "track": "NG00073_GRCh38_MIX",
+          "pvalue": "2.31e-05",
+          "test_allele": "T",
+          "neg_log10_pvalue": 4.63638802010786
+        },
+        {
+          "track": "NG00056_GRCh38_NON_APOE_E4",
+          "pvalue": "2.32e-05",
+          "test_allele": "T",
+          "neg_log10_pvalue": 4.6345120151091
+        }
+      ],
+      "matched_variant": {
+        "metaseq_id": "19:44913484:C:T",
+        "ref_snp_id": "rs438811",
+        "genomicsdb_id": "19:44913484:C:T:rs438811"
+      }
+    },
+    "rs10189885": {
+      "hits": [
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7E-308",
+          "test_allele": "A",
+          "neg_log10_pvalue": 308
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "7.00e-281",
+          "test_allele": "A",
+          "neg_log10_pvalue": 280.154901959986
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "5.00e-119",
+          "test_allele": "A",
+          "neg_log10_pvalue": 118.301029995664
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2.00e-103",
+          "test_allele": "A",
+          "neg_log10_pvalue": 102.698970004336
+        }
+      ],
+      "matched_variant": {
+        "metaseq_id": "2:73649928:A:G",
+        "ref_snp_id": "rs10189885",
+        "genomicsdb_id": "2:73649928:A:G:rs10189885"
+      }
+    },
+    "6:421281:G:T": {
+      "hits": [
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2E-308",
+          "test_allele": "N",
+          "neg_log10_pvalue": 308
+        },
+        {
+          "track": "NHGRI_GWAS_CATALOG",
+          "pvalue": "2E-308",
+          "test_allele": "N",
+          "neg_log10_pvalue": 308
+        }
+      ],
+      "matched_variant": {
+        "metaseq_id": "6:421281:G:T",
+        "ref_snp_id": "rs62389423",
+        "genomicsdb_id": "6:421281:G:T:rs62389423"
+      }
+    }
+  },
+  "tracks": {
+    "NG00039_GRCh38": {
+      "name": "ADGC LOAD: African Americans (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00039_GRCh38",
+      "description": "summary statistics from an ADGC (2013) GWAS study of African Americans and their genetic risk for late-onset Alzheimer's disease (LOAD), adjusted for age, sex, and population stratification (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00058_GRCh38": {
+      "name": "IGAP: AD Age of Onset Survival (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00058_GRCh38",
+      "description": "Summary statistics from a genome-wide survival analysis of the age of onset (AAO) of Alzheimer's disease and AAO-defined survival. (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00076_GRCh38": {
+      "name": "ADGC LOAD Subset: non-IGAP Discovery Phase (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00076_GRCh38",
+      "description": "Summary statistics from a multi-stage association study for late-onset Alzhemier's disease (LOAD) using the subset of ADGC samples (N = 7,050). that were not included in the IGAP discovery phase. (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00056_GRCh38_ALL": {
+      "name": "Transethnic LOAD: All Samples (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00056_GRCh38_ALL",
+      "description": "summary statistics for a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population stratification (all samples) (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00073_GRCh38_MIX": {
+      "name": "Multiple substantial cognitive impairments AD subgroup (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00073_GRCh38_MIX",
+      "description": "summary statistics from a case-control analyses of an Alzheimer’s disease subgroup with multiple domains (memory, visuospatial, language) of substantial cognitive impairment (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00073_GRCh38_VSP": {
+      "name": "Visuospatial predominant AD subgroup (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00073_GRCh38_VSP",
+      "description": "summary statistics from a case-control analyses of a visuospatial predominant Alzheimer’s disease subgroup (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NHGRI_GWAS_CATALOG": {
+      "name": "NHGRI-EBI GWAS Catalog",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NHGRI_GWAS_CATALOG",
+      "description": "The NHGRI-EBI GWAS Catalog is a catalog of published genome-wide association studies, assaying at >100,000 SNPs and all SNP-trait associations with p-values &lt; 1.0 x 10<sup>-5</sup>."
+    },
+    "NG00055_GRCh38_PTAU": {
+      "name": "CSF: ptau (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00055_GRCh38_PTAU",
+      "description": "summary statistics for CSF tau phosphorylated at threonine 181 (ptau) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00073_GRCh38_LANG": {
+      "name": "Language predominant AD subgroup (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00073_GRCh38_LANG",
+      "description": "summary statistics from a case-control analyses of a language predominant Alzheimer’s disease subgroup (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00073_GRCh38_NONE": {
+      "name": "No domain-specific substantial cognitive impairment AD subgroup (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00073_GRCh38_NONE",
+      "description": "summary statistics from a case-control analyses of an Alzheimer’s disease subgroup with no domains (memory, visuospatial, language) of substantial relative cognitive impairment (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00115_GRCh38_MALE": {
+      "name": "Genetic architecture of AD and differential effect between sexes: Males (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00115_GRCh38_MALE",
+      "description": "summary statistics from a sex-stratified genome-wide association study of SNPS from Alzheimer's Disease Genetics Consortium (ADGC) male samples with European ancestry. Subjects with individual-pairwise genetic relationship matrix (GRM) > 0.1 were excluded from analyses to ensure sample independence.  Samples were selected from both ADGC phase 1 and phase 2 cohorts. (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00115_GRCh38_FEMALE": {
+      "name": "Genetic architecture of AD and differential effect between sexes: Females (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00115_GRCh38_FEMALE",
+      "description": "summary statistics from a sex-stratified genome-wide association study of SNPS from Alzheimer's Disease Genetics Consortium (ADGC) female samples with European ancestry. Subjects with individual-pairwise genetic relationship matrix (GRM) > 0.1 were excluded from analyses to ensure sample independence.  Samples were selected from both ADGC phase 1 and phase 2 cohorts. (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00056_GRCh38_APOE_E4": {
+      "name": "Transethnic LOAD: APOE ε4 Carriers (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00056_GRCh38_APOE_E4",
+      "description": "summary statistics for APOE ε4 carriers in a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population stratification (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00056_GRCh38_NON_APOE_E4": {
+      "name": "Transethnic LOAD: APOE ε4 Non-Carriers (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00056_GRCh38_NON_APOE_E4",
+      "description": "summary statistics for APOE ε4 non-carriers in a transethnic GWAS study of late-onset AD, adjusted for age, sex, and population stratification (Lifted Over from GRCh37 to GRCh38)"
+    },
+    "NG00056_GRCh38_ALL_APOE_ADJ": {
+      "name": "Transethnic LOAD: All Samples, adjusted for APOE ε4 (GRCh38)",
+      "metadata": { "tba": "coming soon" },
+      "dataset_id": "NG00056_GRCh38_ALL_APOE_ADJ",
+      "description": "summary statistics for a transethnic GWAS study of late-onset AD, adjusted for age, sex, population stratification, and APOE ε4 status (all samples) (Lifted Over from GRCh37 to GRCh38)"
+    }
+  },
+  "search_parameters": {
+    "pvalueCutoff": "1.00e-03",
+    "submitted_variants": "rs10189885,6:421281:G:T,rs438811"
+  }
+}
