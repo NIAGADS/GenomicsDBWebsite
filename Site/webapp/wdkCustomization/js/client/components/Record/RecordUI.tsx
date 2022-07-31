@@ -37,7 +37,7 @@ class RecordUI extends Component {
         //@ts-ignore
         this.activeSectionTop = null;
         //@ts-ignore
-        this.state = { navigationIsOpen: true }; // default open
+        this.state = { navigationIsOpen: false};
     }
 
     componentDidMount() {
