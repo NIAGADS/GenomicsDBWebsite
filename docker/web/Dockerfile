@@ -29,7 +29,8 @@ RUN echo "Builiding ${GENOME_BUILD} website at w/web root = ${WEBAPP}"
 
 # install build dependencies
 # TODO: specify versions for maven, nodejs, npm?
-RUN apt-get update && apt-get install -y git maven nodejs npm ant python3-pip && \
+RUN apt-get update && apt-get install -y git maven nodejs npm ant && \
+    # python3-pip && \
     # clean up temp directories
 	apt-get clean && apt-get purge && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -37,8 +38,8 @@ RUN apt-get update && apt-get install -y git maven nodejs npm ant python3-pip &&
 
 # Python Modules 
 # -------------------------------------------------
-RUN pip3 install --no-cache-dir  \
-    pandas scipy statsmodels wordcloud numpy seaborn
+#RUN pip3 install --no-cache-dir  \
+#    pandas scipy statsmodels wordcloud numpy seaborn
 
 RUN mkdir -p $SITE_HOME/conf $SITE_HOME/gus_home/config $SITE_HOME/webapp \ 
     $SITE_HOME/cgi-bin $SITE_HOME/cgi-lib $SITE_HOME/htdocs \
