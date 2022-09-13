@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<modelConfig modelName="@MODEL@"
+    webServiceUrl="local"
+    smtpServer="127.0.0.1"
+    supportEmail="@SITE_ADMIN_EMAIL@"
+    secretKeyFile="/www/common/secret/.wdk_key"
+    wdkTempDir="/www/common/temp"
+    useWeights="false">
+
+    <queryMonitor baseline=".1"
+        slow="2" />
+
+    <appDb login="@DB_WEB_USER@"
+        password="@DB_WEB_PASSWORD@"
+        connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
+        platform="PostgreSQL"
+        maxActive="20"
+        maxIdle="10"
+        minIdle="1"
+        maxWait="50"
+        showConnections="false"
+        showConnectionsInterval="10"
+        showConnectionsDuration="600"
+        acctDbLink=""
+        userDbLink="" />
+
+    <userDb login="@DB_WEB_USER@"
+        password="@DB_WEB_PASSWORD@"
+        connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
+        platform="PostgreSQL"
+        maxActive="20"
+        maxIdle="1"
+        minIdle="1"
+        maxWait="50"
+        showConnections="false"
+        showConnectionsInterval="10"
+        showConnectionsDuration="600"
+        userSchema="userdatastore." />
+
+    <accountDb login="@DB_WEB_USER@"
+        password="@DB_WEB_PASSWORD@"
+        connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
+        platform="PostgreSQL"
+        maxActive="20"
+        maxIdle="1"
+        minIdle="1"
+        maxWait="50"
+        showConnections="false"
+        showConnectionsInterval="10"
+        showConnectionsDuration="600"
+        accountSchema="useraccounts.">
+
+        <userProperty name="firstName"
+            displayName="First Name"
+            dbKey="first_name"
+            required="true"/>
+        <userProperty name="lastName"
+            displayName="Last Name"
+            dbKey="last_name"
+            required="true"/>
+        <userProperty name="middleName"
+            displayName="Middle Name"
+            dbKey="middle_name"/>
+        <userProperty name="organization"
+            displayName="Organization"
+            dbKey="organization"
+            required="true"/>
+    </accountDb>
+
+    <emailSubject>
+    </emailSubject>
+    <emailContent>
+    </emailContent>
+
+</modelConfig>
