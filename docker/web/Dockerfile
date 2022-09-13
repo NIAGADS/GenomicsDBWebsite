@@ -64,7 +64,7 @@ RUN echo "Building website " && \
     # https://www.topzenith.com/2020/07/http-status-404-not-found-docker-tomcat-image.html
     rm -r $CATALINA_HOME/webapps && mv $CATALINA_HOME/webapps.dist/ $CATALINA_HOME/webapps && \
     # set webapp properties
-    cp $GUS_HOME/config/webapp.prop.sample webapp.prop && \
+    cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/webapp.prop.sample $GUS_HOME/config/webapp.prop && \
     sed -i "s|@WEBAPP@|${WEBAPP}|g" $GUS_HOME/config/webapp.prop && \
     sed -i "s|@PROJECT_ID@|${PROJECT_ID}|g" $GUS_HOME/config/webapp.prop && \
     sed -i "s|@GOOGLE_ANALYTICS_ID@|${GOOGLE_ANALYTICS_ID}|g" $GUS_HOME/config/webapp.prop && \
@@ -80,15 +80,20 @@ RUN echo "Creating/modifying configuration files" && \
     # secret key file for cookie-based authentication
     cat $SECRET_KEY > $COMMON_DIR/secret/.wdk_key && \
     # model.props (specific for genome build b/c of third-party URLs)
-    cp $GUS_HOME/config/$GENOME_BUILD/model.prop.sample $GUS_HOME/config/{$GENOME_BUILD}/model.prop && \
-    sed -i "s|@WEBAPP@|${WEBAPP}|g" $GUS_HOME/config/$GENOME_BUILD/model.prop && \
-    sed -i "s|@SITE_ADMIN_EMAIL@|${SITE_ADMIN_EMAIL}|g" $GUS_HOME/config/$GENOME_BUILD/model.prop && \
+    cp $GUS_HOME/config/$PROJECT_ID/model.prop.sample $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@WEBAPP@|${WEBAPP}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@SITE_ADMIN_EMAIL@|${SITE_ADMIN_EMAIL}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@GENOME_BUILD@|${GENOME_BUILD}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@PROJECT_ID@|${PROJECT_ID}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@GENCODE_VERSION@|${GENCODE_VERSION}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@DBSNP_VERSION@|${DBSNP_VERSION}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
+    sed -i "s|@ALT_BUILD_LINK@|${ALT_BUILD_LINK}|g" $GUS_HOME/config/$PROJECT_ID/model.prop && \
     # model-config
-    cp $GUS_HOME/config/model-config.xml.sample $GUS_HOME/config/{$GENOME_BUILD}/model-config.xml && \
-    sed -i "s|@MODEL@|${PROJECT_ID}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml && \
-    sed -i "s|@SITE_ADMIN_EMAIL@|${PROJECT_ID}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml && \
-    sed -i "s|@DB_WEB_USER@|${DB_WEB_USER}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml && \
-    sed -i "s|@DB_WEB_PASSWORD@|${DB_WEB_PASSWORD}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml && \
-    sed -i "s|@DB_HOST@|${DB_HOST}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml && \
-    sed -i "s|@DB_PORT@|${DB_PORT}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml && \
-    sed -i "s|@DB_NAME@|${DB_NAME}|g" $GUS_HOME/config/$GENOME_BUILD/model-config.xml
+    cp $GUS_HOME/config/model-config.xml.sample $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@MODEL@|${PROJECT_ID}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@SITE_ADMIN_EMAIL@|${SITE_ADMIN_EMAIL}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@DB_WEB_USER@|${DB_WEB_USER}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@DB_WEB_PASSWORD@|${DB_WEB_PASSWORD}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@DB_HOST@|${DB_HOST}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@DB_PORT@|${DB_PORT}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml && \
+    sed -i "s|@DB_NAME@|${DB_NAME}|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
