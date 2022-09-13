@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:     
+  web:
+    container_name: genomicsdb-web
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        SITE_ADMIN_EMAIL: ${SITE_ADMIN_EMAIL}
+        WEBAPP: ${WEBAPP}
+        PROJECT_ID: ${PROJECT_ID}
+        GENOME_BUILD: ${GENOME_BUILD}
+        GENCODE_VERSION: ${GENCODE_VERSION}
+        DBSNP_VERSION: ${DBSNP_VERSION}
+        ALT_BUILD_LINK: ${ALT_BUILD_LINK}
+        GOOGLE_ANALTYICS_ID: ${GOOGLE_ANALYTICS_ID}
+        DB_PORT: ${DB_PORT}
+        DB_HOST: ${DB_HOST}
+        DB_NAME: ${DB_NAME}
+        DB_WEB_USER: ${DB_WEB_USER}
+        DB_WEB_PASSWORD: ${DB_WEB_PASSWORD}
+        SECRET_KEY: ${SECRET_KEY}
+    ports:
+      - '${TOMCAT_PORT}:8080'
+    volumes:
+      - ${TOMCAT_LOG}:/usr/local/tomcat/logs
+    

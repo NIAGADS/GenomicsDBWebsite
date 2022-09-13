@@ -25,7 +25,7 @@ ENV COMMON_DIR=/www/common
 ENV GUS_HOME=/www/genomics/gus_home
 ENV PROJECT_HOME=/www/genomics/project_home
 
-RUN echo "Builiding $GENOME_BUILD website at w/web root = ${WEBAPP}"
+RUN echo "Builiding ${GENOME_BUILD} website at w/web root = ${WEBAPP}"
 
 # install build dependencies
 # TODO: specify versions for maven, nodejs, npm?
