@@ -1,11 +1,17 @@
 version: '3.3'
 
 services:     
-  web:
-    container_name: genomicsdb-web
+  genomicsdb:
+    container_name: ${PROJECT_ID}
     build:
       context: .
-      dockerfile: web/Dockerfile
+      dockerfile: ./Dockerfile
+      # leave off target to build entire 
+      # base - create tomcat container, do update and install dependencies
+      # fetch-src - fetches source from github
+      # build-web - depends on base & fetch-src
+      # target: base|fetch-src|build-web
+      target: build-web
       args:
         SITE_ADMIN_EMAIL: ${SITE_ADMIN_EMAIL}
         WEBAPP: ${WEBAPP}

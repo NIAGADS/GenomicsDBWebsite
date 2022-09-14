@@ -1,6 +1,4 @@
 # config files
-model-config.xml
-wdk_key
 .env
 
 # -*- mode: gitignore; -*-
