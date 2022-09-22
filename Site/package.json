@@ -16,7 +16,6 @@
         "d3": "5.16.0",
         "highcharts": "^7.1.2",
         "highcharts-react-official": "^2.2.2",
-        "ideogram": "^1.29.0",
         "igv": "^2.7.4",
         "locuszoom": "^0.12.2",
         "match-sorter": "^6.3.0",

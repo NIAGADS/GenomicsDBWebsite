@@ -8,7 +8,8 @@ import { RecordAttributeSection, CollapsibleSection, HelpIcon } from "wdk-client
 import RecordTableSection from "./RecordTableSection";
 import { getId, getTargetType, getDisplayName } from "wdk-client/Utils/CategoryUtils";
 
-import { IdeogramPlot, HighchartsPlot } from "@components/Visualizations";
+// import { IdeogramPlot, HighchartsPlot } from "@components/Visualizations";
+import { HighchartsPlot } from "@components/Visualizations";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { RecordInstance, RecordClass } from "wdk-client/Utils/WdkModel";
 
@@ -98,13 +99,13 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
                     isCollapsed={isCollapsed}
                     onCollapsedChange={toggleCollapse}
                 >
-                    {(record.tables as any)[category.wdkReference.name] && (
-                        <IdeogramPlot
+                    {/*(record.tables as any)[category.wdkReference.name] && (
+                       <IdeogramPlot
                             container="ideogram-container"
-                            /* tracks={JSON.parse((record.tables as any)[category.wdkReference.name][0].annotation_tracks)} */
+                            // tracks={JSON.parse((record.tables as any)[category.wdkReference.name][0].annotation_tracks)} 
                             annotations={JSON.parse((record.tables as any)[category.wdkReference.name][0].data)}
-                        />
-                    )}
+                        /> 
+                    )*/}
                 </CollapsibleSection>
             ) : (
                 <RecordTableSection
