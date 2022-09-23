@@ -60,7 +60,7 @@ public class VariantGWASHitsService extends AbstractWdkService {
         + "FROM NIAGADS.VariantGWASTopHits h, ids," + NL
         + "NIAGADS.TrackAttributes ta" + NL
         + "WHERE ids.pk = h.variant_record_primary_key" + NL
-        + "AND ta.track = h.dataset_id" + NL
+        + "AND ta.track = h.track" + NL
         + "AND h.neg_log10_pvalue >= (-1 * log(?)))";
 
     private static final String AGG_HITS_CTE = "AggHits AS (SELECT" + NL

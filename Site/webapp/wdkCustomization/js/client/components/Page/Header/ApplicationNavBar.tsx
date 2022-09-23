@@ -26,7 +26,7 @@ import { RootState } from "wdk-client/Core/State/Types";
 
 import GenomeBuildBanner from "./GenomeBuildBanner";
 
-import { ElevationScroll } from "@components/MaterialUI";
+import { ElevationScroll, withTooltip } from "@components/MaterialUI";
 
 // apply material-ui spacing system to the buttons
 const TextButton = styled(Button)(({ theme }) => ({
@@ -78,13 +78,13 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         sectionDesktop: {
-            display: "none",
+            display: "flex", //none
             [theme.breakpoints.up("md")]: {
                 display: "flex",
             },
         },
         sectionMobile: {
-            display: "flex",
+            display: "none", // flex
             [theme.breakpoints.up("md")]: {
                 display: "none",
             },
@@ -138,7 +138,7 @@ function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             {isGuest ? (
-                <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
+                withTooltip(<MenuItem onClick={handleMenuClose}>Sign In</MenuItem>, "Coming soon")
             ) : (
                 <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
             )}
@@ -194,12 +194,12 @@ function PrimarySearchAppBar() {
                 <p>API</p>
             </MenuItem>
 
-            <MenuItem>
+            {/*<MenuItem>
                 <IconButton aria-label="Info" color="inherit" href={`${webAppUrl}`}>
                     <InfoOutlinedIcon />
                 </IconButton>
                 <p>About</p>
-            </MenuItem>
+    </MenuItem>*/}
 
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
@@ -231,9 +231,9 @@ function PrimarySearchAppBar() {
             <TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`}>
                 API
             </TextButton>
-            <TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
+            {/*<TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
                 About
-            </TextButton>
+    </TextButton>*/}
             <IconButton
                 edge="end"
                 aria-label="account of current user"
@@ -275,7 +275,7 @@ function PrimarySearchAppBar() {
                             />
                             <div className={classes.grow} />
                             {renderDesktopMenu}
-                            <div className={classes.sectionMobile}>
+                            {/*<div className={classes.sectionMobile}>
                                 <IconButton
                                     aria-label="show more"
                                     aria-controls={mobileMenuId}
@@ -285,11 +285,11 @@ function PrimarySearchAppBar() {
                                 >
                                     <MoreIcon />
                                 </IconButton>
-                            </div>
+                            </div> */}
                         </Toolbar>
                         <GenomeBuildBanner />
                     </AppBar>
-                    {renderMobileMenu}
+                    {/*renderMobileMenu*/}
                     {renderAccountMenu}
                 </>
             </ElevationScroll>{" "}

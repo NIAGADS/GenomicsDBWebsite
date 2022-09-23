@@ -29,7 +29,7 @@ export function getMinMaxNegLog10PValue(rows: Row[], id: IdType<any>, upperLimit
         max = upperLimit;
     }
 
-    return [min, max];
+    return [Math.floor(min), Math.ceil(max)];
 };
 
 

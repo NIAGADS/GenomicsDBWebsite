@@ -20,7 +20,7 @@ import {
     RecordNavigationButton,
     RecordNavigationSection as RecordNavigationPanel,
 } from "./Sections/RecordNavigationSection";
-import { contentStyles as drawerPanelStyles } from "@components/MaterialUI/PersistentDrawerLeft";
+import { contentStyles as drawerPanelStyles } from "genomics-client/components/MaterialUI/Drawer/PersistentDrawerLeft";
 /**
  * Renders the main UI for the WDK Record page.
  */
@@ -37,7 +37,7 @@ class RecordUI extends Component {
         //@ts-ignore
         this.activeSectionTop = null;
         //@ts-ignore
-        this.state = { navigationIsOpen: false };
+        this.state = { navigationIsOpen: false};
     }
 
     componentDidMount() {
@@ -148,7 +148,7 @@ class RecordUI extends Component {
                     handleClose={this._handleNavigationClose.bind(this)}
                 >
                     <RecordNavigationSection
-                        heading={this.props.record.displayName}
+                       // heading={this.props.record.displayName}
                         record={this.props.record}
                         recordClass={this.props.recordClass}
                         categoryTree={this.props.categoryTree}

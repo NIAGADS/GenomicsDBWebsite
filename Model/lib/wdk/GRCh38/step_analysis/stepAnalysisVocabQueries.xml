@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wdkModel>
+
+    <querySet name="StepAnalysisVocab" 
+      queryType="vocab" 
+      isCacheable="false">
+      <sqlQuery name="Organism" 
+        doNotTest="1">
+        <paramRef ref="stepAnalysisParams.answerIdSql"/>
+        <column name="term" />
+        <column name="display" />
+        <column name="internal"/>
+        <sql>
+          <![CDATA[
+                  SELECT DISTINCT ga.organism AS term, ga.organism AS display, ga.organism AS internal
+                  FROM CBIL.GeneAttributes ga,
+                  ($$answerIdSql$$) r
+                  WHERE ga.source_id = r.source_id
+                  ORDER BY ga.organism ASC
+        ]]>
+        </sql>
+      </sqlQuery>
+
+
+      <sqlQuery name="Experiment" doNotTest="1">
+        <paramRef ref="stepAnalysisParams.answerIdSql"/>
+        <paramRef ref="stepAnalysisParams.stepParamValuesSql"/>
+        <column name="term" />
+        <column name="display" />
+        <column name="internal"/>
+        <sql>
+          <![CDATA[
+              WITH re AS (
+            SELECT p.dataset_id
+            FROM ErythronDB.Profile p, Study.Study s,
+            ($$stepParamValuesSql$$) pv
+            WHERE pv.name = 'experiment' AND pv.value = s.source_id
+            AND s.study_id = p.dataset_id
+            AND ((p.title LIKE '%Gene%' or p.title LIKE '%Protein%') AND p.title NOT LIKE '%Average%')),
+            re_final AS (
+            SELECT * FROM re
+            UNION 
+            SELECT -1 AS dataset_id
+            WHERE NOT EXISTS (SELECT * FROM re)),
+          	Experiments AS (SELECT dataset_id AS term, dataset_id AS internal, dataset || ' (' || num_genes::text || ')' AS display, 
+            ranked_investigation_id, is_comprehensive, order_num
+            FROM (SELECT p.dataset_id,
+            replace(replace(split_part(p.title, ': ', 1), '(Mm)', ''), '(Hs)', '') || CASE WHEN (p.display->>'record')::boolean THEN '' ELSE '*' END AS dataset,
+            p.order_num, 
+            CASE WHEN p.dataset_id = (SELECT dataset_id FROM re) THEN -1 * s.investigation_id ELSE s.investigation_id END AS ranked_investigation_id,
+            s.investigation_id, (p.display->>'record')::boolean AS is_comprehensive,
+            COUNT(DISTINCT ids.source_id) AS num_genes 
+            FROM ErythronDB.GeneExpressionDataTable ge,
+            Study.Study s, ($$answerIdSql$$) ids, ErythronDB.Profile p
+            WHERE ids.source_id = ge.gene_source_id AND p.profile_id = ge.profile_id
+            AND p.dataset_id = s.study_id
+            GROUP BY p.dataset_id, dataset, order_num, investigation_id, is_comprehensive
+            ORDER BY ranked_investigation_id, is_comprehensive, order_num) a)
+            SELECT * FROM Experiments
+            UNION SELECT 0 AS term, 0 AS internal, 'None' AS display, 1 AS ranked_investigation_id, true AS is_comprehensive, 1 AS order_num
+            WHERE NOT EXISTS (SELECT * FROM Experiments)
+            ORDER BY ranked_investigation_id, is_comprehensive, order_num
+        ]]>
+        </sql>
+      </sqlQuery>
+
+
+      <sqlQuery name="RecommendedExperiment" doNotTest="1"> 
+        <paramRef ref="stepAnalysisParams.stepParamValuesSql"/>
+        <column name="term" />
+        <column name="display" />
+        <column name="internal"/>
+        <sql>
+          <![CDATA[
+            WITH re AS (
+            SELECT s.source_id AS term, s.source_id AS internal, 
+            replace(replace(split_part(p.title, ': ', 1), '(Mm)', ''), '(Hs)', '') 
+            || CASE WHEN (p.display->>'record')::boolean THEN '' ELSE '*' END AS display
+            FROM ErythronDB.Profile p, Study.Study s,
+            ($$stepParamValuesSql$$) pv
+            WHERE pv.name = 'experiment' AND pv.value = s.source_id
+            AND s.study_id = p.dataset_id
+            AND ((p.title LIKE '%Gene%' or p.title LIKE '%Protein%') AND p.title NOT LIKE '%Average%'))
+            SELECT * FROM re
+            UNION
+            SELECT 'None' AS term, 'None' AS internal, 'None' AS display
+            WHERE NOT EXISTS (SELECT * FROM re)
+        ]]>
+        </sql>
+      </sqlQuery>
+    </querySet>
+  </wdkModel>

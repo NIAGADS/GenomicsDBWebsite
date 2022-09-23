@@ -21,6 +21,7 @@ import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
+import org.json.JSONObject;
 
 
 @Path("dataset/gwas/top")
@@ -62,7 +63,28 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         LOG.info("Starting 'GWAS Summary Statistics Top Hits' Service");
         String response = null;
 
+
         try {
+
+            if (track == null) {
+                String messageStr = "Must supply track";
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("missing required parameter: `track`", messageStr))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
+            }
+            String isValidTrack = validateTrack(track);
+            if (!isValidTrack.equals("true")) {
+                String accession = track.split("_", 1)[0];
+                String messageStr = isValidTrack.equals("Invalid Accession") ?
+                "invalid accession supplied as first part of track" + track + "(" + accession + ")"
+                : "invalid track";
+                                
+                return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new JSONObject().put("invalid value: `track`", messageStr).put("valid tracks for this accession (" + accession + ")", isValidTrack.replace('"',' ')))
+                .type( MediaType.APPLICATION_JSON)
+                .build();
+            }
             boolean flankRanges = getRequest().getRequestParamMap().containsKey(FLANK_PARAM);
             LOG.debug(flank + " - " + flankRanges);
             response = lookup(track, limit, flankRanges);       
@@ -82,6 +104,39 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         return sql;
     }
 
+    private String validateTrack(String track) {
+        WdkModel wdkModel = getWdkModel();
+        DataSource ds = wdkModel.getAppDb().getDataSource();
+        BasicResultSetHandler handler = new BasicResultSetHandler();
+        String sql = "SELECT CASE WHEN ? = ANY(array_agg(track))" + NL
+        + "THEN true ELSE false END AS is_valid_track," + NL
+        + "jsonb_agg(track)::text AS valid_tracks" + NL
+        + "FROM NIAGADS.TrackAttributes" + NL
+        + "WHERE dataset_accession  = split_part(?, '_', 1)";
+
+        SQLRunner runner = new SQLRunner(ds, sql, "validate-track-query");
+        runner.executeQuery(new Object[] {track, track}, handler);
+        List<Map<String, Object>> results = handler.getResults();
+        
+        if (results.isEmpty()) {
+            return "Invalid Accession";
+        }
+
+        Boolean isValidTrack = (Boolean) results.get(0).get("is_valid_track");
+        String validTracks = (String) results.get(0).get("valid_tracks");
+        if (validTracks == "null" || validTracks == null) {
+            return "Invalid Accession";
+        }
+        else {
+            if (isValidTrack) {
+                return "true";
+            }
+            else {
+                return validTracks;
+            }
+        }
+    }
+
     private String lookup(String track, int limit, boolean flankRanges) throws WdkModelException {
 
         WdkModel wdkModel = getWdkModel();
@@ -95,7 +150,7 @@ public class DatasetTopFeaturesService extends AbstractWdkService {
         }
 
         String sql = buildQuery(limit);
-
+        LOG.debug("SQL: " + sql);
         SQLRunner runner = new SQLRunner(ds, sql, "dataset-top-hits-data-query");
         runner.executeQuery(new Object[] {track, flank, flank}, handler);
         

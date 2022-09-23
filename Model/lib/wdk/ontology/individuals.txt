@@ -153,6 +153,7 @@ TrackRecordClasses.TrackRecordClass.attribution	http://edamontology.org/topic_02
 TrackRecordClasses.TrackRecordClass.has_manhattan_plot	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	attribute	has_manhattan_plot					1		record-internal	
 TrackRecordClasses.TrackRecordClass.phenotype_list	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	phenotype_list						results	record-internal	download
 TrackRecordClasses.TrackRecordClass.covariate_list	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	covariate_list						results	record-internal	download
+TrackRecordClasses.TrackRecordClass.related_tracks	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	attribute	related_tracks							record-internal	download
 													
 TrackRecordClasses.TrackRecordClass.inferno_expanded_snps	http://www.niagadsontology.org/no_04	Linkage mapping	TrackRecordClasses.TrackRecordClass	table	inferno_expanded_snps					1		record-internal	
 TrackRecordClasses.TrackRecordClass.inferno_tag_ideogram	http://www.niagadsontology.org/no_04	Linkage mapping	TrackRecordClasses.TrackRecordClass	table	inferno_tag_ideogram					2		record-internal	

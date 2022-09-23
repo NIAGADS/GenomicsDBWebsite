@@ -48,8 +48,8 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Filter table..."
-              inputProps={{ "aria-label": "search table" }}
+              placeholder="Search table..."
+              inputProps={{ "aria-label": "text search of table" }}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,

@@ -8,7 +8,7 @@ interface CssBarChart {
 
 const CssBarChart: React.FC<CssBarChart> = ({ value, percentage }) => {
     return (
-        <Grid container wrap="nowrap">
+        value ? <Grid container wrap="nowrap">
             <Grid item>{value}&nbsp;</Grid>
             <Box clone maxWidth="100px" maxHeight="1.4em">
                 <Grid item container wrap="nowrap">
@@ -16,7 +16,7 @@ const CssBarChart: React.FC<CssBarChart> = ({ value, percentage }) => {
                     <SparkBar type="remaining" width={100 - percentage} />
                 </Grid>
             </Box>
-        </Grid>
+        </Grid> : null
     );
 };
 

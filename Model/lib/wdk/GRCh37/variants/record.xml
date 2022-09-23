@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+  <recordClassSet name="VariantRecordClasses">
+    <recordClass name="VariantRecordClass" displayName="Variant" displayNamePlural="Variants" shortDisplayName="Variant" useBasket="false" urlName="variant">
+      <!-- =============================================================== -->
+      <!-- Primary Key -->
+      <!-- =============================================================== -->
+      <primaryKey aliasQueryRef="VariantAttributes.VariantAlias">
+	<columnRef>source_id</columnRef>
+      </primaryKey>
+
+      <idAttribute name="primary_key" displayName="Variant" 
+		   help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
+	<text>
+	  <![CDATA[$$display_metaseq_id$$]]>
+	</text>
+      </idAttribute>
+
+      <attributesList summary="adsp_display_flag,ref_snp_id,variant_class_abbrev,display_allele,most_severe_consequence,msc_impacted_gene_link,msc_impact,msc_is_coding" />
+
+      <!-- =================================================================== -->
+      <!-- Reporters -->
+      <!-- =================================================================== -->
+
+      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record"
+		implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+
+      <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" 
+		implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+	<description>
+	  %%attributesReporterDescription%%
+	</description>
+	<property name="page_size">
+	  1000000
+	</property>
+      </reporter>
+
+      <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+	<description>
+	  %%tableReporterDescription%%
+	</description>
+	<property name="page_size">
+	  1000000
+	</property>
+      </reporter>
+
+      <reporter name="xml" displayName="XML: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter"/>
+
+    <!--  <reporter name="json" displayName="JSON: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter"/> -->
+
+      <!-- =============================================================== -->
+      <!-- Step Analysis Plugins -->
+      <!-- =============================================================== -->
+      
+      <!-- =============================================================== -->
+      <!-- Summary and record views -->
+      <!-- =============================================================== -->
+      <summaryView name="_default" display="Variant Results">
+	<description>
+	  <![CDATA[View variant details.]]>
+	</description>
+      </summaryView>
+      
+      <summaryView name="variant-histogram-ideogram" display="Genome View">
+	<description>
+	  <![CDATA[View your results mapped against the genome.]]>
+	</description>
+      </summaryView>
+      
+      <reporter name="genomeViewReporter" displayName="Ideogram"  scopes=""
+                implementation="org.niagads.genomics.model.report.summaryview.genomeview.VariantGenomeViewReporter" />
+      <!-- =============================================================== -->
+      <!-- Basic Attributes -->
+      <!-- =============================================================== -->
+
+      <attributeQueryRef ref="VariantAttributes.SortingAttributes">
+	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
+	<columnAttribute name="display_metaseq_id" displayName="Variant" internal="true" inReportMaker="false" type="string" />
+      </attributeQueryRef>
+      
+      <attributeQueryRef ref="VariantAttributes.BasicAttributes">
+	<columnAttribute name="metaseq_id" displayName="Metaseq ID" internal="true" inReportMaker="true" type="string" />
+	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" help="dbSNP reference SNP identifier" type="string" />
+
+	<columnAttribute name="chromosome" displayName="Chromosome" type="string" />
+	<columnAttribute name="position" displayName="Position" type="integer" />
+	<columnAttribute name="location" displayName="Location" type="string" />
+	
+	<columnAttribute name="ref_allele" displayName="Ref Allele" type="string" />
+	<columnAttribute name="alt_allele" displayName="Alt Allele" type="string" />
+	<columnAttribute name="display_allele" displayName="Allele" type="string" />	
+	<columnAttribute name="sequence_allele" internal="true" inReportMaker="false" type="string" />
+	<columnAttribute name="sequence_allele_display" internal="true" inReportMaker="false" type="json_text" />
+
+	<columnAttribute name="variant_class_abbrev" displayName="Variant Class" type="string" />
+	<columnAttribute name="variant_class" displayName="variant_class" type="string" />
+	
+	<columnAttribute name="adsp_display_flag" displayName="ADSP Variant?" inReportMaker="false" 
+			 help="variant identified during the Discovery Phase of the ADSP (see NG00061)" type="json_icon" />
+
+	<columnAttribute name="is_adsp_variant" displayName="ADSP Variant?" inReportMaker="true" help="variant identified during the Discovery Phase of the ADSP (see NG00061)" type="boolean" internal="true"/>
+	<columnAttribute name="is_adsp_wes" displayName="ADSP WES?"  inReportMaker="true"
+			 help="variant identified from whole exome sequencing of the Discovery Phase case/control study by the ADSP (see NG00061)"
+			 type="boolean" internal="true" />
+	<columnAttribute name="is_adsp_wgs" displayName="ADSP WGS?"  inReportMaker="true"
+			 help="variant identified from whole genome sequencing of the Discovery Phase family study by the ADSP (see NG00061)"
+			 type="boolean" internal="true"/>
+
+	<columnAttribute name="adsp_wes_qc_filter_status" displayName="ADSP QC Filter Status (WES)" internal="true" inReportMaker="true" type="string" />
+	<columnAttribute name="adsp_wgs_qc_filter_status" displayName="ADSP QC Filter Status (WGS)" internal="true" inReportMaker="true" type="string" />
+
+      </attributeQueryRef>
+
+      <attributeQueryRef ref="VariantAttributes.MostSevereConsequence">
+	<!-- start in record page header for msc attributes -->
+	<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence for the variant" inReportMaker="true" type="string" />
+	<columnAttribute name="msc_impacted_gene" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" internal="true" inReportMaker="true" type="string" />
+	<columnAttribute name="msc_impacted_gene_symbol" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" type="string" />
+	<columnAttribute name="msc_impacted_gene_link" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" inReportMaker="false" type="json_link" />
+	<columnAttribute name="msc_impact" displayName="Consequence Impact" help="impact of most severe predicted consequence" type="string" />
+	<columnAttribute name="msc_is_coding" displayName="Coding?" help="coding variant? based on most severe predicted consequence" type="json_icon" />
+	<!-- end in header for msc attributes -->
+	
+	<columnAttribute name="msc_amino_acid_change" displayName="Amino Acid Change" help="Amino acid change resulting from most severe predicted consequence" type="string" />
+	<columnAttribute name="msc_codon_change" displayName="Codon Change" help="Codon change resulting from most sever predicted consequence" type="string" />
+	<columnAttribute name="msc_impacted_transcript" displayName="Impacted Transcript" help="transcript impacted by most severe predicted consequence" type="json_link" />
+      </attributeQueryRef>
+
+      <!-- <table name="record_link_outs" displayName="Related Variant Records" inReportMaker="false" queryRef="VariantTables.DbRefs_Variant"> -->
+      <!-- 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/> -->
+      <!-- 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/> -->
+      <!-- 	<propertyList name="flags"> -->
+      <!-- 	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value> -->
+      <!-- 	</propertyList> -->
+      <!-- </table> -->
+
+    
+      <!-- =============================================================== -->
+      <!-- Genomic Location -->
+      <!-- =============================================================== -->
+  
+
+      <!-- =============================================================== -->
+      <!-- Function Analysis -->
+      <!-- =============================================================== -->
+      
+      <table name="regulatory_consequences" queryRef="VariantTables.RegulatoryConsequences" displayName="Regulatory Consequences">
+	<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" type="string" />
+	<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" type="string" />
+	<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" type="json_icon" />
+	<columnAttribute name="feature_link" displayName="Feature" help="regulatory feature; follow link to view details from Ensembl" type="json_link" />
+	<columnAttribute name="feature_biotype" displayName="Feature Type" help="regulatory feature biotype" type="string" />
+	
+	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	
+	<propertyList name="hidden_columns">
+	  <value>rank</value>
+	</propertyList>
+	
+      </table>
+
+      <table name="motif_consequences" queryRef="VariantTables.MotifConsequences" displayName="Regulatory Motif Consequences">
+	<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" type="string" />
+	<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" type="string" />
+	<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" type="json_icon" />
+	<columnAttribute name="feature_link" displayName="Matrix" help="JASPAR ID for the positional weight matrix (PWM) defining the motif; follow link to view/download the matrix using a visualization tool from Ensembl" type="json_link" />
+
+	<columnAttribute name="transcription_factor_complex" displayName="TF Complex" help="transcription factor complex associated with the binding site" type="string" />
+
+	<columnAttribute name="strand" displayName="Strand" help="strand of the impacted feature" type="string" />
+	<columnAttribute name="motif_position" displayName="Motif Position" help="position of the variant within the motif, in base pair coordinates, from the start of the motif" type="numeric" />
+	<columnAttribute name="high_info_position" displayName="High Inf?" help="variant position appears to be important to the motif (has high information)" type="numeric" />
+	<columnAttribute name="motif_score_change" displayName="Motif Score Change" help="indicates whether the variant increases or decreases the motif score. If the variant increases the score, it means the sequence around and including the variant matches the known motif consensus sequence much better." type="numeric" />
+	<columnAttribute name="epigenomes" displayName="Epigenomes" help="ENCODE epigenomes for which this site has been experimentally predicted using ChIP-seq" type="string" />
+
+	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>strand,rank</value>
+	</propertyList>
+
+      </table>
+      
+      <table name="intergenic_consequences" queryRef="VariantTables.IntergenicConsequences" displayName="Intergenic Consequences">
+	<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" type="string" />
+	<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" type="string" />
+	<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for more information" type="json_icon" />
+	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>rank</value>
+	</propertyList>
+	
+      </table> 
+
+      <!--
+	  <table name="lof_consequences" queryRef="VariantTables.LossOfFunctionConsequences" displayName="Predicted LOF Consequences">
+	  </table>
+      -->
+      
+      <table name="transcript_consequences" queryRef="VariantTables.TranscriptConsequences" displayName="Transcript Consequences">
+	<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" type="string" />
+	<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" type="string" />
+	<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" type="json_icon" />
+	<columnAttribute name="gene_link" displayName="Gene" help="impacted gene; follow link to view detailed NIAGADS record" type="json_link" />
+	<columnAttribute name="transcript_link" displayName="Transcript" help="impacted transcript; follow link to view transcript details from Ensembl" type="json_link" />
+	<columnAttribute name="is_canonical_transcript" displayName="Canonical?" help="impacted transcript is the canonical transcript for the gene" type="string" />
+	<columnAttribute name="is_coding" displayName="Coding?" help="is coding variant?" type="json_icon" />
+	<columnAttribute name="codon_change" displayName="Codons" help="reference/variant codon sequences" type="string" />
+	<columnAttribute name="exon" displayName="Exon" help="impacted exon/total number of exons" type="string" />
+	<columnAttribute name="distance" displayName="Distance" help="shortest distance from variant to impacted transcript" type="integer" />
+	<columnAttribute name="strand" displayName="Strand" help="strand of the impacted feature" type="string" />
+	<columnAttribute name="protein_link" displayName="Protein" help="impacted protein; follow link to view protein details from Ensembl" type="json_link" />
+	<columnAttribute name="amino_acid_change" displayName="Amino Acids" help="reference/variant amino acid" type="string" />
+	<columnAttribute name="protein_position" displayName="Protein Position" help="relative position of the amino acid in the protein" type="string" />
+	<columnAttribute name="cds_position" displayName="CDS Position" help="relative position of the base pair in the coding sequence" type="string" />
+	<columnAttribute name="cdna_position" displayName="cDNA Position" help="relative position of the base pair in the cDNA sequence" type="string" />
+	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
+
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+	<propertyList name="hidden_columns">
+	  <value>is_canonical_transcript,exon,distance,strand,cds_position,cdna_position,protein_position,rank</value>
+	</propertyList>
+
+
+      </table>
+
+
+      <!-- =============================================================== -->
+      <!-- Variant Classification and Effect -->
+      <!-- =============================================================== -->
+
+      <attributeQueryRef ref="VariantAttributes.CADD">
+	  <columnAttribute name="cadd_raw_score" displayName="CADD (Raw)" help="higher values indicate the variant is more likely to have deleterious effects" type="numeric"/>
+	  <columnAttribute name="cadd_phred_score" displayName="CADD (PHRED-scaled)" help="ranked CADD score across GRCh37/hg19 reference SNVs" type="numeric"/>
+      </attributeQueryRef>
+      
+      <!-- =============================================================== -->
+      <!-- Genetic Variation -->
+      <!-- =============================================================== -->
+      
+
+      <attributeQueryRef ref="VariantAttributes.GWSDatasetsPlot">
+	<columnAttribute name="gws_datasets_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
+	  <propertyList name="chartProperties">
+	    <value>
+	      {"type": "variant_gws_summary"}
+	    </value>
+	  </propertyList>
+	</columnAttribute>
+      </attributeQueryRef>
+
+      <attributeQueryRef ref="VariantAttributes.ColocatedVariants">
+	<columnAttribute name="num_colocated_variants" internal="true" inReportMaker="false" type="integer" />
+	<columnAttribute name="colocated_variants" internal="true" inReportMaker="false" type="json" />
+	<columnAttribute name="alternative_variants" internal="true" inReportMaker="false" type="json" />
+      </attributeQueryRef>
+
+   
+     <!-- <table name="locuszoom_gwas_datasets" displayName="LocusZoom Overview" queryRef="VariantTables.LocusZoomGwasDatasets">
+	<columnAttribute name="dataset_list" internal="true" inReportMaker="false" type="json" />
+
+	<propertyList name="type">
+	  <value>default</value>
+	</propertyList>
+
+	<description><![CDATA[coming soon]]></description>
+      </table> -->
+
+      <table name="linkage" displayName="Linkage" queryRef="VariantTables.Linkage">
+	<columnAttribute name="variant" displayName="Variant" type="json_link"/>
+	<columnAttribute name="ref_snp_id" displayName="RefSNP ID" type="string" />
+	<columnAttribute name="is_annotated_flag" displayName="Annotation" type="json_icon" help="variant is annotated in the GenomicsDB by ADSP or AD-related GWAS results" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
+	<columnAttribute name="distance" displayName="Distance" help="distance between the two loci" type="numeric"/>
+	<columnAttribute name="r_squared" displayName="r2" help="r-squared value; ranges from [0,1]; a value 0 indicates that the two loci are not coinherited" type="numeric"/>
+	<columnAttribute name="d_prime" displayName="D'" help="D' value (scaled 'D'); ranges from [-1,1]; if allele frequencies are high, high D' indicates that the two loci are coinherited. With low allele frequencies D' values may be inflated." type="numeric"/>
+	<columnAttribute name="population" displayName="Population" help="1000Genomes Phase 3 population" type="string"/>
+	<columnAttribute name="minor_allele_frequency" displayName="MAF" help="minor allele frequency in the population for the linked variant" type="percentage_bar"/>
+	<columnAttribute name="minor_allele_frequency_ld_ref" displayName="LD REF MAF" help="minor allele frequency in the population for the LD reference variant (record being browsed)" type="percentage_bar"/>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+      </table>
+
+      <table name="allele_frequencies" displayName="Population Frequencies" queryRef="VariantTables.AlleleFrequency">
+	<columnAttribute name="population_abbrev" displayName="Population" type="string" />
+	<columnAttribute name="ethnicity" displayName="Ethnicity" type="json_text" />
+	<columnAttribute name="population_source" displayName="Resource" type="string" />
+	<columnAttribute name="allele" internal="false" displayName="Allele" type="string" />
+	<columnAttribute name="frequency" displayName="Frequency" inReportMaker="true" type="percentage_bar"/>
+
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+
+
+      </table>
+
+      <!-- =============================================================== -->
+      <!-- Trait Associations -->
+      <!-- =============================================================== -->
+
+      <table name="ad_associations_from_gwas" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromGWAS">
+	<columnAttribute name="allele" displayName="Allele" type="string"/>
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
+
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue"}</value>
+	</propertyList>
+	<propertyList name="flags">
+	  <value>{"defaultOpen": true, "filter": true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+	
+
+	<description>
+	  <![CDATA[
+		   <p>Associations for this variant to Alzheimer's disease identified in a NIAGADS GWAS summary statistics dataset.<br/>
+		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the risk-associations.<br/>
+		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/></p>
+	  ]]>
+	</description>	
+      </table>
+
+      <table name="other_associations_from_gwas" displayName="AD-related neuropathologies and biomarkers" queryRef="VariantTables.OtherAssociationsFromGWAS">
+	<columnAttribute name="allele" displayName="Allele" type="string"/>
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
+	<propertyList name="column_filter">
+	  <value>{"pvalue":"pvalue"}</value>
+	</propertyList>
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen":false, "filter":true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+	
+    
+	<description>
+	  <![CDATA[
+		   <p>Associations for this variant to an AD-related disease, biomarker, or neuropathology identified in a NIAGADS GWAS summary statistics dataset.<br/>
+		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the risk-associations.<br/>
+		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/></p>
+
+	  ]]>
+	</description>
+      </table>
+
+      <table name="ad_associations_from_catalog" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromCatalog">
+	<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
+	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
+	<columnAttribute name="trait" displayName="Trait" type="string" />
+	<columnAttribute name="mapped_efo_trait" displayName="EFO Mapped Trait" help="mapping to Experimental Factor Ontology" type="string" />
+	<columnAttribute name="pubmed_id"  displayName="PubMed ID" type="json_link" />
+	<columnAttribute name="study" displayName="Study" type="json_text" />
+	<columnAttribute name="sample" displayName="Sample" type="string" />
+	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
+
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+
+      
+	<description>
+	  <![CDATA[   
+                   <p>Significant associations for this variant (or a colocated SNP) to Alzheimer's disease from curated 
+		   collections (NHGRI or NIAGADS) of SNPs identified from published
+                   genome-wide association studies (GWAS).</p>   
+          ]]>
+	</description>
+
+      </table>
+
+      <table name="other_associations_from_catalog" displayName="Other Traits (incl. AD-related neuropathologies and biomarkers)" queryRef="VariantTables.OtherAssociationsFromCatalog">
+	<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" type="string" />
+	<columnAttribute name="allele" displayName="Test/Minor Allele" type="string" />
+	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
+	<columnAttribute name="frequency" displayName="Frequency" type="numeric" />
+	<columnAttribute name="trait" displayName="Trait" type="string" />
+	<columnAttribute name="mapped_efo_trait" displayName="EFO Mapped Trait" help="mapping to Experimental Factor Ontology" type="string" />
+	<columnAttribute name="pubmed_id"  displayName="PubMed ID" type="json_link" />
+	<columnAttribute name="study" displayName="Study" type="json_text" />
+	<columnAttribute name="sample" displayName="Sample" type="string" />
+	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
+
+	<propertyList name="flags">
+	  <value>{"defaultOpen": false, "filter": true}</value>
+	</propertyList>
+	<propertyList name="sorted_by">
+		<value>[{"id":"pvalue", "desc":false}]</value>
+	</propertyList>
+
+
+	<description>
+	  <![CDATA[   
+		   <p>Significant associations for this variant (or a colocated SNP) to any disease/trait, including AD-related neuropathologies and AD biomarkers 
+		   from curated collections (NHGRI or NIAGADS) of SNPs identified from published
+		   genome-wide association studies (GWAS)</p>   
+          ]]>
+	</description>
+
+      </table>
+
+    </recordClass>
+  </recordClassSet>
+</wdkModel>

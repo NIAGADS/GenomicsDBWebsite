@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+  <querySet name="VariantFilters" queryType="summary" isCacheable="false">
+
+    <sqlQuery name="All">
+      <paramRef ref="variantParams.variant_answer"/>
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="wdk_weight"/>
+      <sql>
+	<![CDATA[
+		 SELECT source_id,
+		 wdk_weight,
+		 '@PROJECT_ID@'::text AS project_id
+		 FROM $$variant_answer$$ r
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="ByTopSnpEffEffect">
+      <paramRef ref="variantParams.variant_answer"/>
+      <paramRef ref="variantParams.impact_enum"/>
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="wdk_weight"/>
+      <sql>
+	<![CDATA[
+		 SELECT r.source_id,
+		 r.wdk_weight,
+		 '@PROJECT_ID@'::text AS project_id
+		 FROM NIAGADS.TopSnpEffEffect te,
+		 DoTS.SnpFeature sf,
+		 $$variant_answer$$ r
+		 WHERE sf.primary_key = r.source_id
+		 AND sf.na_feature_id = te.na_feature_id
+		 AND te.top_effect_impact SIMILAR to $$impact_enum$$
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="BySource">
+      <paramRef ref="variantParams.variant_answer"/>
+      <paramRef ref="variantParams.variant_source_enum"/>
+      <column name="source_id"/>
+      <column name="project_id"/>
+      <column name="wdk_weight"/>
+      <sql>
+	<![CDATA[
+		 SELECT r.source_id,
+		 r.wdk_weight,
+		 '@PROJECT_ID@'::text AS project_id
+		 FROM
+		 DoTS.SnpFeature sf,
+		 $$variant_answer$$ r
+		 WHERE sf.primary_key = r.source_id
+		 AND (($$variant_source_enum$$ = 'ADSP_NOVEL' AND sf.name = 'ADSP') 
+		 OR ($$variant_source_enum$$ = 'ADSP' AND sf.is_adsp_variant)
+		 OR ($$variant_source_enum$$ = 'ADSP_WES' AND (sf.annotation->>'ADSP_WES')::boolean)
+		 OR ($$variant_source_enum$$ = 'ADSP_WGS' AND (sf.annotation->>'ADSP_WGS')::boolean)
+		 OR ($$variant_source_enum$$ = 'dbSNP' AND sf.name IN ('dbSNP', 'dbSNP_merge')))
+	]]>
+      </sql>
+    </sqlQuery>
+  </querySet>
+</wdkModel>

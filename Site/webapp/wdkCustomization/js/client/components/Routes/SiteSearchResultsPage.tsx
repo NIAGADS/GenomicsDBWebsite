@@ -7,7 +7,7 @@ import { Loading } from "wdk-client/Components";
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { CompositeService as WdkService } from "wdk-client/Service/ServiceMixins";
 import { SearchResult } from "@components/Tools";
-import { buildRouteFromResult } from 'genomics-client/util/util';
+import { buildRouteFromResult } from "genomics-client/util/util";
 
 import { withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -90,24 +90,24 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
 
     const nGenes = get(counts, "gene"),
         nVariants = get(counts, "variant"),
-        nDatasets = get(counts, "gwas_summary"),
+        nDatasets = get(counts, "track"),
         nAccessions = get(counts, "dataset");
 
     return loading ? (
         <Loading />
     ) : searchTerm.length < 3 ? (
-        <Grid>
-            <Box marginTop={3}>
+        <Box marginTop={4}>
+            <Grid>
                 <Typography>
                     <strong>{searchTerm}</strong> is too short to search. Please enter a search term that is at least 3
                     characters long.
                 </Typography>
-            </Box>
-        </Grid>
+            </Grid>
+        </Box>
     ) : (
-        <Grid container spacing={2}>
+        <Box marginTop={4}>
             {resultsArray.length ? (
-                <>
+                <Grid container spacing={2}>
                     <Grid item xs={3}>
                         <Typography variant="h5">Search Results</Typography>
                         <Typography>
@@ -122,7 +122,6 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
                         />
                     </Grid>
                     <Grid item xs={9}>
-                        <Box marginTop={3} />
                         <a id="genes" />
                         {nGenes > 0 && <ResultSectionTitle>Genes</ResultSectionTitle>}
                         {nGenes > 0 && resultsArray.map((res) => _buildSearchResult(res, "gene"))}
@@ -137,19 +136,17 @@ const SiteSearchResultsPage: React.FC<RouteComponentProps<any>> = ({ location })
 
                         <a id="datasets" />
                         {nDatasets > 0 && <ResultSectionTitle>GWAS Summary Statistics Datasets</ResultSectionTitle>}
-                        {nDatasets > 0 && resultsArray.map((res) => _buildSearchResult(res, "gwas_summary"))}
+                        {nDatasets > 0 && resultsArray.map((res) => _buildSearchResult(res, "track"))}
                     </Grid>
-                </>
+                </Grid>
             ) : (
                 <Grid>
-                    <Box marginTop={3}>
-                        <Typography>
-                            <strong>No</strong> results were found for the search <strong>{searchTerm}</strong>
-                        </Typography>
-                    </Box>
+                    <Typography>
+                        <strong>No</strong> results were found for the search <strong>{searchTerm}</strong>
+                    </Typography>
                 </Grid>
             )}
-        </Grid>
+        </Box>
     );
 };
 

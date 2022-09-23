@@ -6,7 +6,8 @@ get:
     queryParameters:
         track: 
             description: unique track identifier
-            example: NG00027_STAGE1
+            example: NG00027_GRCh38_STAGE1
+            required: true
         limit: 
             required: false
             description: rank hits and only return top N hits
@@ -21,4 +22,4 @@ get:
         200:
             body:
                 application/json:
-                    example: !include examples/NG00027_STAGE1.json
+                    example: !include examples/NG00027_GRCh38_STAGE1.json

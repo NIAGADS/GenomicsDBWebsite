@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="VariantAttributes" queryType="attribute" isCacheable="false">
+
+    <!-- =================================================================== -->
+    <!-- Alias -->
+    <!-- allow search by refsnp, but only return first hit -->
+    <!-- =================================================================== -->
+    <sqlQuery name="VariantAlias" doNotTest="true">
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="old_source_id" columnType="string"/>
+      <sql>
+	<![CDATA[
+			WITH ids AS (##WDK_ID_SQL##)
+			SELECT find_variant_primary_key(ids.old_source_id) AS source_id,
+			ids.old_source_id AS old_source_id,
+			'@PROJECT_ID@'::text AS project_id
+			FROM ids
+		]]>
+      </sql>
+    </sqlQuery>
+
+
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="SortingAttributes">
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="display_metaseq_id" columnType="string"/>
+      <sql>
+	<![CDATA[
+		 SELECT '@PROJECT_ID@'::text AS project_id, 
+		 ids.source_id AS source_id,
+		 truncate_str(split_part(ids.source_id, '_', 1), 27) AS display_metaseq_id
+		 FROM (##WDK_ID_SQL##) ids			
+	]]>	
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="BasicAttributes">
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="ref_snp_id" columnType="string"/>
+      <column name="metaseq_id" columnType="string"/>
+
+      <column name="chromosome" columnType="string"/>
+      <column name="position" columnType="number"/>
+      <column name="location" columnType="string"/>
+
+      <column name="display_allele" columnType="string"/>
+      
+      <column name="variant_class_abbrev" columnType="string"/>
+      <column name="variant_class" columnType="string"/>
+
+      <column name="adsp_display_flag" columnType="string"/>
+
+      <column name="is_adsp_variant" columnType="boolean"/>
+
+      <column name="adsp_qc_status" columnType="string"/>
+      <column name="adsp_qc_flags" columnType="string"/>
+      
+      <sql>
+	<![CDATA[
+		 SELECT '@PROJECT_ID@'::TEXT AS project_id,
+		 record_primary_key AS source_id,
+		 ref_snp_id,
+		 metaseq_id,
+		 truncate_str(metaseq_id, 30) AS display_metaseq_id,
+		 
+		 display_attributes->>'display_allele' AS display_allele,
+		 display_attributes->>'variant_class' AS variant_class,
+		 display_attributes->>'variant_class_abbrev' AS variant_class_abbrev,
+		 
+		 chromosome,
+		 position,
+		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN NULL 
+		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS location,
+		 
+		 is_adsp_variant,
+		 adsp_variant_flag(is_adsp_variant) AS adsp_display_flag,
+		 
+		 adsp_qc_status(record_primary_key) AS adsp_qc_status,
+		 adsp_qc_call(record_primary_key) AS adsp_qc_flags
+		 
+		 FROM AnnotatedVDB.Variant
+	]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="MostSevereConsequence">
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="most_severe_consequence" columnType="string"/>
+      <column name="msc_impacted_gene" columnType="string"/>
+      <column name="msc_impacted_gene_symbol" columnType="string"/>
+      <column name="msc_impacted_gene_link" columnType="string"/>
+      <column name="msc_impact" columnType="string"/>
+      <column name="msc_is_coding" columnType="string"/>
+      <column name="msc_amino_acid_change" columnType="string"/>
+      <column name="msc_codon_change" columnType="string"/>
+      <column name="msc_impacted_transcript" columnType="string"/>
+      <sql>
+	<![CDATA[
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 msc AS (
+		 SELECT id.source_id, most_severe_consequence(id.source_id), most_severe_consequence(source_id, TRUE)::jsonb AS conseq FROM id)
+
+		 SELECT msc.source_id,
+		 'GRCh38'::text AS project_id,
+		 msc.most_severe_consequence AS most_severe_consequence,
+		 msc.conseq->>'gene_id' AS msc_impacted_gene,
+		 msc.conseq->>'gene_symbol' AS msc_impacted_gene_symbol,
+		 build_link_attribute(msc.conseq->>'gene_symbol', '/record/gene/', msc.conseq->>'gene_id', 'view gene annotations')::text AS msc_impacted_gene_link,
+		 msc.conseq->>'impact' AS msc_impact,
+
+		 CASE WHEN (msc.conseq->>'consequence_is_coding')::boolean THEN 
+		 build_icon_attribute('Coding', 'fa-check', 'green', NULL, 'true') ELSE NULL END AS msc_is_coding,
+
+		 replace(replace(msc_impacted_transcript(msc.conseq->>'transcript_id', 'GRCh38'), '+ENSEMBL_TRANSCRIPT_URL_GRCh38+', 
+		 '@ENSEMBL_TRANSCRIPT_URL_GRCh38@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh37+', 'http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=') AS msc_impacted_transcript,  
+           
+		 msc.conseq->>'codons' AS msc_codon_change,
+		 msc.conseq->>'amino_acids' AS msc_amino_acid_change		 
+		 FROM msc
+	]]>
+      </sql>
+    </sqlQuery>
+  
+    <sqlQuery name="GWSDatasetsPlot">
+      <column name="source_id" columnType="string"/>
+      <column name="gws_datasets_summary_plot" columnType="string"/>
+      <sql>
+	  <![CDATA[
+		   WITH id AS (##WDK_ID_SQL##),
+
+		   phenotype AS (
+		   SELECT t.protocol_app_node_id,
+		   c.characteristic_type AS category,
+
+		   CASE WHEN c.characteristic_type = 'diagnosis' THEN
+                   CASE WHEN c.characteristic ILIKE 'late onset Alz%' THEN 'LOAD'
+                   WHEN c.characteristic ILIKE '%Alzheimer%' THEN 'AD'
+                   WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
+                   WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
+                   WHEN c.characteristic ILIKE 'Lewy%' THEN 'LBD'
+                   WHEN c.characteristic = 'dementia' THEN 'DEM'
+                   WHEN c.characteristic = 'cognitive impairment' THEN 'CI' 
+		   END
+
+                   WHEN c.characteristic_type = 'neuropathology' THEN -- neuropathology
+                   CASE WHEN c.characteristic ILIKE '%Braak%' THEN 'Braak Stages'
+                   WHEN c.characteristic ILIKE '%CERAD%' THEN 'CERAD Score'
+                   WHEN c.characteristic ILIKE '%angiopathy%' THEN 'CAA'
+                   WHEN c.characteristic ILIKE '%hippo%' THEN 'Hs-Aging'
+                   WHEN c.characteristic ILIKE 'Lewy%' THEN 'LB'
+                   WHEN c.characteristic ILIKE '%plaques%' THEN 'NP'
+                   WHEN c.characteristic ILIKE '%tangles%' THEN 'NT'
+                   WHEN c.characteristic ILIKE '%vascular%' THEN 'VBI'
+                   END
+
+                   ELSE -- biomarkers
+                   CASE WHEN c.characteristic IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
+                   THEN 'CIM'
+		   ELSE
+		   c.characteristic END
+		   END AS phenotype
+
+		   FROM  NIAGADS.TrackAttributes t,
+		   NIAGADS.ProtocolAppNodeCharacteristic c
+		   WHERE t.subcategory = 'GWAS summary statistics'
+		   AND t.dataset_accession NOT LIKE '%CATALOG%'
+		   AND c.protocol_app_node_id = t.protocol_app_node_id
+		   AND c.characteristic_type IN ('diagnosis', 'neuropathology', 'biomarker')
+		   AND c.characteristic NOT IN ('autopsy-based diagnosis')
+		   ),
+
+		   hits AS (		  
+		   SELECT DISTINCT id.source_id,
+		   r.protocol_app_node_id,
+		   CASE WHEN r.neg_log10_pvalue < -1 * log(5e-8) THEN FALSE ELSE TRUE END AS has_gws,
+		   p.phenotype,
+		   p.category,
+		   ROW_NUMBER() OVER(ORDER BY category, phenotype) AS sort_order
+		   FROM Results.VariantGWAS r, id, phenotype p
+		   WHERE r.variant_record_primary_key = id.source_id
+		   AND r.neg_log10_pvalue >= 3.0
+		   AND p.protocol_app_node_id = r.protocol_app_node_id
+		   ORDER BY p.category, p.phenotype
+		   ),
+		   
+		   ycategories AS (
+		   SELECT DISTINCT source_id, category, phenotype,
+		   MIN(sort_order) AS sort_order,
+		   ROW_NUMBER() OVER(ORDER BY MIN(sort_order)) - 1 AS y_index
+		   FROM hits
+		   GROUP BY source_id, category, phenotype
+		   ),
+		   
+		   ycategories_json AS (
+		   SELECT source_id, category,
+		   jsonb_agg(phenotype ORDER BY y_index) AS json
+		   FROM ycategories
+		   GROUP BY source_id, category
+		   ),
+		   
+		   gws_counts AS (
+		   SELECT source_id, category, phenotype,
+		   SUM (CASE WHEN has_gws THEN 1 ELSE 0 END) AS gws_count,
+		   SUM (CASE WHEN has_gws THEN 0 ELSE 1 END) AS not_gws_count
+		   FROM hits
+		   GROUP BY source_id, category, phenotype
+		   ),	
+		   
+		   series AS (
+		   SELECT gc.source_id, gc.category,
+		   jsonb_build_object('name', 'p < 5e-8', 'data', jsonb_agg(gc.gws_count ORDER BY c.y_index)) AS series_data
+		   FROM gws_counts gc, ycategories c
+		   WHERE gc.source_id = c.source_id
+		   AND gc.phenotype = c.phenotype
+		   AND gc.category = c.category
+		   GROUP BY gc.source_id, gc.category
+
+		   UNION ALL
+		   
+		   SELECT gc.source_id, gc.category,
+		   jsonb_build_object('name', '5e-8 < p < 1e-3', 'data', jsonb_agg(gc.not_gws_count ORDER BY c.y_index)) AS series_data
+		   FROM gws_counts gc, ycategories c
+		   WHERE gc.source_id = c.source_id
+		   AND gc.phenotype = c.phenotype
+		   AND gc.category = c.category
+		   GROUP BY gc.source_id, gc.category
+		   ),
+
+	    	   diagnosis AS (
+		   SELECT s.source_id,
+		   jsonb_build_object(
+		   'title', 'Diagnosis',
+		   'categories', yc.json,
+		   'series', jsonb_agg(series_data)) AS chart_data
+		   FROM series s, ycategories_json yc
+		   WHERE s.source_id = yc.source_id
+		   AND s.category = 'diagnosis'
+		   AND s.category = yc.category		   
+		   GROUP BY s.source_id, yc.json
+		   ),
+		   
+		   neuropathology AS (
+		   SELECT s.source_id,
+		   jsonb_build_object(
+		   'title', 'Neuropathology',
+		   'categories', yc.json,
+		   'series', jsonb_agg(series_data)) AS chart_data
+		   FROM series s, ycategories_json yc
+		   WHERE s.source_id = yc.source_id
+		   AND s.category = 'neuropathology'
+		   AND s.category = yc.category
+		   GROUP BY s.source_id, yc.json
+		   ),
+
+		   biomarker AS (
+		   SELECT s.source_id,
+		   jsonb_build_object(
+		   'title', 'Biomarker',
+		   'categories', yc.json,
+		   'series', jsonb_agg(series_data)) AS chart_data		   
+		   FROM series s, ycategories_json yc
+		   WHERE s.source_id = yc.source_id
+		   AND s.category = 'biomarker'
+		   AND s.category = yc.category
+		   GROUP BY s.source_id, yc.json
+		   )
+		   
+		   SELECT id.source_id,
+		   jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), 
+		   (SELECT chart_data FROM neuropathology),
+		   (SELECT chart_data FROM biomarker))::text AS gws_datasets_summary_plot
+		   FROM id       
+	  ]]>
+	  </sql>
+	</sqlQuery>
+
+  
+    <!-- =============================================================== -->
+    <!-- Genomic Location -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="ColocatedVariants">
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="num_colocated_variants" columnType="number"/>
+      <column name="colocated_variants" columnType="string"/>
+      <column name="is_multi_allelic" columnType="boolean"/>
+      <column name="alternative_variants" columnType="string"/>
+      <sql>
+	<![CDATA[
+		 WITH id AS ( ##WDK_ID_SQL## ),
+
+		 bi AS (
+		 SELECT id.source_id AS record_primary_key, 
+		 v.bin_index, 
+		 (v.display_attributes->>'location_start')::int AS location_start,
+		 (v.display_attributes->>'location_end')::int AS location_end,
+		 v.position AS location,
+		 v.chromosome
+		 FROM AnnotatedVDB.Variant v, id 
+		 WHERE record_primary_key = id.source_id),
+		 
+		 
+		 cv AS (
+		 SELECT v.record_primary_key, v.ref_snp_id, v.metaseq_id, v.position AS location
+		 FROM AnnotatedVDB.Variant v
+		 WHERE v.bin_index @> (SELECT bin_index FROM bi)
+		 AND int8range((SELECT bi.location_start FROM bi), (SELECT bi.location_end FROM bi), '[]') 
+		 && int8range((v.display_attributes->>'location_start')::int, (v.display_attributes->>'location_end')::int, '[]')
+		 AND v.record_primary_key NOT IN (SELECT record_primary_key FROM bi)	 
+		 ) ,
+
+		 flags AS (
+		 SELECT bi.record_primary_key AS source_id, cv.record_primary_key, 
+		 CASE WHEN SUM((cv.location = bi.location)::integer) > 0 THEN TRUE ELSE FALSE END AS is_multi_allelic,
+		 SUM((cv.location != bi.location)::integer) AS num_colocated_variants
+		 FROM cv, bi GROUP BY bi.record_primary_key, cv.record_primary_key),
+		 
+		 colocv AS (
+		 SELECT flags.record_primary_key,
+		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
+		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS colocated_variants
+		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
+		 AND split_part(flags.source_id, ':', 2) != split_part(cv.record_primary_key, ':', 2)),
+
+		
+		 altv AS (
+		 SELECT DISTINCT flags.record_primary_key, 
+		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
+		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS alternative_variants
+		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
+		 AND split_part(flags.source_id, ':', 2) = split_part(cv.record_primary_key, ':', 2)
+		 ),
+
+		 result AS (
+		 SELECT flags.source_id,
+		 flags.num_colocated_variants,
+		 flags.is_multi_allelic,
+		 NULLIF(jsonb_agg(DISTINCT altv.alternative_variants)::text, '[null]') AS alternative_variants,
+		 NULLIF(jsonb_agg(DISTINCT colocv.colocated_variants)::text, '[null]') AS colocated_variants
+		 FROM flags, colocv, altv
+		 WHERE flags.record_primary_key = colocv.record_primary_key AND flags.record_primary_key = altv.record_primary_key
+		 GROUP BY flags.source_id, is_multi_allelic, num_colocated_variants)
+
+		 SELECT id.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 r.num_colocated_variants,
+		 r.is_multi_allelic,
+		 r.alternative_variants,
+		 r.colocated_variants
+		 FROM id LEFT OUTER JOIN result r ON id.source_id = r.source_id	
+	]]>
+      </sql>
+    </sqlQuery>
+      
+
+    <!-- =============================================================== -->
+    <!-- Function analysis -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="CADD">
+      <column name="project_id" columnType="string"/>
+      <column name="source_id" columnType="string"/>
+      <column name="cadd_phred_score" columnType="float"/>
+      <column name="cadd_raw_score" columnType="float"/>
+
+      <sql>
+	<![CDATA[
+		 WITH id AS (##WDK_ID_SQL##)
+		 SELECT id.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 (cadd_scores->>'CADD_phred')::numeric AS cadd_phred_score,
+		 (cadd_scores->>'CADD_raw_score')::numeric AS cadd_raw_score
+		 FROM AnnotatedVDB.Variant v, id 
+		 WHERE id.source_id = v.record_primary_key
+	]]>
+      </sql>
+    </sqlQuery>
+
+  </querySet>
+</wdkModel>

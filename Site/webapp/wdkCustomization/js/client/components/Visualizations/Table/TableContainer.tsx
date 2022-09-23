@@ -25,15 +25,16 @@ import {
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 import { Table, TableToolbar, TablePagination, TableColumnsPanel } from ".";
-import { FilterPanel, FilterChipBar, ClearFiltersButton } from "./TableFilters";
+import { FilterPanel, FilterChipBar } from "./TableFilters";
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
 
-import { DefaultBackgroundPanel, EncapsulatedDrawer } from "@components/MaterialUI";
+import { DefaultBackgroundPanel, NavigationDrawer } from "@components/MaterialUI";
 
 import { useTableStyles } from "./styles";
 
 export interface TableContainerProps {
     columns: Column<{}>[];
+    title?: string;
     data: any;
     canFilter: boolean;
     filterTypes?: any; // json object of filter types
@@ -41,6 +42,7 @@ export interface TableContainerProps {
     showAdvancedFilter?: boolean;
     showHideColumns?: boolean;
     initialFilters?: any;
+    initialSort?: any;
 }
 
 const hooks = [
@@ -67,23 +69,6 @@ const defaultFilterTypes = {
     pvalue: greaterThanFilter,
 };
 
-// fix to force table to always take full width of container
-// https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
-// https://spectrum.chat/react-table/general/v7-resizing-columns-no-longer-fit-to-width~4ea8a7c3-b21a-49a0-8582-baf0a6202d43
-const _defaultColumn = React.useMemo(
-    () => ({
-        // When using the useFlexLayout:
-        minWidth: 30, // minWidth is only used as a limit for resizing
-        width: 150, // width is used for both the flex-basis and flex-grow
-        maxWidth: 300, // maxWidth is only used as a limit for resizing
-        //@ts-ignore
-        Filter: () => null, // overcome the issue that useGlobalFilter sets canFilter to true
-        //Cell: ,
-        //Header: DefaultHeader,
-    }),
-    []
-);
-
 const TableContainer: React.FC<TableContainerProps> = ({
     columns,
     data,
@@ -93,6 +78,8 @@ const TableContainer: React.FC<TableContainerProps> = ({
     showAdvancedFilter,
     showHideColumns,
     initialFilters,
+    initialSort,
+    title,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -100,6 +87,23 @@ const TableContainer: React.FC<TableContainerProps> = ({
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
     const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
     const classes = useTableStyles();
+
+    // fix to force table to always take full width of container
+    // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
+    // https://spectrum.chat/react-table/general/v7-resizing-columns-no-longer-fit-to-width~4ea8a7c3-b21a-49a0-8582-baf0a6202d43
+    const _defaultColumn = React.useMemo(
+        () => ({
+            // When using the useFlexLayout:
+            minWidth: 30, // minWidth is only used as a limit for resizing
+            width: 150, // width is used for both the flex-basis and flex-grow
+            maxWidth: 300, // maxWidth is only used as a limit for resizing
+            //@ts-ignore
+            Filter: () => null, // overcome the issue that useGlobalFilter sets canFilter to true
+            //Cell: ,
+            //Header: DefaultHeader,
+        }),
+        []
+    );
 
     const instance = useTable(
         {
@@ -110,6 +114,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 pageIndex: 0,
                 pageSize: 10,
                 filters: [initialFilters ? initialFilters : {}],
+                sortBy: initialSort ? initialSort : [],
                 hiddenColumns: columns
                     .filter((col: any) => col.show === false)
                     .map((col) => col.id || col.accessor) as any,
@@ -129,6 +134,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
         headerGroups,
         prepareRow,
         setFilter,
+        setSortBy,
         preGlobalFilteredRows,
         preFilteredRows,
         setGlobalFilter,
@@ -155,28 +161,48 @@ const TableContainer: React.FC<TableContainerProps> = ({
         <>
             {showHideColumns || showAdvancedFilter ? (
                 <Grid container alignItems="stretch">
-                    {showHideColumns && <Grid item><TableColumnsPanel instance={instance} /></Grid>}
-                    {showAdvancedFilter && <Grid item><FilterPanel instance={instance} /></Grid>}
+                    {showHideColumns && (
+                        <Grid item>
+                            <TableColumnsPanel instance={instance} />
+                        </Grid>
+                    )}
+                    {showAdvancedFilter && (
+                        <Grid item>
+                            <FilterPanel instance={instance} />
+                        </Grid>
+                    )}
                 </Grid>
             ) : null}
+        </>
+    );
+
+    const renderDrawerHeaderContents = (
+        <>
+            <Grid item>
+                <h3>
+                    Filter or modify table: <em>{title}</em>{" "}
+                </h3>
+            </Grid>
         </>
     );
 
     // Render the UI for the table
     return (
         <DefaultBackgroundPanel>
-            <EncapsulatedDrawer
+            <NavigationDrawer
                 navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
-                toggleAnchor="left"
+                toggleAnchor="bottom"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
-                toggleHelp="Show/Hide Filters"
-                //navigationProps={{ color: "primary" }}
+                toggleHelp="Display table summary and advanced filters"
+                toggleText="Summary and Filter"
                 drawerContents={renderDrawerContents}
                 drawerCloseLabel="Close"
+                drawerHeaderContents={title ? renderDrawerHeaderContents : null}
             >
                 <FilterChipBar instance={instance} />
-                <Table className={className} instance={instance} />
-            </EncapsulatedDrawer>
+            </NavigationDrawer>
+
+            <Table className={className} instance={instance} />
         </DefaultBackgroundPanel>
     );
 };

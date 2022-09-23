@@ -1,0 +1,390 @@
+{
+  "paging": { "page": 1, "total_pages": 1 },
+  "result": {
+    "rs438811": [
+      {
+        "alleles": "C>T",
+        "bin_index": "chr19.L1.B1.L2.B2.L3.B1.L4.B2.L5.B2.L6.B1.L7.B1.L8.B2.L9.B2.L10.B2.L11.B1.L12.B2.L13.B1",
+        "annotation": {
+          "ADSP_QC": {
+            "17k": {
+              "info": {
+                "DB": 1.0,
+                "DP": 588858,
+                "FS": 0,
+                "MQ": 59.94,
+                "QD": 18.12,
+                "SOR": 0.698,
+                "MLEAC": 11013,
+                "MLEAF": 0.311,
+                "VQSLOD": 11.01,
+                "culprit": "MQRankSum",
+                "ExcessHet": 0.0001,
+                "MQRankSum": 0,
+                "BaseQRankSum": 0,
+                "ReadPosRankSum": -0.021,
+                "InbreedingCoeff": 0.0309,
+                "POSITIVE_TRAIN_SITE": 1.0
+              },
+              "qual": 5604060.0,
+              "filter": "PASS",
+              "format": "GT"
+            }
+          },
+          "associations": {
+            "NG00039_GRCh38": { "is_gws": 1, "p_value": 0.000000000000341 },
+            "NG00058_GRCh38": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000000000000000000000000000000000000000000000232
+            },
+            "NG00076_GRCh38": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000000000000000000000000000000000000000000000000000000000298
+            },
+            "NG00056_GRCh38_ALL": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+            },
+            "NG00073_GRCh38_MEM": { "is_gws": 1, "p_value": 0 },
+            "NG00073_GRCh38_MIX": { "is_gws": 0, "p_value": 0.0000231 },
+            "NG00073_GRCh38_VSP": { "is_gws": 1, "p_value": 0.00000000000811 },
+            "NG00055_GRCh38_PTAU": {
+              "is_gws": 1,
+              "p_value": 0.00000000000000956
+            },
+            "NG00073_GRCh38_LANG": { "is_gws": 0, "p_value": 0.00000379 },
+            "NG00073_GRCh38_NONE": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000000493
+            },
+            "NG00115_GRCh38_MALE": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000000000000000000000000000000000000000000000000001
+            },
+            "NG00115_GRCh38_FEMALE": {
+              "is_gws": 1,
+              "p_value": 0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000441
+            },
+            "NG00056_GRCh38_APOE_E4": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000196
+            },
+            "NG00056_GRCh38_NON_APOE_E4": { "is_gws": 0, "p_value": 0.0000232 },
+            "NG00056_GRCh38_ALL_APOE_ADJ": {
+              "is_gws": 1,
+              "p_value": 0.0000000000000000000000000000129
+            }
+          },
+          "mapped_coordinates": {
+            "assembly": "GRCh37",
+            "location": 45416741,
+            "chromosome": "19",
+            "matched_variants": ["19:45416741:C:T_rs438811"]
+          },
+          "ranked_consequences": {
+            "transcript_consequences": [
+              {
+                "exon": "1/1",
+                "rank": 292,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "biotype": "TEC",
+                "gene_id": "ENSG00000280087",
+                "cdna_end": 4110,
+                "canonical": 1,
+                "cdna_start": 4110,
+                "gene_symbol": "AC011481.3",
+                "transcript_id": "ENST00000623895",
+                "variant_allele": "T",
+                "consequence_terms": ["non_coding_transcript_exon_variant"],
+                "gene_symbol_source": "Clone_based_ensembl_gene",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 6
+              },
+              {
+                "tsl": 3,
+                "rank": 293,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "trembl": ["K7ELM9.43"],
+                "biotype": "protein_coding",
+                "gene_id": "ENSG00000130208",
+                "hgnc_id": "HGNC:607",
+                "uniparc": ["UPI0002840C14"],
+                "distance": 1385,
+                "protein_id": "ENSP00000466146",
+                "gene_symbol": "APOC1",
+                "tssdistance": 1385,
+                "transcript_id": "ENST00000586638",
+                "variant_allele": "T",
+                "consequence_terms": ["upstream_gene_variant"],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 1
+              },
+              {
+                "tsl": 1,
+                "ccds": "CCDS12648.1",
+                "rank": 293,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "trembl": ["A0A024R0T8.31"],
+                "biotype": "protein_coding",
+                "gene_id": "ENSG00000130208",
+                "hgnc_id": "HGNC:607",
+                "uniparc": ["UPI0000125C19"],
+                "distance": 763,
+                "swissprot": ["P02654.191"],
+                "protein_id": "ENSP00000465356",
+                "gene_symbol": "APOC1",
+                "tssdistance": 763,
+                "transcript_id": "ENST00000588750",
+                "variant_allele": "T",
+                "consequence_terms": ["upstream_gene_variant"],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 2
+              },
+              {
+                "tsl": 1,
+                "ccds": "CCDS12648.1",
+                "rank": 293,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "trembl": ["A0A024R0T8.31"],
+                "biotype": "protein_coding",
+                "gene_id": "ENSG00000130208",
+                "hgnc_id": "HGNC:607",
+                "uniparc": ["UPI0000125C19"],
+                "distance": 841,
+                "swissprot": ["P02654.191"],
+                "protein_id": "ENSP00000468029",
+                "gene_symbol": "APOC1",
+                "tssdistance": 841,
+                "transcript_id": "ENST00000588802",
+                "variant_allele": "T",
+                "consequence_terms": ["upstream_gene_variant"],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 3
+              },
+              {
+                "tsl": 3,
+                "rank": 293,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "trembl": ["K7EPR9.24"],
+                "biotype": "protein_coding",
+                "gene_id": "ENSG00000130208",
+                "hgnc_id": "HGNC:607",
+                "uniparc": ["UPI0002840C11"],
+                "distance": 1226,
+                "protein_id": "ENSP00000467504",
+                "gene_symbol": "APOC1",
+                "tssdistance": 1226,
+                "transcript_id": "ENST00000589781",
+                "variant_allele": "T",
+                "consequence_terms": ["upstream_gene_variant"],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 4
+              },
+              {
+                "tsl": 3,
+                "rank": 293,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "trembl": ["K7EPF9.43"],
+                "biotype": "protein_coding",
+                "gene_id": "ENSG00000130208",
+                "hgnc_id": "HGNC:607",
+                "uniparc": ["UPI0002840C10"],
+                "distance": 1219,
+                "canonical": 1,
+                "protein_id": "ENSP00000467368",
+                "gene_symbol": "APOC1",
+                "tssdistance": 1219,
+                "transcript_id": "ENST00000592885",
+                "variant_allele": "T",
+                "consequence_terms": ["upstream_gene_variant"],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 5
+              },
+              {
+                "tsl": 1,
+                "ccds": "CCDS12647.1",
+                "rank": 294,
+                "impact": "MODIFIER",
+                "strand": 1,
+                "trembl": ["A0A0S2Z3D5.29"],
+                "biotype": "protein_coding",
+                "gene_id": "ENSG00000130203",
+                "hgnc_id": "HGNC:613",
+                "uniparc": ["UPI0000044948"],
+                "distance": 4091,
+                "canonical": 1,
+                "swissprot": ["P02649.252"],
+                "gene_pheno": 1,
+                "protein_id": "ENSP00000252486",
+                "gene_symbol": "APOE",
+                "transcript_id": "ENST00000252486",
+                "variant_allele": "T",
+                "consequence_terms": ["downstream_gene_variant"],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 0
+              }
+            ]
+          },
+          "most_severe_consequence": {
+            "exon": "1/1",
+            "rank": 292,
+            "impact": "MODIFIER",
+            "strand": 1,
+            "biotype": "TEC",
+            "gene_id": "ENSG00000280087",
+            "cdna_end": 4110,
+            "canonical": 1,
+            "cdna_start": 4110,
+            "gene_symbol": "AC011481.3",
+            "transcript_id": "ENST00000623895",
+            "variant_allele": "T",
+            "consequence_terms": ["non_coding_transcript_exon_variant"],
+            "gene_symbol_source": "Clone_based_ensembl_gene",
+            "consequence_is_coding": false,
+            "vep_consequence_order_num": 6
+          }
+        },
+        "metaseq_id": "19:44913484:C:T",
+        "ref_snp_id": "rs438811",
+        "variant_class": "SNV",
+        "is_adsp_variant": true,
+        "record_primary_key": "19:44913484:C:T:rs438811"
+      }
+    ],
+    "rs10189885": [
+      {
+        "alleles": "A>G",
+        "bin_index": "chr2.L1.B2.L2.B1.L3.B1.L4.B2.L5.B1.L6.B1.L7.B2.L8.B2.L9.B1.L10.B2.L11.B1.L12.B1.L13.B2",
+        "annotation": {
+          "ADSP_QC": {
+            "17k": {
+              "info": {
+                "DB": 1.0,
+                "DP": 662598,
+                "FS": 2.482,
+                "MQ": 59,
+                "QD": 16.73,
+                "SOR": 0.526,
+                "MLEAC": 9980,
+                "MLEAF": 0.282,
+                "VQSLOD": -0.2507,
+                "culprit": "MQ",
+                "ExcessHet": 0.2609,
+                "MQRankSum": 1.29,
+                "BaseQRankSum": 0,
+                "ReadPosRankSum": 0.231,
+                "InbreedingCoeff": 0.011,
+                "NEGATIVE_TRAIN_SITE": 1.0
+              },
+              "qual": 5243140.0,
+              "filter": "PASS",
+              "format": "GT"
+            }
+          },
+          "associations": null,
+          "mapped_coordinates": null,
+          "ranked_consequences": {
+            "transcript_consequences": [
+              {
+                "rank": 286,
+                "impact": "MODIFIER",
+                "intron": "1/6",
+                "strand": 1,
+                "biotype": "processed_transcript",
+                "gene_id": "ENSG00000163016",
+                "hgnc_id": "HGNC:29586",
+                "canonical": 1,
+                "gene_symbol": "ALMS1P1",
+                "transcript_id": "ENST00000652439",
+                "variant_allele": "G",
+                "consequence_terms": [
+                  "intron_variant",
+                  "non_coding_transcript_variant"
+                ],
+                "gene_symbol_source": "HGNC",
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 0
+              }
+            ]
+          },
+          "most_severe_consequence": {
+            "rank": 286,
+            "impact": "MODIFIER",
+            "intron": "1/6",
+            "strand": 1,
+            "biotype": "processed_transcript",
+            "gene_id": "ENSG00000163016",
+            "hgnc_id": "HGNC:29586",
+            "canonical": 1,
+            "gene_symbol": "ALMS1P1",
+            "transcript_id": "ENST00000652439",
+            "variant_allele": "G",
+            "consequence_terms": [
+              "intron_variant",
+              "non_coding_transcript_variant"
+            ],
+            "gene_symbol_source": "HGNC",
+            "consequence_is_coding": false,
+            "vep_consequence_order_num": 0
+          }
+        },
+        "metaseq_id": "2:73649928:A:G",
+        "ref_snp_id": "rs10189885",
+        "variant_class": "SNV",
+        "is_adsp_variant": true,
+        "record_primary_key": "2:73649928:A:G:rs10189885"
+      }
+    ],
+    "6:421281:G:T": [
+      {
+        "alleles": "G>T",
+        "bin_index": "chr6.L1.B1.L2.B1.L3.B1.L4.B1.L5.B1.L6.B1.L7.B1.L8.B1.L9.B2.L10.B2.L11.B1.L12.B2.L13.B1",
+        "annotation": {
+          "ADSP_QC": null,
+          "associations": null,
+          "mapped_coordinates": null,
+          "ranked_consequences": {
+            "intergenic_consequences": [
+              {
+                "rank": 298,
+                "impact": "MODIFIER",
+                "variant_allele": "T",
+                "consequence_terms": ["intergenic_variant"],
+                "consequence_is_coding": false,
+                "vep_consequence_order_num": 1
+              }
+            ]
+          },
+          "most_severe_consequence": {
+            "rank": 298,
+            "impact": "MODIFIER",
+            "variant_allele": "T",
+            "consequence_terms": ["intergenic_variant"],
+            "consequence_is_coding": false,
+            "vep_consequence_order_num": 1
+          }
+        },
+        "match_rank": 1,
+        "match_type": "exact",
+        "metaseq_id": "6:421281:G:T",
+        "ref_snp_id": "rs62389423",
+        "variant_class": "SNV",
+        "is_adsp_variant": false,
+        "record_primary_key": "6:421281:G:T:rs62389423"
+      }
+    ]
+  },
+  "unmapped_variants": null
+}

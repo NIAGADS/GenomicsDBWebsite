@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { connect } from "react-redux";
 import { get } from "lodash";
 
 import Grid from "@material-ui/core/Grid";
@@ -10,13 +9,14 @@ import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { withStyles } from "@material-ui/core";
 
 import { useWdkService } from "wdk-client/Hooks/WdkServiceHook";
 import { LoadingOverlay } from "wdk-client/Components";
 
 import { UnlabeledTextField } from "@components/MaterialUI";
-import LZPlot from "./LZPlot";
+import { LocusZoomPlot } from "@viz/LocusZoom";
 
 interface GWASDatasetLZPlotProps {
     dataset: string;
@@ -32,12 +32,13 @@ interface TopHit {
     ld_reference_variant: string;
 }
 
-const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
+export const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
     const [population, setPopulation] = useState<string>("EUR"),
         [topHits, setTopHits] = useState<TopHit[]>(),
-        [refVariant, setRefVariant] = useState<string>(),
+        [variant, setVariant] = useState<string>(),
         [chromosome, setChromosome] = useState<string>(),
-        [range, setRange] = useState<{ start: number; end: number }>();
+        [range, setRange] = useState<{ start: number; end: number }>(),
+        [loading, setLoading] = useState(true);
 
     const populationChoices = [
         { EUR: "EUR: European" },
@@ -51,9 +52,15 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
 
     const loadTopHit = (hit: TopHit) => {
         setRange({ start: hit.start, end: hit.end });
-        setRefVariant(hit.ld_reference_variant);
+        setVariant(hit.ld_reference_variant);
         setChromosome(hit.chromosome);
+        setLoading(false);
     };
+
+    /* useEffect(() => {
+        if (topHits) {setLoading(false)};
+    }, []); */
+
 
     useWdkService(
         (service) =>
@@ -64,8 +71,9 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
         []
     );
 
-    return chromosome && refVariant && range ? (
-        <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+    return (!loading && topHits) ? (
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+            {console.log(loading)}
             {/* outer */}
             <Grid container item direction="column" xs={3}>
                 {/* left col -- selectors */}
@@ -92,35 +100,28 @@ const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset }) => {
                     {/* bottom row - top hits selector */}
                     <Typography>Top Hits</Typography>
                     <List style={{ maxHeight: 350, minWidth: 150, overflow: "auto" }}>
-                        {(topHits || []).map((t) => (
-                            //@ts-ignore
-                            <TopHitListItem key={t.ld_reference_variant}>
-                                <Button variant="text" onClick={() => loadTopHit(t)}>{t.hit}</Button>
-                            </TopHitListItem>
+                        {(topHits || []).map((t:TopHit) => (
+                            <ListItem key={`${t.ld_reference_variant}_item`} style={{paddingTop: 0, paddingLeft: 0 }}>
+                                <Button key={`${t.ld_reference_variant}_button`}variant="text" onClick={() => loadTopHit(t)}>
+                                    {t.hit}
+                                </Button>
+                            </ListItem>
                         ))}
                     </List>
                 </Grid>
             </Grid>
             <Grid item>
                 {/* right col - plot */}
-                <LZPlot
-                    chromosome={chromosome}
-                    end={get(range, "end")}
+                <LocusZoomPlot
                     population={population}
-                    refVariant={refVariant}
+                    variant={variant}
                     selectClass={selectClass.current}
-                    start={get(range, "start")}
                     track={dataset}
                 />
             </Grid>
         </Grid>
     ) : (
-        <LoadingOverlay />
+       <CircularProgress color="secondary"/> 
     );
 };
 
-const TopHitListItem = withStyles({ root: { paddingTop: 0, paddingLeft: 0 } })(ListItem);
-
-export default connect((state: any) => ({
-    endpoint: state.globalData.siteConfig.endpoint,
-}))(GWASDatasetLZPlot);

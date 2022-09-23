@@ -18,6 +18,7 @@ export const extractDisplayText = (value: any): any => {
         : "";
 };
 
+/*
 export const flagColumnSort = useMemo(
     () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
         const a = rowA.values[id] ? true : false,
@@ -129,5 +130,5 @@ export const defaultColumnSort = useMemo(
     },
     []
 );
-
+*/
 

@@ -32,6 +32,7 @@ export interface DatasetRecord {
     date: string;
     attribution: string;
     tracks: string[];
+    genomeBuild?: string;
 }
 
 interface CardProps {
@@ -44,7 +45,8 @@ export const DatasetCard: React.FC<CardProps & PanelProps> = (props) => {
     const { title, description, accession, date, attribution, tracks } = props.dataset;
 
     const img = props.webAppUrl + "/images/manhattan/" + accession + "/png/" + tracks[0] + "-manhattan.png";
-    const url = props.webAppUrl + "/app/record/accession/" + accession;
+    const track = props.webAppUrl === "/genomics" && !tracks[0].includes('GRCh38') ? tracks[0].replace('_', '_GRCh38_') : tracks[0];
+    const url = props.webAppUrl + "/app/record/track/" + track; 
     return (
         <Card className={classes.root}>
             <CardActionArea>

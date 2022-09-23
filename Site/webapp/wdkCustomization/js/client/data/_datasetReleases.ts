@@ -4,7 +4,28 @@
 export const _currentRelease = "2021-06-01";
 export const _datasetReleases = [
     {
+        date: "2022-07-01",
+        genomeBuild: "GRCh38",
+        title: "Genetic architecture of AD and differential effect between sexes",
+        tracks: ["NG00115_GRCh38_FEMALE", "NG00115_GRCh38_MALE"],
+        accession: "NG00115",
+        attribution: "Wang et al. 2021",
+        description:
+            "Sex-stratified GWAS using AGDC samples with European ancestry. Subjects with individual-pairwise genetic relationship matrix (GRM) > 0.1 were excluded..."
+    },
+    {
         date: "2021-06-01",
+        genomeBuild: "both",
+        title: "IGAP Rare Variants",
+        tracks: ["NG00075_STAGE1", "NG00075_STAGE2"],
+        accession: "NG00075",
+        attribution: "Kunkle et al. 2019",
+        description:
+            "The International Genomics of Alzheimer's Project (IGAP) is a large three-stage study based upon genome-wide association studies (GWAS) on individuals...",
+    },
+    {
+        date: "2021-06-01",
+        genomeBuild: "both",
         title: "Cognitively defined late-onset Alzheimer\u2019s disease subgroups",
         tracks: ["NG00073_MEM", "NG00073_VSP", "NG00073_LANG", "NG00073_NONE", "NG00073_MIX"],
         accession: "NG00073",
@@ -14,21 +35,13 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
+        genomeBuild: "GRCh37",
         title: "Informed conditioning on African American LOAD genetic risk",
         tracks: ["NG00088"],
         accession: "NG00088",
         attribution: "Mez et al. 2017",
         description:
             "Summary statistics from a genome\u2010wide association study (GWAS) in African Americans employing informed conditioning in 1825 LOAD cases and 3784 cognit...",
-    },
-    {
-        date: "2021-06-01",
-        title: "IGAP Rare Variants",
-        tracks: ["NG00075_STAGE1", "NG00075_STAGE2"],
-        accession: "NG00075",
-        attribution: "Kunkle et al. 2019",
-        description:
-            "The International Genomics of Alzheimer's Project (IGAP) is a large three-stage study based upon genome-wide association studies (GWAS) on individuals...",
     },
     {
         date: "2021-06-01",

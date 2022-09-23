@@ -14,6 +14,12 @@ export const useTableStyles = makeStyles((theme: Theme) =>
         pagination: {
             fontFamily: "Roboto"
         },
+        tableHead: {
+            backgroundColor: "#edeeef" 
+        },
+        tableBody: {
+            backgroundColor: "#fbfbfb"
+        },
         tableHeadCell: {
             fontSize: theme.typography.pxToRem(14),
             padding: theme.spacing(2),
@@ -77,5 +83,8 @@ export const useTableStyles = makeStyles((theme: Theme) =>
                 borderRight: "none",
             },
         },
+        tableSortLabel: {
+            opacity: 1.0
+        }
     })
 );

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+    <querySet name="GwasDatasetTables" queryType="table" isCacheable="false">
+
+        <defaultTestParamValues>
+            <paramValue name="dataset_id">NG00027</paramValue>
+        </defaultTestParamValues>
+
+        <testRowCountSql>
+      select count(*) from NIAGADS.ResourceAttributes
+        </testRowCountSql>
+
+
+        <!-- =============================================================== -->
+        <!-- Basic Attributes -->
+        <!-- =============================================================== -->
+
+        <sqlQuery name="Phenotypes">
+            <column name="track"/>
+            <column name="project_id"/>
+            <column name="phenotype_category"/>
+            <column name="phenotype"/>
+            <sql>
+                <![CDATA[
+                WITH dataset AS (##WDK_ID_SQL##),
+                chars AS (
+                SELECT dataset.track, '@PROJECT_ID@'::text AS project_id,
+                string_agg(characteristic,', ') FILTER (WHERE characteristic_type = 'diagnosis') AS diagnosis,
+                string_agg(characteristic, ',') FILTER (WHERE characteristic_type ='population') AS population,
+                string_agg(characteristic, ',') FILTER (WHERE characteristic_type = 'neuropathology') AS neuropathology,
+                string_agg(characteristic, ',') FILTER (WHERE characteristic_type = 'APOE carrier status') AS apoe_carrier_status,
+                string_agg(characteristic, ',') FILTER (WHERE characteristic_type = 'biomarker') AS biomarker,
+                string_agg(characteristic, ',') FILTER (WHERE characteristic_type = 'covariate specification') AS covariate,
+                string_agg(characteristic, ',') FILTER (WHERE characteristic_type = 'tissue') AS tissue
+                FROM NIAGADS.ProtocolAppNodeCharacteristic c,
+                Study.ProtocolAppNode pan, dataset
+                WHERE pan.protocol_app_node_id = c.protocol_app_node_id
+                AND pan.source_id = dataset.track
+                GROUP BY dataset.track, project_id)
+                SELECT track, project_id, 'Population' AS phenotype_category, population AS phenotype FROM chars WHERE population IS NOT NULL 
+                UNION
+                SELECT track, project_id, 'Diagnosis' AS phenotype_category, diagnosis AS phenotype FROM chars WHERE diagnosis IS NOT NULL
+                UNION
+                SELECT track, project_id, 'Neuropathology' AS phenotype_category, neuropathology AS phenotype FROM chars WHERE neuropathology IS NOT NULL
+                UNION 
+                SELECT track, project_id, 'APOE carrier status' AS phenotype_category, apoe_carrier_status AS phenotype FROM chars WHERE apoe_carrier_status IS NOT NULL
+                UNION
+                SELECT track, project_id, 'Biomarker' AS phenotype_category, biomarker AS phenotype FROM chars WHERE biomarker IS NOT NULL
+                UNION
+                SELECT track, project_id, 'Tissue' AS phenotype_category, tissue AS phenotype FROM chars WHERE tissue IS NOT NULL
+                UNION
+                SELECT track, project_id, 'Covariates' AS phenotype_category, covariate AS phenotype FROM chars WHERE covariate IS NOT NULL
+        ]]>
+            </sql>
+        </sqlQuery>
+
+        <sqlQuery name="TopVariants">
+            <column name="track"/>
+            <column name="project_id"/>
+            <column name="variant_link"/>
+            <column name="ref_snp_id" />
+            <column name="adsp_variant_flag" />
+            <column name="most_severe_consequence"/>
+            <column name="msc_impact" />
+            <column name="msc_is_coding_flag" />
+            <column name="msc_impacted_gene_link" />
+            <column name="pvalue" />
+            <sql>
+                <![CDATA[
+                        SELECT track
+                        , '@PROJECT_ID@'::text AS project_id
+			, record_link('variant', variant_record_primary_key, metaseq_id, TRUE) AS variant_link
+                        , ref_snp_id
+                        , adsp_variant_flag(is_adsp_variant) AS adsp_variant_flag
+			, consequence_terms(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS most_severe_consequence
+			, annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'impact' AS msc_impact
+                        , msc_impacted_gene_link(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_impacted_gene_link
+                        , msc_is_coding_flag(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_is_coding_flag
+                        , neg_log10_pvalue
+                        , pvalue_display AS pvalue
+                        FROM 
+                        NIAGADS.VariantGWASTopHits
+                        ORDER BY neg_log10_pvalue DESC
+                    ]]>
+            </sql>
+        </sqlQuery>
+    </querySet>
+
+
+
+</wdkModel>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+	<querySet name="GeneIds" queryType="id" isCacheable="true">
+
+		<!-- =============================================================== -->
+		<!-- By Identifier -->
+		<!-- =============================================================== -->
+		<sqlQuery name="Identifier">
+			<paramRef ref="geneParams.generic_gene_identifier"/>
+			<column name="source_id"/>
+			<column name="project_id"/>
+			<sql>
+				<![CDATA[
+					SELECT ga.source_id
+						FROM CBIL.GeneAttributes ga
+						WHERE ga.gene_symbol = UPPER($$generic_gene_identifier$$)
+						OR UPPER($$generic_gene_identifier$$) = ANY (STRING_TO_ARRAY(UPPER(ga.annotation->>'alias_symbol'), '|'))
+						OR UPPER($$generic_gene_identifier$$) = ANY (STRING_TO_ARRAY(UPPER(ga.annotation->>'prev_symbol'), '|'))
+						OR ga.annotation->>'entrez_id' = $$generic_gene_identifier$$
+						OR ga.source_id = $$generic_gene_identifier$$
+				]]>
+			</sql>
+		</sqlQuery>
+
+
+		<sqlQuery name="Upload">
+			<paramRef ref="geneParams.ds_gene_identifiers"/>
+			<column name="source_id"/>
+			<column name="project_id"/>
+			<sql>
+				<![CDATA[
+					WITH ids AS (
+							SELECT UPPER(source_id) AS identifier
+							FROM ($$ds_gene_identifiers$$) ds
+					)
+					SELECT DISTINCT ga.source_id
+					, '@PROJECT_ID@'::text AS project_id
+					FROM CBIL.GeneAttributes ga
+					, ids
+					WHERE ga.gene_symbol = ids.identifier
+					OR ids.identifier = ANY (STRING_TO_ARRAY(UPPER(ga.annotation->>'alias_symbol'), '|'))
+					OR ids.identifier = ANY (STRING_TO_ARRAY(UPPER(ga.annotation->>'prev_symbol'), '|'))
+					OR ga.annotation->>'entrez_id' = ids.identifier
+					OR ga.source_id = ids.identifier
+				]]>
+			</sql>
+		</sqlQuery>
+
+		<!-- =============================================================== -->
+		<!-- Annotation -->
+		<!-- =============================================================== -->
+		<!--   <sqlQuery name="GenesByGoTerm">
+			<paramRef ref="geneParams.go_typeahead"/>
+			<column name="source_id"/>
+			<column name="project_id"/>
+			<sql>
+				<![CDATA[
+					SELECT ga.source_id,
+					'@PROJECT_ID@'::text AS project_id
+					FROM SRes.Pathway p,
+					SRes.PathwayNode pn,
+					CBIL.GeneAttributes ga
+					WHERE ga.gene_id = pn.row_id
+					AND pn.pathway_id = p.pathway_id
+					AND p.source_id = $$pathway$$
+        		]]>
+			</sql>
+		</sqlQuery> -->
+
+		<!-- <sqlQuery name="GenesByPathway">
+			<paramRef ref="geneParams.pathway_typeahead"/>
+			<column name="source_id"/>
+			<column name="project_id"/>
+			<column name="pathways"/>
+			<sql>
+				<![CDATA[
+		 SELECT gene_source_id AS source_id
+		 , '@PROJECT_ID@'::text AS project_id
+		 , string_agg(pathway_name || ' (path:' || pathway_source_id || ')', '//') AS pathways
+		 FROM NIAGADS.GenePathway 
+		 WHERE upper(pathway_name) SIMILAR TO upper(replace(array_to_string(ARRAY [$$pathway_typeahead$$], '|'), '*', '%'))
+		 OR upper(pathway_source_id) SIMILAR TO upper(replace(array_to_string(ARRAY [$$pathway_typeahead$$], '|'), '*', '%'))
+		 GROUP BY gene_source_id, project_id
+        ]]>
+			</sql>
+		</sqlQuery> -->
+
+	
+
+		<!-- =============================================================== -->
+		<!-- ADSP Risk Association-->
+		<!-- =============================================================== -->
+
+			<!-- <paramRef ref="geneParams.gene_risk_accession"/>
+			<paramRef ref="geneParams.p_value"/>
+			<paramRef ref="geneParams.experiment_population"/>
+			<paramRef ref="geneParams.experiment_filter"/> -->
+
+		<sqlQuery name="GeneRisk">
+		
+
+			<column name="source_id"/>
+			<column name="project_id"/>
+			<column name="accession"/>
+			<column name="population"/>
+			<column name="covariates"/>
+			<column name="filter_function"/>
+			<column name="p_value"/>
+			<column name="p_value_display" sortingColumn="p_value_display"/>
+			<column name="rho" />
+			<column name="cumulative_maf" />
+			<column name="cumulative_mac" />
+			<column name="cumulative_maf_display" sortingColumn="cumulative_maf"/>
+			<column name="num_snps"/>
+			<column name="caveat_display"/>
+			<column name="caveat"/>
+			<sql>
+				<![CDATA[
+ ]]>
+			</sql>
+		</sqlQuery>
+
+		<!-- =============================================================== -->
+		<!-- Transforms -->
+		<!-- =============================================================== -->
+	
+		<sqlQuery name="FromVariants">
+			<paramRef ref="variantParams.variant_answer"/>
+			<paramRef ref="variantParams.flanking"/>
+			
+			<column name="source_id"/>
+			<column name="project_id"/>		
+			<column name="wdk_weight"/>	
+			<column name="relative_location"/>	
+			<column name="distance"/>	
+			<column name="matched_variant"/>	
+			<sql>
+			<![CDATA[
+					WITH Results AS ($$variant_answer$$),
+					Overlap AS (
+					SELECT ga.source_id,
+					ga.gene_symbol, 
+					v.record_pk AS variant,
+					r.wdk_weight,
+					CASE WHEN v.position < ga.location_start THEN 'upstream' 
+					WHEN v.position > ga.location_end THEN 'downstream'
+					ELSE 'in gene' END AS relative_position,
+					abs(ga.location_start - v.position)  AS distance
+					FROM NIAGADS.Variant v, results r, CBIL.GeneAttributes ga
+					WHERE r.variant_id = v.variant_id
+					AND ga.chromosome = v.chromosome
+					AND find_bin_index(ga.chromosome, ga.location_start - $$flanking$$, ga.location_end - $$flanking$$)  @> v.bin_index
+					AND numrange(ga.location_start - $$flanking$$, ga.location_end + $$flanking$$, '[]') @> v.position::numeric)
+					SELECT source_id, 
+					wdk_weight,
+					string_agg(relative_position, '//') AS relative_position,
+					string_agg(distance::text, '//') AS distance,
+					string_agg(variant, '//') AS matched_variants
+					FROM Overlap
+					GROUP BY source_id
+					]]>
+			</sql>
+		</sqlQuery>
+	</querySet>
+</wdkModel>

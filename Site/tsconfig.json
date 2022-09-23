@@ -10,6 +10,7 @@
       "@components/*": ["GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/components/*"],
       "@viz/*": ["GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/components/Visualizations/*"],
       "@images/*" : ["GenomicsDBWebsite/Site/webapp/images/*"],
+      "@routes/*" : ["GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/components/Routes/*"],
       "@sass/*" : ["GenomicsDBWebsite/Site/webapp/wdkCustomization/sass/*"],
       "*": [
         "WDKClient/Client/node_modules/*",
