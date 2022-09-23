@@ -3,7 +3,7 @@ import { StepAnalysisDefaultResult } from "wdk-client/Plugins";
 import DefaultQuestionForm from "wdk-client/Views/Question/DefaultQuestionForm";
 
 import { StepAnalysisGoEnrichmentResults } from "./components/StepAnalysis/StepAnalysisGoEnrichmentResults";
-import HistogramIdeogramView from "./components/SummaryViews/VariantGenomeView";
+//import HistogramIdeogramView from "./components/SummaryViews/VariantGenomeView";
 
 export default [
     /* {
@@ -21,11 +21,11 @@ export default [
         type: "questionForm",
         component: DefaultQuestionForm,
     },
-    {
+   /* {
         type: "summaryView",
         name: "variant-histogram-ideogram",
         component: HistogramIdeogramView,
-    },
+    },*/
 
     {
         type: "stepAnalysisResult",

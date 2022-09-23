@@ -11,7 +11,7 @@
 # --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_externalUrls.ts.
 # The updated model.prop.sample & externalUrls.ts can then be committed to the repository
 
-SITE_ADMIN_EMAIL=
+SITE_ADMIN_EMAIL=@SITE_ADMIN_EMAIL@
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
 
 #----------------------------------------------------------
@@ -25,11 +25,8 @@ WDK_VERSION=API_BUILD_50
 # Production v Dev / Beta
 #----------------------------------------------------------
 
-# Base URL: uncomment https://dev.niagads.org for development
-# only one should be uncommented
-NIAGADS_BASE_URL=https://www.niagads.org 
-# NIAGADS_BASE_URL=https://beta.niagads.org
-WEBAPP=genomics
+NIAGADS_BASE_URL=https://www.niagads.org
+WEBAPP=@WEBAPP@
 
 FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
 
@@ -43,11 +40,17 @@ FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
 #dbSNP_VERSION=151
 #ALT_BUILD_LINK=
 
-PROJECT_ID=GRCh38
-GENOME_BUILD=GRCh38.p8
-GENCODE_VERSION=v36
-dbSNP_VERSION=155
-ALT_BUILD_LINK=
+#PROJECT_ID=GRCh38
+#GENOME_BUILD=GRCh38.p8
+#GENCODE_VERSION=v36
+#dbSNP_VERSION=155
+#ALT_BUILD_LINK=
+
+PROJECT_ID=@PROJECT_ID@
+GENOME_BUILD=@GENOME_BUILD@
+GENCODE_VERSION=@GENCODE_VERSION@
+dbSNP_VERSION=@DBSNP_VERSION@
+ALT_BUILD_LINK=@ALT_BUILD_LINK@
 
 #----------------------------------------------------------
 # Constants

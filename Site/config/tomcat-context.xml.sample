@@ -1,0 +1,8 @@
+<Context path="/@WEBAPP@"
+         docBase="/www/genomics/webapp"
+         swallowOutput="true"
+         privileged="false" >
+  <Parameter name="model" value="@MODEL@"/>
+  <Resources allowLinking="true" />
+  <Manager pathname="" />
+</Context>

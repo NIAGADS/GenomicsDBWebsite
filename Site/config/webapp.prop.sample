@@ -1,0 +1,14 @@
+webappTargetDir=/www/genomics/webapp
+confTargetDir=/www/genomics/conf
+htdocsTargetDir=/www/genomics/htdocs
+cgibinTargetDir=/www/genomics/cgi-bin
+cgilibTargetDir=/www/genomics/cgi-lib
+
+# webappCtx: path specified in the tomcat-context.xml file (including initial slash)
+# build: target genome build for the site: GRCh37 or GRCh38
+# googlAnalyticsId: google analytics id if exists, NA otherwise
+# assetPath: path to assests in webapp directory after build
+webappCtx=/@WEBAPP@
+build=@PROJECT_ID@
+googleAnalyticsId=@GOOGLE_ANALYTICS_ID@
+assetPath=bundles/modern
