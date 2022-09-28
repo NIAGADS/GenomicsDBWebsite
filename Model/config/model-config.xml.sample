@@ -39,6 +39,7 @@
         userSchema="userdatastore." />
 
     <accountDb login="@DB_USER@"
+        password="@DB_PASSWORD@"
         connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
         platform="PostgreSQL"
         maxActive="20"
