@@ -18,7 +18,6 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
         button: {
             border: `1px solid ${theme.palette.grey[300]}`,
-            borderRadius: "20%",
             padding: "4.5px",
             "&:hover": {
                 backgroundColor: theme.palette.grey[100],

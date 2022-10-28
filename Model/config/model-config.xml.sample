@@ -11,8 +11,8 @@
     <queryMonitor baseline=".1"
         slow="2" />
 
-    <appDb login="@DB_WEB_USER@"
-        password="@DB_WEB_PASSWORD@"
+    <appDb login="@DB_USER@"
+        password="@DB_PASSWORD@"
         connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
         platform="PostgreSQL"
         maxActive="20"
@@ -25,8 +25,8 @@
         acctDbLink=""
         userDbLink="" />
 
-    <userDb login="@DB_WEB_USER@"
-        password="@DB_WEB_PASSWORD@"
+    <userDb login="@DB_USER@"
+        password="@DB_PASSWORD@"
         connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
         platform="PostgreSQL"
         maxActive="20"
@@ -38,8 +38,8 @@
         showConnectionsDuration="600"
         userSchema="userdatastore." />
 
-    <accountDb login="@DB_WEB_USER@"
-        password="@DB_WEB_PASSWORD@"
+    <accountDb login="@DB_USER@"
+        password="@DB_PASSWORD@"
         connectionUrl="jdbc:postgresql://@DB_HOST@:@DB_PORT@/@DB_NAME@"
         platform="PostgreSQL"
         maxActive="20"
