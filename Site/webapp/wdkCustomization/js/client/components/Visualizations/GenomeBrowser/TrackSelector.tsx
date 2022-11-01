@@ -29,7 +29,7 @@ import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/s
 
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
 
-import { TrackTable, tracksToTrackConfigs, NiagadsBrowserTrackConfig, IgvTrackConfig } from "@viz/GenomeBrowser";
+import { TrackTable, tracksToTrackConfigs, BrowserTrackConfig, IgvTrackConfig } from "@viz/GenomeBrowser";
 
 
 const useBrowserStyles = makeStyles((theme: Theme) =>
@@ -75,7 +75,7 @@ interface TrackSelectorProps {
     loadingTrack: string;
     isOpen: boolean;
     toggleTracks: (t: IgvTrackConfig[], b:any) => void;
-    trackList: NiagadsBrowserTrackConfig[];
+    trackList: BrowserTrackConfig[];
     browser: any;
 }
 
@@ -92,7 +92,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
         [dataSources, setDataSources] = useState<string[]>([]),
         [sequenceFeatureTypes, setSequenceFeatureTypes] = useState<string[]>([]),
         [trackTypes, setTrackTypes] = useState<string[]>([]),
-        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
+        [trackList, setTrackList] = useState<BrowserTrackConfig[]>([]),
         classes = useBrowserStyles(),
         dataSourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
         sequenceFeatureTypeList = useMemo(() => unique((_trackList || []).map((t) => t.featureType)), [_trackList]),

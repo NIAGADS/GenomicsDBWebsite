@@ -1,4 +1,4 @@
-export interface NiagadsBaseTrackConfig {
+export interface Track {
     description?: string; //for browser
     format?: string; //bed, etc
     label: string; // for track popover
@@ -6,7 +6,7 @@ export interface NiagadsBaseTrackConfig {
     source: string; //for display in track browser
 }
 
-export interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
+export interface ServiceTrack extends Track {
     endpoint?: string; //for async tracks only
     feature_type: string; //gene, variant, enhancer, etc., for categorizing
     path?: string; //for filer -- can pass in as url
@@ -17,7 +17,7 @@ export interface NiagadsRawTrackConfig extends NiagadsBaseTrackConfig {
     visibilityWindow?: number;
 }
 
-export interface NiagadsBrowserTrackConfig extends NiagadsBaseTrackConfig {
+export interface TrackConfig extends Track {
     featureType: string;
     phenotypes: string;
     reader?: any;
@@ -43,3 +43,27 @@ export interface IgvTrackConfig {
     supportsWholeGenome: boolean;
     removable?: boolean;
 }
+
+export const generateTrackConfig = (track: ServiceTrack): TrackConfig => {
+    const { endpoint, feature_type, path, phenotypes, track_type, track_type_display, ...rest } = track,
+        config = rest as unknown as TrackConfig;
+
+    if (track.endpoint) {
+        config.url = `${track.endpoint}?track=${track.track}`;
+    }
+
+    if (track.path) {
+        config.url = track.path;
+    }
+
+    config.trackType = track.track_type;
+    config.trackTypeDisplay = track.track_type_display;
+    config.featureType = track.feature_type;
+
+    config.phenotypes = (phenotypes || []).reduce(
+        (a, c) => a + "\n" + Object.keys(c)[0].toUpperCase() + " : " + Object.values(c)[0],
+        ""
+    );
+
+    return config;
+};
