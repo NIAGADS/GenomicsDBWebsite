@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
-import { noop, merge } from "lodash";
+import { noop, merge, get } from "lodash";
 import { GWASTrack, VariantTrack, GWASServiceReader } from "../../../../lib/igv/CustomTracks";
-
+import { TrackConfig } from "@viz/GenomeBrowser";
 
 const HASH_PREFIX = "#/locus/";
 
@@ -14,6 +14,18 @@ interface GenomeBrowser {
     locus?: string;
     onBrowserLoad?: (Browser: any) => void;
 }
+
+/* note that id is unreliable, not necessarily passed from config to trackView.track, at least
+ --> todo: make sure to pass into config during conversion */
+export const getLoadedTracks = (browser: any): string[] =>
+    get(browser, "trackViews", []).map((view: any) => view.track.name || view.track.id);
+
+export const trackIsLoaded = (config: TrackConfig, browser: any) => getLoadedTracks(browser).includes(config.name);
+
+export const removeTrack = (config: TrackConfig, browser: any) => {
+    browser.removeTrackByName(config.name);
+};
+
 
 export const GenomeBrowser: React.FC<GenomeBrowser> = ({
     locus,
@@ -56,9 +68,10 @@ export const GenomeBrowser: React.FC<GenomeBrowser> = ({
                 (config: any, browser: any) => new VariantTrack(config, browser)
             );
 
+            onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
        
-      
+        
     },[locus, onBrowserLoad]);
 
     return <span style={{ width: "100%" }} id="genome-browser" />;

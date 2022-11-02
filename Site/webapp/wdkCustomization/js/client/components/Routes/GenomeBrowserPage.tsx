@@ -12,7 +12,19 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { GenomeBrowser, TrackConfig, ServiceTrack, generateTrackConfig } from "@viz/GenomeBrowser";
+import { PrimaryActionButton } from "@components/MaterialUI";
+
+import {
+    GenomeBrowser,
+    TrackSummary,
+    ServiceTrack,
+    generateTrackSummary,
+    getLoadedTracks,
+    removeTrack,
+    trackIsLoaded,
+    TrackSelector,
+    TrackConfig,
+} from "@viz/GenomeBrowser";
 
 import { _genomes } from "../../data/_igvGenomes";
 
@@ -26,13 +38,34 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
-    const [Browser, setBrowser] = useState<any>(),
+    const [browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),
         [loadingTrack, setLoadingTrack] = useState<string>(),
-        [reloadKey, setReloadKey] = useState(makeReloadKey()),
-        [trackList, setTrackList] = useState<TrackConfig[]>(),
-        [options, setOptions] = useState(null),
-        [test, setTest] = useState(false);
+       // [reloadKey, setReloadKey] = useState(makeReloadKey()),
+        [trackList, setTrackList] = useState<TrackSummary[]>(),
+        [options, setOptions] = useState(null);
+
+    const toggleTracks = (config: TrackConfig[], browser: any) => {
+        config.forEach((c) => {
+            trackIsLoaded(c, browser) ? removeTrack(c, browser) : loadTrack(c, browser);
+        });
+    };
+
+    /* const unloadTrack = (config: TrackConfig, browser: any) => {
+        browser.removeTrackByName(config.name);
+        //force react to update based on imperative change // i dont think we need this?
+        setReloadKey(makeReloadKey());
+    }; */
+
+    const buildBrowser = useCallback((b: any) => {
+       setBrowser(b);
+    }, []);
+
+    const loadTrack = async (config: TrackConfig, browser: any) => {
+        setLoadingTrack(config.name);
+        await browser.loadTrack(config);
+        setLoadingTrack(undefined);
+    };
 
     useEffect(() => {
         if (projectId && serviceUrl) {
@@ -56,21 +89,31 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
             options &&
                 service
                     ._fetchJson<ServiceTrack[]>("GET", `/track/config`)
-                    .then((res) => setTrackList(res.map((res) => generateTrackConfig(res))));
+                    .then((res) => setTrackList(res.map((res) => generateTrackSummary(res))));
             //setTrackList(concat(res.map((res) => transformRawNiagadsTrack(res)),
             //merge(options.reference.tracks[0], { featureType: "Gene", source: "NCBI Gene" }))));
         },
         [serviceUrl, options]
     );
+
     return (
         <Box marginTop={4}>
+            <Grid container item xs={12}>
+                {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
+                <Box m="10px">
+                    <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
+                        <LibraryBooksIcon />
+                        Browse Tracks
+                    </PrimaryActionButton>
+                </Box>
+            </Grid>
             {projectId ? (
                 <Grid>
                     {options ? (
                         <MemoBroswer
                             //locus="ABCA"
                             //disableRefTrack={true}
-                            //onBrowserLoad={buildBrowser}
+                            onBrowserLoad={buildBrowser}
                             searchUrl={`${serviceUrl}/track/feature?id=`}
                             serviceUrl={serviceUrl}
                             webAppUrl={webAppUrl}
@@ -83,6 +126,19 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
             ) : (
                 <CircularProgress color="secondary" />
             )}
+            <Grid item xs={12}>
+                {browser ? (
+                    <TrackSelector
+                        activeTracks={getLoadedTracks(browser)}
+                        handleClose={setListVisible.bind(null, false)}
+                        isOpen={listVisible}
+                        loadingTrack={loadingTrack}
+                        toggleTracks={toggleTracks}
+                        trackList={trackList}
+                        browser={browser}
+                    />
+                ) : null}
+            </Grid>
         </Box>
     );
 };

@@ -2,5 +2,6 @@
 //export * from "./IgvBrowserPopUpFactory";
 export * from "./TrackSelector";
 export * from "./TrackTable";
+export * from "./TrackSummary";
 export * from "./TrackConfigurations";
 export * from "./GenomeBrowser";

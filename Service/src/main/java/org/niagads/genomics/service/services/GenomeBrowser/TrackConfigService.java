@@ -34,6 +34,10 @@ public class TrackConfigService extends AbstractWdkService {
     private static final String DATASOURCE_PARAM = "source";
     private static final String GENOME_BUILD = "assembly";
 
+    private static final String GWAS_TRACK_TYPE = "gwas_service";
+    private static final String VARIANT_TRACK_TYPE = "variant_service";
+    private static final String FUNCTIONAL_GENOMICS_TRACK_TYPE = "annotation";
+
     private static final String GENE_TRACK_SQL = "GeneTracks AS (" + NL
         + "SELECT track, 'gene'::text AS track_type, source AS datasource," + NL
         + "jsonb_build_object(" + NL
@@ -55,7 +59,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "'track', track," + NL
         + "'feature_type', feature_type," + NL
         + "'track_type_display', 'Variant Annotation'," + NL
-        + "'track_type', 'niagadsvariant'," + NL
+        + "'track_type', '" + VARIANT_TRACK_TYPE + "'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
         + "'label', label," +  NL
         + "'name', name," +  NL
@@ -84,7 +88,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "'label', ta.name," + NL
         + "'feature_type', 'Variant'," + NL
         + "'track_type_display', 'GWAS Summary Statistics'," + NL
-        + "'track_type', 'niagadsgwas'," + NL
+        + "'track_type', '" + GWAS_TRACK_TYPE + "'," + NL
         + "'endpoint', '@SERVICE_BASE_URI@/track/gwas'," + NL
         + "'source', 'NIAGADS'," + NL
         + "'description', ta.description," + NL
@@ -110,12 +114,12 @@ public class TrackConfigService extends AbstractWdkService {
         + "jsonb_build_object(" + NL
         + "'track', ta.track," + NL
         + "'name',  replace(ta.name,'ChromHMM 15-state model for', 'Roadmap Enhancer:')," + NL
-        + "'track_type', 'annotation'," + NL
+        + "'track_type', '" + FUNCTIONAL_GENOMICS_TRACK_TYPE + "'," + NL
         + "'format', 'bed'," + NL
         + "'feature_type', 'Enhancer'," + NL
         + "'track_type_display', 'Functional Genomics'," + NL
         + "'path', '@FILER_TRACK_URL@' || '/' || pan.uri,"  + NL
-        + "'source', 'ROADMAP|FILER'," + NL
+        + "'source', 'ROADMAP Enhancers'," + NL
         + "'label', replace(ta.name,'ChromHMM 15-state model for', 'Enh:')," + NL
         + "'description', ta.name,"
         + "'phenotypes', json_agg(jsonb_build_object(p.characteristic_type, p.characteristic))) AS track_config" + NL
