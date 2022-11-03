@@ -11,8 +11,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.gusdb.fgputil.db.runner.BasicResultSetHandler;
@@ -33,6 +36,7 @@ public class TrackConfigService extends AbstractWdkService {
     private static final String TRACK_PARAM = "track";
     private static final String DATASOURCE_PARAM = "source";
     private static final String GENOME_BUILD = "assembly";
+    private static final String FIELDS_ONLY_PARAM = "searchFieldsOnly";
 
     private static final String GWAS_TRACK_TYPE = "gwas_service";
     private static final String VARIANT_TRACK_TYPE = "variant_service";
@@ -54,11 +58,11 @@ public class TrackConfigService extends AbstractWdkService {
             + ") AS track_config)";
 
     private static final String VARIANT_TRACK_SQL = "VariantTracks AS (" + NL
-            + "SELECT track, 'variant'::text AS track_type, CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END AS datasource,"
-            + NL
+            + "SELECT track, 'variant'::text AS track_type," + NL
+            + "CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END AS data_source," + NL
             + "jsonb_build_object(" + NL
             + "'track', track," + NL
-            + "'feature_type', feature_type," + NL
+            + "'feature_type', 'variant'," + NL
             + "'track_type_display', 'Variant Annotation'," + NL
             + "'track_type', '" + VARIANT_TRACK_TYPE + "'," + NL
             + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
@@ -69,18 +73,21 @@ public class TrackConfigService extends AbstractWdkService {
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
             + "ORDER BY track)";
 
-    private static final String GWAS_PHENOTYPES_SQL = "SELECT" + NL
-            + "DISTINCT jsonb_object_keys(track_config->'biosample_characteristics')" + NL
-            + " AS characteristic_types FROM NIAGADS.GWASBrowserTracks";
+    private static final String SEARCHABLE_FIELD_SQL = "SELECT" + NL
+        + "JSONB_OBJECT_AGG(category, fields)::text AS result" + NL
+        + "FROM (SELECT category, jsonb_agg(jsonb_build_object(" + NL
+        + "'id', field, 'header', column_name)) AS fields" + NL
+        + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
+        + "GROUP BY category) a";
 
-    private static final String GWAS_TRACK_SQL = "SELECT" + NL
+    private static final String GWAS_TRACK_SQL = "GWASTracks AS (SELECT" + NL
             + "track, track_type, data_source, track_config" + NL
-            + "FROM NIAGADS.GWASBrowserTracks";
+            + "FROM NIAGADS.GWASBrowserTracks)";
 
-    private static final String FUNCTIONAL_GENOMICS_SQL = "SELECT" + NL
+    private static final String FUNCTIONAL_GENOMICS_SQL = "FGTracks AS (SELECT" + NL
             + "track, track_type, data_source, track_config" + NL
-            + "FROM NIAGADS.FILERBrowserTracks" + NL
-            + "WHERE track_type = ?";
+            + "FROM NIAGADS.FILERBrowserTracks)";
+            //+ NL + "WHERE track_type = ?";
 
     enum TrackType {
         // , TFBS, HISTONE_MOD, ENHANCER, EQTL;
@@ -111,12 +118,12 @@ public class TrackConfigService extends AbstractWdkService {
                 return sql;
             }
         },
-        ENHANCER("enhancer") {
+        FUNCTIONAL_GENOMICS("functional_genomics") {
             @Override
             public String getTrackSql() {
                 String sql = "WITH" + NL
-                        + ENHANCER_TRACK_SQL + NL
-                        + "SELECT * FROM EnhancerTracks";
+                    + FUNCTIONAL_GENOMICS_SQL + NL
+                    + "SELECT * FROM FGTracks";
                 return sql;
             }
         },
@@ -126,15 +133,13 @@ public class TrackConfigService extends AbstractWdkService {
                 String sql = "WITH" + NL
                         + VARIANT_TRACK_SQL + ',' + NL
                         + GWAS_TRACK_SQL + ',' + NL
-                // + GENE_TRACK_SQL + ',' + NL
-                        + ENHANCER_TRACK_SQL + NL
+                        + FUNCTIONAL_GENOMICS_SQL + NL
                         + "SELECT * FROM VariantTracks" + NL
                         + "UNION ALL" + NL
-                        + "SELECT * FROM GwasTracks" + NL
-                // + "UNION ALL" + NL
-                // + "SELECT * FROM GeneTracks" + NL
+                        + "SELECT * FROM GwasTracks"  + NL
                         + "UNION ALL" + NL
-                        + "SELECT * FROM EnhancerTracks";
+                        + "SELECT * FROM FGTracks";
+
                 return sql;
             }
         };
@@ -212,32 +217,40 @@ public class TrackConfigService extends AbstractWdkService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.track.config.get-response")
-    public Response buildResponse(String body, @QueryParam(TYPE_PARAM) String trackType,
+    public Response buildResponse(@Context HttpServletRequest request, 
+            String body,
+            @QueryParam(TYPE_PARAM) String trackType,
             @QueryParam(TRACK_PARAM) String tracks, @QueryParam(DATASOURCE_PARAM) String dataSources,
-            @QueryParam(GENOME_BUILD) String assembly) throws WdkModelException {
+            @QueryParam(GENOME_BUILD) String assembly, 
+            @QueryParam(FIELDS_ONLY_PARAM) Boolean fieldsOnly) throws WdkModelException {
 
         LOG.info("Starting 'TrackConfig' Service");
         String response = "{}";
         try {
 
-            JSONObject validatedDataSources = validateDataSources(dataSources);
-            String dsLookup = null;
-            if (validatedDataSources != null && (int) validatedDataSources.get("valid_count") > 0) {
-                dsLookup = (String) validatedDataSources.get("valid_string");
-            }
+            fieldsOnly = validateBooleanParam(request, FIELDS_ONLY_PARAM);
+            if (fieldsOnly) {
+                response = lookup(SEARCHABLE_FIELD_SQL, "search-field-query");
+            }           
+            else {
+                JSONObject validatedDataSources = validateDataSources(dataSources);
+                String dsLookup = null;
+                if (validatedDataSources != null && (int) validatedDataSources.get("valid_count") > 0) {
+                    dsLookup = (String) validatedDataSources.get("valid_string");
+                }
 
-            // trackType = validateTrackType(trackType);
-            if (trackType == null) {
-                trackType = "all";
-            }
+                // trackType = validateTrackType(trackType);
+                if (trackType == null) {
+                    trackType = "all";
+                }
 
-            String sql = buildQuery(trackType, tracks, dsLookup);
-            response = lookup(sql);
+                String sql = buildQuery(trackType, tracks, dsLookup);
+                response = lookup(sql, "track-config-query");
 
-            if (response == null) {
-                response = "{}";
+                if (response == null) {
+                    response = "{}";
+                }
             }
-            ;
             // LOG.debug("query result: " + response);
         }
 
@@ -292,19 +305,19 @@ public class TrackConfigService extends AbstractWdkService {
         return dsStr; // remove trailing comma
     }
 
-    private String replaceEndpoints(String sql) {
+    private String replaceEndpoints(String str) {
         String serviceBaseUri = getContextUri() + "/service";
-        return sql.replace("@SERVICE_BASE_URI@", serviceBaseUri);
+        return str.replace("@SERVICE_BASE_URI@", serviceBaseUri);
     }
 
-    private String replaceFilerUrl(String sql) throws WdkModelException {
+    /* private String replaceFilerUrl(String sql) throws WdkModelException {
         String filerUrl = getWdkModel().getProperties().get("FILER_TRACK_URL");
         if (filerUrl == null) {
             throw new WdkModelException("Need to specify FILER_TRACK_URL in model.prop");
         }
         LOG.debug(sql.replace("@FILER_TRACK_URL@", filerUrl));
         return sql.replace("@FILER_TRACK_URL@", filerUrl);
-    }
+    } */
 
     private String replaceVersions(String response) throws WdkModelException {
         String genomeBuild = getWdkModel().getProperties().get("GENOME_BUILD");
@@ -327,6 +340,20 @@ public class TrackConfigService extends AbstractWdkService {
                 .replace("+DBSNP_VERSION+", dbSnpVersion);
     }
 
+    private Boolean validateBooleanParam(HttpServletRequest request, String param) {
+        if (!request.getParameterMap().containsKey(param)) {
+            return false;
+        }
+
+        String paramValue = request.getParameterValues(param)[0];
+        if (paramValue == "") {
+            return true;
+        }
+        else {
+            return Boolean.valueOf(paramValue);
+        }
+    }    
+
     private String buildQuery(String trackType, String tracks, String dataSources) throws WdkModelException {
 
         String sql = "SELECT jsonb_agg(track_config)::text AS result FROM (" + NL
@@ -336,21 +363,22 @@ public class TrackConfigService extends AbstractWdkService {
             sql = sql + NL + "WHERE datasource ~* '" + dataSources + "'";
         }
 
-        return replaceFilerUrl(replaceEndpoints(sql));
+        //return replaceFilerUrl(replaceEndpoints(sql));
+        return replaceEndpoints(sql);
     }
 
-    private String lookup(String querySql) throws WdkModelException {
+    private String lookup(String querySql, String name) throws WdkModelException {
 
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
         // LOG.debug(querySql);
-        SQLRunner runner = new SQLRunner(ds, querySql, "track-lookup-query");
+        SQLRunner runner = new SQLRunner(ds, querySql, name);
         runner.executeQuery(handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (!results.isEmpty())
-            return replaceVersions((String) results.get(0).get("result"));
+            return replaceEndpoints(replaceVersions((String) results.get(0).get("result")));
 
         return null;
     }
