@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge } from "lodash";
 import { NiagadsGeneReader, NiagadsGwasTrack, NiagadsVariantTrack } from "../../../../lib/igv/NiagadsTracks";
-import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory";
+import { PopUpData, transformConfigToHtml } from "./IgvBrowserPopUpFactory.tsx.deprecated";
 
 interface IgvBrowser {
     defaultSpan: string;
@@ -50,13 +50,7 @@ export const IgvBrowser: React.FC<IgvBrowser> = ({
             console.log(event);
         });
 
-        options = merge(options, {
-            locus: defaultSpan || "ABCA7",
-            tracks: defaultTracks || [],
-            search: {
-                url: `${searchUrl}$FEATURE$`,
-            }
-        });
+       
 
         const igvDiv = document.getElementById("igv-div");
 
