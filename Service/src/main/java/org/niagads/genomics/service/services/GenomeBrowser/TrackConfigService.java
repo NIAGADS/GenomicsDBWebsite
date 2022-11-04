@@ -80,33 +80,38 @@ public class TrackConfigService extends AbstractWdkService {
         + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
         + "GROUP BY category) a";
 
-    private static final String SEARCHABLE_FIELD_SQL = "SELECT" + NL
-        + "category, field AS id, column_name AS header" + NL
-        + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
+
+    private static final String SEARCHABLE_FIELDS_CTE = "FieldPlaceHolders AS (" + NL
+        + "SELECT category, jsonb_object_agg(field, null) AS fields" + NL
+        + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
+        + "GROUP BY category)";
 
     private static final String GWAS_TRACK_SQL = "GWASTracks AS (SELECT" + NL
-            + "track, track_type, data_source, track_config" + NL
-            + "FROM NIAGADS.GWASBrowserTracks)";
-
-            /*
-             * 
-WITH placeholders AS (
-SELECT category, jsonb_object_agg(field, null) AS fields
-FROM NIAGADS.SearchableBrowserTrackAnnotations
-GROUP BY category)
-SELECT track, track_type, data_source, 
-jsonb_set(jsonb_set(
-track_config, '{biosample_characteristics}', biosample.fields::jsonb || (track_config->'biosample_characteristics')::jsonb),
-'{experimental_design}', design.fields::jsonb || (track_config->'experimental_design')::jsonb)
-AS track_config
-FROM NIAGADS.GWASBrowserTracks t, placeholders design, placeholders biosample
-WHERE design.category = 'experimental_design' AND biosample.category = 'biosample_characteristics'
-             */
-
+        + "track, track_type, data_source," + NL
+        + "jsonb_set(jsonb_set(" + NL
+        + "track_config, '{biosample_characteristics}', biosample.fields::jsonb ||"+ NL 
+        + " (track_config->'biosample_characteristics')::jsonb)," + NL 
+        + "'{experimental_design}', design.fields::jsonb ||" + NL 
+        + " (track_config->'experimental_design')::jsonb)" + NL 
+        + "AS track_config" + NL
+        + "FROM NIAGADS.GWASBrowserTracks t," + NL 
+        + "FieldPlaceHolders design, FieldPlaceHolders biosample" + NL
+        + "WHERE design.category = 'experimental_design'" + NL 
+        + "AND biosample.category = 'biosample_characteristics')";
+    
     private static final String FUNCTIONAL_GENOMICS_SQL = "FGTracks AS (SELECT" + NL
             + "track, track_type, data_source, track_config" + NL
-            + "FROM NIAGADS.FILERBrowserTracks)";
-            //+ NL + "WHERE track_type = ?";
+            + "jsonb_set(jsonb_set(" + NL
+            + "track_config, '{biosample_characteristics}', biosample.fields::jsonb ||"+ NL 
+            + " (track_config->'biosample_characteristics')::jsonb)," + NL 
+            + "'{experimental_design}', design.fields::jsonb ||" + NL 
+            + " (track_config->'experimental_design')::jsonb)" + NL 
+            + "AS track_config" + NL
+            + "FROM NIAGADS.FILERBrowserTracks" + NL
+            + "FieldPlaceHolders design, FieldPlaceHolders biosample" + NL
+            + "WHERE design.category = 'experimental_design'" + NL 
+            + "AND biosample.category = 'biosample_characteristics')";
+
 
     enum TrackType {
         // , TFBS, HISTONE_MOD, ENHANCER, EQTL;
@@ -150,6 +155,7 @@ WHERE design.category = 'experimental_design' AND biosample.category = 'biosampl
             @Override
             public String getTrackSql() {
                 String sql = "WITH" + NL
+                        + SEARCHABLE_FIELDS_CTE + ',' + NL
                         + VARIANT_TRACK_SQL + ',' + NL
                         + GWAS_TRACK_SQL + ',' + NL
                         + FUNCTIONAL_GENOMICS_SQL + NL
