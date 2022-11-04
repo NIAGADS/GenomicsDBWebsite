@@ -26,6 +26,8 @@ import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.google.common.base.Enums;
 
@@ -36,7 +38,6 @@ public class TrackConfigService extends AbstractWdkService {
     private static final String TRACK_PARAM = "track";
     private static final String DATASOURCE_PARAM = "source";
     private static final String GENOME_BUILD = "assembly";
-    private static final String FIELDS_ONLY_PARAM = "searchFieldsOnly";
 
     private static final String GWAS_TRACK_TYPE = "gwas_service";
     private static final String VARIANT_TRACK_TYPE = "variant_service";
@@ -73,45 +74,50 @@ public class TrackConfigService extends AbstractWdkService {
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
             + "ORDER BY track)";
 
-    private static final String SEARCHABLE_FIELD_JSON_SQL = "SELECT" + NL
-        + "JSONB_OBJECT_AGG(category, fields)::text AS result" + NL
-        + "FROM (SELECT category, jsonb_agg(jsonb_build_object(" + NL
-        + "'id', field, 'header', column_name)) AS fields" + NL
-        + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
-        + "GROUP BY category) a";
-
+    private static final String COLUMN_JSON_SQL = "SELECT ('[' ||" + NL
+            + "array_to_string(ARRAY[jsonb_build_object('id', 'name', 'header', 'Track')::text," + NL
+            + "jsonb_build_object('id', 'description', 'header', 'Description')::text," + NL
+            + "jsonb_build_object('id', 'data_source', 'header', 'Data Source')::text," + NL
+            + "jsonb_build_object('id', 'feature_type', 'header', 'Feature')::text," + NL
+            + "jsonb_build_object('id', 'track_type_display', 'header', 'Track Type')::text], ',') || ']')::jsonb" + NL
+            + " || jsonb_agg(jsonb_build_object(" + NL
+            + "'id', field, 'header', column_name)" + NL
+            + "ORDER BY category," + NL
+            + "custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Assay', 'Antibody Target', 'Biosample', 'Anatomical System', 'Tissue', 'Tissue'],"
+            + NL
+            + "column_name))::text AS result" + NL
+            + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
 
     private static final String SEARCHABLE_FIELDS_CTE = "FieldPlaceHolders AS (" + NL
-        + "SELECT category, jsonb_object_agg(field, null) AS fields" + NL
-        + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
-        + "GROUP BY category)";
+            + "SELECT category, jsonb_object_agg(field, null) AS fields" + NL
+            + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
+            + "GROUP BY category)";
 
     private static final String GWAS_TRACK_SQL = "GWASTracks AS (SELECT" + NL
-        + "track, track_type, data_source," + NL
-        + "jsonb_set(jsonb_set(" + NL
-        + "track_config, '{biosample_characteristics}', biosample.fields::jsonb ||"+ NL 
-        + " (track_config->'biosample_characteristics')::jsonb)," + NL 
-        + "'{experimental_design}', design.fields::jsonb ||" + NL 
-        + " (track_config->'experimental_design')::jsonb)" + NL 
-        + "AS track_config" + NL
-        + "FROM NIAGADS.GWASBrowserTracks t," + NL 
-        + "FieldPlaceHolders design, FieldPlaceHolders biosample" + NL
-        + "WHERE design.category = 'experimental_design'" + NL 
-        + "AND biosample.category = 'biosample_characteristics')";
-    
-    private static final String FUNCTIONAL_GENOMICS_SQL = "FGTracks AS (SELECT" + NL
-            + "track, track_type, data_source, track_config" + NL
+            + "track, track_type, data_source," + NL
             + "jsonb_set(jsonb_set(" + NL
-            + "track_config, '{biosample_characteristics}', biosample.fields::jsonb ||"+ NL 
-            + " (track_config->'biosample_characteristics')::jsonb)," + NL 
-            + "'{experimental_design}', design.fields::jsonb ||" + NL 
-            + " (track_config->'experimental_design')::jsonb)" + NL 
+            + "track_config, '{biosample_characteristics}', biosample.fields::jsonb ||" + NL
+            + " (track_config->'biosample_characteristics')::jsonb)," + NL
+            + "'{experimental_design}', design.fields::jsonb ||" + NL
+            + " (track_config->'experimental_design')::jsonb)" + NL
             + "AS track_config" + NL
-            + "FROM NIAGADS.FILERBrowserTracks" + NL
+            + "FROM NIAGADS.GWASBrowserTracks t," + NL
             + "FieldPlaceHolders design, FieldPlaceHolders biosample" + NL
-            + "WHERE design.category = 'experimental_design'" + NL 
+            + "WHERE design.category = 'experimental_design'" + NL
             + "AND biosample.category = 'biosample_characteristics')";
 
+    private static final String FUNCTIONAL_GENOMICS_SQL = "FGTracks AS (SELECT" + NL
+            + "track, track_type, data_source," + NL
+            + "jsonb_set(jsonb_set(" + NL
+            + "track_config, '{biosample_characteristics}', biosample.fields::jsonb ||" + NL
+            + " (track_config->'biosample_characteristics')::jsonb)," + NL
+            + "'{experimental_design}', design.fields::jsonb ||" + NL
+            + " (track_config->'experimental_design')::jsonb)" + NL
+            + "AS track_config" + NL
+            + "FROM NIAGADS.FILERBrowserTracks t," + NL
+            + "FieldPlaceHolders design, FieldPlaceHolders biosample" + NL
+            + "WHERE design.category = 'experimental_design'" + NL
+            + "AND biosample.category = 'biosample_characteristics')";
 
     enum TrackType {
         // , TFBS, HISTONE_MOD, ENHANCER, EQTL;
@@ -146,8 +152,8 @@ public class TrackConfigService extends AbstractWdkService {
             @Override
             public String getTrackSql() {
                 String sql = "WITH" + NL
-                    + FUNCTIONAL_GENOMICS_SQL + NL
-                    + "SELECT * FROM FGTracks";
+                        + FUNCTIONAL_GENOMICS_SQL + NL
+                        + "SELECT * FROM FGTracks";
                 return sql;
             }
         },
@@ -161,7 +167,7 @@ public class TrackConfigService extends AbstractWdkService {
                         + FUNCTIONAL_GENOMICS_SQL + NL
                         + "SELECT * FROM VariantTracks" + NL
                         + "UNION ALL" + NL
-                        + "SELECT * FROM GwasTracks"  + NL
+                        + "SELECT * FROM GwasTracks" + NL
                         + "UNION ALL" + NL
                         + "SELECT * FROM FGTracks";
 
@@ -242,46 +248,51 @@ public class TrackConfigService extends AbstractWdkService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.track.config.get-response")
-    public Response buildResponse(@Context HttpServletRequest request, 
+    public Response buildResponse(@Context HttpServletRequest request,
             String body,
             @QueryParam(TYPE_PARAM) String trackType,
             @QueryParam(TRACK_PARAM) String tracks, @QueryParam(DATASOURCE_PARAM) String dataSources,
-            @QueryParam(GENOME_BUILD) String assembly, 
-            @QueryParam(FIELDS_ONLY_PARAM) Boolean fieldsOnly) throws WdkModelException {
+            @QueryParam(GENOME_BUILD) String assembly) throws WdkModelException {
 
         LOG.info("Starting 'TrackConfig' Service");
         String response = "{}";
         try {
 
-            fieldsOnly = validateBooleanParam(request, FIELDS_ONLY_PARAM);
-            if (fieldsOnly) {
-                response = lookup(SEARCHABLE_FIELD_JSON_SQL, "search-field-query");
-            }           
-            else {
-                JSONObject validatedDataSources = validateDataSources(dataSources);
-                String dsLookup = null;
-                if (validatedDataSources != null && (int) validatedDataSources.get("valid_count") > 0) {
-                    dsLookup = (String) validatedDataSources.get("valid_string");
-                }
-
-                // trackType = validateTrackType(trackType);
-                if (trackType == null) {
-                    trackType = "all";
-                }
-
-                String sql = buildQuery(trackType, tracks, dsLookup);
-                response = lookup(sql, "track-config-query");
-
-                if (response == null) {
-                    response = "{}";
-                }
+            JSONObject validatedDataSources = validateDataSources(dataSources);
+            String dsLookup = null;
+            if (validatedDataSources != null && (int) validatedDataSources.get("valid_count") > 0) {
+                dsLookup = (String) validatedDataSources.get("valid_string");
             }
+
+            // trackType = validateTrackType(trackType);
+            if (trackType == null) {
+                trackType = "all";
+            }
+
+            String sql = buildQuery(trackType, tracks, dsLookup);
+            String trackConfigs = lookup(sql, "track-config-query");
+
+            // LOG.debug("track configs:" + trackConfigs);
+
+            if (trackConfigs == null) {
+                response = "{}";
+            }
+            else {
+                String selectorFields = lookup(COLUMN_JSON_SQL, "track-selector-fields-query");
+                LOG.debug("selector fields:" + selectorFields);
+                JSONObject result = new JSONObject();
+                result.put("columns", new JSONArray(selectorFields));
+                result.put("tracks", new JSONArray(trackConfigs));
+                response = result.toString();
+            }
+
             // LOG.debug("query result: " + response);
         }
 
         catch (WdkRuntimeException ex) {
             throw new WdkModelException(ex);
         }
+    
 
         return Response.ok(response).build();
     }
@@ -335,14 +346,16 @@ public class TrackConfigService extends AbstractWdkService {
         return str.replace("@SERVICE_BASE_URI@", serviceBaseUri);
     }
 
-    /* private String replaceFilerUrl(String sql) throws WdkModelException {
-        String filerUrl = getWdkModel().getProperties().get("FILER_TRACK_URL");
-        if (filerUrl == null) {
-            throw new WdkModelException("Need to specify FILER_TRACK_URL in model.prop");
-        }
-        LOG.debug(sql.replace("@FILER_TRACK_URL@", filerUrl));
-        return sql.replace("@FILER_TRACK_URL@", filerUrl);
-    } */
+    /*
+     * private String replaceFilerUrl(String sql) throws WdkModelException {
+     * String filerUrl = getWdkModel().getProperties().get("FILER_TRACK_URL");
+     * if (filerUrl == null) {
+     * throw new WdkModelException("Need to specify FILER_TRACK_URL in model.prop");
+     * }
+     * LOG.debug(sql.replace("@FILER_TRACK_URL@", filerUrl));
+     * return sql.replace("@FILER_TRACK_URL@", filerUrl);
+     * }
+     */
 
     private String replaceVersions(String response) throws WdkModelException {
         String genomeBuild = getWdkModel().getProperties().get("GENOME_BUILD");
@@ -373,11 +386,10 @@ public class TrackConfigService extends AbstractWdkService {
         String paramValue = request.getParameterValues(param)[0];
         if (paramValue == "") {
             return true;
-        }
-        else {
+        } else {
             return Boolean.valueOf(paramValue);
         }
-    }    
+    }
 
     private String buildQuery(String trackType, String tracks, String dataSources) throws WdkModelException {
 
@@ -388,7 +400,7 @@ public class TrackConfigService extends AbstractWdkService {
             sql = sql + NL + "WHERE datasource ~* '" + dataSources + "'";
         }
 
-        //return replaceFilerUrl(replaceEndpoints(sql));
+        // return replaceFilerUrl(replaceEndpoints(sql));
         return replaceEndpoints(sql);
     }
 
