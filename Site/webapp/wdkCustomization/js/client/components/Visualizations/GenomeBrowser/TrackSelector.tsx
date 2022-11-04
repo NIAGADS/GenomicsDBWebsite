@@ -3,14 +3,11 @@ import { groupBy, uniq as unique } from "lodash";
 
 import Slide from "@material-ui/core/Slide";
 import DialogContent from "@material-ui/core/DialogContent";
-import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -18,7 +15,6 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Chip from "@material-ui/core/Chip";
@@ -29,7 +25,7 @@ import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/s
 
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
 
-import { TrackTable, tracksToTrackConfigs, NiagadsBrowserTrackConfig, IgvTrackConfig } from "@viz/GenomeBrowser";
+import { TrackTable, tracksToTrackConfigs, TrackSummary, IgvTrackConfig } from "@viz/GenomeBrowser";
 
 
 const useBrowserStyles = makeStyles((theme: Theme) =>
@@ -75,7 +71,7 @@ interface TrackSelectorProps {
     loadingTrack: string;
     isOpen: boolean;
     toggleTracks: (t: IgvTrackConfig[], b:any) => void;
-    trackList: NiagadsBrowserTrackConfig[];
+    trackList: TrackSummary[];
     browser: any;
 }
 
@@ -92,7 +88,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
         [dataSources, setDataSources] = useState<string[]>([]),
         [sequenceFeatureTypes, setSequenceFeatureTypes] = useState<string[]>([]),
         [trackTypes, setTrackTypes] = useState<string[]>([]),
-        [trackList, setTrackList] = useState<NiagadsBrowserTrackConfig[]>([]),
+        [trackList, setTrackList] = useState<TrackSummary[]>([]),
         classes = useBrowserStyles(),
         dataSourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
         sequenceFeatureTypeList = useMemo(() => unique((_trackList || []).map((t) => t.featureType)), [_trackList]),

@@ -19,7 +19,7 @@ import { PieChartFilter } from "@viz/Table/TableFilters";
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 
-import { IgvTrackConfig, NiagadsBrowserTrackConfig } from "@viz/GenomeBrowser";
+import { IgvTrackConfig, TrackSummary } from "@viz/GenomeBrowser";
 import { CircularProgress } from "@material-ui/core";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TrackTableProps {
-    data: NiagadsBrowserTrackConfig[];
+    data: TrackSummary[];
     activeTracks: string[];
     toggleTracks: (t: IgvTrackConfig[], b: any) => void;
     loadingTrack: string;
@@ -123,7 +123,7 @@ const _setInitialFilters = (table: TableField) => {
     return useMemo(() => sortBy, []);
 }; */
 
-export const tracksToTrackConfigs = (tracks: NiagadsBrowserTrackConfig[]): IgvTrackConfig[] => {
+export const tracksToTrackConfigs = (tracks: TrackSummary[]): IgvTrackConfig[] => {
    
     return tracks.map((track) => {
       
