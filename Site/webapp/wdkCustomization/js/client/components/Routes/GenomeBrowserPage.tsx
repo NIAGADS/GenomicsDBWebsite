@@ -33,6 +33,10 @@ const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(GenomeBrowser);
 
 interface GenomeBrowserPage {}
+interface TrackConfigServiceResponse {
+    columns: any,
+    tracks: any;
+}
 
 const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
@@ -41,8 +45,9 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     const [browser, setBrowser] = useState<any>(),
         [listVisible, setListVisible] = useState(false),
         [loadingTrack, setLoadingTrack] = useState<string>(),
+        [selectorColumns, setSelectorColumns] = useState<any>(),
        // [reloadKey, setReloadKey] = useState(makeReloadKey()),
-        [trackList, setTrackList] = useState<TrackSummary[]>(),
+        [tracks, setTracks] = useState<TrackSummary[]>(),
         [options, setOptions] = useState(null);
 
     const toggleTracks = (config: TrackConfig[], browser: any) => {
@@ -67,6 +72,12 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         setLoadingTrack(undefined);
     };
 
+
+    const parseTrackConfigServiceResponse = (response:TrackConfigServiceResponse) => {
+        setTrackList(response['tracks']);
+        setSelectorColumns(response['columns']);
+    };
+
     useEffect(() => {
         if (projectId && serviceUrl) {
             let referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
@@ -84,12 +95,16 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         }
     }, [projectId, serviceUrl]);
 
+
     useWdkEffect(
         (service) => {
             options &&
                 service
-                    ._fetchJson<ServiceTrack[]>("GET", `/track/config`)
-                    .then((res) => setTrackList(res.map((res) => generateTrackSummary(res))));
+                    ._fetchJson<TrackConfigServiceResponse>("GET", `/track/config`)
+                    .then(function (res: TrackConfigServiceResponse) {
+                        return parseTrackConfigServiceResponse(res);
+                    });
+                  //  .then((res) => setTrackList(res.map((res) => generateTrackSummary(res))));
             //setTrackList(concat(res.map((res) => transformRawNiagadsTrack(res)),
             //merge(options.reference.tracks[0], { featureType: "Gene", source: "NCBI Gene" }))));
         },
@@ -134,7 +149,8 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                         isOpen={listVisible}
                         loadingTrack={loadingTrack}
                         toggleTracks={toggleTracks}
-                        trackList={trackList}
+                        tracks={tracks}
+                        columns={selectorColumns}
                         browser={browser}
                     />
                 ) : null}

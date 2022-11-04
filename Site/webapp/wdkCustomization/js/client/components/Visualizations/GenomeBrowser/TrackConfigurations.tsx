@@ -1,23 +1,38 @@
-
-
-export interface TrackConfig {
+export interface BaseTrackConfig {
     name: string;
-    format?: string;
-    displayMode: string;
-    height?: number;
-    url: string;
+    description: string;
+    label:string;
+    type: string;
+    track?: string;
+    id?:string;
+}
+
+export interface RawTrackConfig extends BaseTrackConfig {
+    source:string;
+    feature_type: string;
+    endpoint?: string;
+    url?:string;
+    track_type_display: string;
+    biosample_characteristics:{ [key: string]: string};
+    experimental_design:{ [key: string]: string};
+}
+
+
+
+export interface IgvTrackConfig extends BaseTrackConfig {
+    reader?: any;
+    supportsWholeGenome: boolean;
+    removable?: boolean;
+    url?: string;
     indexURL?: string;
+    format?:string;
+    displayMode: string;
+    height?:string;
     visibilityWindow: number;
 }
 
 
-export interface IgvTrackConfig extends TrackConfig {
-    description?: string;
-    track?:string;
+export interface TrackSelectorColumnConfig {
+    header: string;
     id: string;
-    reader?: any;
-    type: string;
-    supportsWholeGenome: boolean;
-    removable?: boolean;
 }
-

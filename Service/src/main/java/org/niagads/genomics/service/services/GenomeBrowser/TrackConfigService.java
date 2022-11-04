@@ -74,7 +74,7 @@ public class TrackConfigService extends AbstractWdkService {
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
             + "ORDER BY track)";
 
-    private static final String COLUMN_JSON_SQL = "SELECT ('[' ||" + NL
+    private static final String COLUMN_JSON_SQL = "SELECT (('[' ||" + NL
             + "array_to_string(ARRAY[jsonb_build_object('id', 'name', 'header', 'Track')::text," + NL
             + "jsonb_build_object('id', 'description', 'header', 'Description')::text," + NL
             + "jsonb_build_object('id', 'data_source', 'header', 'Data Source')::text," + NL
@@ -84,8 +84,7 @@ public class TrackConfigService extends AbstractWdkService {
             + "'id', field, 'header', column_name)" + NL
             + "ORDER BY category," + NL
             + "custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Assay', 'Antibody Target', 'Biosample', 'Anatomical System', 'Tissue', 'Tissue'],"
-            + NL
-            + "column_name))::text AS result" + NL
+            + "column_name)))::text AS result" + NL
             + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
 
     private static final String SEARCHABLE_FIELDS_CTE = "FieldPlaceHolders AS (" + NL

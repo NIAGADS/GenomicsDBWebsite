@@ -25,7 +25,7 @@ import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/s
 
 import { BaseIconButton, UnlabeledTextField } from "@components/MaterialUI";
 
-import { TrackTable, tracksToTrackConfigs, TrackSummary, IgvTrackConfig } from "@viz/GenomeBrowser";
+import { TrackTable, IgvTrackConfig, TrackSelectorColumnConfig, RawTrackConfig } from "@viz/GenomeBrowser";
 
 
 const useBrowserStyles = makeStyles((theme: Theme) =>
@@ -65,24 +65,26 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="right" ref={ref} {...props} />;
 });
 
-interface TrackSelectorProps {
+interface TrackSelector {
     activeTracks: string[];
-    handleClose: () => void;
     loadingTrack: string;
-    isOpen: boolean;
     toggleTracks: (t: IgvTrackConfig[], b:any) => void;
-    trackList: TrackSummary[];
+    handleClose: () => void;
+    isOpen: boolean;
+    tracks: RawTrackConfig[];
     browser: any;
+    columns: TrackSelectorColumnConfig[];
 }
 
-export const TrackSelector: React.FC<TrackSelectorProps> = ({
+export const TrackSelector: React.FC<TrackSelector> = ({
     activeTracks,
     handleClose,
     isOpen,
     loadingTrack,
     toggleTracks,
-    trackList: _trackList,
-    browser
+    tracks,
+    browser,
+    columns
 }) => {
     const [searchTerm, setSearchTerm] = useState(""),
         [dataSources, setDataSources] = useState<string[]>([]),
@@ -329,6 +331,7 @@ export const TrackSelector: React.FC<TrackSelectorProps> = ({
                                 toggleTracks={toggleTracks}
                                 browser={browser}
                                 loadingTrack={loadingTrack}
+                                selectorColumns={selectorColumns}
                             ></TrackTable>
                         </Grid>
                     </Grid>

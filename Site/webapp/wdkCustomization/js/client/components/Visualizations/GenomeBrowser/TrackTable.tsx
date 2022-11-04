@@ -19,7 +19,7 @@ import { PieChartFilter } from "@viz/Table/TableFilters";
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 
-import { IgvTrackConfig, TrackSummary } from "@viz/GenomeBrowser";
+import { IgvTrackConfig, TrackSummary, SelectorColumn } from "@viz/GenomeBrowser";
 import { CircularProgress } from "@material-ui/core";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
@@ -50,9 +50,64 @@ interface TrackTableProps {
     toggleTracks: (t: IgvTrackConfig[], b: any) => void;
     loadingTrack: string;
     browser: any;
+    selectorColumns: SelectorColumn[]
 }
 
-export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, toggleTracks, loadingTrack, browser }) => {
+export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, toggleTracks, loadingTrack, browser, selectorColumns }) => {
+
+    const DEFAULT_VISIBLE_COLUMNS = ['name', 'description', 'data_source', 'feature_type', 'track_type_display'];
+    const TEXT_SEARCH_ONLY_COLUMNS = ['name', 'description', 'data_source', 'feature_type', 'track_type_display'];
+
+    const _buildColumn = (field: SelectorColumn, sortable: boolean) => ({
+        Header: field['header'],
+        sortable,
+        id: field['id']
+        //sortType: defaultColumnSort,
+    });
+
+
+    const _buildColumns = () => {
+        let columns: Column<{}>[] =
+            [
+                {
+                    id: "select",
+                    accessor: (row: any) => {
+                        return (
+                            !!loadingTrack ? <CircularProgress size="0.9rem"></ CircularProgress>
+                                : <UnpaddedCheckbox
+                                    color="primary"
+                                    checked={activeTracks.includes(row.name)}
+                                    onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]), browser)}
+                                //disabled={!!loadingTrack}
+                                />
+                        );
+                    },
+                    Header: () => "Select",
+                    //@ts-ignore
+                    disableGlobalFilter: true,
+                    width: 50,
+                } as Column,
+            ].concat(
+                selectorColumns.map((k): Column => {
+
+                    let column = _buildColumn(k, true);
+
+                    if (!TEXT_SEARCH_ONLY_COLUMNS.includes(column.id)) {
+                        //@ts-ignore
+                        column = _addColumnFilters(column, "pie");
+                    }
+
+                    if (DEFAULT_VISIBLE_COLUMNS.includes(column.id)) {
+                        //@ts-ignore
+                        column.show = false;
+                    }
+
+                    return column;
+                }));
+
+        return columns;
+    };
+
     const buildColumns = () => {
         let columns = [
             {
@@ -60,12 +115,12 @@ export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, togg
                 accessor: (row: any) => {
                     return (
                         !!loadingTrack ? <CircularProgress size="0.9rem"></ CircularProgress>
-                            :<UnpaddedCheckbox
-                            color="primary"
-                            checked={activeTracks.includes(row.name)}
-                            onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]), browser)}
+                            : <UnpaddedCheckbox
+                                color="primary"
+                                checked={activeTracks.includes(row.name)}
+                                onChange={toggleTracks.bind(null, tracksToTrackConfigs([row]), browser)}
                             //disabled={!!loadingTrack}
-                        />
+                            />
                     );
                 },
                 Header: () => "Select",
@@ -89,10 +144,9 @@ export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, togg
         return columns;
     };
 
-    const columns: Column<{}>[] = useMemo(() => buildColumns(), [data]);
+    const columns: Column<{}>[] = useMemo(() => _buildColumns(), [data]);
 
-    //const initialFilters = _setInitialFilters(table);
-    //const initialSort = _setInitialSort(table);
+
 
     const classes = useStyles();
 
@@ -110,39 +164,28 @@ export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, togg
     );
 };
 
-const _setInitialFilters = (table: TableField) => {
-    let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;
-    if (columnFilters && "pvalue" in columnFilters) {
-        return { id: "pvalue", value: DEFAULT_PVALUE_FILTER_VALUE };
-    }
-    return null;
-};
 
-/*const _setInitialSort = (table: TableField) => {
-    let sortBy: any = table.properties.sorted_by ? JSON.parse(table.properties.sorted_by[0]) : null;
-    return useMemo(() => sortBy, []);
-}; */
 
 export const tracksToTrackConfigs = (tracks: TrackSummary[]): IgvTrackConfig[] => {
-   
+
     return tracks.map((track) => {
-      
+
         if (track.track === "REFSEQ_GENE") {
             return track as unknown as IgvTrackConfig;
         }
 
         const base =
-        {
-            displayMode: "expanded",
-            format: track.format,
-            url: track.url,
-            indexURL: `${track.url}.tbi`,
-            name: track.name,
-            type: track.trackType,
-            id: track.trackType,
-            supportsWholeGenome: false,
-            visibilityWindow: track.trackType === 'variant' ? 1000000 : -1
-        } as IgvTrackConfig;
+            {
+                displayMode: "expanded",
+                format: track.format,
+                url: track.url,
+                indexURL: `${track.url}.tbi`,
+                name: track.name,
+                type: track.trackType,
+                id: track.trackType,
+                supportsWholeGenome: false,
+                visibilityWindow: track.trackType === 'variant' ? 1000000 : -1
+            } as IgvTrackConfig;
         if (track.reader) {
             base.reader = track.reader;
         }
@@ -178,13 +221,13 @@ const ShowMore: React.FC<{ str: string }> = ({ str }) => {
             </span>
         </span>
     ) : (
-        <span>
-            {truncate(str, { length: 150 })}{" "}
-            <span className="link" onClick={() => setFullStringVisible(true)}>
-                more
+            <span>
+                {truncate(str, { length: 150 })}{" "}
+                <span className="link" onClick={() => setFullStringVisible(true)}>
+                    more
             </span>
-        </span>
-    );
+            </span>
+        );
 };
 
 
