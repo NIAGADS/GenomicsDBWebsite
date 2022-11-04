@@ -73,16 +73,35 @@ public class TrackConfigService extends AbstractWdkService {
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
             + "ORDER BY track)";
 
-    private static final String SEARCHABLE_FIELD_SQL = "SELECT" + NL
+    private static final String SEARCHABLE_FIELD_JSON_SQL = "SELECT" + NL
         + "JSONB_OBJECT_AGG(category, fields)::text AS result" + NL
         + "FROM (SELECT category, jsonb_agg(jsonb_build_object(" + NL
         + "'id', field, 'header', column_name)) AS fields" + NL
         + "FROM NIAGADS.SearchableBrowserTrackAnnotations" + NL
         + "GROUP BY category) a";
 
+    private static final String SEARCHABLE_FIELD_SQL = "SELECT" + NL
+        + "category, field AS id, column_name AS header" + NL
+        + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
+
     private static final String GWAS_TRACK_SQL = "GWASTracks AS (SELECT" + NL
             + "track, track_type, data_source, track_config" + NL
             + "FROM NIAGADS.GWASBrowserTracks)";
+
+            /*
+             * 
+WITH placeholders AS (
+SELECT category, jsonb_object_agg(field, null) AS fields
+FROM NIAGADS.SearchableBrowserTrackAnnotations
+GROUP BY category)
+SELECT track, track_type, data_source, 
+jsonb_set(jsonb_set(
+track_config, '{biosample_characteristics}', biosample.fields::jsonb || (track_config->'biosample_characteristics')::jsonb),
+'{experimental_design}', design.fields::jsonb || (track_config->'experimental_design')::jsonb)
+AS track_config
+FROM NIAGADS.GWASBrowserTracks t, placeholders design, placeholders biosample
+WHERE design.category = 'experimental_design' AND biosample.category = 'biosample_characteristics'
+             */
 
     private static final String FUNCTIONAL_GENOMICS_SQL = "FGTracks AS (SELECT" + NL
             + "track, track_type, data_source, track_config" + NL
@@ -230,7 +249,7 @@ public class TrackConfigService extends AbstractWdkService {
 
             fieldsOnly = validateBooleanParam(request, FIELDS_ONLY_PARAM);
             if (fieldsOnly) {
-                response = lookup(SEARCHABLE_FIELD_SQL, "search-field-query");
+                response = lookup(SEARCHABLE_FIELD_JSON_SQL, "search-field-query");
             }           
             else {
                 JSONObject validatedDataSources = validateDataSources(dataSources);
