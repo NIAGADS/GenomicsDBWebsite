@@ -19,7 +19,7 @@ import { PieChartFilter } from "@viz/Table/TableFilters";
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 
-import { IgvTrackConfig, TrackSummary, SelectorColumn } from "@viz/GenomeBrowser";
+import { IgvTrackConfig, RawTrackConfig, TrackSelectorColumnConfig } from "@viz/GenomeBrowser";
 import { CircularProgress } from "@material-ui/core";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
@@ -45,12 +45,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TrackTableProps {
-    data: TrackSummary[];
+    data: RawTrackConfig[];
     activeTracks: string[];
-    toggleTracks: (t: IgvTrackConfig[], b: any) => void;
+    toggleTracks: (t: RawTrackConfig[], b: any) => void;
     loadingTrack: string;
     browser: any;
-    selectorColumns: SelectorColumn[]
+    selectorColumns: TrackSelectorColumnConfig[]
 }
 
 export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, toggleTracks, loadingTrack, browser, selectorColumns }) => {
@@ -58,7 +58,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, togg
     const DEFAULT_VISIBLE_COLUMNS = ['name', 'description', 'data_source', 'feature_type', 'track_type_display'];
     const TEXT_SEARCH_ONLY_COLUMNS = ['name', 'description', 'data_source', 'feature_type', 'track_type_display'];
 
-    const _buildColumn = (field: SelectorColumn, sortable: boolean) => ({
+    const _buildColumn = (field: TrackSelectorColumnConfig, sortable: boolean) => ({
         Header: field['header'],
         sortable,
         id: field['id']
@@ -166,7 +166,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ data, activeTracks, togg
 
 
 
-export const tracksToTrackConfigs = (tracks: TrackSummary[]): IgvTrackConfig[] => {
+export const tracksToTrackConfigs = (tracks: RawTrackConfig[]): IgvTrackConfig[] => {
 
     return tracks.map((track) => {
 
@@ -177,18 +177,18 @@ export const tracksToTrackConfigs = (tracks: TrackSummary[]): IgvTrackConfig[] =
         const base =
             {
                 displayMode: "expanded",
-                format: track.format,
+               // format: track.format,
                 url: track.url,
                 indexURL: `${track.url}.tbi`,
                 name: track.name,
-                type: track.trackType,
-                id: track.trackType,
+               // type: track.trackType,
+                //id: track.trackType,
                 supportsWholeGenome: false,
-                visibilityWindow: track.trackType === 'variant' ? 1000000 : -1
+              //  visibilityWindow: track.trackType === 'variant' ? 1000000 : -1
             } as IgvTrackConfig;
-        if (track.reader) {
+       /* if (track.reader) {
             base.reader = track.reader;
-        }
+        }*/
         return base;
     });
 };

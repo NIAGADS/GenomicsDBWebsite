@@ -1,6 +1,9 @@
-export const generateTrackSummary = (track: ServiceTrack): TrackSummary => {
+import { RawTrackConfig } from "@viz/GenomeBrowser"
+
+/*
+export const generateTrackSummary = (track: RawTrackConfig): RawTrackConfig => {
     const { endpoint, feature_type, path, phenotypes, track_type, track_type_display, ...rest } = track,
-        config = rest as unknown as TrackSummary;
+        config = rest as unknown as RawTrackConfig;
 
     if (track.endpoint) {
         config.url = `${track.endpoint}?track=${track.track}`;
@@ -20,4 +23,4 @@ export const generateTrackSummary = (track: ServiceTrack): TrackSummary => {
     );
 
     return config;
-};
+}; */

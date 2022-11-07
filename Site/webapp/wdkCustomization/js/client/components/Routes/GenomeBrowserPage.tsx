@@ -16,14 +16,12 @@ import { PrimaryActionButton } from "@components/MaterialUI";
 
 import {
     GenomeBrowser,
-    TrackSummary,
-    ServiceTrack,
-    generateTrackSummary,
+    RawTrackConfig,
+    IgvTrackConfig,
     getLoadedTracks,
     removeTrack,
     trackIsLoaded,
-    TrackSelector,
-    TrackConfig,
+    TrackSelector
 } from "@viz/GenomeBrowser";
 
 import { _genomes } from "../../data/_igvGenomes";
@@ -47,10 +45,10 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         [loadingTrack, setLoadingTrack] = useState<string>(),
         [selectorColumns, setSelectorColumns] = useState<any>(),
        // [reloadKey, setReloadKey] = useState(makeReloadKey()),
-        [tracks, setTracks] = useState<TrackSummary[]>(),
+        [tracks, setTracks] = useState<RawTrackConfig[]>(),
         [options, setOptions] = useState(null);
 
-    const toggleTracks = (config: TrackConfig[], browser: any) => {
+    const toggleTracks = (config: RawTrackConfig[], browser: any) => {
         config.forEach((c) => {
             trackIsLoaded(c, browser) ? removeTrack(c, browser) : loadTrack(c, browser);
         });
@@ -66,7 +64,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
        setBrowser(b);
     }, []);
 
-    const loadTrack = async (config: TrackConfig, browser: any) => {
+    const loadTrack = async (config: RawTrackConfig, browser: any) => {
         setLoadingTrack(config.name);
         await browser.loadTrack(config);
         setLoadingTrack(undefined);
@@ -74,7 +72,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
 
 
     const parseTrackConfigServiceResponse = (response:TrackConfigServiceResponse) => {
-        setTrackList(response['tracks']);
+        setTracks(response['tracks']);
         setSelectorColumns(response['columns']);
     };
 
@@ -116,7 +114,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
             <Grid container item xs={12}>
                 {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
                 <Box m="10px">
-                    <PrimaryActionButton disabled={!!!trackList} onClick={() => setListVisible(true)}>
+                    <PrimaryActionButton disabled={!!!tracks} onClick={() => setListVisible(true)}>
                         <LibraryBooksIcon />
                         Browse Tracks
                     </PrimaryActionButton>
