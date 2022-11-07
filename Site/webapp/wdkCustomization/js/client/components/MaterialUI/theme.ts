@@ -12,7 +12,7 @@ export const themeOptions: ThemeOptions = {
     },
     props: {
       MuiAppBar: {
-        color: 'transparent'
+       // color: 'transparent'
       },
       MuiTablePagination: {
         labelRowsPerPage: 'Results per page:'
