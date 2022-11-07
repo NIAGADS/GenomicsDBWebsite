@@ -41,13 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         appBar: {
             // zindex
-            backgroundColor: "white"
+            //backgroundColor: "white"
         },
         logo: {
-            maxWidth: "100%",
+            height: 40
         },
         logoButton: {
-            maxWidth: 150,
+            //maxWidth: 150,
+            padding: 0
         },
         grow: {
             flexGrow: 1,
