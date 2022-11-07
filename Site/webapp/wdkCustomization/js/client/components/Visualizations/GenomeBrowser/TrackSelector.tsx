@@ -68,7 +68,7 @@ const Transition = React.forwardRef(function Transition(
 interface TrackSelector {
     activeTracks: string[];
     loadingTrack: string;
-    toggleTracks: (t: IgvTrackConfig[], b:any) => void;
+    toggleTracks: (t: RawTrackConfig[], b:any) => void;
     handleClose: () => void;
     isOpen: boolean;
     tracks: RawTrackConfig[];
@@ -82,7 +82,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
     isOpen,
     loadingTrack,
     toggleTracks,
-    tracks,
+    tracks: _trackList,
     browser,
     columns
 }) => {
@@ -90,14 +90,14 @@ export const TrackSelector: React.FC<TrackSelector> = ({
         [dataSources, setDataSources] = useState<string[]>([]),
         [sequenceFeatureTypes, setSequenceFeatureTypes] = useState<string[]>([]),
         [trackTypes, setTrackTypes] = useState<string[]>([]),
-        [trackList, setTrackList] = useState<TrackSummary[]>([]),
+        [trackList, setTrackList] = useState<RawTrackConfig[]>([]),
         classes = useBrowserStyles(),
         dataSourceList = useMemo(() => unique((_trackList || []).map((t) => t.source)), [_trackList]),
-        sequenceFeatureTypeList = useMemo(() => unique((_trackList || []).map((t) => t.featureType)), [_trackList]),
-        trackTypeList = useMemo(() => unique((_trackList || []).map((t) => t.trackTypeDisplay)), [_trackList]),
+        sequenceFeatureTypeList = useMemo(() => unique((_trackList || []).map((t) => t.feature_type)), [_trackList]),
+        trackTypeList = useMemo(() => unique((_trackList || []).map((t) => t.track_type_display)), [_trackList]),
         dataSourceCounts = useMemo(() => groupBy(_trackList || [], (t) => t.source), [_trackList]),
-        sequenceFeatureTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.featureType), [_trackList]),
-        trackTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.trackTypeDisplay), [_trackList]);
+        sequenceFeatureTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.feature_type), [_trackList]),
+        trackTypeCounts = useMemo(() => groupBy(_trackList || [], (t) => t.track_type_display), [_trackList]);
 
     useEffect(() => {
         const st = searchTerm.toLowerCase();
@@ -115,8 +115,8 @@ export const TrackSelector: React.FC<TrackSelector> = ({
                         (t) =>
                             !!(
                                 dataSources.includes(t.source) ||
-                                sequenceFeatureTypes.includes(t.featureType) ||
-                                trackTypes.includes(t.trackTypeDisplay) ||
+                                sequenceFeatureTypes.includes(t.feature_type) ||
+                                trackTypes.includes(t.track_type_display) ||
                                 (!dataSources.length && !sequenceFeatureTypes.length && !trackTypes.length)
                             )
                     )
@@ -178,12 +178,12 @@ export const TrackSelector: React.FC<TrackSelector> = ({
                                                 ) : (
                                                     <Checkbox
                                                         checked={true}
-                                                        onChange={toggleTracks.bind(
+                                                        /*onChange={toggleTracks.bind(
                                                             null,
                                                             tracksToTrackConfigs([
                                                                 _trackList.find((track) => track.name === t),
                                                             ]), browser
-                                                        )}
+                                                        )}*/
                                                         name={t}
                                                     />
                                                 )
@@ -331,7 +331,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
                                 toggleTracks={toggleTracks}
                                 browser={browser}
                                 loadingTrack={loadingTrack}
-                                selectorColumns={selectorColumns}
+                                selectorColumns={columns}
                             ></TrackTable>
                         </Grid>
                     </Grid>

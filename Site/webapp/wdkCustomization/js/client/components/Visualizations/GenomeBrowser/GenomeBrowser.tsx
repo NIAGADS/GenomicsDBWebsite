@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
 import { GWASTrack, VariantTrack, GWASServiceReader } from "../../../../lib/igv/CustomTracks";
-import { TrackConfig } from "@viz/GenomeBrowser";
+import { RawTrackConfig } from "@viz/GenomeBrowser";
 
 const HASH_PREFIX = "#/locus/";
 
@@ -20,9 +20,9 @@ interface GenomeBrowser {
 export const getLoadedTracks = (browser: any): string[] =>
     get(browser, "trackViews", []).map((view: any) => view.track.name || view.track.id);
 
-export const trackIsLoaded = (config: TrackConfig, browser: any) => getLoadedTracks(browser).includes(config.name);
+export const trackIsLoaded = (config: RawTrackConfig, browser: any) => getLoadedTracks(browser).includes(config.name);
 
-export const removeTrack = (config: TrackConfig, browser: any) => {
+export const removeTrack = (config: RawTrackConfig, browser: any) => {
     browser.removeTrackByName(config.name);
 };
 
