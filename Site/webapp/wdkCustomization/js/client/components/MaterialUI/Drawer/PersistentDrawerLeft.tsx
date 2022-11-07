@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { DrawerProps } from "@components/MaterialUI";
 
-export const DRAWER_WIDTH = 240;
+export const DRAWER_WIDTH = 300;
 export interface DrawerState {
     isOpen: boolean;
     handleClose?: any;
