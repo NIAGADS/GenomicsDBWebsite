@@ -19,6 +19,7 @@ import { withStyles } from "@material-ui/core/styles";
 import {
     RecordNavigationButton,
     RecordNavigationSection as RecordNavigationPanel,
+    RecordActionButtons
 } from "./Sections/RecordNavigationSection";
 import { contentStyles as drawerPanelStyles } from "genomics-client/components/MaterialUI/Drawer/PersistentDrawerLeft";
 /**
@@ -146,9 +147,12 @@ class RecordUI extends Component {
                 <RecordNavigationPanel
                     isOpen={this.state.navigationIsOpen}
                     handleClose={this._handleNavigationClose.bind(this)}
+                    title="Page Navigation"
                 >
                     <RecordNavigationSection
-                       // heading={this.props.record.displayName}
+                        heading={!this.props.recordClass.startsWith('dataset') 
+                            ? this.props.record.displayName 
+                            : "Location: " + this.props.record.span.toString()}
                         record={this.props.record}
                         recordClass={this.props.recordClass}
                         categoryTree={this.props.categoryTree}
@@ -163,8 +167,12 @@ class RecordUI extends Component {
                         onNavigationQueryChange={this.props.updateNavigationQuery}
                         requestPartialRecord={this.props.requestPartialRecord}
                     />
-                </RecordNavigationPanel>
+                                  {/*<RecordActionButtons 
+                    record={this.props.Record} recordClass={this.props.recordClass}>
+        </RecordActionButtons>*/}
 
+                </RecordNavigationPanel>
+  
                 <div className="wdk-RecordMain">
                     <RecordMainSection
                         ref={(c) => (this.recordMainSectionNode = findDOMNode(c))}
