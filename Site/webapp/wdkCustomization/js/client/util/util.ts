@@ -7,6 +7,13 @@ export function isTrue(stringArg: string) {
 
 export const getKey = (obj: { [key: string]: any }) => Object.keys(obj).pop();
 
+/* converts chr:start-end:strand into chr:start-end with commas in delimiting thousandths */
+export const formatSpan = (span: string) => {
+    const spanElements = span.split(':');
+    const positions = spanElements[1].split('-');
+    return spanElements[0] + ':' + parseInt(positions[0]).toLocaleString() + '-' + parseInt(positions[1]).toLocaleString();
+}
+
 export const convertHtmlEntites = (html: string) => {
     const conv = safeHtml(html),
         proc = conv.props.dangerouslySetInnerHTML.__html;

@@ -22,6 +22,8 @@ import {
     RecordActionButtons
 } from "./Sections/RecordNavigationSection";
 import { contentStyles as drawerPanelStyles } from "genomics-client/components/MaterialUI/Drawer/PersistentDrawerLeft";
+
+import { formatSpan } from "genomics-client/util/util";
 /**
  * Renders the main UI for the WDK Record page.
  */
@@ -38,7 +40,7 @@ class RecordUI extends Component {
         //@ts-ignore
         this.activeSectionTop = null;
         //@ts-ignore
-        this.state = { navigationIsOpen: true};
+        this.state = { navigationIsOpen: true };
     }
 
     componentDidMount() {
@@ -122,7 +124,7 @@ class RecordUI extends Component {
 
     render() {
         //@ts-ignore
-        let classes = this.props.classes; 
+        let classes = this.props.classes;
         let navigationStatusClassName = clsx(classes.content, { [classes.contentShift]: this.state.navigationIsOpen });
         let classNames = classnames(
             "wdk-RecordContainer",
@@ -150,9 +152,9 @@ class RecordUI extends Component {
                     title="Page Navigation"
                 >
                     <RecordNavigationSection
-                        heading={!this.props.recordClass.startsWith('dataset') 
-                            ? this.props.record.displayName 
-                            : "Location: " + this.props.record.span.toString()}
+                        heading={this.props.recordClass.shortDisplayName.startsWith('Dataset')
+                            ? this.props.record.displayName
+                            : "Available annotations for " + formatSpan(this.props.record.attributes.span.toString())}
                         record={this.props.record}
                         recordClass={this.props.recordClass}
                         categoryTree={this.props.categoryTree}
@@ -167,12 +169,16 @@ class RecordUI extends Component {
                         onNavigationQueryChange={this.props.updateNavigationQuery}
                         requestPartialRecord={this.props.requestPartialRecord}
                     />
-                                  {/*<RecordActionButtons 
-                    record={this.props.Record} recordClass={this.props.recordClass}>
-        </RecordActionButtons>*/}
+                    <RecordActionButtons
+                        primaryKey={this.props.record.id[0].value}
+                        recordClass={this.props.recordClass}
+                        browserSpan={this.props.recordClass.shortDisplayName.startsWith('Dataset')
+                            ? undef :
+                            formatSpan(this.props.record.attributes.span.toString())}>
+                    </RecordActionButtons>
 
                 </RecordNavigationPanel>
-  
+
                 <div className="wdk-RecordMain">
                     <RecordMainSection
                         ref={(c) => (this.recordMainSectionNode = findDOMNode(c))}

@@ -50,6 +50,7 @@
       <column name="chromosome" columnType="string"/>
       <column name="position" columnType="number"/>
       <column name="location" columnType="string"/>
+	  <column name="span" columnType="string"/>
 
       <column name="display_allele" columnType="string"/>
       
@@ -77,9 +78,10 @@
 		 
 		 chromosome,
 		 position,
-		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN NULL 
+		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position 
 		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS location,
-		 
+		 chromosome || ':' || CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position
+		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS span,
 		 is_adsp_variant,
 		 adsp_variant_flag(is_adsp_variant) AS adsp_display_flag,
 		 

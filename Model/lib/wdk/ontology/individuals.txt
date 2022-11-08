@@ -39,8 +39,6 @@ GeneRecordClasses.GeneRecordClass.ensembl_id	http://edamontology.org/topic_0219	
 GeneRecordClasses.GeneRecordClass.uniprot_id	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	uniprot_id				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.cytogenetic_location	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	cytogenetic_location				gene		results	record-internal	download
 													
-GeneRecordClasses.GeneRecordClass.full_jbrowse_link	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	full_jbrowse_link				gene			record-internal	
-GeneRecordClasses.GeneRecordClass.jbrowse_source_url	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	jbrowse_source_url				gene			record-internal	
 GeneRecordClasses.GeneRecordClass.dynspan_link	http://edamontology.org/topic_1775	Function analysis	GeneRecordClasses.GeneRecordClass	attribute	dynspan_link				gene			record-internal	
 GeneRecordClasses.GeneRecordClass.span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	span				gene		results	record-internal	download
 													
@@ -73,6 +71,7 @@ VariantRecordClasses.VariantRecordClass.metaseq_id	http://edamontology.org/topic
 VariantRecordClasses.VariantRecordClass.chromosome	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	chromosome						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.position	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	position						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.location	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	location						results	record-internal	download
+VariantRecordClasses.VariantRecordClass.span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	span				gene		record-internal
 VariantRecordClasses.VariantRecordClass.ref_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	ref_allele						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.alt_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	alt_allele						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.display_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	display_allele						results	record-internal	download
