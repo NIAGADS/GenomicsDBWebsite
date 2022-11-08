@@ -1,54 +1,65 @@
 /** Navigation panel for record page */
-import React from "react";
-
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import clsx from "clsx";
+
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Icon from "@material-ui/core/Icon";
 import MenuIcon from "@material-ui/icons/Menu";
-import { createStyles, makeStyles, useTheme, Theme } from "@material-ui/core/styles";
+import ShareIcon from "@material-ui/icons/Share";
+import BookIcon from "@material-ui/icons/Book";
+import LineStyleIcon from "@material-ui/icons/LineStyle";
+
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { PersistentDrawerLeft, DrawerState, HtmlTooltip, DrawerProps } from "@components/MaterialUI";
 
-/* import PropTypes from 'prop-types';
-import { includes, memoize, throttle } from 'lodash';
+import { RootState } from "wdk-client/Core/State/Types";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
 
-import CategoriesCheckboxTree from 'wdk-client/Components/CheckboxTree/CategoriesCheckboxTree';
-import { getId, getTargetType, isIndividual } from 'wdk-client/Utils/CategoryUtils';
-import { Seq } from 'wdk-client/Utils/IterableUtils';
-import { preorderSeq, pruneDescendantNodes } from 'wdk-client/Utils/TreeUtils';
-import RecordNavigationItem from 'wdk-client/Views/Records/RecordNavigation/RecordNavigationItem';
-import { constant } from 'wdk-client/Utils/Json'; */
+export interface RecordActions {
+    primaryKey: string;
+    recordClass: any;
+    browserSpan?: string;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         drawerContents: {
-            padding: theme.spacing(1)
+            padding: theme.spacing(1),
         },
         menuButton: {
             //marginRight: 36,
             borderRadius: "10%",
-            color: "white", 
-            fontSize: "2rem",    
+            color: "white",
+            fontSize: "2rem",
             padding: "8px",
             background: "rgba(0, 0, 0, 0.19) none repeat scroll 0% 0%",
             "&:hover": {
-                background: "rgba(0, 0, 0, 0.5) none repeat scroll 0% 0% !important"
-            }
+                background: "rgba(0, 0, 0, 0.5) none repeat scroll 0% 0% !important",
+            },
         },
         hide: {
             display: "none",
         },
         menuIcon: {
-          fill: "white",
-          //background: theme.palette.grey[50], 
-        }, 
+            fill: "white",
+            //background: theme.palette.grey[50],
+        },
         menu: {
-          position: "fixed",
-          height: "80px",
-          zIndex: 1
-        }
+            position: "fixed",
+            height: "80px",
+            zIndex: 1,
+        },
     })
 );
 
@@ -60,7 +71,9 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
                 arrow
                 title={
                     <React.Fragment>
-                        <Typography color="inherit" variant="caption">Show table of contents panel</Typography>
+                        <Typography color="inherit" variant="caption">
+                            Show table of contents panel
+                        </Typography>
                     </React.Fragment>
                 }
             >
@@ -77,13 +90,78 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
     );
 };
 
+/* genome browser, export, share, bookmark */
+export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recordClass, browserSpan }) => {
+    const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
+    const isGuest = useSelector((state: RootState) => state.globalData?.user?.isGuest);
+    const exportUrl = "/record/" + recordClass.urlSegment + "/download/" + primaryKey;
+
+    const [shareIsOpen, setShareIsOpen] = useState<boolean>(false);
+
+    const toggleShareModal = (event: React.MouseEvent<HTMLElement>) => {
+        setShareIsOpen(!shareIsOpen);
+    };
+
+    const handleCopyClick = (event: React.MouseEvent<HTMLElement>) => {
+        navigator.clipboard.writeText(window.location.toString());
+    };
+
+    return (
+        <>
+            {browserSpan && (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<LineStyleIcon />}
+                    href={`${webAppUrl}/app/visualizations/browser?#locus=${browserSpan}`}
+                >
+                    View on genome browser
+                </Button>
+            )}
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Icon className="fa fa-download" />}
+                href={exportUrl}
+            >
+                Export record
+            </Button>
+            <Button variant="contained" color="primary" startIcon={<ShareIcon />} onClick={toggleShareModal}>
+                Share this page
+            </Button>
+            <Button variant="contained" color="primary" startIcon={<BookIcon />} disabled={!isGuest}>
+                Bookmark
+            </Button>
+            <Dialog open={shareIsOpen} onClose={toggleShareModal} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Share this page</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Copy the following link:</DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Permalink"
+                        type="text"
+                        fullWidth
+                        defaultValue={window.location.toString()}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                    />
+                    <IconButton color="secondary" aria-label="delete">
+                        <Icon className="fas fa-copy" />
+                    </IconButton>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
+
 export const RecordNavigationSection: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
     const classes = useStyles();
     return (
         <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Close">
-            <Box className={classes.drawerContents}>
-                {children}
-            </Box>
+            <Box className={classes.drawerContents}>{children}</Box>
         </PersistentDrawerLeft>
     );
 };
