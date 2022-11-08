@@ -1,5 +1,5 @@
 /** Navigation panel for record page */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 
@@ -14,21 +14,26 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ShareIcon from "@material-ui/icons/Share";
 import BookIcon from "@material-ui/icons/Book";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { PersistentDrawerLeft, DrawerState, HtmlTooltip, DrawerProps } from "@components/MaterialUI";
 
 import { RootState } from "wdk-client/Core/State/Types";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
+import { RecordClass } from "wdk-client/Utils/WdkModel";
+
+
 
 export interface RecordActions {
     primaryKey: string;
-    recordClass: any;
+    recordClass: RecordClass;
     browserSpan?: string;
 }
 
@@ -94,9 +99,21 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
 export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recordClass, browserSpan }) => {
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const isGuest = useSelector((state: RootState) => state.globalData?.user?.isGuest);
-    const exportUrl = "/record/" + recordClass.urlSegment + "/download/" + primaryKey;
+    const [exportUrl, setExportUrl] = useState<string>("loading");
+    const [canBookmark, setCanBookmark] = useState<boolean>(false);
 
     const [shareIsOpen, setShareIsOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (webAppUrl) {
+            const url = webAppUrl + "/record/" + recordClass.urlSegment + "/download/" + primaryKey;
+            setExportUrl(url);
+        }
+        if (isGuest) {
+            setCanBookmark(isGuest);
+        }
+    }, [webAppUrl, isGuest]);
+
 
     const toggleShareModal = (event: React.MouseEvent<HTMLElement>) => {
         setShareIsOpen(!shareIsOpen);
@@ -107,7 +124,8 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
     };
 
     return (
-        <>
+    <>
+          <Grid item>
             {browserSpan && (
                 <Button
                     variant="contained"
@@ -123,36 +141,38 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                 color="primary"
                 startIcon={<Icon className="fa fa-download" />}
                 href={exportUrl}
+                disabled={exportUrl === "loading"}
             >
                 Export record
             </Button>
             <Button variant="contained" color="primary" startIcon={<ShareIcon />} onClick={toggleShareModal}>
                 Share this page
             </Button>
-            <Button variant="contained" color="primary" startIcon={<BookIcon />} disabled={!isGuest}>
+            <Button variant="contained" color="primary" startIcon={<BookIcon />} disabled={isGuest}>
                 Bookmark
             </Button>
-            <Dialog open={shareIsOpen} onClose={toggleShareModal} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Share this page</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Copy the following link:</DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Permalink"
-                        type="text"
-                        fullWidth
-                        defaultValue={window.location.toString()}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                    />
-                    <IconButton color="secondary" aria-label="delete">
-                        <Icon className="fas fa-copy" />
-                    </IconButton>
-                </DialogContent>
-            </Dialog>
+        </Grid>
+        <Dialog open={shareIsOpen} onClose={toggleShareModal} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Share this page</DialogTitle>
+            <DialogContent>
+                <DialogContentText>Copy the following link:</DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Permalink"
+                    type="text"
+                    fullWidth
+                    defaultValue={window.location.toString()}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                />
+                <IconButton color="secondary" aria-label="delete">
+                    <FileCopyIcon />
+                </IconButton>
+            </DialogContent>
+        </Dialog>
         </>
     );
 };

@@ -85,6 +85,7 @@
 	<columnAttribute name="chromosome" displayName="Chromosome" type="string" />
 	<columnAttribute name="position" displayName="Position" type="integer" />
 	<columnAttribute name="location" displayName="Location" type="string" />
+	<columnAttribute name="span" displayName="Location" type="string"  internal="true" inReportMaker="false"/>
 	
 	<columnAttribute name="display_allele" displayName="Allele" type="string" />	
 
