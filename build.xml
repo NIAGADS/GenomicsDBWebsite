@@ -50,7 +50,7 @@
     <!-- the following four commands generate the website ontology -->
 
     <path id="owl-class-path">
-      <pathelement location="${targetDir}/lib/java/log4j-1.2.17.jar" />
+      <pathelement location="${targetDir}/lib/java/deprecated/log4j-1.2.17.jar" />
       <pathelement location="${targetDir}/lib/java/ebrc-website-common-model-1.0.0.jar" />
       <pathelement location="${targetDir}/lib/java/args4j-2.0.23.jar" />
       <pathelement location="${targetDir}/lib/java/owlapi-distribution-3.5.0.jar" />
