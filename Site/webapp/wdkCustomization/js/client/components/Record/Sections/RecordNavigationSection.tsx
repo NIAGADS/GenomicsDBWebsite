@@ -8,18 +8,12 @@ import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment";
+
 import Icon from "@material-ui/core/Icon";
 import MenuIcon from "@material-ui/icons/Menu";
 import ShareIcon from "@material-ui/icons/Share";
 import BookIcon from "@material-ui/icons/Book";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -53,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         actionButton: {
             marginTop: theme.spacing(1),
-            justifyContent: "left"
+            justifyContent: "left",
         },
         shareLink: {
             fontSize: "1rem",
@@ -134,7 +128,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                 {browserSpan && (
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="default"
                         startIcon={<LineStyleIcon />}
                         href={`${webAppUrl}/app/visualizations/browser?#locus=${browserSpan}`}
                         fullWidth={true}
@@ -146,7 +140,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                 )}
                 <Button
                     variant="contained"
-                    color="secondary"
+                    color="default"
                     startIcon={<Icon className="fa fa-download" />}
                     href={exportUrl}
                     disabled={exportUrl === "loading"}
@@ -168,7 +162,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                 >
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="default"
                         startIcon={<ShareIcon />}
                         onClick={handleCopyClick}
                         fullWidth={true}
@@ -178,6 +172,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                         Share this page
                     </Button>
                 </HtmlTooltip>
+                {/* span allow tooltip to fire, since button is disabled */}
                 <HtmlTooltip
                     arrow
                     title={
@@ -188,39 +183,21 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                         </React.Fragment>
                     }
                 >
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<BookIcon />}
-                        disabled={canBookmark}
-                        fullWidth={true}
-                        size="small"
-                        className={classes.actionButton}
-                    >
-                        Bookmark
-                    </Button>
+                    <span>
+                        <Button
+                            variant="contained"
+                            color="default"
+                            startIcon={<BookIcon />}
+                            disabled={canBookmark}
+                            fullWidth={true}
+                            size="small"
+                            className={classes.actionButton}
+                        >
+                            Bookmark
+                        </Button>
+                    </span>
                 </HtmlTooltip>
             </Grid>
-            <Dialog open={shareIsOpen} onClose={toggleShareModal} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Share this page</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Copy the following link:</DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        type="text"
-                        defaultValue={window.location.toString()}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        className={classes.shareLink}
-                    />
-                    <IconButton color="secondary" aria-label="delete">
-                        <FileCopyIcon />
-                    </IconButton>
-                </DialogContent>
-            </Dialog>
         </>
     );
 };
@@ -228,7 +205,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
 export const RecordNavigationSection: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
     const classes = useStyles();
     return (
-        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Close">
+        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Hide Navigation">
             <Box className={classes.drawerContents}>{children}</Box>
         </PersistentDrawerLeft>
     );
