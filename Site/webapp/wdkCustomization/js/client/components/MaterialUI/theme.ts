@@ -1,6 +1,11 @@
 import { ThemeOptions, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-export const themeOptions: ThemeOptions = {
+// MUI default theme, for theming blue buttons and the like
+export const muiThemeOptions: ThemeOptions = {
+  palette: {type: "light"}
+}
+
+export const primaryThemeOptions: ThemeOptions = {
     palette: {
       type: 'light',
       primary: {
@@ -30,6 +35,13 @@ export const themeOptions: ThemeOptions = {
       },
       h4: {
         fontFamily: '"Libre Franklin", "Raleway", "Roboto", "Arial", "sans-serif"'
+      },
+      h5: {
+        fontFamily: '"Roboto", "Arial", "sans-serif"'
+      },
+      h6: {
+        fontFamily: '"Roboto", "Arial", "sans-serif"',
+        fontSize: "1rem"
       },
       body2: {
           //fontSize: "1.5rem",

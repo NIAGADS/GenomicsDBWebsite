@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Custom {
-    className: string;
+    className?: string;
     alignItems?: GridItemsAlignment;
     justifyContent?: GridJustification;
 }
@@ -73,7 +73,7 @@ export const CustomPanel: React.FC<PanelProps & Custom> = ({
     hasBaseArrow = false,
 }) => {
     return (
-        <Grid item container justifyContent={justifyContent} alignItems={alignItems} className={className} xs={12}>
+        <Grid item container justifyContent={justifyContent} alignItems={alignItems} className={className ? className : ""} xs={12}>
             {children}
             {hasBaseArrow && <DownArrowRow color="primary" />}
         </Grid>

@@ -6,8 +6,11 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 import { DrawerProps } from "@components/MaterialUI";
+import { Box } from "@material-ui/core";
+import { typeAheadEnumParamDecoder } from "wdk-client/Service/Mixins/SearchesService";
 
 export const DRAWER_WIDTH = 300;
 export const SHIFT_X = 225;
@@ -17,7 +20,7 @@ export interface DrawerState {
     handleOpen?: any;
 }
 
-export const contentStyles = (theme:Theme) => ({
+export const contentStyles = (theme: Theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
@@ -32,12 +35,22 @@ export const contentStyles = (theme:Theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: SHIFT_X
+        marginLeft: SHIFT_X,
     },
 });
 
 const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
+        actionButton: {
+            marginTop: theme.spacing(1),
+            justifyContent: "right",
+        },
+        divider: {
+            marginTop: theme.spacing(1)
+        },
+        children: {
+            marginTop: 100,
+        },
         drawer: {
             width: DRAWER_WIDTH,
             flexShrink: 0,
@@ -52,7 +65,7 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
             // necessary for content to be below app bar
             ...theme.mixins.toolbar,
             justifyContent: "flex-end",
-            marginTop: "90px"
+            marginTop: "90px",
         },
         content: {
             flexGrow: 1,
@@ -72,7 +85,6 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
         },
     })
 );
-
 
 export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ title, children, isOpen, handleClose }) => {
     const classes = useDrawerStyles();
@@ -98,14 +110,19 @@ export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ titl
                 paper: classes.drawerPaper,
             }}
         >
-            <div className={classes.drawerHeader}>
-                {title && <Typography variant="h5">{title}</Typography>}
-                <IconButton onClick={onDrawerClose}>
-                    {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                </IconButton>
-            </div>
-            <Divider />
-            {children}
+            <Box className={classes.children}>{children}</Box>
+            <Divider className={classes.divider}/>
+            <Button
+                variant="text"
+                color="primary"
+                endIcon={<ChevronLeftIcon />}
+                onClick={onDrawerClose}
+                fullWidth={true}
+                size="small"
+                className={classes.actionButton}
+            >
+                {title ? title : "Hide"}
+            </Button>
         </Drawer>
     );
 };

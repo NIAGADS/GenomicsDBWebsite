@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, ButtonProps, IconButton, Theme, withStyles } from "@material-ui/core";
+import { Button, ButtonProps, IconButton, Theme, withStyles, ThemeProvider } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { muiTheme } from "@components/MaterialUI";
 
 //base override of wdk input[type=button]
 const buttonResetStyles = (theme: Theme) =>
@@ -60,3 +61,11 @@ export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, 
         </BaseButton>
     );
 };
+
+export const MaterialUIThemedButton: React.FC<ButtonProps> = ({children, ...props}) => {
+    return (
+        <ThemeProvider theme={muiTheme}>
+            <Button {...props}>{children}</Button>
+        </ThemeProvider>
+    )
+}
