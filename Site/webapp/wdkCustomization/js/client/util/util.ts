@@ -11,7 +11,12 @@ export const getKey = (obj: { [key: string]: any }) => Object.keys(obj).pop();
 export const formatSpan = (span: string) => {
     const spanElements = span.split(':');
     const positions = spanElements[1].split('-');
-    return spanElements[0] + ':' + parseInt(positions[0]).toLocaleString() + '-' + parseInt(positions[1]).toLocaleString();
+    if (positions.length == 2) {
+        return spanElements[0] + ':' + parseInt(positions[0]).toLocaleString() + '-' + parseInt(positions[1]).toLocaleString();
+    }
+    return spanElements[0] + ':' + parseInt(positions[0]).toLocaleString();
+    
+    
 }
 
 export const convertHtmlEntites = (html: string) => {

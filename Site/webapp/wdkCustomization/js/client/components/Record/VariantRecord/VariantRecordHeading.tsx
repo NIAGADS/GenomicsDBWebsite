@@ -6,7 +6,6 @@ import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
 
 import {
-    HeaderRecordActions,
     SummaryPlotHeader,
     getAttributeChartProperties,
     useHeadingStyles,
@@ -60,9 +59,6 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                         </Typography>
                     )}
                 </Grid>
-                <Box pb={2} pt={1}>
-                    <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-                </Box>
                 <Grid item>
                     <AttributeList record={record} />
                 </Grid>

@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { DrawerProps } from "@components/MaterialUI";
 
 export const DRAWER_WIDTH = 300;
+export const SHIFT_X = 225;
 export interface DrawerState {
     isOpen: boolean;
     handleClose?: any;
@@ -31,7 +32,7 @@ export const contentStyles = (theme:Theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: DRAWER_WIDTH,
+        marginLeft: SHIFT_X
     },
 });
 

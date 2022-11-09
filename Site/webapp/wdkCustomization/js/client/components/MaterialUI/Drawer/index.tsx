@@ -14,6 +14,7 @@ export interface DrawerProps {
     handleClose?: any;
     handleOpen?: any;
     title?: string;
+    className?: string;
 }
 
 export interface DrawerContentsProps {

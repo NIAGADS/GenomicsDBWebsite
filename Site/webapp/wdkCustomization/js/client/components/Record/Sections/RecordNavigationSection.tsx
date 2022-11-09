@@ -14,7 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ShareIcon from "@material-ui/icons/Share";
 import BookIcon from "@material-ui/icons/Book";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -28,8 +28,6 @@ import { PersistentDrawerLeft, DrawerState, HtmlTooltip, DrawerProps } from "@co
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { RecordClass } from "wdk-client/Utils/WdkModel";
-
-
 
 export interface RecordActions {
     primaryKey: string;
@@ -52,6 +50,13 @@ const useStyles = makeStyles((theme: Theme) =>
             "&:hover": {
                 background: "rgba(0, 0, 0, 0.5) none repeat scroll 0% 0% !important",
             },
+        },
+        actionButton: {
+            marginTop: theme.spacing(1),
+            justifyContent: "left"
+        },
+        shareLink: {
+            fontSize: "1rem",
         },
         hide: {
             display: "none",
@@ -101,19 +106,19 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
     const isGuest = useSelector((state: RootState) => state.globalData?.user?.isGuest);
     const [exportUrl, setExportUrl] = useState<string>("loading");
     const [canBookmark, setCanBookmark] = useState<boolean>(false);
-
     const [shareIsOpen, setShareIsOpen] = useState<boolean>(false);
+
+    const classes = useStyles();
 
     useEffect(() => {
         if (webAppUrl) {
-            const url = webAppUrl + "/record/" + recordClass.urlSegment + "/download/" + primaryKey;
+            const url = webAppUrl + "/app/record/" + recordClass.urlSegment + "/download/" + primaryKey;
             setExportUrl(url);
         }
         if (isGuest) {
             setCanBookmark(isGuest);
         }
     }, [webAppUrl, isGuest]);
-
 
     const toggleShareModal = (event: React.MouseEvent<HTMLElement>) => {
         setShareIsOpen(!shareIsOpen);
@@ -124,55 +129,98 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
     };
 
     return (
-    <>
-          <Grid item>
-            {browserSpan && (
+        <>
+            <Grid item>
+                {browserSpan && (
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<LineStyleIcon />}
+                        href={`${webAppUrl}/app/visualizations/browser?#locus=${browserSpan}`}
+                        fullWidth={true}
+                        size="small"
+                        className={classes.actionButton}
+                    >
+                        View on genome browser
+                    </Button>
+                )}
                 <Button
                     variant="contained"
-                    color="primary"
-                    startIcon={<LineStyleIcon />}
-                    href={`${webAppUrl}/app/visualizations/browser?#locus=${browserSpan}`}
+                    color="secondary"
+                    startIcon={<Icon className="fa fa-download" />}
+                    href={exportUrl}
+                    disabled={exportUrl === "loading"}
+                    fullWidth={true}
+                    size="small"
+                    className={classes.actionButton}
                 >
-                    View on genome browser
+                    Export record
                 </Button>
-            )}
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Icon className="fa fa-download" />}
-                href={exportUrl}
-                disabled={exportUrl === "loading"}
-            >
-                Export record
-            </Button>
-            <Button variant="contained" color="primary" startIcon={<ShareIcon />} onClick={toggleShareModal}>
-                Share this page
-            </Button>
-            <Button variant="contained" color="primary" startIcon={<BookIcon />} disabled={isGuest}>
-                Bookmark
-            </Button>
-        </Grid>
-        <Dialog open={shareIsOpen} onClose={toggleShareModal} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Share this page</DialogTitle>
-            <DialogContent>
-                <DialogContentText>Copy the following link:</DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Permalink"
-                    type="text"
-                    fullWidth
-                    defaultValue={window.location.toString()}
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                />
-                <IconButton color="secondary" aria-label="delete">
-                    <FileCopyIcon />
-                </IconButton>
-            </DialogContent>
-        </Dialog>
+                <HtmlTooltip
+                    arrow
+                    title={
+                        <React.Fragment>
+                            <Typography color="inherit" variant="caption">
+                                Click to copy share permalink to cliboard
+                            </Typography>
+                        </React.Fragment>
+                    }
+                >
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<ShareIcon />}
+                        onClick={handleCopyClick}
+                        fullWidth={true}
+                        size="small"
+                        className={classes.actionButton}
+                    >
+                        Share this page
+                    </Button>
+                </HtmlTooltip>
+                <HtmlTooltip
+                    arrow
+                    title={
+                        <React.Fragment>
+                            <Typography color="inherit" variant="caption">
+                                Features for registered users coming soon.
+                            </Typography>
+                        </React.Fragment>
+                    }
+                >
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<BookIcon />}
+                        disabled={canBookmark}
+                        fullWidth={true}
+                        size="small"
+                        className={classes.actionButton}
+                    >
+                        Bookmark
+                    </Button>
+                </HtmlTooltip>
+            </Grid>
+            <Dialog open={shareIsOpen} onClose={toggleShareModal} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Share this page</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Copy the following link:</DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        type="text"
+                        defaultValue={window.location.toString()}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                        className={classes.shareLink}
+                    />
+                    <IconButton color="secondary" aria-label="delete">
+                        <FileCopyIcon />
+                    </IconButton>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };
