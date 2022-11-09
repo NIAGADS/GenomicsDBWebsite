@@ -28,7 +28,7 @@ import { Table, TableToolbar, TablePagination, TableColumnsPanel } from ".";
 import { FilterPanel, FilterChipBar } from "./TableFilters";
 import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
 
-import { DefaultBackgroundPanel, NavigationDrawer } from "@components/MaterialUI";
+import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
 import { useTableStyles } from "./styles";
 
@@ -188,13 +188,13 @@ const TableContainer: React.FC<TableContainerProps> = ({
 
     // Render the UI for the table
     return (
-        <DefaultBackgroundPanel>
+        <CustomPanel justifyContent="flex-start">
             <NavigationDrawer
                 navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
                 toggleAnchor="bottom"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Display table summary and advanced filters"
-                toggleText="Advanced Filters"
+                toggleText="Filter"
                 drawerContents={renderDrawerContents}
                 drawerCloseLabel="Close"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
@@ -204,7 +204,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
             </NavigationDrawer>
 
             <Table className={className} instance={instance} />
-        </DefaultBackgroundPanel>
+        </CustomPanel>
     );
 };
 

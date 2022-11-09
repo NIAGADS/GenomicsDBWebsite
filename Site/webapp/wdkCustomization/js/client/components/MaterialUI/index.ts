@@ -1,7 +1,8 @@
 import { createTheme } from '@material-ui/core/styles';
-import { themeOptions } from "./theme";
+import { primaryThemeOptions, muiThemeOptions } from "./theme";
 
-export const theme = createTheme(themeOptions);
+export const theme = createTheme(primaryThemeOptions);
+export const muiTheme = createTheme(muiThemeOptions);
 export * from "./styles";
 
 export * from "./Tooltips";

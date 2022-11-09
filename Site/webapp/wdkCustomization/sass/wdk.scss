@@ -63,14 +63,12 @@ body {
     }
 
     .wdk-RecordNavigationSectionHeader {
-        // record name in conext menu
-        //display: none;
         font-family: "Roboto";
         text-align: center;
-        font-size: 12px;
+        font-size: 14px;
     }
     .wdk-RecordNavigationSectionItem {
-        background: $secondary;
+        background: $mui-default;
         padding: 4px 6px;
         a {color: $primary !important;}
         border-radius: 4px;

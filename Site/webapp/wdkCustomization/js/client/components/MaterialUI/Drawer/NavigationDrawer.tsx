@@ -11,18 +11,12 @@ import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { withHtmlTooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
+import { withHtmlTooltip, DrawerProps, DrawerContentsProps, MaterialUIThemedButton } from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
 
 const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
-        button: {
-            border: `1px solid ${theme.palette.grey[300]}`,
-            padding: "4.5px",
-            "&:hover": {
-                backgroundColor: theme.palette.grey[100],
-            },
-        },
+
         drawerHeader: {
             display: "flex",
             alignItems: "center",
@@ -73,15 +67,15 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
                     <Toolbar /*style={{ display: "flex" }} */ variant="dense">
                         {toggleIcon &&
                             withHtmlTooltip(
-                                <Button
-                                    className={drawerClasses.button}
+                                <MaterialUIThemedButton
                                     style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
-                                    color="inherit"
+                                    color="primary"
+                                    variant="text"
                                     aria-label="open-close-filter-menu"
                                     onClick={handleToggleClick}
                                     endIcon={toggleIcon}>
                                     {toggleText}
-                                </Button>,
+                                </MaterialUIThemedButton>,
                                 toggleHelp
                             )}
 
@@ -104,7 +98,6 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
                         <Grid item>
                             {withHtmlTooltip(
                                 <IconButton
-                                    className={drawerClasses.button}
                                     color="inherit"
                                     aria-label="close-filter-menu"
                                     onClick={handleToggleClick}
