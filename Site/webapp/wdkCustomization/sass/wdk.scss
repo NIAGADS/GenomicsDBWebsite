@@ -1,8 +1,5 @@
-// material-ui / wdk css overrides
-
-/* [class*="MUI-button"] {
-    hover: {text-decoration: none}
-} */
+// wdk css overrides
+//@import "./variables";
 
 //overrides go here
 
@@ -73,9 +70,9 @@ body {
         font-size: 12px;
     }
     .wdk-RecordNavigationSectionItem {
-        background: #27333f;
+        background: $secondary;
         padding: 4px 6px;
-        a {color: white !important;}
+        a {color: $primary !important;}
         border-radius: 4px;
     }
     .wdk-RecordNavigationItem {

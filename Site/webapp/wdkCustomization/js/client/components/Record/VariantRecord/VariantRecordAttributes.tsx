@@ -80,8 +80,9 @@ const ADSPStatusDisplay: React.FC<any> = ({ is_adsp_variant }) => {
                     <Typography variant="caption">
                         This variant was present in ADSP samples and PASSED the ADSP quality control checks.
                     </Typography>
+                    <br/>
                     <Typography variant="caption" className="red">
-                        <WarningIcon /> This is not an indicator of AD-risk association. Please view summary statistics
+                        <WarningIcon fontSize="small"/> This is not an indicator of AD-risk association. Please view summary statistics
                         results or ADSP Case/Control single-variant results to make that determination.
                     </Typography>
                 </>

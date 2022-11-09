@@ -78,10 +78,13 @@
 		 
 		 chromosome,
 		 position,
-		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position 
+
+		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position::text 
 		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS location,
-		 chromosome || ':' || CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position
-		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS span,
+
+		 chromosome || ':' || CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position::text
+		 ELSE (display_attributes->>'location_start')::text || ' - ' || (display_attributes->>'location_end')::text END AS span,
+
 		 is_adsp_variant,
 		 adsp_variant_flag(is_adsp_variant) AS adsp_display_flag,
 		 

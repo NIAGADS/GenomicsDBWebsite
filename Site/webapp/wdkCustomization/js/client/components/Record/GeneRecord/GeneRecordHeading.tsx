@@ -8,7 +8,6 @@ import { HighchartsTableTrellis } from "@components/Visualizations";
 import { CustomPanel } from "@components/MaterialUI";
 
 import {
-    HeaderRecordActions,
     SummaryPlotHeader,
     getAttributeChartProperties,
     useHeadingStyles,
@@ -32,9 +31,6 @@ const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }
                         <em>{record.attributes.gene_name}</em>
                     </Typography>
                 </Grid>
-                <Box pb={2} pt={1}>
-                    <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} />
-                </Box>
                 <Grid item>
                     <AttributeList record={record} />
                 </Grid>

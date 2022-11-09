@@ -198,6 +198,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
                 drawerContents={renderDrawerContents}
                 drawerCloseLabel="Close"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
+                className={classes.navigationToolbar}
             >
                 <FilterChipBar instance={instance} />
             </NavigationDrawer>

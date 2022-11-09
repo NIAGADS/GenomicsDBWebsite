@@ -55,6 +55,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
     toggleHelp,
     toggleText,
     children,
+    className
 }) => {
     const classes = useDrawerStyles();
     const [open, setOpen] = useState(false);
@@ -68,7 +69,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
     return (
         <div>
             <React.Fragment key={toggleAnchor}>
-                <AppBar position="static" elevation={0} {...navigationProps}>
+                <AppBar position="static" elevation={0} {...navigationProps} className={className}>
                     <Toolbar /*style={{ display: "flex" }} */ variant="dense">
                         {toggleIcon &&
                             withHtmlTooltip(
