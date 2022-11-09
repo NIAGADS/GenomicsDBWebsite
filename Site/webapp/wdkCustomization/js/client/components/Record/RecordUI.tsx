@@ -152,8 +152,10 @@ class RecordUI extends Component {
                     title="Page Navigation"
                 >
                     <RecordNavigationSection
-                        heading={this.props.recordClass.shortDisplayName.startsWith('Dataset')
+                        heading={this.props.recordClass.shortDisplayName === "Track"
                             ? this.props.record.displayName
+                            : this.props.recordClass.shortDisplayName === "Dataset"
+                            ? "NIAGADS accessions and datasets in the Alzheimer's GenomicsDB"
                             : "Available annotations for " + formatSpan(this.props.record.attributes.span.toString())}
                         record={this.props.record}
                         recordClass={this.props.recordClass}
@@ -172,7 +174,7 @@ class RecordUI extends Component {
                     <RecordActionButtons
                         primaryKey={this.props.record.id[0].value}
                         recordClass={this.props.recordClass}
-                        browserSpan={this.props.recordClass.shortDisplayName.startsWith('Dataset')
+                        browserSpan={this.props.recordClass.shortDisplayName === "Track" || this.props.recordClass.shortDisplayName === "Dataset"
                             ? null :
                             formatSpan(this.props.record.attributes.span.toString())}>
                     </RecordActionButtons>
