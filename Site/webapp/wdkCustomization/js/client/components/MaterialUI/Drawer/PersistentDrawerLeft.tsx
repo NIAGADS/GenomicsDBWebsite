@@ -1,16 +1,14 @@
 import React from "react";
+
 import { makeStyles, useTheme, Theme, createStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 import { DrawerProps } from "@components/MaterialUI";
 import { Box } from "@material-ui/core";
-import { typeAheadEnumParamDecoder } from "wdk-client/Service/Mixins/SearchesService";
+
 
 export const DRAWER_WIDTH = 300;
 export const SHIFT_X = 225;
