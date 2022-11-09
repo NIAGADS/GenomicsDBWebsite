@@ -173,7 +173,7 @@ class RecordUI extends Component {
                         primaryKey={this.props.record.id[0].value}
                         recordClass={this.props.recordClass}
                         browserSpan={this.props.recordClass.shortDisplayName.startsWith('Dataset')
-                            ? undef :
+                            ? null :
                             formatSpan(this.props.record.attributes.span.toString())}>
                     </RecordActionButtons>
 
