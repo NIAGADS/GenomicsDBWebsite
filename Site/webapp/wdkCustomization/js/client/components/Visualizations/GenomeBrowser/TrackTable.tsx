@@ -11,11 +11,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { findIndex, has, get } from "lodash";
 import { HelpIcon } from "wdk-client/Components";
 
-import { SelectColumnFilter } from "@viz/Table/TableFilters/TableFilters";
 import TableContainer /*, { SortIconGroup } */ from "@viz/Table/TableContainer";
+import { PieChartFilter, SelectColumnFilter, fuzzyTextFilter, globalTextFilter, includesFilter } from "@viz/Table";
 
-import { fuzzyTextFilter, globalTextFilter, includesFilter } from "@viz/Table/TableFilters/filters";
-import { PieChartFilter } from "@viz/Table/TableFilters";
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";
 

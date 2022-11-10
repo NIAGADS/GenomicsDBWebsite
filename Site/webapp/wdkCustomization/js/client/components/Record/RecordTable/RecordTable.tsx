@@ -21,7 +21,7 @@ import {
     booleanFlagFilter,
     includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
-import { PValueSliderFilter as PValueFilter, PieChartFilter } from "./RecordTableFilters";
+import { PValueThresholdFilter as PValueFilter, PieChartFilter } from "./RecordTableFilters";
 import classNames from "classnames";
 import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
 

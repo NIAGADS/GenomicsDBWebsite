@@ -25,6 +25,7 @@
         "react-csv": "^1.0.19",
         "react-material-ui-carousel": "^2.2.7",
         "react-native": "^0.64.2",
+        "react-number-format": "^5.1.1",
         "react-socks": "^2.2.0",
         "react-table": "7.7.0"
     },

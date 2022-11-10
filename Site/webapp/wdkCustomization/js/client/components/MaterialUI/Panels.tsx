@@ -30,6 +30,7 @@ export interface CollapsablePanelProps {
     title?: string;
     defaultOpen?: boolean;
     headerContents?: React.ReactNode;
+    borderedHeader?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,6 +58,9 @@ const useStyles = makeStyles((theme: Theme) =>
         expandOpen: {
             transform: "rotate(180deg)",
         },
+        borderBottom: {
+            bottomBorder: "2px solid " + theme.palette.secondary.main,
+        }
     })
 );
 
@@ -128,7 +132,8 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
     headerContents,
     children,
     hasBaseArrow = false,
-    defaultOpen = false
+    defaultOpen = false,
+    borderedHeader = false
 }) => {
     const [expanded, setExpanded] = useState(defaultOpen);
     const classes = useStyles();
@@ -138,7 +143,7 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
     };
     return children ? (
         <Card elevation={0}>
-            <CardActions disableSpacing>
+            <CardActions disableSpacing className={borderedHeader ? classes.borderBottom : ""}>
                 {title && <Typography>{title}</Typography>}
                 {headerContents && headerContents}
                 <IconButton
@@ -149,6 +154,7 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
                     aria-expanded={expanded}
                     size="small"
                     aria-label="show more"
+                    color="default"
                 >
                     <ExpandMoreIcon />
                 </IconButton>

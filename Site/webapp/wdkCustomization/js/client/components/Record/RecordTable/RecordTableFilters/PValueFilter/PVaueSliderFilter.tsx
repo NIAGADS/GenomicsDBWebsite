@@ -3,6 +3,7 @@ import { chain } from "lodash";
 import { Column } from "react-table";
 
 import { negLog10p, getMinMaxNegLog10PValue, invertNegLog10p } from "../filters/negLog10pFilter";
+import { DEFAULT_FILTER_VALUE } from "../PValueFilter";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
@@ -12,7 +13,7 @@ import Box from "@material-ui/core/Box";
 import PinDropIcon from '@material-ui/icons/PinDrop';
 import { theme } from "genomics-client/components/MaterialUI";
 
-export const DEFAULT_FILTER_VALUE = negLog10p(5e-8);
+
 const MAX_ALLOWABLE_PVALUE = 15;
 const MIN_ALLOWABLE_PVALUE = 1;
 
