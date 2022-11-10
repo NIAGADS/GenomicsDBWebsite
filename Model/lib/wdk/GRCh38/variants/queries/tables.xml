@@ -132,7 +132,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
     <sqlQuery name="AlleleFrequency">
       <column name="project_id"/>
       <column name="source_id"/>
-      <column name="ethnicity"/>
+      <column name="population"/>
       <column name="population_abbrev"/>
       <column name="population_source"/>
       <column name="frequency"/>
@@ -167,7 +167,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 abbreviation AS population_abbrev, 
 
 		 CASE WHEN description IS NOT NULL THEN build_text_attribute(display_value, description, NULL)
-		 ELSE build_text_attribute(display_value, NULL, NULL) END AS ethnicity
+		 ELSE build_text_attribute(display_value, NULL, NULL) END AS population
 
 		 FROM freq_values v, NIAGADS.Population p,
 		 normalize_alleles(split_part(v.source_id, ':', 3), split_part(split_part(v.source_id, '_', 1), ':', 4)) n

@@ -1,4 +1,4 @@
-import { includes } from "lodash";
+import { includes, get } from "lodash";
 import React from "react";
 import { useEffect, useRef } from "react";
 import CollapsibleSection from "wdk-client/Components/Display/CollapsibleSection";
@@ -12,7 +12,7 @@ import { DefaultSectionTitle } from "wdk-client/Views/Records/SectionTitle";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import RecordTable from "../RecordTable/RecordTable";
-import {_tableProperties} from "genomics-client/data/_recordTableProperties";
+import {_tableProperties, _defaultTableProperties} from "genomics-client/data/_recordTableProperties";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,7 +38,7 @@ function RecordTableSection(props: RecordTableSection) {
     let { table, record, recordClass, isCollapsed, onCollapsedChange, requestPartialRecord, title } = props;
     let { displayName, description, name } = table;
     let data = record.tables[name];
-    let properties = _tableProperties[recordClass.displayName][name];
+    let properties = get(_tableProperties[recordClass.displayName], name, _defaultTableProperties);
     let isError = includes(record.tableErrors, name);
     let isLoading = data == null;
 
