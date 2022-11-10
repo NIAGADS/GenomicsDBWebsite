@@ -248,6 +248,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
 
     let defaultHiddenColumns = get(properties, "hiddenColumns");
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
+    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
 
     const columns: Column<{}>[] = useMemo(() => _buildColumns(table, data, defaultHiddenColumns), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
@@ -266,16 +267,16 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
             </p>
         );
     }
-
+    
     return (
         <TableContainer
-            className={classNames(table.properties.canShrink ? "shrink" : classes.fullWidth, classes.table)}
+            className={classNames(get(properties, "fullWidth", true) ? classes.fullWidth : "shrink", classes.table)}
             columns={columns}
             data={resolvedData}
             filterTypes={filterTypes}
             canFilter={canFilter}
             showAdvancedFilter={hasColumnFilters}
-            showHideColumns={hasHiddenColumns}
+            showHideColumns={canToggleColumns}
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}

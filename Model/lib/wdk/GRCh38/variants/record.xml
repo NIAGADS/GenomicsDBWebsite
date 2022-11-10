@@ -295,7 +295,7 @@
 
       <table name="allele_frequencies" displayName="Population Frequencies" queryRef="VariantTables.AlleleFrequency">
 	<columnAttribute name="population_abbrev" displayName="Population" type="string" />
-	<columnAttribute name="ethnicity" displayName="Ethnicity" type="json_text" />
+	<columnAttribute name="population" displayName="Population" type="json_text" />
 	<columnAttribute name="population_source" displayName="Resource" type="string" />
 	<columnAttribute name="allele" internal="false" displayName="Allele" type="string" />
 	<columnAttribute name="frequency" displayName="Frequency" inReportMaker="true" type="percentage_bar"/>
@@ -315,7 +315,7 @@
       <table name="ad_associations_from_gwas" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromGWAS">
 	<columnAttribute name="allele" displayName="Allele" type="string"/>
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
-	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
+	<columnAttribute name="track" displayName="Track" type="json_text" />
 
 
 	<propertyList name="column_filter">
