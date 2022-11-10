@@ -5,16 +5,13 @@ import { countBy, merge } from "lodash";
 
 import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
-import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/InputLabel";
 import SearchIcon from "@material-ui/icons/Search";
-import InputAdornment from "@material-ui/core/InputAdornment";
+
 
 import { Options } from "highcharts";
 import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";

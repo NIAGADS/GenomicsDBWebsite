@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import { TableInstance } from "react-table";
-import Checkbox from "@material-ui/core/Checkbox";
+import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { CollapsableCardPanel } from "@components/MaterialUI";
 
@@ -22,10 +22,12 @@ export function TableColumnsPanel<T extends Record<string, unknown>>({
             {hideableColumns.map((column) => (
                 <FormControlLabel
                     key={column.id}
-                    control={<Checkbox value={`${column.id}`} disabled={column.isVisible && onlyOneOptionLeft} />}
+                    control={<Switch size="small" value={`${column.id}`} disabled={column.isVisible && onlyOneOptionLeft} />}
                     label={column.render("Header")}
                     checked={column.isVisible}
                     onChange={() => toggleHideColumn(column.id, column.isVisible)}
+                    labelPlacement="start"
+                    
                 />
             ))}
         </CollapsableCardPanel>

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
 import DownloadIcon from "@material-ui/icons/GetApp";
-import IconButton from "@material-ui/core/IconButton";
-import Box from "@material-ui/core/Box";
+import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 
 import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "./TableFilters";
 import { withHtmlTooltip, MaterialUIThemedButton } from "@components/MaterialUI";
@@ -10,8 +9,14 @@ import { TablePagination } from ".";
 
 interface FilterToolbarProps {
     canFilter: boolean;
+    allowToggleColumns: boolean;
 }
-export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ canFilter, instance }) => {
+
+export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
+    canFilter,
+    allowToggleColumns,
+    instance,
+}) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
 
@@ -19,6 +24,19 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
 
     return (
         <>
+            {allowToggleColumns && withHtmlTooltip(
+                <MaterialUIThemedButton
+                    endIcon={<ViewColumnIcon />}
+                    variant="text"
+                    color="primary"
+                    aria-label="add or remove columns"
+                    //onClick={toggleViewColumns}
+                >
+                    Columns
+                </MaterialUIThemedButton>,
+
+                "Add or remove columns"
+            )}
             {/* span is b/c button is disabled, allows tooltip to fire */}
             {withHtmlTooltip(
                 <span>

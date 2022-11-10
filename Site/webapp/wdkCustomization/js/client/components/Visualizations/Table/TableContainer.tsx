@@ -178,11 +178,9 @@ const TableContainer: React.FC<TableContainerProps> = ({
 
     const renderDrawerHeaderContents = (
         <>
-            <Grid item>
-                <h3>
-                    Filter or modify table: <em>{title}</em>{" "}
-                </h3>
-            </Grid>
+            <Typography variant="h6">
+                Filter table: <em>{title}</em>
+            </Typography>
         </>
     );
 
@@ -190,13 +188,13 @@ const TableContainer: React.FC<TableContainerProps> = ({
     return (
         <CustomPanel justifyContent="flex-start">
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
-                toggleAnchor="bottom"
+                navigation={<TableToolbar instance={instance} canFilter={canFilter} allowToggleColumns={showHideColumns} />}
+                toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Display table summary and advanced filters"
                 toggleText="Filter"
                 drawerContents={renderDrawerContents}
-                drawerCloseLabel="Close"
+                drawerCloseLabel="Close Table Filter"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
                 className={classes.navigationToolbar}
             >

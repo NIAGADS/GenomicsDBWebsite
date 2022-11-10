@@ -12,6 +12,7 @@ import { DefaultSectionTitle } from "wdk-client/Views/Records/SectionTitle";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import RecordTable from "../RecordTable/RecordTable";
+import {_tableProperties} from "genomics-client/data/_recordTableProperties";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,6 +38,7 @@ function RecordTableSection(props: RecordTableSection) {
     let { table, record, recordClass, isCollapsed, onCollapsedChange, requestPartialRecord, title } = props;
     let { displayName, description, name } = table;
     let data = record.tables[name];
+    let properties = _tableProperties[recordClass.displayName][name];
     let isError = includes(record.tableErrors, name);
     let isLoading = data == null;
 
@@ -67,7 +69,7 @@ function RecordTableSection(props: RecordTableSection) {
                 ) : isLoading ? (
                     <p>Loading...</p>
                 ) : (
-                    <RecordTable data={data} table={table}  />
+                    <RecordTable data={data} table={table} properties={properties} />
                 )}
             </ErrorBoundary>
         </CollapsibleSection>
