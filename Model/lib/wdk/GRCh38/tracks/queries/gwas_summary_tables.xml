@@ -59,6 +59,8 @@
             <column name="track"/>
             <column name="project_id"/>
             <column name="variant_link"/>
+            <column name="chromosome"/>
+            <column name="position"/>
             <column name="ref_snp_id" />
             <column name="adsp_variant_flag" />
             <column name="most_severe_consequence"/>
@@ -71,6 +73,7 @@
                         SELECT track
                         , '@PROJECT_ID@'::text AS project_id
 			, record_link('variant', variant_record_primary_key, metaseq_id, TRUE) AS variant_link
+            ,chromosome, position,
                         , ref_snp_id
                         , adsp_variant_flag(is_adsp_variant) AS adsp_variant_flag
 			, consequence_terms(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS most_severe_consequence

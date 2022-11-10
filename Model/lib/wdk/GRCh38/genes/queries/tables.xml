@@ -302,6 +302,15 @@
       <column name="gene_impact"/>
       <column name="gene_consequence"/>
 
+	  <column name="diagnosis"/>
+	  <column name="neuropathology"/>
+	  <column name="genotype"/>
+	  <column name="gender"/>
+	  <column name="tissue"/>
+	  <column name="population"/>
+	  <column name="biomarker"/>
+	  <column name="covariates"/>
+
       <sql>
 	<![CDATA[
 		 WITH id AS (##WDK_ID_SQL##),
@@ -309,10 +318,21 @@
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
 		 record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
-		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link
+		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link,
+		 CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
+		THEN 'European' ELSE bt.track_config->'biosample_characteristics'->>'population' END AS population,
+		bt.track_config->'biosample_characteristics'->>'tissue' AS tissue,
+		bt.track_config->'biosample_characteristics'->>'diagnosis' AS diagnosis,
+		bt.track_config->'biosample_characteristics'->>'neuropathology' AS neuropathology,
+		bt.track_config->'biosample_characteristics'->>'biomarker' AS biomarker,
+		bt.track_config->'biosample_characteristics'->>'gender' AS gender,
+		bt.track_config->'biosample_characteristics'->>'APOE carrier status' AS genotype,
+		bt.track_config->'biosample_characteristics'->>'covariates' AS covariates
 		 FROM NIAGADS.TrackAttributes ta,
-		 NIAGADS.ProtocolAppNodeCharacteristic c
+		 NIAGADS.ProtocolAppNodeCharacteristic c,
+		 NIAGADS.GWASBrowserTracks bt
 		 WHERE ta.protocol_app_node_id = c.protocol_app_node_id
+		 AND bt.track = ta.track
 		 AND ta.subcategory = 'GWAS summary statistics'
 		 AND ta.dataset_accession NOT LIKE '%CATALOG%'
 		 AND c.characteristic_type = 'full_list'

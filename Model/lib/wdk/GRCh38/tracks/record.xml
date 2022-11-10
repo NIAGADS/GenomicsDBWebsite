@@ -109,7 +109,9 @@
       </attributeQueryRef>
 
       <table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
-	   <columnAttribute name="variant_link" displayName="Variant" type="json_link"/>
+		<columnAttribute name="chromosome" displayName="Chromosome" type="string"/>
+		<columnAttribute name="position" displayName="Position" type="integer"/>
+		<columnAttribute name="variant_link" displayName="Variant" type="json_link"/>
 	   <columnAttribute name="pvalue" displayName="p-value" type="numeric"/>
 	   <columnAttribute name="ref_snp_id" displayName="refSNP" type="string"/>
 	   <columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>

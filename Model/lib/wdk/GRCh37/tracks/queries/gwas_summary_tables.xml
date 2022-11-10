@@ -58,6 +58,8 @@
         <sqlQuery name="TopVariants">
             <column name="track"/>
             <column name="project_id"/>
+            <column name="chromosome"/>
+            <column name="position"/>    
             <column name="variant_link"/>
             <column name="ref_snp_id" />
             <column name="adsp_variant_flag" />
@@ -69,7 +71,8 @@
             <sql>
                 <![CDATA[
                         SELECT r.dataset_id AS track
-                        , '@PROJECT_ID@'::text AS project_id
+                        , '@PROJECT_ID@'::text AS project_id,
+                        , chromosome, position,
                         , build_link_attribute(truncate_str(r.metaseq_id, 30), '../variant/', r.variant_record_primary_key) AS variant_link
                         , r.ref_snp_id
                         , adsp_variant_display_flag(r.is_adsp_variant) AS adsp_variant_flag

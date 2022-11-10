@@ -67,6 +67,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
     navigation,
     navigationProps,
     drawerContents,
+    drawerSections,
     drawerProps,
     drawerHeaderContents,
     toggleAnchor,
@@ -103,52 +104,66 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
         </Grid>
     );
 
-    return (
-        <React.Fragment key={toggleAnchor}>
-            <AppBar position="static" elevation={0} {...navigationProps} className={className} disableGutters={true}>
-                <Toolbar /*style={{ display: "flex" }} */ variant="dense" disableGutters={true}>
-                    {toggleIcon &&
-                        withHtmlTooltip(
-                            <MaterialUIThemedButton
-                                style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
-                                color="primary"
-                                variant="text"
-                                aria-label="toggle-secondary-navigation"
-                                onClick={handleToggleClick}
-                                endIcon={toggleIcon}
-                            >
-                                {toggleText}
-                            </MaterialUIThemedButton>,
-                            toggleHelp
-                        )}
-                    {navigation}
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                anchor={toggleAnchor}
-                open={open}
-                classes={{
-                    paper: clsx(classes.sideDrawerPaper, {
-                        "": toggleAnchor === "top" || toggleAnchor === "bottom",
-                    }),
-                }}
-                className={clsx(classes.sideDrawer, {
-                    [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
-                })}
-                variant="temporary"
-                onClose={(event, reason) => {
-                    if (reason === "backdropClick" || reason === "escapeKeyDown") {
-                        setOpen(false);
-                    }
-                }}
-                {...drawerProps}
-            >
-                {renderDrawerHeader}
-                <Divider className={classes.divider}></Divider>
-                <Box className={classes.content}>{drawerContents}</Box>
-            </Drawer>
-
-            {children}
-        </React.Fragment>
+    const renderDrawerSections = (
+        <>
+            {drawerSections?.map((section, index) => {
+                return (
+                    <div key={index}>
+                        {section}
+                    </div>
+                );
+            })}
+        </>
     );
+
+
+return (
+    <React.Fragment key={toggleAnchor}>
+        <AppBar position="static" elevation={0} {...navigationProps} className={className} disableGutters={true}>
+            <Toolbar /*style={{ display: "flex" }} */ variant="dense" disableGutters={true}>
+                {toggleIcon &&
+                    withHtmlTooltip(
+                        <MaterialUIThemedButton
+                            style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
+                            color="primary"
+                            variant="text"
+                            aria-label="toggle-secondary-navigation"
+                            onClick={handleToggleClick}
+                            endIcon={toggleIcon}
+                        >
+                            {toggleText}
+                        </MaterialUIThemedButton>,
+                        toggleHelp
+                    )}
+                {navigation}
+            </Toolbar>
+        </AppBar>
+        <Drawer
+            anchor={toggleAnchor}
+            open={open}
+            classes={{
+                paper: clsx(classes.sideDrawerPaper, {
+                    "": toggleAnchor === "top" || toggleAnchor === "bottom",
+                }),
+            }}
+            className={clsx(classes.sideDrawer, {
+                [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
+            })}
+            variant="temporary"
+            onClose={(event, reason) => {
+                if (reason === "backdropClick" || reason === "escapeKeyDown") {
+                    setOpen(false);
+                }
+            }}
+            {...drawerProps}
+        >
+            {renderDrawerHeader}
+            <Divider className={classes.divider}></Divider>
+            {drawerContents && <Box className={classes.content}>{drawerContents}</Box>}
+            {drawerSections && <Box className={classes.content}>{renderDrawerSections}</Box>}
+        </Drawer>
+
+        {children}
+    </React.Fragment>
+);
 };

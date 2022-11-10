@@ -23,7 +23,7 @@ import {
 } from "./RecordTableFilters/filters";
 import { PValueSliderFilter as PValueFilter, PieChartFilter } from "./RecordTableFilters";
 import classNames from "classnames";
-import { RecordTableProperties } from "genomics-client/data/_recordTableProperties";
+import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -277,6 +277,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
             canFilter={canFilter}
             showAdvancedFilter={hasColumnFilters}
             showHideColumns={canToggleColumns}
+            requiredColumns={get(properties, "requiredColumns", null)}
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}
