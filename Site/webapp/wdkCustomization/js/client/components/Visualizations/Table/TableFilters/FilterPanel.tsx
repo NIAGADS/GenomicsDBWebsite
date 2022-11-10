@@ -5,10 +5,11 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
-import { CollapsableCardPanel } from "@components/MaterialUI";
+import { CollapsableCardPanel, LabelButton} from "@components/MaterialUI";
 
-import { useFilterPanelStyles, FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
+import { useFilterPanelStyles, FilterPageProps } from "@viz/Table/TableFilters";
 import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
 
 export function FilterPanel({ instance }: FilterPageProps): ReactElement {
@@ -38,14 +39,23 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
         ).length > 0;
 
+
     const renderFilterHeader = (
-        <Button variant="contained" color="secondary" startIcon={<RotateLeftIcon />} fullWidth={true} size="small">
-            Reset filters
-        </Button>
+        <LabelButton
+            variant="text"
+            color="default"
+            startIcon={<FilterListIcon />}
+            fullWidth={true}
+            size="small"
+            disableElevation
+            disableRipple
+        >
+            Filter Table
+        </LabelButton>
     );
 
     return (
-        <CollapsableCardPanel headerContents={renderFilterHeader} defaultOpen={true}>
+        <CollapsableCardPanel headerContents={renderFilterHeader} defaultOpen={true} borderedHeader={true}>
             <Grid
                 container
                 //direction="column"
@@ -56,6 +66,15 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
             >
                 {/* render pvalue filter */}
                 {/* <form> */}
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<RotateLeftIcon />}
+                    fullWidth={true}
+                    size="small"
+                >
+                    Reset filters
+                </Button>
                 {allColumns
                     .filter(
                         //@ts-ignore

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import DownloadIcon from "@material-ui/icons/GetApp";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 
-import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "./TableFilters";
+import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "@viz/Table";
 import { withHtmlTooltip, MaterialUIThemedButton } from "@components/MaterialUI";
 import { TablePagination } from ".";
 

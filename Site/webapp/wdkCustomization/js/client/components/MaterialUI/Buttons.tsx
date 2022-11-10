@@ -43,6 +43,16 @@ export const BaseIconButton = withStyles((theme) =>
     })
 )(IconButton);
 
+export const LabelButton = withStyles((theme) =>
+    createStyles({
+        root: {
+            "&:hover": {
+                backgroundColor: "white",
+            },
+        },
+    })
+)(Button);
+
 const BaseButton = withStyles(BaseStyles)(Button);
 
 const useButtonStyles = makeStyles((theme: Theme) =>
@@ -62,10 +72,10 @@ export const PrimaryActionButton: React.FC<ButtonProps> = ({ onClick, children, 
     );
 };
 
-export const MaterialUIThemedButton: React.FC<ButtonProps> = ({children, ...props}) => {
+export const MaterialUIThemedButton: React.FC<ButtonProps> = ({ children, ...props }) => {
     return (
         <ThemeProvider theme={muiTheme}>
             <Button {...props}>{children}</Button>
         </ThemeProvider>
-    )
-}
+    );
+};

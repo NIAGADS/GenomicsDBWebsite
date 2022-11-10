@@ -161,7 +161,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
 
 
     const _buildDrawerSections = () => {
-        const sections:React.ReactNode[] = showHideColumns ? [<TableColumnsPanel instance={instance} />] : [];
+        const sections:React.ReactNode[] = showHideColumns ? [<TableColumnsPanel instance={instance} requiredColumns={requiredColumns}/>] : [];
         showAdvancedFilter && sections.push(<FilterPanel instance={instance} />);
         return sections;
     };
