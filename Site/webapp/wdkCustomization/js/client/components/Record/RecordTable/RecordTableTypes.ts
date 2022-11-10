@@ -1,17 +1,19 @@
+import { TableField, AttributeField, TableValue, AttributeValue } from "wdk-client/Utils/WdkModel";
+import { TableInstance } from "react-table";
+import { RecordTableProperties } from "genomics-client/data/_recordTableProperties";
 
-import { TableField, AttributeField, TableValue, AttributeValue } from 'wdk-client/Utils/WdkModel';
-import { TableInstance } from 'react-table';
 type FilterType = "pie" | "pvalue" | "select";
-export interface Filters extends Array<Record<FilterType, any>> { };
+export interface Filters extends Array<Record<FilterType, any>> {}
 
 export interface RecordTableProps {
     table: TableField;
     data: TableValue;
+    properties?: RecordTableProperties;
     onLoad?: (ref: React.MutableRefObject<TableInstance>) => void;
 }
 
 export interface TableAttribute extends AttributeField {
-      type?:
+    type?:
         | "integer"
         | "numeric"
         | "boolean"
@@ -34,4 +36,3 @@ export interface TableAttribute extends AttributeField {
     tableInstance: rtInstance | null;
     basket: { [key: string]: any }[];
 } */
-

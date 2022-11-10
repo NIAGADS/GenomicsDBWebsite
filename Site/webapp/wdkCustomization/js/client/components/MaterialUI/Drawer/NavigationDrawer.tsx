@@ -1,3 +1,4 @@
+/* drawer tied to navigation toolbar */
 import React, { useState } from "react";
 import clsx from "clsx";
 
@@ -7,32 +8,57 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
-import CloseIcon from "@material-ui/icons/Close";
 
-import { withHtmlTooltip, DrawerProps, DrawerContentsProps, MaterialUIThemedButton } from "@components/MaterialUI";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+
+import {
+    withHtmlTooltip,
+    DrawerProps,
+    DrawerContentsProps,
+    MaterialUIThemedButton,
+    DRAWER_WIDTH,
+    SHIFT_X,
+} from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 
 const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
-
         drawerHeader: {
-            display: "flex",
-            alignItems: "center",
-            padding: theme.spacing(0, 1),
+            //display: "flex",
+            //alignItems: "center",
+            //padding: theme.spacing(0, 3),
             // necessary for content to be below app bar
-            ...theme.mixins.toolbar,
-            justifyContent: "flex-end",
-            marginTop: "10px",
-            minHeight: "32px",
+            //...theme.mixins.toolbar,
+            //justifyContent: "flex-end",
+            //marginTop: theme.spacing(1),
         },
         title: {
             fontSize: theme.typography.pxToRem(12),
         },
-        content: {},
+        actionButton: {
+            marginTop: theme.spacing(1),
+            // justifyContent: "left"
+        },
+        divider: {
+            marginTop: theme.spacing(1),
+        },
+        children: {
+            marginTop: theme.spacing(1),
+        },
+        content: {
+            //padding: theme.spacing(3),
+        },
+        sideDrawer: {
+            width: DRAWER_WIDTH,
+            flexShrink: 0,
+        },
+        sideDrawerPaper: {
+            width: DRAWER_WIDTH,
+        },
         fullWidth: {
-            width: "auto",
+            margin: "auto",
         },
     })
 );
@@ -42,14 +68,14 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
     navigationProps,
     drawerContents,
     drawerProps,
-    drawerCloseLabel,
     drawerHeaderContents,
     toggleAnchor,
     toggleIcon,
     toggleHelp,
     toggleText,
     children,
-    className
+    className,
+    drawerCloseLabel,
 }) => {
     const classes = useDrawerStyles();
     const [open, setOpen] = useState(false);
@@ -58,61 +84,71 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
         setOpen(!open);
     };
 
-
-    const drawerClasses = useDrawerStyles();
-    return (
-        <div>
-            <React.Fragment key={toggleAnchor}>
-                <AppBar position="static" elevation={0} {...navigationProps} className={className}>
-                    <Toolbar /*style={{ display: "flex" }} */ variant="dense">
-                        {toggleIcon &&
-                            withHtmlTooltip(
-                                <MaterialUIThemedButton
-                                    style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
-                                    color="primary"
-                                    variant="text"
-                                    aria-label="open-close-filter-menu"
-                                    onClick={handleToggleClick}
-                                    endIcon={toggleIcon}>
-                                    {toggleText}
-                                </MaterialUIThemedButton>,
-                                toggleHelp
-                            )}
-
-                        {navigation}
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    anchor={toggleAnchor}
-                    open={open}
-                    className={clsx("", {
-                        [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
-                    })}
-                    variant="temporary"
-                    onClose={(event, reason) => {if (reason === 'backdropClick' || reason === 'escapeKeyDown') {setOpen(false);}}}
-                    {...drawerProps}
+    const renderDrawerHeader = (
+        <Grid container className={classes.drawerHeader} justifyContent="center" spacing={2}>
+            <Grid item>
+                <Button
+                    variant="text"
+                    color="primary"
+                    endIcon={<ChevronLeftIcon />}
+                    onClick={handleToggleClick}
+                    fullWidth={true}
+                    size="small"
+                    className={classes.actionButton}
                 >
-                    <Grid container justifyContent="flex-start" alignItems="center">
-                        {drawerHeaderContents}
-                        <Grid item></Grid>
-                        <Grid item>
-                            {withHtmlTooltip(
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="close-filter-menu"
-                                    onClick={handleToggleClick}
-                                >
-                                    <CloseIcon></CloseIcon>
-                                </IconButton>,
-                                "Close advanced filters"
-                            )}
-                        </Grid>
-                    </Grid>
-                    <Divider></Divider>
-                    {drawerContents}
-                </Drawer>
-                {children} {/*} && <Box className={drawerClasses.drawerHeader}>{children}</Box>}*/}
-            </React.Fragment>
-        </div>
+                    {drawerCloseLabel ? drawerCloseLabel : "Close"}
+                </Button>
+            </Grid>
+            <Grid item>{drawerHeaderContents}</Grid>
+        </Grid>
+    );
+
+    return (
+        <React.Fragment key={toggleAnchor}>
+            <AppBar position="static" elevation={0} {...navigationProps} className={className} disableGutters={true}>
+                <Toolbar /*style={{ display: "flex" }} */ variant="dense" disableGutters={true}>
+                    {toggleIcon &&
+                        withHtmlTooltip(
+                            <MaterialUIThemedButton
+                                style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
+                                color="primary"
+                                variant="text"
+                                aria-label="toggle-secondary-navigation"
+                                onClick={handleToggleClick}
+                                endIcon={toggleIcon}
+                            >
+                                {toggleText}
+                            </MaterialUIThemedButton>,
+                            toggleHelp
+                        )}
+                    {navigation}
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                anchor={toggleAnchor}
+                open={open}
+                classes={{
+                    paper: clsx(classes.sideDrawerPaper, {
+                        "": toggleAnchor === "top" || toggleAnchor === "bottom",
+                    }),
+                }}
+                className={clsx(classes.sideDrawer, {
+                    [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
+                })}
+                variant="temporary"
+                onClose={(event, reason) => {
+                    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+                        setOpen(false);
+                    }
+                }}
+                {...drawerProps}
+            >
+                {renderDrawerHeader}
+                <Divider className={classes.divider}></Divider>
+                <Box className={classes.content}>{drawerContents}</Box>
+            </Drawer>
+
+            {children}
+        </React.Fragment>
     );
 };

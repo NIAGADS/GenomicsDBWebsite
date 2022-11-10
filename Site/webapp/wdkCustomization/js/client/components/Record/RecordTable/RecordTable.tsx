@@ -23,7 +23,7 @@ import {
 } from "./RecordTableFilters/filters";
 import { PValueSliderFilter as PValueFilter, PieChartFilter } from "./RecordTableFilters";
 import classNames from "classnames";
-import { SortByAlpha } from "@material-ui/icons";
+import { RecordTableProperties } from "genomics-client/data/_recordTableProperties";
 
 const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
 
@@ -67,7 +67,6 @@ function toString(a: any) {
     return "";
 }
 
-
 const extractDisplayText = (value: any): any => {
     return isString(value) || !value
         ? value
@@ -84,70 +83,66 @@ const extractDisplayText = (value: any): any => {
         : "";
 };
 
-const RecordTable: React.FC<RecordTableProps> = ({ table, data }) => {
+const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
     const { attributes } = table;
 
-
-
-const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
-    if (!data) {
-        return [];
-    }
-    if (data.length === 0) {
-        return [];
-    } else {
-        let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;
-
-        let attributes: AttributeField[] = table.attributes;
-        let columns: Column<{}>[] = Object.keys(data[0])
-            .filter((k) => {
-                const attribute: AttributeField = attributes.find((item) => item.name === k);
-                return attribute && attribute.isDisplayable;
-            })
-            .map((k): Column => {
-                const attribute: AttributeField = attributes.find((item) => item.name === k);
-                let filterType =
-                    columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
-                let column = _buildColumn(attribute, attribute.isSortable, filterType);
-                //@ts-ignore
-                if (column.id.endsWith("link")) column.sortType = linkColumnSort;
-                if (column.id.includes("pvalue")) {
+    const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
+        if (!data) {
+            return [];
+        }
+        if (data.length === 0) {
+            return [];
+        } else {
+            let columnFilters: any = get(properties, "filters", null);
+            let attributes: AttributeField[] = table.attributes;
+            let columns: Column<{}>[] = Object.keys(data[0])
+                .filter((k) => {
+                    const attribute: AttributeField = attributes.find((item) => item.name === k);
+                    return attribute && attribute.isDisplayable;
+                })
+                .map((k): Column => {
+                    const attribute: AttributeField = attributes.find((item) => item.name === k);
+                    let filterType =
+                        columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
+                    let column = _buildColumn(attribute, attribute.isSortable, filterType);
                     //@ts-ignore
-                    column.sortType = sciNotationColumnSort;
-                    //@ts-ignore
-                    column.disableGlobalFilter = true;
-                    //@ts-ignore
-                    column.target = table.name + "_pvalue_chart";
-                }
-
-                if (column.id.includes("flag")) {
-                    //@ts-ignore
-                    column.sortType = flagColumnSort;
-                    //@ts-ignore
-                    column.disableGlobalFilter = true;
-                    if (filterType && filterType === "pie") {
-                        filterType = "booleanPie";
+                    if (column.id.endsWith("link")) column.sortType = linkColumnSort;
+                    if (column.id.includes("pvalue")) {
+                        //@ts-ignore
+                        column.sortType = sciNotationColumnSort;
+                        //@ts-ignore
+                        column.disableGlobalFilter = true;
+                        //@ts-ignore
+                        column.target = table.name + "_pvalue_chart";
                     }
-                }
 
-                if (filterType) {
-                    //@ts-ignore
-                    column = _addColumnFilters(column, filterType);
-                }
+                    if (column.id.includes("flag")) {
+                        //@ts-ignore
+                        column.sortType = flagColumnSort;
+                        //@ts-ignore
+                        column.disableGlobalFilter = true;
+                        if (filterType && filterType === "pie") {
+                            filterType = "booleanPie";
+                        }
+                    }
 
-                if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
-                    //@ts-ignore
-                    column.show = false;
-                }
+                    if (filterType) {
+                        //@ts-ignore
+                        column = _addColumnFilters(column, filterType);
+                    }
 
-                return column;
-            })
-            .sort((c1, c2) => _indexSort(c1, c2, attributes));
+                    if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
+                        //@ts-ignore
+                        column.show = false;
+                    }
 
-        return columns;
-    }
-};
+                    return column;
+                })
+                .sort((c1, c2) => _indexSort(c1, c2, attributes));
 
+            return columns;
+        }
+    };
 
     const flagColumnSort = useMemo(
         () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
@@ -242,7 +237,7 @@ const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns
         },
         []
     );
-    
+
     const _buildColumn = (attribute: AttributeField, sortable: boolean, filterType?: any) => ({
         Header: _buildHeader(attribute),
         sortable,
@@ -251,17 +246,16 @@ const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns
         sortType: defaultColumnSort,
     });
 
-    let defaultHiddenColumns = get(table, "properties.hidden_columns[0]");
-    defaultHiddenColumns = defaultHiddenColumns && defaultHiddenColumns.split(",");
+    let defaultHiddenColumns = get(properties, "hiddenColumns");
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
 
     const columns: Column<{}>[] = useMemo(() => _buildColumns(table, data, defaultHiddenColumns), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
 
-    const canFilter = get(JSON.parse(get(table, "properties.flags[0]", '{"filter":true}')), "filter", true); // default to true if missing
-    const hasColumnFilters = "column_filter" in table.properties;
-    const initialFilters = _setInitialFilters(table);
-    const initialSort = _setInitialSort(table);
+    const canFilter = get(properties, "canFilter", true); // default to true if missing
+    const hasColumnFilters = properties.hasOwnProperty("filters");
+    const initialFilters = _setInitialFilters(table, properties);
+    const initialSort = _setInitialSort(table, properties);
 
     const classes = useStyles();
 
@@ -289,16 +283,16 @@ const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns
     );
 };
 
-const _setInitialFilters = (table: TableField) => {
-    let columnFilters: any = table.properties.column_filter ? JSON.parse(table.properties.column_filter[0]) : null;
+const _setInitialFilters = (table: TableField, properties: RecordTableProperties) => {
+    let columnFilters: any = get(properties, "filters", null);
     if (columnFilters && "pvalue" in columnFilters) {
         return { id: "pvalue", value: DEFAULT_PVALUE_FILTER_VALUE };
     }
     return null;
 };
 
-const _setInitialSort = (table: TableField) => {
-    let sortBy: any = table.properties.sorted_by ? JSON.parse(table.properties.sorted_by[0]) : null;
+const _setInitialSort = (table: TableField, properties: RecordTableProperties) => {
+    let sortBy: any = get(properties, "sortedBy", null);
     return useMemo(() => sortBy, []);
 };
 
@@ -322,8 +316,6 @@ const _addColumnFilters = (column: Column, filterType: string) => {
 
     return column;
 };
-
-
 
 const _buildHeader = (attribute: AttributeField) => {
     return (

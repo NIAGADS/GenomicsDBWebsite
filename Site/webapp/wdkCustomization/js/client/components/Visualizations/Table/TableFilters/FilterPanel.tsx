@@ -1,16 +1,15 @@
 // modified from https://github.com/ggascoigne/react-table-example
 import React, { ReactElement, useCallback } from "react";
-import { countBy } from "lodash";
-import { Theme, createStyles, makeStyles } from "@material-ui/core";
+
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+
 import { CollapsableCardPanel } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
 import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
-import { setOpenedStrategies } from "wdk-client/Actions/StrategyWorkspaceActions";
 
 export function FilterPanel({ instance }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
@@ -40,16 +39,9 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
         ).length > 0;
 
     const renderFilterHeader = (
-        <Grid item container spacing={4} justifyContent="flex-start" alignItems="center">
-            <Grid item>
-                <Typography>Advanced Filters</Typography>
-            </Grid>
-            <Grid item>
-                <Button variant="contained" color="secondary" onClick={resetFilters}>
-                    Reset
-                </Button>
-            </Grid>
-        </Grid>
+        <Button variant="contained" color="secondary" startIcon={<RotateLeftIcon />} fullWidth={true} size="small">
+            Reset filters
+        </Button>
     );
 
     return (
