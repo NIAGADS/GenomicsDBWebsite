@@ -9,12 +9,10 @@ import { TablePagination } from ".";
 
 interface FilterToolbarProps {
     canFilter: boolean;
-    allowToggleColumns: boolean;
 }
 
 export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
     canFilter,
-    allowToggleColumns,
     instance,
 }) => {
     //@ts-ignore
@@ -24,19 +22,6 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
 
     return (
         <>
-            {allowToggleColumns && withHtmlTooltip(
-                <MaterialUIThemedButton
-                    endIcon={<ViewColumnIcon />}
-                    variant="text"
-                    color="primary"
-                    aria-label="add or remove columns"
-                    //onClick={toggleViewColumns}
-                >
-                    Columns
-                </MaterialUIThemedButton>,
-
-                "Add or remove columns"
-            )}
             {/* span is b/c button is disabled, allows tooltip to fire */}
             {withHtmlTooltip(
                 <span>

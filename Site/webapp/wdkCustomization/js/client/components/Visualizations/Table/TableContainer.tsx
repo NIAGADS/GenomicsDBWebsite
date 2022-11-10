@@ -41,6 +41,7 @@ export interface TableContainerProps {
     className?: string;
     showAdvancedFilter?: boolean;
     showHideColumns?: boolean;
+    requiredColumns?: string[];
     initialFilters?: any;
     initialSort?: any;
 }
@@ -77,6 +78,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
     canFilter,
     showAdvancedFilter,
     showHideColumns,
+    requiredColumns,
     initialFilters,
     initialSort,
     title,
@@ -157,29 +159,17 @@ const TableContainer: React.FC<TableContainerProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
-    const renderDrawerContents = (
-        <>
-            {showHideColumns || showAdvancedFilter ? (
-                <Grid container alignItems="stretch">
-                    {showHideColumns && (
-                        <Grid item>
-                            <TableColumnsPanel instance={instance} />
-                        </Grid>
-                    )}
-                    {showAdvancedFilter && (
-                        <Grid item>
-                            <FilterPanel instance={instance} />
-                        </Grid>
-                    )}
-                </Grid>
-            ) : null}
-        </>
-    );
+
+    const _buildDrawerSections = () => {
+        const sections:React.ReactNode[] = showHideColumns ? [<TableColumnsPanel instance={instance} />] : [];
+        showAdvancedFilter && sections.push(<FilterPanel instance={instance} />);
+        return sections;
+    };
 
     const renderDrawerHeaderContents = (
         <>
             <Typography variant="h6">
-                Filter table: <em>{title}</em>
+                Modify table: <em>{title}</em>
             </Typography>
         </>
     );
@@ -188,12 +178,12 @@ const TableContainer: React.FC<TableContainerProps> = ({
     return (
         <CustomPanel justifyContent="flex-start">
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} allowToggleColumns={showHideColumns} />}
+                navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
                 toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Display table summary and advanced filters"
                 toggleText="Filter"
-                drawerContents={renderDrawerContents}
+                drawerSections={_buildDrawerSections()}
                 drawerCloseLabel="Close Table Filter"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
                 className={classes.navigationToolbar}

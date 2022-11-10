@@ -1,6 +1,6 @@
 import { TableField, AttributeField, TableValue, AttributeValue } from "wdk-client/Utils/WdkModel";
 import { TableInstance } from "react-table";
-import { RecordTableProperties } from "genomics-client/data/_recordTableProperties";
+import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
 
 type FilterType = "pie" | "pvalue" | "select";
 export interface Filters extends Array<Record<FilterType, any>> {}

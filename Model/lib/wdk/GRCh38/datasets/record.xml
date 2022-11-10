@@ -80,7 +80,7 @@
 
 
 	<propertyList name="column_filter">
-	  <value>{"consortium": "select","neuropathology": "pie","population": "pie","biomarker": "select","genotype": "select" }</value>
+		<value>{"consortium": "select","neuropathology": "pie","population": "pie","biomarker": "select","genotype": "select" }</value>
 	</propertyList>
 
 	<propertyList name="flags">

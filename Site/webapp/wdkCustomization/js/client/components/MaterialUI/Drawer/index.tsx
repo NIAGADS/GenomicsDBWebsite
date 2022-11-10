@@ -3,6 +3,7 @@ export type Anchor = 'top' | 'left' | 'bottom' | 'right';
 export interface DrawerProps {
     navigation?: React.ReactNode;
     drawerContents?: React.ReactNode;
+    drawerSections?: React.ReactNode[];
     drawerProps?: any;
     navigationProps?: any; //appBarProps
     toggleAnchor?: Anchor;

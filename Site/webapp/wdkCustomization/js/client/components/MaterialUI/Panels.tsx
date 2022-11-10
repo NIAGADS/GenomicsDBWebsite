@@ -147,6 +147,7 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
                     })}
                     onClick={handleExpandClick}
                     aria-expanded={expanded}
+                    size="small"
                     aria-label="show more"
                 >
                     <ExpandMoreIcon />
