@@ -10,7 +10,7 @@ export interface RecordTableColumnSort {
 
 export interface RecordTableProperties {
     filters?: { [columnId: string]: string };
-    filterGroups?: { [groupId: string]: string[] };
+    filterGroups?: { [groupId: string]: string[] }[];
     defaultFilter?: string;
     hiddenColumns?: string[];
     requiredColumns?: string[];

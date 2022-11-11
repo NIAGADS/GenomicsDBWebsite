@@ -10,10 +10,10 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
             genotype: "select",
 
         },
-        filterGroups: {
-            Affiliation: ["consortium"],
-            Phenotype: ["neuropathology", "population", "biomarker", "genotype"]
-        },
+        filterGroups: [
+            {Affiliation: ["consortium"]},
+            {Phenotype: ["neuropathology", "population", "biomarker", "genotype"]}
+        ],
         requiredColumns: ["track", "name"],
         hiddenColumns: ["description", "covariates", "biomarker", "genotype"],
         defaultOpen: true,
@@ -29,10 +29,10 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
             genotype: "select",
 
         },
-        filterGroups: {
-            Affiliation: ["consortium"],
-            Phenotype: ["neuropathology", "population", "biomarker", "genotype"]
-        },
+        filterGroups: [
+            {Affiliation: ["consortium"]},
+            {Phenotype: ["neuropathology", "population", "biomarker", "genotype"]}
+        ],
         requiredColumns: ["track", "name"],
         hiddenColumns: ["description", "covariates", "biomarker", "genotype"],
         defaultOpen: false,
@@ -48,10 +48,10 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
             genotype: "select",
 
         },
-        filterGroups: {
-            Affiliation: ["consortium"],
-            Phenotype: ["neuropathology", "population", "biomarker", "genotype"]
-        },
+        filterGroups: [
+            {Affiliation: ["consortium"]},
+            {Phenotype: ["neuropathology", "population", "biomarker", "genotype"]}
+        ],
         requiredColumns: ["track", "name"],
         hiddenColumns: ["description", "covariates", "biomarker", "genotype"],
         defaultOpen: false,

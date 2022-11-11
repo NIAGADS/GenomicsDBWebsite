@@ -10,11 +10,11 @@ export const _trackTableProperties: { [name: string]: RecordTableProperties } = 
             msc_impact: "pie",
             msc_is_coding_flag: "pie"
         },
-        filterGroups: {
-            Statistics: ["pvalue"],
-            Position: ["chromosome"],
-            Annotation: ["adsp_variant_flag", "most_severe_consequence", "msc_impact", "msc_is_coding_flag"],
-        },
+        filterGroups: [
+            {Statistics: ["pvalue"]},
+            {Position: ["chromosome"]},
+            {Annotation: ["adsp_variant_flag", "most_severe_consequence", "msc_impact", "msc_is_coding_flag"]},
+        ],
         defaultFilter: "pvalue",
         requiredColumns: ["track", "variant", "pvalue"],
         defaultOpen: true,
