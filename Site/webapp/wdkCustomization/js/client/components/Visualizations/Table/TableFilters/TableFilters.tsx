@@ -26,8 +26,6 @@ import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 import { toProperCase } from "genomics-client/util/util";
 import { useFilterStyles, useGlobalFilterStyles } from ".";
 
-
-
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
 export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
     const count = preGlobalFilteredRows.length;
@@ -340,3 +338,4 @@ export function DefaultColumnFilter<T extends Record<string, unknown>>({
         />
     );
 }
+

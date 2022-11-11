@@ -76,6 +76,9 @@ export const useFilterPanelStyles = makeStyles((theme: Theme) =>
             //width: "100%",
             //borderRight: `3px solid  ${theme.palette.primary.dark}`,
         },
+        filterGroup: {
+            padding: theme.spacing(1)
+        },
         heading: {
             fontSize: theme.typography.pxToRem(15),
         },

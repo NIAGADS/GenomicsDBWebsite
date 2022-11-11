@@ -9,4 +9,5 @@ export * from "./styles";
 
 export type FilterPageProps = {
     instance: TableInstance;
+    filterGroups?: { [id: string]: string[] }[];
 };

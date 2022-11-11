@@ -7,12 +7,15 @@ import Grid from "@material-ui/core/Grid";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
-import { CollapsableCardPanel, LabelButton} from "@components/MaterialUI";
+import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps } from "@viz/Table/TableFilters";
-import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
+import {
+    DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE,
+    DEFAULT_OPEN_FILTER_GROUPS,
+} from "@components/Record/RecordTable/RecordTableFilters";
 
-export function FilterPanel({ instance }: FilterPageProps): ReactElement {
+export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
@@ -39,7 +42,6 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
         ).length > 0;
 
-
     const renderFilterHeader = (
         <LabelButton
             variant="text"
@@ -53,6 +55,34 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
             Filter Table
         </LabelButton>
     );
+
+    const renderFilterGroup = (group: string, columnNames: string[]) => {
+        return (
+            <CollapsableCardPanel title={group} defaultOpen={DEFAULT_OPEN_FILTER_GROUPS.includes(group)}>
+                <Grid
+                    container
+                    className={classes.filterGroup}
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    spacing={3}
+                >
+                    {columnNames.map((id) => {
+                        renderFilter(id);
+                    })}
+                </Grid>
+            </CollapsableCardPanel>
+        );
+    };
+
+    const renderFilter = (columnName: string) => {
+        return allColumns
+            .filter((column) => column.id === columnName)
+            .map((column) => (
+                <Grid item key={column.id}>
+                    <Box className={classes.filterCell}>{column.render("Filter")}</Box>
+                </Grid>
+            ));
+    };
 
     return (
         <CollapsableCardPanel headerContents={renderFilterHeader} defaultOpen={true} borderedHeader={true}>
@@ -75,39 +105,7 @@ export function FilterPanel({ instance }: FilterPageProps): ReactElement {
                 >
                     Reset filters
                 </Button>
-                {allColumns
-                    .filter(
-                        //@ts-ignore
-                        (item) => item.canFilter && item.filter && item.filter.toLowerCase() === "pvalue"
-                    )
-                    .map((column) => (
-                        <Grid item key={column.id}>
-                            <Box className={classes.filterCell}>{column.render("Filter")}</Box>
-                        </Grid>
-                    ))}
-
-                {/* render pie charts first ; includes to handle special cases */}
-                {allColumns
-                    .filter(
-                        //@ts-ignore
-                        (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pie")
-                    )
-                    .map((column) => (
-                        <Grid item key={column.id}>
-                            <Box className={classes.filterCell}>{column.render("Filter")}</Box>
-                        </Grid>
-                    ))}
-
-                {/* render selects */}
-                {allColumns
-                    //@ts-ignore
-                    .filter((item) => item.canFilter && item.filter === "select")
-                    .map((column) => (
-                        <Grid item key={column.id}>
-                            <Box className={classes.filterCell}>{column.render("Filter")}</Box>
-                        </Grid>
-                    ))}
-                {/* </form> */}
+                {filterGroups.map((fg) => renderFilterGroup(fg.keys[0], fg[fg.keys[0]]))}
             </Grid>
         </CollapsableCardPanel>
     );
