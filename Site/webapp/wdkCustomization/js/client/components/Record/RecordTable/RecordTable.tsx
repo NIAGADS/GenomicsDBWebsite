@@ -274,6 +274,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
             columns={columns}
             data={resolvedData}
             filterTypes={filterTypes}
+            filterGroups={get(properties, "filterGroups", null)}
             canFilter={canFilter}
             showAdvancedFilter={hasColumnFilters}
             showHideColumns={canToggleColumns}

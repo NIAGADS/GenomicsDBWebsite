@@ -38,6 +38,7 @@ export interface TableContainerProps {
     data: any;
     canFilter: boolean;
     filterTypes?: any; // json object of filter types
+    filterGroups?: { [id: string]: string[] }[]; // an array so can specify order
     className?: string;
     showAdvancedFilter?: boolean;
     showHideColumns?: boolean;
@@ -74,6 +75,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
     columns,
     data,
     filterTypes,
+    filterGroups,
     className,
     canFilter,
     showAdvancedFilter,
@@ -162,7 +164,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
 
     const _buildDrawerSections = () => {
         const sections:React.ReactNode[] = showHideColumns ? [<TableColumnsPanel instance={instance} requiredColumns={requiredColumns}/>] : [];
-        showAdvancedFilter && sections.push(<FilterPanel instance={instance} />);
+        showAdvancedFilter && sections.push(<FilterPanel instance={instance} filterGroups={filterGroups}/>);
         return sections;
     };
 
