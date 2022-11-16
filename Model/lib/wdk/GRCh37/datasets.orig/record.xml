@@ -59,7 +59,7 @@
 	<columnAttribute name="version" displayName="Version" type="string" />
 	<columnAttribute name="category" displayName="Category" type="string" />
 	<columnAttribute name="caveats" displayName="Notes/Caveats" type="string" />
-	<columnAttribute name="is_adsp" displayName="ADSP?" type="json_icon" />
+	<columnAttribute name="is_adsp" displayName="ADSP Variant?" type="json_icon" />
       </attributeQueryRef>
 
       <!-- =============================================================== -->
@@ -259,7 +259,7 @@
 	   <columnAttribute name="variant" displayName="Variant" type="json_link"/>
 	   <columnAttribute name="pvalue" displayName="p-value" type="numeric"/>
 	   <columnAttribute name="ref_snp_id" displayName="refSNP" type="string"/>
-	   <columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
+	   <columnAttribute name="is_adsp_variant" displayName="ADSP Variant?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
 	   <columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
 	   <columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>
 	   <columnAttribute name="msc_impacted_gene_link" displayName="Impactd Gene" help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="json_link"/>
@@ -287,7 +287,7 @@ Top variants from this GWAS summary statistics dataset.
 	<columnAttribute name="variant" displayName="SNP" type="json_link" />
 	<columnAttribute name="is_expanded" displayName="Expanded?" type="json_icon" help="variant identified by INFERNO LD-expansion" />
 	<columnAttribute name="refsnp_id" displayName="refSNP" type="string" />
-	<columnAttribute name="is_adsp_variant" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
+	<columnAttribute name="is_adsp_variant" displayName="ADSP Variant?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string" />
 	<columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string" />
 	<columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon" />

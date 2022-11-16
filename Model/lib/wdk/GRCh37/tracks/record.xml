@@ -111,7 +111,7 @@
 		<columnAttribute name="variant_link" displayName="Variant" type="json_link"/>
 	   <columnAttribute name="pvalue" displayName="p-value" type="numeric"/>
 	   <columnAttribute name="ref_snp_id" displayName="refSNP" type="string"/>
-	   <columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
+	   <columnAttribute name="adsp_variant_flag" displayName="ADSP Variant?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon"/>
 	   <columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="string"/>
 	   <columnAttribute name="msc_impact" displayName="Impact" help="relative impact of the predicted consequence" type="string"/>
 	   <columnAttribute name="msc_impacted_gene_link" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="json_link"/>
