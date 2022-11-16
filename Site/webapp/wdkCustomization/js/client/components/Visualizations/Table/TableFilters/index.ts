@@ -9,5 +9,12 @@ export * from "./styles";
 
 export type FilterPageProps = {
     instance: TableInstance;
-    filterGroups?: { [id: string]: string[] }[];
+    filterGroups?: FilterGroup[];
 };
+
+export interface FilterGroup {
+    label: string;
+    columns: string[];
+    defaultOpen?: boolean;
+    collapsible?: boolean;
+}

@@ -8,11 +8,14 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
             population: "pie",
             biomarker: "select",
             genotype: "select",
-
         },
         filterGroups: [
-            {Affiliation: ["consortium"]},
-            {Phenotype: ["neuropathology", "population", "biomarker", "genotype"]}
+            { label: "Affiliation", columns: ["consortium"], defaultOpen: true },
+            {
+                label: "Phenotype",
+                columns: ["neuropathology", "population", "biomarker", "genotype"],
+                defaultOpen: true,
+            },
         ],
         requiredColumns: ["track", "name"],
         hiddenColumns: ["description", "covariates", "biomarker", "genotype"],
@@ -27,11 +30,14 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
             population: "pie",
             biomarker: "select",
             genotype: "select",
-
         },
         filterGroups: [
-            {Affiliation: ["consortium"]},
-            {Phenotype: ["neuropathology", "population", "biomarker", "genotype"]}
+            { label: "Affiliation", columns: ["consortium"], defaultOpen: true },
+            {
+                label: "Phenotype",
+                columns: ["neuropathology", "population", "biomarker", "genotype"],
+                defaultOpen: true,
+            },
         ],
         requiredColumns: ["track", "name"],
         hiddenColumns: ["description", "covariates", "biomarker", "genotype"],
@@ -46,11 +52,14 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
             population: "pie",
             biomarker: "select",
             genotype: "select",
-
         },
         filterGroups: [
-            {Affiliation: ["consortium"]},
-            {Phenotype: ["neuropathology", "population", "biomarker", "genotype"]}
+            { label: "Affiliation", columns: ["consortium"], defaultOpen: true },
+            {
+                label: "Phenotype",
+                columns: ["neuropathology", "population", "biomarker", "genotype"],
+                defaultOpen: true,
+            },
         ],
         requiredColumns: ["track", "name"],
         hiddenColumns: ["description", "covariates", "biomarker", "genotype"],

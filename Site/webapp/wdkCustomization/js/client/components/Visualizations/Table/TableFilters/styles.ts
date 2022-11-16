@@ -79,6 +79,12 @@ export const useFilterPanelStyles = makeStyles((theme: Theme) =>
         filterGroup: {
             padding: theme.spacing(1)
         },
+        collapsibleFilterGroup: {
+            padding: theme.spacing(1)
+        },
+        collapsiblePanelFilterGroupPanel: {
+            width: "100%",
+        },
         heading: {
             fontSize: theme.typography.pxToRem(15),
         },

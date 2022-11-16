@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
             transform: "rotate(180deg)",
         },
         borderBottom: {
-            bottomBorder: "2px solid " + theme.palette.secondary.main,
+            borderBottom: "1px solid " + theme.palette.secondary.main,
         }
     })
 );
