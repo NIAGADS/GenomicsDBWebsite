@@ -24,9 +24,17 @@ import {
 } from "react-table";
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
-import { Table, TableToolbar, TablePagination, TableColumnsPanel } from ".";
-import { FilterPanel, FilterChipBar } from "./TableFilters";
-import { fuzzyTextFilter, numericTextFilter, greaterThanFilter, includesFilter } from "./TableFilters/filters";
+import {
+    Table,
+    TableToolbar,
+    TablePagination,
+    TableColumnsPanel,
+    fuzzyTextFilter,
+    numericTextFilter,
+    greaterThanFilter,
+    includesFilter,
+} from "@viz/Table";
+import { FilterPanel, FilterChipBar, FilterGroup } from "./TableFilters";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
@@ -38,7 +46,7 @@ export interface TableContainerProps {
     data: any;
     canFilter: boolean;
     filterTypes?: any; // json object of filter types
-    filterGroups?: { [id: string]: string[] }[]; // an array so can specify order
+    filterGroups?: FilterGroup[];
     className?: string;
     showAdvancedFilter?: boolean;
     showHideColumns?: boolean;
@@ -161,10 +169,11 @@ const TableContainer: React.FC<TableContainerProps> = ({
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
-
     const _buildDrawerSections = () => {
-        const sections:React.ReactNode[] = showHideColumns ? [<TableColumnsPanel instance={instance} requiredColumns={requiredColumns}/>] : [];
-        showAdvancedFilter && sections.push(<FilterPanel instance={instance} filterGroups={filterGroups}/>);
+        const sections: React.ReactNode[] = showHideColumns
+            ? [<TableColumnsPanel instance={instance} requiredColumns={requiredColumns} />]
+            : [];
+        showAdvancedFilter && sections.push(<FilterPanel instance={instance} filterGroups={filterGroups} />);
         return sections;
     };
 

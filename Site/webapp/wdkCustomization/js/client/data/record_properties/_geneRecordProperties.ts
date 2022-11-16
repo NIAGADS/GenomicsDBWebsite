@@ -14,12 +14,11 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             covariates: "multi_select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Position: ["relative_position"]},
-            {Annotation: ["adsp_variant_flag", "gene_impact", "gene_consequence"]},
-            {Phenotype: ["population", "biomarker", "genotype", "tissue", "covariates"]},
-        ]
-        ,
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Position", columns: ["relative_position"] },
+            { label: "Annotation", columns: ["adsp_variant_flag", "gene_impact", "gene_consequence"] },
+            { label: "Phenotype", columns: ["population", "biomarker", "genotype", "tissue", "covariates"] },
+        ],
         defaultFilter: "pvalue",
         hiddenColumns: [
             "population",
@@ -52,18 +51,13 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             covariates: "multi_select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Position: ["relative_position"]},
-            {Annotation: ["adsp_variant_flag", "gene_impact", "gene_consequence"]},
-            {Phenotype: [
-                "population",
-                "diagnosis",
-                "neuropathology",
-                "biomarker",
-                "genotype",
-                "tissue",
-                "covariates",
-            ]}
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Position", columns: ["relative_position"] },
+            { label: "Annotation", columns: ["adsp_variant_flag", "gene_impact", "gene_consequence"] },
+            {
+                label: "Phenotype",
+                columns: ["population", "diagnosis", "neuropathology", "biomarker", "genotype", "tissue", "covariates"],
+            },
         ],
         defaultFilter: "pvalue",
         hiddenColumns: ["population", "covariates", "gender", "genotype", "biomarker", "tissue"],
@@ -83,9 +77,9 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             source: "select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Position: ["relative_position"]},
-            {Annotation: ["source", "adsp_variant_flag", "gene_impact", "gene_consequence"]},
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Position", columns: ["relative_position"] },
+            { label: "Annotation", columns: ["source", "adsp_variant_flag", "gene_impact", "gene_consequence"] },
         ],
         defaultFilter: "pvalue",
         hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
@@ -105,9 +99,9 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             source: "select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Position: ["relative_position"]},
-            {Annotation: ["source", "adsp_variant_flag", "gene_impact", "gene_consequence"]}
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Position", columns: ["relative_position"] },
+            { label: "Annotation", columns: ["source", "adsp_variant_flag", "gene_impact", "gene_consequence"] },
         ],
         hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
         requiredColumns: ["variant_link", "pvalue", "trait", "study"],
@@ -121,9 +115,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             go_evidence_code: "select",
             ontology: "select",
         },
-        filterGroups: [
-            {Annotation: ["go_evidence_code", "ontology"]},
-        ],
+        filterGroups: [{ label: "Annotation", columns: ["go_evidence_code", "ontology"], defaultOpen: true }],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: false,

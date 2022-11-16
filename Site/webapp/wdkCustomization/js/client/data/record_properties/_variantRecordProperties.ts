@@ -1,7 +1,6 @@
 import { RecordTableProperties } from "./_recordTableProperties";
 
 export const _variantTableProperties: { [name: string]: RecordTableProperties } = {
-
     ad_associations_from_gwas: {
         filters: {
             pvalue: "pvalue",
@@ -11,8 +10,8 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             covariates: "multi_select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Phenotype: ["population", "biomarker", "genotype", "tissue", "covariates"]},
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Phenotype", columns: ["population", "biomarker", "genotype", "tissue", "covariates"] },
         ],
         defaultFilter: "pvalue",
         hiddenColumns: [
@@ -42,16 +41,11 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             covariates: "multi_select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Phenotype: [
-                "population",
-                "diagnosis",
-                "neuropathology",
-                "biomarker",
-                "genotype",
-                "tissue",
-                "covariates",
-            ]},
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            {
+                label: "Phenotype",
+                columns: ["population", "diagnosis", "neuropathology", "biomarker", "genotype", "tissue", "covariates"],
+            },
         ],
         defaultFilter: "pvalue",
         hiddenColumns: ["population", "covariates", "gender", "genotype", "biomarker", "tissue"],
@@ -67,8 +61,8 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             source: "select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Annotation: ["source"]},
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Annotation", columns: ["source"] },
         ],
         hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
         requiredColumns: ["pvalue", "trait", "study"],
@@ -83,8 +77,8 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             source: "select",
         },
         filterGroups: [
-            {Statistics: ["pvalue"]},
-            {Annotation: ["source"]},
+            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Annotation", columns: ["source"] },
         ],
         hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
         requiredColumns: ["pvalue", "trait", "study"],
@@ -97,11 +91,11 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         filters: {
             population: "select",
             r_squared: "greater_than_threshold",
-            minor_allele_frequency_ld_ref: "less_than_threshold"
+            minor_allele_frequency_ld_ref: "less_than_threshold",
         },
         filterGroups: [
-            {Statistics: ["r_squared", "minor_allele_frequency_ld_ref"]},
-            {Phenotype: ["population"]},
+            { label: "Statistics", columns: ["r_squared", "minor_allele_frequency_ld_ref"], defaultOpen: true },
+            { label: "Phenotype", columns: ["population"], defaultOpen: true },
         ],
         defaultOpen: false,
         canFilter: true,
@@ -115,12 +109,9 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             population_source: "select",
             population: "select",
         },
-        filterGroups: [
-            {Population: ["population", "population_source"]}
-        ],
+        filterGroups: [{ label: "Population", columns: ["population", "population_source"], defaultOpen: true }],
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: false,
     },
-
 };

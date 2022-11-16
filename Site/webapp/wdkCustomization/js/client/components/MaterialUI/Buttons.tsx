@@ -49,6 +49,7 @@ export const LabelButton = withStyles((theme) =>
             "&:hover": {
                 backgroundColor: "white",
             },
+            justifyContent: "left"
         },
     })
 )(Button);

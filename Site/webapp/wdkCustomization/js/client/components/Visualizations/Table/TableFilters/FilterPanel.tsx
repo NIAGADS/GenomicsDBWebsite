@@ -1,6 +1,8 @@
 // modified from https://github.com/ggascoigne/react-table-example
 import React, { ReactElement, useCallback } from "react";
 
+import { ColumnInstance } from "react-table";
+
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -9,11 +11,9 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 
 import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
 
-import { useFilterPanelStyles, FilterPageProps } from "@viz/Table/TableFilters";
-import {
-    DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE,
-    DEFAULT_OPEN_FILTER_GROUPS,
-} from "@components/Record/RecordTable/RecordTableFilters";
+import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
+import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
+import { GroupWorkSharp, GroupSharp } from "@material-ui/icons";
 
 export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
@@ -30,13 +30,13 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
         }
     }, [setAllFilters]);
 
-    const hasSelectFilters =
+    const hasSelectFilters: boolean =
         allColumns.filter(
             //@ts-ignore
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("select")
         ).length > 0;
 
-    const hasPvalueFilter =
+    const hasPvalueFilter: boolean =
         allColumns.filter(
             //@ts-ignore
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
@@ -56,22 +56,37 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
         </LabelButton>
     );
 
-    const renderFilterGroup = (group: string, columnNames: string[]) => {
+    const renderCollapsibleFilterGroup = (group: FilterGroup) => {
         return (
-            <CollapsableCardPanel title={group} defaultOpen={DEFAULT_OPEN_FILTER_GROUPS.includes(group)}>
-                <Grid
-                    container
-                    className={classes.filterGroup}
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    spacing={3}
-                >
-                    {columnNames.map((id) => {
-                        renderFilter(id);
-                    })}
-                </Grid>
+            <CollapsableCardPanel
+                className={classes.collapsiblePanelFilterGroupPanel}
+                key={group.label + "-collapse"}
+                title={group.label}
+                defaultOpen={group.defaultOpen != null ? group.defaultOpen : false}
+            >
+                {renderStaticFilterGroup(group, classes.collapsibleFilterGroup)}
             </CollapsableCardPanel>
         );
+    };
+
+    const renderStaticFilterGroup = (group: FilterGroup, className?: string) => {
+        return (
+            <Grid
+                key={group.label + "-static"}
+                container
+                className={className ? className : classes.filterGroup}
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                spacing={3}
+            >
+                {group.columns.map((id: string) => renderFilter(id))}
+            </Grid>
+        );
+    };
+
+    const renderFilterGroup = (group: FilterGroup) => {
+        const isCollapsible: boolean = group.collapsible != null ? group.collapsible : true;
+        return isCollapsible ? renderCollapsibleFilterGroup(group) : renderStaticFilterGroup(group);
     };
 
     const renderFilter = (columnName: string) => {
@@ -105,7 +120,7 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
                 >
                     Reset filters
                 </Button>
-                {filterGroups.map((fg) => renderFilterGroup(fg.keys[0], fg[fg.keys[0]]))}
+                {filterGroups.map((fg) => renderFilterGroup(fg))}
             </Grid>
         </CollapsableCardPanel>
     );
