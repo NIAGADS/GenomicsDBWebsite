@@ -142,7 +142,7 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
         setExpanded(!expanded);
     };
     return children ? (
-        <Card elevation={0}>
+        <Card elevation={0} className={className}>
             <CardActions disableSpacing className={borderedHeader ? classes.borderBottom : ""}>
                 {title && <Typography>{title}</Typography>}
                 {headerContents && headerContents}
