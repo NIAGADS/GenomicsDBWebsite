@@ -339,7 +339,7 @@
 					type="string" />
 				<columnAttribute
 					name="adsp_variant_flag"
-					displayName="ADSP?"
+					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
 					type="json_icon" />
 				<columnAttribute
@@ -443,7 +443,7 @@
 					type="string" />
 				<columnAttribute
 					name="adsp_variant_flag"
-					displayName="ADSP?"
+					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
 					type="json_icon" />
 				<columnAttribute
@@ -547,7 +547,7 @@
 					type="string" />
 				<columnAttribute
 					name="adsp_variant_flag"
-					displayName="ADSP?"
+					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
 					type="json_icon" />
 				<columnAttribute
@@ -643,7 +643,7 @@
 					type="string" />
 				<columnAttribute
 					name="adsp_variant_flag"
-					displayName="ADSP?"
+					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
 					type="json_icon" />
 				<columnAttribute

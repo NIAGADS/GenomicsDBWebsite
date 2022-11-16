@@ -274,7 +274,7 @@
        	<columnAttribute name="population" displayName="Population" help="1000Genomes Phase 3 population" type="string"/>
 	<columnAttribute name="variant" displayName="Variant" type="json_link"/>
 	<columnAttribute name="linked_ref_snp_id" displayName="RefSNP ID" type="string" />
-	<columnAttribute name="adsp_variant_flag" displayName="ADSP?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
+	<columnAttribute name="adsp_variant_flag" displayName="ADSP Variant?" help="variant identified by the ADSP and passed the ADSP QC protocol" type="json_icon" />
 	<columnAttribute name="distance" displayName="Distance" help="distance between the two loci" type="numeric"/>
 	<columnAttribute name="r_squared" displayName="r2" help="r-squared value; ranges from [0,1]; a value 0 indicates that the two loci are not coinherited" type="numeric"/>
 	<columnAttribute name="d_prime" displayName="D'" help="D' value (scaled 'D'); ranges from [-1,1]; if allele frequencies are high, high D' indicates that the two loci are coinherited. With low allele frequencies D' values may be inflated." type="numeric"/>
