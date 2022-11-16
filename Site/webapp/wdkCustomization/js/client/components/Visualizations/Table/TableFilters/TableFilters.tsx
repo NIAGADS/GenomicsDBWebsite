@@ -92,7 +92,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                 verticalAlign: "middle",
                 layout: "vertical",
                 floating: true,
-                x: -150,
+                x: -50,
                 title: {
                     text: title ? title : toProperCase(id),
                     style: { fontSize: "12px", fontWeight: "normal" },
