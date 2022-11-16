@@ -89,6 +89,8 @@ DOCUMENTATION_URL=TBA
 
 IDEOGRAM_CYTOBAND_URL=https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/
 
+ADVP_VARIANT_URL=https://advp.niagads.org/variant?
+
 ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
 FILER_TRACK_URL=https://tf.lisanwanglab.org/GADB
