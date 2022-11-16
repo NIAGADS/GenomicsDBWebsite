@@ -234,7 +234,7 @@
 		record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
 		build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link,
 		CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
-		THEN 'European' ELSE bt.track_config->'biosample_characteristics'->>'population' END AS population,
+		THEN 'European' ELSE replace(bt.track_config->'biosample_characteristics'->>'population', ', ', ' // ') END AS population,
 		bt.track_config->'biosample_characteristics'->>'tissue' AS tissue,
 		bt.track_config->'biosample_characteristics'->>'biomarker' AS biomarker,
 		bt.track_config->'biosample_characteristics'->>'gender' AS gender,
@@ -320,7 +320,7 @@
 		 record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
 		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link,
 		 CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
-		THEN 'European' ELSE bt.track_config->'biosample_characteristics'->>'population' END AS population,
+		THEN 'European' ELSE replace(bt.track_config->'biosample_characteristics'->>'population', ', ', ' // ') END AS population,
 		bt.track_config->'biosample_characteristics'->>'tissue' AS tissue,
 		bt.track_config->'biosample_characteristics'->>'diagnosis' AS diagnosis,
 		bt.track_config->'biosample_characteristics'->>'neuropathology' AS neuropathology,

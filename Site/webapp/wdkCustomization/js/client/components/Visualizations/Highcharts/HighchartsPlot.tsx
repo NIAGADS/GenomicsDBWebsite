@@ -74,7 +74,7 @@ const HighchartsPlot: React.FC<HighchartsPlotProps> = (props) => {
     const chartComponentProps = omit(props, omittedProps);
 
     return options ? (
-        <HighchartsReact highcharts={Highcharts} options={options} {...chartComponentProps} />
+        <HighchartsReact highcharts={Highcharts} options={options} {...chartComponentProps} {...containerProps} />
     ) : displayMessage ? (
         <div>{message}</div>
     ) : null;

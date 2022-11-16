@@ -22,6 +22,10 @@ export const useFilterStyles = makeStyles((theme: Theme) =>
             height: 28,
             margin: 4,
         },
+        pieChartContainer: {
+            width: 280,
+            height: 100,
+        },
     })
 );
 
@@ -77,10 +81,10 @@ export const useFilterPanelStyles = makeStyles((theme: Theme) =>
             //borderRight: `3px solid  ${theme.palette.primary.dark}`,
         },
         filterGroup: {
-            padding: theme.spacing(1)
+            padding: theme.spacing(1),
         },
         collapsibleFilterGroup: {
-            padding: theme.spacing(1)
+            padding: theme.spacing(1),
         },
         collapsiblePanelFilterGroupPanel: {
             width: "100%",

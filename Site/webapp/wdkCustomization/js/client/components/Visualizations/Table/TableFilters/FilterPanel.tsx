@@ -107,7 +107,6 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 className={classes.root}
-                spacing={3}
             >
                 {/* render pvalue filter */}
                 {/* <form> */}
