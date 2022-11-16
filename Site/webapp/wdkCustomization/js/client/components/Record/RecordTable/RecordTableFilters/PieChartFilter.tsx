@@ -1,20 +1,14 @@
 // credit to https://github.com/ggascoigne/react-table-example for all except global filer
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { countBy, merge } from "lodash";
-import { Column, HeaderProps } from "react-table";
+import { Column } from "react-table";
 import { Options } from "highcharts";
-import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";
-import {
-    addTitle,
-    disableExport,
-    applyCustomSeriesColor,
-    backgroundTransparent,
-} from "@viz/Highcharts/HighchartsOptions";
-import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
-import { toProperCase } from "genomics-client/util/util";
+import { addTitle } from "@viz/Highcharts/HighchartsOptions";
+
+import { PieChartFilter as DefaultPieChartFilter } from "@viz/Table/TableFilters";
+
 import { extractDisplayText } from "../RecordTableSort";
-import Box from "@material-ui/core/Box";
 
 //@ts-ignore
 export function PieChartFilter<T extends Record<string, unknown>>({
@@ -28,23 +22,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
 
     const header: any = column.Header;
-    const buildPlotOptions = () => {
-        let plotOptions: Options = {
-            tooltip: {
-                pointFormat: "",
-            },
-            chart:{
-                width: 250
-            }
-        };
-
-        let title = header.props.children[2]; // where the displayName is stored for the column
-        plotOptions = merge(plotOptions, addTitle(title, { y: 40 }));
-        plotOptions = merge(plotOptions, disableExport());
-        plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
-        plotOptions = merge(plotOptions, backgroundTransparent());
-        return plotOptions;
-    };
+    const title = header.props.children[2]; // where the displayName is stored for the column
 
     const series = useMemo(() => {
         let values = new Array<String>(); // assumming pie filter is only for categorical values
@@ -61,7 +39,11 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                     vals.forEach((v: string) => {
                         values.push(v);
                     });
-                } else {
+                } 
+                else if (value.toUpperCase() == value) {
+                    values.push(value.toLowerCase())
+                }
+                else {
                     values.push(value);
                 }
             }
@@ -83,7 +65,14 @@ export function PieChartFilter<T extends Record<string, unknown>>({
             cursor: "pointer",
             showInLegend: true,
             point: {
-                events: { legendItemClick: () => false },
+                events: {
+                    legendItemClick: function () {
+                        //@ts-ignore
+                        setFilter(this.name || undefined);
+                    },
+                },
+
+                //         () => false },
             },
             events: {
                 click: function (e: any) {
@@ -94,5 +83,5 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         return series;
     }, [id, preFilteredRows]);
 
-    return <HighchartsPlot data={{ series: series }} properties={{ type: "pie" }} plotOptions={buildPlotOptions()} />;
+    return <DefaultPieChartFilter column={column} columns={columns} series={series} title={title} />;
 }

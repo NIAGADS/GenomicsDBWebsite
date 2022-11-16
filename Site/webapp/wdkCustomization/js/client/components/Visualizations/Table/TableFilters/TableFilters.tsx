@@ -12,7 +12,6 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import SearchIcon from "@material-ui/icons/Search";
 
-
 import { Options } from "highcharts";
 import HighchartsPlot from "@viz/Highcharts/HighchartsPlot";
 import {
@@ -20,6 +19,7 @@ import {
     disableExport,
     applyCustomSeriesColor,
     backgroundTransparent,
+    formatLegend,
 } from "@viz/Highcharts/HighchartsOptions";
 import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
@@ -38,23 +38,23 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
 
     return (
         <>
-        <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+            <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                    <SearchIcon />
+                </div>
+                <InputBase
+                    placeholder="Search table..."
+                    inputProps={{ "aria-label": "text search of table" }}
+                    classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                    }}
+                    onChange={(e) => {
+                        setValue(e.target.value);
+                        onChange(e.target.value);
+                    }}
+                />
             </div>
-            <InputBase
-              placeholder="Search table..."
-              inputProps={{ "aria-label": "text search of table" }}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              onChange={(e) => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-            }}
-            />
-          </div>
         </>
     );
 }
@@ -63,74 +63,120 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
 export function PieChartFilter<T extends Record<string, unknown>>({
     columns,
     column,
+    series,
+    options,
+    title,
 }: {
     columns: Column[];
     column: Column;
+    series?: any;
+    options?: any;
+    title?: string;
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const classes = useFilterStyles();
 
     const buildPlotOptions = () => {
         let plotOptions: Options = {
+            plotOptions: {
+                pie: {
+                    center: ["20%", "50%"], // draws pie on left
+                },
+            },
             tooltip: {
                 pointFormat: "",
             },
+            legend: {
+                align: "right",
+                verticalAlign: "middle",
+                layout: "vertical",
+                floating: true,
+                x: -150,
+                title: {
+                    text: title ? title : toProperCase(id),
+                    style: { fontSize: "12px", fontWeight: "normal" },
+                },
+                //floating: true
+            },
+            /*chart: {
+                height: 150
+            }*/
         };
 
-        plotOptions = merge(plotOptions, addTitle(toProperCase(id), { y: 40 }));
+        plotOptions = merge(plotOptions, addTitle(null));
         plotOptions = merge(plotOptions, disableExport());
         plotOptions = merge(plotOptions, applyCustomSeriesColor(PALETTES.eight_color));
         plotOptions = merge(plotOptions, backgroundTransparent());
+
+        if (options) {
+            plotOptions = merge(plotOptions, options);
+        }
+
         return plotOptions;
     };
 
-    const series = useMemo(() => {
-        let values = new Array<String>(); // assumming pie filter is only for categorical values
-        preFilteredRows.forEach((row: any) => {
-            let value = row.values[id];
-            //counts[num] = counts[num] ? counts[num] + 1 : 1;
-            if (value) {
-                if (value.includes("//")) {
-                    let vals = value.split(" // ");
-                    vals.forEach((v: string) => {
-                        values.push(v);
-                    });
-                } else {
-                    values.push(value);
-                }
-            }
-        });
+    series = series
+        ? series
+        : useMemo(() => {
+              let values = new Array<String>(); // assumming pie filter is only for categorical values
+              preFilteredRows.forEach((row: any) => {
+                  let value = row.values[id];
+                  //counts[num] = counts[num] ? counts[num] + 1 : 1;
+                  if (value) {
+                      if (value.includes("//")) {
+                          let vals = value.split(" // ");
+                          vals.forEach((v: string) => {
+                              values.push(v);
+                          });
+                      } else {
+                          values.push(value);
+                      }
+                  }
+              });
 
-        let data: any = [];
-        let counts = countBy(values);
-        for (const id of Object.keys(counts)) {
-            data.push({ name: id, y: counts[id] });
-        }
-        let series = {
-            name: id,
-            data: data,
-            colorByPoint: true,
-            allowPointSelect: true,
-            dataLabels: {
-                enabled: false,
-            },
-            cursor: "pointer",
-            showInLegend: true,
-            point: {
-                events: { legendItemClick: () => false },
-            },
-            events: {
-                click: function (e: any) {
-                    setFilter(e.point.name || undefined);
-                },
-            },
-        };
-        return series;
-    }, [id, preFilteredRows]);
+              let data: any = [];
+              let counts = countBy(values);
+              for (const id of Object.keys(counts)) {
+                  data.push({ name: id, y: counts[id] });
+              }
+              let series = {
+                  name: id,
+                  data: data,
+                  colorByPoint: true,
+                  allowPointSelect: true,
+                  dataLabels: {
+                      enabled: false,
+                  },
+                  cursor: "pointer",
+                  showInLegend: true,
+                  point: {
+                      events: {
+                          legendItemClick: function () {
+                              //@ts-ignore
+                              setFilter(this.name || undefined);
+                              return true;
+                          },
+                          //   legendItemClick: () => false
+                      },
+                  },
+                  events: {
+                      click: function (e: any) {
+                          setFilter(e.point.name || undefined);
+                      },
+                  },
+              };
+              return series;
+          }, [id, preFilteredRows]);
 
     return (
         <>
-            <HighchartsPlot data={{ series: series }} properties={{ type: "pie" }} plotOptions={buildPlotOptions()} />
+            <HighchartsPlot
+                data={{ series: series }}
+                properties={{ type: "pie" }}
+                plotOptions={buildPlotOptions()}
+                containerProps={{ className: classes.pieChartContainer }}
+            />
         </>
     );
 }
@@ -338,4 +384,3 @@ export function DefaultColumnFilter<T extends Record<string, unknown>>({
         />
     );
 }
-

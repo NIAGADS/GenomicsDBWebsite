@@ -382,6 +382,14 @@ export function applyCustomSeriesColor(palette: string[]) {
     return plotOptions;
 }
 
+export function formatLegend(options:any) {
+    const plotOptions: Options = {
+        legend: options
+    }
+
+    return plotOptions;
+}
+
 export function disableLegendClick() {
    const plotOptions: Options = {
         plotOptions: {
@@ -455,7 +463,7 @@ export function addCategories(categories: string[], axis: string = "xAxis") {
     return plotOptions;
 }
 
-export function addTitle(title: string, layout: any = null ) {
+export function addTitle(title: string, layout: any = null, style: any = null ) {
 
     const plotOptions: Options = title !== null
         ? {
@@ -471,6 +479,9 @@ export function addTitle(title: string, layout: any = null ) {
 
     if (layout) {
         plotOptions.title = merge(plotOptions.title, layout);
+    }
+    if (style) {
+        plotOptions.title = merge(plotOptions.title, style)
     }
 
     return plotOptions;
