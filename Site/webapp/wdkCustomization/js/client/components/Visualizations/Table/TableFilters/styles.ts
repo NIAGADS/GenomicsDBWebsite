@@ -24,7 +24,7 @@ export const useFilterStyles = makeStyles((theme: Theme) =>
         },
         pieChartContainer: {
             width: 250,
-            height: 150,
+            height: 130,
         },
     })
 );
