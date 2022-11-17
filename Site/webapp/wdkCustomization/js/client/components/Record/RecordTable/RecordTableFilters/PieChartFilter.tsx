@@ -56,29 +56,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         }
         let series = {
             name: id,
-            data: data,
-            colorByPoint: true,
-            allowPointSelect: true,
-            dataLabels: {
-                enabled: false,
-            },
-            cursor: "pointer",
-            showInLegend: true,
-            point: {
-                events: {
-                    legendItemClick: function () {
-                        //@ts-ignore
-                        setFilter(this.name || undefined);
-                    },
-                },
-
-                //         () => false },
-            },
-            events: {
-                click: function (e: any) {
-                    setFilter(e.point.name || undefined);
-                },
-            },
+            data: data,     
         };
         return series;
     }, [id, preFilteredRows]);
