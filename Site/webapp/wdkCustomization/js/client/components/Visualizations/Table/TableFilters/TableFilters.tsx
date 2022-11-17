@@ -19,7 +19,6 @@ import {
     disableExport,
     applyCustomSeriesColor,
     backgroundTransparent,
-    formatLegend,
 } from "@viz/Highcharts/HighchartsOptions";
 import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
@@ -82,7 +81,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
             plotOptions: {
                 pie: {
                     center: ["50%", "50%"], // draws pie on left
-                    size: 100,
+                    size: 80,
                 },
             },
             tooltip: {
@@ -99,9 +98,6 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                 itemStyle: { color: "black", fontSize: "12px", fontWeight: "normal", width: 100 },
                 itemHoverStyle: { color: "#ffc665" },
             },
-            /*chart: {
-                height: 150
-            }*/
         };
 
         plotOptions = merge(plotOptions, addTitle(null));
@@ -116,59 +112,67 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         return plotOptions;
     };
 
-    series = series
-        ? series
-        : useMemo(() => {
-              let values = new Array<String>(); // assumming pie filter is only for categorical values
-              preFilteredRows.forEach((row: any) => {
-                  let value = row.values[id];
-                  //counts[num] = counts[num] ? counts[num] + 1 : 1;
-                  if (value) {
-                      if (value.includes("//")) {
-                          let vals = value.split(" // ");
-                          vals.forEach((v: string) => {
-                              values.push(v);
-                          });
-                      } else {
-                          values.push(value);
-                      }
-                  }
-              });
+    const _buildSeriesData = () => {
+        let values = new Array<String>(); // assumming pie filter is only for categorical values
+        preFilteredRows.forEach((row: any) => {
+            let value = row.values[id];
+            //counts[num] = counts[num] ? counts[num] + 1 : 1;
+            if (value) {
+                if (value.includes("//")) {
+                    let vals = value.split(" // ");
+                    vals.forEach((v: string) => {
+                        values.push(v);
+                    });
+                }  else if (value === "n/a") {
+                    values.push("N/A or Unknown");
+                }  
+                else {
+                    values.push(value);
+                }
+            }
+            else {
+                values.push("N/A or Unkown");
+            }
+        });
 
-              let data: any = [];
-              let counts = countBy(values);
-              for (const id of Object.keys(counts)) {
-                  data.push({ name: id, y: counts[id] });
-              }
-              let series = {
-                  name: id,
-                  data: data,
-                  colorByPoint: true,
-                  allowPointSelect: true,
-                  dataLabels: {
-                      enabled: false,
-                  },
-                  cursor: "pointer",
-                  showInLegend: true,
-                  point: {
-                      events: {
-                          legendItemClick: function () {
-                              //@ts-ignore
-                              alert(this.name);
-                              //setFilter(this.name || undefined);
-                              return false;
-                          },
-                          //   legendItemClick: () => false
-                      },
-                  },
-                  events: {
-                      click: function (e: any) {
-                          setFilter(e.point.name || undefined);
-                      },
-                  },
-              };
-              return series;
-          }, [id, preFilteredRows]);
+        let data: any = [];
+        let counts = countBy(values);
+        for (const id of Object.keys(counts)) {
+            data.push({ name: id, y: counts[id] });
+        }
+
+        return data;
+    };
+
+    series = useMemo(() => {
+        series ? series : { name: id, data: _buildSeriesData() };
+        const seriesOptions = {
+            colorByPoint: true,
+            allowPointSelect: true,
+            dataLabels: {
+                enabled: false,
+            },
+            cursor: "pointer",
+            showInLegend: true,
+            point: {
+                events: {
+                    legendItemClick: function () {
+                        //@ts-ignore
+                        //setFilter(this.name || undefined);
+                        return false;
+                    },
+                },
+            },
+            events: {
+                click: function (e: any) {
+                    setFilter(e.point.name || undefined);
+                },
+            },
+        };
+
+        series = merge(series, seriesOptions);
+        return series;
+    }, [id, preFilteredRows]);
 
     return (
         <>
@@ -203,9 +207,13 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
                     vals.forEach((v: string) => {
                         options.add(v);
                     });
+                } else if (value === "n/a") {
+                    options.add("N/A or Unknown");
                 } else {
                     options.add(value);
                 }
+            } else {
+                options.add("N/A or Unknown");
             }
         });
         return [...Array.from(options.values())];
@@ -383,5 +391,112 @@ export function DefaultColumnFilter<T extends Record<string, unknown>>({
                 setFilter(e.target.value || undefined);
             }}
         />
+    );
+}
+
+export function NumberThresholdFilter<T extends Record<string, unknown>>({
+    columns,
+    column,
+    minValue,
+    maxValue,
+    defaultValue,
+    errorMsg,
+    validator,
+}: {
+    columns: Column[];
+    column: Column;
+    minValue?: number;
+    maxValue?: number;
+    defaultValue: number;
+    errorMsg?: string;
+    validator?: (value: string) => boolean;
+}) {
+    //@ts-ignore
+    const { id, filterValue, setFilter, render, preFilteredRows, target } = column;
+    const [isValid, setIsValid] = useState<boolean>(false);
+    const [value, setValue] = useState<string>(null);
+    const [validValueKey, setValidValueKey] = useState<string>(null); // handle update for sequential valid values
+
+    const rangeMin = minValue != null ? minValue : 0;
+    const rangeMax = maxValue != null ? maxValue : 1.0;
+
+    const eMsg = errorMsg
+        ? errorMsg
+        : "Please specify p-value in the range (" +
+          rangeMin.toString() +
+          "," +
+          rangeMax.toString() +
+          ") in decimal (0.0001) or E-notation (1e-4) format";
+
+    const [currentFilterValue, setFilterValue] = useState<string>(
+        filterValue === undefined ? defaultValue.toString() : filterValue.toString()
+    ); // catch clear filters
+
+    // only want to do these once
+    useEffect(() => {
+        setValue(currentFilterValue);
+    }, [currentFilterValue]);
+
+    useEffect(() => {
+        setIsValid(validator ? validator(value) : validateValue(value));
+    }, [value]);
+
+    useEffect(() => {
+        // basically handle situations where isValid does not change, but value does
+        // want to submit new filter value when value is valid, so need to catch series of valid values
+        setValidValueKey(isValid.toString() + "_" + value);
+    }, [isValid, value]);
+
+    useEffect(() => {
+        if (isValid) {
+            setFilter(value);
+        }
+    }, [validValueKey]);
+
+    const validateValue = (value: string) => {
+        if (!value) {
+            return false;
+        }
+
+        if (parseFloat(value) >= rangeMax || parseFloat(value) <= rangeMin) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const parseInputText = (text: string) => {
+        if (text === null) {
+            text = "0";
+        }
+        text = text.replace(/\s/g, ""); // strip spaces
+        text.toLowerCase(); // E -> e
+        if (!text.includes("e")) {
+            if (parseFloat(text) < 0.009) {
+                text = parseFloat(text).toExponential().toString();
+            }
+        }
+        return text;
+    };
+
+    return (
+        <>
+            <TextField
+                id="outlined-number"
+                label="P-value"
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                variant="outlined"
+                size="small"
+                onChange={(event: any) => {
+                    setValue(parseInputText(event.target.value));
+                }}
+                error={!isValid}
+                helperText={!isValid ? eMsg : null}
+                defaultValue={currentFilterValue}
+                fullWidth={true}
+            />
+        </>
     );
 }

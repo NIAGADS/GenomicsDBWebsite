@@ -11,8 +11,7 @@ export const useFilterStyles = makeStyles((theme: Theme) =>
             width: 400,
         },
         select: {
-            fontSize: `${theme.typography.pxToRem(12)} !important`,
-            width: 300,
+            width: 230,
             marginTop: theme.spacing(1),
         },
         iconButton: {

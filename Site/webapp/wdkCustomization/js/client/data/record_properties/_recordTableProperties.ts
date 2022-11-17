@@ -1,4 +1,4 @@
-import { FilterGroup } from "@viz/Table/TableFilters";
+import { FilterGroup, ColumnAccessorType } from "@viz/Table";
 
 import { _geneTableProperties as _geneRecordTableProperties } from "./_geneRecordProperties";
 import { _variantTableProperties as _variantRecordTableProperties } from "./_variantRecordProperties";
@@ -22,6 +22,7 @@ export interface RecordTableProperties {
     canToggleColumns: boolean;
     fullWidth?: boolean;
     sortedBy?: RecordTableColumnSort[];
+    accessors?: {[key: string]: ColumnAccessorType};
 }
 
 export const _defaultTableProperties: RecordTableProperties = {

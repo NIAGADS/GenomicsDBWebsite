@@ -12,7 +12,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
-import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
+import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
 
 export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
@@ -76,7 +76,6 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
                 className={className ? className : classes.filterGroup}
                 justifyContent="flex-start"
                 alignItems="flex-start"
-                spacing={3}
             >
                 {group.columns.map((id: string) => renderFilter(id))}
             </Grid>

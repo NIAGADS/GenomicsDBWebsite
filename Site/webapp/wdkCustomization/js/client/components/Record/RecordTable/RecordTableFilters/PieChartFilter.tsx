@@ -1,10 +1,7 @@
 // credit to https://github.com/ggascoigne/react-table-example for all except global filer
 import React, { useMemo } from "react";
-import { countBy, merge } from "lodash";
+import { countBy } from "lodash";
 import { Column } from "react-table";
-import { Options } from "highcharts";
-
-import { addTitle } from "@viz/Highcharts/HighchartsOptions";
 
 import { PieChartFilter as DefaultPieChartFilter } from "@viz/Table/TableFilters";
 
@@ -39,13 +36,15 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                     vals.forEach((v: string) => {
                         values.push(v);
                     });
-                } 
-                else if (value.toUpperCase() == value) {
-                    values.push(value.toLowerCase())
-                }
-                else {
+                } else if (value.toUpperCase() == value) {
+                    values.push(value.toLowerCase());
+                } else if (value === "n/a") {
+                    values.push("N/A or Unknown");
+                } else {
                     values.push(value);
                 }
+            } else {
+                values.push("N/A or Unknown");
             }
         });
 
@@ -56,7 +55,7 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         }
         let series = {
             name: id,
-            data: data,     
+            data: data,
         };
         return series;
     }, [id, preFilteredRows]);

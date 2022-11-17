@@ -5,4 +5,7 @@ export * from "./TableHeaderCell";
 export * from "./TableColumnsPanel";
 export * from "./styles";
 export * from "./TableToolbar";
-export * from "./TableFilters"
+export * from "./TableFilters";
+export * from "./TableContainer";
+
+export type ColumnAccessorType = 'StackedBar' | 'Default';

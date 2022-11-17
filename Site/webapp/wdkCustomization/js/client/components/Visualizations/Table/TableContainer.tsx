@@ -5,8 +5,6 @@ import { assign } from "lodash";
 
 import clsx from "clsx";
 
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -27,7 +25,6 @@ import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 import {
     Table,
     TableToolbar,
-    TablePagination,
     TableColumnsPanel,
     fuzzyTextFilter,
     numericTextFilter,
@@ -79,7 +76,7 @@ const defaultFilterTypes = {
     pvalue: greaterThanFilter,
 };
 
-const TableContainer: React.FC<TableContainerProps> = ({
+export const TableContainer: React.FC<TableContainerProps> = ({
     columns,
     data,
     filterTypes,
@@ -206,5 +203,3 @@ const TableContainer: React.FC<TableContainerProps> = ({
         </CustomPanel>
     );
 };
-
-export default TableContainer;
