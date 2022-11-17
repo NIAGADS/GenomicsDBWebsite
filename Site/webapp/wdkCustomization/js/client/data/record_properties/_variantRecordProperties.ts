@@ -103,6 +103,7 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         hiddenColumns: ["d_prime"],
         requiredColumns: ["variant", "r_squared", "population"],
         sortedBy: [{ id: "r_squared", descending: true }],
+        accessors: {"adsp_variant_flag": "BooleanFlag"}
     },
     allele_frequencies: {
         filters: {

@@ -8,4 +8,5 @@ export * from "./TableToolbar";
 export * from "./TableFilters";
 export * from "./TableContainer";
 
-export type ColumnAccessorType = 'StackedBar' | 'Default';
+export type ColumnAccessorType = 'StackedBar' | 'Default' | "BooleanFlag";
+

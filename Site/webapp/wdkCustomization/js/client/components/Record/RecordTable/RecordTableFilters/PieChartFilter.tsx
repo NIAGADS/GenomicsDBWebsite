@@ -25,12 +25,12 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         let values = new Array<String>(); // assumming pie filter is only for categorical values
         preFilteredRows.forEach((row: any) => {
             let value = id.endsWith("flag") // handle badges, which are in html / if present, value is true
-                ? row.values[id]
+                ? row.values[id] 
                     ? "Yes"
                     : "No"
                 : extractDisplayText(row.values[id]);
             //counts[num] = counts[num] ? counts[num] + 1 : 1;
-            if (value) {
+            if (value && value != 'n/a') {            
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
@@ -38,13 +38,9 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                     });
                 } else if (value.toUpperCase() == value) {
                     values.push(value.toLowerCase());
-                } else if (value === "n/a") {
-                    values.push("N/A or Unknown");
                 } else {
                     values.push(value);
                 }
-            } else {
-                values.push("N/A or Unknown");
             }
         });
 

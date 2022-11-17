@@ -43,5 +43,7 @@ export const resolveAccessor = (key: string, accessorType: ColumnAccessorType = 
             return (row: any) => (isObject(row[key]) ? resolveObjectInput(row[key]) : resolveNAs(row[key]));
         case "StackedBar":
             return (row: any) => <CssBarChart value={row[key]} percentage={row[key] * 100} />;
+        case "BooleanFlag":
+            return (row: any) => (isObject(row[key]) ? resolveObjectInput(row[key]) : row[key]);
     }
 };

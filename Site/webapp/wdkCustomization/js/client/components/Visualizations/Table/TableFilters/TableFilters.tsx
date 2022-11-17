@@ -1,7 +1,7 @@
 // credit to https://github.com/ggascoigne/react-table-example for all except global filer
 
 import React, { useMemo, useState, useEffect } from "react";
-import { countBy, merge } from "lodash";
+import { countBy, merge, isObject } from "lodash";
 
 import { Row, IdType, Column, useAsyncDebounce } from "react-table";
 
@@ -24,6 +24,17 @@ import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
 import { toProperCase } from "genomics-client/util/util";
 import { useFilterStyles, useGlobalFilterStyles } from ".";
+
+/* note currently assumes spans for colored text */
+const extractObjectDisplayText = (obj: any) => {
+    return (obj as { displayText: string }).displayText
+        ? (obj as { displayText: string }).displayText
+        : obj.value
+        ? obj.value
+        : obj.props && obj.props.children
+        ? obj.props.chilren
+        : "";
+};
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
 export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
@@ -118,20 +129,21 @@ export function PieChartFilter<T extends Record<string, unknown>>({
             let value = row.values[id];
             //counts[num] = counts[num] ? counts[num] + 1 : 1;
             if (value) {
-                if (value.includes("//")) {
-                    let vals = value.split(" // ");
-                    vals.forEach((v: string) => {
-                        values.push(v);
-                    });
-                }  else if (value === "n/a") {
-                    values.push("N/A or Unknown");
-                }  
-                else {
-                    values.push(value);
+                if (value) {
+                    if (isObject(value)) {
+                        let valueText = extractObjectDisplayText(value);
+                        if (valueText != "n/a") {
+                            values.push(value);
+                        }
+                    } else if (value.includes("//")) {
+                        let vals = value.split(" // ");
+                        vals.forEach((v: string) => {
+                            values.push(v);
+                        });
+                    } else {
+                        values.push(value);
+                    }
                 }
-            }
-            else {
-                values.push("N/A or Unkown");
             }
         });
 
@@ -202,18 +214,19 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
         preFilteredRows.forEach((row: any) => {
             let value = row.values[id];
             if (value) {
-                if (value.includes("//")) {
+                if (isObject(value)) {
+                    let valueText = extractObjectDisplayText(value);
+                    if (valueText != "n/a") {
+                        options.add(value);
+                    }
+                } else if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
                         options.add(v);
                     });
-                } else if (value === "n/a") {
-                    options.add("N/A or Unknown");
                 } else {
                     options.add(value);
                 }
-            } else {
-                options.add("N/A or Unknown");
             }
         });
         return [...Array.from(options.values())];

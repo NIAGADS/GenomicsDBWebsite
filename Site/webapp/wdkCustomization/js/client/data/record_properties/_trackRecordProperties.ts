@@ -25,5 +25,6 @@ export const _trackTableProperties: { [name: string]: RecordTableProperties } = 
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: {"adsp_variant_flag": "BooleanFlag", "msc_is_coding_flag": "BooleanFlag"}
     },
 };
