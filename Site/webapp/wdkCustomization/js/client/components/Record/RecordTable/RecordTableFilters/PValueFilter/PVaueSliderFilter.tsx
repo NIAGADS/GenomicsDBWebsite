@@ -3,7 +3,7 @@ import { chain } from "lodash";
 import { Column } from "react-table";
 
 import { negLog10p, getMinMaxNegLog10PValue, invertNegLog10p } from "../filters/negLog10pFilter";
-import { DEFAULT_FILTER_VALUE } from "../PValueFilter";
+import { DEFAULT_PVALUE_FILTER_VALUE as DEFAULT_FILTER_VALUE } from "../PValueFilter";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";

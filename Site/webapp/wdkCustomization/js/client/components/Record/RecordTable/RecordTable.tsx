@@ -1,18 +1,16 @@
-import React, { useMemo, useRef } from "react";
-import { Column, Row, TableInstance, HeaderProps } from "react-table";
-import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
+import React, { useMemo } from "react";
 import { findIndex, has, isString, get, toNumber, isObject } from "lodash";
 
+import { Column, Row } from "react-table";
+
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-
 import { Box } from "@material-ui/core";
-import { resolveAccessor, resolveData } from "./RecordTableUtils";
-import { RecordTableProps } from "./RecordTableTypes";
-import { HelpIcon } from "wdk-client/Components";
-// import { linkColumnSort, sciNotationColumnSort, flagColumnSort, defaultColumnSort } from "./RecordTableSort";
 
-import { SelectColumnFilter } from "@viz/Table/TableFilters/TableFilters";
-import TableContainer /*, { SortIconGroup } */ from "@viz/Table/TableContainer";
+import { TableContainer, SelectColumnFilter, ColumnAccessorType } from "@viz/Table";
+import { resolveAccessor, resolveData, RecordTableProps } from "@components/Record/RecordTable";
+
+import { HelpIcon } from "wdk-client/Components";
+import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
 
 import {
     fuzzyRecordTableTextFilter,
@@ -95,6 +93,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
         } else {
             let columnFilters: any = get(properties, "filters", null);
             let attributes: AttributeField[] = table.attributes;
+            const accessors: any = get(properties, "accessors", null);
             let columns: Column<{}>[] = Object.keys(data[0])
                 .filter((k) => {
                     const attribute: AttributeField = attributes.find((item) => item.name === k);
@@ -102,9 +101,14 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
                 })
                 .map((k): Column => {
                     const attribute: AttributeField = attributes.find((item) => item.name === k);
+                    const accessorType:ColumnAccessorType = accessors
+                        ? accessors.hasOwnProperty(attribute.name)
+                            ? accessors[attribute.name]
+                            : "Default"
+                        : "Default";
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
-                    let column = _buildColumn(attribute, attribute.isSortable, filterType);
+                    let column = _buildColumn(attribute, accessorType);
                     //@ts-ignore
                     if (column.id.endsWith("link")) column.sortType = linkColumnSort;
                     if (column.id.includes("pvalue")) {
@@ -238,10 +242,13 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
         []
     );
 
-    const _buildColumn = (attribute: AttributeField, sortable: boolean, filterType?: any) => ({
+    const _buildColumn = (
+        attribute: AttributeField,
+        accessor: ColumnAccessorType
+    ) => ({
         Header: _buildHeader(attribute),
-        sortable,
-        accessor: resolveAccessor(attribute.name, attribute.type),
+        sortable: attribute.isSortable,
+        accessor: resolveAccessor(attribute.name, accessor),
         id: attribute.name,
         sortType: defaultColumnSort,
     });
@@ -267,7 +274,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
             </p>
         );
     }
-    
+
     return (
         <TableContainer
             className={classNames(get(properties, "fullWidth", true) ? classes.fullWidth : "shrink", classes.table)}

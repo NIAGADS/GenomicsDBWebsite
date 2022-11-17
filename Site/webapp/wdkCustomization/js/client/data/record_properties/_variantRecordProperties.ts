@@ -113,5 +113,6 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: false,
+        accessors: {"frequency": "StackedBar" },
     },
 };
