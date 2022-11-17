@@ -85,12 +85,8 @@
       <!-- <table name="phenotypes" displayName="Phenotypes" queryRef="GwasDatasetTables.Phenotypes">
 	   <columnAttribute name="phenotype_category" displayName="Category" type="string"/>
 	   <columnAttribute name="phenotype" displayName="Phenotype" type="string" />
-	   <propertyList name="type">
-	   <value>default</value>
-	   </propertyList>
-	   <propertyList name="defaultOpen">
-	   <value>true</value>
-	   </propertyList>
+	   
+	   
 	   
 	   <description>
 	   <![CDATA[
@@ -120,13 +116,9 @@
 	   <columnAttribute name="msc_impacted_gene_link" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="json_link"/>
 	   <columnAttribute name="msc_is_coding_flag" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
 
-	   <propertyList name="flags">
-	     <value>{"defaultOpen": true, "filter": true}</value>
-	   </propertyList>
 	   
-	   <propertyList name="column_filter">
-	     <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie",  "msc_impact": "pie", "msc_is_coding_flag":"pie", "msc_impact": "pie"}</value>
-	</propertyList>
+	   
+	   
 	
 	
 	<description>

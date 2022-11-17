@@ -135,17 +135,11 @@
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
 
 
-	<propertyList name="column_filter">
-	  <value>{"consortium": "select","neuropathology": "pie","population": "pie","biomarker": "select","genotype": "select" }</value>
-	</propertyList>
+	
 
-	<propertyList name="defaultOpen">
-	  <value>true</value>
-	</propertyList>
+	
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+	
 
 
       </table>
@@ -232,12 +226,8 @@
       <!-- <table name="phenotypes" displayName="Phenotypes" queryRef="GwasDatasetTables.Phenotypes">
 	   <columnAttribute name="phenotype_category" displayName="Category" type="string"/>
 	   <columnAttribute name="phenotype" displayName="Phenotype" type="string" />
-	   <propertyList name="type">
-	   <value>default</value>
-	   </propertyList>
-	   <propertyList name="defaultOpen">
-	   <value>true</value>
-	   </propertyList>
+	   
+	   
 	   
 	   <description>
 	   <![CDATA[
@@ -265,12 +255,8 @@
 	   <columnAttribute name="msc_impacted_gene_link" displayName="Impactd Gene" help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" type="json_link"/>
 	   <columnAttribute name="msc_is_coding" displayName="Is Coding?" help="flagged as a coding variant by the ADSP annotation pipeline" type="json_icon"/>
 
-<propertyList name="type">
-<value>chart_filter</value>
-</propertyList>
-<propertyList name="filter_field">
-<value>pvalue</value>
-</propertyList>
+
+
 
 <description>
 <![CDATA[
@@ -298,9 +284,7 @@ Top variants from this GWAS summary statistics dataset.
 	<columnAttribute name="tag_rsquared" displayName="Tag r^2" help="LD r-squared between this variant the refSNP(s) in the tag region to which it has linkage" type="numeric" />
 	<columnAttribute name="tag_distance" displayName="Tag Distance" help="distance between this variant and the refSNP(s) in the tage reigon to which it has linkage" type="numeric" />
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -320,9 +304,7 @@ Top variants from this GWAS summary statistics dataset.
 	<columnAttribute name="data" inReportMaker="false" type="json" />
 	<columnAttribute name="annotation_tracks" inReportMaker="false" type="json" />
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+	
 	<description>
 	  <![CDATA[
 		   Unique tag regions identified during <a href="@INFERNO_URL@">INFERNO</a> LD-expansion step.  See table below for details.
@@ -336,9 +318,7 @@ Top variants from this GWAS summary statistics dataset.
 	<columnAttribute name="tag_location" displayName="Location" type="string" />
 	<columnAttribute name="tag_span" displayName="Length" help="span of this tag region, in bp" type="numeric" />
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -361,9 +341,7 @@ Top variants from this GWAS summary statistics dataset.
 	<columnAttribute name="span_start" displayName="Overlap Region Start" type="string" help="starting position (bp) of the region containing this variant" />
 	<columnAttribute name="span_end" displayName="Overlap Region End" type="string" help="end position (bp) of the region containing this variant" />
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -374,10 +352,8 @@ Top variants from this GWAS summary statistics dataset.
 
       <table name="inferno_highchart_gene_mapping" displayName="Gene regions" queryRef="InfernoTables.GeneMapping">
 	<columnAttribute name="chart" internal="true" inReportMaker="false" />
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
-	<propertyList name="chartProperties"></propertyList>
+	
+	
 
 	<description>
 	  <![CDATA[
@@ -388,9 +364,7 @@ Top variants from this GWAS summary statistics dataset.
 
       <table name="inferno_highchart_list_lncRNA_mapping" displayName="lncRNA regions" queryRef="InfernoTables.lncRNAMapping">
 	<columnAttribute name="charts" internal="true" inReportMaker="false" />
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -401,9 +375,7 @@ Top variants from this GWAS summary statistics dataset.
 
       <table name="inferno_highchart_list_mRNA_mapping" displayName="mRNA regions" queryRef="InfernoTables.mRNAMapping">
 	<columnAttribute name="charts" internal="true" inReportMaker="false" />
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -418,9 +390,7 @@ Top variants from this GWAS summary statistics dataset.
 
       <table name="inferno_highchart_enhancer_overlap_fantom5" displayName="FANTOM5 enhancer overlap" queryRef="InfernoTables.FANTOM5">
 	<columnAttribute name="chart" internal="true" inReportMaker="false" />
-	<propertyList name="type">
-	  <value>highchart</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -431,9 +401,7 @@ Top variants from this GWAS summary statistics dataset.
 
       <!-- 	<table name="inferno_highchart_enhancer_overlap_roadmap" displayName="Roadmap enhancer overlap" queryRef="InfernoTables.Roadmap">
 	   <columnAttribute name="chart" internal="true" inReportMaker="false"/>
-	   <propertyList name="type">
-	   <value>highchart</value>
-	   </propertyList>
+	   
 	   
 	   <description>	
 	   <![CDATA[
