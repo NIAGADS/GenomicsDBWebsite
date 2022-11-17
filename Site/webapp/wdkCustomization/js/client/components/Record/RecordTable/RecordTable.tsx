@@ -65,6 +65,16 @@ function toString(a: any) {
     return "";
 }
 
+const extractObjectDisplayText = (obj: any) => {
+    return (obj as { displayText: string}).displayText 
+    ? (obj as { displayText: string }).displayText
+    : obj.value 
+    ? obj.value 
+    : obj.props && obj.props.children
+    ? extractDisplayText(obj.props.children)
+    : "";
+}
+
 const extractDisplayText = (value: any): any => {
     return isString(value) || !value
         ? value
@@ -72,12 +82,8 @@ const extractDisplayText = (value: any): any => {
         ? value.props.dangerouslySetInnerHTML.__html
         : value.type && value.type.name === "CssBarChart"
         ? toNumber(value.props.original)
-        : isObject(value) && (value as { displayText: string }).displayText
-        ? (value as { displayText: string }).displayText
-        : value.value
-        ? value.value
-        : value.props && value.props.children
-        ? extractDisplayText(value.props.children)
+        : isObject(value)
+        ? extractObjectDisplayText(value)
         : "";
 };
 

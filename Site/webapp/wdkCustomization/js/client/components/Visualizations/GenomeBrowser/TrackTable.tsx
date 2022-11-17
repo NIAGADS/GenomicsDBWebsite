@@ -11,7 +11,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { findIndex, has, get } from "lodash";
 import { HelpIcon } from "wdk-client/Components";
 
-import TableContainer /*, { SortIconGroup } */ from "@viz/Table/TableContainer";
+import { TableContainer } from "@viz/Table";
 import { PieChartFilter, SelectColumnFilter, fuzzyTextFilter, globalTextFilter, includesFilter } from "@viz/Table";
 
 import classNames from "classnames";

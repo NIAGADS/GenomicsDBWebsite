@@ -35,6 +35,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { "adsp_variant_flag": "BooleanFlag"}
     },
     other_variants_from_gwas: {
         filters: {
@@ -66,6 +67,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { "adsp_variant_flag": "BooleanFlag"}
     },
     ad_variants_from_catalog: {
         filters: {
@@ -88,6 +90,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { "adsp_variant_flag": "BooleanFlag"}
     },
     other_variants_from_catalog: {
         filters: {
@@ -109,6 +112,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { "adsp_variant_flag": "BooleanFlag"}
     },
     go_terms: {
         filters: {

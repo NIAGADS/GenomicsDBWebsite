@@ -21,6 +21,7 @@ interface TableProps {
     className?: string;
 }
 
+
 export const Table: React.FC<TableProps> = ({ instance, className }) => {
     const classes = useTableStyles();
     const {
