@@ -73,9 +73,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                         />
                         <HighchartsTableTrellis
                             data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}
-                            properties={JSON.parse(
-                                getAttributeChartProperties(recordClass, "gws_datasets_summary_plot")
-                            )}
+                            properties={{type: "variant_gws_summary"}}
                         />
                     </Box>
                 </Grid>

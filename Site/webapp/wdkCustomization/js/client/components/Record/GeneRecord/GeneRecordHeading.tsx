@@ -45,9 +45,7 @@ const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }
                         />
                         <HighchartsTableTrellis
                             data={JSON.parse(record.attributes.gws_variants_summary_plot.toString())}
-                            properties={JSON.parse(
-                                getAttributeChartProperties(recordClass, "gws_variants_summary_plot")
-                            )}
+                            properties={{type: "gene_gws_summary"}}
                         />
                     </Box>
                 </Grid>
