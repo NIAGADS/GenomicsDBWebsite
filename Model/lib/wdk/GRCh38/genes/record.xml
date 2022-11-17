@@ -197,9 +197,7 @@
 					internal="false"
 					truncateTo="5000"
 					type="json_link" />
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-				</propertyList>
+				
 			</table>
 
 			<table
@@ -219,9 +217,7 @@
 					truncateTo="5000"
 					type="json_link" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-				</propertyList>
+				
 
 			</table>
 
@@ -242,9 +238,7 @@
 					truncateTo="5000"
 					type="json_link" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-				</propertyList>
+				
 
 			</table>
 
@@ -265,9 +259,7 @@
 					truncateTo="5000"
 					type="json_link" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-				</propertyList>
+				
 			</table>
 
 			<table
@@ -291,9 +283,7 @@
 					displayName="Position (End)"
 					type="integer" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-				</propertyList>
+				
 
 			</table>
 
@@ -307,9 +297,7 @@
 					internal="true"
 					inReportMaker="false"
 					type="highchart_json">
-					<propertyList name="chartProperties">
-						<value>{"type": "gene_gws_summary"}</value>
-					</propertyList>
+					
 				</columnAttribute>
 			</attributeQueryRef>
 
@@ -390,25 +378,15 @@
 					displayName="Covariates"
 					type="string" />
 
-				<propertyList name="column_filter">
-					<value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie","population":"pie", "biomarker":"select", "tissue":"select", "covariates":"multi_select"}</value>
-				</propertyList>
+				
 
-				<propertyList name="filter_groups">
-					<value>{"Position":["relative_position"], "Variant Annotation": ["adsp_variant_flag", "gene_impact", "gene_consequence"],"Phenotype":["population","genotype","biomarker","tissue","covariates"]}</value>
-				</propertyList>
+				
 
-				<propertyList name="hidden_columns">
-					<value>population,diagnosis,neuropathology,covariates,gender,genotype,biomarker,tissue</value>
-				</propertyList>
+				
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": true, "filter": true}</value>
-				</propertyList>
+				
 
-				<propertyList name="sorted_by">
-					<value>[{"id":"pvalue", "desc":false}]</value>
-				</propertyList>
+				
 
 				<description>
 					<![CDATA[
@@ -502,16 +480,10 @@
 					type="string" />
 
 
-				<propertyList name="column_filter">
-					<value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
-				</propertyList>
+				
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": true}</value>
-				</propertyList>
-				<propertyList name="sorted_by">
-					<value>[{"id":"pvalue", "desc":false}]</value>
-				</propertyList>
+				
+				
 
 				<description>
 					<![CDATA[
@@ -593,21 +565,13 @@
 					displayName="Replicate (Stage 2) Sample"
 					type="string" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": true}</value>
-				</propertyList>
+				
 
-				<propertyList name="column_filter">
-					<value>{"pvalue":"pvalue", "adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie", "source":"select"}</value>
-				</propertyList>
+				
 
-				<propertyList name="hidden_columns">
-					<value>source,sample,replicate_sample,pubmed_id,frequency</value>
-				</propertyList>
+				
 
-				<propertyList name="sorted_by">
-					<value>[{"id":"pvalue", "desc":false}]</value>
-				</propertyList>
+				
 
 
 				<description>
@@ -689,21 +653,13 @@
 					displayName="Replicate (Stage 2) Sample"
 					type="string" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": true}</value>
-				</propertyList>
+				
 
-				<propertyList name="column_filter">
-					<value>{"pvalue":"pvalue", "adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie", "source":"select"}</value>
-				</propertyList>
+				
 
-				<propertyList name="hidden_columns">
-					<value>source,sample,replicate_sample,pubmed_id,frequency</value>
-				</propertyList>
+				
 
-				<propertyList name="sorted_by">
-					<value>[{"id":"pvalue", "desc":false}]</value>
-				</propertyList>
+				
 
 				<description>
 					<![CDATA[   
@@ -730,13 +686,9 @@
 	   <columnAttribute name="cell" displayName="Cell" help="cell or cultured cell type; standardized using OBO foundary ontologies" type="string"/>
 	   <columnAttribute name="cell_line" displayName="Cell Line" type="string"/>
 	   <columnAttribute name="tissue" displayName="Tissue" help="tissues; standardized using OBO foundary ontologies" type="string"/>
-	   <propertyList name="column_filter">
-	   <value>{"go_evidence_code": "select", "ontology":"select"}</value>
-	   </propertyList>
 	   
-	   <propertyList name="flags">
-	   <value>{"defaultOpen": false, "filter": true}</value>
-	   </propertyList>
+	   
+	   
 	   
 	   </table>-->
 
@@ -768,13 +720,9 @@
 					name="ontology"
 					type="string" />
 
-				<propertyList name="column_filter">
-					<value>{"go_evidence_code": "select", "ontology":"select"}</value>
-				</propertyList>
+				
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": true}</value>
-				</propertyList>
+				
 
 				<description>
 					<![CDATA[
@@ -807,9 +755,7 @@
 					displayName="Resource"
 					type="string" />
 
-				<propertyList name="flags">
-					<value>{"defaultOpen": false, "filter": true}</value>
-				</propertyList>
+				
 
 
 				<description>

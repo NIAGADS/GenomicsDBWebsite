@@ -79,16 +79,10 @@
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
 
 
-	<propertyList name="column_filter">
-		<value>{"consortium": "select","neuropathology": "pie","population": "pie","biomarker": "select","genotype": "select" }</value>
-	</propertyList>
+	
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter": true}</value>
-	</propertyList>
-	<propertyList name="hidden_columns">
-	  <value>description,covariates,biomarker,genotype</value>
-	</propertyList>
+	
+	
       </table>
 
       
@@ -117,13 +111,9 @@
 	<columnAttribute name="population" displayName="Population" type="string" />
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
 
-	<propertyList name="column_filter">
-	  <value>{"population": "select"}</value>
-	</propertyList>
+	
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter":true}</value>
-	</propertyList>
+	
       </table>
 
 
@@ -153,9 +143,7 @@
 	<columnAttribute name="population" displayName="Population" type="string" />
 	<columnAttribute name="covariates" displayName="Covariates" type="string" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter":false}</value>
-	</propertyList>
+	
       </table>
 
     </recordClass>

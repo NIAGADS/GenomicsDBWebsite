@@ -114,18 +114,14 @@
       <table name="record_link_outs" displayName="Related Gene Records" inReportMaker="false" queryRef="GeneTables.DbRefs_Gene">
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-	</propertyList>
+	
       </table>
 
       <table name="sequence_link_outs" displayName="Nucleotide Sequences" inReportMaker="false" queryRef="GeneTables.DbRefs_NSeq">
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-	</propertyList>
+	
 
       </table>
 
@@ -133,9 +129,7 @@
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-	</propertyList>
+	
 
       </table>
 
@@ -143,9 +137,7 @@
 	<columnAttribute name="external_id" displayName="External ID" internal="false" type="string"/>
 	<columnAttribute name="external_links" displayName="Resources" internal="false" truncateTo="5000" type="json_link"/>
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-	</propertyList>
+	
       </table>
 
       <table name="transcript_link_outs" displayName="Transcripts" queryRef="GeneTables.Transcripts">
@@ -154,9 +146,7 @@
 	<columnAttribute name="location_start" displayName="Position (Start)" type="integer" />
 	<columnAttribute name="location_end" displayName="Position (End)" type="integer" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": false, "canShrink": false}</value>
-	</propertyList>
+	
 	
       </table>
 
@@ -166,11 +156,7 @@
 
       <attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
 	<columnAttribute name="gws_variants_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
-	  <propertyList name="chartProperties">
-	    <value>
-	      {"type": "gene_gws_summary"}
-	    </value>
-	  </propertyList>
+	  
 	</columnAttribute>
       </attributeQueryRef>
       
@@ -193,17 +179,11 @@
 	<columnAttribute name="gene_consequence" displayName="Consequence" type="string" help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline"/>
 	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
 
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
-	</propertyList>
+	
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter": true}</value>
-	</propertyList>
+	
 
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -232,17 +212,11 @@
 	<columnAttribute name="track_name" displayName="Track" type="json_text" />
 
 
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue", "adsp_variant_flag": "pie", "gene_impact": "pie", "gene_consequence":"pie", "relative_position": "pie"}</value>
-	</propertyList>
 	
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
+	
 
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -272,21 +246,13 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
-	<propertyList name="column_filter">
-	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
-	</propertyList>
+	
 
-	<propertyList name="hidden_columns">
-	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
-	</propertyList>
+	
 
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
+	
 
 	
 	<description>
@@ -316,21 +282,13 @@
 	<columnAttribute name="sample" displayName="Sample" type="string" />
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
-	<propertyList name="column_filter">
-	  <value>{"adsp_variant_flag":"pie", "relative_position": "pie", "gene_impact": "pie", "gene_consequence":"pie"}</value>
-	</propertyList>
+	
 
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
+	
 
-	<propertyList name="hidden_columns">
-	  <value>source,sample,replicate_sample,pubmed_id,frequency</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[   
@@ -359,13 +317,9 @@
 	   <columnAttribute name="cell" displayName="Cell" help="cell or cultured cell type; standardized using OBO foundary ontologies" type="string"/>
 	   <columnAttribute name="cell_line" displayName="Cell Line" type="string"/>
 	   <columnAttribute name="tissue" displayName="Tissue"  help="tissues; standardized using OBO foundary ontologies"  type="string"/>
-	   <propertyList name="column_filter">
-	   <value>{"go_evidence_code": "select", "ontology":"select"}</value>
-	   </propertyList>
 	   
-	   <propertyList name="flags">
-	   <value>{"defaultOpen": false, "filter": true}</value>
-	   </propertyList>
+	   
+	   
 	   
 	   </table>-->
       
@@ -380,13 +334,9 @@
 	<columnAttribute displayName="Evidence Code" name="go_evidence_code" type="string" />
 	<columnAttribute displayName="Ontology" name="ontology" type="string" />
 
-	<propertyList name="column_filter">
-	  <value>{"go_evidence_code": "select", "ontology":"select"}</value>
-	</propertyList>
+	
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
 	<description>
 	  <![CDATA[
@@ -406,9 +356,7 @@
 	-->
 	<columnAttribute name="source" displayName="Resource" type="string" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
 
 	<description>

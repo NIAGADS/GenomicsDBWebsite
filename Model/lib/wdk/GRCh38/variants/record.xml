@@ -139,14 +139,10 @@
 	
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
 	
-	<propertyList name="hidden_columns">
-	  <value>rank</value>
-	</propertyList>
+	
 	
       </table>
 
@@ -166,13 +162,9 @@
 
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
-	<propertyList name="hidden_columns">
-	  <value>strand,rank</value>
-	</propertyList>
+	
 
       </table>
       
@@ -182,13 +174,9 @@
 	<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for more information" type="json_icon" />
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
-	<propertyList name="hidden_columns">
-	  <value>rank</value>
-	</propertyList>
+	
 	
       </table> 
 
@@ -217,13 +205,9 @@
 	<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." type="integer" />
 
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
-	<propertyList name="hidden_columns">
-	  <value>is_canonical_transcript,exon,distance,strand,cds_position,cdna_position,protein_position,rank</value>
-	</propertyList>
+	
 
 
       </table>
@@ -245,11 +229,7 @@
 
       <attributeQueryRef ref="VariantAttributes.GWSDatasetsPlot">
 	<columnAttribute name="gws_datasets_summary_plot" internal="true" inReportMaker="false" type="highchart_json">
-	  <propertyList name="chartProperties">
-	    <value>
-	      {"type": "variant_gws_summary"}
-	    </value>
-	  </propertyList>
+	  
 	</columnAttribute>
       </attributeQueryRef>
 
@@ -263,9 +243,7 @@
      <!-- <table name="locuszoom_gwas_datasets" displayName="LocusZoom Overview" queryRef="VariantTables.LocusZoomGwasDatasets">
 	<columnAttribute name="dataset_list" internal="true" inReportMaker="false" type="json" />
 
-	<propertyList name="type">
-	  <value>default</value>
-	</propertyList>
+	
 
 	<description><![CDATA[coming soon]]></description>
       </table> -->
@@ -281,15 +259,9 @@
 	<columnAttribute name="minor_allele_frequency" displayName="MAF" help="minor allele frequency in the population for the linked variant" type="percentage_bar"/>
 	<columnAttribute name="minor_allele_frequency_ld_ref" displayName="LD REF MAF" help="minor allele frequency in the population for the LD reference variant (record being browsed)" type="percentage_bar"/>
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
-	<propertyList name="sorted_by">
-	  <value>[{"id":"r_squared", "desc":true}]</value>
-	</propertyList>
-	<propertyList name="hidden_columns">
-	  <value>d_prime</value>
-	</propertyList>
+	
+	
+	
 
       </table>
 
@@ -301,9 +273,7 @@
 	<columnAttribute name="frequency" displayName="Frequency" inReportMaker="true" type="percentage_bar"/>
 
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
+	
 
 
       </table>
@@ -318,15 +288,9 @@
 	<columnAttribute name="track" displayName="Track" type="json_text" />
 
 
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue"}</value>
-	</propertyList>
-	<propertyList name="flags">
-	  <value>{"defaultOpen": true, "filter": true}</value>
-	</propertyList>
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
+	
+	
+	
 
 	<description>
 	  <![CDATA[
@@ -342,15 +306,9 @@
 	<columnAttribute name="pvalue" displayName="p-value" type="numeric" />
 	<columnAttribute name="track_name_link" displayName="Track" type="json_text" />
 
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue"}</value>
-	</propertyList>
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
+	
+	
+	
     
 	<description>
 	  <![CDATA[
@@ -375,18 +333,10 @@
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue", "source":"select"}</value>
-	</propertyList>
-	<propertyList name="hidden_columns">
-	  <value>study,sample,replicate_sample,mapped_efo_trait</value>
-	</propertyList>
+	
+	
+	
+	
 
       
 	<description>
@@ -412,18 +362,10 @@
 	<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" type="string" />
 
 
-	<propertyList name="flags">
-	  <value>{"defaultOpen": false, "filter": true}</value>
-	</propertyList>
-	<propertyList name="sorted_by">
-		<value>[{"id":"pvalue", "desc":false}]</value>
-	</propertyList>
-	<propertyList name="column_filter">
-	  <value>{"pvalue":"pvalue", "source":"select"}</value>
-	</propertyList>
-	<propertyList name="hidden_columns">
-	  <value>source,study,sample,replicate_sample,mapped_efo_trait</value>
-	</propertyList>
+	
+	
+	
+	
 
 
 	<description>

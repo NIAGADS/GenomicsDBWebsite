@@ -65,13 +65,9 @@
         <columnAttribute name="category_level_2" displayName="Subcategory" type="string" inReportMaker="true"/>
 
 
-        <propertyList name="column_filter">
-          <value>{"category_level_1": "select","category_level_2": "select" }</value>
-        </propertyList>
+        
 
-        <propertyList name="flags">
-          <value>{"defaultOpen": true, "filter": true}</value>
-        </propertyList>
+        
 
       </table>
 
