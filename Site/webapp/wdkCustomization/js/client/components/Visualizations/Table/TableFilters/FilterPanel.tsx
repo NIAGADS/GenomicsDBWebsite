@@ -13,7 +13,6 @@ import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_FILTER_VALUE as DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
-import { GroupWorkSharp, GroupSharp } from "@material-ui/icons";
 
 export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
