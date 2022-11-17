@@ -6,7 +6,7 @@ import CssBarChart from "./Columns/CssBarChart";
 
 const _parseJson = (value: any) => {
     //not reallly a json test, more like a check to see if the backend is sending us something we assume we can treat as json
-    if (!value) return "n/a";
+    if (!value) return 'n/a';
     if (!isString(value)) return value;
     if (value.startsWith("[") || value.startsWith("[{") || value.startsWith("{")) {
         try {
@@ -21,7 +21,7 @@ const _parseJson = (value: any) => {
 export const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
         return forIn(datum, (v: string, k: string, o: { [x: string]: any }) => {
-            o[k] = _parseJson(v);
+            o[k] = k.endsWith("_flag") && !v ? null : _parseJson(v); 
         });
     });
 };
