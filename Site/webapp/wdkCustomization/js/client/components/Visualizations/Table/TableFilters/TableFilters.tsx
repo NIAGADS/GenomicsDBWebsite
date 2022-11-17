@@ -81,7 +81,8 @@ export function PieChartFilter<T extends Record<string, unknown>>({
         let plotOptions: Options = {
             plotOptions: {
                 pie: {
-                    center: ["20%", "50%"], // draws pie on left
+                    center: ["50%", "50%"], // draws pie on left
+                    size: 100,
                 },
             },
             tooltip: {
@@ -91,13 +92,12 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                 align: "right",
                 verticalAlign: "middle",
                 layout: "vertical",
-                floating: true,
-                x: -50,
                 title: {
                     text: title ? title : toProperCase(id),
-                    style: { fontSize: "12px", fontWeight: "normal" },
+                    style: { fontSize: "12px" },
                 },
-                //floating: true
+                itemStyle: { color: "black", fontSize: "12px", fontWeight: "normal", width: 100 },
+                itemHoverStyle: { color: "#ffc665" },
             },
             /*chart: {
                 height: 150
@@ -154,8 +154,9 @@ export function PieChartFilter<T extends Record<string, unknown>>({
                       events: {
                           legendItemClick: function () {
                               //@ts-ignore
-                              setFilter(this.name || undefined);
-                              return true;
+                              alert(this.name);
+                              //setFilter(this.name || undefined);
+                              return false;
                           },
                           //   legendItemClick: () => false
                       },
