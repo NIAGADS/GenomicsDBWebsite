@@ -2,7 +2,7 @@
 <wdkModel>
   <recordClassSet name="TrackRecordClasses">
 
-    <recordClass name="TrackRecordClass" displayName="Summary Statistics Dataset Report"
+    <recordClass name="TrackRecordClass" displayName="Track Report"
 		 displayNamePlural="Tracks" shortDisplayName="Track" useBasket="false" urlName="track">
 
       <!-- =================================================================== -->
