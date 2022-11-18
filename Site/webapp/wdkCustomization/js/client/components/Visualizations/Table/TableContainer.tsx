@@ -30,8 +30,10 @@ import {
     numericTextFilter,
     greaterThanFilter,
     includesFilter,
+    FilterPanel,
+    FilterChipBar,
+    FilterGroup,
 } from "@viz/Table";
-import { FilterPanel, FilterChipBar, FilterGroup } from "@viz/Table";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
@@ -168,7 +170,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
 
     const _buildDrawerSections = () => {
         const sections: React.ReactNode[] = showHideColumns
-            ? [<TableColumnsPanel instance={instance} requiredColumns={requiredColumns} />]
+            ? [<ToggleColumnsPanel instance={instance} requiredColumns={requiredColumns} />]
             : [];
         showAdvancedFilter && sections.push(<FilterPanel instance={instance} filterGroups={filterGroups} />);
         return sections;
