@@ -1,4 +1,5 @@
 import { FilterValue, IdType, Row } from "react-table";
+import { parseFieldValue } from "@viz/Table";
 
 export function includesFilter<T extends Record<string, unknown>>(
     rows: Array<Row<T>>,
@@ -6,7 +7,7 @@ export function includesFilter<T extends Record<string, unknown>>(
     filterValue: FilterValue
 ): Array<Row<T>> {
     return rows.filter((row) => {
-        const rowValue = row.values[id[0]];
+        const rowValue = parseFieldValue(row.values[id[0]]);
         return rowValue && rowValue.includes(filterValue);
     });
 }
