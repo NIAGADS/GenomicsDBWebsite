@@ -7,7 +7,8 @@ import { Column, Row } from "react-table";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 
-import { TableContainer, SelectColumnFilter, ColumnAccessorType, parseFieldValue } from "@viz/Table";
+import { TableContainer, SelectColumnFilter, ColumnAccessorType, parseFieldValue, globalTextFilter } from "@viz/Table";
+
 import {
     resolveAccessor,
     resolveData,
@@ -27,6 +28,7 @@ import { RecordTableProperties } from "genomics-client/data/record_properties/_r
 const filterTypes = {
     pvalue: negLog10pFilter,
     booleanPie: booleanFlagFilter,
+    global: globalTextFilter,
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,6 +49,10 @@ const useStyles = makeStyles((theme: Theme) =>
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
 // modified from react-table alphanumeric function
+
+// TODO: see https://github.com/TanStack/table/blob/3e760e3eab4dfc1c7168e418741566e42ba7dd25/packages/table-core/src/sortingFns.ts
+// TODO: to pull this out of this code & evaluate which custom sorts are necessary
+
 const reSplitAlphaNumeric = /([0-9]+)/gm;
 function toString(a: any) {
     if (typeof a === "number") {
@@ -98,6 +104,9 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
                             if (filterType && filterType === "pie") {
                                 filterType = "booleanPie";
                             }
+                            break;
+                        case "Link":
+                            column.sortType = linkColumnSort;
                             break;
                         case "Float":
                         case "StackedBar":
@@ -221,17 +230,15 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
             }
 
             return a.length - b.length;
-            if (a > b) return 1;
-            if (a < b) return -1;
-            return 0;
         },
         []
     );
 
-    const _buildColumn = (attribute: AttributeField, accessor: ColumnAccessorType) => ({
+    const _buildColumn = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
         Header: _buildHeader(attribute),
         sortable: attribute.isSortable,
-        accessor: resolveAccessor(attribute.name, accessor),
+        accessor: resolveAccessor(attribute.name, accessorType),
+        accessorType: accessorType,
         id: attribute.name,
         sortType: defaultColumnSort,
     });
@@ -290,23 +297,25 @@ const _setInitialSort = (table: TableField, properties: RecordTableProperties) =
 };
 
 const _addColumnFilters = (column: Column, filterType: string) => {
-    if (filterType === "select") {
-        //@ts-ignore
-        column.Filter = SelectColumnFilter;
-    }
-    if (filterType.toLowerCase().includes("pie")) {
-        //@ts-ignore
-        column.Filter = PieChartColumnFilter;
-    }
-
-    if (filterType === "pvalue") {
-        //@ts-ignore
-        column.Filter = PValueFilter;
+    switch (filterType) {
+        case "select":
+            //@ts-ignore
+            column.Filter = SelectColumnFilter;
+            break;
+        case "pie":
+        case "booleanPie":
+            //@ts-ignore
+            column.Filter = PieChartColumnFilter;
+            break;
+        case "pvalue":
+            //@ts-ignore
+            column.Filter = PValueFilter;
+            break;
+        
     }
 
     //@ts-ignore
     column.filter = filterType;
-
     return column;
 };
 
