@@ -25,13 +25,13 @@ import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 import {
     Table,
     TableToolbar,
-    TableColumnsPanel,
+    ToggleColumnsPanel,
     fuzzyTextFilter,
     numericTextFilter,
     greaterThanFilter,
     includesFilter,
 } from "@viz/Table";
-import { FilterPanel, FilterChipBar, FilterGroup } from "./TableFilters";
+import { FilterPanel, FilterChipBar, FilterGroup } from "@viz/Table";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
