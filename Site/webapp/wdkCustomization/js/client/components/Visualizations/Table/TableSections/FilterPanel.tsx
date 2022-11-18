@@ -29,12 +29,6 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
         }
     }, [setAllFilters]);
 
-    const hasSelectFilters: boolean =
-        allColumns.filter(
-            //@ts-ignore
-            (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("select")
-        ).length > 0;
-
     const hasPvalueFilter: boolean =
         allColumns.filter(
             //@ts-ignore
