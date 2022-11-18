@@ -3,12 +3,12 @@ import React, { useMemo } from "react";
 import { countBy } from "lodash";
 import { Column } from "react-table";
 
-import { PieChartFilter as DefaultPieChartFilter } from "@viz/Table/TableFilters";
+import { PieChartColumnFilter as DefaultPieChartFilter } from "@viz/Table/TableFilters";
 
 import { extractDisplayText } from "../RecordTableSort";
 
 //@ts-ignore
-export function PieChartFilter<T extends Record<string, unknown>>({
+export function PieChartColumnFilter<T extends Record<string, unknown>>({
     columns,
     column,
 }: {
