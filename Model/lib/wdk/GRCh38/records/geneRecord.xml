@@ -69,7 +69,7 @@
 			<!-- =============================================================== -->
 			<!-- Step Analysis Plugins -->
 			<!-- =============================================================== -->
-			<stepAnalysisRef name="custom-go-enrichment" />
+			<!-- <stepAnalysisRef name="custom-go-enrichment" /> -->
 			<!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
 			<!-- =============================================================== -->
