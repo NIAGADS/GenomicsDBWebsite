@@ -29,6 +29,8 @@
     buildNumber='{"build":"%%buildNumber38%%", "alt_build": "%%buildNumber37%%", "alt_build_target": "@ALT_BUILD_LINK@"}'
   />
 
+  <import file="GRCh38/categories.xml"/>
+
   <!-- VARIANTS -->
   <import file="GRCh38/records/variantRecord.xml" />
   <import file="GRCh38/attributes/variantAttributes.xml" />
