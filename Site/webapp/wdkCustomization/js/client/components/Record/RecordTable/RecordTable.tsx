@@ -1,36 +1,32 @@
 import React, { useMemo } from "react";
-import { findIndex, has, isString, get, toNumber, isObject } from "lodash";
+import { findIndex, has, get } from "lodash";
+import classNames from "classnames";
 
 import { Column, Row } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 
-import { TableContainer, SelectColumnFilter, ColumnAccessorType } from "@viz/Table";
-import { resolveAccessor, resolveData, RecordTableProps } from "@components/Record/RecordTable";
+import { TableContainer, SelectColumnFilter, ColumnAccessorType, parseFieldValue } from "@viz/Table";
+import {
+    resolveAccessor,
+    resolveData,
+    RecordTableProps,
+    negLog10pFilter,
+    booleanFlagFilter,
+    PValueThresholdFilter as PValueFilter,
+    PieChartColumnFilter,
+    DEFAULT_PVALUE_FILTER_VALUE,
+} from "@components/Record/RecordTable";
 
 import { HelpIcon } from "wdk-client/Components";
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
 
-import {
-    fuzzyRecordTableTextFilter,
-    globalTextFilter,
-    negLog10pFilter,
-    booleanFlagFilter,
-    includesFilter as recordIncludesFilter,
-} from "./RecordTableFilters/filters";
-import { PValueThresholdFilter as PValueFilter, PieChartColumnFilter } from "./RecordTableFilters";
-import classNames from "classnames";
 import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
 
-const DEFAULT_PVALUE_FILTER_VALUE = 5e-8;
-
 const filterTypes = {
-    global: globalTextFilter,
-    fuzzyText: fuzzyRecordTableTextFilter,
     pvalue: negLog10pFilter,
     booleanPie: booleanFlagFilter,
-    pie: recordIncludesFilter,
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,28 +61,6 @@ function toString(a: any) {
     return "";
 }
 
-const extractObjectDisplayText = (obj: any) => {
-    return (obj as { displayText: string}).displayText 
-    ? (obj as { displayText: string }).displayText
-    : obj.value 
-    ? obj.value 
-    : obj.props && obj.props.children
-    ? extractDisplayText(obj.props.children)
-    : "";
-}
-
-const extractDisplayText = (value: any): any => {
-    return isString(value) || !value
-        ? value
-        : get(value, "props.dangerouslySetInnerHTML.__html")
-        ? value.props.dangerouslySetInnerHTML.__html
-        : value.type && value.type.name === "CssBarChart"
-        ? toNumber(value.props.original)
-        : isObject(value)
-        ? extractObjectDisplayText(value)
-        : "";
-};
-
 const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
     const { attributes } = table;
 
@@ -107,7 +81,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
                 })
                 .map((k): Column => {
                     const attribute: AttributeField = attributes.find((item) => item.name === k);
-                    const accessorType:ColumnAccessorType = accessors
+                    const accessorType: ColumnAccessorType = accessors
                         ? accessors.hasOwnProperty(attribute.name)
                             ? accessors[attribute.name]
                             : "Default"
@@ -115,25 +89,31 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
                     let column = _buildColumn(attribute, accessorType);
-                    //@ts-ignore
-                    if (column.id.endsWith("link")) column.sortType = linkColumnSort;
-                    if (column.id.includes("pvalue")) {
-                        //@ts-ignore
-                        column.sortType = sciNotationColumnSort;
-                        //@ts-ignore
-                        column.disableGlobalFilter = true;
-                        //@ts-ignore
-                        column.target = table.name + "_pvalue_chart";
-                    }
 
-                    if (column.id.includes("flag")) {
-                        //@ts-ignore
-                        column.sortType = flagColumnSort;
-                        //@ts-ignore
-                        column.disableGlobalFilter = true;
-                        if (filterType && filterType === "pie") {
-                            filterType = "booleanPie";
-                        }
+                    switch (accessorType) {
+                        case "BooleanFlag":
+                            //@ts-ignore
+                            column.disableGlobalFilter = true;
+                            column.sortType = flagColumnSort;
+                            if (filterType && filterType === "pie") {
+                                filterType = "booleanPie";
+                            }
+                            break;
+                        case "Float":
+                        case "StackedBar":
+                            //@ts-ignore
+                            column.disableGlobalFilter = true;
+                            break;
+                        case "ScientificNotation":
+                            //@ts-ignore
+                            column.disableGlobalFilter = true;
+                            column.sortType = sciNotationColumnSort;
+                            break;
+                        default:
+                            // catch legacy links
+                            if (column.id.endsWith("link")) {
+                                column.sortType = linkColumnSort;
+                            }
                     }
 
                     if (filterType) {
@@ -168,8 +148,8 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
 
     const linkColumnSort = useMemo(
         () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            const a = extractDisplayText(rowA.values[id]),
-                b = extractDisplayText(rowB.values[id]);
+            const a = parseFieldValue(rowA.values[id]),
+                b = parseFieldValue(rowB.values[id]);
 
             if (a > b) return 1;
             if (a < b) return -1;
@@ -180,8 +160,8 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
 
     const sciNotationColumnSort = useMemo(
         () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            let a = extractDisplayText(rowA.values[id]),
-                b = extractDisplayText(rowB.values[id]);
+            let a = parseFieldValue(rowA.values[id]),
+                b = parseFieldValue(rowB.values[id]);
             (a = a === null || a === undefined ? -Infinity : a), (b = b === null || b === undefined ? -Infinity : b);
             a = /\d\.\d+e-\d+/.test(a) ? +a : a;
             b = /\d\.\d+e-\d+/.test(b) ? +b : b;
@@ -194,8 +174,8 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
 
     const defaultColumnSort = useMemo(
         () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            let a = extractDisplayText(rowA.values[id]),
-                b = extractDisplayText(rowB.values[id]);
+            let a = parseFieldValue(rowA.values[id]),
+                b = parseFieldValue(rowB.values[id]);
             // Force to strings (or "" for unsupported types)
             a = toString(a);
             b = toString(b);
@@ -248,10 +228,7 @@ const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) =>
         []
     );
 
-    const _buildColumn = (
-        attribute: AttributeField,
-        accessor: ColumnAccessorType
-    ) => ({
+    const _buildColumn = (attribute: AttributeField, accessor: ColumnAccessorType) => ({
         Header: _buildHeader(attribute),
         sortable: attribute.isSortable,
         accessor: resolveAccessor(attribute.name, accessor),
