@@ -35,7 +35,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag"}
+        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "track": "Link"}
     },
     other_variants_from_gwas: {
         filters: {
@@ -67,7 +67,7 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag"}
+        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "track": "Link"}
     },
     ad_variants_from_catalog: {
         filters: {
@@ -84,13 +84,13 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             { label: "Annotation", columns: ["source", "adsp_variant_flag", "gene_impact", "gene_consequence"] },
         ],
         defaultFilter: "pvalue",
-        hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
-        requiredColumns: ["variant_link", "pvalue", "trait", "study"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "gene_impact", "gene_consequence"],
+        requiredColumns: ["variant_link", "pvalue", "trait", "study", "pubmed_id"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag"}
+        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "pubmed_id": "Link"}
     },
     other_variants_from_catalog: {
         filters: {
@@ -106,13 +106,14 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
             { label: "Position", columns: ["relative_position"] },
             { label: "Annotation", columns: ["source", "adsp_variant_flag", "gene_impact", "gene_consequence"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
-        requiredColumns: ["variant_link", "pvalue", "trait", "study"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "gene_impact", "gene_consequence"],
+        requiredColumns: ["variant_link", "pvalue", "trait", "study", "pubmed_id"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag"}
+        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "pubmed_id": "Link"}
+        
     },
     go_terms: {
         filters: {
@@ -123,10 +124,12 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: false,
+        accessors: {"go_accession": "Link"}
     },
     pathways: {
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: false,
+        accessors: {"accession": "Link"}
     },
 };
