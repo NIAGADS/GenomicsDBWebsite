@@ -29,6 +29,7 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { pvalue: "ScientificNotation", track: "Link" },
     },
     other_associations_from_gwas: {
         filters: {
@@ -54,6 +55,7 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { pvalue: "ScientificNotation", track: "Link" },
     },
     ad_associations_from_catalog: {
         filters: {
@@ -64,12 +66,13 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
             { label: "Annotation", columns: ["source"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "mapped_efo_trait"],
         requiredColumns: ["pvalue", "trait", "study"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { pvalue: "ScientificNotation", mapped_efo_trait: "Link", pubmed_id: "Link" },
     },
     other_associations_from_catalog: {
         filters: {
@@ -80,12 +83,13 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
             { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
             { label: "Annotation", columns: ["source"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "pubmed_id", "frequency"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "frequency"],
         requiredColumns: ["pvalue", "trait", "study"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
+        accessors: { pvalue: "ScientificNotation", mapped_efo_trait: "Link", pubmed_id: "Link" },
     },
     linkage: {
         filters: {
@@ -103,7 +107,13 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         hiddenColumns: ["d_prime"],
         requiredColumns: ["variant", "r_squared", "population"],
         sortedBy: [{ id: "r_squared", descending: true }],
-        accessors: {"adsp_variant_flag": "BooleanFlag"}
+        accessors: {
+            adsp_variant_flag: "BooleanFlag",
+            r_squared: "Float",
+            minor_allele_frequency_ld_ref: "Float",
+            minor_allele_frequency: "Float",
+            d_prime: "Float"
+        }
     },
     allele_frequencies: {
         filters: {
@@ -114,6 +124,6 @@ export const _variantTableProperties: { [name: string]: RecordTableProperties } 
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: false,
-        accessors: {"frequency": "StackedBar" },
+        accessors: { frequency: "StackedBar" },
     },
 };

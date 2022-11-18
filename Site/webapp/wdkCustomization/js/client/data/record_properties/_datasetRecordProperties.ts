@@ -22,6 +22,7 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: true,
+        accessors: {"track": "Link"}
     },
     gene_risk: {
         filters: {
@@ -44,6 +45,7 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
+        accessors: {"track": "Link"}
     },
     rare_variants: {
         filters: {
@@ -66,5 +68,6 @@ export const _datasetTableProperties: { [name: string]: RecordTableProperties } 
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
+        accessors: {"track": "Link"}
     },
 };

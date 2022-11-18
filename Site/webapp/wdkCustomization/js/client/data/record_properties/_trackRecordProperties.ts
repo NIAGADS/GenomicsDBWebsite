@@ -20,11 +20,17 @@ export const _trackTableProperties: { [name: string]: RecordTableProperties } = 
             },
         ],
         defaultFilter: "pvalue",
-        requiredColumns: ["track", "variant", "pvalue"],
+        requiredColumns: ["variant", "pvalue"],
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: {"adsp_variant_flag": "BooleanFlag", "msc_is_coding_flag": "BooleanFlag"}
+        accessors: {
+            adsp_variant_flag: "BooleanFlag",
+            msc_is_coding_flag: "BooleanFlag",
+            variant: "Link",
+            pvalue: "ScientificNotation",
+            msc_impacted_gene_link: "Link",
+        },
     },
 };
