@@ -72,7 +72,7 @@
                 <![CDATA[
                         SELECT r.dataset_id AS track
                         , '@PROJECT_ID@'::text AS project_id,
-                        , chromosome, position,
+                        , chromosome, position
                         , build_link_attribute(truncate_str(r.metaseq_id, 30), '../variant/', r.variant_record_primary_key) AS variant_link
                         , r.ref_snp_id
                         , adsp_variant_display_flag(r.is_adsp_variant) AS adsp_variant_flag
