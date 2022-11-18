@@ -3,9 +3,8 @@ import React, { useMemo } from "react";
 import { countBy } from "lodash";
 import { Column } from "react-table";
 
-import { PieChartColumnFilter as DefaultPieChartFilter } from "@viz/Table/TableFilters";
+import { PieChartColumnFilter as DefaultPieChartFilter, parseFieldValue } from "@viz/Table";
 
-import { extractDisplayText } from "../RecordTableSort";
 
 //@ts-ignore
 export function PieChartColumnFilter<T extends Record<string, unknown>>({
@@ -28,7 +27,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                 ? row.values[id] 
                     ? "Yes"
                     : "No"
-                : extractDisplayText(row.values[id]);
+                : parseFieldValue(row.values[id]);
             //counts[num] = counts[num] ? counts[num] + 1 : 1;
             if (value && value != 'n/a') {            
                 if (value.includes("//")) {

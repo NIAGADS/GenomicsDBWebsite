@@ -3,4 +3,3 @@ export * from "./TableTypes";
 export * from "./TableUtils";
 export * from "./TableFilters";
 export * from "./TableContainer";
-export * from "./styles"
