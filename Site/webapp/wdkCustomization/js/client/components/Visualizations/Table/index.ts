@@ -1,12 +1,6 @@
-export * from "./TablePagination";
+export * from "./TableSections";
 export * from "./TableTypes";
-export * from "./Table";
-export * from "./TableHeaderCell";
-export * from "./TableColumnsPanel";
-export * from "./styles";
-export * from "./TableToolbar";
+export * from "./TableUtils";
 export * from "./TableFilters";
 export * from "./TableContainer";
-
-export type ColumnAccessorType = 'StackedBar' | 'Default' | "BooleanFlag";
-
+export * from "./styles"
