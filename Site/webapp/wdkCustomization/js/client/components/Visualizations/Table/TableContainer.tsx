@@ -33,11 +33,10 @@ import {
     FilterPanel,
     FilterChipBar,
     FilterGroup,
+    useTableStyles
 } from "@viz/Table";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
-
-import { useTableStyles } from "./styles";
 
 export interface TableContainerProps {
     columns: Column<{}>[];

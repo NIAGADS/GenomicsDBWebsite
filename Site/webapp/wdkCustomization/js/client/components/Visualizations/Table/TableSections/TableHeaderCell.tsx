@@ -5,7 +5,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import cx from 'classnames';
 
-import { useTableStyles } from '.'
+import { useTableStyles } from '@viz/Table'
 
 interface TableHeaderCellProps {
     column: Column;
