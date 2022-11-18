@@ -181,7 +181,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
     <sqlQuery name="ADAssociationsFromGWAS">
       <column name="source_id"/>
       <column name="allele"/>
-      <column name="track_name_link"/>
+      <column name="track"/>
       <column name="pvalue"/>
 
       <sql>
@@ -199,7 +199,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 AND c.characteristic_type = 'diagnosis'
 		 AND c.characteristic LIKE '%Alzh%')
 		 
-		 SELECT id.source_id, t.*, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
+		 SELECT id.source_id, t.track_name_link AS track, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
 		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key
@@ -213,7 +213,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
     <sqlQuery name="OtherAssociationsFromGWAS">
       <column name="source_id"/>
       <column name="allele"/>
-      <column name="track_name_link"/>
+      <column name="track"/>
       <column name="pvalue"/>
 
 
@@ -232,7 +232,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 AND c.characteristic_type = 'full_list'
 		 AND c.characteristic NOT ILIKE '%Alzh%')
 		 
-		 SELECT id.source_id, t.*, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
+		 SELECT id.source_id, t.track_name_link AS track, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
 		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key

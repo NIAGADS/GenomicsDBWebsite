@@ -47,9 +47,9 @@
       <!-- =============================================================== -->
       
       <attributeQueryRef ref="DatasetAttributes.BasicAttributes">
-	<columnAttribute name="project_id" internal="true" inReportMaker="false" type="string" />
-	<columnAttribute name="description" displayName="Description" type="string" />
-	<columnAttribute name="name" displayName="Name" type="string" />
+	<columnAttribute name="project_id" internal="true" inReportMaker="false"  />
+	<columnAttribute name="description" displayName="Description"  />
+	<columnAttribute name="name" displayName="Name"  />
       </attributeQueryRef>
 
 
@@ -64,19 +64,19 @@
       <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
       <table name="gwas" displayName="GWAS Summary Statistics" queryRef="DatasetTables.gwas">
 	<description>GWAS summary statistics datasets.</description>
-	<columnAttribute name="dataset_accession" displayName="Accession" type="string"
+	<columnAttribute name="dataset_accession" displayName="Accession" 
 			 help="NIAGADS accession number" inReportMaker="true"/>
-	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true" />
-	<columnAttribute name="name" displayName="Dataset" type="string" internal="true" inReportMaker="true" />
-	<columnAttribute name="dataset_record_link" displayName="Dataset" type="json_link" inReportMaker="false" />
-	<columnAttribute name="attribution" displayName="Attribution" type="string" />
-	<columnAttribute name="consortium" displayName="Consortium" type="string" />
-	<columnAttribute name="description" displayName="Description" type="string" />
-	<columnAttribute name="neuropathology" displayName="Neuropathology" type="string" />
-	<columnAttribute name="population" displayName="Population" type="string" />
-	<columnAttribute name="biomarker" displayName="Biomarker" type="string" />
-	<columnAttribute name="genotype" displayName="APOE Carrier Status" type="string"/>
-	<columnAttribute name="covariates" displayName="Covariates" type="string" />
+	<columnAttribute name="track" displayName="Track"  internal="true" inReportMaker="true" />
+	<columnAttribute name="name" displayName="Dataset"  internal="true" inReportMaker="true" />
+	<columnAttribute name="dataset_record_link" displayName="Dataset"  inReportMaker="false" />
+	<columnAttribute name="attribution" displayName="Attribution"  />
+	<columnAttribute name="consortium" displayName="Consortium"  />
+	<columnAttribute name="description" displayName="Description"  />
+	<columnAttribute name="neuropathology" displayName="Neuropathology"  />
+	<columnAttribute name="population" displayName="Population"  />
+	<columnAttribute name="biomarker" displayName="Biomarker"  />
+	<columnAttribute name="genotype" displayName="APOE Carrier Status" />
+	<columnAttribute name="covariates" displayName="Covariates"  />
 
 
 	
@@ -100,16 +100,16 @@
 	  ]]>
 	</description>
 
-	<columnAttribute name="dataset_accession" displayName="Accession" type="json_link" help="NIAGADS accession number" internal="true" inReportMaker="true"/>
-	<columnAttribute name="dataset_accession_link" displayName="Accession" type="string" help="NIAGADS accession number" inReportMaker="false"/>
-	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true" />
-	<columnAttribute name="name" displayName="Dataset" type="string"  inReportMaker="true" />
-	<columnAttribute name="attribution" displayName="Attribution" type="string" />
-	<columnAttribute name="consortium" displayName="Consortium" type="string" />
-	<columnAttribute name="description" displayName="Description" type="string" />
-	<columnAttribute name="neuropathology" displayName="Neuropathology" type="string" />
-	<columnAttribute name="population" displayName="Population" type="string" />
-	<columnAttribute name="covariates" displayName="Covariates" type="string" />
+	<columnAttribute name="dataset_accession" displayName="Accession"  help="NIAGADS accession number" internal="true" inReportMaker="true"/>
+	<columnAttribute name="dataset_accession_link" displayName="Accession"  help="NIAGADS accession number" inReportMaker="false"/>
+	<columnAttribute name="track" displayName="Track"  internal="true" inReportMaker="true" />
+	<columnAttribute name="name" displayName="Dataset"   inReportMaker="true" />
+	<columnAttribute name="attribution" displayName="Attribution"  />
+	<columnAttribute name="consortium" displayName="Consortium"  />
+	<columnAttribute name="description" displayName="Description"  />
+	<columnAttribute name="neuropathology" displayName="Neuropathology"  />
+	<columnAttribute name="population" displayName="Population"  />
+	<columnAttribute name="covariates" displayName="Covariates"  />
 
 	
 
@@ -132,16 +132,16 @@
 	</description>
 	
 
-	<columnAttribute name="dataset_accession" displayName="Accession" type="json_link" help="NIAGADS accession number" internal="true" inReportMaker="true"/>
-	<columnAttribute name="dataset_accession_link" displayName="Accession" type="string" help="NIAGADS accession number" inReportMaker="false"/>
-	<columnAttribute name="track" displayName="Track" type="string" internal="true" inReportMaker="true" />
-	<columnAttribute name="name" displayName="Dataset" type="string" inReportMaker="true" />
-	<columnAttribute name="attribution" displayName="Attribution" type="string" />
-	<columnAttribute name="consortium" displayName="Consortium" type="string" />
-	<columnAttribute name="description" displayName="Description" type="string" />
-	<columnAttribute name="neuropathology" displayName="Neuropathology" type="string" />
-	<columnAttribute name="population" displayName="Population" type="string" />
-	<columnAttribute name="covariates" displayName="Covariates" type="string" />
+	<columnAttribute name="dataset_accession" displayName="Accession"  help="NIAGADS accession number" internal="true" inReportMaker="true"/>
+	<columnAttribute name="dataset_accession_link" displayName="Accession"  help="NIAGADS accession number" inReportMaker="false"/>
+	<columnAttribute name="track" displayName="Track"  internal="true" inReportMaker="true" />
+	<columnAttribute name="name" displayName="Dataset"  inReportMaker="true" />
+	<columnAttribute name="attribution" displayName="Attribution"  />
+	<columnAttribute name="consortium" displayName="Consortium"  />
+	<columnAttribute name="description" displayName="Description"  />
+	<columnAttribute name="neuropathology" displayName="Neuropathology"  />
+	<columnAttribute name="population" displayName="Population"  />
+	<columnAttribute name="covariates" displayName="Covariates"  />
 
 	
       </table>
