@@ -12,7 +12,7 @@ import { findIndex, has, get } from "lodash";
 import { HelpIcon } from "wdk-client/Components";
 
 import { TableContainer } from "@viz/Table";
-import { PieChartFilter, SelectColumnFilter, fuzzyTextFilter, globalTextFilter, includesFilter } from "@viz/Table";
+import { PieChartColumnFilter, SelectColumnFilter, fuzzyTextFilter, globalTextFilter, includesFilter } from "@viz/Table";
 
 import classNames from "classnames";
 import { SortByAlpha } from "@material-ui/icons";

@@ -70,7 +70,7 @@ export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGloba
 }
 
 //@ts-ignore
-export function PieChartFilter<T extends Record<string, unknown>>({
+export function PieChartColumnFilter<T extends Record<string, unknown>>({
     columns,
     column,
     series,
@@ -407,7 +407,7 @@ export function DefaultColumnFilter<T extends Record<string, unknown>>({
     );
 }
 
-export function NumberThresholdFilter<T extends Record<string, unknown>>({
+export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
     columns,
     column,
     minValue,

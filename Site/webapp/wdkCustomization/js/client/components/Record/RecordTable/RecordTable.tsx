@@ -19,7 +19,7 @@ import {
     booleanFlagFilter,
     includesFilter as recordIncludesFilter,
 } from "./RecordTableFilters/filters";
-import { PValueThresholdFilter as PValueFilter, PieChartFilter } from "./RecordTableFilters";
+import { PValueThresholdFilter as PValueFilter, PieChartColumnFilter } from "./RecordTableFilters";
 import classNames from "classnames";
 import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
 
@@ -319,7 +319,7 @@ const _addColumnFilters = (column: Column, filterType: string) => {
     }
     if (filterType.toLowerCase().includes("pie")) {
         //@ts-ignore
-        column.Filter = PieChartFilter;
+        column.Filter = PieChartColumnFilter;
     }
 
     if (filterType === "pvalue") {
