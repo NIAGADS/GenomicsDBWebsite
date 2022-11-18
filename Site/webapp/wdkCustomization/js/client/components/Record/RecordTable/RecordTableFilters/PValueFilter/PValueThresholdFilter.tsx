@@ -2,7 +2,7 @@ import React from "react";
 import { Column } from "react-table";
 
 import { DEFAULT_PVALUE_FILTER_VALUE  } from "@components/Record/RecordTable";
-import { NumberThresholdFilter } from "@viz/Table";
+import { NumberThresholdColumnFilter } from "@viz/Table";
 
 import TextField from "@material-ui/core/TextField";
 
@@ -40,6 +40,6 @@ export function PValueThresholdFilter<T extends Record<string, unknown>>({
 
   
     return (
-      <NumberThresholdFilter columns={columns} column={column} defaultValue={DEFAULT_PVALUE_FILTER_VALUE} validator={validateValue} />
+      <NumberThresholdColumnFilter columns={columns} column={column} defaultValue={DEFAULT_PVALUE_FILTER_VALUE} validator={validateValue} />
     );
 }
