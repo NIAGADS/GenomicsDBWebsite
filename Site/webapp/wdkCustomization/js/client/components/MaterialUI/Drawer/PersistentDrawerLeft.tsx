@@ -10,7 +10,7 @@ import { Box } from "@material-ui/core";
 
 
 export const DRAWER_WIDTH = 300;
-export const SHIFT_X = 225;
+export const SHIFT_X = 250;
 export interface DrawerState {
     isOpen: boolean;
     handleClose?: any;
@@ -20,7 +20,8 @@ export interface DrawerState {
 export const contentStyles = (theme: Theme) => ({
     content: {
         flexGrow: 1,
-        padding: theme.spacing(3),
+        paddingTop: theme.spacing(1) ,
+        //paddingLeft: theme.spacing(3),
         transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,

@@ -5,9 +5,14 @@ import { flatMap, get, intersection, isEmpty } from "lodash";
 import { getTableNames } from "wdk-client/Views/Records/RecordUtils";
 import { setCollapsedSections } from "wdk-client/Actions/RecordActions";
 import { CategoryTreeNode, getId, getLabel } from "wdk-client/Utils/CategoryUtils";
-import { RecordClass, RecordInstance } from "wdk-client/Utils/WdkModel";
+import { RecordClass, RecordInstance, TableField } from "wdk-client/Utils/WdkModel";
 
 import { RecordMainCategorySection } from "@components/Record/Sections";
+
+import {
+    _tableProperties,
+    _defaultTableProperties,
+} from "genomics-client/data/record_properties/_recordTableProperties";
 
 interface RecordMainSection {
     categories: CategoryTreeNode[];
@@ -36,12 +41,22 @@ const _RecordMainSection: React.SFC<RecordMainSection> = ({
     //set all sections collapsed by default
     //using useState instead of useEffect b/c we need it to set collapsed *before* first render
 
-    const [loaded, setLoaded] = useState(false),
-        defaultOpen = (recordClass.tables || [])
-            .filter((t) => 
-                get(JSON.parse(get(t, "properties.flags[0]", '{}')), 'defaultOpen', false))
-            .map((t) => t.name),
-        defaultClosed = flatMap(categories, getTableNames).filter((n) => !defaultOpen.includes(n));
+    const [loaded, setLoaded] = useState(false);
+    const properties = get(_tableProperties, recordClass.displayName, null);
+    /* const defaultOpen = (recordClass.tables || []).filter((t: TableField) =>
+        .map((t: TableField) => t.name)
+    ); */
+
+    const defaultOpen = (recordClass.tables || [])
+        .filter((t) =>
+            properties ? get(get(properties, t.name, _defaultTableProperties), "defaultOpen", false) : false
+        )
+
+        //get(JSON.parse(get(t, "properties.flags[0]", '{}')), 'defaultOpen', false))
+        .map((t: any) => t.name);
+
+    const defaultClosed = flatMap(categories, getTableNames).filter((n) => !defaultOpen.includes(n));
+
     if (!loaded) {
         if (isEmpty(intersection(defaultClosed, collapsedSections))) {
             setCollapsedSections([...defaultClosed, ...collapsedSections]);
@@ -91,5 +106,3 @@ const mapStateToProps = (state: any) => ({
 export const RecordMainSection = connect(mapStateToProps, {
     setCollapsedSections,
 })(_RecordMainSection);
-
-
