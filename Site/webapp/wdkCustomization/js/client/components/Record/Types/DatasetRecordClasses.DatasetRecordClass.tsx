@@ -1,6 +1,5 @@
-import React from 'react';
-import RecordHeading  from '../DatasetRecord/DatasetRecordHeading';
-import RecordMainSection from '../Sections/RecordMainSection';
-import RecordUI from '../RecordUI';
+import RecordHeading  from '@components/Record/RecordHeading/DatasetRecordHeading';
+import { RecordMainSection } from '@components/Record/Sections';
+import RecordUI from '@components/Record/RecordUI';
 
 export { RecordHeading, RecordMainSection, RecordUI };

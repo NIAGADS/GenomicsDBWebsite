@@ -1,17 +1,12 @@
 import React from "react";
 
-import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-import { RecordHeading } from "../Types";
-import { useHeadingStyles } from "../RecordHeading";
+import { RecordHeading } from "@components/Record/Types";
+import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
 import { CustomPanel } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
-
-
-// import "./DatasetRecordHeading.scss";
-
 
 const DatasetRecordSummary: React.FC<RecordHeading> = (props) => {
     const classes = useHeadingStyles();

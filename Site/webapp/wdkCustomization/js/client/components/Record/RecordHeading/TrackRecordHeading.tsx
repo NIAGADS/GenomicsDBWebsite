@@ -3,14 +3,15 @@ import { useSelector } from "react-redux";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-import { HeaderRecordActions, useHeadingStyles, RecordAttributeItem } from "../RecordHeading";
-import { RecordHeading } from "../Types";
+import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
+
+import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
+import { RecordHeading } from "@components/Record/Types";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
@@ -26,22 +27,6 @@ import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 import "./TrackRecordHeading.scss";
 
-/*
-
-
-
-import Grid from "@material-ui/core/Grid";
-
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-
-
-import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
-import { _externalUrls } from "genomics-client/data/_externalUrls";
-
-
-
- */
 interface HeaderImage {
     src: string;
     type?: string;
@@ -91,7 +76,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
         >
             <Grid item container direction="row" spacing={5}>
                 <Grid item container direction="column" sm={3} xs={12}>
-                    {/* <HeaderRecordActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
+                    {/* <RecordHeaderActions record={record} recordClass={recordClass} headerActions={headerActions} /> */}
                     <Typography variant="h5">{convertHtmlEntites(record.attributes.name.toString())}</Typography>
                     <Typography>{record.attributes.attribution}</Typography>
                     <Typography>{record.attributes.description}</Typography>

@@ -4,21 +4,16 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
+import { SummaryPlotHeader } from "@components/Record/RecordHeading/SummaryPlotHeader";
+import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
+import { RecordHeading } from "@components/Record/Types";
 
-import {
-    SummaryPlotHeader,
-    getAttributeChartProperties,
-    useHeadingStyles,
-} from "../RecordHeading";
-import { RecordHeading } from "../Types";
 import { VariantRecordAttributesList as AttributeList } from "./VariantRecordAttributes";
+import { AlternativeVariantsSection, ColocatedVariantsSection } from "./VariantHeaderSections";
 
 import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
-import { CustomPanel, withTooltip } from "@components/MaterialUI";
-import { useTypographyStyles } from "@components/MaterialUI";
-
-import { AlternativeVariantsSection, ColocatedVariantsSection } from "./VariantHeaderSections";
+import { CustomPanel, withTooltip, useTypographyStyles } from "@components/MaterialUI";
 
 import { resolveJsonInput, isJson } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
@@ -73,7 +68,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                         />
                         <HighchartsTableTrellis
                             data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}
-                            properties={{type: "variant_gws_summary"}}
+                            properties={{ type: "variant_gws_summary" }}
                         />
                     </Box>
                 </Grid>

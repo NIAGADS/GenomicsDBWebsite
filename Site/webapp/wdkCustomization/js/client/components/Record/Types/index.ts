@@ -15,7 +15,6 @@ export interface RecordHeading {
 
 export type RecordAttributes = Record<string, AttributeValue>;
 
-
 export const isVariantRecord = (item: any) => {
     return item.recordClassName === "VariantRecordClasses.VariantRecordClass"
 };
