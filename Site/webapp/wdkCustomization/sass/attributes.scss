@@ -1,6 +1,6 @@
 @import "./variables";
 
-.impact-indicator{
+.impact-indicator {
 	&.high {
 		color: $high;
 	}
@@ -15,5 +15,17 @@
 	}
 	&.notreported {
 		color: $notReported;
+	}
+}
+
+.position-indicator {
+	&.colocated {
+		color: black
+	}
+	&.upstream {
+		color: red
+	}
+	&.downstream {
+		color: green
 	}
 }

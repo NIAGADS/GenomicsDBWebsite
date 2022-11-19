@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { ImpactIndicator } from "@components/Record/Attributes";
+import { VariantConsequenceImpactSpan as ImpactIndicator } from "@components/Record/Attributes";
 
 import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";

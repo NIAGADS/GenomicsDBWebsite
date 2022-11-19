@@ -12,7 +12,7 @@ export type TableMouseEventHandler = (instance: TableInstance) => MouseEventHand
 
 export type TableData = Record<string, string>;
 
-export type ColumnAccessorType = 'StackedBar' | 'Default' | "BooleanFlag" | "Link" | "ScientificNotation" | "Float";
+export type ColumnAccessorType = 'StackedBar' | 'Default' | "BooleanFlag" | "Link" | "ScientificNotation" | "Float" | "VariantImpact" | "RelativePosition";
 
 export interface TableProps {
     instance: TableInstance;
