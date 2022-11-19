@@ -6,7 +6,7 @@ import { HeaderActions } from "../Types";
 import { RecordActionLink } from "wdk-client/Components";
 
 
-interface HeaderRecordActions {
+interface RecordHeaderActions {
     record: any;
     recordClass: any;
     headerActions: HeaderActions[];
@@ -15,7 +15,7 @@ interface HeaderRecordActions {
     showLabel?: boolean;
 }
 
-export const HeaderRecordActions: React.FC<HeaderRecordActions> = (props) => {
+export const RecordHeaderActions: React.FC<RecordHeaderActions> = (props) => {
     return (
         <Grid item>
             <Box mt="5px">
@@ -35,21 +35,5 @@ export function getAttributeByName(recordClass: any, attributeName: string) {
         return attribute.name == attributeName;
     });
     return targetAttribute[0];
-}
-
-// return attribute properties (specified in propertyList in model)
-export function getAttributePropertiesByName(recordClass: any, attributeName: string) {
-    const targetAttribute = recordClass.attributes.filter(function (attribute: any) {
-        return attribute.name == attributeName;
-    });
-    return targetAttribute[0].properties;
-}
-
-// return chartProperties (specified in propertyList (name=chartProperties) in model)
-export function getAttributeChartProperties(recordClass: any, attributeName: string) {
-    const targetAttribute = recordClass.attributes.filter(function (attribute: any) {
-        return attribute.name == attributeName;
-    });
-    return targetAttribute[0].properties.chartProperties;
 }
 

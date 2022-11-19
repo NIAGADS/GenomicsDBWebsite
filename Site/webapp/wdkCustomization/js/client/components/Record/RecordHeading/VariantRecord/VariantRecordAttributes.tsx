@@ -10,7 +10,7 @@ import WarningIcon from "@material-ui/icons/Warning";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { RecordAttributeItem, useHeadingStyles } from "../RecordHeading";
+import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
 import { MostSevereConsequenceSection } from "./VariantHeaderSections";
 
 import { withTooltip, HtmlTooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";

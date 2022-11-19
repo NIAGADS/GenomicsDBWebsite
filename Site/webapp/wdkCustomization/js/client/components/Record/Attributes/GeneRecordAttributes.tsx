@@ -8,7 +8,7 @@ import { RecordInstance } from "wdk-client/Utils/WdkModel";
 import { resolveJsonInput } from "genomics-client/util/jsonParse";
 
 import { UnpaddedListItem as ListItem, useTypographyStyles } from "@components/MaterialUI";
-import { RecordAttributeItem } from "../RecordHeading";
+import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
 
 export const GeneAttributeList: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const classes = useTypographyStyles();

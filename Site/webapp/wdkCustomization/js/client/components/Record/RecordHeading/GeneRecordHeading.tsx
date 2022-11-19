@@ -7,14 +7,11 @@ import Typography from "@material-ui/core/Typography";
 import { HighchartsTableTrellis } from "@components/Visualizations";
 import { CustomPanel } from "@components/MaterialUI";
 
-import {
-    SummaryPlotHeader,
-    getAttributeChartProperties,
-    useHeadingStyles,
-} from "../RecordHeading";
+import { SummaryPlotHeader } from "@components/Record/RecordHeading/SummaryPlotHeader";
+import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
 
-import { RecordHeading } from "../Types";
-import { GeneAttributeList as AttributeList } from "./GeneRecordAttributes";
+import { RecordHeading } from "@components/Record/Types";
+import { GeneAttributeList as AttributeList } from "@components/Record/Attributes";
 
 const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
     const classes = useHeadingStyles();
@@ -45,7 +42,7 @@ const Heading: React.FC<RecordHeading> = ({ record, recordClass, headerActions }
                         />
                         <HighchartsTableTrellis
                             data={JSON.parse(record.attributes.gws_variants_summary_plot.toString())}
-                            properties={{type: "gene_gws_summary"}}
+                            properties={{ type: "gene_gws_summary" }}
                         />
                     </Box>
                 </Grid>

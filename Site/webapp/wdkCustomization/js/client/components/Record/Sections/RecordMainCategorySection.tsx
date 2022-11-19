@@ -5,15 +5,15 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
 import { RecordAttributeSection, CollapsibleSection, HelpIcon } from "wdk-client/Components";
-import RecordTableSection from "./RecordTableSection";
+import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 import { getId, getTargetType, getDisplayName } from "wdk-client/Utils/CategoryUtils";
+import { RecordInstance, RecordClass } from "wdk-client/Utils/WdkModel";
+import { PartialRecordRequest } from 'wdk-client/Views/Records/RecordUtils';
+
+import { RecordTableSection } from "@components/Record/Sections";
+import { HighchartsPlot } from "@components/Visualizations";
 
 // import { IdeogramPlot, HighchartsPlot } from "@components/Visualizations";
-import { HighchartsPlot } from "@components/Visualizations";
-import { safeHtml } from "wdk-client/Utils/ComponentUtils";
-import { RecordInstance, RecordClass } from "wdk-client/Utils/WdkModel";
-
-import { PartialRecordRequest } from 'wdk-client/Views/Records/RecordUtils';
 
 interface RecordMainCategorySection {
     category: any;
@@ -26,7 +26,7 @@ interface RecordMainCategorySection {
     requestPartialRecord?: (request: PartialRecordRequest) => void;
 }
 
-const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
+export const RecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
     category,
     children,
     depth,
@@ -146,5 +146,3 @@ const NiagadsRecordMainCategorySection: React.FC<RecordMainCategorySection> = ({
     }
 };
 
-
-export default NiagadsRecordMainCategorySection;

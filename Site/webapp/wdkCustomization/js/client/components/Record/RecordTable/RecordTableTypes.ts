@@ -28,11 +28,3 @@ export interface TableAttribute extends AttributeField {
         | "percentage_bar"; //, json_* and always can be null!
 }
 
-/* export interface RecordTableStateProps {
-    filtered: Filter[];
-    pValueFilterVisible: boolean;
-    filterVal: string;
-    csvData: { [key: string]: any }[] | "";
-    tableInstance: rtInstance | null;
-    basket: { [key: string]: any }[];
-} */

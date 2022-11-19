@@ -67,7 +67,7 @@ function toString(a: any) {
     return "";
 }
 
-const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
+export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
     const { attributes } = table;
 
     const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
@@ -334,5 +334,3 @@ const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) =>
         idx2 = findIndex(attributes, (att) => att.name === col2.id);
     return idx2 > idx1 ? -1 : 1;
 };
-
-export default RecordTable;

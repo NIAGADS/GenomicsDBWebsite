@@ -1,14 +1,15 @@
-import { Box, BoxProps, Grid, withStyles } from "@material-ui/core";
 import React from "react";
 
-interface CssBarChart {
+import { Box, BoxProps, Grid, withStyles } from "@material-ui/core";
+
+interface StackedBar {
     percentage: number;
     value: any;
 }
 
-const CssBarChart: React.FC<CssBarChart> = ({ value, percentage }) => {
-    return (
-        value ? <Grid container wrap="nowrap">
+export const StackedBar: React.FC<StackedBar> = ({ value, percentage }) => {
+    return value ? (
+        <Grid container wrap="nowrap">
             <Grid item>{value}&nbsp;</Grid>
             <Box clone maxWidth="100px" maxHeight="1.4em">
                 <Grid item container wrap="nowrap">
@@ -16,8 +17,8 @@ const CssBarChart: React.FC<CssBarChart> = ({ value, percentage }) => {
                     <SparkBar type="remaining" width={100 - percentage} />
                 </Grid>
             </Box>
-        </Grid> : null
-    );
+        </Grid>
+    ) : null;
 };
 
 interface SparkBarProps extends BoxProps {
@@ -32,5 +33,3 @@ const SparkBar = withStyles((theme) => ({
             props.type === "filled" ? theme.palette.secondary.main : theme.palette.primary.light,
     },
 }))(({ width, type, ...rest }: SparkBarProps) => <Box {...rest} flexBasis={`${width}%`} />);
-
-export default CssBarChart;
