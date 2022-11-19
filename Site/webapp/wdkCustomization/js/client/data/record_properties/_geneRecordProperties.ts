@@ -35,7 +35,13 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "track": "Link"}
+        accessors: {
+            adsp_variant_flag: "BooleanFlag",
+            pvalue: "ScientificNotation",
+            variant_link: "Link",
+            track: "Link",
+            gene_impact: "VariantImpact",
+        },
     },
     other_variants_from_gwas: {
         filters: {
@@ -67,7 +73,12 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "track": "Link"}
+        accessors: {
+            adsp_variant_flag: "BooleanFlag",
+            pvalue: "ScientificNotation",
+            variant_link: "Link",
+            track: "Link",
+        },
     },
     ad_variants_from_catalog: {
         filters: {
@@ -90,7 +101,12 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "pubmed_id": "Link"}
+        accessors: {
+            adsp_variant_flag: "BooleanFlag",
+            pvalue: "ScientificNotation",
+            variant_link: "Link",
+            pubmed_id: "Link",
+        },
     },
     other_variants_from_catalog: {
         filters: {
@@ -112,8 +128,12 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { "adsp_variant_flag": "BooleanFlag", "pvalue": "ScientificNotation", "variant_link": "Link", "pubmed_id": "Link"}
-        
+        accessors: {
+            adsp_variant_flag: "BooleanFlag",
+            pvalue: "ScientificNotation",
+            variant_link: "Link",
+            pubmed_id: "Link",
+        },
     },
     go_terms: {
         filters: {
@@ -124,12 +144,12 @@ export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: false,
-        accessors: {"go_accession": "Link"}
+        accessors: { go_accession: "Link" },
     },
     pathways: {
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: false,
-        accessors: {"accession": "Link"}
+        accessors: { accession: "Link" },
     },
 };

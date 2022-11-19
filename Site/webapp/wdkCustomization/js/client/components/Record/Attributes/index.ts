@@ -1,6 +1,7 @@
 export * from './StackedBar';
 export * from "./NASpan";
 export * from "./LabeledAttributeItem";
-export * from "./ImpactIndicator";
+export * from "./VariantConsequenceImpactSpan";
+export * from "./RelativePositionSpan";
+export * from "./GeneRecordAttributes";
 
-export * from "./GeneRecordAttributes"
