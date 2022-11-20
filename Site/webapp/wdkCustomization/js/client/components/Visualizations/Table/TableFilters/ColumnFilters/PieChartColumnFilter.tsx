@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { countBy, merge, isObject } from "lodash";
+import React, { useMemo, useState, useEffect } from "react";
+import { countBy, merge } from "lodash";
 
 import { Column } from "react-table";
 
@@ -11,10 +11,13 @@ import {
     applyCustomSeriesColor,
     backgroundTransparent,
 } from "@viz/Highcharts/HighchartsOptions";
+
 import { _color_blind_friendly_palettes as PALETTES } from "@viz/palettes";
 
+import { parseFieldValue } from "@viz/Table";
+import { useFilterStyles, ZeroFilterChoicesMsg } from "@viz/Table/TableFilters";
+
 import { toProperCase } from "genomics-client/util/util";
-import { useFilterStyles, parseFieldValue } from "@viz/Table";
 
 //@ts-ignore
 export function PieChartColumnFilter<T extends Record<string, unknown>>({
@@ -32,7 +35,14 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
+
     const classes = useFilterStyles();
+
+    useEffect(() => {
+        setNumFilterChoices(series.data.length)
+    }, [series]);
+
 
     const buildPlotOptions = () => {
         let plotOptions: Options = {
@@ -122,17 +132,22 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         };
 
         series = merge(series, seriesOptions);
+
         return series;
     }, [id, preFilteredRows]);
 
     return (
         <>
-            <HighchartsPlot
-                data={{ series: series }}
-                properties={{ type: "pie" }}
-                plotOptions={buildPlotOptions()}
-                containerProps={{ className: classes.pieChartContainer }}
-            />
+            {numFilterChoices && numFilterChoices > 0 ? (
+                <HighchartsPlot
+                    data={{ series: series }}
+                    properties={{ type: "pie" }}
+                    plotOptions={buildPlotOptions()}
+                    containerProps={{ className: classes.pieChartContainer }}
+                />
+            ) : (
+                <ZeroFilterChoicesMsg label={title ? title : toProperCase(id)} />
+            )}
         </>
     );
 }
