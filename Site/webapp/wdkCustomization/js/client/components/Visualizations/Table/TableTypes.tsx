@@ -1,7 +1,5 @@
-import React, { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 import {
-    Column,
-    Row,
     UsePaginationState,
     TableInstance
 } from "react-table";

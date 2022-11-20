@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
 import DownloadIcon from "@material-ui/icons/GetApp";
-import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 
-import { FilterPageProps, GlobalFilterFlat, useFilterStyles, TablePagination } from "@viz/Table";
+import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "@viz/Table/TableFilters";
+import { TablePagination } from "@viz/Table/TableSections";
+
 import { withHtmlTooltip, MaterialUIThemedButton } from "@components/MaterialUI";
 
 interface FilterToolbarProps {

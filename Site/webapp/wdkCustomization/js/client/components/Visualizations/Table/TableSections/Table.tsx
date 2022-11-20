@@ -14,7 +14,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { HeaderGroup, Column, TableInstance } from "react-table";
 
-import { TableHeaderCell, useTableStyles, TableProps } from "@viz/Table";
+import { useTableStyles, TableProps } from "@viz/Table";
+import { TableHeaderCell } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ instance, className }) => {
     const classes = useTableStyles();

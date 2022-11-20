@@ -1,4 +1,4 @@
-import { isString, isObject, get, toNumber } from 'lodash'
+import { isString, isObject, get } from 'lodash'
 
 export const parseFieldValue = (value: any, returnNA:boolean=false): any => {
     return isString(value) || !value

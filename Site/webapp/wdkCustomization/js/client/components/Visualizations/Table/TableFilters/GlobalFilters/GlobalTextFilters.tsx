@@ -5,7 +5,7 @@ import { useAsyncDebounce } from "react-table";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 
-import { useGlobalFilterStyles } from "@viz/Table";
+import { useGlobalFilterStyles } from "@viz/Table/TableFilters";
 
 // modeled after https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering?file=/src/App.js
 export function GlobalFilterFlat({ preGlobalFilteredRows, globalFilter, setGlobalFilter }: any) {
