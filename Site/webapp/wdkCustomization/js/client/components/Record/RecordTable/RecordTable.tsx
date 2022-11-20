@@ -7,7 +7,7 @@ import { Column, Row } from "react-table";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 
-import { TableContainer, SelectColumnFilter, ColumnAccessorType, parseFieldValue, globalTextFilter } from "@viz/Table";
+import { TableContainer, SelectColumnFilter, ColumnAccessorType, globalTextFilter } from "@viz/Table";
 
 import {
     resolveAccessor,
@@ -25,12 +25,6 @@ import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkMode
 
 import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
 
-const filterTypes = {
-    pvalue: negLog10pFilter,
-    booleanPie: booleanFlagFilter,
-    global: globalTextFilter,
-};
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
@@ -45,30 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-// Mixed sorting is slow, but very inclusive of many edge cases.
-// It handles numbers, mixed alphanumeric combinations, and even
-// null, undefined, and Infinity
-// modified from react-table alphanumeric function
-
-// TODO: see https://github.com/TanStack/table/blob/3e760e3eab4dfc1c7168e418741566e42ba7dd25/packages/table-core/src/sortingFns.ts
-// TODO: to pull this out of this code & evaluate which custom sorts are necessary
-
-const reSplitAlphaNumeric = /([0-9]+)/gm;
-function toString(a: any) {
-    if (typeof a === "number") {
-        if (isNaN(a) || a === Infinity || a === -Infinity) {
-            return "";
-        }
-        return String(a);
-    }
-    if (typeof a === "string") {
-        return a;
-    }
-    return "";
-}
-
 export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
     const { attributes } = table;
+
+    const filterTypes = {
+        pvalue: useMemo(() => negLog10pFilter, []),
+        booleanPie: useMemo(() => booleanFlagFilter, []),
+        global: useMemo(() => globalTextFilter, [])
+    };
 
     const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
         if (!data) {
@@ -100,28 +78,28 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                         case "BooleanFlag":
                             //@ts-ignore
                             column.disableGlobalFilter = true;
-                            column.sortType = flagColumnSort;
+                            column.sortType = "booleanFlag";
                             if (filterType && filterType === "pie") {
                                 filterType = "booleanPie";
                             }
                             break;
                         case "Link":
-                            column.sortType = linkColumnSort;
+                            column.sortType = "link";
                             break;
-                        case "Float":
                         case "StackedBar":
                             //@ts-ignore
                             column.disableGlobalFilter = true;
+                            column.sortType = "stackedBar";
                             break;
                         case "ScientificNotation":
                             //@ts-ignore
                             column.disableGlobalFilter = true;
-                            column.sortType = sciNotationColumnSort;
+                            column.sortType = "scientificNotation";
                             break;
                         default:
                             // catch legacy links
                             if (column.id.endsWith("link")) {
-                                column.sortType = linkColumnSort;
+                                column.sortType = "link";
                             }
                     }
 
@@ -143,104 +121,13 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         }
     };
 
-    const flagColumnSort = useMemo(
-        () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            const a = rowA.values[id] ? true : false,
-                b = rowB.values[id] ? true : false;
-
-            if (a > b) return 1;
-            if (a < b) return -1;
-            return 0;
-        },
-        []
-    );
-
-    const linkColumnSort = useMemo(
-        () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            const a = parseFieldValue(rowA.values[id]),
-                b = parseFieldValue(rowB.values[id]);
-
-            if (a > b) return 1;
-            if (a < b) return -1;
-            return 0;
-        },
-        []
-    );
-
-    const sciNotationColumnSort = useMemo(
-        () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            let a = parseFieldValue(rowA.values[id]),
-                b = parseFieldValue(rowB.values[id]);
-            (a = a === null || a === undefined ? -Infinity : a), (b = b === null || b === undefined ? -Infinity : b);
-            a = /\d\.\d+e-\d+/.test(a) ? +a : a;
-            b = /\d\.\d+e-\d+/.test(b) ? +b : b;
-            if (a > b) return 1;
-            if (a < b) return -1;
-            return 0;
-        },
-        []
-    );
-
-    const defaultColumnSort = useMemo(
-        () => (rowA: Row, rowB: Row, id: string, desc: Boolean) => {
-            let a = parseFieldValue(rowA.values[id]),
-                b = parseFieldValue(rowB.values[id]);
-            // Force to strings (or "" for unsupported types)
-            a = toString(a);
-            b = toString(b);
-
-            // Split on number groups, but keep the delimiter
-            // Then remove falsey split values
-            a = a.split(reSplitAlphaNumeric).filter(Boolean);
-            b = b.split(reSplitAlphaNumeric).filter(Boolean);
-
-            // While
-            while (a.length && b.length) {
-                let aa = a.shift();
-                let bb = b.shift();
-
-                const an = parseInt(aa, 10);
-                const bn = parseInt(bb, 10);
-
-                const combo = [an, bn].sort();
-
-                // Both are string
-                if (isNaN(combo[0])) {
-                    if (aa > bb) {
-                        return 1;
-                    }
-                    if (bb > aa) {
-                        return -1;
-                    }
-                    continue;
-                }
-
-                // One is a string, one is a number
-                if (isNaN(combo[1])) {
-                    return isNaN(an) ? -1 : 1;
-                }
-
-                // Both are numbers
-                if (an > bn) {
-                    return 1;
-                }
-                if (bn > an) {
-                    return -1;
-                }
-            }
-
-            return a.length - b.length;
-        },
-        []
-    );
-
     const _buildColumn = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
         Header: _buildHeader(attribute),
         sortable: attribute.isSortable,
         accessor: resolveAccessor(attribute.name, accessorType),
         accessorType: accessorType,
         id: attribute.name,
-        sortType: defaultColumnSort,
+        sortType: "alphanumeric",
     });
 
     let defaultHiddenColumns = get(properties, "hiddenColumns");
@@ -311,7 +198,6 @@ const _addColumnFilters = (column: Column, filterType: string) => {
             //@ts-ignore
             column.Filter = PValueFilter;
             break;
-        
     }
 
     //@ts-ignore
