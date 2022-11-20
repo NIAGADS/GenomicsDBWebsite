@@ -8,11 +8,11 @@ import { parseFieldValue } from "@viz/Table";
 const reSplitAlphaNumeric = /([0-9]+)/gm;
 
 interface SortingFunction {
-    (rowA: Row, rowB: Row, columnId: string, desc?: Boolean): number;
+    (rowA: Row, rowB: Row, columnId: string, desc?: boolean): number;
 }
 
 const getValue: any = (row: Row, columnId: string, retString: boolean = true) => {
-    const value = parseFieldValue(row.values[columnId]);
+    const value = parseFieldValue(row.values[columnId], true);
     return retString ? toString(value) : value;
 };
 
@@ -20,11 +20,11 @@ const getBooleanValue: any = (row: Row, columnId: string) => {
     return row.values[columnId] ? true : false;
 };
 
-export const barChartSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareAlphanumeric(getValue(rowA, columnId), getValue(rowB, columnId));
+export const barChartSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareAlphanumeric(getValue(rowA, columnId), getValue(rowB, columnId), desc);
 };
 
-export const booleanFlagSort: SortingFunction = (rowA, rowB, columnId) => {
+export const booleanFlagSort: SortingFunction = (rowA, rowB, columnId, desc) => {
     const a = getBooleanValue(rowA, columnId),
         b = getBooleanValue(rowB, columnId);
 
@@ -33,8 +33,8 @@ export const booleanFlagSort: SortingFunction = (rowA, rowB, columnId) => {
     return 0;
 };
 
-export const linkSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareBasic(getValue(rowA, columnId).toLowerCase(), getValue(rowB, columnId).toLowerCase());
+export const linkSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareBasic(getValue(rowA, columnId).toLowerCase(), getValue(rowB, columnId).toLowerCase(), desc);
 };
 
 export const scientificNotationSort: SortingFunction = (rowA, rowB, columnId) => {
@@ -48,28 +48,28 @@ export const scientificNotationSort: SortingFunction = (rowA, rowB, columnId) =>
     return 0;
 };
 
-export const alphanumericSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareAlphanumeric(getValue(rowA, columnId).toLowerCase(), getValue(rowB, columnId).toLowerCase());
+export const alphanumericSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareAlphanumeric(getValue(rowA, columnId).toLowerCase(), getValue(rowB, columnId).toLowerCase(), desc);
 };
 
-export const alphanumericCaseSensitiveSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareAlphanumeric(getValue(rowA, columnId), getValue(rowB, columnId));
-};
-
-// The text filter is more basic (less numeric support)
-// but is much faster
-export const textSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareBasic(getValue(rowA, columnId).toLowerCase(), getValue(rowB, columnId).toLowerCase());
+export const alphanumericCaseSensitiveSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareAlphanumeric(getValue(rowA, columnId), getValue(rowB, columnId), desc);
 };
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-export const textCaseSensitiveSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareBasic(getValue(rowA, columnId), getValue(rowB, columnId));
+export const textSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareBasic(getValue(rowA, columnId).toLowerCase(), getValue(rowB, columnId).toLowerCase(), desc);
 };
 
-export const basicSort: SortingFunction = (rowA, rowB, columnId) => {
-    return compareBasic(getValue(rowA, columnId, false), getValue(rowB, columnId, false));
+// The text filter is more basic (less numeric support)
+// but is much faster
+export const textCaseSensitiveSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareBasic(getValue(rowA, columnId), getValue(rowB, columnId), desc);
+};
+
+export const basicSort: SortingFunction = (rowA, rowB, columnId, desc) => {
+    return compareBasic(getValue(rowA, columnId, false), getValue(rowB, columnId, false), desc);
 };
 
 // Utils
@@ -100,10 +100,10 @@ function resolveNAs(aStr: string, bStr: string) {
     }
 }
 
-function compareBasic(a: any, b: any) {
+function compareBasic(a: any, b: any, desc: boolean) {
     const naComparison = resolveNAs(a, b);
     if (naComparison != null) {
-        return naComparison;
+        return desc ? -1 * naComparison : naComparison;
     }
     return a === b ? 0 : a > b ? 1 : -1;
 }
@@ -111,13 +111,13 @@ function compareBasic(a: any, b: any) {
 // Mixed sorting is slow, but very inclusive of many edge cases.
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
-function compareAlphanumeric(aStr: string, bStr: string) {
+function compareAlphanumeric(aStr: string, bStr: string, desc: boolean) {
     // Split on number groups, but keep the delimiter
     // Then remove falsey split values
 
     const naComparison = resolveNAs(aStr, bStr);
     if (naComparison != null) {
-        return naComparison;
+        return desc ? -1 * naComparison : naComparison;
     }
 
     const a = aStr.split(reSplitAlphaNumeric).filter(Boolean);
@@ -165,12 +165,12 @@ const TableSortingFunctions = {
     alphanumericSort,
     alphanumericCaseSensitiveSort,
     basicSort,
-   textCaseSensitiveSort,
+    textCaseSensitiveSort,
     textSort,
     barChartSort,
     booleanFlagSort,
     linkSort,
-    scientificNotationSort
-}; 
+    scientificNotationSort,
+};
 
 export default TableSortingFunctions;
