@@ -33,7 +33,7 @@ export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> 
                 <List disablePadding={true}>
                     <Typography variant="caption">
                         Impact:&nbsp;
-                        <ImpactIndicator impact={attributes.msc_impact.toString()} />
+                        <ImpactIndicator value={attributes.msc_impact.toString()} />
                     </Typography>
                     {attributes.msc_impacted_gene_link && (
                         <ListItem>
