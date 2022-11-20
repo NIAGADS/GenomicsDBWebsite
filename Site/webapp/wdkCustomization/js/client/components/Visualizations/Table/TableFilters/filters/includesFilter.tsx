@@ -1,14 +1,15 @@
 import { FilterValue, IdType, Row } from "react-table";
 import { parseFieldValue } from "@viz/Table";
 
+// to lowercase / sometimes pie filter changes case for labeling
 export function includesFilter<T extends Record<string, unknown>>(
     rows: Array<Row<T>>,
     id: IdType<T>,
     filterValue: FilterValue
 ): Array<Row<T>> {
     return rows.filter((row) => {
-        const rowValue = parseFieldValue(row.values[id[0]]);
-        return rowValue && rowValue.includes(filterValue);
+        const rowValue = parseFieldValue(row.values[id[0]]).toString().toLowerCase();
+        return rowValue && rowValue.includes(filterValue.toString().toLowerCase());
     });
 }
 
