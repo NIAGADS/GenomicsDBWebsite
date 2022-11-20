@@ -1,16 +1,10 @@
-
-
 import React, { useMemo, useState, useEffect } from "react";
-import { countBy, merge, isObject } from "lodash";
 
-import { Row, IdType, Column, useAsyncDebounce } from "react-table";
+import { Row, IdType, Column } from "react-table";
 
 import TextField from "@material-ui/core/TextField";
-
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
-
-
 
 const getMinMax = (rows: Row[], id: IdType<any>) => {
     let min = rows.length ? rows[0].values[id] : 0;

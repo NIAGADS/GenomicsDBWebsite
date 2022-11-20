@@ -22,19 +22,18 @@ import {
 } from "react-table";
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
+
 import {
-    Table,
-    TableToolbar,
-    ToggleColumnsPanel,
     fuzzyTextFilter,
     numericTextFilter,
     greaterThanFilter,
     includesFilter,
-    FilterPanel,
-    FilterChipBar,
     FilterGroup,
-    useTableStyles,
-} from "@viz/Table";
+} from "@viz/Table/TableFilters";
+
+import { Table, TableToolbar, ToggleColumnsPanel, FilterPanel, FilterChipBar } from "@viz/Table/TableSections";
+
+import { useTableStyles } from "@viz/Table";
 
 import TableSortingFunctions, {
     alphanumericSort,
@@ -122,8 +121,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         barChart: useMemo(() => barChartSort, []),
         booleanFlag: useMemo(() => booleanFlagSort, []),
         link: useMemo(() => linkSort, []),
-        scientificNotation: useMemo(() => scientificNotationSort, [])
-    }; 
+        scientificNotation: useMemo(() => scientificNotationSort, []),
+    };
 
     // fix to force table to always take full width of container
     // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width

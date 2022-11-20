@@ -1,12 +1,14 @@
 import React, { ReactElement, useState } from "react";
+
 import { TableInstance } from "react-table";
+
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
-import Button from "@material-ui/core/Button";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
+
+import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
 
 type HideColumnProps<T extends Record<string, unknown>> = {
     instance: TableInstance<T>;

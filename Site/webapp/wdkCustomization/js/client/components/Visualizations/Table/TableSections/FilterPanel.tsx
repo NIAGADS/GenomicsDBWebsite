@@ -1,8 +1,6 @@
 // modified from https://github.com/ggascoigne/react-table-example
 import React, { ReactElement, useCallback } from "react";
 
-import { ColumnInstance } from "react-table";
-
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";

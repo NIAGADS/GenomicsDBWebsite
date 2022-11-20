@@ -7,7 +7,8 @@ import { Column } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { useFilterStyles, parseFieldValue } from "@viz/Table";
+import { parseFieldValue } from "@viz/Table";
+import { useFilterStyles } from "@viz/Table/TableFilters";
 
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<Column<T>>): Column<T> =>
     //@ts-ignore

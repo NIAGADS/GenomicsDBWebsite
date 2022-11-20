@@ -2,9 +2,7 @@ import React from "react";
 import { Column } from "react-table";
 
 import { DEFAULT_PVALUE_FILTER_VALUE  } from "@components/Record/RecordTable";
-import { NumberThresholdColumnFilter } from "@viz/Table";
-
-import TextField from "@material-ui/core/TextField";
+import { NumberThresholdColumnFilter } from "@viz/Table/TableFilters";
 
 
 //@ts-ignore

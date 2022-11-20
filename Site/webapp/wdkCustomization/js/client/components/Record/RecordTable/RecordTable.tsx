@@ -2,12 +2,12 @@ import React, { useMemo } from "react";
 import { findIndex, has, get } from "lodash";
 import classNames from "classnames";
 
-import { Column, Row } from "react-table";
+import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
 
-import { TableContainer, SelectColumnFilter, ColumnAccessorType, globalTextFilter } from "@viz/Table";
+import { TableContainer, ColumnAccessorType } from "@viz/Table";
+import { SelectColumnFilter, globalTextFilter } from "@viz/Table/TableFilters";
 
 import {
     resolveAccessor,
@@ -44,7 +44,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
         booleanPie: useMemo(() => booleanFlagFilter, []),
-        global: useMemo(() => globalTextFilter, [])
+        global: useMemo(() => globalTextFilter, []),
     };
 
     const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
@@ -72,8 +72,11 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
                     let column = _buildColumn(attribute, accessorType);
-                    //@ts-ignore
-                    if (attribute.help) {column.help = attribute.help;}
+           
+                    if (attribute.help) {
+                        //@ts-ignore
+                        column.help = attribute.help;
+                    }
 
                     switch (accessorType) {
                         case "BooleanFlag":
@@ -205,7 +208,6 @@ const _addColumnFilters = (column: Column, filterType: string) => {
     column.filter = filterType;
     return column;
 };
-
 
 const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) => {
     const idx1 = findIndex(attributes, (att) => att.name === col1.id),

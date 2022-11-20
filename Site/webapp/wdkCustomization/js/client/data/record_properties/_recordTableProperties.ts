@@ -1,4 +1,5 @@
-import { FilterGroup, ColumnAccessorType } from "@viz/Table";
+import { ColumnAccessorType } from "@viz/Table";
+import { FilterGroup } from "@viz/Table/TableFilters";
 
 import { _geneTableProperties as _geneRecordTableProperties } from "./_geneRecordProperties";
 import { _variantTableProperties as _variantRecordTableProperties } from "./_variantRecordProperties";

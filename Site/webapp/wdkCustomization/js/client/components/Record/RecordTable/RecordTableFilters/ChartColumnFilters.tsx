@@ -3,8 +3,8 @@ import React, { useMemo } from "react";
 import { countBy } from "lodash";
 import { Column } from "react-table";
 
-import { PieChartColumnFilter as DefaultPieChartFilter, parseFieldValue } from "@viz/Table";
-
+import { PieChartColumnFilter as DefaultPieChartFilter } from "@viz/Table/TableFilters";
+import { parseFieldValue } from "@viz/Table";
 
 //@ts-ignore
 export function PieChartColumnFilter<T extends Record<string, unknown>>({
@@ -24,12 +24,12 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         let values = new Array<String>(); // assumming pie filter is only for categorical values
         preFilteredRows.forEach((row: any) => {
             let value = id.endsWith("flag") // handle badges, which are in html / if present, value is true
-                ? row.values[id] 
+                ? row.values[id]
                     ? "Yes"
                     : "No"
                 : parseFieldValue(row.values[id]);
             //counts[num] = counts[num] ? counts[num] + 1 : 1;
-            if (value && value != 'n/a') {            
+            if (value && value != "n/a") {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
