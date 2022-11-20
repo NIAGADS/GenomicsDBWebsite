@@ -13,5 +13,7 @@ export const parseFieldValue = (value: any): any => {
     ? value.value
     : value.props && value.props.children
     ? parseFieldValue(value.props.children)
+    : value.props 
+    ? parseFieldValue(value.props)
     : "";
 };

@@ -1,7 +1,9 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 
-export const RelativePositionSpan: React.SFC<{value: string}> = (props) => {
+import { AttributeFormatter } from "@components/Record/Attributes";
+
+export const RelativePositionSpan: React.SFC<AttributeFormatter> = (props) => {
     const { value } = props;
 
     const className = value.includes('in') || value.includes('overlap') ? 'colocated' : value.toLowerCase();

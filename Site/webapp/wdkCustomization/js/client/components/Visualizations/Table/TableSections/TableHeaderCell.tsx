@@ -5,6 +5,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import cx from 'classnames';
 
+
+import { HelpIcon } from "wdk-client/Components";
+
 import { useTableStyles } from '@viz/Table'
 
 interface TableHeaderCellProps {
@@ -25,6 +28,10 @@ const ResizeHandle: React.FC<TableHeaderCellProps> = ({ column }) =>  {
   )
 }
 
+export const ColumnHelp: React.FC<TableHeaderProps> = ({column}) => {
+    return column.help ? <HelpIcon>{column.help}</HelpIcon> : null
+}
+
 export const BaseTableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
     return (
         <>
@@ -37,7 +44,7 @@ export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
     const classes = useTableStyles();
 
     return column.canSort ? (
-        <TableCell {...column.getHeaderProps()} className={cx({[classes.tableHeadCell]: true})}>
+        <TableCell {...column.getHeaderProps()} className={cx({[classes.tableHeadCell]: true})}> 
             <TableSortLabel
                 //@ts-ignore --react-table
                 active={column.isSorted}
@@ -47,15 +54,17 @@ export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({ column }) => {
                 //@ts-ignore --react-table
                 {...column.getSortByToggleProps()}
 
-            >
-                <BaseTableHeaderCell column={column} />
+            >       
+             <BaseTableHeaderCell column={column} />        
             </TableSortLabel>
+            <ColumnHelp column={column}/>
             {column.canResize && <ResizeHandle column={column}/>}
         </TableCell>
     ) : (
         <TableCell {...column.getHeaderProps()} className={cx({[classes.tableHeadCell]: true})}>
             <BaseTableHeaderCell column={column} />
-            {column.canResize && <ResizeHandle column={column}/>}
+            <ColumnHelp column={column}/>
+            {column.canResize && <ResizeHandle column={column}/>}         
         </TableCell>
     );
 };

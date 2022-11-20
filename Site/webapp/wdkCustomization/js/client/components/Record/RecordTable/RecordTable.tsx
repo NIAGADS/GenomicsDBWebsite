@@ -20,7 +20,6 @@ import {
     DEFAULT_PVALUE_FILTER_VALUE,
 } from "@components/Record/RecordTable";
 
-import { HelpIcon } from "wdk-client/Components";
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
 
 import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
@@ -73,6 +72,8 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
                     let column = _buildColumn(attribute, accessorType);
+                    //@ts-ignore
+                    if (attribute.help) {column.help = attribute.help;}
 
                     switch (accessorType) {
                         case "BooleanFlag":
@@ -122,7 +123,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     };
 
     const _buildColumn = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
-        Header: _buildHeader(attribute),
+        Header: attribute.displayName,
         sortable: attribute.isSortable,
         accessor: resolveAccessor(attribute.name, accessorType),
         accessorType: accessorType,
@@ -205,15 +206,6 @@ const _addColumnFilters = (column: Column, filterType: string) => {
     return column;
 };
 
-const _buildHeader = (attribute: AttributeField) => {
-    return (
-        <Box>
-            {attribute.help ? <HelpIcon>{attribute.help}</HelpIcon> : null}
-            {attribute.help ? " " : null}
-            {attribute.displayName}
-        </Box>
-    );
-};
 
 const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) => {
     const idx1 = findIndex(attributes, (att) => att.name === col1.id),

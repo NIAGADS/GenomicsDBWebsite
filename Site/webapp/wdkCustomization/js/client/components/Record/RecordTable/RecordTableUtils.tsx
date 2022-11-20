@@ -43,7 +43,7 @@ export const resolveAccessor = (key: string, accessorType: ColumnAccessorType = 
         case "RelativePosition":
             return (row: any) => resolveNAs(row[key], <RelativePositionSpan value={row[key]} />);
         case "VariantImpact":
-            return (row: any) => resolveNAs(row[key], <VariantConsequenceImpactSpan impact={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <VariantConsequenceImpactSpan value={row[key]} />);
         case "Link":
         case "ScientificNotation":
         case "Float":

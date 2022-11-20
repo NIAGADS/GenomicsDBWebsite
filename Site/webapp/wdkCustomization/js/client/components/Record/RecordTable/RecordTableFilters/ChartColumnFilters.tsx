@@ -18,7 +18,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
 
     const header: any = column.Header;
-    const title = header.props.children[2]; // where the displayName is stored for the column
+    const title = header.toString(); // where the displayName is stored for the column
 
     const series = useMemo(() => {
         let values = new Array<String>(); // assumming pie filter is only for categorical values
