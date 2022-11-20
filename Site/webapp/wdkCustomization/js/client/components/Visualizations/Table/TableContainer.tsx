@@ -1,6 +1,6 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { assign } from "lodash";
 
 import clsx from "clsx";
@@ -33,8 +33,20 @@ import {
     FilterPanel,
     FilterChipBar,
     FilterGroup,
-    useTableStyles
+    useTableStyles,
 } from "@viz/Table";
+
+import TableSortingFunctions, {
+    alphanumericSort,
+    alphanumericCaseSensitiveSort,
+    linkSort,
+    basicSort,
+    scientificNotationSort,
+    textSort,
+    textCaseSensitiveSort,
+    barChartSort,
+    booleanFlagSort,
+} from "@viz/Table/TableSortingFunctions";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
@@ -67,16 +79,6 @@ const hooks = [
     //selectionHook,
 ];
 
-const defaultFilterTypes = {
-    fuzzyText: fuzzyTextFilter,
-    numeric: numericTextFilter,
-    greater: greaterThanFilter,
-    select: includesFilter,
-    pie: includesFilter,
-    booleanPie: includesFilter,
-    pvalue: greaterThanFilter,
-};
-
 export const TableContainer: React.FC<TableContainerProps> = ({
     columns,
     data,
@@ -95,8 +97,33 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
-    const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes; // add custom filterTypes into the default / overwrite defaults
+
     const classes = useTableStyles();
+
+    const defaultFilterTypes = {
+        fuzzyText: useMemo(() => fuzzyTextFilter, []),
+        numeric: useMemo(() => numericTextFilter, []),
+        greater: useMemo(() => greaterThanFilter, []),
+        select: useMemo(() => includesFilter, []),
+        pie: useMemo(() => includesFilter, []),
+        booleanPie: useMemo(() => includesFilter, []),
+        pvalue: useMemo(() => greaterThanFilter, []), // I think this is necessary as a placeholder
+    };
+
+    // add custom filterTypes into the default / overwrite defaults
+    const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes;
+
+    const sortingFunctions = {
+        alphanumeric: useMemo(() => alphanumericSort, []),
+        alphanumericCaseSensitiveSort: useMemo(() => alphanumericCaseSensitiveSort, []),
+        basic: useMemo(() => basicSort, []),
+        textCaseSensitive: useMemo(() => textCaseSensitiveSort, []),
+        text: useMemo(() => textSort, []),
+        barChart: useMemo(() => barChartSort, []),
+        booleanFlag: useMemo(() => booleanFlagSort, []),
+        link: useMemo(() => linkSort, []),
+        scientificNotation: useMemo(() => scientificNotationSort, [])
+    }; 
 
     // fix to force table to always take full width of container
     // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
@@ -134,6 +161,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             defaultColumn: _defaultColumn,
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
+            sortTypes: sortingFunctions,
         },
         ...hooks
     );
