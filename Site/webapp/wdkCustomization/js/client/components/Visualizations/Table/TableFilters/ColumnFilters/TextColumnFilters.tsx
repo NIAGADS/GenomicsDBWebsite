@@ -9,6 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { parseFieldValue } from "@viz/Table";
 import { useFilterStyles } from "@viz/Table/TableFilters";
+import { ZeroFilterChoicesMsg } from "./ZeroFilterChoicesMsg";
 
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<Column<T>>): Column<T> =>
     //@ts-ignore
@@ -62,7 +63,10 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
+
     const classes = useFilterStyles();
+
     const options = useMemo(() => {
         const options = new Set<any>();
         preFilteredRows.forEach((row: any) => {
@@ -81,7 +85,11 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
         return [...Array.from(options.values())];
     }, [id, preFilteredRows]);
 
-    return (
+    useEffect(() => {
+        setNumFilterChoices(options.length);
+    }, [options]);
+
+    return numFilterChoices && numFilterChoices > 0 ? (
         <TextField
             select
             className={classes.select}
@@ -101,5 +109,7 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
                 </MenuItem>
             ))}
         </TextField>
+    ) : (
+        <ZeroFilterChoicesMsg label={render("Header")} />
     );
 }
