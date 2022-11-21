@@ -23,13 +23,9 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     const series = useMemo(() => {
         let values = new Array<String>(); // assumming pie filter is only for categorical values
         preFilteredRows.forEach((row: any) => {
-            let value = id.endsWith("flag") // handle badges, which are in html / if present, value is true
-                ? row.values[id]
-                    ? "Yes"
-                    : "No"
-                : parseFieldValue(row.values[id]);
+            let value = parseFieldValue(row.values[id], true, column.accessor == 'booleanFlag');
             //counts[num] = counts[num] ? counts[num] + 1 : 1;
-            if (value && value != "n/a") {
+            if (value /* && value != "n/a" */) {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
