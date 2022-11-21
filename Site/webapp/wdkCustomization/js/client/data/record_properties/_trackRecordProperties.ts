@@ -1,6 +1,6 @@
-import { RecordTableProperties } from "./_recordTableProperties";
+import { TableProperties } from "@viz/Table/TableProperties";
 
-export const _trackTableProperties: { [name: string]: RecordTableProperties } = {
+export const _trackTableProperties: { [name: string]: TableProperties } = {
     top_variants: {
         filters: {
             pvalue: "pvalue",

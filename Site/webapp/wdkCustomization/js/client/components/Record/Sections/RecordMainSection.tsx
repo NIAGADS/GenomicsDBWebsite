@@ -9,10 +9,9 @@ import { RecordClass, RecordInstance, TableField } from "wdk-client/Utils/WdkMod
 
 import { RecordMainCategorySection } from "@components/Record/Sections";
 
-import {
-    _tableProperties,
-    _defaultTableProperties,
-} from "genomics-client/data/record_properties/_recordTableProperties";
+import { _tableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
+
+import { _defaultTableProperties } from "@viz/Table/TableProperties";
 
 interface RecordMainSection {
     categories: CategoryTreeNode[];

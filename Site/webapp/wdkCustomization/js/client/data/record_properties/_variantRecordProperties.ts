@@ -1,6 +1,6 @@
-import { RecordTableProperties } from "./_recordTableProperties";
+import { TableProperties } from "@viz/Table/TableProperties";
 
-export const _variantTableProperties: { [name: string]: RecordTableProperties } = {
+export const _variantTableProperties: { [name: string]: TableProperties } = {
     ad_associations_from_gwas: {
         filters: {
             pvalue: "pvalue",

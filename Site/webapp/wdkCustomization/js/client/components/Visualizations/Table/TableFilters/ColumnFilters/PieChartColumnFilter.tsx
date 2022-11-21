@@ -47,7 +47,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     }, [series]);
 
     useEffect(() => {
-        setFilter(selectedSlice);
+        selectedSlice && setFilter(selectedSlice);
     }, [selectedSlice]);
 
     const buildPlotOptions = () => {
