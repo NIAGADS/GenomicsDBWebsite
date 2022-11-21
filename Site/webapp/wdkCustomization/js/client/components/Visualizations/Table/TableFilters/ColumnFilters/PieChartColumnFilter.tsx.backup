@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { countBy, merge, get } from "lodash";
 
 import { Column } from "react-table";
@@ -36,19 +36,39 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
     const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
-    const [ selectedSlice, setSelectedSlice ] = useState<string>(filterValue);
 
     const classes = useFilterStyles();
 
-    useEffect(() => {
-        if (series && series.hasOwnProperty("data")) {
-            setNumFilterChoices(series.data.length == 1 ? (series.data[0].name == "N/A" ? 0 : 1) : series.data.length);
-        }
-    }, [series]);
-
-    useEffect(() => {
-        setFilter(selectedSlice);
-    }, [selectedSlice]);
+    const seriesOptions = {
+        colorByPoint: true,
+        allowPointSelect: true,
+        dataLabels: {
+            enabled: false,
+        },
+        cursor: "pointer",
+        showInLegend: true,
+        point: {
+            events: {
+                legendItemClick: function () {
+                    //@ts-ignore
+                    if (this.name === "N/A") {
+                        return true; // if N/A hide
+                    }
+                    return false; // otherwise filter
+                },
+            },
+        },
+        events: {
+            click: function (e: any) {
+                //@ts-ignore
+                /*  if (e.point.state == "select") {
+                    setFilter(undefined);
+                } else { */
+                setFilter(e.point.name);
+                //  }
+            },
+        },
+    };
 
     const buildPlotOptions = () => {
         let plotOptions: Options = {
@@ -56,6 +76,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                 pie: {
                     center: ["50%", "50%"], // draws pie on left
                     size: 80,
+                    animation: false,
                     states: {
                         select: {
                             color: "red",
@@ -64,7 +85,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                 },
             },
             tooltip: {
-                pointFormat: "N = {point.total} ({point.percentage:.1f} %)",
+                pointFormat: "",
             },
             legend: {
                 align: "right",
@@ -101,11 +122,11 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         return plotOptions;
     };
 
-    const _buildSeriesData = (rows: any, accessorType: string) => {
+    const buildSeriesData = () => {
         let values = new Array<String>(); // assumming pie filter is only for categorical values
-        rows.forEach((row: any) => {
+        preFilteredRows.forEach((row: any) => {
             //@ts-ignore
-            let value = parseFieldValue(row.values[id], true, accessorType == "BooleanFlag");
+            let value = parseFieldValue(row.values[id], true, column.accessorType == "BooleanFlag");
             if (value) {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
@@ -126,77 +147,49 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         let data: any = [];
         if (counts.hasOwnProperty("N/A") && !ignoreNAs) {
             // want N/As to always be first b/c they will be the biggest slice
-            if (selectedSlice && selectedSlice.toUpperCase() === "N/A") {
-                data.push({ name: "N/A", y: counts["N/A"], color: "#ffd998", selected: true, sliced: true });
-            } else {
-                data.push({ name: "N/A", y: counts["N/A"], color: "#ffd998" });
-            }
+            data.push({ name: "N/A", y: counts["N/A"], color: "#ffd998" });
         }
         for (const id of Object.keys(counts)) {
             if (id != "N/A") {
-                if (selectedSlice && id === selectedSlice) {
+                if (filterValue && id === filterValue) {
                     data.push({ name: id, y: counts[id], selected: true, sliced: true });
                 } else {
                     data.push({ name: id, y: counts[id] });
                 }
             }
         }
+
         return data;
     };
 
-    series = useMemo(() => {
-        //@ts-ignore
-        const accessorType = column.accessorType;
-        let modifiedSeries = series
-            ? series.hasOwnProperty("data")
-                ? series // use series passed to component b/c already has data
-                : merge(series, { data: _buildSeriesData(preFilteredRows, accessorType) }) // data needs to be added
-            : { name: id, data: _buildSeriesData(preFilteredRows, accessorType) }; // whole series needs to be generated
+    /* useEffect(() => {
+        setSeriesData(series ? get(series, "data", buildSeriesData()) : buildSeriesData());
+    }, [id, preFilteredRows]); */
 
-        const seriesOptions = {
-            colorByPoint: true,
-            allowPointSelect: true,
-            dataLabels: {
-                enabled: false,
-            },
-            cursor: "pointer",
-            showInLegend: true,
-            point: {
-                events: {
-                    legendItemClick: function () {
-                        //@ts-ignore
-                        if (this.name === "N/A") {
-                            return true; // if N/A hide
-                        }
-                        return false; // otherwise filter
-                    },
-                },
-            },
-            events: {
-                click: function (e: any) {
-                    if (e.point.state == "select") {
-                        setSelectedSlice(undefined);
-                        alert("remove")
-                    } else {
-                        //setFilter(e.point.name || undefined);
-                        setSelectedSlice(e.point.name);
-                        alert("add")
-                    }
-                    //
-                },
-            },
-        };
+    const finalSeries = useMemo(() => {
+        return merge(
+            series
+                ? series.hasOwnProperty("data")
+                    ? series // use series passed to component b/c already has data
+                    : merge(series, { data: buildSeriesData() }) // data needs to be added
+                : { name: id, data: buildSeriesData() }, // whole series needs to be generated
 
-        modifiedSeries = merge(modifiedSeries, seriesOptions);
-
-        return modifiedSeries;
+            seriesOptions
+        );
     }, [id, preFilteredRows]);
+
+    useEffect(() => {
+        finalSeries &&
+            setNumFilterChoices(
+                finalSeries.data.length == 1 ? (finalSeries.data[0].name == "N/A" ? 0 : 1) : finalSeries.data.length
+            );
+    }, [finalSeries]);
 
     return (
         <>
             {numFilterChoices && numFilterChoices > 0 ? (
                 <HighchartsPlot
-                    data={{ series: series }}
+                    data={{ series: finalSeries }}
                     properties={{ type: "pie" }}
                     plotOptions={buildPlotOptions()}
                     containerProps={{ className: classes.pieChartContainer }}
