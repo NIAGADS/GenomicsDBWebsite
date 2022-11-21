@@ -20,7 +20,7 @@ export const ZeroFilterChoicesMsg: React.SFC<{ label: string }> = ({ label }) =>
     return (
         <Alert severity="info" className={classes.alert}>
             <AlertTitle className={classes.alertTitle}>{label}</AlertTitle>
-            No choices available with selected filters.
+            No choices (or only NAs) available with selected filters.
         </Alert>
     );
 };

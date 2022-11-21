@@ -7,7 +7,7 @@ import { Column } from "react-table";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 import { TableContainer, ColumnAccessorType } from "@viz/Table";
-import { SelectColumnFilter, globalTextFilter } from "@viz/Table/TableFilters";
+import { SelectColumnFilter, globalTextFilter, PieChartColumnFilter } from "@viz/Table/TableFilters";
 
 import {
     resolveAccessor,
@@ -16,7 +16,7 @@ import {
     negLog10pFilter,
     booleanFlagFilter,
     PValueThresholdFilter as PValueFilter,
-    PieChartColumnFilter,
+   // PieChartColumnFilter,
     DEFAULT_PVALUE_FILTER_VALUE,
 } from "@components/Record/RecordTable";
 
