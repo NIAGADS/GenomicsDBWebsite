@@ -11,7 +11,8 @@ import { DefaultSectionTitle } from "wdk-client/Views/Records/SectionTitle";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import { RecordTable } from "@components/Record/RecordTable";
-import {_tableProperties, _defaultTableProperties} from "genomics-client/data/record_properties/_recordTableProperties";
+import { _tableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
+import { _defaultTableProperties } from "@viz/Table/TableProperties";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

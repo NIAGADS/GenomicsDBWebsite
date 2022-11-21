@@ -113,3 +113,64 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
         <ZeroFilterChoicesMsg label={render("Header")} />
     );
 }
+
+//@ts-ignore
+export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
+    columns,
+    column,
+}: {
+    columns: Column[];
+    column: Column;
+}) {
+    //@ts-ignore
+    const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
+
+    const classes = useFilterStyles();
+
+    const options = useMemo(() => {
+        const options = new Set<any>();
+        preFilteredRows.forEach((row: any) => {
+            let value = parseFieldValue(row.values[id]);
+            if (value && value != "n/a") {
+                if (value.includes("//")) {
+                    let vals = value.split(" // ");
+                    vals.forEach((v: string) => {
+                        options.add(v);
+                    });
+                } else {
+                    options.add(value);
+                }
+            }
+        });
+        return [...Array.from(options.values())];
+    }, [id, preFilteredRows]);
+
+    useEffect(() => {
+        setNumFilterChoices(options.length);
+    }, [options]);
+
+    return numFilterChoices && numFilterChoices > 0 ? (
+        <TextField
+            select
+            className={classes.select}
+            label={render("Header")}
+            value={filterValue || ""}
+            variant="outlined"
+            margin="dense"
+            size="small"
+            onChange={(e) => {
+                setFilter(e.target.value || undefined);
+            }}
+        >
+            <MenuItem value={""}>Any</MenuItem>
+            {options.map((option, i) => (
+                <MenuItem key={i} value={option}>
+                    {option}
+                </MenuItem>
+            ))}
+        </TextField>
+    ) : (
+        <ZeroFilterChoicesMsg label={render("Header")} />
+    );
+}

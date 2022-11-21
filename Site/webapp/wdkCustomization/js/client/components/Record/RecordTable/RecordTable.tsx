@@ -22,7 +22,7 @@ import {
 
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
 
-import { RecordTableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
+import { TableProperties } from "@viz/Table/TableProperties";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -174,7 +174,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     );
 };
 
-const _setInitialFilters = (table: TableField, properties: RecordTableProperties) => {
+const _setInitialFilters = (table: TableField, properties: TableProperties) => {
     let columnFilters: any = get(properties, "filters", null);
     if (columnFilters && "pvalue" in columnFilters) {
         return { id: "pvalue", value: DEFAULT_PVALUE_FILTER_VALUE };
@@ -182,7 +182,7 @@ const _setInitialFilters = (table: TableField, properties: RecordTableProperties
     return null;
 };
 
-const _setInitialSort = (table: TableField, properties: RecordTableProperties) => {
+const _setInitialSort = (table: TableField, properties: TableProperties) => {
     let sortBy: any = get(properties, "sortedBy", null);
     return useMemo(() => sortBy, []);
 };

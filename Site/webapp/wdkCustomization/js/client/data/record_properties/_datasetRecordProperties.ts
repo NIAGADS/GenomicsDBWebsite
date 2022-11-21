@@ -1,6 +1,6 @@
-import { RecordTableProperties } from "./_recordTableProperties";
+import { TableProperties } from "@viz/Table/TableProperties";
 
-export const _datasetTableProperties: { [name: string]: RecordTableProperties } = {
+export const _datasetTableProperties: { [name: string]: TableProperties } = {
     gwas: {
         filters: {
             consortium: "select",

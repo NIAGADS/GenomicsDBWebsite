@@ -1,6 +1,6 @@
-import { RecordTableProperties } from "./_recordTableProperties";
+import { TableProperties } from "@viz/Table/TableProperties";
 
-export const _geneTableProperties: { [name: string]: RecordTableProperties } = {
+export const _geneTableProperties: { [name: string]: TableProperties } = {
     ad_variants_from_gwas: {
         filters: {
             pvalue: "pvalue",
