@@ -1,9 +1,8 @@
 import React from "react";
 import { Column } from "react-table";
 
-import { DEFAULT_PVALUE_FILTER_VALUE  } from "@components/Record/RecordTable";
+import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable";
 import { NumberThresholdColumnFilter } from "@viz/Table/TableFilters";
-
 
 //@ts-ignore
 export function PValueThresholdFilter<T extends Record<string, unknown>>({
@@ -36,8 +35,15 @@ export function PValueThresholdFilter<T extends Record<string, unknown>>({
         return true;
     };
 
-  
     return (
-      <NumberThresholdColumnFilter columns={columns} column={column} defaultValue={DEFAULT_PVALUE_FILTER_VALUE} validator={validateValue} />
+        <NumberThresholdColumnFilter
+            columns={columns}
+            column={column}
+            defaultValue={DEFAULT_PVALUE_FILTER_VALUE}
+            validator={validateValue}
+            minValue={0.001}
+            maxValue={1.0}
+            helpText="Click to filter table for values <= specified threshold"
+        />
     );
 }
