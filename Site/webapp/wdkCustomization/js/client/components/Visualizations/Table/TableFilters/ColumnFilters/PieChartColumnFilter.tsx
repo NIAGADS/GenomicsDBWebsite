@@ -187,7 +187,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     };
 
     return (
-        series && (
+        series ? (
             <>
                 {numFilterChoices && numFilterChoices > 0 ? (
                     <HighchartsPlot
@@ -200,6 +200,6 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                     <ZeroFilterChoicesMsg label={title ? title : column.Header.toString()} />
                 )}
             </>
-        )
+        ) : null
     );
 }
