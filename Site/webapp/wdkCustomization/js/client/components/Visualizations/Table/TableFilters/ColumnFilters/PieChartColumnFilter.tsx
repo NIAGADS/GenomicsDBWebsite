@@ -35,7 +35,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
     const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
     const [selectedSlice, setSelectedSlice] = useState<string>(filterValue);
-    const [series, setSeries] = useState<any>(null);
+
     const classes = useFilterStyles();
 
     const seriesOptions = {
@@ -60,33 +60,9 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         events: {
             click: function (e: any) {
                 setSelectedSlice(selectedSlice === e.point.name ? undefined : e.point.name);
-                /*  if (e.point.state == "select") {
-                    setSelectedSlice(undefined);
-                    alert("remove");
-                } else {
-                    //setFilter(e.point.name || undefined);
-                   
-                    alert("add");
-                }*/
-                //
             },
         },
     };
-
-    useEffect(() => {
-        //@ts-ignore
-        setSeries(_buildSeries(preFilteredRows, column.accessorType, selectedSlice));
-    }, [column, preFilteredRows, selectedSlice]);
-
-    useEffect(() => {
-        if (series && series.hasOwnProperty("data")) {
-            setNumFilterChoices(series.data.length == 1 ? (series.data[0].name == "N/A" ? 0 : 1) : series.data.length);
-        }
-    }, [series]);
-
-    useEffect(() => {
-        setFilter(selectedSlice || undefined);
-    }, [selectedSlice]);
 
     const _buildPlotOptions = () => {
         let plotOptions: Options = {
@@ -119,7 +95,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                         ? '<span class="legend-text-with-tooltip" title="Click legend label to hide missing or N/A values on chart (click slice on chart to filter table)">' +
                               this.name +
                               "</span>"
-                        : '<span class="legend-text-with-tooltip" title="Click slice on chart to filter table">' +
+                        : '<span class="legend-text-with-tooltip" title="Click slice on chart to filter table for: ' + this.name + '">' +
                               this.name +
                               "</span>";
                 },
@@ -139,9 +115,12 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         return plotOptions;
     };
 
-    const _buildSeries = (rows: any, accessorType: string, selectedColumn: string) => {
+    const series: any = useMemo(() => {
+        //@ts-ignore
+        let accessorType = column.accessorType;
         let values = new Array<String>(); // assumming pie filter is only for categorical values
-        rows.forEach((row: any) => {
+
+        preFilteredRows.forEach((row: any) => {
             //@ts-ignore
             let value = parseFieldValue(row.values[id], true, accessorType == "BooleanFlag");
             if (value) {
@@ -166,40 +145,37 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         // want N/As to always be first b/c they will be the biggest slice
         if (counts.hasOwnProperty("N/A") && !ignoreNAs) {
             seriesData.push({ name: "N/A", y: counts["N/A"], color: "#e0e0e0" });
-
-            /*if (selectedColumn && selectedColumn.toUpperCase() === "N/A") {
-                data.push({ name: "N/A", y: counts["N/A"], color: "#e0e0e0", selected: true, sliced: true });
-            } else {
-                data.push({ name: "N/A", y: counts["N/A"], color: "#e0e0e0" });
-            } */
         }
         for (const id of Object.keys(counts)) {
             if (id != "N/A") {
                 seriesData.push({ name: id, y: counts[id] });
-                /* if (selectedColumn && id === selectedColumn) {
-                    data.push({ name: id, y: counts[id], selected: true, sliced: true });
-                } else {
-                    data.push({ name: id, y: counts[id] });
-                }*/
             }
         }
-        merge({ name: id, data: seriesData }, seriesOptions);
-    };
+        return merge({ name: id, data: seriesData }, seriesOptions);
+    }, [preFilteredRows, id]);
 
-    return (
-        series ? (
-            <>
-                {numFilterChoices && numFilterChoices > 0 ? (
-                    <HighchartsPlot
-                        data={{ series: series }}
-                        properties={{ type: "pie" }}
-                        plotOptions={_buildPlotOptions()}
-                        containerProps={{ className: classes.pieChartContainer }}
-                    />
-                ) : (
-                    <ZeroFilterChoicesMsg label={title ? title : column.Header.toString()} />
-                )}
-            </>
-        ) : null
-    );
+    useEffect(() => {
+        if (series && series.hasOwnProperty("data")) {
+            setNumFilterChoices(series.data.length == 1 ? (series.data[0].name == "N/A" ? 0 : 1) : series.data.length);
+        }
+    }, [series]);
+
+    useEffect(() => {
+        setFilter(selectedSlice || undefined);
+    }, [selectedSlice]);
+
+    return series ? (
+        <>
+            {numFilterChoices && numFilterChoices > 0 ? (
+                <HighchartsPlot
+                    data={{ series: series }}
+                    properties={{ type: "pie" }}
+                    plotOptions={_buildPlotOptions()}
+                    containerProps={{ className: classes.pieChartContainer }}
+                />
+            ) : (
+                <ZeroFilterChoicesMsg label={title ? title : column.Header.toString()} />
+            )}
+        </>
+    ) : null;
 }

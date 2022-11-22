@@ -106,8 +106,9 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
                     startIcon={<RotateLeftIcon />}
                     fullWidth={true}
                     size="small"
+                    onClick={resetFilters}
                 >
-                    Reset filters
+                    Reset Filters
                 </Button>
                 {filterGroups.map((fg) => renderFilterGroup(fg))}
             </Grid>

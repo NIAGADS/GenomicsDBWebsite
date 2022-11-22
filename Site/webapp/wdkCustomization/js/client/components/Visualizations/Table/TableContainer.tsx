@@ -28,6 +28,7 @@ import {
     numericTextFilter,
     greaterThanFilter,
     includesFilter,
+    multiIncludesFilter,
     FilterGroup,
 } from "@viz/Table/TableFilters";
 
@@ -104,6 +105,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         numeric: useMemo(() => numericTextFilter, []),
         greater: useMemo(() => greaterThanFilter, []),
         select: useMemo(() => includesFilter, []),
+        multi_select: useMemo(() => multiIncludesFilter, []),
         pie: useMemo(() => includesFilter, []),
         booleanPie: useMemo(() => includesFilter, []),
         pvalue: useMemo(() => greaterThanFilter, []), // I think this is necessary as a placeholder

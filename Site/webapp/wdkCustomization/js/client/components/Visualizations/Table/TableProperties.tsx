@@ -1,4 +1,4 @@
-import { ColumnAccessorType } from "@viz/Table";
+import { ColumnAccessorType, FilterType } from "@viz/Table";
 import { FilterGroup } from "@viz/Table/TableFilters";
 
 export interface TableColumnSort {
@@ -7,7 +7,7 @@ export interface TableColumnSort {
 }
 
 export interface TableProperties {
-    filters?: { [columnId: string]: string };
+    filters?: { [columnId: string]: FilterType };
     filterGroups?: FilterGroup[];
     defaultFilter?: string;
     hiddenColumns?: string[];
