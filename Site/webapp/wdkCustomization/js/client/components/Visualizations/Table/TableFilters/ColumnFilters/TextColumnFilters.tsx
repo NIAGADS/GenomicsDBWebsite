@@ -6,6 +6,12 @@ import { Column } from "react-table";
 
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { parseFieldValue } from "@viz/Table";
 import { useFilterStyles } from "@viz/Table/TableFilters";
@@ -82,7 +88,7 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
                 }
             }
         });
-        return [...Array.from(options.values())];
+        return [...Array.from(options.values()).sort()];
     }, [id, preFilteredRows]);
 
     useEffect(() => {
@@ -125,8 +131,35 @@ export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
     const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
+    const [checkedValues, setCheckedValues] = useState<string[]>(filterValue ? filterValue.split(",") : []);
 
     const classes = useFilterStyles();
+
+    const toggleListValue = (value: string, list: string[]) => {
+        if (list.includes(value)) {
+            // remove
+            list.splice(list.indexOf(value), 1);
+        } else {
+            list.push(value);
+        }
+        return list;
+    };
+
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCheckedValues(toggleListValue(event.target.value, checkedValues));
+    };
+
+    const isChecked = (value: string) => {
+        return (checkedValues.includes(value));
+    }
+
+    useEffect(() => {
+        if (!checkedValues || checkedValues.length == 0) {
+            setFilter(undefined);
+        } else {
+            setFilter(checkedValues.join());
+        }
+    }, [checkedValues]);
 
     const options = useMemo(() => {
         const options = new Set<any>();
@@ -143,7 +176,7 @@ export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
                 }
             }
         });
-        return [...Array.from(options.values())];
+        return [...Array.from(options.values()).sort()];
     }, [id, preFilteredRows]);
 
     useEffect(() => {
@@ -151,25 +184,19 @@ export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
     }, [options]);
 
     return numFilterChoices && numFilterChoices > 0 ? (
-        <TextField
-            select
-            className={classes.select}
-            label={render("Header")}
-            value={filterValue || ""}
-            variant="outlined"
-            margin="dense"
-            size="small"
-            onChange={(e) => {
-                setFilter(e.target.value || undefined);
-            }}
-        >
-            <MenuItem value={""}>Any</MenuItem>
-            {options.map((option, i) => (
-                <MenuItem key={i} value={option}>
-                    {option}
-                </MenuItem>
-            ))}
-        </TextField>
+        <FormControl required component="fieldset">
+            <FormLabel component="legend">{column.Header.toString()}</FormLabel>
+            <FormGroup>
+                {options.map((option, i) => (
+                    <FormControlLabel
+                        key={i}
+                        value={option}
+                        label={option}
+                        control={<Checkbox onChange={handleCheckboxChange} name={option} checked={isChecked(option)}/>}
+                    />
+                ))}
+            </FormGroup>
+        </FormControl>
     ) : (
         <ZeroFilterChoicesMsg label={render("Header")} />
     );

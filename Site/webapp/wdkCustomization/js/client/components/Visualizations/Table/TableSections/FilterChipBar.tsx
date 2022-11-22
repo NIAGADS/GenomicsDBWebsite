@@ -39,8 +39,15 @@ const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) =
             const min = filterValue[0];
             const max = filterValue[1];
             return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`;
+        case "multi_select":
+            const values = filterValue.split(",");
+            const numValues = values.length;
+            const addendum = numValues > 1 ? " + " + numValues.toString() + " more" : ""
+            return filterValue[0] + addendum;
+        default:
+            return filterValue;
     }
-    return filterValue;
+
 };
 
 export function FilterChipBar<T extends Record<string, unknown>>({
