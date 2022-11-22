@@ -6,7 +6,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 
-import { HelpIcon } from "wdk-client/Components";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import FormControl from "@material-ui/core/FormControl";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const getMinMax = (rows: Row[], id: IdType<any>) => {
     let min = rows.length ? rows[0].values[id] : 0;
@@ -39,8 +43,7 @@ const useActiveElement = () => {
     return active;
 };
 
-
-// credit to https://github.com/ggascoigne/react-table-example 
+// credit to https://github.com/ggascoigne/react-table-example
 // @ts-ignore
 export function NumberRangeColumnFilter({ filterValue = [], render, setFilter, preFilteredRows, id }: Column) {
     const [min, max] = useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows]);
@@ -101,6 +104,7 @@ export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
     defaultValue,
     errorMsg,
     validator,
+    helpText,
 }: {
     columns: Column[];
     column: Column;
@@ -108,57 +112,66 @@ export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
     maxValue?: number;
     defaultValue: number;
     errorMsg?: string;
+    helpText: string;
     validator?: (value: string) => boolean;
 }) {
     //@ts-ignore
     const { id, filterValue, setFilter, render, preFilteredRows, target } = column;
-    const [isValid, setIsValid] = useState<boolean>(false);
+    const [isValid, setIsValid] = useState<boolean>(true);
     const [value, setValue] = useState<string>(null);
-    const [validValueKey, setValidValueKey] = useState<string>(null); // handle update for sequential valid values
+    // const [validValueKey, setValidValueKey] = useState<string>(null); // handle update for sequential valid values
+    const [currentFilterValue, setFilterValue] = useState<string>(
+        //filterValue === undefined ? defaultValue.toString() : filterValue.toString()
+        filterValue === undefined ? undefined : filterValue.toString()
+    ); // catch clear filters
 
     const rangeMin = minValue != null ? minValue : 0;
     const rangeMax = maxValue != null ? maxValue : 1.0;
 
     const eMsg = errorMsg
         ? errorMsg
-        : "Please specify p-value in the range [" +
+        : "Please specify p-value in the range (" +
           rangeMin.toString() +
           "," +
           rangeMax.toString() +
           "] in decimal (0.0001) or E-notation (1e-4) format";
-
-    const [currentFilterValue, setFilterValue] = useState<string>(
-        //filterValue === undefined ? defaultValue.toString() : filterValue.toString()
-        filterValue === undefined ? undefined : filterValue.toString()
-    ); // catch clear filters
 
     // only want to do these once
     useEffect(() => {
         setValue(currentFilterValue);
     }, [currentFilterValue]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         setIsValid(validator ? validator(value) : validateValue(value));
-    }, [value]);
+    }, [value]); */
 
-    useEffect(() => {
+    const handleApplyClick = () => {
+        //setIsValid(validator ? validator(value) : validateValue(value));
+        const valueIsValid = validator ? validator(value) : validateValue(value);
+        if (valueIsValid) {
+            setFilter(value);
+        }
+        setIsValid(valueIsValid);
+    };
+
+    /* useEffect(() => {
         // basically handle situations where isValid does not change, but value does
         // want to submit new filter value when value is valid, so need to catch series of valid values
         setValidValueKey(isValid.toString() + "_" + value === undefined ? "null" : value);
-    }, [isValid, value]);
+    }, [isValid, value]); */
 
-    useEffect(() => {
-        if (isValid && value) {
+    /*useEffect(() => {
+        if (isValid) {
             setFilter(value);
         }
-    }, [validValueKey]);
+    }, [isValid]);*/
 
     const validateValue = (value: string) => {
         if (!value) {
             return true;
         }
 
-        if (parseFloat(value) > rangeMax || parseFloat(value) < rangeMin) {
+        if (parseFloat(value) > rangeMax || parseFloat(value) <= rangeMin) {
             return false;
         }
 
@@ -181,28 +194,43 @@ export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
 
     return (
         <>
-            <TextField
-                id="outlined-number"
-                label="P-value"
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                variant="outlined"
-                size="small"
-                onChange={(event: any) => {
-                    setValue(parseInputText(event.target.value));
-                }}
-                error={!isValid}
-                helperText={!isValid ? eMsg : null}
-                defaultValue={currentFilterValue}
-                fullWidth={true}
-            />
-            <HelpIcon>Filters for values &leq; the specified threshold.</HelpIcon>
+            <FormControl variant="outlined">
+                <InputLabel htmlFor="threshold-filter">{column.Header.toString()}</InputLabel>
+                <OutlinedInput
+                    id={`${column.id}-threshold-filter-input`}
+                    margin="dense"
+                    onChange={(event: any) => {
+                        setValue(parseInputText(event.target.value));
+                    }}
+                    error={!isValid}
+                    defaultValue={currentFilterValue}
+                    fullWidth={true}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <Tooltip title={helpText}>
+                                <Button
+                                    size="small"
+                                    color="primary"
+                                    variant="text"
+                                    aria-label="apply filter"
+                                    onClick={handleApplyClick}
+                                >
+                                    Apply
+                                </Button>
+                            </Tooltip>
+                        </InputAdornment>
+                    }
+                    label={column.Header.toString()}
+                />
+                {!isValid && (
+                    <FormHelperText className="red" id="error-msg-text">
+                        {eMsg}
+                    </FormHelperText>
+                )}
+            </FormControl>
         </>
     );
 }
-
-
 
 //@ts-ignore
 export function SliderColumnFilter({ filterValue, render, setFilter, preFilteredRows, id }: Column) {
