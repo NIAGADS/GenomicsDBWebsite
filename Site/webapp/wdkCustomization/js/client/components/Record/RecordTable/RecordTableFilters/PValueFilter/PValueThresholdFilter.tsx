@@ -17,7 +17,7 @@ export function PValueThresholdFilter<T extends Record<string, unknown>>({
     const { id, filterValue, setFilter, render, preFilteredRows, target } = column;
     const validateValue = (value: string) => {
         if (!value) {
-            return false;
+            return true;
         }
 
         const eNotationRegex = /\d+e-\d+/g;
@@ -29,7 +29,7 @@ export function PValueThresholdFilter<T extends Record<string, unknown>>({
             }
         }
 
-        if (parseFloat(value) >= 1.0 || parseFloat(value) <= 0.0) {
+        if (parseFloat(value) > 1.0 || parseFloat(value) < 0.0) {
             return false;
         }
 

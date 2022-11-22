@@ -6,6 +6,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 
+import { HelpIcon } from "wdk-client/Components";
+
 const getMinMax = (rows: Row[], id: IdType<any>) => {
     let min = rows.length ? rows[0].values[id] : 0;
     let max = rows.length ? rows[0].values[id] : 0;
@@ -119,14 +121,15 @@ export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
 
     const eMsg = errorMsg
         ? errorMsg
-        : "Please specify p-value in the range (" +
+        : "Please specify p-value in the range [" +
           rangeMin.toString() +
           "," +
           rangeMax.toString() +
-          ") in decimal (0.0001) or E-notation (1e-4) format";
+          "] in decimal (0.0001) or E-notation (1e-4) format";
 
     const [currentFilterValue, setFilterValue] = useState<string>(
-        filterValue === undefined ? defaultValue.toString() : filterValue.toString()
+        //filterValue === undefined ? defaultValue.toString() : filterValue.toString()
+        filterValue === undefined ? undefined : filterValue.toString()
     ); // catch clear filters
 
     // only want to do these once
@@ -141,21 +144,21 @@ export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
     useEffect(() => {
         // basically handle situations where isValid does not change, but value does
         // want to submit new filter value when value is valid, so need to catch series of valid values
-        setValidValueKey(isValid.toString() + "_" + value);
+        setValidValueKey(isValid.toString() + "_" + value === undefined ? "null" : value);
     }, [isValid, value]);
 
     useEffect(() => {
-        if (isValid) {
+        if (isValid && value) {
             setFilter(value);
         }
     }, [validValueKey]);
 
     const validateValue = (value: string) => {
         if (!value) {
-            return false;
+            return true;
         }
 
-        if (parseFloat(value) >= rangeMax || parseFloat(value) <= rangeMin) {
+        if (parseFloat(value) > rangeMax || parseFloat(value) < rangeMin) {
             return false;
         }
 
@@ -194,6 +197,7 @@ export function NumberThresholdColumnFilter<T extends Record<string, unknown>>({
                 defaultValue={currentFilterValue}
                 fullWidth={true}
             />
+            <HelpIcon>Filters for values &leq; the specified threshold.</HelpIcon>
         </>
     );
 }
