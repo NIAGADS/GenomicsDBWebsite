@@ -8,7 +8,7 @@ export * from "./BooleanCheckAccessor";
 export * from "./JSONAccessor";
 export * from "./LinkAccessor";
 
-export type ColumnAccessorType = 'PercentageBar' | 'Default' | "BooleanCheck" | "Link" | "ScientificNotation" | "Float" | "ColoredSpan";
+export type ColumnAccessorType = 'PercentageBar' | 'Default' | "BooleanCheck" | "ScientificNotation" | "Float" | "ColoredSpan" ;
 
 export interface ColumnAccessor {
     value?: any;
@@ -16,6 +16,7 @@ export interface ColumnAccessor {
     muiColor?: any; // one of 
     htmlColor?: string;
     className?: string;
+    maxLength?: number
 }
 
 

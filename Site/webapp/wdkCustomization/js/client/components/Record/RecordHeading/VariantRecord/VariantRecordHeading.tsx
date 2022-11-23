@@ -13,9 +13,9 @@ import { AlternativeVariantsSection, ColocatedVariantsSection } from "./VariantH
 
 import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
-import { CustomPanel, withTooltip, useTypographyStyles } from "@components/MaterialUI";
+import { MetaseqIdAttribute } from "@components/Record/Attributes";
+import { CustomPanel, useTypographyStyles, CustomTooltip as Tooltip } from "@components/MaterialUI";
 
-import { resolveJsonInput, isJson } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
@@ -36,21 +36,19 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
             <Grid item container direction="column" sm={3}>
                 <Grid item>
                     <Typography variant="h5">
-                        <strong>
-                            {isJson(attributes.display_metaseq_id)
-                                ? resolveJsonInput(attributes.display_metaseq_id.toString())
-                                : attributes.display_metaseq_id}
-                        </strong>
+                        <MetaseqIdAttribute value={attributes.display_metaseq_id.toString()} />
                     </Typography>
                     {attributes.ref_snp_id && (
                         <Typography>
                             {attributes.ref_snp_id}{" "}
-                            {withTooltip(
+                            <Tooltip
+                                title="Explore dbSNP record for this variant"
+                                aria-label="Explore dbSNP record for this variant"
+                            >
                                 <Link href={`${_externalUrls.DBSNP_URL}${attributes.ref_snp_id}`}>
                                     <i className={`${tClasses.small} fa fa-external-link`}></i>
-                                </Link>,
-                                "Explore dbSNP record for this variant"
-                            )}
+                                </Link>
+                            </Tooltip>
                         </Typography>
                     )}
                 </Grid>

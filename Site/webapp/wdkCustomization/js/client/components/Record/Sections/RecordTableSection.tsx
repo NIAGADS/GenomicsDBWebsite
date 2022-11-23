@@ -9,6 +9,8 @@ import { PartialRecordRequest } from "wdk-client/Views/Records/RecordUtils";
 import { DefaultSectionTitle } from "wdk-client/Views/Records/SectionTitle";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Typography from "@material-ui/core/Typography";
 
 import { RecordTable } from "@components/Record/RecordTable";
 import { _tableProperties } from "genomics-client/data/record_properties/_recordTableProperties";
@@ -67,7 +69,10 @@ export function RecordTableSection(props: RecordTableSection) {
                 {isError ? (
                     <p style={{ color: "darkred", fontStyle: "italic" }}>Unable to load data due to a server error.</p>
                 ) : isLoading ? (
-                    <p>Loading...</p>
+                    <>
+                    <LinearProgress color="secondary"></LinearProgress>
+                    <Typography variant="body1" color="primary">Loading..</Typography>
+                    </>
                 ) : (
                     <RecordTable data={data} table={table} properties={properties} />
                 )}

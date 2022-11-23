@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import isJSON from "lodash";
 
 import Box from "@material-ui/core/Box";
@@ -6,12 +6,36 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import { ColumnAccessor, JSONAccessor } from "@viz/Table/ColumnAccessors";
 
-const parseValue: any = (value: string) => {
-    if (isJSON(value)) {
-        return JSON.parse(value);
-    } else {
-        return value;
-    }
+export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength=250 }) => {
+    return isJSON(value) ? (
+        <JSONAccessor value={value} />
+    ) : value.length > maxLength ? (
+        <ClobTextAccessor value={value} />
+    ) : (
+        <Box component="span">{value}</Box>
+    );
+};
+
+// large text, show more or tooltip
+// if not JSON & no tooltip, show more
+export const ClobTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength=250 }) => {
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+    const toggleIsExpanded = () => {
+        setIsExpanded(!isExpanded);
+    };
+
+    return isJSON(value) && "tooltip" in value ? (
+        <AnnotatedTextAccessor value={{ value: value.slice(0, maxLength - 3) + "...", tooltip: value.tooltip }} />
+    ) : isExpanded ? (
+        <Box>
+            {value} <a onClick={toggleIsExpanded}>Show less</a>
+        </Box>
+    ) : (
+        <Box>
+            {`${value.slice(0, maxLength - 3)}...`} <a onClick={toggleIsExpanded}>Show more</a>
+        </Box>
+    );
 };
 
 export const ColoredTextAccessor: React.SFC<ColumnAccessor> = ({ value, className, muiColor }) => {
@@ -22,12 +46,9 @@ export const ColoredTextAccessor: React.SFC<ColumnAccessor> = ({ value, classNam
     );
 };
 
-export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value }) => {
-    return isJSON(value) ? <Box component="span">{value}</Box> : <JSONAccessor value={value} />;
-};
-
 // text with tooltip value = { value: string, tooltip: string}
-export const AnnotatedTextAccessor: React.SFC<ColumnAccessor> = ({value}) => {
+// so technically, takes JSON
+export const AnnotatedTextAccessor: React.SFC<ColumnAccessor> = ({ value }) => {
     return (
         <Tooltip title={value.tooltip} arial-label={value.tooltip}>
             {value.value}
