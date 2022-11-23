@@ -5,7 +5,7 @@ import DownloadIcon from "@material-ui/icons/GetApp";
 import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "@viz/Table/TableFilters";
 import { TablePagination } from "@viz/Table/TableSections";
 
-import { withHtmlTooltip, MaterialUIThemedButton } from "@components/MaterialUI";
+import { CustomTooltip as Tooltip, MaterialUIThemedButton } from "@components/MaterialUI";
 
 interface FilterToolbarProps {
     canFilter: boolean;
@@ -20,7 +20,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
     return (
         <>
             {/* span is b/c button is disabled, allows tooltip to fire */}
-            {withHtmlTooltip(
+            <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
                 <span>
                     <MaterialUIThemedButton
                         endIcon={<DownloadIcon />}
@@ -31,9 +31,8 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
                     >
                         Export
                     </MaterialUIThemedButton>
-                </span>,
-                "Table downloads coming soon"
-            )}
+                </span>
+            </Tooltip>
             {canFilter && (
                 <GlobalFilterFlat
                     preGlobalFilteredRows={preGlobalFilteredRows}

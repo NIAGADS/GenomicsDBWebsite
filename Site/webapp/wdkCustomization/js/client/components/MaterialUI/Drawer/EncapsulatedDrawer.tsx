@@ -11,8 +11,7 @@ import clsx from "clsx";
 
 import { makeStyles, useTheme, Theme, createStyles } from "@material-ui/core/styles";
 
-import { withHtmlTooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
-
+import { CustomTooltip as Tooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
 
 const DRAWER_WIDTH = 400;
 const MAX_HEIGHT = 750;
@@ -90,11 +89,9 @@ const useDrawerStyles = makeStyles<Theme, StyleProps>((theme: Theme) =>
     })
 );
 
-
 const DrawerContents: React.FC<DrawerContentsProps> = ({ children }) => {
     return <>{children}</>;
 };
-
 
 export const EncapsulatedDrawer: React.FC<DrawerProps & DrawerContentsProps> = ({
     navigation,
@@ -139,8 +136,8 @@ export const EncapsulatedDrawer: React.FC<DrawerProps & DrawerContentsProps> = (
             <div ref={containerRef} style={{ width: "100%" }}>
                 <AppBar position="static" elevation={0} {...navigationProps}>
                     <Toolbar /*style={{ display: "flex" }} */ variant="dense">
-                        {toggleIcon &&
-                            withHtmlTooltip(
+                        {toggleIcon && (
+                            <Tooltip title={toggleHelp} aria-label={toggleHelp}>
                                 <IconButton
                                     className={drawerClasses.button}
                                     style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
@@ -149,9 +146,9 @@ export const EncapsulatedDrawer: React.FC<DrawerProps & DrawerContentsProps> = (
                                     onClick={handleToggleClick}
                                 >
                                     {toggleIcon}
-                                </IconButton>,
-                                toggleHelp
-                            )}
+                                </IconButton>
+                            </Tooltip>
+                        )}
 
                         {navigation}
                     </Toolbar>
