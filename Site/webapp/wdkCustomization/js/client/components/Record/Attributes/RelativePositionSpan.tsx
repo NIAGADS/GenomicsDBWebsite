@@ -1,16 +1,9 @@
 import React from "react";
-import Box from "@material-ui/core/Box";
 
-import { AttributeFormatter } from "@components/Record/Attributes";
+import { ColumnAccessor, ColoredSpan } from "@viz/Table/ColumnAccessors";
 
-export const RelativePositionSpan: React.SFC<AttributeFormatter> = (props) => {
-    const { value } = props;
+export const RelativePositionSpan: React.SFC<ColumnAccessor> = ({ value }) => {
+    const className = value.includes("in") || value.includes("overlap") ? "colocated" : value.toLowerCase();
 
-    const className = value.includes('in') || value.includes('overlap') ? 'colocated' : value.toLowerCase();
-
-    return (
-        <Box className={`position-indicator ${className}`} component="span">
-            {value}
-        </Box>
-    );
+    return <ColoredSpan value={value} className={`position-indicator ${className}`} />;
 };
