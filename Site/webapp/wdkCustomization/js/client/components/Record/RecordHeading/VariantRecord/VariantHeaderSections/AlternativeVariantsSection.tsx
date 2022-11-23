@@ -5,7 +5,9 @@ import Chip from "@material-ui/core/Chip";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
-import { LinkList as List, HtmlTooltip as Tooltip } from "@components/MaterialUI";
+import {LinkAttributeList } from "@components/Record/Attributes";
+
+import { CustomTooltip as Tooltip } from "@components/MaterialUI";
 
 export const AlternativeVariantsSection: React.FC<{ variants: string }> = ({ variants }) => (
     <Box>
@@ -21,6 +23,6 @@ export const AlternativeVariantsSection: React.FC<{ variants: string }> = ({ var
         >
             <Chip color="secondary" icon={<InfoIcon />} label="multi-allelic variant" />
         </Tooltip>
-        <List list={JSON.parse(variants)} />
+        <LinkAttributeList values={variants} />
     </Box>
 );
