@@ -27,7 +27,6 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
             return (row: any) => <BooleanCheckAccessor value={row[key]} />;
         case "ColoredSpan":
             return (row: any) => resolveNAs(row[key], <ColoredTextAccessor value={row[key]} htmlColor="red" />);
-        case "Link":
         case "ScientificNotation":
         case "Float":
         default:

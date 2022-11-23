@@ -4,3 +4,4 @@ export * from "./RelativePositionSpan";
 export * from "./VariantConsequenceImpactSpan";
 export * from "./BooleanAttribute";
 export * from "./LinkAttributes";
+export * from "./MetaseqIdAttribute";

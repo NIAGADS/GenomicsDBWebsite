@@ -6,8 +6,9 @@ import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-import { TableContainer, ColumnAccessorType } from "@viz/Table";
+import { TableContainer } from "@viz/Table";
 import { SelectColumnFilter, globalTextFilter, PieChartColumnFilter } from "@viz/Table/TableFilters";
+import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 
 import {
     resolveAccessor,
