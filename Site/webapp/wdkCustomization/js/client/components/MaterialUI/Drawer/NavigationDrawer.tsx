@@ -13,12 +13,10 @@ import Grid from "@material-ui/core/Grid";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 import {
-    withHtmlTooltip,
+    CustomTooltip as Tooltip,
     DrawerProps,
-    DrawerContentsProps,
     MaterialUIThemedButton,
-    DRAWER_WIDTH,
-    SHIFT_X,
+    DRAWER_WIDTH
 } from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -122,7 +120,7 @@ return (
         <AppBar position="static" elevation={0} {...navigationProps} className={className} disableGutters={true}>
             <Toolbar /*style={{ display: "flex" }} */ variant="dense" disableGutters={true}>
                 {toggleIcon &&
-                    withHtmlTooltip(
+                    <Tooltip title={toggleHelp} aria-label={toggleHelp}>
                         <MaterialUIThemedButton
                             style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
                             color="primary"
@@ -132,9 +130,8 @@ return (
                             endIcon={toggleIcon}
                         >
                             {toggleText}
-                        </MaterialUIThemedButton>,
-                        toggleHelp
-                    )}
+                        </MaterialUIThemedButton>
+                   </Tooltip>}
                 {navigation}
             </Toolbar>
         </AppBar>
