@@ -16,7 +16,7 @@ export const CustomTooltip = withStyles((theme: Theme) => ({
     },
 }))(Tooltip);
 
-export const KeyedHtmlTooltip = (target: React.ReactElement<any>, tooltip: string) => {
+export const KeyedTooltip = (target: React.ReactElement<any>, tooltip: string) => {
     return tooltip ? (
         <CustomTooltip
             key={Math.random().toString(36).slice(2)}
