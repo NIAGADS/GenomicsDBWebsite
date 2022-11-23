@@ -6,13 +6,13 @@ import Box from "@material-ui/core/Box";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { VariantConsequenceImpactSpan as ImpactIndicator } from "@components/Record/Attributes";
+import { BooleanAttribute, VariantConsequenceImpactSpan as ImpactIndicator, LinkAttribute } from "@components/Record/Attributes";
 
 import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";
 
-import { resolveJsonInput } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
+
 
 export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const attributes = record.attributes;
@@ -24,7 +24,7 @@ export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> 
                 <ListItem>
                     <Typography className={classes.small}>
                         <strong>Consequence:</strong> {attributes.most_severe_consequence}{" "}
-                        {attributes.msc_is_coding && resolveJsonInput(attributes.msc_is_coding.toString())}
+                        {attributes.msc_is_coding && <BooleanAttribute value={attributes.msc_is_coding.toString()} htmlColor="green"/>}
                     </Typography>
                 </ListItem>
                 {attributes.msc_impact && <ListItem></ListItem>}
@@ -39,7 +39,7 @@ export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> 
                         <ListItem>
                             <Typography variant="caption">
                                 Impacted Gene:&nbsp;
-                                {resolveJsonInput(attributes.msc_impacted_gene_link.toString())}
+                                <LinkAttribute value={attributes.msc_impacted_gene_link.toString()}/>
                             </Typography>
                         </ListItem>
                     )}
@@ -47,7 +47,7 @@ export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> 
                         <ListItem>
                             <Typography variant="caption">
                                 Impacted Transcript:&nbsp;
-                                {resolveJsonInput(attributes.msc_impacted_transcript.toString())}
+                                <LinkAttribute value={attributes.msc_impacted_transcript.toString()}/>
                             </Typography>
                         </ListItem>
                     )}
