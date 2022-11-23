@@ -1,20 +1,20 @@
 import React from "react";
 
-import { Box, BoxProps, Grid, withStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
+import Box, { BoxProps } from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 
-interface StackedBar {
-    percentage: number;
-    value: any;
-}
+import { ColumnAccessor } from "@viz/Table/ColumnAccessors";
 
-export const StackedBar: React.FC<StackedBar> = ({ value, percentage }) => {
+export const SparkPercentageBarAccessor: React.FC<ColumnAccessor> = ({ value }) => {
+    
     return value ? (
         <Grid container wrap="nowrap">
-            <Grid item>{value}&nbsp;</Grid>
+            <Grid item>{value.value}&nbsp;</Grid>
             <Box clone maxWidth="100px" maxHeight="1.4em">
                 <Grid item container wrap="nowrap">
-                    <SparkBar type="filled" width={percentage} />
-                    <SparkBar type="remaining" width={100 - percentage} />
+                    <SparkBar type="filled" width={value.percentage} />
+                    <SparkBar type="remaining" width={100 - value.percentage} />
                 </Grid>
             </Box>
         </Grid>
