@@ -5,7 +5,8 @@ import Chip from "@material-ui/core/Chip";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
-import { LinkList as List, HtmlTooltip as Tooltip } from "@components/MaterialUI";
+import { CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { LinkAttributeList } from "@components/Record/Attributes";
 
 export const ColocatedVariantsSection: React.FC<{ variants: string; position: string; chromosome: string }> = ({
     variants,
@@ -16,12 +17,10 @@ export const ColocatedVariantsSection: React.FC<{ variants: string; position: st
         <Tooltip
             arrow
             title={
-                <React.Fragment>
-                    <Typography color="inherit" variant="caption">
-                        Follow the links below to view annotations for co-located/overlapping variants, such as indels,
-                        structural variants, and colocated SNVs not in dbSNP.
-                    </Typography>
-                </React.Fragment>
+                <Typography color="inherit" variant="caption">
+                    Follow the links below to view annotations for co-located/overlapping variants, such as indels,
+                    structural variants, and colocated SNVs not in dbSNP.
+                </Typography>
             }
         >
             <Chip
@@ -30,6 +29,6 @@ export const ColocatedVariantsSection: React.FC<{ variants: string; position: st
                 label={`This position (${chromosome}:${position}) coincides with:`}
             />
         </Tooltip>
-        <List list={JSON.parse(variants)} />
+        <LinkAttributeList value={variants} />
     </Box>
 );

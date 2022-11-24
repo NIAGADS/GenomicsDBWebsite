@@ -6,7 +6,14 @@ import { ColumnAccessorType } from "genomics-client/components/Visualizations/Ta
 
 export interface Filters extends Array<Record<FilterType, any>> {}
 
-export type RecordTableColumnAccessorType = ColumnAccessorType | "RelativePosition" | "VariantImpact" | "AnnotatedText";
+export type RecordTableColumnAccessorType =
+    | ColumnAccessorType
+    | "RelativePosition"
+    | "VariantImpact"
+    | "AnnotatedText"
+    | "MetaseqID"
+    | "GreenCheck"
+    | "RedCheck"
 
 export interface RecordTableProps {
     table: TableField;
@@ -14,4 +21,3 @@ export interface RecordTableProps {
     properties?: TableProperties;
     onLoad?: (ref: React.MutableRefObject<TableInstance>) => void;
 }
-

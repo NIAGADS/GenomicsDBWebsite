@@ -8,7 +8,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
+import {
+    LabeledAttributeItem as RecordAttributeItem,
+    LabeledBooleanAttribute,
+    LinkAttributeList,
+} from "@components/Record/Attributes";
 
 import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
 import { RecordHeading } from "@components/Record/Types";
@@ -16,16 +20,16 @@ import { RecordHeading } from "@components/Record/Types";
 import { RootState } from "wdk-client/Core/State/Types";
 import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
 
-import { CustomPanel, withTooltip } from "@components/MaterialUI";
+import { CustomPanel, CustomTooltip as Tooltip } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI";
 
 import { convertHtmlEntites } from "genomics-client/util/util";
-import { resolveJsonInput } from "genomics-client/util/jsonParse";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 //import { GWASDatasetLZPlot } from "@viz/LocusZoom";
 
 import "./TrackRecordHeading.scss";
+import Box from "@material-ui/core/Box";
 
 interface HeaderImage {
     src: string;
@@ -82,31 +86,40 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                     <Typography>{record.attributes.description}</Typography>
 
                     {record.attributes.is_adsp && (
-                        <Typography>
-                            <strong> {resolveJsonInput(record.attributes.is_adsp.toString())}</strong>
-                        </Typography>
+                        <LabeledBooleanAttribute
+                            value={record.attributes.is_adsp.toString()}
+                            label="ADSP"
+                            className="red"
+                        />
                     )}
 
                     <List>
                         <ListItem>
                             <RecordAttributeItem
                                 label="Accession"
-                                attribute={withTooltip(
-                                    <span>
+                                attribute={
+                                    <Box component="span">
                                         {record.attributes.niagads_accession}{" "}
-                                        <Link href={`${_externalUrls.NIAGADS_BASE_URL}/${record.attributes.niagads_accession}`}>
+                                        <Link
+                                            href={`${_externalUrls.NIAGADS_BASE_URL}/${record.attributes.niagads_accession}`}
+                                        >
                                             <i className={`${tClasses.small} fa fa-external-link`}></i>
                                         </Link>
-                                    </span>,
-                                    "View NIAGADS Accession / Request Access to full summary statistics"
-                                )}
+                                    </Box>
+                                }
+                                tooltip="View NIAGADS Accession / Request Access to full summary statistics"
                             ></RecordAttributeItem>
                         </ListItem>
                         <ListItem>
                             {record.attributes.related_tracks && (
                                 <RecordAttributeItem
                                     label="Related Tracks"
-                                    attribute={resolveJsonInput(record.attributes.related_tracks.toString())}
+                                    attribute={
+                                        <LinkAttributeList
+                                            value={record.attributes.related_tracks.toString()}
+                                            asString={true}
+                                        />
+                                    }
                                 />
                             )}
                         </ListItem>

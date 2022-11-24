@@ -11,6 +11,7 @@ import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
+import { FilterChipBar } from "@viz/Table/TableSections";
 
 export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
@@ -110,6 +111,7 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
                 >
                     Reset Filters
                 </Button>
+                <FilterChipBar instance={instance} />
                 {filterGroups.map((fg) => renderFilterGroup(fg))}
             </Grid>
         </CollapsableCardPanel>
