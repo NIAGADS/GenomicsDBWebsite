@@ -18,7 +18,7 @@ import Grid from "@material-ui/core/Grid";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-import { PersistentDrawerLeft, DrawerState, HtmlTooltip, DrawerProps } from "@components/MaterialUI";
+import { PersistentDrawerLeft, DrawerState, CustomTooltip as Tooltip, DrawerProps } from "@components/MaterialUI";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { RecordClass } from "wdk-client/Utils/WdkModel";
@@ -71,14 +71,12 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
     const classes = useStyles();
     return (
         <Toolbar disableGutters={true} className={classes.menu}>
-            <HtmlTooltip
+            <Tooltip
                 arrow
                 title={
-                    <React.Fragment>
-                        <Typography color="inherit" variant="caption">
-                            Show table of contents panel
-                        </Typography>
-                    </React.Fragment>
+                    <Typography color="inherit" variant="caption">
+                        Show table of contents panel
+                    </Typography>
                 }
             >
                 <IconButton
@@ -89,7 +87,7 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
                 >
                     <MenuIcon className={classes.menuIcon} />
                 </IconButton>
-            </HtmlTooltip>
+            </Tooltip>
         </Toolbar>
     );
 };
@@ -150,14 +148,12 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                 >
                     Export record
                 </Button>
-                <HtmlTooltip
+                <Tooltip
                     arrow
                     title={
-                        <React.Fragment>
-                            <Typography color="inherit" variant="caption">
-                                Click to copy share permalink to cliboard
-                            </Typography>
-                        </React.Fragment>
+                        <Typography color="inherit" variant="caption">
+                            Click to copy share permalink to cliboard
+                        </Typography>
                     }
                 >
                     <Button
@@ -171,16 +167,14 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                     >
                         Share this page
                     </Button>
-                </HtmlTooltip>
+                </Tooltip>
                 {/* span allow tooltip to fire, since button is disabled */}
-                <HtmlTooltip
+                <Tooltip
                     arrow
                     title={
-                        <React.Fragment>
-                            <Typography color="inherit" variant="caption">
-                                Features for registered users coming soon.
-                            </Typography>
-                        </React.Fragment>
+                        <Typography color="inherit" variant="caption">
+                            Features for registered users coming soon.
+                        </Typography>
                     }
                 >
                     <span>
@@ -196,7 +190,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                             Bookmark
                         </Button>
                     </span>
-                </HtmlTooltip>
+                </Tooltip>
             </Grid>
         </>
     );

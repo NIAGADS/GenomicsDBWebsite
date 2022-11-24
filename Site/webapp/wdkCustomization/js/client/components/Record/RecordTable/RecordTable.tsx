@@ -11,15 +11,17 @@ import { SelectColumnFilter, globalTextFilter, PieChartColumnFilter } from "@viz
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 
 import {
-    resolveAccessor,
+    resolveColumnAccessor,
     resolveData,
     RecordTableProps,
+} from "@components/Record/RecordTable";
+
+import {
     negLog10pFilter,
     booleanFlagFilter,
     PValueThresholdFilter as PValueFilter,
-   // PieChartColumnFilter,
     DEFAULT_PVALUE_FILTER_VALUE,
-} from "@components/Record/RecordTable";
+} from "@components/Record/RecordTable/RecordTableFilters"
 
 import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
 
@@ -41,14 +43,26 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
     const { attributes } = table;
-
+    const classes = useStyles();
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
         booleanPie: useMemo(() => booleanFlagFilter, []),
         global: useMemo(() => globalTextFilter, []),
     };
 
-    const _buildColumns = (table: TableField, data: TableValue, defaultHiddenColumns: string[]) => {
+    const defaultHiddenColumns = get(properties, "hiddenColumns");
+    const hasHiddenColumns = defaultHiddenColumns ? true : false;
+    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
+
+    const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
+    const resolvedData: any = useMemo(() => resolveData(data), [data]);
+
+    const canFilter = get(properties, "canFilter", true); // default to true if missing
+    const hasColumnFilters = properties.hasOwnProperty("filters");
+    const initialFilters = _setInitialFilters(table, properties);
+    const initialSort = _setInitialSort(table, properties);
+
+    const buildColumns = () => {
         if (!data) {
             return [];
         }
@@ -75,46 +89,12 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     let column = _buildColumn(attribute, accessorType);
            
                     if (attribute.help) {
-                        //@ts-ignore
                         column.help = attribute.help;
                     }
 
-                    switch (accessorType) {
-                        case "BooleanFlag":
-                            //@ts-ignore
-                            column.disableGlobalFilter = true;
-                            column.sortType = "booleanFlag";
-                            if (filterType && filterType === "pie") {
-                                filterType = "booleanPie";
-                            }
-                            break;
-                        case "Link":
-                            column.sortType = "link";
-                            break;
-                        case "StackedBar":
-                            //@ts-ignore
-                            column.disableGlobalFilter = true;
-                            column.sortType = "stackedBar";
-                            break;
-                        case "ScientificNotation":
-                            //@ts-ignore
-                            column.disableGlobalFilter = true;
-                            column.sortType = "scientificNotation";
-                            break;
-                        default:
-                            // catch legacy links
-                            if (column.id.endsWith("link")) {
-                                column.sortType = "link";
-                            }
-                    }
-
-                    if (filterType) {
-                        //@ts-ignore
-                        column = _addColumnFilters(column, filterType);
-                    }
-
+                    column = _setColumnBehavior(column, filterType, accessorType);
+                    
                     if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
-                        //@ts-ignore
                         column.show = false;
                     }
 
@@ -125,30 +105,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             return columns;
         }
     };
-
-    const _buildColumn = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
-        Header: attribute.displayName,
-        sortable: attribute.isSortable,
-        accessor: resolveAccessor(attribute.name, accessorType),
-        accessorType: accessorType,
-        id: attribute.name,
-        sortType: "alphanumeric",
-    });
-
-    let defaultHiddenColumns = get(properties, "hiddenColumns");
-    const hasHiddenColumns = defaultHiddenColumns ? true : false;
-    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
-
-    const columns: Column<{}>[] = useMemo(() => _buildColumns(table, data, defaultHiddenColumns), [table]);
-    const resolvedData: any = useMemo(() => resolveData(data), [data]);
-
-    const canFilter = get(properties, "canFilter", true); // default to true if missing
-    const hasColumnFilters = properties.hasOwnProperty("filters");
-    const initialFilters = _setInitialFilters(table, properties);
-    const initialSort = _setInitialSort(table, properties);
-
-    const classes = useStyles();
-
+ 
     if (data.length === 0 || columns.length === 0) {
         return (
             <p>
@@ -188,24 +145,60 @@ const _setInitialSort = (table: TableField, properties: TableProperties) => {
     return useMemo(() => sortBy, []);
 };
 
-const _addColumnFilters = (column: Column, filterType: string) => {
+
+const _setColumnBehavior = (column: any, filterType: string, accessorType: ColumnAccessorType="Default") => {
+    switch (accessorType) {
+        case "BooleanGreenCheck":
+        case "BooleanRedCheck":
+        case "BooleanCheck":
+            //@ts-ignore
+            column.disableGlobalFilter = true;
+            column.sortType = "booleanFlag";
+            break;
+        case "Link":
+            column.sortType = "link";
+            break;
+        case "PercentageBar":
+            //@ts-ignore
+            column.disableGlobalFilter = true;
+            column.sortType = "stackedBar";
+            break;
+        case "Float":
+            column.disableGlobalFilter = true;
+            break;
+        case "ScientificNotation":
+            //@ts-ignore
+            column.disableGlobalFilter = true;
+            column.sortType = "scientificNotation";
+            break;
+        default:
+            // catch legacy links
+            if (column.id.endsWith("link")) {
+                column.sortType = "link";
+            }
+    }
+
+    column = _addColumnFilters(column, filterType);
+    return column;
+}
+
+const _addColumnFilters = (column: any, filterType: string) => {
     switch (filterType) {
         case "select":
-            //@ts-ignore
             column.Filter = SelectColumnFilter;
             break;
         case "pie":
         case "booleanPie":
-            //@ts-ignore
             column.Filter = PieChartColumnFilter;
             break;
         case "pvalue":
-            //@ts-ignore
             column.Filter = PValueFilter;
             break;
+        case null:
+        default:
+            return column;
     }
 
-    //@ts-ignore
     column.filter = filterType;
     return column;
 };
@@ -215,3 +208,12 @@ const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) =>
         idx2 = findIndex(attributes, (att) => att.name === col2.id);
     return idx2 > idx1 ? -1 : 1;
 };
+
+const _buildColumn:any = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
+    Header: attribute.displayName,
+    sortable: attribute.isSortable,
+    accessor: resolveColumnAccessor(attribute.name, accessorType),
+    accessorType: accessorType,
+    id: attribute.name,
+    sortType: "alphanumeric",
+});
