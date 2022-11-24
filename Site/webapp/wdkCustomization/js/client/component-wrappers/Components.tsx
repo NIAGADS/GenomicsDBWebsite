@@ -3,8 +3,6 @@ import { Header as SiteHeader } from "../components/Page/Header/Header";
 import SiteFooter from "../components/Page/Footer";
 import QuestionForm from "../components/QuestionForm/QuestionForm";
 import CustomPageLayout from "../components/Page/CustomPageLayout";
-import { ThemeProvider } from "@material-ui/core/styles";
-import { theme } from "../components/MaterialUI";
 
 export const Page = () => CustomPageLayout;
 
