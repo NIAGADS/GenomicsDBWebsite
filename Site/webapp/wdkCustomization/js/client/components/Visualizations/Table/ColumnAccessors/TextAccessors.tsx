@@ -12,7 +12,8 @@ export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLengt
     ) : value.length > maxLength ? (
         <ClobTextAccessor value={value} />
     ) : (
-        <Box component="span">{value}</Box>
+        // <Box component="span">{value}</Box>
+        value
     );
 };
 

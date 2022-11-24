@@ -12,8 +12,8 @@ export type RecordTableColumnAccessorType =
     | "VariantImpact"
     | "AnnotatedText"
     | "MetaseqID"
-    | "GreenCheck"
-    | "RedCheck"
+    | "BooleanGreenCheck"
+    | "BooleanRedCheck"
 
 export interface RecordTableProps {
     table: TableField;

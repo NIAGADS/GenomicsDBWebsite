@@ -2,9 +2,10 @@ import React from "react";
 import isJson, { isString, forIn } from "lodash";
 import { RelativePositionSpan, VariantConsequenceImpactSpan, LinkAttribute, MetaseqIdAttribute } from "@components/Record/Attributes";
 
-import { resolveNAs, resolveColumnAccessor as defaultResolveColumnAccessor } from "@viz/Table/ColumnAccessors";
+import { resolveNAs, resolveColumnAccessor as defaultResolveColumnAccessor, BooleanCheckAccessor } from "@viz/Table/ColumnAccessors";
 
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
+import { Column } from "react-table";
 
 /*const _parseJson = (value: any) => {
     //not reallly a json test, more like a check to see if the backend is sending us something we assume we can treat as json
@@ -26,13 +27,8 @@ export const resolveData = (data: { [key: string]: any }[]): { [key: string]: an
             o[k] = v; // k.endsWith("_flag") && !v ? null : _parseJson(v);
         });
     });
-};
+}; 
 
-/*
-| "RelativePosition"
-| "VariantImpact"
-| "AnnotatedText"
-| "MetaseqID"; */
 
 export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default") => {
     switch (accessorType) {
@@ -44,8 +40,10 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
             return (row: any) => resolveNAs(row[key], <LinkAttribute value={row[key]} />);
         case "MetaseqID":
             return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]}/>);
-        case "GreenCheck": 
-            return (row: any) => resolveNAs(row[key])
+        case "BooleanGreenCheck": 
+            return (row: any) => resolveNAs(row[key], <BooleanCheckAccessor value={row[key]} htmlColor="green"/>);
+        case "BooleanRedCheck": 
+            return (row: any) => resolveNAs(row[key], <BooleanCheckAccessor value={row[key]} htmlColor="red"/>);
         default:
             return (row: any) => defaultResolveColumnAccessor(key, accessorType);
     }
