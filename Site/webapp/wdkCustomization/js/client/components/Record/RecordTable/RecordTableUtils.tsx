@@ -1,5 +1,5 @@
 import React from "react";
-import isJson, { isString, forIn } from "lodash";
+import { isString, forIn } from "lodash";
 import { RelativePositionSpan, VariantConsequenceImpactSpan, LinkAttribute, MetaseqIdAttribute } from "@components/Record/Attributes";
 
 import { resolveNAs, resolveColumnAccessor as defaultResolveColumnAccessor, BooleanCheckAccessor } from "@viz/Table/ColumnAccessors";
