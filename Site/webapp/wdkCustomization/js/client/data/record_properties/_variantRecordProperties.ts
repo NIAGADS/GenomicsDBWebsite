@@ -1,4 +1,4 @@
-import { TableProperties } from "@viz/Table/TableProperties";
+import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
 export const _variantTableProperties: { [name: string]: TableProperties } = {
     ad_associations_from_gwas: {
@@ -108,7 +108,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         requiredColumns: ["variant", "r_squared", "population"],
         sortedBy: [{ id: "r_squared", descending: true }],
         accessors: {
-            adsp_variant_flag: "BooleanFlag",
+            adsp_variant_flag: "BooleanRedCheck",
             r_squared: "Float",
             minor_allele_frequency_ld_ref: "Float",
             minor_allele_frequency: "Float",
@@ -124,6 +124,6 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: false,
-        accessors: { frequency: "StackedBar" },
+        accessors: { frequency: "PercentageBar" },
     },
 };

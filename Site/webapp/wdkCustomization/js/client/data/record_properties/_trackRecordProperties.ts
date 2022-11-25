@@ -1,4 +1,4 @@
-import { TableProperties } from "@viz/Table/TableProperties";
+import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
 export const _trackTableProperties: { [name: string]: TableProperties } = {
     top_variants: {
@@ -26,8 +26,8 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
-            adsp_variant_flag: "BooleanFlag",
-            msc_is_coding_flag: "BooleanFlag",
+            adsp_variant_flag: "BooleanRedCheck",
+            msc_is_coding_flag: "BooleanGreenCheck",
             variant: "Link",
             pvalue: "ScientificNotation",
             msc_impacted_gene_link: "Link",

@@ -23,9 +23,9 @@ import {
     DEFAULT_PVALUE_FILTER_VALUE,
 } from "@components/Record/RecordTable/RecordTableFilters"
 
-import { TableField, TableValue, AttributeField } from "wdk-client/Utils/WdkModel";
+import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
-import { TableProperties } from "@viz/Table/TableProperties";
+import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

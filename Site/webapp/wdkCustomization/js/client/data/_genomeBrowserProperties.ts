@@ -32,10 +32,10 @@ export const _selectorTableProperties: TableProperties = {
     canToggleColumns: true,
     sortedBy: [{ id: "pvalue", descending: false }],
     accessors: {
-        adsp_variant_flag: "BooleanFlag",
+        adsp_variant_flag: "BooleanCheck",
         pvalue: "ScientificNotation",
         variant_link: "Link",
         track: "Link",
-        gene_impact: "VariantImpact",
+        gene_impact: "ColoredText",
     },
 };

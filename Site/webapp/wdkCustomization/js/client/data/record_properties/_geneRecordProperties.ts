@@ -1,4 +1,4 @@
-import { TableProperties } from "@viz/Table/TableProperties";
+import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
 export const _geneTableProperties: { [name: string]: TableProperties } = {
     ad_variants_from_gwas: {
@@ -36,7 +36,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
-            adsp_variant_flag: "BooleanFlag",
+            adsp_variant_flag: "BooleanRedCheck",
             pvalue: "ScientificNotation",
             variant_link: "Link",
             track: "Link",
@@ -74,7 +74,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
-            adsp_variant_flag: "BooleanFlag",
+            adsp_variant_flag: "BooleanRedCheck",
             pvalue: "ScientificNotation",
             variant_link: "Link",
             track: "Link",
@@ -102,7 +102,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
-            adsp_variant_flag: "BooleanFlag",
+            adsp_variant_flag: "BooleanRedCheck",
             pvalue: "ScientificNotation",
             variant_link: "Link",
             pubmed_id: "Link",
@@ -129,7 +129,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
-            adsp_variant_flag: "BooleanFlag",
+            adsp_variant_flag: "BooleanRedCheck",
             pvalue: "ScientificNotation",
             variant_link: "Link",
             pubmed_id: "Link",
