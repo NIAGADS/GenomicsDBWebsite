@@ -50,18 +50,6 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         global: useMemo(() => globalTextFilter, []),
     };
 
-    const defaultHiddenColumns = get(properties, "hiddenColumns");
-    const hasHiddenColumns = defaultHiddenColumns ? true : false;
-    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
-
-    const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
-    const resolvedData: any = useMemo(() => resolveData(data), [data]);
-
-    const canFilter = get(properties, "canFilter", true); // default to true if missing
-    const hasColumnFilters = properties.hasOwnProperty("filters");
-    const initialFilters = _setInitialFilters(table, properties);
-    const initialSort = _setInitialSort(table, properties);
-
     const buildColumns = () => {
         if (!data) {
             return [];
@@ -105,6 +93,18 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             return columns;
         }
     };
+
+    const defaultHiddenColumns = get(properties, "hiddenColumns");
+    const hasHiddenColumns = defaultHiddenColumns ? true : false;
+    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
+
+    const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
+    const resolvedData: any = useMemo(() => resolveData(data), [data]);
+
+    const canFilter = get(properties, "canFilter", true); // default to true if missing
+    const hasColumnFilters = properties.hasOwnProperty("filters");
+    const initialFilters = _setInitialFilters(table, properties);
+    const initialSort = _setInitialSort(table, properties);
  
     if (data.length === 0 || columns.length === 0) {
         return (
