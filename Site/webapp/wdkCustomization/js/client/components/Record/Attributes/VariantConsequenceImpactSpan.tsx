@@ -1,6 +1,6 @@
 import React from "react";
-import { ColumnAccessor, ColoredSpan } from "@viz/Table/ColumnAccessors";
+import { ColumnAccessor, ColoredTextAccessor } from "@viz/Table/ColumnAccessors";
 
 export const VariantConsequenceImpactSpan: React.SFC<ColumnAccessor> = ({ value }) => {
-    return <ColoredSpan value={value} className={`impact-indicator ${value.toLowerCase()}`} />;
+    return <ColoredTextAccessor value={value} className={`impact-indicator ${value.toLowerCase()}`} />;
 };

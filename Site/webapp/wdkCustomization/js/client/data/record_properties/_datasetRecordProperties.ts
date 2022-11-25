@@ -1,4 +1,4 @@
-import { TableProperties } from "@viz/Table/TableProperties";
+import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
 export const _datasetTableProperties: { [name: string]: TableProperties } = {
     gwas: {

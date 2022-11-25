@@ -26,7 +26,7 @@ import { RootState } from "wdk-client/Core/State/Types";
 
 import GenomeBuildBanner from "./GenomeBuildBanner";
 
-import { ElevationScroll, withTooltip } from "@components/MaterialUI";
+import { ElevationScroll, CustomTooltip as Tooltip } from "@components/MaterialUI";
 
 // apply material-ui spacing system to the buttons
 const TextButton = styled(Button)(({ theme }) => ({
@@ -139,7 +139,7 @@ function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             {isGuest ? (
-                withTooltip(<MenuItem onClick={handleMenuClose}>Sign In</MenuItem>, "Coming soon")
+                <Tooltip title="coming soon"><MenuItem onClick={handleMenuClose}>Sign In</MenuItem></Tooltip>
             ) : (
                 <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
             )}

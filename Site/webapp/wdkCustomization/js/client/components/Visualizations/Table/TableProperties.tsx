@@ -1,5 +1,5 @@
-import { ColumnAccessorType, FilterType } from "@viz/Table";
-import { FilterGroup } from "@viz/Table/TableFilters";
+import { ColumnAccessorType } from "@viz/Table/ColumnAccessors";
+import { FilterGroup, FilterType } from "@viz/Table/TableFilters";
 
 export interface TableColumnSort {
     id: string;
@@ -17,7 +17,7 @@ export interface TableProperties {
     canToggleColumns: boolean;
     fullWidth?: boolean;
     sortedBy?: TableColumnSort[];
-    accessors?: {[key: string]: ColumnAccessorType};
+    accessors?: {[key: string]: ColumnAccessorType };
 }
 
 export const _defaultTableProperties: TableProperties = {

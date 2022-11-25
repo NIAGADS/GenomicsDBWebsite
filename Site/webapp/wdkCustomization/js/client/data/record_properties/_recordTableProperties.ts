@@ -1,4 +1,4 @@
-import { TableProperties } from "@viz/Table/TableProperties";
+import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
 import { _geneTableProperties as _geneRecordTableProperties } from "./_geneRecordProperties";
 import { _variantTableProperties as _variantRecordTableProperties } from "./_variantRecordProperties";
