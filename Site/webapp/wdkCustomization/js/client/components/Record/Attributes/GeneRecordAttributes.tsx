@@ -1,7 +1,6 @@
 import React from "react";
 
 import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
