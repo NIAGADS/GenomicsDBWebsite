@@ -4,6 +4,8 @@ model-config.xml
 model.prop
 webapp.prop
 
+yarn-error.log
+
 # Created by https://www.gitignore.io/api/emacs
 # Edit at https://www.gitignore.io/?templates=emacs
 
