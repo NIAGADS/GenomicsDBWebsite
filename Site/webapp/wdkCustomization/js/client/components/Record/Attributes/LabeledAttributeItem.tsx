@@ -2,15 +2,23 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useTypographyStyles, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { NASpan } from "genomics-client/components/Visualizations/Table/ColumnAccessors";
 
 interface LabeledAttributeItem {
     label: string;
-    attribute: string | React.ReactElement;
+    attribute?: string;
+    children?: React.ReactElement;
     small?: boolean;
     tooltip?: string;
 }
 
-export const LabeledAttributeItem: React.FC<LabeledAttributeItem> = ({ label, attribute, small, tooltip }) => {
+export const LabeledAttributeItem: React.FC<LabeledAttributeItem> = ({
+    label,
+    attribute,
+    children,
+    small,
+    tooltip,
+}) => {
     const classes = useTypographyStyles();
     const className = small ? classes.small : "";
 
@@ -22,10 +30,14 @@ export const LabeledAttributeItem: React.FC<LabeledAttributeItem> = ({ label, at
             </strong>
             {tooltip ? (
                 <Tooltip title={tooltip}>
-                   <>{attribute}</>
+                    {attribute ? <Box component="span">attribute</Box> : children ? children : <NASpan />}
                 </Tooltip>
+            ) : attribute ? (
+                attribute
+            ) : children ? (
+                children
             ) : (
-                { attribute }
+                <NASpan />
             )}
         </Typography>
     );

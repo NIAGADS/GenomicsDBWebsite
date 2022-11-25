@@ -97,7 +97,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                         <ListItem>
                             <RecordAttributeItem
                                 label="Accession"
-                                attribute={
+                                children={
                                     <Box component="span">
                                         {record.attributes.niagads_accession}{" "}
                                         <Link
@@ -114,7 +114,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                             {record.attributes.related_tracks && (
                                 <RecordAttributeItem
                                     label="Related Tracks"
-                                    attribute={
+                                    children={
                                         <LinkAttributeList
                                             value={record.attributes.related_tracks.toString()}
                                             asString={true}
