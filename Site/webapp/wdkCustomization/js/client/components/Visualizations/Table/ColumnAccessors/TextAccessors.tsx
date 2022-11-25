@@ -1,12 +1,24 @@
 import React, { useState } from "react";
-import isJSON from "lodash";
+import { isObject, isString } from "lodash";
 
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import { ColumnAccessor, JSONAccessor } from "@viz/Table/ColumnAccessors";
 
-export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength=250 }) => {
+const isJSON = (value: any) => {
+    try {
+        value = JSON.parse(value);
+    } catch (e) {
+        return false;
+    }
+
+    // catch numbers, nulls, booleans
+    return isObject(value) && value != null
+}
+
+export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 250 }) => {
+    const test = isJSON(value);
     return isJSON(value) ? (
         <JSONAccessor value={value} />
     ) : value.length > maxLength ? (
@@ -19,7 +31,7 @@ export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLengt
 
 // large text, show more or tooltip
 // if not JSON & no tooltip, show more
-export const ClobTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength=250 }) => {
+export const ClobTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 250 }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
@@ -49,6 +61,7 @@ export const ColoredTextAccessor: React.SFC<ColumnAccessor> = ({ value, classNam
 
 // text with tooltip value = { value: string, tooltip: string}
 // so technically, takes JSON
+
 export const AnnotatedTextAccessor: React.SFC<ColumnAccessor> = ({ value }) => {
     return (
         <Tooltip title={value.tooltip} arial-label={value.tooltip}>
