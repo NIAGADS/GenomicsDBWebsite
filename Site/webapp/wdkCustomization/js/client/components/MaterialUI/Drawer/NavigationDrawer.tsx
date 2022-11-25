@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-import { makeStyles, useTheme, Theme, createStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,7 +15,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {
     CustomTooltip as Tooltip,
     DrawerProps,
-    MaterialUIThemedButton,
     DRAWER_WIDTH
 } from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
@@ -121,16 +120,16 @@ return (
             <Toolbar /*style={{ display: "flex" }} */ variant="dense" disableGutters={true}>
                 {toggleIcon &&
                     <Tooltip title={toggleHelp} aria-label={toggleHelp}>
-                        <MaterialUIThemedButton
+                        <Button
                             style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
                             color="primary"
-                            variant="text"
+                            variant="contained"
                             aria-label="toggle-secondary-navigation"
                             onClick={handleToggleClick}
                             endIcon={toggleIcon}
                         >
                             {toggleText}
-                        </MaterialUIThemedButton>
+                        </Button>
                    </Tooltip>}
                 {navigation}
             </Toolbar>

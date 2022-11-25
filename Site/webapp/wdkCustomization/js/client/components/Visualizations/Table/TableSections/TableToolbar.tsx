@@ -6,6 +6,7 @@ import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "@viz/Table/T
 import { TablePagination } from "@viz/Table/TableSections";
 
 import { CustomTooltip as Tooltip, MaterialUIThemedButton } from "@components/MaterialUI";
+import Button from "@material-ui/core/Button";
 
 interface FilterToolbarProps {
     canFilter: boolean;
@@ -22,7 +23,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
             {/* span is b/c button is disabled, allows tooltip to fire */}
             <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
                 <span>
-                    <MaterialUIThemedButton
+                    <Button
                         endIcon={<DownloadIcon />}
                         variant="text"
                         color="primary"
@@ -30,7 +31,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
                         disabled={true}
                     >
                         Export
-                    </MaterialUIThemedButton>
+                    </Button>
                 </span>
             </Tooltip>
             {canFilter && (
