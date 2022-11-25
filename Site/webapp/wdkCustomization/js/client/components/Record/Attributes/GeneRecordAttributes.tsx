@@ -5,8 +5,6 @@ import Typography from "@material-ui/core/Typography";
 
 import { RecordInstance } from "wdk-client/Utils/WdkModel";
 
-import { resolveJsonInput } from "genomics-client/util/jsonParse";
-
 import { UnpaddedListItem as ListItem, useTypographyStyles } from "@components/MaterialUI";
 import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
 
@@ -35,14 +33,14 @@ export const GeneAttributeList: React.FC<{ record: RecordInstance }> = ({ record
                 />
             </ListItem>
 
-            {record.attributes.has_genetic_evidence_for_ad_risk && (
+            {/*record.attributes.has_genetic_evidence_for_ad_risk && (
                 <ListItem>
                     <Typography className={classes.small}>
                         Genetic Evidence for AD?{" "}
                         {resolveJsonInput(record.attributes.has_genetic_evidence_for_ad_risk_display.toString())}
                     </Typography>
                 </ListItem>
-            )}
+            ) */}
         </List>
     );
 };
