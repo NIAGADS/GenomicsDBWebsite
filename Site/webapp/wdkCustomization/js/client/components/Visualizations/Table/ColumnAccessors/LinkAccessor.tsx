@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link";
 import { ColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 export const resolveLink = (url: string, value: string) => {
-    const isRouterLink = /^http/.test(url);
+    const isRouterLink = /[^http]/.test(url);
     return isRouterLink ? (
         <RouterLink key={url} to={url}>
             {value}

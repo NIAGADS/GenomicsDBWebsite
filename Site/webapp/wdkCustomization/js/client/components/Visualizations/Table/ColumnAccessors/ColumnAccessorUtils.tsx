@@ -12,7 +12,7 @@ import {
 
 /* altValue defines what should be displayed if not n/a */
 export const resolveNAs = (value: string, altValue: any = null) => {
-    if (value === "n/a") {
+    if (value === "n/a" || value === null) {
         return <NASpan key={Math.random().toString(36).slice(2)}></NASpan>;
     }
     return altValue ? altValue : value;

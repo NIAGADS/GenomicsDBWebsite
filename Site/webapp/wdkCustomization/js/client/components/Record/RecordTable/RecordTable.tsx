@@ -10,18 +10,14 @@ import { TableContainer } from "@viz/Table";
 import { SelectColumnFilter, globalTextFilter, PieChartColumnFilter } from "@viz/Table/TableFilters";
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 
-import {
-    resolveColumnAccessor,
-    resolveData,
-    RecordTableProps,
-} from "@components/Record/RecordTable";
+import { resolveColumnAccessor, resolveData, RecordTableProps } from "@components/Record/RecordTable";
 
 import {
     negLog10pFilter,
     booleanFlagFilter,
     PValueThresholdFilter as PValueFilter,
     DEFAULT_PVALUE_FILTER_VALUE,
-} from "@components/Record/RecordTable/RecordTableFilters"
+} from "@components/Record/RecordTable/RecordTableFilters";
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
@@ -67,21 +63,23 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 })
                 .map((k): Column => {
                     const attribute: AttributeField = attributes.find((item) => item.name === k);
-                    const accessorType: ColumnAccessorType = accessors
-                        ? accessors.hasOwnProperty(attribute.name)
+                    const accessorType: ColumnAccessorType =
+                        accessors && accessors.hasOwnProperty(attribute.name)
                             ? accessors[attribute.name]
-                            : "Default"
-                        : "Default";
+                            : attribute.name.includes("link")
+                            ? "Link"
+                            : "Default";
+
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
                     let column = _buildColumn(attribute, accessorType);
-           
+
                     if (attribute.help) {
                         column.help = attribute.help;
                     }
 
                     column = _setColumnBehavior(column, filterType, accessorType);
-                    
+
                     if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
                         column.show = false;
                     }
@@ -105,7 +103,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const hasColumnFilters = properties.hasOwnProperty("filters");
     const initialFilters = _setInitialFilters(table, properties);
     const initialSort = _setInitialSort(table, properties);
- 
+
     if (data.length === 0 || columns.length === 0) {
         return (
             <p>
@@ -145,8 +143,7 @@ const _setInitialSort = (table: TableField, properties: TableProperties) => {
     return useMemo(() => sortBy, []);
 };
 
-
-const _setColumnBehavior = (column: any, filterType: string, accessorType: ColumnAccessorType="Default") => {
+const _setColumnBehavior = (column: any, filterType: string, accessorType: ColumnAccessorType = "Default") => {
     switch (accessorType) {
         case "BooleanGreenCheck":
         case "BooleanRedCheck":
@@ -173,14 +170,14 @@ const _setColumnBehavior = (column: any, filterType: string, accessorType: Colum
             break;
         default:
             // catch legacy links
-            if (column.id.endsWith("link")) {
+            if (column.id.endsWith("link") || column.id.endsWith("links")) {
                 column.sortType = "link";
             }
     }
 
     column = _addColumnFilters(column, filterType);
     return column;
-}
+};
 
 const _addColumnFilters = (column: any, filterType: string) => {
     switch (filterType) {
@@ -209,7 +206,7 @@ const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) =>
     return idx2 > idx1 ? -1 : 1;
 };
 
-const _buildColumn:any = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
+const _buildColumn: any = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
     Header: attribute.displayName,
     sortable: attribute.isSortable,
     accessor: resolveColumnAccessor(attribute.name, accessorType),

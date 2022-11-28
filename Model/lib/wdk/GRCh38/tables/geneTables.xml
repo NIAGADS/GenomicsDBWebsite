@@ -262,10 +262,10 @@
 		variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		
 		CASE WHEN r.position::bigint < ga.location_start 
-		THEN build_text_attribute('upstream', NULL, 'red')::text
+		THEN 'upstream'
 		WHEN r.position::bigint > ga.location_end 
-		THEN build_text_attribute('downstream', NULL, 'green')::text
-		ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		THEN 'downstream'
+		ELSE 'in gene' END AS relative_position,
 		
 		r.test_allele AS allele,
 		to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
@@ -350,10 +350,10 @@
 		 variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN r.position::bigint < ga.location_start 
-		 THEN build_text_attribute('upstream', NULL, 'red')::text
+		 THEN 'upstream'
 		 WHEN r.position::bigint > ga.location_end 
-		 THEN build_text_attribute('downstream', NULL, 'green')::text
-		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		 THEN 'downstream'
+		 ELSE 'in gene' END AS relative_position,
 		 
 		 r.test_allele AS allele,
 		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
