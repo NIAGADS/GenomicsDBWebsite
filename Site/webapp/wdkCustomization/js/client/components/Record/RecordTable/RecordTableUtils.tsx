@@ -41,10 +41,10 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
         case "MetaseqID":
             return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]}/>);
         case "BooleanGreenCheck": 
-            return (row: any) => resolveNAs(row[key], <BooleanCheckAccessor value={row[key]} htmlColor="green"/>);
+            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="green"/>;
         case "BooleanRedCheck": 
-            return (row: any) => resolveNAs(row[key], <BooleanCheckAccessor value={row[key]} htmlColor="red"/>);
+            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="red"/>;
         default:
-            return (row: any) => defaultResolveColumnAccessor(key, accessorType);
+            return defaultResolveColumnAccessor(key, accessorType);
     }
 };

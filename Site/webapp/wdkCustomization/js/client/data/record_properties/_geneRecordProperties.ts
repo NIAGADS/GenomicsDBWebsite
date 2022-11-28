@@ -78,6 +78,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
             pvalue: "ScientificNotation",
             variant_link: "Link",
             track: "Link",
+            relative_position: "RelativePosition"
         },
     },
     ad_variants_from_catalog: {

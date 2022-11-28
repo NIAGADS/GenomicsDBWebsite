@@ -6,10 +6,11 @@ import Box from "@material-ui/core/Box";
 import { ColumnAccessor, AnnotatedTextAccessor, LinkAccessor } from "@viz/Table/ColumnAccessors";
 import { ColoredTextAccessor } from "./TextAccessors";
 
-export const jsonAccessorType = (obj: { [key: string]: any }) => {
+export const jsonAccessorType = (obj: any) => {
+
     if (!("value" in obj)) {
         throw new Error(
-            `EROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - missing 'value': ${obj.toString()}`
+            `EROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - missing 'value': ${JSON.stringify(obj)}`
         );
     }
 
@@ -23,7 +24,7 @@ export const jsonAccessorType = (obj: { [key: string]: any }) => {
     }
 
     throw new Error(
-        `EROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${obj.toString()}`
+        `EROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${JSON.stringify(obj)}`
     );
 };
 

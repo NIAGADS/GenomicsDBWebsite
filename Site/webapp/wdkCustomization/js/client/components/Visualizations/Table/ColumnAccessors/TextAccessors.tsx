@@ -14,19 +14,17 @@ const isJSON = (value: any) => {
     }
 
     // catch numbers, nulls, booleans
-    return isObject(value) && value != null
-}
+    return isObject(value) && value != null;
+};
 
 export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 250 }) => {
-    const test = isJSON(value);
-    return isJSON(value) ? (
-        <JSONAccessor value={value} />
-    ) : value.length > maxLength ? (
-        <ClobTextAccessor value={value} />
-    ) : (
-        // <Box component="span">{value}</Box>
-        value
-    );
+    if (isJSON(value)) {
+        return <JSONAccessor value={value} />;
+    }
+    if (value.toString().length > maxLength) {
+        return <ClobTextAccessor value={value} />;
+    }
+    return value;
 };
 
 // large text, show more or tooltip
