@@ -1,8 +1,6 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 import React from "react";
 import cx from "classnames";
-import { assign } from "lodash";
-import clsx from "clsx";
 
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -10,12 +8,13 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
-import { withStyles } from "@material-ui/core/styles";
 
 import { HeaderGroup, Column, TableInstance } from "react-table";
 
 import { useTableStyles, TableProps } from "@viz/Table";
 import { TableHeaderCell } from "@viz/Table/TableSections";
+
+import { InfoAlert } from "@components/MaterialUI";
 
 export const Table: React.FC<TableProps> = ({ instance, className }) => {
     const classes = useTableStyles();
@@ -25,10 +24,18 @@ export const Table: React.FC<TableProps> = ({ instance, className }) => {
         headerGroups,
         prepareRow,
         //@ts-ignore
+        preFilteredRows,
+        data,
+        //@ts-ignore
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
     } = instance;
 
-    return (
+    return preFilteredRows.length === 0 ? (
+        <InfoAlert
+            title="No rows meet the selected search or filter criteria."
+            message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
+        />
+    ) : (
         <Box className={className}>
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>
