@@ -1,6 +1,6 @@
 // adapted from: https://github.com/TanStack/table/blob/3e760e3eab4dfc1c7168e418741566e42ba7dd25/packages/table-core/src/sortingFns.ts
 // basically, wrappers to parseValues from objects in the table
-// and catch n/a's to treat them like null values
+// and catch N/A's to treat them like null values
 
 import { Row } from "react-table";
 import { parseFieldValue } from "@viz/Table";
@@ -17,7 +17,9 @@ const getValue: any = (row: Row, columnId: string, retString: boolean = true) =>
 };
 
 const getBooleanValue: any = (row: Row, columnId: string) => {
-    return row.values[columnId] ? true : false;
+    const rv = row.values[columnId];
+    const debug = parseFieldValue(row.values[columnId], false);
+    return parseFieldValue(row.values[columnId], false) === "Yes" ? 1 : 0;
 };
 
 export const barChartSort: SortingFunction = (rowA, rowB, columnId, desc) => {
@@ -89,11 +91,11 @@ function toString(a: any) {
 
 function resolveNAs(aStr: string, bStr: string) {
     switch (true) {
-        case aStr == "n/a" && bStr == "n/a":
+        case aStr == "N/A" && bStr == "N/A":
             return 0;
-        case aStr != "n/a" && bStr == "n/a":
+        case aStr != "N/A" && bStr == "N/A":
             return -1;
-        case aStr == "n/a" && bStr != "n/a":
+        case aStr == "N/A" && bStr != "N/A":
             return 1;
         default: // neither na
             return null;

@@ -12,10 +12,10 @@ import {
 
 /* altValue defines what should be displayed if not n/a */
 export const resolveNAs = (value: string, altValue: any = null) => {
-    if (value === "n/a" || value === null) {
+    if (value === "N/A" || value === null) {
         return <NASpan key={Math.random().toString(36).slice(2)}></NASpan>;
     }
-    return altValue ? altValue : value;
+    return altValue != null ? altValue : value;
 };
 
 // the |any for accessor type is to handle custom types that build on 
