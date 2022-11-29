@@ -77,7 +77,7 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
         const options = new Set<any>();
         preFilteredRows.forEach((row: any) => {
             let value = parseFieldValue(row.values[id]);
-            if (value && value != "n/a") {
+            if (value && value != "N/A") {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
@@ -165,7 +165,7 @@ export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
         const options = new Set<any>();
         preFilteredRows.forEach((row: any) => {
             let value = parseFieldValue(row.values[id]);
-            if (value && value != "n/a") {
+            if (value && value != "N/A") {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {

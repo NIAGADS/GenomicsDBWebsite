@@ -78,7 +78,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                 },
             },
             tooltip: {
-                pointFormat: "N = {point.total} ({point.percentage:.1f} %)",
+                pointFormat: "N = {point.y} ({point.percentage:.1f} %)",
             },
             legend: {
                 align: "right",
@@ -116,25 +116,25 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     };
 
     const series: any = useMemo(() => {
-        //@ts-ignore
-        let accessorType = column.accessorType;
         let values = new Array<String>(); // assumming pie filter is only for categorical values
 
         preFilteredRows.forEach((row: any) => {
             //@ts-ignore
-            let value = parseFieldValue(row.values[id], true, accessorType == "BooleanFlag");
+            let value = parseFieldValue(row.values[id], true);
             if (value) {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
                     vals.forEach((v: string) => {
                         values.push(v);
                     });
-                } else if (value.toUpperCase() == value) {
-                    values.push(value.toLowerCase());
-                } else if (ignoreNAs) {
+                } else if (ignoreNAs && value != "N/A") {
                     values.push(value);
-                } else {
-                    values.push(value == "n/a" ? value.toUpperCase() : value);
+                } 
+                else if (value != "N/A" && value.toUpperCase() == value) {
+                    values.push(value.toLowerCase());
+                }
+                else {
+                    values.push(value);
                 }
             }
         });
@@ -146,9 +146,9 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         if (counts.hasOwnProperty("N/A") && !ignoreNAs) {
             seriesData.push({ name: "N/A", y: counts["N/A"], color: "#e0e0e0" });
         }
-        for (const id of Object.keys(counts)) {
-            if (id != "N/A") {
-                seriesData.push({ name: id, y: counts[id] });
+        for (const sliceId of Object.keys(counts)) {
+            if (sliceId != "N/A") {
+                seriesData.push({ name: sliceId, y: counts[sliceId] });
             }
         }
         return merge({ name: id, data: seriesData }, seriesOptions);

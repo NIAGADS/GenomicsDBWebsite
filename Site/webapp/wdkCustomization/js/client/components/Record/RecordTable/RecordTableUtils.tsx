@@ -43,21 +43,17 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
     }
 };
 
-export const parseFieldValue = (value: any, returnNA: boolean = false, isBooleanFlag: boolean = false): any => {
-    if (isBooleanFlag || value.type.name.includes("Boolean")) {
-        return value ? "Yes" : "No";
-    }
+export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
+    const accessorType = value.type
+        ? value.type.name.includes("Boolean")
+            ? "BooleanCheckAccessor"
+            : value.type.name
+        : "String";
 
-    if (!value || isString(value)) {
-        return resolveNAs(value, returnNA);
-    }
-
-    switch (value.type.name) {
+    switch (accessorType) {
         case "LinkAttribute":
-            return 1;
-        case "RelativePosition":
-            return 1;
+            throw new Error(`ERROR: Unable to parse field value - unhandled ColumnAccessor type: ${value.type.name}`);
         default:
-            return defaultParseFieldValue(value, returnNA, isBooleanFlag);
+            return defaultParseFieldValue(value, returnNA);
     }
 };

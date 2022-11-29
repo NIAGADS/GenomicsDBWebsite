@@ -19,22 +19,28 @@ export const resolveNullFieldValue = (value: string, returnNA: boolean) => {
     return value === null || value === "N/A" ? (returnNA ? "N/A" : "") : resolveJSONFieldValue(value);
 };
 
-export const parseFieldValue = (value: any, returnNA: boolean = false, isBooleanFlag: boolean = false): any => {
-    if (isBooleanFlag || (value.type && value.type.name.includes("Boolean"))) {
-        return value ? "Yes" : "No";
+export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
+    if (!value) {
+        return resolveNullFieldValue(null, returnNA);
     }
 
-    if (!value || isString(value)) {
-        return resolveNullFieldValue(value, returnNA);
-    }
+    const accessorType = value.type
+        ? value.type.name.includes("Boolean")
+            ? "BooleanCheckAccessor"
+            : value.type.name
+        : "String";
 
-    switch (value.type.name) {
+    switch (accessorType) {
+        case "String":
+            return resolveNullFieldValue(value, returnNA);
         case "NASpan":
             return resolveNullFieldValue("N/A", returnNA);
+        case "BooleanCheckAccessor":
+            return value.props.value === "true" ? "Yes" : "No";
         default:
             if (value.props && value.props.value) {
                 return resolveNullFieldValue(value.props.value, returnNA);
             }
-            throw new Error(`ERROR: Unable to parse field value - unknown ColumnAccessor type: ${value.type.name}`);
+            throw new Error(`ERROR: Unable to parse field value - unhandled ColumnAccessor type: ${value.type.name}`);
     }
 };
