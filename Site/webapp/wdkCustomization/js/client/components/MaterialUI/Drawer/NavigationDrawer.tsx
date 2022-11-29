@@ -117,7 +117,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
 return (
     <React.Fragment key={toggleAnchor}>
         <AppBar position="static" elevation={0} {...navigationProps} className={className} disableGutters={true}>
-            <Toolbar /*style={{ display: "flex" }} */ variant="dense" disableGutters={true}>
+            <Toolbar variant="dense" disableGutters={true}>
                 {toggleIcon &&
                     <Tooltip title={toggleHelp} aria-label={toggleHelp}>
                         <Button
@@ -126,7 +126,9 @@ return (
                             variant="contained"
                             aria-label="toggle-secondary-navigation"
                             onClick={handleToggleClick}
-                            endIcon={toggleIcon}
+                            startIcon={toggleIcon}
+                            size="small"
+                            disableElevation={true}
                         >
                             {toggleText}
                         </Button>
