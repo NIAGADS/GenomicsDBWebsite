@@ -1,25 +1,20 @@
 import React from "react";
 import { isString, forIn } from "lodash";
-import { RelativePositionSpan, VariantConsequenceImpactSpan, LinkAttribute, MetaseqIdAttribute } from "@components/Record/Attributes";
+import {
+    RelativePositionSpan,
+    VariantConsequenceImpactSpan,
+    LinkAttribute,
+    MetaseqIdAttribute,
+} from "@components/Record/Attributes";
 
-import { resolveNAs, resolveColumnAccessor as defaultResolveColumnAccessor, BooleanCheckAccessor } from "@viz/Table/ColumnAccessors";
+import {
+    resolveNAs,
+    resolveColumnAccessor as defaultResolveColumnAccessor,
+    BooleanCheckAccessor,
+} from "@viz/Table/ColumnAccessors";
+import { parseFieldValue as defaultParseFieldValue, resolveNullFieldValue } from "@viz/Table";
 
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
-import { Column } from "react-table";
-
-/*const _parseJson = (value: any) => {
-    //not reallly a json test, more like a check to see if the backend is sending us something we assume we can treat as json
-    if (!value) return "n/a";
-    if (!isString(value)) return value;
-    if (value.startsWith("[") || value.startsWith("[{") || value.startsWith("{")) {
-        try {
-            return JSON.parse(value);
-        } catch ($e) {
-            return value;
-        }
-    }
-    return value;
-};*/
 
 export const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
@@ -27,8 +22,7 @@ export const resolveData = (data: { [key: string]: any }[]): { [key: string]: an
             o[k] = v; // k.endsWith("_flag") && !v ? null : _parseJson(v);
         });
     });
-}; 
-
+};
 
 export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default") => {
     switch (accessorType) {
@@ -39,12 +33,31 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
         case "Link":
             return (row: any) => resolveNAs(row[key], <LinkAttribute value={row[key]} />);
         case "MetaseqID":
-            return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]}/>);
-        case "BooleanGreenCheck": 
-            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="green"/>;
-        case "BooleanRedCheck": 
-            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="red"/>;
+            return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]} />);
+        case "BooleanGreenCheck":
+            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="green" />;
+        case "BooleanRedCheck":
+            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="red" />;
         default:
             return defaultResolveColumnAccessor(key, accessorType);
+    }
+};
+
+export const parseFieldValue = (value: any, returnNA: boolean = false, isBooleanFlag: boolean = false): any => {
+    if (isBooleanFlag || value.type.name.includes("Boolean")) {
+        return value ? "Yes" : "No";
+    }
+
+    if (!value || isString(value)) {
+        return resolveNAs(value, returnNA);
+    }
+
+    switch (value.type.name) {
+        case "LinkAttribute":
+            return 1;
+        case "RelativePosition":
+            return 1;
+        default:
+            return defaultParseFieldValue(value, returnNA, isBooleanFlag);
     }
 };

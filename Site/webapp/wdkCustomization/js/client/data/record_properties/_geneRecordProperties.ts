@@ -39,8 +39,9 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
             adsp_variant_flag: "BooleanRedCheck",
             pvalue: "ScientificNotation",
             variant_link: "Link",
-            track: "Link",
+            track_name: "Link",
             gene_impact: "VariantImpact",
+            relative_position: "RelativePosition"
         },
     },
     other_variants_from_gwas: {
@@ -77,7 +78,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
             adsp_variant_flag: "BooleanRedCheck",
             pvalue: "ScientificNotation",
             variant_link: "Link",
-            track: "Link",
+            track_name: "Link",
             relative_position: "RelativePosition"
         },
     },
@@ -134,6 +135,7 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
             pvalue: "ScientificNotation",
             variant_link: "Link",
             pubmed_id: "Link",
+            relative_position: "RelativePosition"
         },
     },
     go_terms: {

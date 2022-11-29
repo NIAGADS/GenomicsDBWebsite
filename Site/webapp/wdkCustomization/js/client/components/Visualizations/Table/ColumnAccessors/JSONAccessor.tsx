@@ -10,7 +10,7 @@ export const jsonAccessorType = (obj: any) => {
 
     if (!("value" in obj)) {
         throw new Error(
-            `EROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - missing 'value': ${JSON.stringify(obj)}`
+            `ERROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - missing 'value': ${JSON.stringify(obj)}`
         );
     }
 
@@ -24,7 +24,7 @@ export const jsonAccessorType = (obj: any) => {
     }
 
     throw new Error(
-        `EROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${JSON.stringify(obj)}`
+        `ERROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${JSON.stringify(obj)}`
     );
 };
 
