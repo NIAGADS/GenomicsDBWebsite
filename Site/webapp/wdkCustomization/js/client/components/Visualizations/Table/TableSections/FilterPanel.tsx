@@ -7,11 +7,12 @@ import Grid from "@material-ui/core/Grid";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
-import { CollapsableCardPanel, LabelButton } from "@components/MaterialUI";
+import { CollapsableCardPanel, LabelButton, CustomTooltip as Tooltip } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
 import { FilterChipBar } from "@viz/Table/TableSections";
+import { HelpIcon } from "wdk-client/Components";
 
 export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
@@ -95,24 +96,33 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
             <Grid
                 container
                 //direction="column"
-                justifyContent="flex-start"
+                justifyContent="center"
                 alignItems="flex-start"
                 className={classes.root}
             >
-                {/* render pvalue filter */}
-                {/* <form> */}
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<RotateLeftIcon />}
-                    fullWidth={true}
-                    size="small"
-                    onClick={resetFilters}
-                >
-                    Reset Filters
-                </Button>
-                <FilterChipBar instance={instance} />
-                {filterGroups.map((fg) => renderFilterGroup(fg))}
+                <Grid item>
+                    <Box component="span">
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<RotateLeftIcon />}
+                        //fullWidth={true}
+                        size="small"
+                        onClick={resetFilters}
+                    >
+                        Reset Filters
+                    </Button>
+                    
+                    <HelpIcon>
+                        Remove or reset filter criteria to table defaults. This will not clear terms entered in the text
+                        search box.
+                    </HelpIcon>
+                    </Box>
+                </Grid>
+                <Grid item>
+                    <FilterChipBar instance={instance} />
+                </Grid>
+                <Grid item>{filterGroups.map((fg) => renderFilterGroup(fg))}</Grid>
             </Grid>
         </CollapsableCardPanel>
     );
