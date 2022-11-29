@@ -3,6 +3,9 @@ import React from "react";
 import { withStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
+import MUIHelpIcon from "@material-ui/icons/Help";
+import IconButton from "@material-ui/core/IconButton";
+import { green, blue } from "@material-ui/core/colors";
 
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 
@@ -16,7 +19,7 @@ export const CustomTooltip = withStyles((theme: Theme) => ({
     },
 }))(Tooltip);
 
-export const KeyedTooltip = (target: React.ReactElement<any>, tooltip: string) => {
+export const KeyedTooltip = (target: React.ReactElement, tooltip: string) => {
     return tooltip ? (
         <CustomTooltip
             key={Math.random().toString(36).slice(2)}
@@ -29,3 +32,23 @@ export const KeyedTooltip = (target: React.ReactElement<any>, tooltip: string) =
         { target }
     );
 };
+
+export const DefaultHelpIcon = (tooltip: React.ReactElement) => {
+    return (
+        <CustomTooltip title={tooltip}>
+            <IconButton aria-label="info" size="small">
+                <MUIHelpIcon />
+            </IconButton>
+        </CustomTooltip>
+    );
+};
+
+export const HelpIcon = withStyles((theme) => ({
+    root: {
+        color: theme.palette.getContrastText(blue[800]),
+        backgroundColor: blue[800],
+        "&:hover": {
+            backgroundColor: blue[500],
+        },
+    },
+}))(DefaultHelpIcon);
