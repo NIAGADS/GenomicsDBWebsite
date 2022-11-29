@@ -5,8 +5,9 @@ import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import { ColumnAccessor, JSONAccessor } from "@viz/Table/ColumnAccessors";
+import { parseFieldValue } from "@viz/Table";
 
-const isJSON = (value: any) => {
+export const isJSON = (value: any) => {
     try {
         value = JSON.parse(value);
     } catch (e) {
@@ -24,7 +25,8 @@ export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLengt
     if (value.toString().length > maxLength) {
         return <ClobTextAccessor value={value} />;
     }
-    return value;
+    // catch numerics
+    return parseFieldValue(value);
 };
 
 // large text, show more or tooltip

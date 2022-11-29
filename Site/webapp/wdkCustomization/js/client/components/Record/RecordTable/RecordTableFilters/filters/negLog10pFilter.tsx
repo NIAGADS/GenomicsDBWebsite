@@ -1,5 +1,5 @@
 import { FilterValue, IdType, Row } from 'react-table'
-
+import { parseFieldValue } from "@viz/Table";
 
 export function invertNegLog10p(value: any) {
     if (value.toString().includes("e")) 
@@ -17,8 +17,8 @@ export function negLog10p (value: any) {
 }
 
 export function getMinMaxNegLog10PValue(rows: Row[], id: IdType<any>, upperLimit:number) {
-    let min = rows.length ? negLog10p(rows[0].values[id]) : 0;
-    let max = rows.length ? negLog10p(rows[0].values[id]) : 0;
+    let min = rows.length ? negLog10p(parseFieldValue(rows[0].values[id])) : 0;
+    let max = rows.length ? negLog10p(parseFieldValue(rows[0].values[id])) : 0;
     rows.forEach((row) => {
         let value = negLog10p(row.values[id]);
         min = Math.min(value, min);
@@ -41,7 +41,7 @@ export function negLog10pFilter<T extends Record<string, unknown>>(
 ): Array<Row<T>> {
     let fv = negLog10p(filterValue);
     return rows.filter((row) => {
-        return negLog10p(row.values[id]) >= fv;
+        return negLog10p(parseFieldValue(row.values[id])) >= fv;
     });
 }
 
