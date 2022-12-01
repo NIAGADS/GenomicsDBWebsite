@@ -85,7 +85,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END," + NL
         + "CASE WHEN field = 'APOE carrier status' THEN 'Genotype' ELSE column_name END)," + NL
         + "'order'," + NL
-        + "array_to_json(array['track','description','data_source'," + NL 
+        + "array_to_json(array['name','description','data_source'," + NL 
         + "'consortium', 'feature_type', 'track_type_display'])::jsonb" + NL
         + "|| jsonb_agg(CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END" + NL
         + "ORDER BY category, custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Assay'," + NL

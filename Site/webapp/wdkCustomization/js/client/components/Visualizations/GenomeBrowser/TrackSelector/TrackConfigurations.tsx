@@ -28,7 +28,7 @@ export interface TrackSelectorRow extends Omit<RawTrackConfig, "biomsample_chara
 
 export interface TrackColumnConfig {
     columns: { [key: string]: string };
-    sort_order: string[];
+    order: string[];
 }
 
 export interface ConfigServiceResponse {

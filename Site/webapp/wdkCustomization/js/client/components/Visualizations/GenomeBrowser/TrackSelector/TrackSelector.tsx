@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { isObject, merge, forIn, indexOf, has, get } from "lodash";
 
 import { Column } from "react-table";
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isOpen, browser, handleClose }) => {
-    const { columns, sort_order } = columnConfig;
+    const { columns, order } = columnConfig;
     const [open, setOpen] = useState<boolean>(isOpen);
     const classes = useStyles();
     const filterTypes = {
@@ -83,9 +83,8 @@ export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isO
         } else {
             let columnFilters: any = get(properties, "filters", null);
             const accessors: any = get(properties, "accessors", null);
-            let selectorColumns: Column<{}>[] = [];
-            Object.entries(columns).forEach(column => {
-                const [name, header] = column;
+            let selectorColumns: Column<{}>[] = order.map((name) => { 
+                const header = columns[name];
                 const accessorType: ColumnAccessorType =
                     accessors && accessors.hasOwnProperty(name)
                         ? accessors[name]
@@ -101,10 +100,10 @@ export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isO
                     tableColumn.show = false;
                 }
 
-                selectorColumns.push(tableColumn);
+                return tableColumn;
             });
 
-            return selectorColumns.sort((c1: Column, c2: Column) => _indexSort(c1, c2, sort_order));;
+            return selectorColumns;
         }
     };
 
@@ -152,7 +151,7 @@ const _addColumnFilters = (column: any, filterType: string) => {
             column.Filter = RadioSelectColumnFilter;
             break;
         case "checkbox_select":
-            column.Fitler = CheckboxSelectColumnFilter;
+            column.Filter = CheckboxSelectColumnFilter;
             break;
         case "typeahead_select":
             column.Filter = TypeAheadSelectColumnFilter;

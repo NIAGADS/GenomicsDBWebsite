@@ -130,7 +130,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
             <Grid item style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH }}>
                 {renderDrawer}
             </Grid>
-            <Grid item>
+            <Grid item style={{ width: "80%" }}>
                 {children}
             </Grid>
         </Grid>
