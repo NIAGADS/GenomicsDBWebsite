@@ -1,6 +1,5 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 import React, { useMemo, useState, useEffect } from "react";
-import { isObject } from "lodash";
 
 import { Column } from "react-table";
 
@@ -11,11 +10,11 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import FormHelperText from "@material-ui/core/FormHelperText";
+
+import { ComingSoonAlert } from "@components/MaterialUI";
 
 import { parseFieldValue } from "@viz/Table";
-import { useFilterStyles } from "@viz/Table/TableFilters";
-import { ZeroFilterChoicesMsg } from "./ZeroFilterChoicesMsg";
+import { useFilterStyles, ZeroFilterChoicesMsg } from "@viz/Table/TableFilters";
 
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<Column<T>>): Column<T> =>
     //@ts-ignore
@@ -121,7 +120,7 @@ export function SelectColumnFilter<T extends Record<string, unknown>>({
 }
 
 //@ts-ignore
-export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
+export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
     columns,
     column,
 }: {
@@ -199,5 +198,52 @@ export function MultiSelectColumnFilter<T extends Record<string, unknown>>({
         </FormControl>
     ) : (
         <ZeroFilterChoicesMsg label={render("Header")} />
+    );
+}
+
+
+export function RadioSelectColumnFilter<T extends Record<string, unknown>>({
+    columns,
+    column,
+}: {
+    columns: Column[];
+    column: Column;
+}) {
+    //@ts-ignore
+    const { id, filterValue, setFilter, render } = column;
+    const [value, setValue] = useState(filterValue || "");
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+    };
+    // ensure that reset loads the new value
+    useEffect(() => {
+        setValue(filterValue || "");
+    }, [filterValue]);
+
+    return (
+        <ComingSoonAlert message={`Radio select filter by ${column.Header.toString()} coming soon.`}/>
+    );
+}
+
+export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
+    columns,
+    column,
+}: {
+    columns: Column[];
+    column: Column;
+}) {
+    //@ts-ignore
+    const { id, filterValue, setFilter, render } = column;
+    const [value, setValue] = useState(filterValue || "");
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+    };
+    // ensure that reset loads the new value
+    useEffect(() => {
+        setValue(filterValue || "");
+    }, [filterValue]);
+
+    return (
+        <ComingSoonAlert message={`Type ahead select filter by ${column.Header.toString()} coming soon.`}/>
     );
 }

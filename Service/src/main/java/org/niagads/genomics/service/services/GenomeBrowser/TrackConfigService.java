@@ -69,23 +69,29 @@ public class TrackConfigService extends AbstractWdkService {
             + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
             + "'label', label," + NL
             + "'name', name," + NL
-            + "'source', CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END," + NL
+            + "'data_source', CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END," + NL
             + "'description', description) AS track_config" + NL
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
             + "ORDER BY track)";
 
-    private static final String COLUMN_JSON_SQL = "SELECT (('[' ||" + NL
-            + "array_to_string(ARRAY[jsonb_build_object('id', 'name', 'header', 'Track')::text," + NL
-            + "jsonb_build_object('id', 'description', 'header', 'Description')::text," + NL
-            + "jsonb_build_object('id', 'data_source', 'header', 'Data Source')::text," + NL
-            + "jsonb_build_object('id', 'feature_type', 'header', 'Feature')::text," + NL
-            + "jsonb_build_object('id', 'track_type_display', 'header', 'Track Type')::text], ',') || ']')::jsonb" + NL
-            + " || jsonb_agg(jsonb_build_object(" + NL
-            + "'id', field, 'header', column_name)" + NL
-            + "ORDER BY category," + NL
-            + "custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Assay', 'Antibody Target', 'Biosample', 'Anatomical System', 'Tissue', 'Tissue'],"
-            + "column_name)))::text AS result" + NL
-            + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
+    private static final String COLUMN_JSON_SQL = "SELECT" + NL
+        + "jsonb_build_object('columns'," + NL
+        + "jsonb_build_object('name', 'Track', 'description', 'Description'," + NL
+        + "'consortium', 'Consortium'," + NL
+        + "'data_source', 'Data Source'," + NL 
+        + "'feature_type', 'Feature'," + NL
+        + "'track_type_display','Track Type')" + NL
+        + "|| jsonb_object_agg(" + NL
+        + "CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END," + NL
+        + "CASE WHEN field = 'APOE carrier status' THEN 'Genotype' ELSE column_name END)," + NL
+        + "'order'," + NL
+        + "array_to_json(array['track','description','data_source'," + NL 
+        + "'consortium', 'feature_type', 'track_type_display'])::jsonb" + NL
+        + "|| jsonb_agg(CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END" + NL
+        + "ORDER BY category, custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Assay'," + NL
+        + "'Antibody Target', 'Biosample', 'Anatomical System', 'Tissue', 'Tissue'], column_name)))::text" + NL
+        + "AS result" + NL
+        + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
 
     private static final String SEARCHABLE_FIELDS_CTE = "FieldPlaceHolders AS (" + NL
             + "SELECT category, jsonb_object_agg(field, null) AS fields" + NL
@@ -280,7 +286,7 @@ public class TrackConfigService extends AbstractWdkService {
                 String selectorFields = lookup(COLUMN_JSON_SQL, "track-selector-fields-query");
                 LOG.debug("selector fields:" + selectorFields);
                 JSONObject result = new JSONObject();
-                result.put("columns", new JSONArray(selectorFields));
+                result.put("columns", new JSONObject(selectorFields));
                 result.put("tracks", new JSONArray(trackConfigs));
                 response = result.toString();
             }

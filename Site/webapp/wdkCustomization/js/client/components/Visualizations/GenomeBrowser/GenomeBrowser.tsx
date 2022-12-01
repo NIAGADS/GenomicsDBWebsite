@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState, useEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
 import { GWASTrack, VariantTrack, GWASServiceReader } from "../../../../lib/igv/CustomTracks";
-import { RawTrackConfig } from "@viz/GenomeBrowser";
+import { RawTrackConfig } from "@viz/GenomeBrowser/TrackSelector";
 
 const HASH_PREFIX = "#/locus/";
 

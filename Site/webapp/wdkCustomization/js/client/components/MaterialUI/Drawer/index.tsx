@@ -16,6 +16,8 @@ export interface DrawerProps {
     handleOpen?: any;
     title?: string;
     className?: string;
+    width?: any;
+    encapsulated?: boolean;
 }
 
 export interface DrawerContentsProps {

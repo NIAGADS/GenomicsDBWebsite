@@ -14,7 +14,7 @@ import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/Reco
 import { FilterChipBar } from "@viz/Table/TableSections";
 import { HelpIcon } from "wdk-client/Components";
 
-export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactElement {
+export function FilterPanel({ instance, filterGroups, includeChips=true }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
@@ -119,9 +119,9 @@ export function FilterPanel({ instance, filterGroups }: FilterPageProps): ReactE
                     </HelpIcon>
                     </Box>
                 </Grid>
-                <Grid item>
+                {includeChips && <Grid item>
                     <FilterChipBar instance={instance} />
-                </Grid>
+                </Grid>}
                 <Grid item>{filterGroups.map((fg) => renderFilterGroup(fg))}</Grid>
             </Grid>
         </CollapsableCardPanel>

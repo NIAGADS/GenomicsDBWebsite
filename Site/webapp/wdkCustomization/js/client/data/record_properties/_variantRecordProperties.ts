@@ -7,7 +7,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
             population: "pie",
             biomarker: "select",
             tissue: "select",
-            covariates: "multi_select",
+            covariates: "checkbox_select",
         },
         filterGroups: [
             { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
@@ -39,7 +39,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
             population: "pie",
             biomarker: "select",
             tissue: "select",
-            covariates: "multi_select",
+            covariates: "checkbox_select",
         },
         filterGroups: [
             { label: "Statistics", columns: ["pvalue"], defaultOpen: true },

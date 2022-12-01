@@ -20,7 +20,7 @@ import {
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 
-const useDrawerStyles = makeStyles((theme: Theme) =>
+const useDrawerStyles = (props: any) => makeStyles((theme: Theme) =>
     createStyles({
         drawerHeader: {
             //display: "flex",
@@ -48,11 +48,11 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
             //padding: theme.spacing(3),
         },
         sideDrawer: {
-            width: DRAWER_WIDTH,
+            width: props.width || DRAWER_WIDTH,
             flexShrink: 0,
         },
         sideDrawerPaper: {
-            width: DRAWER_WIDTH,
+            width: props.width || DRAWER_WIDTH,
         },
         fullWidth: {
             margin: "auto",
@@ -60,22 +60,25 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export const NavigationDrawer: React.FC<DrawerProps> = ({
-    navigation,
-    navigationProps,
-    drawerContents,
-    drawerSections,
-    drawerProps,
-    drawerHeaderContents,
-    toggleAnchor,
-    toggleIcon,
-    toggleHelp,
-    toggleText,
-    children,
-    className,
-    drawerCloseLabel,
-}) => {
-    const classes = useDrawerStyles();
+export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
+    const {
+        navigation,
+        navigationProps,
+        drawerContents,
+        drawerSections,
+        drawerProps,
+        drawerHeaderContents,
+        toggleAnchor,
+        toggleIcon,
+        toggleHelp,
+        toggleText,
+        children,
+        className,
+        drawerCloseLabel,
+        width,
+        encapsulated
+    } = props;
+    const classes = useDrawerStyles(props)();
     const [open, setOpen] = useState(false);
 
     const handleToggleClick = () => {
@@ -113,6 +116,26 @@ export const NavigationDrawer: React.FC<DrawerProps> = ({
         </>
     );
 
+    const renderDrawer = (
+        <>
+        {renderDrawerHeader}
+        <Divider className={classes.divider}></Divider>
+        {drawerContents && <Box className={classes.content}>{drawerContents}</Box>}
+        {drawerSections && <Box className={classes.content}>{renderDrawerSections}</Box>}
+        </>
+    );
+
+    const renderEncapsulatedDrawer = (
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} >
+            <Grid item style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH }}>
+                {renderDrawer}
+            </Grid>
+            <Grid item>
+                {children}
+            </Grid>
+        </Grid>
+    );
+
 
 return (
     <React.Fragment key={toggleAnchor}>
@@ -133,7 +156,7 @@ return (
                             {toggleText}
                         </Button>
                    </Tooltip>}
-                {navigation}
+                {navigation && navigation}
             </Toolbar>
         </AppBar>
         <Drawer
@@ -155,13 +178,11 @@ return (
             }}
             {...drawerProps}
         >
-            {renderDrawerHeader}
-            <Divider className={classes.divider}></Divider>
-            {drawerContents && <Box className={classes.content}>{drawerContents}</Box>}
-            {drawerSections && <Box className={classes.content}>{renderDrawerSections}</Box>}
+            {encapsulated ? renderEncapsulatedDrawer : renderDrawer}
+            
         </Drawer>
 
-        {children}
+        {!encapsulated && children}
     </React.Fragment>
 );
 };
