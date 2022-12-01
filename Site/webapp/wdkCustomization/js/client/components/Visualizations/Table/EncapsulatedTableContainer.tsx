@@ -101,7 +101,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         select: useMemo(() => includesFilter, []),
         checkbox_select: useMemo(() => includesAnyFilter, []),
         radio_select: useMemo(() => includesFilter, []),
-        typeahead_select: useMemo(() => includesFilter, []),
+        typeahead_select: useMemo(() => includesAnyFilter, []),
         pie: useMemo(() => includesFilter, []),
         boolean_pie: useMemo(() => includesFilter, []),
         tissue: useMemo(() => includesFilter, []), // I think this is necessary as a placeholder
