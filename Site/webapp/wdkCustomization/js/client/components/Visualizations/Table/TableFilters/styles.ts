@@ -14,6 +14,18 @@ export const useFilterStyles = makeStyles((theme: Theme) =>
             width: 230,
             marginTop: theme.spacing(1),
         },
+        checkBox: {
+            padding: 4
+        },
+        formControlLabel: {
+            fontSize: "12px"
+        },
+        formLabel: {
+            fontWeight: "bold",
+            fontSize: "14px",
+            paddingBottom: theme.spacing(1),
+            color: "inherit"
+        },
         iconButton: {
             padding: 10,
         },

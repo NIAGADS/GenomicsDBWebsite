@@ -14,6 +14,7 @@ export interface TableProperties {
     requiredColumns?: string[];
     defaultOpen?: boolean;
     canFilter: boolean;
+    canExport?: boolean;
     canToggleColumns: boolean;
     fullWidth?: boolean;
     sortedBy?: TableColumnSort[];
@@ -23,6 +24,7 @@ export interface TableProperties {
 export const _defaultTableProperties: TableProperties = {
     defaultOpen: false,
     canFilter: false,
+    canExport: true,
     fullWidth: false,
     canToggleColumns: false,
 };

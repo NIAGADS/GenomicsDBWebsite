@@ -145,7 +145,7 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
     };
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckedValues(toggleListValue(event.target.value, checkedValues));
+        setCheckedValues([...toggleListValue(event.target.value, checkedValues)]); // arrays passed by reference, [...arr] creates a copy, so state changes
     };
 
     const isChecked = (value: string) => {
@@ -159,6 +159,11 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
             setFilter(checkedValues.join());
         }
     }, [checkedValues]);
+
+
+    useEffect(() => { // trying to catch resets and clears
+        setCheckedValues(filterValue ? filterValue.split(",") : []);
+    }, [filterValue]);
 
     const options = useMemo(() => {
         const options = new Set<any>();
@@ -183,15 +188,15 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
     }, [options]);
 
     return numFilterChoices && numFilterChoices > 0 ? (
-        <FormControl required component="fieldset">
-            <FormLabel component="legend">{column.Header.toString()}</FormLabel>
+        <FormControl component="fieldset" className={classes.select}>
+            <FormLabel component="label" className={classes.formLabel}>{column.Header.toString()}</FormLabel>
             <FormGroup>
                 {options.map((option, i) => (
-                    <FormControlLabel
+                    <FormControlLabel classes={{label: classes.formControlLabel}}
                         key={i}
                         value={option}
                         label={option}
-                        control={<Checkbox onChange={handleCheckboxChange} name={option} checked={isChecked(option)}/>}
+                        control={<Checkbox onChange={handleCheckboxChange} name={option} checked={isChecked(option)} className={classes.checkBox} size="small"/>}
                     />
                 ))}
             </FormGroup>
