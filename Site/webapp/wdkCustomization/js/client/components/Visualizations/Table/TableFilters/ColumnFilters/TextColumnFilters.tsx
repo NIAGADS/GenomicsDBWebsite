@@ -256,16 +256,15 @@ export function RadioSelectColumnFilter<T extends Record<string, unknown>>({
         setRadioValue(filterValue || null);
     }, [filterValue]);
 
-    const getOptionCounts = (opt: string, options: {[key:string]:number}) => {
+    const getOptionCounts = (opt: string, options: { [key: string]: number }) => {
         if (opt in options) {
-            const counts = options[opt]
-            return counts + 1
-        }
-        else return 1
-    }
+            const counts = options[opt];
+            return counts + 1;
+        } else return 1;
+    };
 
     const options = useMemo(() => {
-        const options: {[key: string]: number} = {};
+        const options: { [key: string]: number } = {};
         preFilteredRows.forEach((row: any) => {
             let value = parseFieldValue(row.values[id]);
             if (value && value != "N/A") {
@@ -341,10 +340,6 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
         return list;
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, newInputValue: any) => {
-        setSelectedValues([...toggleSelectedValues(newInputValue, selectedValues)]); // arrays passed by reference, [...arr] creates a copy, so state changes
-    };
-
     useEffect(() => {
         if (!selectedValues || selectedValues.length == 0) {
             setFilter(undefined);
@@ -390,16 +385,18 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
             autoHighlight
             multiple
             limitTags={3}
+            onInputChange={(event, newInputValue) => {
+                setSelectedValues([...toggleSelectedValues(newInputValue, selectedValues)]);
+            }}
+            inputValue={selectedValues.join() || null}
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    onInputChange={handleChange}
                     label={render("Header")}
                     variant="outlined"
                     margin="dense"
                     size="small"
                     placeholder={column.Header.toString()}
-                    inputValue={selectedValues || null}
                 />
             )}
         />
