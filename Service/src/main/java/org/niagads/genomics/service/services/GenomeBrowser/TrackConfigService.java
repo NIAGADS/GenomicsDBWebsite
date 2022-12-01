@@ -52,7 +52,7 @@ public class TrackConfigService extends AbstractWdkService {
             + "'track_type', 'annotation'," + NL // refseq
             + "'endpoint', '@SERVICE_BASE_URI@/track/gene'," + NL
             + "'label', label," + NL
-            + "'source', source," + NL
+            + "'data_source', source," + NL
             + "'name', name," + NL
             + "'description', description" + NL
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE feature_type = 'gene'"
@@ -60,7 +60,7 @@ public class TrackConfigService extends AbstractWdkService {
 
     private static final String VARIANT_TRACK_SQL = "VariantTracks AS (" + NL
             + "SELECT track, 'variant'::text AS track_type," + NL
-            + "CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END AS data_source," + NL
+            + "CASE WHEN track LIKE 'ADSP%' THEN 'NIAGADS' ELSE 'dbSNP' END AS data_source," + NL
             + "jsonb_build_object(" + NL
             + "'track', track," + NL
             + "'feature_type', 'variant'," + NL
@@ -69,7 +69,8 @@ public class TrackConfigService extends AbstractWdkService {
             + "'endpoint', '@SERVICE_BASE_URI@/track/variant'," + NL
             + "'label', label," + NL
             + "'name', name," + NL
-            + "'data_source', CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE 'DBSNP' END," + NL
+            + "'consortium', CASE WHEN track LIKE 'ADSP%' THEN 'ADSP' ELSE NULL END," + NL
+            + "'data_source', CASE WHEN track LIKE 'ADSP%' THEN 'NIAGADS' ELSE 'dbSNP' END," + NL
             + "'description', description) AS track_config" + NL
             + "FROM NIAGADS.GenomeBrowserTrackConfig WHERE track_type = 'variant'"
             + "ORDER BY track)";
@@ -77,7 +78,8 @@ public class TrackConfigService extends AbstractWdkService {
     private static final String COLUMN_JSON_SQL = "SELECT" + NL
         + "jsonb_build_object('columns'," + NL
         + "jsonb_build_object('name', 'Track', 'description', 'Description'," + NL
-        + "'consortium', 'Consortium'," + NL
+        + "'consortium', 'AD Genetics Consortium'," + NL
+        + "'repository', 'Repository'," + NL
         + "'data_source', 'Data Source'," + NL 
         + "'feature_type', 'Feature'," + NL
         + "'track_type_display','Track Type')" + NL
@@ -86,10 +88,10 @@ public class TrackConfigService extends AbstractWdkService {
         + "CASE WHEN field = 'APOE carrier status' THEN 'Genotype' ELSE column_name END)," + NL
         + "'order'," + NL
         + "array_to_json(array['name','description','data_source'," + NL 
-        + "'consortium', 'feature_type', 'track_type_display'])::jsonb" + NL
+        + "'consortium', 'repository', 'feature_type', 'track_type_display'])::jsonb" + NL
         + "|| jsonb_agg(CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END" + NL
-        + "ORDER BY category, custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Assay'," + NL
-        + "'Antibody Target', 'Biosample', 'Anatomical System', 'Tissue', 'Tissue'], column_name)))::text" + NL
+        + "ORDER BY category, custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Antibody Target', 'Assay'," + NL
+        + "'Biosample', 'Anatomical System', 'Tissue', 'Tissue'], column_name)))::text" + NL
         + "AS result" + NL
         + "FROM NIAGADS.SearchableBrowserTrackAnnotations";
 
