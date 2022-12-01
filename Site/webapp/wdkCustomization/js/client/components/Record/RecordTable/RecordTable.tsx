@@ -7,7 +7,14 @@ import { Column } from "react-table";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 import { TableContainer } from "@viz/Table";
-import { SelectColumnFilter, globalTextFilter, PieChartColumnFilter } from "@viz/Table/TableFilters";
+import {
+    SelectColumnFilter,
+    RadioSelectColumnFilter,
+    CheckboxSelectColumnFilter,
+    TypeAheadSelectColumnFilter,
+    globalTextFilter,
+    PieChartColumnFilter,
+} from "@viz/Table/TableFilters";
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 
 import { resolveColumnAccessor, resolveData, RecordTableProps } from "@components/Record/RecordTable";
@@ -184,6 +191,14 @@ const _addColumnFilters = (column: any, filterType: string) => {
         case "select":
             column.Filter = SelectColumnFilter;
             break;
+        case "radio_select":
+            column.Filter = RadioSelectColumnFilter;
+            break;
+        case "checkbox_select":
+            column.Filter = CheckboxSelectColumnFilter;
+            break;
+        case "typeahead_select":
+            column.Filter = TypeAheadSelectColumnFilter;
         case "pie":
         case "boolean_pie":
             column.Filter = PieChartColumnFilter;
@@ -191,6 +206,7 @@ const _addColumnFilters = (column: any, filterType: string) => {
         case "pvalue":
             column.Filter = PValueFilter;
             break;
+
         case null:
         default:
             return column;
