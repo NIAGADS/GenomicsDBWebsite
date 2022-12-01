@@ -23,7 +23,8 @@ export function includesFilter<T extends Record<string, unknown>>(
 // will be automatically removed. Normally this is just an undefined
 includesFilter.autoRemove = (val: any) => !val || !val.length;
 
-export function multiIncludesFilter<T extends Record<string, unknown>>(
+// match one or more values from a multi-select
+export function includesAnyFilter<T extends Record<string, unknown>>(
     rows: Array<Row<T>>,
     id: IdType<T>,
     filterValue: FilterValue
@@ -35,7 +36,7 @@ export function multiIncludesFilter<T extends Record<string, unknown>>(
         if (rowValue.includes("//")) {
             let valueArray: string[] = rowValue.split(" // ");
             const filteredArray = valueArray.filter((value) => fValueArray.includes(value));
-            return filteredArray.length > 1;
+            return filteredArray.length > 0;
         }
         return fValueArray.includes(rowValue);
     });
@@ -44,4 +45,4 @@ export function multiIncludesFilter<T extends Record<string, unknown>>(
 // This is an autoRemove method on the filter function that
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
-multiIncludesFilter.autoRemove = (val: any) => !val || !val.length;
+includesAnyFilter.autoRemove = (val: any) => !val || !val.length;
