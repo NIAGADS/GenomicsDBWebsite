@@ -18,7 +18,8 @@ import { TableProperties } from "@viz/Table/TableProperties";
     f"antibody_target": "Antibody Target",
     "anatomical_system": "Anatomical System",
     "track_type_display": "Track Type",
-    "consortium": "consortium"
+    "consortium": "AD Genetics Consortium",
+    "repository": "Repository"
   }*/
 
 export const _trackSelectorTableProperties: TableProperties = {
@@ -54,9 +55,13 @@ export const _trackSelectorTableProperties: TableProperties = {
         "biomarker",
         "tissue",
         "anatomical_system",
-        "biosample"
+        "biosample",
+        "repository",
+        "consortium",
+        "antibody_target"
     ],
     requiredColumns: ["name", "track_type_display", "feature_type"],
     canFilter: true,
+    canExport: false,
     canToggleColumns: true
 };
