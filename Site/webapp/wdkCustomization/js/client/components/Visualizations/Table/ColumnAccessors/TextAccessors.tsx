@@ -31,7 +31,7 @@ export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLengt
 
 // large text, show more or tooltip
 // if not JSON & no tooltip, show more
-export const ClobTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 250 }) => {
+export const ClobTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 100 }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
