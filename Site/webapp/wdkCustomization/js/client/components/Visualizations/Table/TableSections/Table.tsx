@@ -36,7 +36,7 @@ export const Table: React.FC<TableProps> = ({ instance, className }) => {
             message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
         />
     ) : (
-        <Box className={className}>
+        <Box className={className ? className: null}>
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>
                     {headerGroups.map((headerGroup: HeaderGroup<object>) => (

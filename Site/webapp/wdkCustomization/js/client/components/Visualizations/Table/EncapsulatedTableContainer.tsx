@@ -5,8 +5,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { assign } from "lodash";
 
 import Typography from "@material-ui/core/Typography";
-
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 import {
     useTable,
@@ -27,7 +28,7 @@ import {
     numericTextFilter,
     greaterThanFilter,
     includesFilter,
-    multiIncludesFilter,
+    includesAnyFilter,
     FilterGroup,
 } from "@viz/Table/TableFilters";
 
@@ -75,6 +76,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
     filterGroups,
     className,
     canFilter,
+    canExport,
     showAdvancedFilter,
     showHideColumns,
     requiredColumns,
@@ -97,7 +99,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         numeric: useMemo(() => numericTextFilter, []),
         greater: useMemo(() => greaterThanFilter, []),
         select: useMemo(() => includesFilter, []),
-        checkbox_select: useMemo(() => multiIncludesFilter, []),
+        checkbox_select: useMemo(() => includesAnyFilter, []),
         radio_select: useMemo(() => includesFilter, []),
         typeahead_select: useMemo(() => includesFilter, []),
         pie: useMemo(() => includesFilter, []),
@@ -195,7 +197,8 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         const sections: React.ReactNode[] = showHideColumns
             ? [<ToggleColumnsPanel instance={instance} requiredColumns={requiredColumns} />]
             : [];
-        showAdvancedFilter && sections.push(<FilterPanel includeChips={false} instance={instance} filterGroups={filterGroups} />);
+        showAdvancedFilter &&
+            sections.push(<FilterPanel includeChips={false} instance={instance} filterGroups={filterGroups} />);
         return sections;
     };
 
@@ -205,6 +208,14 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                 <em>{title}</em>
             </Typography>
         </>
+    );
+
+    const renderGlobalFilter = (
+        <AppBar position="static" elevation={0} className={classes.navigationToolbar}>
+            <Toolbar variant="dense" disableGutters>
+                <TableToolbar instance={instance} canFilter={canFilter} canExport={canExport} />
+            </Toolbar>
+        </AppBar>
     );
 
     // Render the UI for the table
@@ -224,9 +235,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                 encapsulated={true}
             >
                 <>
-                <TableToolbar instance={instance} canFilter={canFilter} />
-                <FilterChipBar instance={instance} />
-                <Table className={className} instance={instance} />
+                    {renderGlobalFilter}
+                    <FilterChipBar instance={instance} />
+                    <Table className={className} instance={instance} />
                 </>
             </NavigationDrawer>
         </CustomPanel>
