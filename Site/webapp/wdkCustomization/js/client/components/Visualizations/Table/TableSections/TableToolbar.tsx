@@ -10,9 +10,10 @@ import Button from "@material-ui/core/Button";
 
 interface FilterToolbarProps {
     canFilter: boolean;
+    canExport?:boolean;
 }
 
-export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ canFilter, instance }) => {
+export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ canFilter, instance, canExport=true }) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
 
@@ -21,7 +22,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
     return (
         <>
             {/* span is b/c button is disabled, allows tooltip to fire */}
-            <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
+            {canExport && <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
                 <span>
                     <Button
                         endIcon={<DownloadIcon />}
@@ -33,7 +34,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({ c
                         Export
                     </Button>
                 </span>
-            </Tooltip>
+            </Tooltip>}
             {canFilter && (
                 <GlobalFilterFlat
                     preGlobalFilteredRows={preGlobalFilteredRows}
