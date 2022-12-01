@@ -283,7 +283,7 @@ export function RadioSelectColumnFilter<T extends Record<string, unknown>>({
     }, [id, preFilteredRows]);
 
     useEffect(() => {
-        setNumFilterChoices(options.length);
+        setNumFilterChoices(Object.keys(options).length);
     }, [options]);
 
     return numFilterChoices && numFilterChoices > 0 ? (
@@ -341,12 +341,8 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
         return list;
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedValues([...toggleSelectedValues(event.target.value, selectedValues)]); // arrays passed by reference, [...arr] creates a copy, so state changes
-    };
-
-    const isSelected = (value: string) => {
-        return selectedValues.includes(value);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, newInputValue: any) => {
+        setSelectedValues([...toggleSelectedValues(newInputValue, selectedValues)]); // arrays passed by reference, [...arr] creates a copy, so state changes
     };
 
     useEffect(() => {
@@ -397,13 +393,13 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    onChange={handleChange}
+                    onInputChange={handleChange}
                     label={render("Header")}
                     variant="outlined"
                     margin="dense"
                     size="small"
                     placeholder={column.Header.toString()}
-                    value={selectedValues || null}
+                    inputValue={selectedValues || null}
                 />
             )}
         />
