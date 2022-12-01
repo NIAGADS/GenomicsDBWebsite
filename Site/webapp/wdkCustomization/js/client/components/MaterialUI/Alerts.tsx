@@ -1,6 +1,7 @@
 import React from "react";
 import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
+import BuildIcon from "@material-ui/icons/Build";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,6 +21,16 @@ export const InfoAlert: React.SFC<{ title: string, message: string }> = ({ title
   return (
       <Alert severity="info" className={classes.alert}>
           <AlertTitle className={classes.alertTitle}>{title}</AlertTitle>
+          {message}
+      </Alert>
+  );
+};
+
+export const ComingSoonAlert: React.SFC<{ message: string }> = ({ message }) => {
+  const classes = useStyles();
+  return (
+      <Alert icon={<BuildIcon fontSize="inherit"/>} severity="warning" className={classes.alert}>
+          <AlertTitle className={classes.alertTitle}>Coming Soon</AlertTitle>
           {message}
       </Alert>
   );

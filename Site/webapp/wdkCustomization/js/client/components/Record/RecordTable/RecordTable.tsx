@@ -42,7 +42,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const classes = useStyles();
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
-        booleanPie: useMemo(() => booleanFlagFilter, []),
+        boolean_pie: useMemo(() => booleanFlagFilter, []),
         global: useMemo(() => globalTextFilter, []),
     };
 
@@ -185,7 +185,7 @@ const _addColumnFilters = (column: any, filterType: string) => {
             column.Filter = SelectColumnFilter;
             break;
         case "pie":
-        case "booleanPie":
+        case "boolean_pie":
             column.Filter = PieChartColumnFilter;
             break;
         case "pvalue":

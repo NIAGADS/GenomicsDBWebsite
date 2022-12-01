@@ -2,51 +2,57 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { get, find, concat, merge } from "lodash";
-import qs from "qs";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 
-import Grid from "@material-ui/core/Grid";
-import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
-import { PrimaryActionButton } from "@components/MaterialUI";
+import { CustomPanel } from "@components/MaterialUI";
+
+import { GenomeBrowser, getLoadedTracks, removeTrack, trackIsLoaded } from "@viz/GenomeBrowser";
 
 import {
-    GenomeBrowser,
+    ConfigServiceResponse,
+    TrackSelectorRow,
     RawTrackConfig,
-    IgvTrackConfig,
-    getLoadedTracks,
-    removeTrack,
-    trackIsLoaded,
-    TrackSelector
-} from "@viz/GenomeBrowser";
+    resolveSelectorData,
+    TrackSelector,
+} from "@viz/GenomeBrowser/TrackSelector";
 
-import { _genomes } from "../../data/_igvGenomes";
+import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
-
 const MemoBroswer = React.memo(GenomeBrowser);
 
-interface GenomeBrowserPage {}
-interface TrackConfigServiceResponse {
-    columns: any,
-    tracks: any;
-}
+export const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        panel: {
+            background: "transparent",
+            position: "relative",
+            top: theme.spacing(3),
+            //paddingLeft: "50px",
+        },
+    })
+);
 
-const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
+const GenomeBrowserPage: React.FC<{}> = () => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
-    const [browser, setBrowser] = useState<any>(),
-        [listVisible, setListVisible] = useState(false),
-        [loadingTrack, setLoadingTrack] = useState<string>(),
-        [selectorColumns, setSelectorColumns] = useState<any>(),
-       // [reloadKey, setReloadKey] = useState(makeReloadKey()),
-        [tracks, setTracks] = useState<RawTrackConfig[]>(),
-        [options, setOptions] = useState(null);
+    const [browser, setBrowser] = useState<any>();
+    const [trackSelectorIsOpen, setTrackSelectorIsOpen] = useState<boolean>(false);
+    const [loadingTrack, setLoadingTrack] = useState<string>(null);
+    const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
+    const [browserOptions, setBrowserOptions] = useState<any>(null);
+    // [reloadKey, setReloadKey] = useState(makeReloadKey()),
+
+    const classes = useStyles();
 
     const toggleTracks = (config: RawTrackConfig[], browser: any) => {
         config.forEach((c) => {
@@ -61,7 +67,7 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
     }; */
 
     const buildBrowser = useCallback((b: any) => {
-       setBrowser(b);
+        setBrowser(b);
     }, []);
 
     const loadTrack = async (config: RawTrackConfig, browser: any) => {
@@ -70,17 +76,15 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
         setLoadingTrack(undefined);
     };
 
-
-    const parseTrackConfigServiceResponse = (response:TrackConfigServiceResponse) => {
-        setTracks(response['tracks']);
-        setSelectorColumns(response['columns']);
+    const parseTrackConfigServiceResponse = (response: ConfigServiceResponse) => {
+        setServiceTrackConfig(response);
     };
 
     useEffect(() => {
-        if (projectId && serviceUrl) {
-            let referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
-            let referenceTrackConfig = find(_genomes, { id: referenceTrackId });
-            setOptions({
+        if (projectId) {
+            const referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
+            const referenceTrackConfig = find(_genomes, { id: referenceTrackId });
+            setBrowserOptions({
                 reference: {
                     id: referenceTrackId,
                     name: referenceTrackConfig.name,
@@ -91,69 +95,53 @@ const GenomeBrowserPage: React.FC<GenomeBrowserPage> = ({}) => {
                 },
             });
         }
-    }, [projectId, serviceUrl]);
+    }, [projectId]);
 
+    useWdkEffect((service) => {
+        service._fetchJson<ConfigServiceResponse>("GET", `/track/config`).then(function (res: ConfigServiceResponse) {
+            return parseTrackConfigServiceResponse(res);
+        });
+    }, []);
 
-    useWdkEffect(
-        (service) => {
-            options &&
-                service
-                    ._fetchJson<TrackConfigServiceResponse>("GET", `/track/config`)
-                    .then(function (res: TrackConfigServiceResponse) {
-                        return parseTrackConfigServiceResponse(res);
-                    });
-                  //  .then((res) => setTrackList(res.map((res) => generateTrackSummary(res))));
-            //setTrackList(concat(res.map((res) => transformRawNiagadsTrack(res)),
-            //merge(options.reference.tracks[0], { featureType: "Gene", source: "NCBI Gene" }))));
-        },
-        [serviceUrl, options]
+    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
+        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
+        [serviceTrackConfig]
     );
 
-    return (
-        <Box marginTop={4}>
-            <Grid container item xs={12}>
-                {/* 10px on lm assures flush w/ browser, which has 10px margin by default */}
-                <Box m="10px">
-                    <PrimaryActionButton disabled={!!!tracks} onClick={() => setListVisible(true)}>
-                        <LibraryBooksIcon />
-                        Browse Tracks
-                    </PrimaryActionButton>
-                </Box>
-            </Grid>
-            {projectId ? (
-                <Grid>
-                    {options ? (
-                        <MemoBroswer
-                            //locus="ABCA"
-                            //disableRefTrack={true}
-                            onBrowserLoad={buildBrowser}
-                            searchUrl={`${serviceUrl}/track/feature?id=`}
-                            serviceUrl={serviceUrl}
-                            webAppUrl={webAppUrl}
-                            options={options}
-                        />
-                    ) : (
-                        <CircularProgress color="secondary"></CircularProgress>
-                    )}
-                </Grid>
-            ) : (
-                <CircularProgress color="secondary" />
-            )}
-            <Grid item xs={12}>
-                {browser ? (
-                    <TrackSelector
-                        activeTracks={getLoadedTracks(browser)}
-                        handleClose={setListVisible.bind(null, false)}
-                        isOpen={listVisible}
-                        loadingTrack={loadingTrack}
-                        toggleTracks={toggleTracks}
-                        tracks={tracks}
-                        columns={selectorColumns}
-                        browser={browser}
-                    />
-                ) : null}
-            </Grid>
-        </Box>
+    return browserOptions && serviceUrl && webAppUrl && resolvedSelectorData ? (
+        <CustomPanel
+            hasBaseArrow={false}
+            className={classes.panel}
+            alignItems="flex-start"
+            justifyContent="space-between"
+        >
+              {browser ? (
+                <TrackSelector
+                    browser={browser}
+                    isOpen={trackSelectorIsOpen}
+                    handleClose={setTrackSelectorIsOpen.bind(null, false)}
+                    columnConfig={serviceTrackConfig.columns}
+                    data={resolvedSelectorData}
+                />
+            ) : null}
+
+            <MemoBroswer
+                //locus="ABCA"
+                //disableRefTrack={true}
+                onBrowserLoad={buildBrowser}
+                searchUrl={`${serviceUrl}/track/feature?id=`}
+                serviceUrl={serviceUrl}
+                webAppUrl={webAppUrl}
+                options={browserOptions}
+            />
+        </CustomPanel>
+    ) : (
+        <CustomPanel>
+            <Typography component="span">
+                Loading...
+                <CircularProgress size="small" color="secondary" />
+            </Typography>
+        </CustomPanel>
     );
 };
 

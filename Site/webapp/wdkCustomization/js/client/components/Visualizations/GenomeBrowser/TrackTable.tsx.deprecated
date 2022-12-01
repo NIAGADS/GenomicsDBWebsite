@@ -16,7 +16,7 @@ import {
     includesFilter,
 } from "@viz/Table/TableFilters";
 
-import { IgvTrackConfig, RawTrackConfig, TrackSelectorColumnConfig } from "@viz/GenomeBrowser";
+import { IgvTrackConfig, RawTrackConfig } from "@viz/GenomeBrowser";
 import { CircularProgress } from "@material-ui/core";
 
 const filterTypes = {
@@ -45,7 +45,7 @@ interface TrackTableProps {
     toggleTracks: (t: RawTrackConfig[], b: any) => void;
     loadingTrack: string;
     browser: any;
-    selectorColumns: TrackSelectorColumnConfig[];
+    selectorColumns: {[key:string] :string}[];
 }
 
 export const TrackTable: React.FC<TrackTableProps> = ({
@@ -59,7 +59,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({
     const DEFAULT_VISIBLE_COLUMNS = ["name", "description", "data_source", "feature_type", "track_type_display"];
     const TEXT_SEARCH_ONLY_COLUMNS = ["name", "description", "data_source", "feature_type", "track_type_display"];
 
-    const _buildColumn = (field: TrackSelectorColumnConfig, sortable: boolean) => ({
+    const _buildColumn = (field: {[key:string] :string}, sortable: boolean) => ({
         Header: field["header"],
         sortable,
         id: field["id"],

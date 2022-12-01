@@ -1,11 +1,12 @@
 // modeled after https://github.com/ggascoigne/react-table-example
+// table is encapsulated in the side panel (e.g., for genome browser track selector)
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { assign } from "lodash";
 
 import Typography from "@material-ui/core/Typography";
 
-import FilterListIcon from "@material-ui/icons/FilterList";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
 import {
     useTable,
@@ -32,7 +33,7 @@ import {
 
 import { Table, TableToolbar, ToggleColumnsPanel, FilterPanel, FilterChipBar } from "@viz/Table/TableSections";
 
-import { useTableStyles } from "@viz/Table";
+import { useTableStyles, TableContainerProps } from "@viz/Table";
 
 import TableSortingFunctions, {
     alphanumericSort,
@@ -48,19 +49,9 @@ import TableSortingFunctions, {
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
-export interface TableContainerProps {
-    columns: Column<{}>[];
-    title?: string;
-    data: any;
-    canFilter: boolean;
-    filterTypes?: any; // json object of filter types
-    filterGroups?: FilterGroup[];
-    className?: string;
-    showAdvancedFilter?: boolean;
-    showHideColumns?: boolean;
-    requiredColumns?: string[];
-    initialFilters?: any;
-    initialSort?: any;
+interface EncapsulatedTableContainerProps extends TableContainerProps {
+    isOpen: boolean;
+    handleClose: any;
 }
 
 const hooks = [
@@ -77,7 +68,7 @@ const hooks = [
     //selectionHook,
 ];
 
-export const TableContainer: React.FC<TableContainerProps> = ({
+export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProps> = ({
     columns,
     data,
     filterTypes,
@@ -90,10 +81,13 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     initialFilters,
     initialSort,
     title,
+    isOpen,
+    handleClose,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
 
+    const [open, setOpen] = useState<boolean>(isOpen);
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
 
     const classes = useTableStyles();
@@ -103,9 +97,12 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         numeric: useMemo(() => numericTextFilter, []),
         greater: useMemo(() => greaterThanFilter, []),
         select: useMemo(() => includesFilter, []),
-        multi_select: useMemo(() => multiIncludesFilter, []),
+        checkbox_select: useMemo(() => multiIncludesFilter, []),
+        radio_select: useMemo(() => includesFilter, []),
+        typeahead_select: useMemo(() => includesFilter, []),
         pie: useMemo(() => includesFilter, []),
         boolean_pie: useMemo(() => includesFilter, []),
+        tissue: useMemo(() => includesFilter, []), // I think this is necessary as a placeholder
         pvalue: useMemo(() => greaterThanFilter, []), // I think this is necessary as a placeholder
     };
 
@@ -198,14 +195,14 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         const sections: React.ReactNode[] = showHideColumns
             ? [<ToggleColumnsPanel instance={instance} requiredColumns={requiredColumns} />]
             : [];
-        showAdvancedFilter && sections.push(<FilterPanel instance={instance} filterGroups={filterGroups} />);
+        showAdvancedFilter && sections.push(<FilterPanel includeChips={false} instance={instance} filterGroups={filterGroups} />);
         return sections;
     };
 
     const renderDrawerHeaderContents = (
         <>
             <Typography variant="h6">
-                Modify table: <em>{title}</em>
+                <em>{title}</em>
             </Typography>
         </>
     );
@@ -214,20 +211,24 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     return (
         <CustomPanel justifyContent="flex-start">
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
+                navigation={null}
                 toggleAnchor="left"
-                toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
-                toggleHelp="Display table summary and advanced filters"
-                toggleText="Filter"
                 drawerSections={_buildDrawerSections()}
-                drawerCloseLabel="Close Table Filter"
+                drawerCloseLabel="Close Track Selector"
+                toggleIcon={<LibraryBooksIcon />}
+                toggleHelp="Display track selector"
+                toggleText="Browse Tracks"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
                 className={classes.navigationToolbar}
+                width="80%"
+                encapsulated={true}
             >
+                <>
+                <TableToolbar instance={instance} canFilter={canFilter} />
                 <FilterChipBar instance={instance} />
+                <Table className={className} instance={instance} />
+                </>
             </NavigationDrawer>
-
-            <Table className={className} instance={instance} />
         </CustomPanel>
     );
 };
