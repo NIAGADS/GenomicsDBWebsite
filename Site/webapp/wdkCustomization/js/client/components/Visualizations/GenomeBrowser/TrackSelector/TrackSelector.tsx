@@ -5,7 +5,7 @@ import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-import { EncapsulatedTableContainer as TableContainer} from "@viz/Table";
+import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
 import { ColumnAccessorType, resolveColumnAccessor } from "@viz/Table/ColumnAccessors";
 import {
     SelectColumnFilter,
@@ -13,7 +13,7 @@ import {
     PieChartColumnFilter,
     CheckboxSelectColumnFilter,
     TypeAheadSelectColumnFilter,
-    RadioSelectColumnFilter
+    RadioSelectColumnFilter,
 } from "@viz/Table/TableFilters";
 
 import { TissueColumnFilter } from "@viz/GenomeBrowser/TrackSelector";
@@ -55,13 +55,11 @@ interface TrackSelector {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
-            /* minHeight: 500,
-          maxHeight: 500,
-          overflowY: "scroll",
-          overflowX: "hidden" */
-        },
-        fullWidth: {
             width: "100%",
+            minHeight: 500,
+            maxHeight: 1000,
+            overflowY: "scroll",
+            overflowX: "scroll",
         },
     })
 );
@@ -83,7 +81,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isO
         } else {
             let columnFilters: any = get(properties, "filters", null);
             const accessors: any = get(properties, "accessors", null);
-            let selectorColumns: Column<{}>[] = order.map((name) => { 
+            let selectorColumns: Column<{}>[] = order.map((name) => {
                 const header = columns[name];
                 const accessorType: ColumnAccessorType =
                     accessors && accessors.hasOwnProperty(name)
@@ -119,12 +117,13 @@ export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isO
     // component here
     return (
         <TableContainer
-            className={classes.fullWidth}
+            className={classes.table}
             columns={selectorColumns}
             data={data}
             filterTypes={filterTypes}
             filterGroups={get(properties, "filterGroups", null)}
             canFilter={canFilter}
+            canExport={false}
             showAdvancedFilter={hasColumnFilters}
             showHideColumns={canToggleColumns}
             requiredColumns={get(properties, "requiredColumns", null)}
