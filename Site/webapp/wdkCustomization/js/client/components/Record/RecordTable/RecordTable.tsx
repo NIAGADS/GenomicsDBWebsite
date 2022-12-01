@@ -35,11 +35,12 @@ const useStyles = makeStyles((theme: Theme) =>
         table: {
             /* minHeight: 500,
           maxHeight: 500,
-          overflowY: "scroll",
-          overflowX: "hidden" */
+          overflowY: "scroll", */
+         
         },
         fullWidth: {
             width: "100%",
+            overflowX: "scroll"
         },
     })
 );
