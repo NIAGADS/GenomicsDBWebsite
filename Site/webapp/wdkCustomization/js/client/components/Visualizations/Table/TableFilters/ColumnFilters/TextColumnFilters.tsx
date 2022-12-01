@@ -10,6 +10,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Radio from "@material-ui/core/Radio";
+import { Autocomplete } from "@material-ui/lab";
 
 import { ComingSoonAlert } from "@components/MaterialUI";
 
@@ -149,8 +152,8 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
     };
 
     const isChecked = (value: string) => {
-        return (checkedValues.includes(value));
-    }
+        return checkedValues.includes(value);
+    };
 
     useEffect(() => {
         if (!checkedValues || checkedValues.length == 0) {
@@ -160,8 +163,8 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
         }
     }, [checkedValues]);
 
-
-    useEffect(() => { // trying to catch resets and clears
+    useEffect(() => {
+        // trying to catch resets and clears
         setCheckedValues(filterValue ? filterValue.split(",") : []);
     }, [filterValue]);
 
@@ -188,15 +191,26 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
     }, [options]);
 
     return numFilterChoices && numFilterChoices > 0 ? (
-        <FormControl component="fieldset" className={classes.select}>
-            <FormLabel component="label" className={classes.formLabel}>{column.Header.toString()}</FormLabel>
+        <FormControl component="fieldset" className={`${classes.select} ${classes.formControl}`}>
+            <FormLabel component="label" className={classes.formLabel}>
+                {column.Header.toString()}
+            </FormLabel>
             <FormGroup>
                 {options.map((option, i) => (
-                    <FormControlLabel classes={{label: classes.formControlLabel}}
+                    <FormControlLabel
+                        classes={{ label: classes.formControlLabel }}
                         key={i}
                         value={option}
                         label={option}
-                        control={<Checkbox onChange={handleCheckboxChange} name={option} checked={isChecked(option)} className={classes.checkBox} size="small"/>}
+                        control={
+                            <Checkbox
+                                onChange={handleCheckboxChange}
+                                name={option}
+                                checked={isChecked(option)}
+                                className={classes.checkBox}
+                                size="small"
+                            />
+                        }
                     />
                 ))}
             </FormGroup>
@@ -206,7 +220,7 @@ export function CheckboxSelectColumnFilter<T extends Record<string, unknown>>({
     );
 }
 
-
+//@ts-ignore
 export function RadioSelectColumnFilter<T extends Record<string, unknown>>({
     columns,
     column,
@@ -215,21 +229,93 @@ export function RadioSelectColumnFilter<T extends Record<string, unknown>>({
     column: Column;
 }) {
     //@ts-ignore
-    const { id, filterValue, setFilter, render } = column;
-    const [value, setValue] = useState(filterValue || "");
+    const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
+    const [radioValue, setRadioValue] = useState(filterValue || null);
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
+        setRadioValue(event.target.value);
     };
-    // ensure that reset loads the new value
+
+    const classes = useFilterStyles();
+
+    const isChecked = (value: string) => {
+        return radioValue === value;
+    };
+
     useEffect(() => {
-        setValue(filterValue || "");
+        if (!radioValue) {
+            setFilter(undefined);
+        } else {
+            setFilter(radioValue);
+        }
+    }, [radioValue]);
+
+    useEffect(() => {
+        // trying to catch resets and clears
+        setRadioValue(filterValue || null);
     }, [filterValue]);
 
-    return (
-        <ComingSoonAlert message={`Radio select filter by ${column.Header.toString()} coming soon.`}/>
+    const getOptionCounts = (opt: string, options: {[key:string]:number}) => {
+        if (opt in options) {
+            const counts = options[opt]
+            return counts + 1
+        }
+        else return 1
+    }
+
+    const options = useMemo(() => {
+        const options: {[key: string]: number} = {};
+        preFilteredRows.forEach((row: any) => {
+            let value = parseFieldValue(row.values[id]);
+            if (value && value != "N/A") {
+                if (value.includes("//")) {
+                    let vals = value.split(" // ");
+                    vals.forEach((v: string) => {
+                        options[v] = getOptionCounts(v, options);
+                    });
+                } else {
+                    options[value] = getOptionCounts(value, options);
+                }
+            }
+        });
+        return options;
+    }, [id, preFilteredRows]);
+
+    useEffect(() => {
+        setNumFilterChoices(options.length);
+    }, [options]);
+
+    return numFilterChoices && numFilterChoices > 0 ? (
+        <FormControl component="fieldset" className={`${classes.select} ${classes.formControl}`}>
+            <FormLabel component="label" className={classes.formLabel}>
+                {column.Header.toString()}
+            </FormLabel>
+            <RadioGroup onChange={handleChange}>
+                {Object.keys(options).map((option, i) => (
+                    <FormControlLabel
+                        classes={{ label: classes.formControlLabel }}
+                        key={i}
+                        value={option}
+                        label={option}
+                        control={
+                            <Radio
+                                name={`${option} (N = ${options[option]})`}
+                                checked={isChecked(option)}
+                                className={classes.checkBox}
+                                size="small"
+                            />
+                        }
+                    />
+                ))}
+            </RadioGroup>
+        </FormControl>
+    ) : (
+        <ZeroFilterChoicesMsg label={render("Header")} />
     );
 }
 
+//@ts-ignore
 export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
     columns,
     column,
@@ -238,17 +324,90 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
     column: Column;
 }) {
     //@ts-ignore
-    const { id, filterValue, setFilter, render } = column;
-    const [value, setValue] = useState(filterValue || "");
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
+    //@ts-ignore
+    const { id, filterValue, setFilter, render, preFilteredRows } = column;
+    const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
+    const [selectedValues, setSelectedValues] = useState<string[]>(filterValue ? filterValue.split(",") : []);
+
+    const classes = useFilterStyles();
+
+    const toggleSelectedValues = (value: any, list: string[]) => {
+        if (list.includes(value)) {
+            // remove
+            list.splice(list.indexOf(value), 1);
+        } else {
+            list.push(value);
+        }
+        return list;
     };
-    // ensure that reset loads the new value
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedValues([...toggleSelectedValues(event.target.value, selectedValues)]); // arrays passed by reference, [...arr] creates a copy, so state changes
+    };
+
+    const isSelected = (value: string) => {
+        return selectedValues.includes(value);
+    };
+
     useEffect(() => {
-        setValue(filterValue || "");
+        if (!selectedValues || selectedValues.length == 0) {
+            setFilter(undefined);
+        } else {
+            setFilter(selectedValues.join());
+        }
+    }, [selectedValues]);
+
+    useEffect(() => {
+        // trying to catch resets and clears
+        setSelectedValues(filterValue ? filterValue.split(",") : []);
     }, [filterValue]);
 
-    return (
-        <ComingSoonAlert message={`Type ahead select filter by ${column.Header.toString()} coming soon.`}/>
+    const options = useMemo(() => {
+        const options = new Set<any>();
+        preFilteredRows.forEach((row: any) => {
+            let value = parseFieldValue(row.values[id]);
+            if (value && value != "N/A") {
+                if (value.includes("//")) {
+                    let vals = value.split(" // ");
+                    vals.forEach((v: string) => {
+                        options.add(v);
+                    });
+                } else {
+                    options.add(value);
+                }
+            }
+        });
+        return [...Array.from(options.values()).sort()];
+    }, [id, preFilteredRows]);
+
+    useEffect(() => {
+        setNumFilterChoices(options.length);
+    }, [options]);
+
+    return numFilterChoices && numFilterChoices > 0 ? (
+        <Autocomplete
+            className={classes.select}
+            options={options}
+            id={id}
+            selectOnFocus
+            autoComplete
+            autoHighlight
+            multiple
+            limitTags={3}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    onChange={handleChange}
+                    label={render("Header")}
+                    variant="outlined"
+                    margin="dense"
+                    size="small"
+                    placeholder={column.Header.toString()}
+                    value={selectedValues || null}
+                />
+            )}
+        />
+    ) : (
+        <ZeroFilterChoicesMsg label={render("Header")} />
     );
 }

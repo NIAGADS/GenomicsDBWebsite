@@ -17,6 +17,12 @@ export const useFilterStyles = makeStyles((theme: Theme) =>
         checkBox: {
             padding: 4
         },
+        formControl: {
+            border: "2px solid lightgray",
+            borderRadius: "8px",
+            padding: theme.spacing(2)
+          
+        },
         formControlLabel: {
             fontSize: "12px"
         },
@@ -88,7 +94,9 @@ export const useGlobalFilterStyles = makeStyles((theme: Theme) =>
 export const useFilterPanelStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            //width: "100%",
+            maxHeight: 1000,
+            overflowY: "scroll"
+            //width: "100%"
             //borderRight: `3px solid  ${theme.palette.primary.dark}`,
         },
         filterGroup: {

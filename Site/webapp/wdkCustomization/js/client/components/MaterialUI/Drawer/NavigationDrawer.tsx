@@ -126,8 +126,8 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
     );
 
     const renderEncapsulatedDrawer = (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={3} >
-            <Grid item style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH }}>
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+            <Grid item style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH}}>
                 {renderDrawer}
             </Grid>
             <Grid item style={{ width: "80%" }}>
