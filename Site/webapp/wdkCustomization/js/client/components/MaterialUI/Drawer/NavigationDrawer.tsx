@@ -126,7 +126,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
     );
 
     const renderEncapsulatedDrawer = (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} >
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={3} >
             <Grid item style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH }}>
                 {renderDrawer}
             </Grid>
@@ -139,8 +139,8 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
 
 return (
     <React.Fragment key={toggleAnchor}>
-        <AppBar position="static" elevation={0} {...navigationProps} className={className} disableGutters={true}>
-            <Toolbar variant="dense" disableGutters={true}>
+        <AppBar position="static" elevation={0} {...navigationProps} className={className}>
+            <Toolbar variant="dense" disableGutters>
                 {toggleIcon &&
                     <Tooltip title={toggleHelp} aria-label={toggleHelp}>
                         <Button
