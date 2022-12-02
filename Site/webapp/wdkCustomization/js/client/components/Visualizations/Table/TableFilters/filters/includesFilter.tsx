@@ -1,3 +1,4 @@
+import { map } from "lodash";
 import { FilterValue, IdType, Row } from "react-table";
 import { parseFieldValue } from "@viz/Table";
 
@@ -29,7 +30,9 @@ export function includesAnyFilter<T extends Record<string, unknown>>(
     id: IdType<T>,
     filterValue: FilterValue
 ): Array<Row<T>> {
-    const fValueArray: string[] = filterValue.split(",");
+    const fValueArray: string[] = filterValue.split(",").map(function (value: string) {
+        return value.toLowerCase();
+    });
 
     return rows.filter((row) => {
         const rowValue = parseFieldValue(row.values[id[0]]).toString().toLowerCase();

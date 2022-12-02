@@ -1,4 +1,5 @@
 import { makeStyles, createStyles, Theme, alpha } from "@material-ui/core";
+import { green, blue } from "@material-ui/core/colors";
 
 export const useFilterStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -17,14 +18,22 @@ export const useFilterStyles = makeStyles((theme: Theme) =>
         checkBox: {
             padding: 4
         },
+        selectListbox: {
+            fontSize: "12px"
+        },
         formControl: {
             border: "2px solid lightgray",
             borderRadius: "8px",
             padding: theme.spacing(2)
           
         },
+        infoChip: {
+            backgroundColor: blue[200],
+            color: theme.palette.getContrastText(blue[200])
+        },
         formControlLabel: {
-            fontSize: "12px"
+            fontSize: "12px",
+            minWidth: 180
         },
         formLabel: {
             fontWeight: "bold",
