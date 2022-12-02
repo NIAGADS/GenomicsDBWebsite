@@ -21,7 +21,8 @@ import {
     useRowSelect,
     Column,
     Row,
-    UseRowSelectRowProps
+    TableCellProps,
+    UseRowSelectRowProps,
 } from "react-table";
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
@@ -57,6 +58,8 @@ import { RowSelectCheckbox } from "./RowSelectCheckbox";
 interface EncapsulatedTableContainerProps extends TableContainerProps {
     isOpen: boolean;
     handleClose: any;
+    initialSelectedRows?: string[];
+    onRowSelect?: any;
 }
 
 const hooks = [
@@ -86,9 +89,10 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
     requiredColumns,
     initialFilters,
     initialSort,
+    initialSelectedRows,
+    onRowSelect,
     title,
     isOpen,
-    handleClose,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
@@ -152,6 +156,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                 // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
                 pageIndex: 0,
                 pageSize: 10,
+                selectedRowIds: initialSelectedRows ? initialSelectedRows : [],
                 filters: [initialFilters ? initialFilters : {}],
                 sortBy: initialSort ? initialSort : [],
                 hiddenColumns: columns
@@ -178,10 +183,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                     Header: "Loaded",
                     // The cell can use the individual row's getToggleRowSelectedProps method
                     // to the render a checkbox
-                    Cell: (row: Row<any> & UseRowSelectRowProps<any>) => (
-                        <div>  
-                           {/* <RowSelectCheckbox {...row.getToggleRowSelectedProps()} /> */}
-                           <RowSelectCheckbox />
+                    Cell: (cell: any) => (
+                        <div>
+                            <RowSelectCheckbox {...cell.row.getToggleRowSelectedProps()} />
                         </div>
                     ),
                 },
@@ -205,7 +209,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         state, //: { pageIndex, pageSize },
         selectedFlatRows,
         state: { selectedRowIds },
-        onSelectedRowsChange
+        toggleRowSelected,
     } = instance;
 
     const debouncedState = useAsyncDebounce(state, 500);
@@ -221,6 +225,10 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         };
         setInitialState(val);
     }, [setInitialState, debouncedState]);
+
+    useEffect(() => {
+        onRowSelect && onRowSelect(selectedFlatRows);
+    }, [selectedFlatRows.length]);
 
     const _buildDrawerSections = () => {
         const sections: React.ReactNode[] = showHideColumns
@@ -273,7 +281,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                             {JSON.stringify(
                                 {
                                     selectedRowIds: selectedRowIds,
-                                    "selectedFlatRows[].original": selectedFlatRows.map((d:any) => d.original),
+                                    "selectedFlatRows[].original": selectedFlatRows.map((d: any) => d.original.track),
                                 },
                                 null,
                                 2
