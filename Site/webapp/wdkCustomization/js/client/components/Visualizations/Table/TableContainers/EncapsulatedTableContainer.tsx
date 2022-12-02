@@ -275,19 +275,6 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                     {renderGlobalFilter}
                     <FilterChipBar instance={instance} />
                     <Table className={className} instance={instance} />
-                    <span>
-                        Selected Rows:{" "}
-                        <code>
-                            {JSON.stringify(
-                                {
-                                    selectedRowIds: selectedRowIds,
-                                    "selectedFlatRows[].original": selectedFlatRows.map((d: any) => d.original.track),
-                                },
-                                null,
-                                2
-                            )}
-                        </code>
-                    </span>
                 </>
             </NavigationDrawer>
         </CustomPanel>
