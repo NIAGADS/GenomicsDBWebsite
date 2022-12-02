@@ -7,6 +7,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
 import { ColumnAccessorType, resolveColumnAccessor } from "@viz/Table/ColumnAccessors";
+
 import {
     SelectColumnFilter,
     globalTextFilter,
@@ -14,6 +15,7 @@ import {
     CheckboxSelectColumnFilter,
     TypeAheadSelectColumnFilter,
     RadioSelectColumnFilter,
+    FilterType
 } from "@viz/Table/TableFilters";
 
 import { TissueColumnFilter } from "@viz/GenomeBrowser/TrackSelector";
@@ -134,7 +136,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isO
     );
 };
 
-const _addColumnFilters = (column: any, filterType: string) => {
+const _addColumnFilters = (column: any, filterType: FilterType) => {
     switch (filterType) {
         case "select":
             column.Filter = SelectColumnFilter;
@@ -154,6 +156,7 @@ const _addColumnFilters = (column: any, filterType: string) => {
             break;
         case "typeahead_select":
             column.Filter = TypeAheadSelectColumnFilter;
+            break;
         case null:
         default:
             return column;
@@ -177,3 +180,4 @@ const _buildColumn: any = (name: string, header: string, accessorType: ColumnAcc
     id: name,
     sortType: "alphanumeric",
 });
+

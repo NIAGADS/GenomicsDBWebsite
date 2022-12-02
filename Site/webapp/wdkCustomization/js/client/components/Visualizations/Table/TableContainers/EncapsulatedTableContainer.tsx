@@ -18,7 +18,10 @@ import {
     useFilters,
     useGlobalFilter,
     useAsyncDebounce,
+    useRowSelect,
     Column,
+    Row,
+    UseRowSelectRowProps
 } from "react-table";
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
@@ -49,6 +52,7 @@ import TableSortingFunctions, {
 } from "@viz/Table/TableSortingFunctions";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
+import { RowSelectCheckbox } from "./RowSelectCheckbox";
 
 interface EncapsulatedTableContainerProps extends TableContainerProps {
     isOpen: boolean;
@@ -65,7 +69,7 @@ const hooks = [
     useFilters,
     useSortBy,
     usePagination,
-    //useRowSelect,
+    useRowSelect,
     //selectionHook,
 ];
 
@@ -161,7 +165,29 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
         },
-        ...hooks
+        ...hooks,
+        (hooks) => {
+            hooks.visibleColumns.push((columns: any) => [
+                // Let's make a column for selection
+                {
+                    id: "selection",
+                    width: 50,
+                    sortable: true,
+                    // The header can use the table's getToggleAllRowsSelectedProps method
+                    // to render a checkbox
+                    Header: "Loaded",
+                    // The cell can use the individual row's getToggleRowSelectedProps method
+                    // to the render a checkbox
+                    Cell: (row: Row<any> & UseRowSelectRowProps<any>) => (
+                        <div>  
+                           {/* <RowSelectCheckbox {...row.getToggleRowSelectedProps()} /> */}
+                           <RowSelectCheckbox />
+                        </div>
+                    ),
+                },
+                ...columns,
+            ]);
+        }
     );
 
     const {
@@ -177,6 +203,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         globalFilter,
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
         state, //: { pageIndex, pageSize },
+        selectedFlatRows,
+        state: { selectedRowIds },
+        onSelectedRowsChange
     } = instance;
 
     const debouncedState = useAsyncDebounce(state, 500);
@@ -238,6 +267,19 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                     {renderGlobalFilter}
                     <FilterChipBar instance={instance} />
                     <Table className={className} instance={instance} />
+                    <span>
+                        Selected Rows:{" "}
+                        <code>
+                            {JSON.stringify(
+                                {
+                                    selectedRowIds: selectedRowIds,
+                                    "selectedFlatRows[].original": selectedFlatRows.map((d:any) => d.original),
+                                },
+                                null,
+                                2
+                            )}
+                        </code>
+                    </span>
                 </>
             </NavigationDrawer>
         </CustomPanel>

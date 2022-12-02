@@ -37,10 +37,11 @@ export const _trackSelectorTableProperties: TableProperties = {
         tissue: "tissue",
         biomarker: "select",
         genotype: "select",
+        consortium: "select"
     },
     filterGroups: [
         { label: "Experimental Design", columns: ["track_type_display", "feature_type", "assay", "antibody_target"], defaultOpen: true },
-        { label: "Provenance", columns: ["data_source", "consortium"], defaultOpen: true},
+        { label: "Affiliation", columns: ["consortium", "data_source"], defaultOpen: true},
         { label: "Phenotype", columns: ["population", "diagnosis", "biomarker", "genotype", "covariates"] },
         { label: "Biosample", columns: ["tissue", "biosample"]}
     ],

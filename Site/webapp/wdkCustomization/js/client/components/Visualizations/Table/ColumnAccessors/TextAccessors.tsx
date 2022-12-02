@@ -18,12 +18,12 @@ export const isJSON = (value: any) => {
     return isObject(value) && value != null;
 };
 
-export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 250 }) => {
+export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 100 }) => {
     if (isJSON(value)) {
         return <JSONAccessor value={value} />;
     }
     if (value.toString().length > maxLength) {
-        return <ClobTextAccessor value={value} />;
+        return <ClobTextAccessor value={value} maxLength={maxLength} />;
     }
     // catch numerics
     return parseFieldValue(value);

@@ -7,7 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     alert: {
       fontSize: "12px",
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
+      marginTop: theme.spacing(1)
     },
     alertTitle: {
         fontWeight: "bold",
@@ -16,10 +17,11 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-export const InfoAlert: React.SFC<{ title: string, message: string }> = ({ title, message }) => {
+export const InfoAlert: React.SFC<{ title: string, message: string, className?:string }> = ({ title, message, className }) => {
   const classes = useStyles();
+
   return (
-      <Alert severity="info" className={classes.alert}>
+      <Alert severity="info" className={className ? `${className} ${classes.alert}`  : classes.alert}>
           <AlertTitle className={classes.alertTitle}>{title}</AlertTitle>
           {message}
       </Alert>

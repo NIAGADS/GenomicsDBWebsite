@@ -14,10 +14,12 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import { Autocomplete } from "@material-ui/lab";
 
-import { ComingSoonAlert } from "@components/MaterialUI";
+import { ComingSoonAlert, CustomTooltip as Tooltip } from "@components/MaterialUI";
 
 import { parseFieldValue } from "@viz/Table";
 import { useFilterStyles, ZeroFilterChoicesMsg } from "@viz/Table/TableFilters";
+import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
 
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<Column<T>>): Column<T> =>
     //@ts-ignore
@@ -296,10 +298,15 @@ export function RadioSelectColumnFilter<T extends Record<string, unknown>>({
                         classes={{ label: classes.formControlLabel }}
                         key={i}
                         value={option}
-                        label={option}
+                        label={
+                            <Typography className={classes.formControlLabel}>
+                                {option}&nbsp;&nbsp;&nbsp;
+                                <Chip label={options[option]} className={classes.infoChip} size="small" />
+                            </Typography>
+                        }
                         control={
                             <Radio
-                                name={`${option} (N = ${options[option]})`}
+                                name={option}
                                 checked={isChecked(option)}
                                 className={classes.checkBox}
                                 size="small"
@@ -329,16 +336,6 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
     const [selectedValues, setSelectedValues] = useState<string[]>(filterValue ? filterValue.split(",") : []);
 
     const classes = useFilterStyles();
-
-    const toggleSelectedValues = (value: any, list: string[]) => {
-        if (list.includes(value)) {
-            // remove
-            list.splice(list.indexOf(value), 1);
-        } else {
-            list.push(value);
-        }
-        return list;
-    };
 
     useEffect(() => {
         if (!selectedValues || selectedValues.length == 0) {
@@ -376,30 +373,32 @@ export function TypeAheadSelectColumnFilter<T extends Record<string, unknown>>({
     }, [options]);
 
     return numFilterChoices && numFilterChoices > 0 ? (
-        <Autocomplete
-            className={classes.select}
-            options={options}
-            id={id}
-            selectOnFocus
-            autoComplete
-            autoHighlight
-            multiple
-            limitTags={3}
-            onInputChange={(event, newInputValue) => {
-                setSelectedValues([...toggleSelectedValues(newInputValue, selectedValues)]);
-            }}
-            inputValue={selectedValues.join() || null}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label={render("Header")}
-                    variant="outlined"
-                    margin="dense"
-                    size="small"
-                    placeholder={column.Header.toString()}
-                />
-            )}
-        />
+        <Tooltip title="Select from list or start typing for suggestions" placement="right">
+            <Autocomplete
+                className={classes.select}
+                options={options}
+                classes={{ listbox: classes.selectListbox, option: classes.selectListbox }}
+                id={id}
+                selectOnFocus
+                autoHighlight
+                multiple
+                limitTags={2}
+                onChange={(event, newInputValue) => {
+                    setSelectedValues([...newInputValue]);
+                }}
+                value={selectedValues || undefined}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label={render("Header")}
+                        variant="outlined"
+                        margin="dense"
+                        size="small"
+                        placeholder={column.Header.toString()}
+                    />
+                )}
+            />
+        </Tooltip>
     ) : (
         <ZeroFilterChoicesMsg label={render("Header")} />
     );
