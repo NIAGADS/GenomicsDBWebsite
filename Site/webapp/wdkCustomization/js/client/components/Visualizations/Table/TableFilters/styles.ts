@@ -103,8 +103,8 @@ export const useGlobalFilterStyles = makeStyles((theme: Theme) =>
 export const useFilterPanelStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            maxHeight: 1000,
-            overflowY: "scroll"
+            //maxHeight: 1000,
+            //overflowY: "scroll"
             //width: "100%"
             //borderRight: `3px solid  ${theme.palette.primary.dark}`,
         },
