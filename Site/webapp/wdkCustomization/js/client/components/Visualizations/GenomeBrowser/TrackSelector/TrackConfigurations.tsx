@@ -1,3 +1,5 @@
+import { merge } from "lodash";
+
 export interface BaseTrackConfig {
     name: string;
     description: string;
@@ -36,11 +38,31 @@ export interface ConfigServiceResponse {
     tracks: RawTrackConfig[];
 }
 
-export interface IgvTrackConfig extends BaseTrackConfig {
+export interface IgvTrackProps {
     reader?: any;
-    supportsWholeGenome: boolean;
+    supportsWholeGenome?: boolean;
     removable?: boolean;
-    displayMode: string;
+    displayMode?: string;
     height?: string;
-    visibilityWindow: number;
+    visibilityWindow?: number;
+    type: string;
+    id: string;
 }
+
+export const convertRawToIgvTrack = (tracks: RawTrackConfig[]): any => {
+    return tracks.map((track: RawTrackConfig) => {
+        const options: IgvTrackProps = {
+            displayMode: "expanded",
+            type: track.track_type,
+            id: track.track,
+            supportsWholeGenome: false,
+            visibilityWindow: track.track_type === 'variant_service' ? 1000000 : -1
+        } 
+
+        if (track.track_type.includes("_service")) {
+            options.reader = track.track_type;
+        }
+
+        return merge(track, options);
+    });
+};

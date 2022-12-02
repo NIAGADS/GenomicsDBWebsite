@@ -9,8 +9,6 @@ const HASH_PREFIX = "#/locus/";
 interface GenomeBrowser {
     searchUrl: string;
     options: any;
-    webAppUrl: string;
-    serviceUrl: string;
     locus?: string;
     onBrowserLoad?: (Browser: any) => void;
 }
@@ -18,21 +16,18 @@ interface GenomeBrowser {
 /* note that id is unreliable, not necessarily passed from config to trackView.track, at least
  --> todo: make sure to pass into config during conversion */
 export const getLoadedTracks = (browser: any): string[] =>
-    get(browser, "trackViews", []).map((view: any) => view.track.name || view.track.id);
+    get(browser, "trackViews", []).map((view: any) => view.track.id || view.track.name);
 
-export const trackIsLoaded = (config: RawTrackConfig, browser: any) => getLoadedTracks(browser).includes(config.name);
+export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(browser).includes(config.id);
 
-export const removeTrack = (config: RawTrackConfig, browser: any) => {
+export const removeTrack = (config: any, browser: any) => {
     browser.removeTrackByName(config.name);
 };
-
 
 export const GenomeBrowser: React.FC<GenomeBrowser> = ({
     locus,
     searchUrl,
-    webAppUrl,
     options,
-    serviceUrl,
     onBrowserLoad
 }) => {
     useLayoutEffect(() => {
@@ -53,10 +48,10 @@ export const GenomeBrowser: React.FC<GenomeBrowser> = ({
         const targetDiv = document.getElementById("genome-browser");
         igv.createBrowser(targetDiv, options).then(function (browser:any) {
             // browser is initialized and can now be used
-            browser.on('locuschange', function (referenceFrameList: any) {
+            /* browser.on('locuschange', function (referenceFrameList: any) {
                 let loc = referenceFrameList.map((rf:any) => rf.getLocusString()).join('%20');
                 window.location.replace(HASH_PREFIX + loc);
-            }); 
+            }); */
 
             browser.addTrackToFactory(
                 "gwas_service",

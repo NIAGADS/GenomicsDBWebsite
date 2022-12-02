@@ -15,26 +15,27 @@ import {
     CheckboxSelectColumnFilter,
     TypeAheadSelectColumnFilter,
     RadioSelectColumnFilter,
-    FilterType
+    FilterType,
 } from "@viz/Table/TableFilters";
 
 import { TissueColumnFilter } from "@viz/GenomeBrowser/TrackSelector";
 import { ConfigServiceResponse, TrackSelectorRow, TrackColumnConfig } from "@viz/GenomeBrowser/TrackSelector";
 
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
 
 export const resolveSelectorData = (response: ConfigServiceResponse): TrackSelectorRow[] => {
     const expectedColumns = Object.keys(response.columns.columns);
-    const data = response.tracks.map((track) => {
-        const resolvedTrack: any = forIn(track, (value: any, k: string, o: { [x: string]: any }) => {
+    const data = response.tracks.map((track: { [x: string]: any }) => {
+        let resolvedTrack: any = {};
+        for (const k in track) {
+            const value = track[k];
             if (isObject(value)) {
-                o = merge(o, value);
-                delete o[k];
+                resolvedTrack = merge(resolvedTrack, value);
             } else {
-                o[k] = value;
+                resolvedTrack[k] = value;
             }
-        });
-
+        }
         const missingColumns = expectedColumns.filter((x: string) => !(x in resolvedTrack));
         missingColumns.forEach((col) => {
             resolvedTrack[col] = null;
@@ -52,6 +53,8 @@ interface TrackSelector {
     browser: any;
     isOpen: boolean;
     handleClose: any;
+    preSelectedTracks?: string[];
+    handleTrackSelect?: any;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,13 +69,34 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isOpen, browser, handleClose }) => {
+export const TrackSelector: React.FC<TrackSelector> = ({
+    columnConfig,
+    data,
+    isOpen,
+    browser,
+    handleClose,
+    handleTrackSelect,
+    preSelectedTracks,
+}) => {
     const { columns, order } = columnConfig;
     const [open, setOpen] = useState<boolean>(isOpen);
+    const [selectedTracks, setSelectedTracks] = useState<string[]>(preSelectedTracks ? preSelectedTracks : []);
     const classes = useStyles();
     const filterTypes = {
         global: useMemo(() => globalTextFilter, []),
     };
+
+    const updateSelectedTracks = (tracks: any) => {
+        setSelectedTracks(
+            tracks.map((track: any) => {
+                return track.original.track;
+            })
+        );
+    };
+
+    useWdkEffect(() => {
+        handleTrackSelect(selectedTracks);
+    }, [selectedTracks]);
 
     const buildColumns = () => {
         if (!data) {
@@ -132,6 +156,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({ columnConfig, data, isO
             title="Genome Browser Track Selector"
             isOpen={open}
             handleClose={handleClose}
+            onRowSelect={updateSelectedTracks}
         />
     );
 };
@@ -180,4 +205,3 @@ const _buildColumn: any = (name: string, header: string, accessorType: ColumnAcc
     id: name,
     sortType: "alphanumeric",
 });
-

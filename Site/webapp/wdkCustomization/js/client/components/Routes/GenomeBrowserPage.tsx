@@ -23,9 +23,11 @@ import {
     RawTrackConfig,
     resolveSelectorData,
     TrackSelector,
+    convertRawToIgvTrack,
 } from "@viz/GenomeBrowser/TrackSelector";
 
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
+import { isString } from "util";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(GenomeBrowser);
@@ -54,10 +56,16 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const classes = useStyles();
 
-    const toggleTracks = (config: RawTrackConfig[], browser: any) => {
-        config.forEach((c) => {
-            trackIsLoaded(c, browser) ? removeTrack(c, browser) : loadTrack(c, browser);
-        });
+    const toggleTracks = (selectedTracks: string[]) => {
+        if (browser && browserTrackConfig) {
+            selectedTracks.forEach((trackKey: string) =>
+                browserTrackConfig
+                    .filter((track:any) => track.id === trackKey)
+                    .map((track:any) => {
+                        trackIsLoaded(track, browser) ? removeTrack(track, browser) : loadTrack(track, browser);
+                    })
+            );
+        }
     };
 
     /* const unloadTrack = (config: TrackConfig, browser: any) => {
@@ -70,8 +78,8 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setBrowser(b);
     }, []);
 
-    const loadTrack = async (config: RawTrackConfig, browser: any) => {
-        setLoadingTrack(config.name);
+    const loadTrack = async (config: any, browser: any) => {
+        setLoadingTrack(config.id);
         await browser.loadTrack(config);
         setLoadingTrack(undefined);
     };
@@ -108,6 +116,11 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         [serviceTrackConfig]
     );
 
+    const browserTrackConfig: any = useMemo(
+        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
+        [serviceTrackConfig]
+    );
+
     return browserOptions && serviceUrl && webAppUrl && resolvedSelectorData ? (
         <CustomPanel
             hasBaseArrow={false}
@@ -115,13 +128,14 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             alignItems="flex-start"
             justifyContent="space-between"
         >
-              {browser ? (
+            {browser ? (
                 <TrackSelector
                     browser={browser}
                     isOpen={trackSelectorIsOpen}
                     handleClose={setTrackSelectorIsOpen.bind(null, false)}
                     columnConfig={serviceTrackConfig.columns}
                     data={resolvedSelectorData}
+                    handleTrackSelect={toggleTracks}
                 />
             ) : null}
 
@@ -130,8 +144,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 //disableRefTrack={true}
                 onBrowserLoad={buildBrowser}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
-                serviceUrl={serviceUrl}
-                webAppUrl={webAppUrl}
                 options={browserOptions}
             />
         </CustomPanel>
