@@ -5,6 +5,7 @@ import { GWASTrack, VariantTrack, GWASServiceReader } from "../../../../lib/igv/
 import { RawTrackConfig } from "@viz/GenomeBrowser/TrackSelector";
 
 const HASH_PREFIX = "#/locus/";
+const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
 
 interface GenomeBrowser {
     searchUrl: string;
@@ -16,47 +17,43 @@ interface GenomeBrowser {
 /* note that id is unreliable, not necessarily passed from config to trackView.track, at least
  --> todo: make sure to pass into config during conversion */
 export const getLoadedTracks = (browser: any): string[] =>
-    get(browser, "trackViews", []).map((view: any) => view.track.id || view.track.name);
+    get(browser, "trackViews", []).map((view: any) => !(view.track.id in ALWAYS_ON_TRACKS) && view.track.id);
 
 export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(browser).includes(config.id);
 
-export const removeTrack = (config: any, browser: any) => {
-    browser.removeTrackByName(config.name);
+// we want to find track by ID b/c some names may be duplicated; so modeled after:
+// https://github.com/igvteam/igv.js/blob/0dfb1f7b02d9660ff1ef0169899c4711496158e8/js/browser.js#L1104
+export const removeTrackById = (trackId: string, browser: any) => {
+    const trackViews = get(browser, "trackViews", []);
+    const trackView = trackViews.filter((view: any) => view.track.id === trackId);
+    browser.removeTrack(trackView.track);
 };
 
-export const GenomeBrowser: React.FC<GenomeBrowser> = ({
-    locus,
-    searchUrl,
-    options,
-    onBrowserLoad
-}) => {
+export const GenomeBrowser: React.FC<GenomeBrowser> = ({ locus, searchUrl, options, onBrowserLoad }) => {
     useLayoutEffect(() => {
         window.addEventListener("ERROR: Genome Browser - ", (event) => {
             console.log(event);
         });
 
         options = merge(options, {
-            locus: locus || "ABCA7",                
+            locus: locus || "ABCA7",
             tracks: [],
             flanking: 1000,
             minimumBases: 40,
             search: {
                 url: `${searchUrl}$FEATURE$`,
-            }
+            },
         });
 
         const targetDiv = document.getElementById("genome-browser");
-        igv.createBrowser(targetDiv, options).then(function (browser:any) {
+        igv.createBrowser(targetDiv, options).then(function (browser: any) {
             // browser is initialized and can now be used
-            /* browser.on('locuschange', function (referenceFrameList: any) {
-                let loc = referenceFrameList.map((rf:any) => rf.getLocusString()).join('%20');
+            browser.on("locuschange", function (referenceFrameList: any) {
+                let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
                 window.location.replace(HASH_PREFIX + loc);
-            }); */
+            });
 
-            browser.addTrackToFactory(
-                "gwas_service",
-                (config: any, browser: any) => new GWASTrack(config, browser)
-            );
+            browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new GWASTrack(config, browser));
 
             browser.addTrackToFactory(
                 "variant_service",
@@ -65,15 +62,9 @@ export const GenomeBrowser: React.FC<GenomeBrowser> = ({
 
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
-       
-        
-    },[locus, onBrowserLoad]);
+    }, [locus, onBrowserLoad]);
 
     return <span style={{ width: "100%" }} id="genome-browser" />;
-}
+};
 
 export default GenomeBrowser;
-
-
-
-
