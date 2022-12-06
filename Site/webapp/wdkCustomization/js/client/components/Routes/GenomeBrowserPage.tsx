@@ -1,33 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { get, find, concat, merge } from "lodash";
+import { find } from "lodash";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
 import { CustomPanel } from "@components/MaterialUI";
 
-import { GenomeBrowser, getLoadedTracks, removeTrack, trackIsLoaded } from "@viz/GenomeBrowser";
+import { GenomeBrowser, getLoadedTracks, removeTrackById } from "@viz/GenomeBrowser";
 
 import {
     ConfigServiceResponse,
     TrackSelectorRow,
-    RawTrackConfig,
     resolveSelectorData,
     TrackSelector,
     convertRawToIgvTrack,
 } from "@viz/GenomeBrowser/TrackSelector";
 
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
-import { isString } from "util";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(GenomeBrowser);
@@ -56,15 +50,33 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const classes = useStyles();
 
+    const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
+        selectedTracks.forEach((trackKey: string) =>
+            browserTrackConfig
+                .filter((track: any) => track.id === trackKey)
+                .map((track: any) => {
+                    // avoid duplicate loads due to aysnc issues
+                    !loadedTracks.includes(track.id) && loadTrack(track, browser);
+                })
+        );
+    };
+
+    const unloadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
+        const removedTracks = loadedTracks.filter((track) => !selectedTracks.includes(track));
+        removedTracks.forEach((trackKey: string) =>
+            browserTrackConfig
+                .filter((track: any) => track.id === trackKey)
+                .map((track: any) => {
+                    removeTrackById(track.id, browser); 
+                })
+        );
+    };
+
     const toggleTracks = (selectedTracks: string[]) => {
         if (browser && browserTrackConfig) {
-            selectedTracks.forEach((trackKey: string) =>
-                browserTrackConfig
-                    .filter((track:any) => track.id === trackKey)
-                    .map((track:any) => {
-                        trackIsLoaded(track, browser) ? removeTrack(track, browser) : loadTrack(track, browser);
-                    })
-            );
+            const loadedTracks = getLoadedTracks(browser);
+            loadTracks(selectedTracks, loadedTracks);
+            unloadTracks(selectedTracks, loadedTracks);
         }
     };
 
