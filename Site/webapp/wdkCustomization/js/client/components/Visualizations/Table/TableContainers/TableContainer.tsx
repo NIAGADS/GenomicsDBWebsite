@@ -226,7 +226,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
                 className={classes.navigationToolbar}
             >
-                <FilterChipBar instance={instance} />
+                {canFilter && <FilterChipBar instance={instance} />}
             </NavigationDrawer>
 
             <Table className={className} instance={instance} />
