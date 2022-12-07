@@ -200,6 +200,7 @@ const _addColumnFilters = (column: any, filterType: string) => {
             break;
         case "typeahead_select":
             column.Filter = TypeAheadSelectColumnFilter;
+            break;
         case "pie":
         case "boolean_pie":
             column.Filter = PieChartColumnFilter;

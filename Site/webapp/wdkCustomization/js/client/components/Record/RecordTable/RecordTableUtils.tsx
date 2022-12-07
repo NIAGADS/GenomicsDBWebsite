@@ -3,7 +3,6 @@ import { isString, forIn } from "lodash";
 import {
     RelativePositionSpan,
     VariantConsequenceImpactSpan,
-    LinkAttribute,
     MetaseqIdAttribute,
 } from "@components/Record/Attributes";
 
@@ -19,7 +18,7 @@ import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components
 export const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
         return forIn(datum, (v: string, k: string, o: { [x: string]: any }) => {
-            o[k] = v; // k.endsWith("_flag") && !v ? null : _parseJson(v);
+            o[k] = v === '' ? null : v; // k.endsWith("_flag") && !v ? null : _parseJson(v);
         });
     });
 };
@@ -30,8 +29,6 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
             return (row: any) => resolveNAs(row[key], <RelativePositionSpan value={row[key]} />);
         case "VariantImpact":
             return (row: any) => resolveNAs(row[key], <VariantConsequenceImpactSpan value={row[key]} />);
-        case "Link":
-            return (row: any) => resolveNAs(row[key], <LinkAttribute value={row[key]} />);
         case "MetaseqID":
             return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]} />);
         case "BooleanGreenCheck":

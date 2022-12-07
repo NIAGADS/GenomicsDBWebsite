@@ -105,80 +105,80 @@
 					name="project_id"
 					internal="true"
 					inReportMaker="false"
-					 />
+				 />
 				<columnAttribute
 					name="gene_type"
 					displayName="Type"
-					 />
+				 />
 				<columnAttribute
 					name="chromosome"
 					displayName="Chromsome"
-					 />
+				 />
 				<columnAttribute
 					name="location_start"
 					displayName="Position (Start)"
-					 />
+				 />
 				<columnAttribute
 					name="location_end"
 					displayName="Position (End)"
-					 />
+				 />
 				<columnAttribute
 					name="strand"
 					displayName="Strand"
-					 />
+				 />
 				<columnAttribute
 					name="is_reversed"
 					internal="true"
 					inReportMaker="false"
-					 />
+				 />
 				<columnAttribute
 					name="gene_name"
 					displayName="Product"
-					 />
+				 />
 				<columnAttribute
 					name="synonyms"
 					displayName="Synonyms"
-					 />
+				 />
 				<columnAttribute
 					name="gene_symbol"
 					displayName="Symbol"
-					 />
+				 />
 				<columnAttribute
 					name="hgnc_id"
 					displayName="HGNC ID"
-					 />
+				 />
 				<columnAttribute
 					name="omim_id"
 					displayName="OMIM ID"
-					 />
+				 />
 				<columnAttribute
 					name="ucsc_id"
 					displayName="UCSC ID"
-					 />
+				 />
 				<columnAttribute
 					name="vega_id"
 					displayName="VEGA ID"
-					 />
+				 />
 				<columnAttribute
 					name="uniprot_id"
 					displayName="UniProt ID(s)"
-					 />
+				 />
 				<columnAttribute
 					name="entrez_id"
 					displayName="NCBI Gene (Entrez) ID"
-					 />
+				 />
 				<columnAttribute
 					name="ensembl_id"
 					displayName="Ensembl ID"
-					 />
+				 />
 				<columnAttribute
 					name="span"
 					displayName="Location"
-					 />
+				 />
 				<columnAttribute
 					name="cytogenetic_location"
 					displayName="Cytogenetic Location"
-					 />
+				 />
 			</attributeQueryRef>
 
 			<table
@@ -190,14 +190,14 @@
 					name="external_id"
 					displayName="External ID"
 					internal="false"
-					 />
+				 />
 				<columnAttribute
 					name="external_links"
 					displayName="Resources"
 					internal="false"
 					truncateTo="5000"
-					 />
-				
+				 />
+
 			</table>
 
 			<table
@@ -209,15 +209,14 @@
 					name="external_id"
 					displayName="External ID"
 					internal="false"
-					 />
+				 />
 				<columnAttribute
 					name="external_links"
 					displayName="Resources"
 					internal="false"
 					truncateTo="5000"
-					 />
+				 />
 
-				
 
 			</table>
 
@@ -230,15 +229,14 @@
 					name="external_id"
 					displayName="External ID"
 					internal="false"
-					 />
+				 />
 				<columnAttribute
 					name="external_links"
 					displayName="Resources"
 					internal="false"
 					truncateTo="5000"
-					 />
+				 />
 
-				
 
 			</table>
 
@@ -251,15 +249,15 @@
 					name="external_id"
 					displayName="External ID"
 					internal="false"
-					 />
+				 />
 				<columnAttribute
 					name="external_links"
 					displayName="Resources"
 					internal="false"
 					truncateTo="5000"
-					 />
+				 />
 
-				
+
 			</table>
 
 			<table
@@ -269,21 +267,20 @@
 				<columnAttribute
 					name="transcript_name"
 					displayName="Transcript"
-					 />
+				 />
 				<columnAttribute
 					name="transcript_accession_link"
 					displayName="Ensembl Transcript"
-					 />
+				 />
 				<columnAttribute
 					name="location_start"
 					displayName="Position (Start)"
-					 />
+				 />
 				<columnAttribute
 					name="location_end"
 					displayName="Position (End)"
-					 />
+				 />
 
-				
 
 			</table>
 
@@ -296,9 +293,7 @@
 					name="gws_variants_summary_plot"
 					internal="true"
 					inReportMaker="false"
-					>
-					
-				</columnAttribute>
+				></columnAttribute>
 			</attributeQueryRef>
 
 			<!-- <attributeQueryRef ref="GeneAttributes.ADEvidenceFlag">
@@ -316,77 +311,69 @@
 				<columnAttribute
 					name="relative_position"
 					displayName="Relative Position"
-					 />
+				 />
 				<columnAttribute
 					name="variant_link"
 					displayName="Variant"
-					 />
+				 />
 				<columnAttribute
 					name="ref_snp_id"
 					displayName="RefSNP ID"
-					 />
+				 />
 				<columnAttribute
 					name="adsp_variant_flag"
 					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
-					 />
+				 />
 				<columnAttribute
 					name="allele"
 					displayName="Test/Minor Allele"
-					 />
+				 />
 				<columnAttribute
 					name="pvalue"
 					displayName="p-value"
-					 />
+				 />
 				<columnAttribute
 					name="gene_impact"
 					displayName="Impact"
-					
 					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
 					name="gene_consequence"
 					displayName="Consequence"
-					
 					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="track_name"
+					name="track_name_link"
 					displayName="Track"
-					 />
-
+				 />
+				<columnAttribute
+					name="track_description"
+					displayName="Track Description"
+				 />
 				<columnAttribute
 					name="population"
 					displayName="Population"
-					 />
+				 />
 				<columnAttribute
 					name="biomarker"
 					displayName="Biomarker"
-					 />
+				 />
 				<columnAttribute
 					name="genotype"
 					displayName="Genotype"
-					 />
+				 />
 				<columnAttribute
 					name="gender"
 					displayName="Gender"
-					 />
+				 />
 				<columnAttribute
 					name="tissue"
 					displayName="Tissue"
-					 />
+				 />
 				<columnAttribute
 					name="covariates"
 					displayName="Covariates"
-					 />
+				 />
 
-				
-
-				
-
-				
-
-				
-
-				
 
 				<description>
 					<![CDATA[
@@ -410,80 +397,77 @@
 				<columnAttribute
 					name="relative_position"
 					displayName="Relative Position"
-					 />
+				 />
 				<columnAttribute
 					name="variant_link"
 					displayName="Variant"
-					 />
+				 />
 				<columnAttribute
 					name="ref_snp_id"
 					displayName="RefSNP ID"
-					 />
+				 />
 				<columnAttribute
 					name="adsp_variant_flag"
 					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
-					 />
+				 />
 				<columnAttribute
 					name="allele"
 					displayName="Test/Minor Allele"
-					 />
+				 />
 				<columnAttribute
 					name="pvalue"
 					displayName="p-value"
-					 />
+				 />
 				<columnAttribute
 					name="gene_impact"
 					displayName="Impact"
-					
 					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
 					name="gene_consequence"
 					displayName="Consequence"
-					
 					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="track_name"
+					name="track_name_link"
 					displayName="Track"
-					 />
+				 />
+				<columnAttribute
+					name="track_description"
+					displayName="Track Description"
+				 />
 				<columnAttribute
 					name="diagnosis"
 					displayName="Diagnosis"
-					 />
+				 />
 				<columnAttribute
 					name="neuropathology"
 					displayName="Neuropathology"
-					 />
+				 />
 				<columnAttribute
 					name="population"
 					displayName="Population"
-					 />
+				 />
 				<columnAttribute
 					name="biomarker"
 					displayName="Biomarker"
-					 />
+				 />
 				<columnAttribute
 					name="genotype"
 					displayName="Genotype"
-					 />
+				 />
 				<columnAttribute
 					name="gender"
 					displayName="Gender"
-					 />
+				 />
 				<columnAttribute
 					name="tissue"
 					displayName="Tissue"
-					 />
+				 />
 				<columnAttribute
 					name="covariates"
 					displayName="Covariates"
-					 />
+				 />
 
-
-				
-
-				
-				
 
 				<description>
 					<![CDATA[
@@ -504,74 +488,69 @@
 					name="source"
 					displayName="Data Source"
 					help="NHGRI or NIAGADS-curated GWAS Catalog"
-					 />
+				 />
 				<columnAttribute
 					name="relative_position"
 					displayName="Relative Position"
-					 />
+				 />
 				<columnAttribute
 					name="variant_link"
 					displayName="Variant"
-					 />
+				 />
 				<columnAttribute
 					name="ref_snp_id"
 					displayName="RefSNP ID"
-					 />
+				 />
 				<columnAttribute
 					name="adsp_variant_flag"
 					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
-					 />
+				 />
 				<columnAttribute
 					name="allele"
 					displayName="Test/Minor Allele"
-					 />
+				 />
 				<columnAttribute
 					name="pvalue"
 					displayName="p-value"
-					 />
+				 />
 				<columnAttribute
 					name="gene_impact"
 					displayName="Impact"
-					
 					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
 					name="gene_consequence"
 					displayName="Consequence"
-					
 					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
 					name="frequency"
 					displayName="Frequency"
-					 />
+				 />
 				<columnAttribute
 					name="trait"
+					displayName="Trait (Reported)"
+				 />
+				<columnAttribute
+					name="mapped_efo_trait"
 					displayName="Trait"
-					 />
+					help="standardized trait; mapped to ontology"
+				 />
 				<columnAttribute
 					name="pubmed_id"
 					displayName="PubMed ID"
-					 />
+				 />
 				<columnAttribute
 					name="study"
 					displayName="Study"
-					 />
+				 />
 				<columnAttribute
 					name="sample"
 					displayName="Sample"
-					 />
+				 />
 				<columnAttribute
 					name="replicate_sample"
 					displayName="Replicate (Stage 2) Sample"
-					 />
-
-				
-
-				
-
-				
-
-				
+				 />
 
 
 				<description>
@@ -592,74 +571,70 @@
 					name="source"
 					displayName="Data Source"
 					help="NHGRI or NIAGADS-curated GWAS Catalog"
-					 />
+				 />
 				<columnAttribute
 					name="relative_position"
 					displayName="Relative Position"
-					 />
+				 />
 				<columnAttribute
 					name="variant_link"
 					displayName="Variant"
-					 />
+				 />
 				<columnAttribute
 					name="ref_snp_id"
 					displayName="RefSNP ID"
-					 />
+				 />
 				<columnAttribute
 					name="adsp_variant_flag"
 					displayName="ADSP Variant?"
 					help="variant identified by the ADSP and passed the ADSP QC protocol"
-					 />
+				 />
 				<columnAttribute
 					name="allele"
 					displayName="Test/Minor Allele"
-					 />
+				 />
 				<columnAttribute
 					name="pvalue"
 					displayName="p-value"
-					 />
+				 />
 				<columnAttribute
 					name="gene_impact"
 					displayName="Impact"
-					
 					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
 					name="gene_consequence"
 					displayName="Consequence"
-					
 					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
 					name="frequency"
 					displayName="Frequency"
-					 />
+				 />
 				<columnAttribute
 					name="trait"
+					displayName="Trait (Reported)"
+				 />
+				<columnAttribute
+					name="mapped_efo_trait"
 					displayName="Trait"
-					 />
+					help="standardized trait; mapped to ontology"
+				 />
 				<columnAttribute
 					name="pubmed_id"
 					displayName="PubMed ID"
-					 />
+				 />
 				<columnAttribute
 					name="study"
 					displayName="Study"
-					 />
+				 />
 				<columnAttribute
 					name="sample"
 					displayName="Sample"
-					 />
+				 />
 				<columnAttribute
 					name="replicate_sample"
 					displayName="Replicate (Stage 2) Sample"
-					 />
+				 />
 
-				
-
-				
-
-				
-
-				
 
 				<description>
 					<![CDATA[   
@@ -705,24 +680,21 @@
 				<columnAttribute
 					displayName="Term"
 					name="term"
-					 />
+				 />
 				<columnAttribute
 					displayName="GO Accession"
 					name="go_accession"
 					help="follow link for more information from AmIGO"
-					 />
+				 />
 				<columnAttribute
 					displayName="Evidence Code"
 					name="go_evidence_code"
-					 />
+				 />
 				<columnAttribute
 					displayName="Ontology"
 					name="ontology"
-					 />
+				 />
 
-				
-
-				
 
 				<description>
 					<![CDATA[
@@ -740,12 +712,11 @@
 				<columnAttribute
 					name="pathway_name"
 					displayName="Pathway"
-					 />
+				 />
 				<columnAttribute
 					name="accession"
 					displayName="Accession"
 					truncateTo="5000"
-					
 					help="view pathway details at KEGG or Reactome" />
 				<!--
 	    <columnAttribute name="pathway_image" displayName="Graph" truncateTo="5000"  help="click image thumbnail to view gene highlighted in the pathway on the KEGG or Reactome website"/>
@@ -753,9 +724,7 @@
 				<columnAttribute
 					name="source"
 					displayName="Resource"
-					 />
-
-				
+				 />
 
 
 				<description>

@@ -105,6 +105,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         greater: useMemo(() => greaterThanFilter, []),
         select: useMemo(() => includesFilter, []),
         multi_select: useMemo(() => includesAnyFilter, []),
+        typeahead_select: useMemo(() => includesAnyFilter, []),
         pie: useMemo(() => includesFilter, []),
         boolean_pie: useMemo(() => includesFilter, []),
         pvalue: useMemo(() => greaterThanFilter, []), // I think this is necessary as a placeholder

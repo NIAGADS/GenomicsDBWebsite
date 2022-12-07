@@ -4,7 +4,7 @@ export const resolveJSONFieldValue = (value: string) => {
     try {
         const jsonValue = JSON.parse(value);
         if (Array.isArray(jsonValue)) {
-            throw new Error(`DEBUG ERROR: TODO JSON Array: ${JSON.stringify(jsonValue)}`);
+            return jsonValue.map((item) => item.value).join(' // ');
         }
         // JSON parse yields scientific notation parsed correctly, so this will return
         // correctly formatted numbers
@@ -18,6 +18,7 @@ export const resolveJSONFieldValue = (value: string) => {
 export const resolveNullFieldValue = (value: string, returnNA: boolean) => {
     return value === null || value === "N/A" ? (returnNA ? "N/A" : "") : resolveJSONFieldValue(value);
 };
+
 
 export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
     if (!value) {

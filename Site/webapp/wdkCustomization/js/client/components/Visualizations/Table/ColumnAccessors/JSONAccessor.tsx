@@ -3,10 +3,21 @@ import { isObject } from "lodash";
 
 import Box from "@material-ui/core/Box";
 
-import { ColumnAccessor, AnnotatedTextAccessor, LinkAccessor } from "@viz/Table/ColumnAccessors";
+import { ColumnAccessor, AnnotatedTextAccessor, LinkAccessor, LinkListAccessor } from "@viz/Table/ColumnAccessors";
 import { ColoredTextAccessor } from "./TextAccessors";
 
 export const jsonAccessorType = (obj: any) => {
+    if (Array.isArray(obj)) {
+        if ("url" in obj[0]) {
+            return "link_list";
+        } else {
+            throw new Error(
+                `ERROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown array type: ${JSON.stringify(
+                    obj
+                )}`
+            );
+        }
+    }
 
     if (!("value" in obj)) {
         throw new Error(
@@ -24,7 +35,9 @@ export const jsonAccessorType = (obj: any) => {
     }
 
     throw new Error(
-        `ERROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${JSON.stringify(obj)}`
+        `ERROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${JSON.stringify(
+            obj
+        )}`
     );
 };
 
@@ -38,6 +51,8 @@ export const JSONAccessor: React.SFC<ColumnAccessor> = ({ value }) => {
             return <AnnotatedTextAccessor value={obj} />;
         case "link":
             return <LinkAccessor value={obj} />;
+        case "link_list":
+            return <LinkListAccessor value={obj} />;
         default: // not handled, so make it visible so
             return <ColoredTextAccessor value={value} htmlColor="red" />;
     }

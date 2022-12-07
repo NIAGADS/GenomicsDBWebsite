@@ -61,13 +61,14 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         filters: {
             pvalue: "pvalue",
             source: "select",
+            mapped_efo_trait:"typeahead_select"
         },
         filterGroups: [
-            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Statistics", columns: ["pvalue", "mapped_efo_trait"], defaultOpen: true },
             { label: "Annotation", columns: ["source"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "mapped_efo_trait"],
-        requiredColumns: ["pvalue", "trait", "study"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "trait"],
+        requiredColumns: ["pvalue", "mapped_efo_trait", "study"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
@@ -78,13 +79,14 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         filters: {
             pvalue: "pvalue",
             source: "select",
+            mapped_efo_trait: "typeahead_select"
         },
         filterGroups: [
-            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Statistics", columns: ["pvalue", "mapped_efo_trait"], defaultOpen: true },
             { label: "Annotation", columns: ["source"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "frequency"],
-        requiredColumns: ["pvalue", "trait", "study"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "trait", "frequency"],
+        requiredColumns: ["pvalue", "mapped_efo_trait", "study"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
@@ -124,6 +126,6 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: false,
-        accessors: { frequency: "PercentageBar" },
+        accessors: { frequency: "PercentageBar", population: "AnnotatedText" },
     },
 };
