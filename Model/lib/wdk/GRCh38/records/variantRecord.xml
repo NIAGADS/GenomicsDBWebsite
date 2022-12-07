@@ -262,7 +262,35 @@
 			<table name="ad_associations_from_gwas" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromGWAS">
 				<columnAttribute name="allele" displayName="Allele" />
 				<columnAttribute name="pvalue" displayName="p-value" />
-				<columnAttribute name="track" displayName="Track" />
+				<columnAttribute name="track_name_link" displayName="Track" />
+				<columnAttribute
+				name="track_description"
+				displayName="Track Description"
+			 />
+			<columnAttribute
+				name="population"
+				displayName="Population"
+			 />
+			<columnAttribute
+				name="biomarker"
+				displayName="Biomarker"
+			 />
+			<columnAttribute
+				name="genotype"
+				displayName="Genotype"
+			 />
+			<columnAttribute
+				name="gender"
+				displayName="Gender"
+			 />
+			<columnAttribute
+				name="tissue"
+				displayName="Tissue"
+			 />
+			<columnAttribute
+				name="covariates"
+				displayName="Covariates"
+			 />
 
 
 				<description>

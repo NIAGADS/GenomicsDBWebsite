@@ -1,4 +1,4 @@
-import { isString } from "lodash";
+import { isObject } from "lodash";
 
 export const resolveJSONFieldValue = (value: string) => {
     try {

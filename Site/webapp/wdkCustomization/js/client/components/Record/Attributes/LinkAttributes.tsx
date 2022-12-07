@@ -5,7 +5,7 @@ import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { LinkAccessor, DefaultTextAccessor, ColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 export const LinkAttribute: React.FC<{value:string}> = ({value}) => {
-    return <DefaultTextAccessor value={JSON.parse(value)}/>
+    return <LinkAccessor value={JSON.parse(value)}/>
 }
 
 // json array of [{url: , value: , tooltip?: }, ...]
