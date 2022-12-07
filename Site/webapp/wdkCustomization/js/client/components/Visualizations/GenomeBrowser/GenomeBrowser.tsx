@@ -14,10 +14,12 @@ interface GenomeBrowser {
     onBrowserLoad?: (Browser: any) => void;
 }
 
+//loadedTracks.filter((track) => !selectedTracks.includes(track));
+
 /* note that id is unreliable, not necessarily passed from config to trackView.track, at least
  --> todo: make sure to pass into config during conversion */
 export const getLoadedTracks = (browser: any): string[] =>
-    get(browser, "trackViews", []).map((view: any) => !(view.track.id in ALWAYS_ON_TRACKS) && view.track.id);
+    get(browser, "trackViews", []).map((view: any) => view.track.id).filter((track: string) => !ALWAYS_ON_TRACKS.includes(track));
 
 export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(browser).includes(config.id);
 
@@ -26,7 +28,7 @@ export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(brow
 export const removeTrackById = (trackId: string, browser: any) => {
     const trackViews = get(browser, "trackViews", []);
     const trackView = trackViews.filter((view: any) => view.track.id === trackId);
-    browser.removeTrack(trackView.track);
+    browser.removeTrack(trackView[0].track);
 };
 
 export const GenomeBrowser: React.FC<GenomeBrowser> = ({ locus, searchUrl, options, onBrowserLoad }) => {
