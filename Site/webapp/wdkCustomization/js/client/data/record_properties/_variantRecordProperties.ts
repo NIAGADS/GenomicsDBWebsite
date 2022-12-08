@@ -15,8 +15,8 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         ],
         defaultFilter: "pvalue",
         hiddenColumns: [
-            "population",
             "diagnosis",
+            "track_description",
             "neuropathology",
             "covariates",
             "gender",
