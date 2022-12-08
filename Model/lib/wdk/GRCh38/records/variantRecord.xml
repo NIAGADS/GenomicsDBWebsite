@@ -12,7 +12,7 @@
 			<idAttribute name="primary_key" displayName="Variant"
 				help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
 				<text>
-					<![CDATA[$$display_metaseq_id$$]]>
+					<![CDATA[$$display_id$$]]>
 				</text>
 			</idAttribute>
 
@@ -75,7 +75,7 @@
 
 			<attributeQueryRef ref="VariantAttributes.SortingAttributes">
 				<columnAttribute name="project_id" internal="true" inReportMaker="false" />
-				<columnAttribute name="display_metaseq_id" displayName="Variant" internal="true" inReportMaker="false" />
+				<columnAttribute name="display_id" displayName="Variant" internal="true" inReportMaker="false" />
 			</attributeQueryRef>
 
 			<attributeQueryRef ref="VariantAttributes.BasicAttributes">

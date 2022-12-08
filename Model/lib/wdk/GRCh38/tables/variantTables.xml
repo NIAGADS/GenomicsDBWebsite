@@ -201,7 +201,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
 		 build_link_attribute(ta.name, '/record/track/', ta.track, NULL) AS track_name_link,
-		 ta.description,
+		 ta.description AS track_description,
 		 
 		 CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
 		THEN 'European' ELSE replace(bt.track_config->'biosample_characteristics'->>'population', ', ', ' // ') END AS population,
@@ -223,7 +223,10 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 AND c.characteristic LIKE '%Alzh%')
 		 
 		 
-		 SELECT id.source_id, t.track_name_link AS track, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
+		 SELECT id.source_id, 
+		 r.test_allele AS allele, 
+		 to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue,
+		 t.*
 		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key

@@ -30,13 +30,13 @@
     <sqlQuery name="SortingAttributes">
       <column name="project_id" columnType="string"/>
       <column name="source_id" columnType="string"/>
-      <column name="display_metaseq_id" columnType="string"/>
+      <column name="display_id" columnType="string"/>
       <sql>
 	<![CDATA[
 		 SELECT '@PROJECT_ID@'::text AS project_id, 
 		 ids.source_id AS source_id,
-		 truncate_str(split_part(ids.source_id, '_', 1), 27) AS display_metaseq_id
-		 FROM (##WDK_ID_SQL##) ids			
+		 v.details->>'display_id' AS display_id
+		 FROM (##WDK_ID_SQL##) ids, get_variant_display_details(ids.source_id) v	
 	]]>	
       </sql>
     </sqlQuery>
@@ -64,34 +64,30 @@
       <column name="adsp_qc_status" columnType="string"/>
       <column name="adsp_qc_flags" columnType="string"/>
       
+
       <sql>
 	<![CDATA[
 		 SELECT '@PROJECT_ID@'::TEXT AS project_id,
 		 record_primary_key AS source_id,
-		 ref_snp_id,
-		 metaseq_id,
-		 truncate_str(metaseq_id, 30) AS display_metaseq_id,
-		 
-		 display_attributes->>'display_allele' AS display_allele,
-		 display_attributes->>'variant_class' AS variant_class,
-		 display_attributes->>'variant_class_abbrev' AS variant_class_abbrev,
-		 
-		 chromosome,
-		 position,
+		 v.details->>'ref_snp_id' AS ref_snp_id,
+		 v.details->>'metaseq_id' AS metaseq_id,
+		 v.details->>'display_id' AS display_id,
+		 v.details->>'display_allele' AS display_allele,
+		 v.details->>'variant_class' AS variant_class,
+		 v.details->>'variant_class_abbrev' AS variant_class_abbrev,
+		 v.details->>'chromosome' AS chromosome,
+		 (v.details->>'position')::int AS position,
 
-		 CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position::text 
-		 ELSE display_attributes->>'location_start' || ' - ' || (display_attributes->>'location_end')::text END AS location,
-
-		 chromosome || ':' || CASE WHEN display_attributes->>'location_start' = display_attributes->>'location_end' THEN position::text
-		 ELSE (display_attributes->>'location_start')::text || ' - ' || (display_attributes->>'location_end')::text END AS span,
-
-		 is_adsp_variant,
-		 adsp_variant_flag(is_adsp_variant) AS adsp_display_flag,
+		 v.details->>'location' AS location,
+		 v.details->>'chromosome' || ':' || (v.details->>'location')::text AS span,
 		 
-		 adsp_qc_status(record_primary_key) AS adsp_qc_status,
-		 adsp_qc_call(record_primary_key) AS adsp_qc_flags
+		 (v.details->>'is_adsp_variant')::boolean AS is_adsp_variant,
+		 adsp_variant_flag((v.details->>'is_adsp_variant')::boolean) AS adsp_display_flag,
 		 
-		 FROM AnnotatedVDB.Variant
+		 adsp_qc_status(ids.source_id) AS adsp_qc_status,
+		 adsp_qc_call(ids.source_id) AS adsp_qc_flags
+		 
+		 FROM (##WDK_ID_SQL##) ids, get_variant_display_details(ids.source_id) v	
 	]]>
       </sql>
     </sqlQuery>
