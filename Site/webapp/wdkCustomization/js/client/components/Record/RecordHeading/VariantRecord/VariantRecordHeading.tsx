@@ -36,7 +36,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
             <Grid item container direction="column" sm={3}>
                 <Grid item>
                     <Typography variant="h5">
-                        <MetaseqIdAttribute value={attributes.display_metaseq_id.toString()} />
+                        <MetaseqIdAttribute value={attributes.metaseq_id.toString()} />
                     </Typography>
                     {attributes.ref_snp_id && (
                         <Typography>
