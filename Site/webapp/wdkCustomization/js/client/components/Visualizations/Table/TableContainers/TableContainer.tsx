@@ -219,10 +219,10 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                 navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
                 toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
-                toggleHelp="Display table summary and advanced filters"
-                toggleText="Filter"
+                toggleHelp="Select columns and advanced filters"
+                toggleText="Modify Table"
                 drawerSections={_buildDrawerSections()}
-                drawerCloseLabel="Close Table Filter"
+                drawerCloseLabel="Close"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
                 className={classes.navigationToolbar}
             >
