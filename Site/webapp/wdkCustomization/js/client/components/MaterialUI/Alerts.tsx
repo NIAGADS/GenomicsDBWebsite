@@ -28,6 +28,17 @@ export const InfoAlert: React.SFC<{ title: string, message: string, className?:s
   );
 };
 
+export const WarningAlert: React.SFC<{ title: string, message: string, className?:string }> = ({ title, message, className }) => {
+  const classes = useStyles();
+
+  return (
+      <Alert severity="warning" className={className ? `${className} ${classes.alert}`  : classes.alert}>
+          <AlertTitle className={classes.alertTitle}>{title}</AlertTitle>
+          {message}
+      </Alert>
+  );
+};
+
 export const ComingSoonAlert: React.SFC<{ message: string }> = ({ message }) => {
   const classes = useStyles();
   return (
