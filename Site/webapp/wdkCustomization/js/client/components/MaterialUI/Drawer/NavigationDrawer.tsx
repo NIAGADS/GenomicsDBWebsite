@@ -31,6 +31,11 @@ const useDrawerStyles = (props: any) => makeStyles((theme: Theme) =>
             //justifyContent: "flex-end",
             //marginTop: theme.spacing(1),
         },
+        drawerHeaderContents: {
+            backgroundColor: theme.palette.secondary.main,
+            borderRadius: 4,
+            marginBottom: theme.spacing(1)
+        },
         title: {
             fontSize: theme.typography.pxToRem(12),
         },
@@ -100,7 +105,7 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
                     {drawerCloseLabel ? drawerCloseLabel : "Close"}
                 </Button>
             </Grid>
-            <Grid item>{drawerHeaderContents}</Grid>
+            <Grid className={classes.drawerHeaderContents} item>{drawerHeaderContents}</Grid>
         </Grid>
     );
 
