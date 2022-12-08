@@ -269,7 +269,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                 toggleText="Browse Tracks"
                 drawerHeaderContents={title ? renderDrawerHeaderContents : null}
                 className={classes.navigationToolbar}
-                width="80%"
+                width="90%"
                 encapsulated={true}
             >
                 <>
