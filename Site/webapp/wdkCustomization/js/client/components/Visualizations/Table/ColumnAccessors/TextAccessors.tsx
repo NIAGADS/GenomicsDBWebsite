@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { isObject, isString } from "lodash";
 
 import Box from "@material-ui/core/Box";
-import Tooltip from "@material-ui/core/Tooltip";
+import { CustomTooltip as Tooltip} from "@components/MaterialUI";
 
 import { ColumnAccessor, JSONAccessor } from "@viz/Table/ColumnAccessors";
 import { parseFieldValue } from "@viz/Table";

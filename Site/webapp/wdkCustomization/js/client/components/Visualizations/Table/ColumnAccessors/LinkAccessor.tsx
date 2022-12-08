@@ -1,7 +1,7 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-import Tooltip from "@material-ui/core/Tooltip";
+import { CustomTooltip as Tooltip} from "@components/MaterialUI";
 import Link from "@material-ui/core/Link";
 
 import { ColumnAccessor } from "@viz/Table/ColumnAccessors";
