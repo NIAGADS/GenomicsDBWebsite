@@ -13,7 +13,7 @@ import { RecordInstance } from "wdk-client/Utils/WdkModel";
 import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
 import { MostSevereConsequenceSection } from "./VariantHeaderSections";
 
-import { CustomTooltip as Tooltip, UnpaddedListItem as ListItem, WarningAlert } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip, WhiteTooltip, UnpaddedListItem as ListItem, WarningAlert } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
@@ -76,7 +76,7 @@ const ADSPStatusDisplay: React.FC<{ isAdspVariant: any; callFlags: any }> = ({ i
     const calls = callFlags ? JSON.parse(callFlags.toString()) : null;
     const passed = calls ? Boolean(calls[Object.keys(calls)[0]]) : false;
     return Boolean(isAdspVariant ? isAdspVariant.toString() : isAdspVariant) ? (
-        <Tooltip
+        <WhiteTooltip
             arrow
             title={
                 <>
@@ -91,9 +91,9 @@ const ADSPStatusDisplay: React.FC<{ isAdspVariant: any; callFlags: any }> = ({ i
             }
         >
             <Chip color="secondary" icon={<InfoIcon />} label="ADSP Variant" />
-        </Tooltip>
+        </WhiteTooltip>
     ) : passed ? (
-        <Tooltip
+        <WhiteTooltip
             arrow
             title={
                 <>
@@ -108,7 +108,7 @@ const ADSPStatusDisplay: React.FC<{ isAdspVariant: any; callFlags: any }> = ({ i
             }
         >
             <Chip color="secondary" icon={<InfoIcon />} label="variant flagged by the ADSP" />
-        </Tooltip>
+        </WhiteTooltip>
     ) : null;
 };
 

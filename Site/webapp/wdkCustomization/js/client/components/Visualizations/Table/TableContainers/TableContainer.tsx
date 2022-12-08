@@ -25,6 +25,7 @@ import {
     fuzzyTextFilter,
     numericTextFilter,
     greaterThanFilter,
+    lessThanFilter,
     includesFilter,
     includesAnyFilter,
     FilterGroup,
@@ -109,6 +110,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         pie: useMemo(() => includesFilter, []),
         boolean_pie: useMemo(() => includesFilter, []),
         pvalue: useMemo(() => greaterThanFilter, []), // I think this is necessary as a placeholder
+        greater_than_threshold: useMemo(() => greaterThanFilter, []),
+        less_than_threshold: useMemo(() => lessThanFilter, []),
     };
 
     // add custom filterTypes into the default / overwrite defaults
@@ -120,7 +123,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         basic: useMemo(() => basicSort, []),
         textCaseSensitive: useMemo(() => textCaseSensitiveSort, []),
         text: useMemo(() => textSort, []),
-        barChart: useMemo(() => barChartSort, []),
+        stackedBar: useMemo(() => barChartSort, []),
         booleanFlag: useMemo(() => booleanFlagSort, []),
         link: useMemo(() => linkSort, []),
         scientificNotation: useMemo(() => scientificNotationSort, []),
@@ -206,8 +209,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
 
     const renderDrawerHeaderContents = (
         <>
-            <Typography variant="h6">
-                Modify table: <em>{title}</em>
+            <Typography variant="h6" style={{padding:"8px"}}>
+                Modify table: <em className="red">{title}</em>
             </Typography>
         </>
     );

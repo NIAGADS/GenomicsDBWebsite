@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { LinkAttributeList } from "@components/Record/Attributes";
 
-import { CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 export const AlternativeVariantsSection: React.FC<{ variants: string }> = ({ variants }) => (
     <Box>

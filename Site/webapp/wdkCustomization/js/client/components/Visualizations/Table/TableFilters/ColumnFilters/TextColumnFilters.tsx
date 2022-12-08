@@ -14,7 +14,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import { Autocomplete } from "@material-ui/lab";
 
-import { ComingSoonAlert, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { ComingSoonAlert, StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 import { parseFieldValue } from "@viz/Table";
 import { useFilterStyles, ZeroFilterChoicesMsg } from "@viz/Table/TableFilters";

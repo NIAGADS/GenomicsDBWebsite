@@ -2,12 +2,12 @@
 <wdkModel>
 	<recordClassSet name="GeneRecordClasses">
 		<recordClass
-			name="GeneRecordClass"
-			displayName="Gene"
-			displayNamePlural="Genes"
-			shortDisplayName="Gene"
-			useBasket="false"
-			urlName="gene">
+				name="GeneRecordClass"
+				displayName="Gene"
+				displayNamePlural="Genes"
+				shortDisplayName="Gene"
+				useBasket="false"
+				urlName="gene">
 			<!-- =================================================================== -->
 			<!-- Primary Key -->
 			<!-- =================================================================== -->
@@ -16,8 +16,8 @@
 			</primaryKey>
 
 			<idAttribute
-				name="primary_key"
-				displayName="Gene">
+					name="primary_key"
+					displayName="Gene">
 				<text>
 					<![CDATA[$$gene_symbol$$]]>
 				</text>
@@ -31,35 +31,35 @@
 			<!-- Reporters -->
 			<!-- =================================================================== -->
 			<reporter
-				name="fullRecord"
-				displayName="%%fullReporterDisplayName%%"
-				scopes="record"
-				implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+					name="fullRecord"
+					displayName="%%fullReporterDisplayName%%"
+					scopes="record"
+					implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
 			<reporter
-				name="attributesTabular"
-				displayName="%%attributesReporterDisplayName%%"
-				scopes="results"
-				implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+					name="attributesTabular"
+					displayName="%%attributesReporterDisplayName%%"
+					scopes="results"
+					implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
 				<description> %%attributesReporterDescription%%</description>
 				<property name="page_size">1000000</property>
 			</reporter>
 
 			<reporter
-				name="tableTabular"
-				displayName="%%tableReporterDisplayName%%"
-				scopes="results"
-				implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+					name="tableTabular"
+					displayName="%%tableReporterDisplayName%%"
+					scopes="results"
+					implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
 				<description>%%tableReporterDescription%%</description>
 				<property name="page_size">1000000</property>
 			</reporter>
 
 			<reporter
-				name="xml"
-				displayName="XML: choose from columns
+					name="xml"
+					displayName="XML: choose from columns
 					and/or tables"
-				scopes=""
-				implementation="org.gusdb.wdk.model.report.reporter.XMLReporter"></reporter>
+					scopes=""
+					implementation="org.gusdb.wdk.model.report.reporter.XMLReporter"></reporter>
 
 			<!--<reporter name="json" displayName="JSON: choose from columns
 					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
@@ -76,210 +76,179 @@
 			<!-- Summary and record views -->
 			<!-- =============================================================== -->
 			<summaryView
-				name="_default"
-				display="Gene Results">
+					name="_default"
+					display="Gene Results">
 				<description>
 					<![CDATA[View gene details.]]>
 				</description>
 			</summaryView>
 
 			<summaryView
-				name="ideogram"
-				display="Genome View">
+					name="ideogram"
+					display="Genome View">
 				<description>
 					<![CDATA[View your results mapped against the genome.]]>
 				</description>
 			</summaryView>
 
 			<reporter
-				name="genomeViewReporter"
-				displayName="Ideogram"
-				scopes=""
-				implementation="org.niagads.genomics.model.report.summaryview.genomeview.GeneGenomeViewReporter" />
+					name="genomeViewReporter"
+					displayName="Ideogram"
+					scopes=""
+					implementation="org.niagads.genomics.model.report.summaryview.genomeview.GeneGenomeViewReporter" />
 
 			<!-- =============================================================== -->
 			<!-- Annotation and Link Outs -->
 			<!-- =============================================================== -->
 			<attributeQueryRef ref="GeneAttributes.BasicAttributes">
 				<columnAttribute
-					name="project_id"
-					internal="true"
-					inReportMaker="false"
-				 />
+						name="project_id"
+						internal="true"
+						inReportMaker="false" />
 				<columnAttribute
-					name="gene_type"
-					displayName="Type"
-				 />
+						name="gene_type"
+						displayName="Type" />
 				<columnAttribute
-					name="chromosome"
-					displayName="Chromsome"
-				 />
+						name="chromosome"
+						displayName="Chromsome" />
 				<columnAttribute
-					name="location_start"
-					displayName="Position (Start)"
-				 />
+						name="location_start"
+						displayName="Position (Start)" />
 				<columnAttribute
-					name="location_end"
-					displayName="Position (End)"
-				 />
+						name="location_end"
+						displayName="Position (End)" />
 				<columnAttribute
-					name="strand"
-					displayName="Strand"
-				 />
+						name="strand"
+						displayName="Strand" />
 				<columnAttribute
-					name="is_reversed"
-					internal="true"
-					inReportMaker="false"
-				 />
+						name="is_reversed"
+						internal="true"
+						inReportMaker="false" />
 				<columnAttribute
-					name="gene_name"
-					displayName="Product"
-				 />
+						name="gene_name"
+						displayName="Product" />
 				<columnAttribute
-					name="synonyms"
-					displayName="Synonyms"
-				 />
+						name="synonyms"
+						displayName="Synonyms" />
 				<columnAttribute
-					name="gene_symbol"
-					displayName="Symbol"
-				 />
+						name="gene_symbol"
+						displayName="Symbol" />
 				<columnAttribute
-					name="hgnc_id"
-					displayName="HGNC ID"
-				 />
+						name="hgnc_id"
+						displayName="HGNC ID" />
 				<columnAttribute
-					name="omim_id"
-					displayName="OMIM ID"
-				 />
+						name="omim_id"
+						displayName="OMIM ID" />
 				<columnAttribute
-					name="ucsc_id"
-					displayName="UCSC ID"
-				 />
+						name="ucsc_id"
+						displayName="UCSC ID" />
 				<columnAttribute
-					name="vega_id"
-					displayName="VEGA ID"
-				 />
+						name="vega_id"
+						displayName="VEGA ID" />
 				<columnAttribute
-					name="uniprot_id"
-					displayName="UniProt ID(s)"
-				 />
+						name="uniprot_id"
+						displayName="UniProt ID(s)" />
 				<columnAttribute
-					name="entrez_id"
-					displayName="NCBI Gene (Entrez) ID"
-				 />
+						name="entrez_id"
+						displayName="NCBI Gene (Entrez) ID" />
 				<columnAttribute
-					name="ensembl_id"
-					displayName="Ensembl ID"
-				 />
+						name="ensembl_id"
+						displayName="Ensembl ID" />
 				<columnAttribute
-					name="span"
-					displayName="Location"
-				 />
+						name="span"
+						displayName="Location" />
 				<columnAttribute
-					name="cytogenetic_location"
-					displayName="Cytogenetic Location"
-				 />
+						name="cytogenetic_location"
+						displayName="Cytogenetic Location" />
 			</attributeQueryRef>
 
 			<table
-				name="record_link_outs"
-				displayName="Related Gene Records"
-				inReportMaker="false"
-				queryRef="GeneTables.DbRefs_Gene">
+					name="record_link_outs"
+					displayName="Related Gene Records"
+					inReportMaker="false"
+					queryRef="GeneTables.DbRefs_Gene">
 				<columnAttribute
-					name="external_id"
-					displayName="External ID"
-					internal="false"
-				 />
+						name="external_id"
+						displayName="External ID"
+						internal="false" />
 				<columnAttribute
-					name="external_links"
-					displayName="Resources"
-					internal="false"
-					truncateTo="5000"
-				 />
+						name="external_links"
+						displayName="Resources"
+						internal="false"
+						truncateTo="5000" />
 
 			</table>
 
 			<table
-				name="sequence_link_outs"
-				displayName="Nucleotide Sequences"
-				inReportMaker="false"
-				queryRef="GeneTables.DbRefs_NSeq">
+					name="sequence_link_outs"
+					displayName="Nucleotide Sequences"
+					inReportMaker="false"
+					queryRef="GeneTables.DbRefs_NSeq">
 				<columnAttribute
-					name="external_id"
-					displayName="External ID"
-					internal="false"
-				 />
+						name="external_id"
+						displayName="External ID"
+						internal="false" />
 				<columnAttribute
-					name="external_links"
-					displayName="Resources"
-					internal="false"
-					truncateTo="5000"
-				 />
+						name="external_links"
+						displayName="Resources"
+						internal="false"
+						truncateTo="5000" />
 
 
 			</table>
 
 			<table
-				name="protein_link_outs"
-				displayName="Proteins"
-				inReportMaker="false"
-				queryRef="GeneTables.DbRefs_Proteins">
+					name="protein_link_outs"
+					displayName="Proteins"
+					inReportMaker="false"
+					queryRef="GeneTables.DbRefs_Proteins">
 				<columnAttribute
-					name="external_id"
-					displayName="External ID"
-					internal="false"
-				 />
+						name="external_id"
+						displayName="External ID"
+						internal="false" />
 				<columnAttribute
-					name="external_links"
-					displayName="Resources"
-					internal="false"
-					truncateTo="5000"
-				 />
+						name="external_links"
+						displayName="Resources"
+						internal="false"
+						truncateTo="5000" />
 
 
 			</table>
 
 			<table
-				name="clinical_link_outs"
-				displayName="Clinical"
-				inReportMaker="false"
-				queryRef="GeneTables.DbRefs_Clinical">
+					name="clinical_link_outs"
+					displayName="Clinical"
+					inReportMaker="false"
+					queryRef="GeneTables.DbRefs_Clinical">
 				<columnAttribute
-					name="external_id"
-					displayName="External ID"
-					internal="false"
-				 />
+						name="external_id"
+						displayName="External ID"
+						internal="false" />
 				<columnAttribute
-					name="external_links"
-					displayName="Resources"
-					internal="false"
-					truncateTo="5000"
-				 />
+						name="external_links"
+						displayName="Resources"
+						internal="false"
+						truncateTo="5000" />
 
 
 			</table>
 
 			<table
-				name="transcript_link_outs"
-				displayName="Transcripts"
-				queryRef="GeneTables.Transcripts">
+					name="transcript_link_outs"
+					displayName="Transcripts"
+					queryRef="GeneTables.Transcripts">
 				<columnAttribute
-					name="transcript_name"
-					displayName="Transcript"
-				 />
+						name="transcript_name"
+						displayName="Transcript" />
 				<columnAttribute
-					name="transcript_accession_link"
-					displayName="Ensembl Transcript"
-				 />
+						name="transcript_accession_link"
+						displayName="Ensembl Transcript" />
 				<columnAttribute
-					name="location_start"
-					displayName="Position (Start)"
-				 />
+						name="location_start"
+						displayName="Position (Start)" />
 				<columnAttribute
-					name="location_end"
-					displayName="Position (End)"
-				 />
+						name="location_end"
+						displayName="Position (End)" />
 
 
 			</table>
@@ -290,10 +259,9 @@
 
 			<attributeQueryRef ref="GeneAttributes.GWSVariantsPlot">
 				<columnAttribute
-					name="gws_variants_summary_plot"
-					internal="true"
-					inReportMaker="false"
-				></columnAttribute>
+						name="gws_variants_summary_plot"
+						internal="true"
+						inReportMaker="false"></columnAttribute>
 			</attributeQueryRef>
 
 			<!-- <attributeQueryRef ref="GeneAttributes.ADEvidenceFlag">
@@ -305,75 +273,60 @@
 
 			<!-- GWAS -->
 			<table
-				name="ad_variants_from_gwas"
-				displayName="Alzheimer's Disease"
-				queryRef="GeneTables.ADVariantsFromGWAS">
+					name="ad_variants_from_gwas"
+					displayName="Alzheimer's Disease"
+					queryRef="GeneTables.ADVariantsFromGWAS">
 				<columnAttribute
-					name="relative_position"
-					displayName="Relative Position"
-				 />
+						name="relative_position"
+						displayName="Relative Position" />
 				<columnAttribute
-					name="variant_link"
-					displayName="Variant"
-				 />
+						name="variant_link"
+						displayName="Variant" />
 				<columnAttribute
-					name="ref_snp_id"
-					displayName="RefSNP ID"
-				 />
+						name="pvalue"
+						displayName="p-value" />
 				<columnAttribute
-					name="adsp_variant_flag"
-					displayName="ADSP Variant?"
-					help="variant identified by the ADSP and passed the ADSP QC protocol"
-				 />
+						name="allele"
+						displayName="Test/Minor Allele" />
 				<columnAttribute
-					name="allele"
-					displayName="Test/Minor Allele"
-				 />
+						name="track_name_link"
+						displayName="Track" />
 				<columnAttribute
-					name="pvalue"
-					displayName="p-value"
-				 />
+						name="track_description"
+						displayName="Track Description" />
 				<columnAttribute
-					name="gene_impact"
-					displayName="Impact"
-					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="ref_snp_id"
+						displayName="RefSNP ID" />
 				<columnAttribute
-					name="gene_consequence"
-					displayName="Consequence"
-					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="adsp_variant_flag"
+						displayName="ADSP Variant?"
+						help="variant identified by the ADSP and passed the ADSP QC protocol" />
 				<columnAttribute
-					name="track_name_link"
-					displayName="Track"
-				 />
+						name="gene_impact"
+						displayName="Impact"
+						help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="track_description"
-					displayName="Track Description"
-				 />
+						name="gene_consequence"
+						displayName="Consequence"
+						help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="population"
-					displayName="Population"
-				 />
+						name="population"
+						displayName="Population" />
 				<columnAttribute
-					name="biomarker"
-					displayName="Biomarker"
-				 />
+						name="biomarker"
+						displayName="Biomarker" />
 				<columnAttribute
-					name="genotype"
-					displayName="Genotype"
-				 />
+						name="genotype"
+						displayName="Genotype" />
 				<columnAttribute
-					name="gender"
-					displayName="Gender"
-				 />
+						name="gender"
+						displayName="Gender" />
 				<columnAttribute
-					name="tissue"
-					displayName="Tissue"
-				 />
+						name="tissue"
+						displayName="Tissue" />
 				<columnAttribute
-					name="covariates"
-					displayName="Covariates"
-				 />
-
+						name="covariates"
+						displayName="Covariates" />
 
 				<description>
 					<![CDATA[
@@ -391,82 +344,66 @@
 			</table>
 
 			<table
-				name="other_variants_from_gwas"
-				displayName="AD-related neuropathologies and biomarkers"
-				queryRef="GeneTables.OtherVariantsFromGWAS">
+					name="other_variants_from_gwas"
+					displayName="AD-related neuropathologies and biomarkers"
+					queryRef="GeneTables.OtherVariantsFromGWAS">
 				<columnAttribute
-					name="relative_position"
-					displayName="Relative Position"
-				 />
+						name="relative_position"
+						displayName="Relative Position" />
 				<columnAttribute
-					name="variant_link"
-					displayName="Variant"
-				 />
+						name="variant_link"
+						displayName="Variant" />
 				<columnAttribute
-					name="ref_snp_id"
-					displayName="RefSNP ID"
-				 />
+						name="pvalue"
+						displayName="p-value" />
 				<columnAttribute
-					name="adsp_variant_flag"
-					displayName="ADSP Variant?"
-					help="variant identified by the ADSP and passed the ADSP QC protocol"
-				 />
+						name="allele"
+						displayName="Test/Minor Allele" />
 				<columnAttribute
-					name="allele"
-					displayName="Test/Minor Allele"
-				 />
+						name="track_name_link"
+						displayName="Track" />
 				<columnAttribute
-					name="pvalue"
-					displayName="p-value"
-				 />
+						name="track_description"
+						displayName="Track Description" />
 				<columnAttribute
-					name="gene_impact"
-					displayName="Impact"
-					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="ref_snp_id"
+						displayName="RefSNP ID" />
 				<columnAttribute
-					name="gene_consequence"
-					displayName="Consequence"
-					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="adsp_variant_flag"
+						displayName="ADSP Variant?"
+						help="variant identified by the ADSP and passed the ADSP QC protocol" />
 				<columnAttribute
-					name="track_name_link"
-					displayName="Track"
-				 />
+						name="gene_impact"
+						displayName="Impact"
+						help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="track_description"
-					displayName="Track Description"
-				 />
+						name="gene_consequence"
+						displayName="Consequence"
+						help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="diagnosis"
-					displayName="Diagnosis"
-				 />
+						name="population"
+						displayName="Population" />
 				<columnAttribute
-					name="neuropathology"
-					displayName="Neuropathology"
-				 />
+						name="diagnosis"
+						displayName="Diagnosis" />
 				<columnAttribute
-					name="population"
-					displayName="Population"
-				 />
+						name="neuropathology"
+						displayName="Neuropathology" />
 				<columnAttribute
-					name="biomarker"
-					displayName="Biomarker"
-				 />
+						name="biomarker"
+						displayName="Biomarker" />
 				<columnAttribute
-					name="genotype"
-					displayName="Genotype"
-				 />
+						name="genotype"
+						displayName="Genotype" />
 				<columnAttribute
-					name="gender"
-					displayName="Gender"
-				 />
+						name="gender"
+						displayName="Gender" />
 				<columnAttribute
-					name="tissue"
-					displayName="Tissue"
-				 />
+						name="tissue"
+						displayName="Tissue" />
 				<columnAttribute
-					name="covariates"
-					displayName="Covariates"
-				 />
+						name="covariates"
+						displayName="Covariates" />
 
 
 				<description>
@@ -481,76 +418,64 @@
 			</table>
 
 			<table
-				name="ad_variants_from_catalog"
-				displayName="Alzheimer's Disease"
-				queryRef="GeneTables.ADVariantsFromCatalog">
+					name="ad_variants_from_catalog"
+					displayName="Alzheimer's Disease"
+					queryRef="GeneTables.ADVariantsFromCatalog">
 				<columnAttribute
-					name="source"
-					displayName="Data Source"
-					help="NHGRI or NIAGADS-curated GWAS Catalog"
-				 />
+						name="source"
+						displayName="Data Source"
+						help="NHGRI or NIAGADS-curated GWAS Catalog" />
 				<columnAttribute
-					name="relative_position"
-					displayName="Relative Position"
-				 />
+						name="relative_position"
+						displayName="Relative Position" />
 				<columnAttribute
-					name="variant_link"
-					displayName="Variant"
-				 />
+						name="variant_link"
+						displayName="Variant" />
 				<columnAttribute
-					name="ref_snp_id"
-					displayName="RefSNP ID"
-				 />
+						name="ref_snp_id"
+						displayName="RefSNP ID" />
 				<columnAttribute
-					name="adsp_variant_flag"
-					displayName="ADSP Variant?"
-					help="variant identified by the ADSP and passed the ADSP QC protocol"
-				 />
+						name="pvalue"
+						displayName="p-value" />
 				<columnAttribute
-					name="allele"
-					displayName="Test/Minor Allele"
-				 />
+						name="mapped_efo_trait"
+						displayName="Trait"
+						help="standardized trait; mapped to ontology" />
 				<columnAttribute
-					name="pvalue"
-					displayName="p-value"
-				 />
+						name="trait"
+						displayName="Trait (Reported)" />
+
 				<columnAttribute
-					name="gene_impact"
-					displayName="Impact"
-					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="pubmed_id"
+						displayName="PubMed ID" />
 				<columnAttribute
-					name="gene_consequence"
-					displayName="Consequence"
-					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="study"
+						displayName="Study" />
 				<columnAttribute
-					name="frequency"
-					displayName="Frequency"
-				 />
+						name="adsp_variant_flag"
+						displayName="ADSP Variant?"
+						help="variant identified by the ADSP and passed the ADSP QC protocol" />
 				<columnAttribute
-					name="trait"
-					displayName="Trait (Reported)"
-				 />
+						name="sample"
+						displayName="Sample" />
 				<columnAttribute
-					name="mapped_efo_trait"
-					displayName="Trait"
-					help="standardized trait; mapped to ontology"
-				 />
+						name="replicate_sample"
+						displayName="Replicate (Stage 2) Sample" />
 				<columnAttribute
-					name="pubmed_id"
-					displayName="PubMed ID"
-				 />
+						name="allele"
+						displayName="Test/Minor Allele" />
 				<columnAttribute
-					name="study"
-					displayName="Study"
-				 />
+						name="frequency"
+						displayName="Frequency" />
+
 				<columnAttribute
-					name="sample"
-					displayName="Sample"
-				 />
+						name="gene_impact"
+						displayName="Impact"
+						help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="replicate_sample"
-					displayName="Replicate (Stage 2) Sample"
-				 />
+						name="gene_consequence"
+						displayName="Consequence"
+						help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 
 
 				<description>
@@ -564,76 +489,64 @@
 
 
 			<table
-				name="other_variants_from_catalog"
-				displayName="Other Traits (incl. related neuropathologies and AD biomarkers)"
-				queryRef="GeneTables.OtherVariantsFromCatalog">
+					name="other_variants_from_catalog"
+					displayName="Other Traits (incl. related neuropathologies and AD biomarkers)"
+					queryRef="GeneTables.OtherVariantsFromCatalog">
 				<columnAttribute
-					name="source"
-					displayName="Data Source"
-					help="NHGRI or NIAGADS-curated GWAS Catalog"
-				 />
+						name="source"
+						displayName="Data Source"
+						help="NHGRI or NIAGADS-curated GWAS Catalog" />
 				<columnAttribute
-					name="relative_position"
-					displayName="Relative Position"
-				 />
+						name="relative_position"
+						displayName="Relative Position" />
 				<columnAttribute
-					name="variant_link"
-					displayName="Variant"
-				 />
+						name="variant_link"
+						displayName="Variant" />
 				<columnAttribute
-					name="ref_snp_id"
-					displayName="RefSNP ID"
-				 />
+						name="ref_snp_id"
+						displayName="RefSNP ID" />
 				<columnAttribute
-					name="adsp_variant_flag"
-					displayName="ADSP Variant?"
-					help="variant identified by the ADSP and passed the ADSP QC protocol"
-				 />
+						name="pvalue"
+						displayName="p-value" />
 				<columnAttribute
-					name="allele"
-					displayName="Test/Minor Allele"
-				 />
+						name="mapped_efo_trait"
+						displayName="Trait"
+						help="standardized trait; mapped to ontology" />
 				<columnAttribute
-					name="pvalue"
-					displayName="p-value"
-				 />
+						name="trait"
+						displayName="Trait (Reported)" />
+
 				<columnAttribute
-					name="gene_impact"
-					displayName="Impact"
-					help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="pubmed_id"
+						displayName="PubMed ID" />
 				<columnAttribute
-					name="gene_consequence"
-					displayName="Consequence"
-					help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
+						name="study"
+						displayName="Study" />
 				<columnAttribute
-					name="frequency"
-					displayName="Frequency"
-				 />
+						name="adsp_variant_flag"
+						displayName="ADSP Variant?"
+						help="variant identified by the ADSP and passed the ADSP QC protocol" />
 				<columnAttribute
-					name="trait"
-					displayName="Trait (Reported)"
-				 />
+						name="sample"
+						displayName="Sample" />
 				<columnAttribute
-					name="mapped_efo_trait"
-					displayName="Trait"
-					help="standardized trait; mapped to ontology"
-				 />
+						name="replicate_sample"
+						displayName="Replicate (Stage 2) Sample" />
 				<columnAttribute
-					name="pubmed_id"
-					displayName="PubMed ID"
-				 />
+						name="allele"
+						displayName="Test/Minor Allele" />
 				<columnAttribute
-					name="study"
-					displayName="Study"
-				 />
+						name="frequency"
+						displayName="Frequency" />
+
 				<columnAttribute
-					name="sample"
-					displayName="Sample"
-				 />
+						name="gene_impact"
+						displayName="Impact"
+						help="Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 				<columnAttribute
-					name="replicate_sample"
-					displayName="Replicate (Stage 2) Sample"
-				 />
+						name="gene_consequence"
+						displayName="Consequence"
+						help="Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline" />
 
 
 				<description>
@@ -673,27 +586,23 @@
 
 			<!-- 	<columnAttribute displayName="Association" name="evidence_table_dropdown" help="click on links to reveal supporting evidence for this association"  /> -->
 			<table
-				name="go_terms"
-				displayName="Gene Ontology"
-				queryRef="GeneTables.GoTerms">
+					name="go_terms"
+					displayName="Gene Ontology"
+					queryRef="GeneTables.GoTerms">
 
 				<columnAttribute
-					displayName="Term"
-					name="term"
-				 />
+						displayName="Term"
+						name="term" />
 				<columnAttribute
-					displayName="GO Accession"
-					name="go_accession"
-					help="follow link for more information from AmIGO"
-				 />
+						displayName="GO Accession"
+						name="go_accession"
+						help="follow link for more information from AmIGO" />
 				<columnAttribute
-					displayName="Evidence Code"
-					name="go_evidence_code"
-				 />
+						displayName="Evidence Code"
+						name="go_evidence_code" />
 				<columnAttribute
-					displayName="Ontology"
-					name="ontology"
-				 />
+						displayName="Ontology"
+						name="ontology" />
 
 
 				<description>
@@ -706,25 +615,23 @@
 			</table>
 
 			<table
-				name="pathways"
-				displayName="Pathways"
-				queryRef="GeneTables.Pathways">
+					name="pathways"
+					displayName="Pathways"
+					queryRef="GeneTables.Pathways">
 				<columnAttribute
-					name="pathway_name"
-					displayName="Pathway"
-				 />
+						name="pathway_name"
+						displayName="Pathway" />
 				<columnAttribute
-					name="accession"
-					displayName="Accession"
-					truncateTo="5000"
-					help="view pathway details at KEGG or Reactome" />
+						name="accession"
+						displayName="Accession"
+						truncateTo="5000"
+						help="view pathway details at KEGG or Reactome" />
 				<!--
 	    <columnAttribute name="pathway_image" displayName="Graph" truncateTo="5000"  help="click image thumbnail to view gene highlighted in the pathway on the KEGG or Reactome website"/>
 	-->
 				<columnAttribute
-					name="source"
-					displayName="Resource"
-				 />
+						name="source"
+						displayName="Resource" />
 
 
 				<description>

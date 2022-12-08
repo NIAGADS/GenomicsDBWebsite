@@ -18,7 +18,7 @@ import Grid from "@material-ui/core/Grid";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-import { PersistentDrawerLeft, DrawerState, CustomTooltip as Tooltip, DrawerProps } from "@components/MaterialUI";
+import { PersistentDrawerLeft, DrawerState, StyledTooltip as Tooltip, DrawerProps } from "@components/MaterialUI";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { RecordClass } from "wdk-client/Utils/WdkModel";

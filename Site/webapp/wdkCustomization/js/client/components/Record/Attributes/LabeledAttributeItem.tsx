@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { useTypographyStyles, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { useTypographyStyles, StyledTooltip as Tooltip } from "@components/MaterialUI";
 import { NASpan } from "genomics-client/components/Visualizations/Table/ColumnAccessors";
 
 interface LabeledAttributeItem {

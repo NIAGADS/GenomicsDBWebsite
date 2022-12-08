@@ -43,7 +43,7 @@ export function PValueThresholdFilter<T extends Record<string, unknown>>({
             validator={validateValue}
             minValue={0.001}
             maxValue={1.0}
-            helpText="Click to filter table for values <= specified threshold"
+            helpText="Click to filter table for values ≤ specified threshold"
         />
     );
 }

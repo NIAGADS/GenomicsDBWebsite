@@ -119,7 +119,7 @@ v.details->>'metaseq_id' AS linked_metaseq_id,
 v.details->>'ref_snp_id' AS linked_ref_snp_id,
 
 record_link('variant', m.linked_variant_record_primary_key, 
-truncate_str(v.details->>'metaseq_id', 30), true) AS variant,
+v.details->>'display_id', true) AS variant,
 
 (v.details->>'is_adsp_variant')::boolean AS is_adsp_variant,
 adsp_variant_flag((v.details->>'is_adsp_variant')::boolean) AS adsp_variant_flag
@@ -166,8 +166,8 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 n.alt AS allele,
 		 abbreviation AS population_abbrev, 
 
-		 CASE WHEN description IS NOT NULL THEN build_text_attribute(display_value, description, NULL)
-		 ELSE build_text_attribute(display_value, NULL, NULL) END AS population
+		 CASE WHEN description IS NOT NULL THEN build_text_attribute(display_value, description, NULL)::text
+		 ELSE display_value END AS population
 
 		 FROM freq_values v, NIAGADS.Population p,
 		 normalize_alleles(split_part(v.source_id, ':', 3), split_part(split_part(v.source_id, '_', 1), ':', 4)) n
@@ -193,6 +193,8 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 	  <column name="population"/>
 	  <column name="biomarker"/>
 	  <column name="covariates"/>
+	  <column name="diagnosis"/>
+	  <column name="neuropathology"/>
 
       <sql>
 	<![CDATA[
@@ -240,7 +242,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
     <sqlQuery name="OtherAssociationsFromGWAS">
       <column name="source_id"/>
       <column name="allele"/>
-      <column name="track"/>
+      <column name="track_name_link"/>
       <column name="pvalue"/>
 
 
@@ -249,17 +251,32 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 WITH id AS (##WDK_ID_SQL##),
 
 		 tracks AS (
-		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		 build_link_attribute(ta.name, '/record/track/', ta.track, ta.description) AS track_name_link
-		 FROM NIAGADS.TrackAttributes ta,
-		 NIAGADS.ProtocolAppNodeCharacteristic c
-		 WHERE ta.protocol_app_node_id = c.protocol_app_node_id
+			SELECT DISTINCT ta.track, ta.protocol_app_node_id,
+			build_link_attribute(ta.name, '/record/track/', ta.track, NULL) AS track_name_link,
+			ta.description AS track_description,
+			
+			CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
+		   THEN 'European' ELSE replace(bt.track_config->'biosample_characteristics'->>'population', ', ', ' // ') END AS population,
+		   bt.track_config->'biosample_characteristics'->>'tissue' AS tissue,
+		   bt.track_config->'biosample_characteristics'->>'diagnosis' AS diagnosis,
+		   bt.track_config->'biosample_characteristics'->>'biomarker' AS biomarker,
+		   bt.track_config->'biosample_characteristics'->>'gender' AS gender,
+		   bt.track_config->'biosample_characteristics'->>'neuropathology' AS neuropathology,
+		   bt.track_config->'biosample_characteristics'->>'APOE carrier status' AS genotype,
+		   bt.track_config->'biosample_characteristics'->>'covariates' AS covariates
+		   
+			FROM NIAGADS.TrackAttributes ta,
+			NIAGADS.ProtocolAppNodeCharacteristic c,
+			NIAGADS.GWASBrowserTracks bt
+			WHERE ta.protocol_app_node_id = c.protocol_app_node_id
+			AND bt.track = ta.track
 		 AND ta.subcategory = 'GWAS summary statistics'
 		 AND ta.dataset_accession NOT LIKE '%CATALOG%'
 		 AND c.characteristic_type = 'full_list'
 		 AND c.characteristic NOT ILIKE '%Alzh%')
 		 
-		 SELECT id.source_id, t.track_name_link AS track, r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
+		 SELECT id.source_id, t.*,
+		 r.test_allele AS allele, to_char(r.pvalue_display::numeric, '9.99EEEE') as pvalue
 		 FROM id, NIAGADS.VariantGWASTopHits r, tracks t
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND id.source_id = r.variant_record_primary_key
@@ -417,14 +434,14 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 
 		 SELECT source_id, 
 		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
-		 THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') 
+		 THEN TRUE
 		 ELSE NULL END AS is_most_severe_consequence,
 
 		 conseq->>'rank' AS rank,
 		 conseq->>'exon' AS exon,
 		 conseq->>'impact' AS impact,
 		 CASE WHEN (conseq->>'strand')::int = 1 THEN '+' ELSE '-' END AS strand,
-		 CASE WHEN (conseq->>'canonical')::int = 1 THEN 'Y' ELSE NULL END AS is_canonical_transcript,
+		 CASE WHEN (conseq->>'canonical')::int = 1 THEN true ELSE NULL END AS is_canonical_transcript,
 		 build_link_attribute(conseq->>'gene_symbol', '/record/gene/', conseq->>'gene_id', 'view gene details') AS gene_link,
 		 build_link_attribute(conseq->>'transcript_id', CASE WHEN '@PROJECT_ID@' = 'GRCh37' 
 		 THEN '@ENSEMBL_TRANSCRIPT_URL_GRCh37@' ELSE '@ENSEMBL_TRANSCRIPT_URL_GRCh38@' END, 
@@ -442,7 +459,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 conseq->>'codons' AS codon_change,
 
 		 CASE WHEN (conseq->>'consequence_is_coding')::boolean 
-		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') ELSE NULL END AS is_coding,
+		 THEN TRUE ELSE NULL END AS is_coding,
 
 		 CASE WHEN conseq->>'cds_start' = conseq->>'cds_end' THEN conseq->>'cds_start' 
 		 ELSE (conseq->>'cds_start')::text || '-' || (conseq->>'cds_end')::text END AS cds_position,
@@ -481,7 +498,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 SELECT source_id, 
 
 		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
-		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
+		 THEN TRUE
 		 ELSE NULL END AS is_most_severe_consequence,
 
 		 conseq->>'rank' AS rank,
@@ -560,7 +577,7 @@ get_variant_display_details(m.linked_variant_record_primary_key) v
 		 SELECT source_id, 
 
 		 CASE WHEN conseq = most_severe_consequence(source_id, TRUE)::JSONB
-		 THEN build_icon_attribute(NULL, 'fa-check', 'green', NULL, 'true') 
+		 THEN TRUE
 		 ELSE NULL END AS is_most_severe_consequence,
 
 		 conseq->>'rank' AS rank,

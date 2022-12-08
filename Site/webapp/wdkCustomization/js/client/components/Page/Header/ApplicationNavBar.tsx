@@ -26,7 +26,7 @@ import { RootState } from "wdk-client/Core/State/Types";
 
 import GenomeBuildBanner from "./GenomeBuildBanner";
 
-import { ElevationScroll, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { ElevationScroll, StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 // apply material-ui spacing system to the buttons
 const TextButton = styled(Button)(({ theme }) => ({
@@ -44,11 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
             //backgroundColor: "white"
         },
         logo: {
-            height: 40
+            height: 40,
         },
         logoButton: {
             //maxWidth: 150,
-            padding: 0
+            padding: 0,
         },
         grow: {
             flexGrow: 1,
@@ -139,7 +139,9 @@ function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             {isGuest ? (
-                <Tooltip title="coming soon"><MenuItem onClick={handleMenuClose}>Sign In</MenuItem></Tooltip>
+                <Tooltip title="coming soon">
+                    <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
+                </Tooltip>
             ) : (
                 <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
             )}
@@ -189,7 +191,7 @@ function PrimarySearchAppBar() {
             </MenuItem>
 
             <MenuItem>
-                <IconButton aria-label="API" color="inherit" href={`${webAppUrl}/app/api`}>
+                <IconButton aria-label="API" color="inherit" href={`${webAppUrl}/app/api`} disabled>
                     <CodeIcon />
                 </IconButton>
                 <p>API</p>
@@ -229,9 +231,11 @@ function PrimarySearchAppBar() {
             <TextButton aria-label="genome browser" color="inherit" href={`${webAppUrl}/app/visualizations/browser`}>
                 Genome Browser
             </TextButton>
-            <TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`}>
+
+            {/*<TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`}>
                 API
-            </TextButton>
+    </TextButton>*/}
+
             {/*<TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
                 About
     </TextButton>*/}
@@ -253,7 +257,6 @@ function PrimarySearchAppBar() {
             <ElevationScroll>
                 <>
                     <AppBar position="fixed" className={classes.appBar}>
-                     
                         <Toolbar className={classes.toolbar}>
                             <Button
                                 className={classes.logoButton}

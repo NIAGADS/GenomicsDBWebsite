@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { isObject, isString } from "lodash";
 
 import Box from "@material-ui/core/Box";
-import { CustomTooltip as Tooltip} from "@components/MaterialUI";
+import { StyledTooltip as Tooltip} from "@components/MaterialUI";
 
 import { ColumnAccessor, JSONAccessor } from "@viz/Table/ColumnAccessors";
 import { parseFieldValue } from "@viz/Table";
@@ -63,9 +63,9 @@ export const ColoredTextAccessor: React.SFC<ColumnAccessor> = ({ value, classNam
 // so technically, takes JSON
 
 export const AnnotatedTextAccessor: React.SFC<ColumnAccessor> = ({ value }) => {
-    return (
+    return (    
         <Tooltip title={value.tooltip} arial-label={value.tooltip}>
-            {value.value}
+           <Box component="span" className="annotated-text">{value.value}</Box>
         </Tooltip>
     );
 };

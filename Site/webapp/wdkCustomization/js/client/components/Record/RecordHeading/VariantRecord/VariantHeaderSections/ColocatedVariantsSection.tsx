@@ -5,7 +5,7 @@ import Chip from "@material-ui/core/Chip";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
-import { CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip } from "@components/MaterialUI";
 import { LinkAttributeList } from "@components/Record/Attributes";
 
 export const ColocatedVariantsSection: React.FC<{ variants: string; position: string; chromosome: string }> = ({

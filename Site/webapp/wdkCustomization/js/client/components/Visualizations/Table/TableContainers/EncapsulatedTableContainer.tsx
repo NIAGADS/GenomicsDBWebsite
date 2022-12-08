@@ -178,6 +178,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                     id: "selection",
                     width: 50,
                     sortable: true,
+                    sortType: "alphanumeric",
                     // The header can use the table's getToggleAllRowsSelectedProps method
                     // to render a checkbox
                     Header: "Loaded",

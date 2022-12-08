@@ -1,10 +1,13 @@
 import React from "react";
 import { isObject } from "lodash";
 
-import Box from "@material-ui/core/Box";
-
-import { ColumnAccessor, AnnotatedTextAccessor, LinkAccessor, LinkListAccessor } from "@viz/Table/ColumnAccessors";
-import { ColoredTextAccessor } from "./TextAccessors";
+import {
+    DefaultTextAccessor,
+    ColumnAccessor,
+    AnnotatedTextAccessor,
+    LinkAccessor,
+    LinkListAccessor,
+} from "@viz/Table/ColumnAccessors";
 
 export const jsonAccessorType = (obj: any) => {
     if (Array.isArray(obj)) {
@@ -33,6 +36,10 @@ export const jsonAccessorType = (obj: any) => {
     if ("tooltip" in obj) {
         return "tooltip";
     }
+    // legacy (type == text)
+    else if ("text" in obj) {
+        return "legacy_plain_text";
+    }
 
     throw new Error(
         `ERROR: Invalid JSON passed to JSONAccessor (a ColumnAccessor) - unknown JSONAccessor type: ${JSON.stringify(
@@ -53,7 +60,7 @@ export const JSONAccessor: React.SFC<ColumnAccessor> = ({ value }) => {
             return <LinkAccessor value={obj} />;
         case "link_list":
             return <LinkListAccessor value={obj} />;
-        default: // not handled, so make it visible so
-            return <ColoredTextAccessor value={value} htmlColor="red" />;
+        default: // not handled, so just display value // probably just a legacy text
+            return <DefaultTextAccessor value={value.value} />;
     }
 };

@@ -20,7 +20,7 @@ import { RecordHeading } from "@components/Record/Types";
 import { RootState } from "wdk-client/Core/State/Types";
 import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
 
-import { CustomPanel, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { CustomPanel, StyledTooltip as Tooltip } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI";
 
 import { convertHtmlEntites } from "genomics-client/util/util";

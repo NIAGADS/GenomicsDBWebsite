@@ -14,7 +14,7 @@ import { AlternativeVariantsSection, ColocatedVariantsSection } from "./VariantH
 import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
 import { MetaseqIdAttribute } from "@components/Record/Attributes";
-import { CustomPanel, useTypographyStyles, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { CustomPanel, useTypographyStyles, StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 

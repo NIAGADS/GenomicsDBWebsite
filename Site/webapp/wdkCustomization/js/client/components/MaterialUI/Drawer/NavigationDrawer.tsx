@@ -13,7 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 import {
-    CustomTooltip as Tooltip,
+    StyledTooltip as Tooltip,
     DrawerProps,
     DRAWER_WIDTH
 } from "@components/MaterialUI";
@@ -32,8 +32,8 @@ const useDrawerStyles = (props: any) => makeStyles((theme: Theme) =>
             //marginTop: theme.spacing(1),
         },
         drawerHeaderContents: {
-            backgroundColor: theme.palette.secondary.main,
-            borderRadius: 4,
+            //backgroundColor: theme.palette.secondary.main,
+            //borderRadius: 4,
             marginBottom: theme.spacing(1)
         },
         title: {
