@@ -76,7 +76,7 @@
             ,chromosome, position
                         , ref_snp_id
                         , adsp_variant_flag(is_adsp_variant) AS adsp_variant_flag
-			, consequence_terms(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS most_severe_consequence
+			, replace(consequence_terms(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'), ',', ' // ') AS most_severe_consequence
 			, annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'impact' AS msc_impact
                         , msc_impacted_gene_link(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_impacted_gene_link
                         , msc_is_coding_flag(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_is_coding_flag
