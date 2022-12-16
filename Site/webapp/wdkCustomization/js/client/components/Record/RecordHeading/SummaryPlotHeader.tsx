@@ -1,6 +1,6 @@
 import { Box, Typography } from "@material-ui/core";
 import React from "react";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 
 interface SummaryPlotHeader {
     text: string;

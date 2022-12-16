@@ -3,7 +3,7 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 import { SummaryPlotHeader } from "@components/Record/RecordHeading/SummaryPlotHeader";
 import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
 import { RecordHeading } from "@components/Record/Types";

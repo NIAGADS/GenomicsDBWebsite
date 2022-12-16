@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";

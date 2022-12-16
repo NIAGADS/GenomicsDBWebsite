@@ -4,7 +4,7 @@ import { RootState } from "wdk-client/Core/State/Types";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

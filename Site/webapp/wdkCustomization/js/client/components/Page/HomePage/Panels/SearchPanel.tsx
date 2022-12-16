@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 

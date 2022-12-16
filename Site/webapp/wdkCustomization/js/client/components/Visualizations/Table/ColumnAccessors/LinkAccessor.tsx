@@ -1,13 +1,12 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-import { StyledTooltip as Tooltip} from "@components/MaterialUI";
-import Link from "@material-ui/core/Link";
+import { StyledTooltip as Tooltip, CustomLink as Link} from "@components/MaterialUI";
 
 import { ColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 export const resolveLink = (url: string, value: string) => {
-    const isRouterLink = !url.includes("http");
+    const isRouterLink = !url.includes("http"); 
     return isRouterLink ? (
         <RouterLink key={url} to={url}>
             {value}
