@@ -26,10 +26,13 @@ import { useTypographyStyles } from "@components/MaterialUI";
 import { convertHtmlEntites } from "genomics-client/util/util";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
+import { PlotlyManhattan } from "@viz/Manhattan";
+
 //import { GWASDatasetLZPlot } from "@viz/LocusZoom";
 
 import "./TrackRecordHeading.scss";
 import Box from "@material-ui/core/Box";
+
 
 interface HeaderImage {
     src: string;
@@ -101,7 +104,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                                     <Box component="span">
                                         {record.attributes.niagads_accession}{" "}
                                         <Link
-                                            href={`${_externalUrls.NIAGADS_BASE_URL}/${record.attributes.niagads_accession}`}
+                                            href={`${_externalUrls.NIAGADS_BASE_URL}/dataset/${record.attributes.niagads_accession}`}
                                         >
                                             <i className={`${tClasses.small} fa fa-external-link`}></i>
                                         </Link>
@@ -124,6 +127,9 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                             )}
                         </ListItem>
                     </List>
+                                   
+                    <PlotlyManhattan track={record.id[0].value} accession={record.attributes.niagads_accession.toString()} webAppUrl={webAppUrl} />
+
                     <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
                 </Grid>
                 {/* <Grid item sm={6} xs={12}>
