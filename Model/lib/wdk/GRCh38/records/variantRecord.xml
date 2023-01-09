@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
 	<recordClassSet name="VariantRecordClasses">
-		<recordClass name="VariantRecordClass" displayName="Variant" displayNamePlural="Variants" shortDisplayName="Variant" useBasket="false" urlName="variant">
+		<recordClass
+				name="VariantRecordClass"
+				displayName="Variant"
+				displayNamePlural="Variants"
+				shortDisplayName="Variant"
+				useBasket="false"
+				urlName="variant">
 			<!-- =============================================================== -->
 			<!-- Primary Key -->
 			<!-- =============================================================== -->
@@ -9,10 +15,12 @@
 				<columnRef>source_id</columnRef>
 			</primaryKey>
 
-			<idAttribute name="primary_key" displayName="Variant"
-				help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
+			<idAttribute
+					name="primary_key"
+					displayName="Variant"
+					help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
 				<text>
-					<![CDATA[$$display_metaseq_id$$]]>
+					<![CDATA[$$display_id$$]]>
 				</text>
 			</idAttribute>
 
@@ -22,11 +30,17 @@
 			<!-- Reporters -->
 			<!-- =================================================================== -->
 
-			<reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record"
-				implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+			<reporter
+					name="fullRecord"
+					displayName="%%fullReporterDisplayName%%"
+					scopes="record"
+					implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
-			<reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results"
-				implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
+			<reporter
+					name="attributesTabular"
+					displayName="%%attributesReporterDisplayName%%"
+					scopes="results"
+					implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
 				<description>
 	  %%attributesReporterDescription%%
 	</description>
@@ -35,7 +49,11 @@
 	</property>
 			</reporter>
 
-			<reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
+			<reporter
+					name="tableTabular"
+					displayName="%%tableReporterDisplayName%%"
+					scopes="results"
+					implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
 				<description>
 	  %%tableReporterDescription%%
 	</description>
@@ -44,7 +62,11 @@
 	</property>
 			</reporter>
 
-			<reporter name="xml" displayName="XML: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" />
+			<reporter
+					name="xml"
+					displayName="XML: choose from columns and/or tables"
+					scopes=""
+					implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" />
 
 			<!-- <reporter name="json" displayName="JSON: choose from columns and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter"/>
 -->
@@ -55,69 +77,152 @@
 			<!-- =============================================================== -->
 			<!-- Summary and record views -->
 			<!-- =============================================================== -->
-			<summaryView name="_default" display="Variant Results">
+			<summaryView
+					name="_default"
+					display="Variant Results">
 				<description>
 					<![CDATA[View variant details.]]>
 				</description>
 			</summaryView>
 
-			<summaryView name="variant-histogram-ideogram" display="Genome View">
+			<summaryView
+					name="variant-histogram-ideogram"
+					display="Genome View">
 				<description>
 					<![CDATA[View your results mapped against the genome.]]>
 				</description>
 			</summaryView>
 
-			<reporter name="genomeViewReporter" displayName="Ideogram" scopes=""
-				implementation="org.niagads.genomics.model.report.summaryview.genomeview.VariantGenomeViewReporter" />
+			<reporter
+					name="genomeViewReporter"
+					displayName="Ideogram"
+					scopes=""
+					implementation="org.niagads.genomics.model.report.summaryview.genomeview.VariantGenomeViewReporter" />
 			<!-- =============================================================== -->
 			<!-- Basic Attributes -->
 			<!-- =============================================================== -->
 
 			<attributeQueryRef ref="VariantAttributes.SortingAttributes">
-				<columnAttribute name="project_id" internal="true" inReportMaker="false" />
-				<columnAttribute name="display_metaseq_id" displayName="Variant" internal="true" inReportMaker="false" />
+				<columnAttribute
+						name="project_id"
+						internal="true"
+						inReportMaker="false" />
+				<columnAttribute
+						name="display_id"
+						displayName="Variant"
+						internal="true"
+						inReportMaker="false" />
 			</attributeQueryRef>
 
 			<attributeQueryRef ref="VariantAttributes.BasicAttributes">
-				<columnAttribute name="metaseq_id" displayName="Metaseq ID" internal="true" inReportMaker="true" />
-				<columnAttribute name="ref_snp_id" displayName="RefSNP ID" help="dbSNP reference SNP identifier" />
+				<columnAttribute
+						name="metaseq_id"
+						displayName="Metaseq ID"
+						internal="true"
+						inReportMaker="true" />
+				<columnAttribute
+						name="ref_snp_id"
+						displayName="RefSNP ID"
+						help="dbSNP reference SNP identifier" />
 
-				<columnAttribute name="chromosome" displayName="Chromosome" />
-				<columnAttribute name="position" displayName="Position" />
-				<columnAttribute name="location" displayName="Location" />
-				<columnAttribute name="span" displayName="Location" internal="true" inReportMaker="false" />
+				<columnAttribute
+						name="chromosome"
+						displayName="Chromosome" />
+				<columnAttribute
+						name="position"
+						displayName="Position" />
+				<columnAttribute
+						name="location"
+						displayName="Location" />
+				<columnAttribute
+						name="span"
+						displayName="Location"
+						internal="true"
+						inReportMaker="false" />
 
-				<columnAttribute name="display_allele" displayName="Allele" />
+				<columnAttribute
+						name="display_allele"
+						displayName="Allele" />
 
 
-				<columnAttribute name="variant_class_abbrev" displayName="Variant Class" />
-				<columnAttribute name="variant_class" displayName="variant_class" />
+				<columnAttribute
+						name="variant_class_abbrev"
+						displayName="Variant Class" />
+				<columnAttribute
+						name="variant_class"
+						displayName="variant_class" />
 
-				<columnAttribute name="adsp_display_flag" displayName="ADSP Variant?" inReportMaker="false"
-					help="variant identified during an ADSP sequencing effort" />
+				<columnAttribute
+						name="adsp_display_flag"
+						displayName="ADSP Variant?"
+						inReportMaker="false"
+						help="variant identified during an ADSP sequencing effort" />
 
-				<columnAttribute name="is_adsp_variant" displayName="ADSP Variant?" inReportMaker="true" help="variant identifier during an ADSP sequencing effort"
-					internal="true" />
+				<columnAttribute
+						name="is_adsp_variant"
+						displayName="ADSP Variant?"
+						inReportMaker="true"
+						help="variant identifier during an ADSP sequencing effort"
+						internal="true" />
 
 
-				<columnAttribute name="adsp_qc_status" displayName="ADSP QC Filter Value" internal="true" inReportMaker="true" />
-				<columnAttribute name="adsp_qc_flags" displayName="ADSP QC Filter Status" internal="true" inReportMaker="true" />
+				<columnAttribute
+						name="adsp_qc_status"
+						displayName="ADSP QC Filter Value"
+						internal="true"
+						inReportMaker="true" />
+				<columnAttribute
+						name="adsp_qc_flags"
+						displayName="ADSP QC Filter Status"
+						internal="true"
+						inReportMaker="true" />
 
 			</attributeQueryRef>
 
 			<attributeQueryRef ref="VariantAttributes.MostSevereConsequence">
 				<!-- start in record page header for msc attributes -->
-				<columnAttribute name="most_severe_consequence" displayName="Consequence" help="most severe predicted consequence for the variant" inReportMaker="true" />
-				<columnAttribute name="msc_impacted_gene" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" internal="true" inReportMaker="true" />
-				<columnAttribute name="msc_impacted_gene_symbol" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" />
-				<columnAttribute name="msc_impacted_gene_link" displayName="Impacted Gene" help="gene impacted by most severe predicted consequence" inReportMaker="false" />
-				<columnAttribute name="msc_impact" displayName="Consequence Impact" help="impact of most severe predicted consequence" />
-				<columnAttribute name="msc_is_coding" displayName="Coding?" help="coding variant? based on most severe predicted consequence" />
+				<columnAttribute
+						name="most_severe_consequence"
+						displayName="Consequence"
+						help="most severe predicted consequence for the variant"
+						inReportMaker="true" />
+				<columnAttribute
+						name="msc_impacted_gene"
+						displayName="Impacted Gene"
+						help="gene impacted by most severe predicted consequence"
+						internal="true"
+						inReportMaker="true" />
+				<columnAttribute
+						name="msc_impacted_gene_symbol"
+						displayName="Impacted Gene"
+						help="gene impacted by most severe predicted consequence" />
+				<columnAttribute
+						name="msc_impacted_gene_link"
+						displayName="Impacted Gene"
+						help="gene impacted by most severe predicted consequence"
+						inReportMaker="false" />
+				<columnAttribute
+						name="msc_impact"
+						displayName="Consequence Impact"
+						help="impact of most severe predicted consequence" />
+				<columnAttribute
+						name="msc_is_coding"
+						displayName="Coding?"
+						help="coding variant? based on most severe predicted consequence" />
 				<!-- end in header for msc attributes -->
 
-				<columnAttribute name="msc_amino_acid_change" displayName="Amino Acid Change" help="Amino acid change resulting from most severe predicted consequence" />
-				<columnAttribute name="msc_codon_change" displayName="Codon Change" help="Codon change resulting from most sever predicted consequence" />
-				<columnAttribute name="msc_impacted_transcript" displayName="Impacted Transcript" help="transcript impacted by most severe predicted consequence" />
+				<columnAttribute
+						name="msc_amino_acid_change"
+						displayName="Amino Acid Change"
+						help="Amino acid change resulting from most severe predicted consequence" />
+				<columnAttribute
+						name="msc_codon_change"
+						displayName="Codon Change"
+						help="Codon change resulting from most sever predicted consequence" />
+				<columnAttribute
+						name="msc_impacted_transcript"
+						displayName="Impacted Transcript"
+						help="transcript impacted by most severe predicted consequence" />
 			</attributeQueryRef>
 
 
@@ -130,42 +235,114 @@
 			<!-- Function Analysis -->
 			<!-- =============================================================== -->
 
-			<table name="regulatory_consequences" queryRef="VariantTables.RegulatoryConsequences" displayName="Regulatory Consequences">
-				<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" />
-				<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" />
-				<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" />
-				<columnAttribute name="feature_link" displayName="Feature" help="regulatory feature; follow link to view details from Ensembl" />
-				<columnAttribute name="feature_biotype" displayName="Feature Type" help="regulatory feature biotype" />
+			<table
+					name="regulatory_consequences"
+					queryRef="VariantTables.RegulatoryConsequences"
+					displayName="Regulatory Consequences">
+				<columnAttribute
+						name="impact"
+						displayName="Impact"
+						help="relative severity of the predicted consequence" />
+				<columnAttribute
+						name="consequence"
+						displayName="Consequence"
+						help="predicted variant consequence" />
+				<columnAttribute
+						name="is_most_severe_consequence"
+						displayName="Most Severe?"
+						help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" />
+				<columnAttribute
+						name="feature_link"
+						displayName="Feature"
+						help="regulatory feature; follow link to view details from Ensembl" />
+				<columnAttribute
+						name="feature_biotype"
+						displayName="Feature Type"
+						help="regulatory feature biotype" />
 
-				<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
+				<columnAttribute
+						name="rank"
+						displayName="Rank"
+						help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
 
 
 			</table>
 
-			<table name="motif_consequences" queryRef="VariantTables.MotifConsequences" displayName="Regulatory Motif Consequences">
-				<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" />
-				<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" />
-				<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" />
-				<columnAttribute name="feature_link" displayName="Matrix" help="JASPAR ID for the positional weight matrix (PWM) defining the motif; follow link to view/download the matrix using a visualization tool from Ensembl" />
+			<table
+					name="motif_consequences"
+					queryRef="VariantTables.MotifConsequences"
+					displayName="Regulatory Motif Consequences">
+				<columnAttribute
+						name="impact"
+						displayName="Impact"
+						help="relative severity of the predicted consequence" />
+				<columnAttribute
+						name="consequence"
+						displayName="Consequence"
+						help="predicted variant consequence" />
+				<columnAttribute
+						name="is_most_severe_consequence"
+						displayName="Most Severe?"
+						help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" />
+				<columnAttribute
+						name="feature_link"
+						displayName="Matrix"
+						help="JASPAR ID for the positional weight matrix (PWM) defining the motif; follow link to view/download the matrix using a visualization tool from Ensembl" />
 
-				<columnAttribute name="transcription_factor_complex" displayName="TF Complex" help="transcription factor complex associated with the binding site" />
+				<columnAttribute
+						name="transcription_factor_complex"
+						displayName="TF Complex"
+						help="transcription factor complex associated with the binding site" />
 
-				<columnAttribute name="strand" displayName="Strand" help="strand of the impacted feature" />
-				<columnAttribute name="motif_position" displayName="Motif Position" help="position of the variant within the motif, in base pair coordinates, from the start of the motif" />
-				<columnAttribute name="high_info_position" displayName="High Inf?" help="variant position appears to be important to the motif (has high information)" />
-				<columnAttribute name="motif_score_change" displayName="Motif Score Change" help="indicates whether the variant increases or decreases the motif score. If the variant increases the score, it means the sequence around and including the variant matches the known motif consensus sequence much better." />
-				<columnAttribute name="epigenomes" displayName="Epigenomes" help="ENCODE epigenomes for which this site has been experimentally predicted using ChIP-seq" />
+				<columnAttribute
+						name="strand"
+						displayName="Strand"
+						help="strand of the impacted feature" />
+				<columnAttribute
+						name="motif_position"
+						displayName="Motif Position"
+						help="position of the variant within the motif, in base pair coordinates, from the start of the motif" />
+				<columnAttribute
+						name="high_info_position"
+						displayName="High Inf?"
+						help="variant position appears to be important to the motif (has high information)" />
+				<columnAttribute
+						name="motif_score_change"
+						displayName="Motif Score Change"
+						help="indicates whether the variant increases or decreases the motif score. If the variant increases the score, it means the sequence around and including the variant matches the known motif consensus sequence much better." />
+				<columnAttribute
+						name="epigenomes"
+						displayName="Epigenomes"
+						help="ENCODE epigenomes for which this site has been experimentally predicted using ChIP-seq" />
 
-				<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
+				<columnAttribute
+						name="rank"
+						displayName="Rank"
+						help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
 
 
 			</table>
 
-			<table name="intergenic_consequences" queryRef="VariantTables.IntergenicConsequences" displayName="Intergenic Consequences">
-				<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" />
-				<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" />
-				<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for more information" />
-				<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
+			<table
+					name="intergenic_consequences"
+					queryRef="VariantTables.IntergenicConsequences"
+					displayName="Intergenic Consequences">
+				<columnAttribute
+						name="impact"
+						displayName="Impact"
+						help="relative severity of the predicted consequence" />
+				<columnAttribute
+						name="consequence"
+						displayName="Consequence"
+						help="predicted variant consequence" />
+				<columnAttribute
+						name="is_most_severe_consequence"
+						displayName="Most Severe?"
+						help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for more information" />
+				<columnAttribute
+						name="rank"
+						displayName="Rank"
+						help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
 
 
 			</table>
@@ -175,24 +352,78 @@
 	  </table>
       -->
 
-			<table name="transcript_consequences" queryRef="VariantTables.TranscriptConsequences" displayName="Transcript Consequences">
-				<columnAttribute name="impact" displayName="Impact" help="relative severity of the predicted consequence" />
-				<columnAttribute name="consequence" displayName="Consequence" help="predicted variant consequence" />
-				<columnAttribute name="is_most_severe_consequence" displayName="Most Severe?" help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" />
-				<columnAttribute name="gene_link" displayName="Gene" help="impacted gene; follow link to view detailed NIAGADS record" />
-				<columnAttribute name="transcript_link" displayName="Transcript" help="impacted transcript; follow link to view transcript details from Ensembl" />
-				<columnAttribute name="is_canonical_transcript" displayName="Canonical?" help="impacted transcript is the canonical transcript for the gene" />
-				<columnAttribute name="is_coding" displayName="Coding?" help="is coding variant?" />
-				<columnAttribute name="codon_change" displayName="Codons" help="reference/variant codon sequences" />
-				<columnAttribute name="exon" displayName="Exon" help="impacted exon/total number of exons" />
-				<columnAttribute name="distance" displayName="Distance" help="shortest distance from variant to impacted transcript" />
-				<columnAttribute name="strand" displayName="Strand" help="strand of the impacted feature" />
-				<columnAttribute name="protein_link" displayName="Protein" help="impacted protein; follow link to view protein details from Ensembl" />
-				<columnAttribute name="amino_acid_change" displayName="Amino Acids" help="reference/variant amino acid" />
-				<columnAttribute name="protein_position" displayName="Protein Position" help="relative position of the amino acid in the protein" />
-				<columnAttribute name="cds_position" displayName="CDS Position" help="relative position of the base pair in the coding sequence" />
-				<columnAttribute name="cdna_position" displayName="cDNA Position" help="relative position of the base pair in the cDNA sequence" />
-				<columnAttribute name="rank" displayName="Rank" help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
+			<table
+					name="transcript_consequences"
+					queryRef="VariantTables.TranscriptConsequences"
+					displayName="Transcript Consequences">
+				<columnAttribute
+						name="impact"
+						displayName="Impact"
+						help="relative severity of the predicted consequence" />
+				<columnAttribute
+						name="consequence"
+						displayName="Consequence"
+						help="predicted variant consequence" />
+				<columnAttribute
+						name="is_most_severe_consequence"
+						displayName="Most Severe?"
+						help="is most severe predicted variant consequence for the variant, according to ADSP ranking; see documentation for information" />
+				<columnAttribute
+						name="gene_link"
+						displayName="Gene"
+						help="impacted gene; follow link to view detailed NIAGADS record" />
+				<columnAttribute
+						name="transcript_link"
+						displayName="Transcript"
+						help="impacted transcript; follow link to view transcript details from Ensembl" />
+				<columnAttribute
+						name="is_canonical_transcript"
+						displayName="Canonical?"
+						help="impacted transcript is the canonical transcript for the gene" />
+				<columnAttribute
+						name="is_coding"
+						displayName="Coding?"
+						help="is coding variant?" />
+				<columnAttribute
+						name="codon_change"
+						displayName="Codons"
+						help="reference/variant codon sequences" />
+				<columnAttribute
+						name="exon"
+						displayName="Exon"
+						help="impacted exon/total number of exons" />
+				<columnAttribute
+						name="distance"
+						displayName="Distance"
+						help="shortest distance from variant to impacted transcript" />
+				<columnAttribute
+						name="strand"
+						displayName="Strand"
+						help="strand of the impacted feature" />
+				<columnAttribute
+						name="protein_link"
+						displayName="Protein"
+						help="impacted protein; follow link to view protein details from Ensembl" />
+				<columnAttribute
+						name="amino_acid_change"
+						displayName="Amino Acids"
+						help="reference/variant amino acid" />
+				<columnAttribute
+						name="protein_position"
+						displayName="Protein Position"
+						help="relative position of the amino acid in the protein" />
+				<columnAttribute
+						name="cds_position"
+						displayName="CDS Position"
+						help="relative position of the base pair in the coding sequence" />
+				<columnAttribute
+						name="cdna_position"
+						displayName="cDNA Position"
+						help="relative position of the base pair in the cDNA sequence" />
+				<columnAttribute
+						name="rank"
+						displayName="Rank"
+						help="ranking of the predicted consequence following ADSP standard; see documentation for more information." />
 
 
 			</table>
@@ -203,8 +434,14 @@
 			<!-- =============================================================== -->
 
 			<attributeQueryRef ref="VariantAttributes.CADD">
-				<columnAttribute name="cadd_raw_score" displayName="CADD (Raw)" help="higher values indicate the variant is more likely to have deleterious effects" />
-				<columnAttribute name="cadd_phred_score" displayName="CADD (PHRED-scaled)" help="ranked CADD score across GRCh37/hg19 reference SNVs" />
+				<columnAttribute
+						name="cadd_raw_score"
+						displayName="CADD (Raw)"
+						help="higher values indicate the variant is more likely to have deleterious effects" />
+				<columnAttribute
+						name="cadd_phred_score"
+						displayName="CADD (PHRED-scaled)"
+						help="ranked CADD score across GRCh37/hg19 reference SNVs" />
 			</attributeQueryRef>
 
 			<!-- =============================================================== -->
@@ -213,13 +450,25 @@
 
 
 			<attributeQueryRef ref="VariantAttributes.GWSDatasetsPlot">
-				<columnAttribute name="gws_datasets_summary_plot" internal="true" inReportMaker="false"></columnAttribute>
+				<columnAttribute
+						name="gws_datasets_summary_plot"
+						internal="true"
+						inReportMaker="false"></columnAttribute>
 			</attributeQueryRef>
 
 			<attributeQueryRef ref="VariantAttributes.ColocatedVariants">
-				<columnAttribute name="num_colocated_variants" internal="true" inReportMaker="false" />
-				<columnAttribute name="colocated_variants" internal="true" inReportMaker="false" />
-				<columnAttribute name="alternative_variants" internal="true" inReportMaker="false" />
+				<columnAttribute
+						name="num_colocated_variants"
+						internal="true"
+						inReportMaker="false" />
+				<columnAttribute
+						name="colocated_variants"
+						internal="true"
+						inReportMaker="false" />
+				<columnAttribute
+						name="alternative_variants"
+						internal="true"
+						inReportMaker="false" />
 			</attributeQueryRef>
 
 
@@ -231,26 +480,66 @@
 	<description><![CDATA[coming soon]]></description>
       </table> -->
 
-			<table name="linkage" displayName="Linkage" queryRef="VariantTables.Linkage">
-				<columnAttribute name="population" displayName="Population" help="1000Genomes Phase 3 population" />
-				<columnAttribute name="variant" displayName="Variant" />
-				<columnAttribute name="linked_ref_snp_id" displayName="RefSNP ID" />
-				<columnAttribute name="adsp_variant_flag" displayName="ADSP Variant?" help="variant identified by the ADSP and passed the ADSP QC protocol" />
-				<columnAttribute name="distance" displayName="Distance" help="distance between the two loci" />
-				<columnAttribute name="r_squared" displayName="r2" help="r-squared value; ranges from [0,1]; a value 0 indicates that the two loci are not coinherited" />
-				<columnAttribute name="d_prime" displayName="D'" help="D' value (scaled 'D'); ranges from [-1,1]; if allele frequencies are high, high D' indicates that the two loci are coinherited. With low allele frequencies D' values may be inflated." />
-				<columnAttribute name="minor_allele_frequency" displayName="MAF" help="minor allele frequency in the population for the linked variant" />
-				<columnAttribute name="minor_allele_frequency_ld_ref" displayName="LD REF MAF" help="minor allele frequency in the population for the LD reference variant (record being browsed)" />
+			<table
+					name="linkage"
+					displayName="Linkage"
+					queryRef="VariantTables.Linkage">
+				<columnAttribute
+						name="population"
+						displayName="Population"
+						help="1000Genomes Phase 3 population" />
+				<columnAttribute
+						name="variant"
+						displayName="Variant" />
+				<columnAttribute
+						name="linked_ref_snp_id"
+						displayName="RefSNP ID" />
+				<columnAttribute
+						name="adsp_variant_flag"
+						displayName="ADSP Variant?"
+						help="variant identified by the ADSP and passed the ADSP QC protocol" />
+				<columnAttribute
+						name="distance"
+						displayName="Distance"
+						help="distance between the two loci" />
+				<columnAttribute
+						name="r_squared"
+						displayName="r2"
+						help="r-squared value; ranges from [0,1]; a value 0 indicates that the two loci are not coinherited" />
+				<columnAttribute
+						name="d_prime"
+						displayName="D'"
+						help="D' value (scaled 'D'); ranges from [-1,1]; if allele frequencies are high, high D' indicates that the two loci are coinherited. With low allele frequencies D' values may be inflated." />
+				<columnAttribute
+						name="minor_allele_frequency"
+						displayName="MAF"
+						help="minor allele frequency in the population for the linked variant" />
+				<columnAttribute
+						name="minor_allele_frequency_ld_ref"
+						displayName="LD REF MAF"
+						help="minor allele frequency in the population for the LD reference variant (record being browsed)" />
 
 
 			</table>
 
-			<table name="allele_frequencies" displayName="Population Frequencies" queryRef="VariantTables.AlleleFrequency">
-				<columnAttribute name="population_abbrev" displayName="Population" />
-				<columnAttribute name="population" displayName="Population" />
-				<columnAttribute name="population_source" displayName="Resource" />
-				<columnAttribute name="allele" internal="false" displayName="Allele" />
-				<columnAttribute name="frequency" displayName="Frequency" inReportMaker="true" />
+			<table
+					name="allele_frequencies"
+					displayName="Population Frequencies"
+					queryRef="VariantTables.AlleleFrequency">
+				<columnAttribute
+						name="population"
+						displayName="Population" />
+				<columnAttribute
+						name="population_source"
+						displayName="Resource" />
+				<columnAttribute
+						name="allele"
+						internal="false"
+						displayName="Allele" />
+				<columnAttribute
+						name="frequency"
+						displayName="Frequency"
+						inReportMaker="true" />
 
 
 			</table>
@@ -259,10 +548,40 @@
 			<!-- Trait Associations -->
 			<!-- =============================================================== -->
 
-			<table name="ad_associations_from_gwas" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromGWAS">
-				<columnAttribute name="allele" displayName="Allele" />
-				<columnAttribute name="pvalue" displayName="p-value" />
-				<columnAttribute name="track" displayName="Track" />
+			<table
+					name="ad_associations_from_gwas"
+					displayName="Alzheimer's disease"
+					queryRef="VariantTables.ADAssociationsFromGWAS">
+				<columnAttribute
+						name="allele"
+						displayName="Allele" />
+				<columnAttribute
+						name="pvalue"
+						displayName="p-value" />
+				<columnAttribute
+						name="track_name_link"
+						displayName="Track" />
+				<columnAttribute
+						name="track_description"
+						displayName="Track Description" />
+				<columnAttribute
+						name="population"
+						displayName="Population" />
+				<columnAttribute
+						name="biomarker"
+						displayName="Biomarker" />
+				<columnAttribute
+						name="genotype"
+						displayName="Genotype" />
+				<columnAttribute
+						name="gender"
+						displayName="Gender" />
+				<columnAttribute
+						name="tissue"
+						displayName="Tissue" />
+				<columnAttribute
+						name="covariates"
+						displayName="Covariates" />
 
 
 				<description>
@@ -274,11 +593,48 @@
 				</description>
 			</table>
 
-			<table name="other_associations_from_gwas" displayName="AD-related neuropathologies and biomarkers" queryRef="VariantTables.OtherAssociationsFromGWAS">
-				<columnAttribute name="allele" displayName="Allele" />
-				<columnAttribute name="pvalue" displayName="p-value" />
-				<columnAttribute name="track" displayName="Track" />
-				
+			<table
+					name="other_associations_from_gwas"
+					displayName="AD-related neuropathologies and biomarkers"
+					queryRef="VariantTables.OtherAssociationsFromGWAS">
+				<columnAttribute
+						name="allele"
+						displayName="Allele" />
+				<columnAttribute
+						name="pvalue"
+						displayName="p-value" />
+				<columnAttribute
+						name="track_name_link"
+						displayName="Track" />
+				<columnAttribute
+						name="track_description"
+						displayName="Track Description" />
+				<columnAttribute
+						name="population"
+						displayName="Population" />
+				<columnAttribute
+						name="neuropathology"
+						displayName="Neuropathology" />
+				<columnAttribute
+						name="diagnosis"
+						displayName="diagnosis" />
+				<columnAttribute
+						name="biomarker"
+						displayName="Biomarker" />
+				<columnAttribute
+						name="genotype"
+						displayName="Genotype" />
+				<columnAttribute
+						name="gender"
+						displayName="Gender" />
+				<columnAttribute
+						name="tissue"
+						displayName="Tissue" />
+				<columnAttribute
+						name="covariates"
+						displayName="Covariates" />
+
+
 				<description>
 					<![CDATA[
 		   <p>Associations for this variant to an AD-related disease, biomarker, or neuropathology identified in a NIAGADS GWAS summary statistics dataset.<br/>
@@ -289,17 +645,42 @@
 				</description>
 			</table>
 
-			<table name="ad_associations_from_catalog" displayName="Alzheimer's disease" queryRef="VariantTables.ADAssociationsFromCatalog">
-				<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" />
-				<columnAttribute name="allele" displayName="Test/Minor Allele" />
-				<columnAttribute name="pvalue" displayName="p-value" />
-				<columnAttribute name="frequency" displayName="Frequency" />
-				<columnAttribute name="trait" displayName="Trait" />
-				<columnAttribute name="mapped_efo_trait" displayName="EFO Mapped Trait" help="mapping to Experimental Factor Ontology" />
-				<columnAttribute name="pubmed_id" displayName="PubMed ID" />
-				<columnAttribute name="study" displayName="Study" />
-				<columnAttribute name="sample" displayName="Sample" />
-				<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" />
+			<table
+					name="ad_associations_from_catalog"
+					displayName="Alzheimer's disease"
+					queryRef="VariantTables.ADAssociationsFromCatalog">
+				<columnAttribute
+						name="source"
+						displayName="Data Source"
+						help="NHGRI or NIAGADS-curated GWAS Catalog" />
+				<columnAttribute
+						name="allele"
+						displayName="Test/Minor Allele" />
+				<columnAttribute
+						name="pvalue"
+						displayName="p-value" />
+				<columnAttribute
+						name="frequency"
+						displayName="Frequency" />
+				<columnAttribute
+						name="trait"
+						displayName="Trait" />
+				<columnAttribute
+						name="mapped_efo_trait"
+						displayName="EFO Mapped Trait"
+						help="mapping to Experimental Factor Ontology" />
+				<columnAttribute
+						name="pubmed_id"
+						displayName="PubMed ID" />
+				<columnAttribute
+						name="study"
+						displayName="Study" />
+				<columnAttribute
+						name="sample"
+						displayName="Sample" />
+				<columnAttribute
+						name="replicate_sample"
+						displayName="Replicate (Stage 2) Sample" />
 
 
 				<description>
@@ -312,17 +693,42 @@
 
 			</table>
 
-			<table name="other_associations_from_catalog" displayName="Other Traits (incl. AD-related neuropathologies and biomarkers)" queryRef="VariantTables.OtherAssociationsFromCatalog">
-				<columnAttribute name="source" displayName="Data Source" help="NHGRI or NIAGADS-curated GWAS Catalog" />
-				<columnAttribute name="allele" displayName="Test/Minor Allele" />
-				<columnAttribute name="pvalue" displayName="p-value" />
-				<columnAttribute name="frequency" displayName="Frequency" />
-				<columnAttribute name="trait" displayName="Trait" />
-				<columnAttribute name="mapped_efo_trait" displayName="EFO Mapped Trait" help="mapping to Experimental Factor Ontology" />
-				<columnAttribute name="pubmed_id" displayName="PubMed ID" />
-				<columnAttribute name="study" displayName="Study" />
-				<columnAttribute name="sample" displayName="Sample" />
-				<columnAttribute name="replicate_sample" displayName="Replicate (Stage 2) Sample" />
+			<table
+					name="other_associations_from_catalog"
+					displayName="Other Traits (incl. AD-related neuropathologies and biomarkers)"
+					queryRef="VariantTables.OtherAssociationsFromCatalog">
+				<columnAttribute
+						name="source"
+						displayName="Data Source"
+						help="NHGRI or NIAGADS-curated GWAS Catalog" />
+				<columnAttribute
+						name="allele"
+						displayName="Test/Minor Allele" />
+				<columnAttribute
+						name="pvalue"
+						displayName="p-value" />
+				<columnAttribute
+						name="frequency"
+						displayName="Frequency" />
+				<columnAttribute
+						name="trait"
+						displayName="Trait" />
+				<columnAttribute
+						name="mapped_efo_trait"
+						displayName="EFO Mapped Trait"
+						help="mapping to Experimental Factor Ontology" />
+				<columnAttribute
+						name="pubmed_id"
+						displayName="PubMed ID" />
+				<columnAttribute
+						name="study"
+						displayName="Study" />
+				<columnAttribute
+						name="sample"
+						displayName="Sample" />
+				<columnAttribute
+						name="replicate_sample"
+						displayName="Replicate (Stage 2) Sample" />
 
 
 				<description>

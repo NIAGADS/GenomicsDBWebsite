@@ -1,4 +1,5 @@
 import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
+import { BooleanCheckAccessor } from "genomics-client/components/Visualizations/Table/ColumnAccessors";
 
 export const _variantTableProperties: { [name: string]: TableProperties } = {
     ad_associations_from_gwas: {
@@ -15,8 +16,8 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         ],
         defaultFilter: "pvalue",
         hiddenColumns: [
-            "population",
             "diagnosis",
+            "track_description",
             "neuropathology",
             "covariates",
             "gender",
@@ -29,7 +30,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { pvalue: "ScientificNotation", track: "Link" },
+        accessors: { pvalue: "ScientificNotation", track_name_link: "Link" },
     },
     other_associations_from_gwas: {
         filters: {
@@ -49,25 +50,26 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
             },
         ],
         defaultFilter: "pvalue",
-        hiddenColumns: ["population", "covariates", "gender", "genotype", "biomarker", "tissue"],
-        requiredColumns: ["track", "allele", "pvalue", "diagnosis", "neuropathology"],
+        hiddenColumns: ["covariates", "gender", "genotype", "biomarker", "tissue", "track_description"],
+        requiredColumns: ["track_name_link", "allele", "pvalue"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
         sortedBy: [{ id: "pvalue", descending: false }],
-        accessors: { pvalue: "ScientificNotation", track: "Link" },
+        accessors: { pvalue: "ScientificNotation", track_name_link: "Link" },
     },
     ad_associations_from_catalog: {
         filters: {
             pvalue: "pvalue",
             source: "select",
+            mapped_efo_trait: "typeahead_select",
         },
         filterGroups: [
-            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Statistics", columns: ["pvalue", "mapped_efo_trait"], defaultOpen: true },
             { label: "Annotation", columns: ["source"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "mapped_efo_trait"],
-        requiredColumns: ["pvalue", "trait", "study"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "frequency", "trait"],
+        requiredColumns: ["pvalue", "mapped_efo_trait", "study"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
@@ -78,13 +80,14 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         filters: {
             pvalue: "pvalue",
             source: "select",
+            mapped_efo_trait: "typeahead_select",
         },
         filterGroups: [
-            { label: "Statistics", columns: ["pvalue"], defaultOpen: true },
+            { label: "Statistics", columns: ["pvalue", "mapped_efo_trait"], defaultOpen: true },
             { label: "Annotation", columns: ["source"] },
         ],
-        hiddenColumns: ["source", "sample", "replicate_sample", "frequency"],
-        requiredColumns: ["pvalue", "trait", "study"],
+        hiddenColumns: ["source", "sample", "replicate_sample", "trait", "frequency"],
+        requiredColumns: ["pvalue", "mapped_efo_trait", "study"],
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
@@ -104,16 +107,12 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         defaultOpen: false,
         canFilter: true,
         canToggleColumns: true,
-        hiddenColumns: ["d_prime"],
+        hiddenColumns: ["d_prime", "minor_allele_frequency_ld_ref"],
         requiredColumns: ["variant", "r_squared", "population"],
         sortedBy: [{ id: "r_squared", descending: true }],
         accessors: {
             adsp_variant_flag: "BooleanRedCheck",
-            r_squared: "Float",
-            minor_allele_frequency_ld_ref: "Float",
-            minor_allele_frequency: "Float",
-            d_prime: "Float"
-        }
+        },
     },
     allele_frequencies: {
         filters: {
@@ -124,6 +123,87 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: false,
-        accessors: { frequency: "PercentageBar" },
+        accessors: { frequency: "PercentageBar", population: "AnnotatedText" },
     },
+
+    transcript_consequences: {
+        filters: {
+            consequence: "select",
+            gene_link: "select",
+            impact: "select",
+        },
+        filterGroups: [{ label: "Consequence", columns: ["consequence", "gene_link", "impact"], defaultOpen: true }],
+        hiddenColumns: ["exon", "cds_position", "cdna_position", "protein_link", "protein_position", "rank"],
+        requiredColumns: ["consequence"],
+        canFilter: true,
+        defaultOpen: true,
+        canToggleColumns: true,
+        accessors: {
+            is_canonical_transcript: "BooleanGreenCheck",
+            is_coding: "BooleanGreenCheck",
+            is_most_severe_consequence: "BooleanRedCheck",
+            gene_link: "Link",
+            transcript_link: "Link",
+            protein_link: "Link",
+        },
+    },
+
+    regulatory_consequences: {
+        filters: {
+            consequence: "select",
+            feature_biotype: "select",
+            impact: "select",
+        },
+        filterGroups: [
+            { label: "Consequence", columns: ["consequence", "feature_biotype", "impact"], defaultOpen: true },
+        ],
+        hiddenColumns: ["rank"],
+        requiredColumns: ["consequence", "feature_biotype", "feature_link"],
+        canFilter: true,
+        defaultOpen: true,
+        canToggleColumns: true,
+        accessors: {
+            is_most_severe_consequence: "BooleanRedCheck",
+            feature_link: "Link",
+        },
+    },
+
+    intergenic_consequences: {
+        filters: {
+            consequence: "select",
+            impact: "select",
+        },
+        filterGroups: [
+            { label: "Consequence", columns: ["consequence", "impact"], defaultOpen: true },
+        ],
+        hiddenColumns: ["rank"],
+        requiredColumns: ["consequence"],
+        canFilter: true,
+        defaultOpen: true,
+        canToggleColumns: true,
+        accessors: {
+            is_most_severe_consequence: "BooleanRedCheck",
+        },
+    },
+
+      motif_consequences: {
+        filters: {
+            consequence: "select",
+            feature_biotype: "select",
+            impact: "select",
+        },
+        filterGroups: [
+            { label: "Consequence", columns: ["consequence", "feature_biotype", "impact"], defaultOpen: true },
+        ],
+        hiddenColumns: ["rank", "high_info_position", "transcription_factor_complex", "epigenomes"],
+        requiredColumns: ["consequence", "feature_link", "feature_biotype"],
+        canFilter: true,
+        defaultOpen: true,
+        canToggleColumns: true,
+        accessors: {
+            is_most_severe_consequence: "BooleanRedCheck",
+            feature_link: "Link",
+            motif_link: "Link"
+        },
+      }
 };

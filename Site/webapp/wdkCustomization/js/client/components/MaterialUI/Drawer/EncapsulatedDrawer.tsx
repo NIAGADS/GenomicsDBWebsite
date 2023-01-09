@@ -11,7 +11,7 @@ import clsx from "clsx";
 
 import { makeStyles, useTheme, Theme, createStyles } from "@material-ui/core/styles";
 
-import { CustomTooltip as Tooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip, DrawerProps, DrawerContentsProps } from "@components/MaterialUI";
 
 const DRAWER_WIDTH = 400;
 const MAX_HEIGHT = 750;

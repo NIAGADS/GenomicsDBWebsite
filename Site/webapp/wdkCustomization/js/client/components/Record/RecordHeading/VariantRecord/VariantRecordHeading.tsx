@@ -3,7 +3,7 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 import { SummaryPlotHeader } from "@components/Record/RecordHeading/SummaryPlotHeader";
 import { useHeadingStyles } from "@components/Record/RecordHeading/styles";
 import { RecordHeading } from "@components/Record/Types";
@@ -14,7 +14,7 @@ import { AlternativeVariantsSection, ColocatedVariantsSection } from "./VariantH
 import { HighchartsTableTrellis } from "@viz/Highcharts/HighchartsTrellisPlot";
 
 import { MetaseqIdAttribute } from "@components/Record/Attributes";
-import { CustomPanel, useTypographyStyles, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { CustomPanel, useTypographyStyles, StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
@@ -36,7 +36,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
             <Grid item container direction="column" sm={3}>
                 <Grid item>
                     <Typography variant="h5">
-                        <MetaseqIdAttribute value={attributes.display_metaseq_id.toString()} />
+                        <MetaseqIdAttribute value={attributes.metaseq_id.toString()} />
                     </Typography>
                     {attributes.ref_snp_id && (
                         <Typography>

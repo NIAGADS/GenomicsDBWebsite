@@ -2,7 +2,7 @@ import React from "react";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+import { CustomLink as Link} from "@components/MaterialUI"
 
 import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";

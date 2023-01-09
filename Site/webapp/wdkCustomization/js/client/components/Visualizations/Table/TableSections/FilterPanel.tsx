@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
-import { CollapsableCardPanel, LabelButton, CustomTooltip as Tooltip } from "@components/MaterialUI";
+import { CollapsableCardPanel, LabelButton, StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";

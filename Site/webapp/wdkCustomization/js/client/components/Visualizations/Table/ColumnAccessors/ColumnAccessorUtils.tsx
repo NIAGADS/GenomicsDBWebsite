@@ -9,10 +9,11 @@ import {
     DefaultTextAccessor,
     LinkAccessor,
 } from "@viz/Table/ColumnAccessors";
+import { DefaultHelpIcon } from "genomics-client/components/MaterialUI";
 
 /* altValue defines what should be displayed if not n/a */
 export const resolveNAs = (value: string, altValue: any = null) => {
-    if (value === "N/A" || value === null) {
+    if (value === "N/A" || value === null || value === "") {
         return <NASpan key={Math.random().toString(36).slice(2)}></NASpan>;
     }
     return altValue != null ? altValue : value;
@@ -34,7 +35,7 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
         case "ColoredText":
             return (row: any) => resolveNAs(row[key], <ColoredTextAccessor value={row[key]} htmlColor="red" />);
         case "Link":
-            return (row: any) => resolveNAs(row[key], <LinkAccessor value={row[key]}/>);
+            return (row: any) => resolveNAs(row[key], <DefaultTextAccessor value={row[key]}/>);
         case "ScientificNotation":
         case "Float":
         default:

@@ -5,7 +5,7 @@ import DownloadIcon from "@material-ui/icons/GetApp";
 import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "@viz/Table/TableFilters";
 import { TablePagination } from "@viz/Table/TableSections";
 
-import { CustomTooltip as Tooltip, MaterialUIThemedButton } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip, MaterialUIThemedButton } from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
 
 interface FilterToolbarProps {

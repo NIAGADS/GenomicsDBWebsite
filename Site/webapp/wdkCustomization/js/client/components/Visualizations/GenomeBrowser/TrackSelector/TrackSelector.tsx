@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
         table: {
             width: "100%",
             minHeight: 500,
-            maxHeight: 1000,
+            //maxHeight: 1000,
             overflowY: "scroll",
             overflowX: "scroll",
         },

@@ -212,6 +212,7 @@
 
       <column name="relative_position"/>
       <column name="track_name_link"/>
+	  <column name="track_description"/>
       <column name="pvalue"/>
       <column name="accession_link"/>
       <column name="adsp_variant_flag"/>
@@ -231,7 +232,8 @@
 
 		tracks AS (
 		SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
+		record_link('track', ta.track, ta.name, TRUE, NULL) AS track_name_link,
+		ta.description AS track_description,
 		build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link,
 		CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
 		THEN 'European' ELSE replace(bt.track_config->'biosample_characteristics'->>'population', ', ', ' // ') END AS population,
@@ -295,7 +297,8 @@
       <column name="allele"/>
 
       <column name="relative_position"/>
-      <column name="track_name"/>
+      <column name="track_name_link"/>
+	  <column name="track_description"/>
       <column name="pvalue"/>
       <column name="accession_link"/>
       <column name="adsp_variant_flag"/>
@@ -317,7 +320,8 @@
 
 		 tracks AS (
 		 SELECT DISTINCT ta.track, ta.protocol_app_node_id,
-		 record_link('track', ta.track, ta.name, TRUE, ta.description) AS track_name,
+		 record_link('track', ta.track, ta.name, TRUE, NULL) AS track_name_link,
+		 ta.description AS track_description,
 		 build_link_attribute(ta.dataset_accession, '@NIAGADS_BASE_URL@/datasets/', NULL, 'view accession details') AS accession_link,
 		 CASE WHEN bt.track_config->'biosample_characteristics'->>'population' IS NULL 
 		THEN 'European' ELSE replace(bt.track_config->'biosample_characteristics'->>'population', ', ', ' // ') END AS population,
@@ -397,6 +401,7 @@
       <column name="sample"/>
       <column name="replicate_sample"/>
       <column name="trait"/>
+	  <column name="mapped_efo_trait"/>
       <sql>
 	<![CDATA[
 
@@ -419,10 +424,10 @@
 		 variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
-		 THEN build_text_attribute('upstream', NULL, 'red')::text
+		 THEN 'upstream'
 		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
-		 THEN build_text_attribute('downstream', NULL, 'green')::text
-		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		 THEN 'downstream'
+		 ELSE 'in gene' END AS relative_position,
 		 
 		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
 		 r.frequency,
@@ -437,10 +442,11 @@
 		 ELSE r.restricted_stats->>'REPLICATION SAMPLE SIZE' END  AS replicate_sample,
 		 
 		 r.restricted_stats->>'DISEASE/TRAIT' AS trait,
-		 
-		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
-		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
-		 
+
+		 multi_replace(r.restricted_stats->>'MAPPED_TRAIT',
+		 ARRAY[', ', 'Alzheimer disease', 'Alzheimers'],
+		 ARRAY[' // ', 'Alzheimer''s disease', 'Alzheimer''s']) AS mapped_efo_trait
+
 		 FROM NIAGADS.VariantGWASTopHits r, tracks t, id, CBIL.GeneAttributes ga
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id
 		 AND r.restricted_stats->>'DISEASE/TRAIT' ILIKE '%Alzheimer%'
@@ -469,7 +475,8 @@
       <column name="adsp_variant_flag"/>
       <column name="gene_impact"/>
       <column name="gene_consequence"/>
-      
+      <column name="mapped_efo_trait"/>
+
       <column name="source"/>
       <column name="pubmed_id"/>
       <column name="study"/>
@@ -498,10 +505,10 @@
 		 variant_msc_gene_consequence(r.annotation->'ADSP_MOST_SEVERE_CONSEQUENCE', id.source_id) AS gene_consequence,
 		 
 		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start 
-		 THEN build_text_attribute('upstream', NULL, 'red')::text
+		 THEN 'upstream'
 		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end 
-		 THEN build_text_attribute('downstream', NULL, 'green')::text
-		 ELSE build_text_attribute('in gene', NULL, NULL)::text END AS relative_position,
+		 THEN 'downstream'
+		 ELSE 'in gene' END AS relative_position,
 		 
 		 replace(r.pvalue_display, 'E', 'e') AS pvalue,
 		 r.frequency,
@@ -517,8 +524,7 @@
 		 
 		 r.restricted_stats->>'DISEASE/TRAIT' AS trait,
 		 
-		 build_link_attribute(r.restricted_stats->>'MAPPED_TRAIT', 
-		 '@EFO_TRAIT_URL@', replace(r.restricted_stats->>'MAPPED_TRAIT_URI', 'http://www.ebi.ac.uk/efo/', ''), NULL) AS mapped_efo_trait
+		 replace(r.restricted_stats->>'MAPPED_TRAIT', ', ', ' // ') AS mapped_efo_trait
 		 
 		 FROM NIAGADS.VariantGWASTopHits r, tracks t, id, CBIL.GeneAttributes ga
 		 WHERE t.protocol_app_node_id = r.protocol_app_node_id

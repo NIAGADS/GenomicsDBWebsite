@@ -1,37 +1,33 @@
 import React from "react";
-import toJson from "lodash";
-
+import { isObject } from "lodash";
 import List from "@material-ui/core/List";
 import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
-import { ColumnAccessor, DefaultTextAccessor } from "@viz/Table/ColumnAccessors";
+import { LinkAccessor, DefaultTextAccessor, ColumnAccessor } from "@viz/Table/ColumnAccessors";
 
-export const LinkAttribute: React.SFC<ColumnAccessor> = ({ value }) => {
-    // if array / then we have a list
-    return Array.isArray(toJson(value)) ? (
-        <LinkAttributeList value={value} asString={true} />
-    ) : (
-        <DefaultTextAccessor value={value} />
-    );
-};
-
-
+export const LinkAttribute: React.FC<{value:string}> = ({value}) => {
+    return <LinkAccessor value={JSON.parse(value)}/>
+}
 
 // json array of [{url: , value: , tooltip?: }, ...]
 // asString returns it as a " // " separated list
-export const LinkAttributeList: React.FC<{ value: string; asString?: boolean }> = ({ value, asString=false }) => {
-    const list: any = toJson(value);
+export const LinkAttributeList: React.FC<{ value: string; asString?: boolean }> = ({ value, asString = false }) => {
+    if (!value || value === null || value === '') {
+        return <DefaultTextAccessor value={value}/>
+    }
+
+    const list: any = JSON.parse(value);
     return asString ? (
         list.map((item: any, i: number) => (
             <span key={i}>
                 {i > 0 && " // "}
-                <LinkAttribute value={item} />
+                <LinkAccessor value={item} />
             </span>
         ))
     ) : (
         <List>
             {list.map((item: any, i: number) => (
                 <ListItem key={i}>
-                    <LinkAttribute value={item} />
+                    <LinkAccessor value={item} />
                 </ListItem>
             ))}
         </List>

@@ -13,7 +13,7 @@ import { RecordInstance } from "wdk-client/Utils/WdkModel";
 import { LabeledAttributeItem as RecordAttributeItem } from "@components/Record/Attributes";
 import { MostSevereConsequenceSection } from "./VariantHeaderSections";
 
-import { CustomTooltip as Tooltip, UnpaddedListItem as ListItem } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip, WhiteTooltip, UnpaddedListItem as ListItem, WarningAlert } from "@components/MaterialUI";
 import { useTypographyStyles } from "@components/MaterialUI/styles";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
@@ -56,7 +56,7 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
             </ListItem>
 
             <ListItem>
-                <ADSPStatusDisplay is_adsp_variant={attributes.is_adsp_variant} />
+                <ADSPStatusDisplay isAdspVariant={attributes.is_adsp_variant} callFlags={attributes.adsp_qc_flags} />
             </ListItem>
 
             <ListItem>
@@ -71,44 +71,45 @@ export const VariantRecordAttributesList: React.FC<{ record: RecordInstance }> =
     );
 };
 
-const ADSPStatusDisplay: React.FC<any> = ({ is_adsp_variant }) => {
-    return is_adsp_variant ? (
-        <Tooltip
+const ADSPStatusDisplay: React.FC<{ isAdspVariant: any; callFlags: any }> = ({ isAdspVariant, callFlags }) => {
+    // temp solution --> since currently only 1 ADSP release; later need to adapt to give a badge for each
+    const calls = callFlags ? JSON.parse(callFlags.toString()) : null;
+    const passed = calls ? Boolean(calls[Object.keys(calls)[0]]) : false;
+    return Boolean(isAdspVariant ? isAdspVariant.toString() : isAdspVariant) ? (
+        <WhiteTooltip
             arrow
             title={
                 <>
                     <Typography variant="caption">
-                        This variant was present in ADSP samples and PASSED the ADSP quality control checks.
+                        This variant was present in ADSP samples and <strong className="red">PASSED</strong> the ADSP quality control checks.
                     </Typography>
-                    <br />
-                    <Typography variant="caption" className="red">
-                        <WarningIcon fontSize="small" /> This is not an indicator of AD-risk association. Please view
-                        summary statistics results or ADSP Case/Control single-variant results to make that
-                        determination.
-                    </Typography>
+                    <WarningAlert
+                        title="This is not an indicator of AD-risk association."
+                        message="Please review summary statistics results to evaluate disease risk-associations."
+                    />
                 </>
             }
         >
             <Chip color="secondary" icon={<InfoIcon />} label="ADSP Variant" />
-        </Tooltip>
-    ) : (
-        <Tooltip
+        </WhiteTooltip>
+    ) : passed ? (
+        <WhiteTooltip
             arrow
             title={
                 <>
                     <Typography variant="caption">
-                        This variant was present in ADSP samples and but did NOT pass the ADSP quality control checks.
+                        This variant was present in ADSP samples and but did <strong className="red">NOT</strong> pass the ADSP quality control checks.
                     </Typography>
-                    <Typography variant="caption" className="red">
-                        <WarningIcon /> This is not an indicator of AD-risk association. Please view summary statistics
-                        results or ADSP Case/Control single-variant results to make that determination.
-                    </Typography>
+                    <WarningAlert
+                        title="This is not an indicator of a lack of AD-risk association."
+                        message="Please review summary statistics results to evaluate disease risk-associations."
+                    />
                 </>
             }
         >
             <Chip color="secondary" icon={<InfoIcon />} label="variant flagged by the ADSP" />
-        </Tooltip>
-    );
+        </WhiteTooltip>
+    ) : null;
 };
 
 const FilterStatusChip: React.FC<any> = ({ label, status, didPass }) => {

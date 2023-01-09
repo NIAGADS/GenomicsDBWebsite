@@ -1,5 +1,5 @@
 /* drawer tied to navigation toolbar */
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -12,53 +12,55 @@ import Grid from "@material-ui/core/Grid";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
-import {
-    CustomTooltip as Tooltip,
-    DrawerProps,
-    DRAWER_WIDTH
-} from "@components/MaterialUI";
+import { StyledTooltip as Tooltip, DrawerProps, DRAWER_WIDTH } from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 
-const useDrawerStyles = (props: any) => makeStyles((theme: Theme) =>
-    createStyles({
-        drawerHeader: {
-            //display: "flex",
-            //alignItems: "center",
-            //padding: theme.spacing(0, 3),
-            // necessary for content to be below app bar
-            //...theme.mixins.toolbar,
-            //justifyContent: "flex-end",
-            //marginTop: theme.spacing(1),
-        },
-        title: {
-            fontSize: theme.typography.pxToRem(12),
-        },
-        actionButton: {
-            marginTop: theme.spacing(1),
-            // justifyContent: "left"
-        },
-        divider: {
-            marginTop: theme.spacing(1),
-        },
-        children: {
-            marginTop: theme.spacing(1),
-        },
-        content: {
-            //padding: theme.spacing(3),
-        },
-        sideDrawer: {
-            width: props.width || DRAWER_WIDTH,
-            flexShrink: 0,
-        },
-        sideDrawerPaper: {
-            width: props.width || DRAWER_WIDTH,
-        },
-        fullWidth: {
-            margin: "auto",
-        },
-    })
-);
+const useDrawerStyles = (props: any) =>
+    makeStyles((theme: Theme) =>
+        createStyles({
+            drawerHeader: {
+                //display: "flex",
+                //alignItems: "center",
+                //padding: theme.spacing(0, 3),
+                // necessary for content to be below app bar
+                //...theme.mixins.toolbar,
+                //justifyContent: "flex-end",
+                //marginTop: theme.spacing(1),
+            },
+            drawerHeaderContents: {
+                //backgroundColor: theme.palette.secondary.main,
+                //borderRadius: 4,
+                marginBottom: theme.spacing(1),
+            },
+            title: {
+                fontSize: theme.typography.pxToRem(12),
+            },
+            actionButton: {
+                marginTop: theme.spacing(1),
+                // justifyContent: "left"
+            },
+            divider: {
+                marginTop: theme.spacing(1),
+            },
+            children: {
+                marginTop: theme.spacing(1),
+            },
+            content: {
+                //padding: theme.spacing(3),
+            },
+            sideDrawer: {
+                width: props.width || DRAWER_WIDTH,
+                flexShrink: 0,
+            },
+            sideDrawerPaper: {
+                width: props.width || DRAWER_WIDTH,
+            },
+            fullWidth: {
+                margin: "auto",
+            },
+        })
+    );
 
 export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
     const {
@@ -76,10 +78,11 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
         className,
         drawerCloseLabel,
         width,
-        encapsulated
+        encapsulated,
     } = props;
     const classes = useDrawerStyles(props)();
     const [open, setOpen] = useState(false);
+
 
     const handleToggleClick = () => {
         setOpen(!open);
@@ -100,89 +103,93 @@ export const NavigationDrawer: React.FC<DrawerProps> = (props) => {
                     {drawerCloseLabel ? drawerCloseLabel : "Close"}
                 </Button>
             </Grid>
-            <Grid item>{drawerHeaderContents}</Grid>
+            <Grid className={classes.drawerHeaderContents} item>
+                {drawerHeaderContents}
+            </Grid>
         </Grid>
     );
 
     const renderDrawerSections = (
         <>
             {drawerSections?.map((section, index) => {
-                return (
-                    <div key={index}>
-                        {section}
-                    </div>
-                );
+                return <div key={index}>{section}</div>;
             })}
         </>
     );
 
     const renderDrawer = (
         <>
-        {renderDrawerHeader}
-        <Divider className={classes.divider}></Divider>
-        {drawerContents && <Box className={classes.content}>{drawerContents}</Box>}
-        {drawerSections && <Box className={classes.content}>{renderDrawerSections}</Box>}
+            {renderDrawerHeader}
+            <Divider className={classes.divider}></Divider>
+            {drawerContents && <Box className={classes.content}>{drawerContents}</Box>}
+            {drawerSections && <Box className={classes.content}>{renderDrawerSections}</Box>}
         </>
     );
 
-    const renderEncapsulatedDrawer = (
+    /*const renderEncapsulatedDrawer = (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
             <Grid item style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH}}>
                 {renderDrawer}
             </Grid>
-            <Grid item style={{ width: "80%" }}>
+            <Grid item style={{ marginLeft: "36px" }}>
                 {children}
             </Grid>
         </Grid>
+    );*/
+
+    const renderEncapsulatedDrawer = (
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+            <Box style={{ minWidth: DRAWER_WIDTH, width: DRAWER_WIDTH }}>{renderDrawer}</Box>
+            <Box sx = {{maxWidth: "lg"}} style={{ marginLeft: "36px", width: "70%"}}>{children}</Box>
+        </Grid>
     );
 
+    return (
+        <React.Fragment key={toggleAnchor}>
+            <AppBar position="static" elevation={0} {...navigationProps} className={className}>
+                <Toolbar variant="dense" disableGutters>
+                    {toggleIcon && (
+                        <Tooltip title={toggleHelp} aria-label={toggleHelp}>
+                            <Button
+                                style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
+                                color="primary"
+                                variant="contained"
+                                aria-label="toggle-secondary-navigation"
+                                onClick={handleToggleClick}
+                                startIcon={toggleIcon}
+                                size="small"
+                                disableElevation={true}
+                            >
+                                {toggleText}
+                            </Button>
+                        </Tooltip>
+                    )}
+                    {navigation && navigation}
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                anchor={toggleAnchor}
+                open={open}
+                classes={{
+                    paper: clsx(classes.sideDrawerPaper, {
+                        "": toggleAnchor === "top" || toggleAnchor === "bottom",
+                    }),
+                }}
+                className={clsx(classes.sideDrawer, {
+                    [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
+                })}
+                variant="temporary"
+                onClose={(event, reason) => {
+                    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+                        setOpen(false);
+                    }
+                }}
+                {...drawerProps}
+            >
+                {encapsulated ? renderEncapsulatedDrawer : renderDrawer}
+            </Drawer>
 
-return (
-    <React.Fragment key={toggleAnchor}>
-        <AppBar position="static" elevation={0} {...navigationProps} className={className}>
-            <Toolbar variant="dense" disableGutters>
-                {toggleIcon &&
-                    <Tooltip title={toggleHelp} aria-label={toggleHelp}>
-                        <Button
-                            style={toggleAnchor === "right" ? { marginLeft: "auto" } : {}}
-                            color="primary"
-                            variant="contained"
-                            aria-label="toggle-secondary-navigation"
-                            onClick={handleToggleClick}
-                            startIcon={toggleIcon}
-                            size="small"
-                            disableElevation={true}
-                        >
-                            {toggleText}
-                        </Button>
-                   </Tooltip>}
-                {navigation && navigation}
-            </Toolbar>
-        </AppBar>
-        <Drawer
-            anchor={toggleAnchor}
-            open={open}
-            classes={{
-                paper: clsx(classes.sideDrawerPaper, {
-                    "": toggleAnchor === "top" || toggleAnchor === "bottom",
-                }),
-            }}
-            className={clsx(classes.sideDrawer, {
-                [classes.fullWidth]: toggleAnchor === "top" || toggleAnchor === "bottom",
-            })}
-            variant="temporary"
-            onClose={(event, reason) => {
-                if (reason === "backdropClick" || reason === "escapeKeyDown") {
-                    setOpen(false);
-                }
-            }}
-            {...drawerProps}
-        >
-            {encapsulated ? renderEncapsulatedDrawer : renderDrawer}
-            
-        </Drawer>
-
-        {!encapsulated && children}
-    </React.Fragment>
-);
+            {!encapsulated && children}
+        </React.Fragment>
+    );
 };
