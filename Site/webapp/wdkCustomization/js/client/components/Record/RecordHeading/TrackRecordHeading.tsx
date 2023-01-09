@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { CustomLink as Link} from "@components/MaterialUI"
+import { CustomLink as Link } from "@components/MaterialUI";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -32,7 +32,6 @@ import { PlotlyManhattan } from "@viz/Manhattan";
 
 import "./TrackRecordHeading.scss";
 import Box from "@material-ui/core/Box";
-
 
 interface HeaderImage {
     src: string;
@@ -104,7 +103,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                                     <Box component="span">
                                         {record.attributes.niagads_accession}{" "}
                                         <Link
-                                            href={`${_externalUrls.NIAGADS_BASE_URL}/dataset/${record.attributes.niagads_accession}`}
+                                            href={`${_externalUrls.NIAGADS_BASE_URL}/datasets/${record.attributes.niagads_accession}`}
                                         >
                                             <i className={`${tClasses.small} fa fa-external-link`}></i>
                                         </Link>
@@ -113,8 +112,8 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                                 tooltip="View NIAGADS Accession / Request Access to full summary statistics"
                             ></RecordAttributeItem>
                         </ListItem>
-                        <ListItem>
-                            {record.attributes.related_tracks && (
+                        {record.attributes.related_tracks && (
+                            <ListItem>
                                 <RecordAttributeItem
                                     label="Related Tracks"
                                     children={
@@ -124,13 +123,18 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
                                         />
                                     }
                                 />
-                            )}
-                        </ListItem>
+                            </ListItem>
+                        )}
                     </List>
-                                   
-                    <PlotlyManhattan track={record.id[0].value} accession={record.attributes.niagads_accession.toString()} webAppUrl={webAppUrl} />
 
                     <DatasetHeaderImage src={`${imgPrefix}-manhattan.png`} type={"standard-manhattan"} />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                    <PlotlyManhattan
+                        track={record.id[0].value}
+                        accession={record.attributes.niagads_accession.toString()}
+                        webAppUrl={webAppUrl}
+                    />
                 </Grid>
                 {/* <Grid item sm={6} xs={12}>
                     <GWASDatasetLZPlot dataset={record.id[0].value} /> 
