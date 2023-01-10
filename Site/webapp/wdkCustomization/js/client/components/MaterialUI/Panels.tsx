@@ -69,6 +69,7 @@ interface Custom {
     alignItems?: GridItemsAlignment;
     justifyContent?: GridJustification;
 }
+
 export const CustomPanel: React.FC<PanelProps & Custom> = ({
     className,
     children,

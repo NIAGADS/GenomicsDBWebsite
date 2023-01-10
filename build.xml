@@ -128,8 +128,8 @@
     </ant>
 
     <echo message="Unpack manhattan plots" />
-    <untar src="${webappTargetDir}/images/manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
-    <delete file="${webappTargetDir}/images/manhattan.tar.gz" quiet="true" />
+    <untar src="${webappTargetDir}/images/${build}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
+    <delete file="${webappTargetDir}/images/${build}_manhattan.tar.gz" quiet="true" />
 
     <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />

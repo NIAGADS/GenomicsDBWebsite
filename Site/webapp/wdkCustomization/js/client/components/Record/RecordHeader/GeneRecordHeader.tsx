@@ -21,7 +21,7 @@ const GeneRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, header
     );
 
     return (
-        <RecordHeader title={} summary={}/>
+        <RecordHeader title={renderTitle} summary={}/>
        {/*} <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
             <Grid item container direction="column" sm={3}>
                 <Grid item>
