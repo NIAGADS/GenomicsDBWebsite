@@ -213,9 +213,7 @@
 						ELSE 'Other Neuropathology'
 				END		 
 			ELSE -- biomarkers
-				CASE WHEN c.characteristic IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
-				THEN 'Cognitive Impairment' 
-				ELSE c.characteristic END
+			c.characteristic
 		 END AS phenotype
 		 
 		 FROM  NIAGADS.TrackAttributes t,
@@ -225,6 +223,7 @@
 		 AND c.protocol_app_node_id = t.protocol_app_node_id
 		 AND c.characteristic_type IN ('diagnosis', 'neuropathology', 'biomarker')
 		 AND c.characteristic NOT IN ('autopsy-based diagnosis')
+		 AND c.characteristic NOT IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
 		 ),
 		 
 		 hits AS (

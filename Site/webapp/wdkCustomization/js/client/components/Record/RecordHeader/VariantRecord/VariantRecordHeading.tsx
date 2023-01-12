@@ -63,6 +63,7 @@ const VariantRecordSummary: React.FC<RecordHeading> = (props) => {
                         <SummaryPlotHeader
                             text="Summary of AD/ADRD associations for this variant:"
                             anchor="#category:phenomics"
+                            help={<Typography>TBD</Typography>}
                         />
                         <HighchartsTableTrellis
                             data={JSON.parse(record.attributes.gws_datasets_summary_plot.toString())}

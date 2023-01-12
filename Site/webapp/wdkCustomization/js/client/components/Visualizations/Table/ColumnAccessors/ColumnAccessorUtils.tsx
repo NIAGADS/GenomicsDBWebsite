@@ -9,7 +9,7 @@ import {
     DefaultTextAccessor,
     LinkAccessor,
 } from "@viz/Table/ColumnAccessors";
-import { DefaultHelpIcon } from "genomics-client/components/MaterialUI";
+
 
 /* altValue defines what should be displayed if not n/a */
 export const resolveNAs = (value: string, altValue: any = null) => {

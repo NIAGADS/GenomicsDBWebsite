@@ -20,12 +20,16 @@ export const RecordHeader: React.FC<RecordHeader> = ({ title, summary, image }) 
     return (
         <CustomPanel hasBaseArrow={false} className={classes.panel} alignItems="flex-start">
             <Grid item container sm={12}>
-                <Typography variant="h5">{title}</Typography>
-                <Box>{summary}</Box>
+                {title}
             </Grid>
-            {image && <Grid item container sm={12}>{image}</Grid>}
+            <Grid item container sm={12}>
+                {summary}
+            </Grid>
+            {image && (
+                <Grid item container sm={12}>
+                    {image}
+                </Grid>
+            )}
         </CustomPanel>
     );
 };
-
-
