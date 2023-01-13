@@ -131,8 +131,6 @@
     <untar src="${webappTargetDir}/images/${build}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
     <delete file="${webappTargetDir}/images/GRCh38_manhattan.tar.gz" quiet="true" />
     <delete file="${webappTargetDir}/images/GRCh37_manhattan.tar.gz" quiet="true" />
-   <!-- <exec dir="${webappTargetDir}/images/manhattan" executable="/usr/bin/find . -name '*.gz' -type f -exec gunzip {} ';'"/> -->
-
     <exec executable="find">
       <arg value="${webappTargetDir}/images/manhattan"/>
       <arg value="-name"/>
