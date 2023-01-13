@@ -8,5 +8,8 @@ export const useHeadingStyles = makeStyles((theme: Theme) =>
             top: "10px",
             paddingLeft: "50px",
         },
+        chipHeading: {
+            marginLeft: -1 * theme.spacing(2)
+        }
     })
 );

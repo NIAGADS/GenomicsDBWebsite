@@ -1,6 +1,6 @@
 import HighchartsPlot from "./HighchartsPlot";
-import { HighchartsTableTrellis } from "./HighchartsTrellisPlot";
+import { HighchartsTableTrellis, HighchartsColumnTrellis } from "./HighchartsTrellisPlot";
 
 export * from "./HighchartsOptions";
 
-export { HighchartsPlot, HighchartsTableTrellis };
+export { HighchartsPlot, HighchartsTableTrellis, HighchartsColumnTrellis };

@@ -5,10 +5,10 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
 import { CustomPanel } from "@components/MaterialUI";
-import { useHeadingStyles } from "genomics-client/components/Record/RecordHeader";
+import { useHeadingStyles } from "@components/Record/RecordHeader";
 
 interface RecordHeader {
-    title: React.ReactElement;
+    title: React.ReactElement;  
     summary: React.ReactElement;
     image?: React.ReactElement;
     actions?: React.ReactElement;

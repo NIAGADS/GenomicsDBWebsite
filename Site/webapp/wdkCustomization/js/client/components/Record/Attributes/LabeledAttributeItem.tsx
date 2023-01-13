@@ -30,7 +30,7 @@ export const LabeledAttributeItem: React.FC<LabeledAttributeItem> = ({
             </strong>
             {tooltip ? (
                 <Tooltip title={tooltip}>
-                    {attribute ? <Box component="span">attribute</Box> : children ? children : <NASpan />}
+                    {attribute ? <Box component="span">{attribute}</Box> : children ? children : <NASpan />}
                 </Tooltip>
             ) : attribute ? (
                 attribute

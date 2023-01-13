@@ -53,7 +53,7 @@ export const PlotlyManhattan: React.SFC<ManhattanPlot> = ({ accession, track, we
     }, []);
 
     return plotData  ?  (
-        <Plot data={plotData.data} layout={plotData.layout} config={plotData.config} />
+        <Plot data={plotData.data} layout={plotData.layout} config={plotData.config} style={{width:"100%"}} useResizeHandler={true}/>
     ) : fetchError ? (
         <InfoAlert
             title={"Coming soon"}

@@ -122,8 +122,7 @@
 		 CASE WHEN (msc.conseq->>'consequence_is_coding')::boolean THEN 
 		 build_icon_attribute('Coding', 'fa-check', 'green', NULL, 'true') ELSE NULL END AS msc_is_coding,
 
-		 replace(replace(msc_impacted_transcript(msc.conseq->>'transcript_id', 'GRCh38'), '+ENSEMBL_TRANSCRIPT_URL_GRCh38+', 
-		 '@ENSEMBL_TRANSCRIPT_URL_GRCh38@'), '+ENSEMBL_TRANSCRIPT_URL_GRCh37+', 'http://grch37.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=') AS msc_impacted_transcript,  
+		 msc.conseq->>'transcript_id' AS msc_impacted_transcript,  
            
 		 msc.conseq->>'codons' AS msc_codon_change,
 		 msc.conseq->>'amino_acids' AS msc_amino_acid_change		 
@@ -143,33 +142,18 @@
 		   SELECT t.protocol_app_node_id,
 		   c.characteristic_type AS category,
 
-		   CASE WHEN c.characteristic_type = 'diagnosis' THEN
-                   CASE WHEN c.characteristic ILIKE 'late onset Alz%' THEN 'LOAD'
-                   WHEN c.characteristic ILIKE '%Alzheimer%' THEN 'AD'
-                   WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
-                   WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
-                   WHEN c.characteristic ILIKE 'Lewy%' THEN 'LBD'
-                   WHEN c.characteristic = 'dementia' THEN 'DEM'
-                   WHEN c.characteristic = 'cognitive impairment' THEN 'CI' 
-		   END
-
-                   WHEN c.characteristic_type = 'neuropathology' THEN -- neuropathology
-                   CASE WHEN c.characteristic ILIKE '%Braak%' THEN 'Braak Stages'
-                   WHEN c.characteristic ILIKE '%CERAD%' THEN 'CERAD Score'
-                   WHEN c.characteristic ILIKE '%angiopathy%' THEN 'CAA'
-                   WHEN c.characteristic ILIKE '%hippo%' THEN 'Hs-Aging'
-                   WHEN c.characteristic ILIKE 'Lewy%' THEN 'LB'
-                   WHEN c.characteristic ILIKE '%plaques%' THEN 'NP'
-                   WHEN c.characteristic ILIKE '%tangles%' THEN 'NT'
-                   WHEN c.characteristic ILIKE '%vascular%' THEN 'VBI'
-                   END
-
-                   ELSE -- biomarkers
-                   CASE WHEN c.characteristic IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
-                   THEN 'CIM'
-		   ELSE
-		   c.characteristic END
-		   END AS phenotype
+		   CASE WHEN c.characteristic_type = 'diagnosis' OR c.characteristic_type = 'neuropathology' THEN
+			CASE WHEN c.characteristic ILIKE '%Alz%' THEN 'AD/LOAD'
+				WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
+				WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
+						WHEN c.characteristic ILIKE 'Lewy%' THEN 'Lewy Body Dementia'
+						WHEN c.characteristic = 'dementia' THEN 'Dementia'
+						WHEN c.characteristic = 'cognitive impairment' THEN 'Cognitive Impairment' 
+						ELSE 'Other Neuropathology'
+				END		 
+			ELSE -- biomarkers
+			c.characteristic
+		 END AS phenotype
 
 		   FROM  NIAGADS.TrackAttributes t,
 		   NIAGADS.ProtocolAppNodeCharacteristic c
@@ -178,6 +162,7 @@
 		   AND c.protocol_app_node_id = t.protocol_app_node_id
 		   AND c.characteristic_type IN ('diagnosis', 'neuropathology', 'biomarker')
 		   AND c.characteristic NOT IN ('autopsy-based diagnosis')
+		   AND c.characteristic NOT IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
 		   ),
 
 		   hits AS (		  
@@ -185,13 +170,13 @@
 		   r.protocol_app_node_id,
 		   CASE WHEN r.neg_log10_pvalue < -1 * log(5e-8) THEN FALSE ELSE TRUE END AS has_gws,
 		   p.phenotype,
-		   p.category,
+		   CASE WHEN p.category = 'biomarker' THEN 'biomarker' ELSE 'diagnosis' END AS category,
 		   ROW_NUMBER() OVER(ORDER BY category, phenotype) AS sort_order
 		   FROM Results.VariantGWAS r, id, phenotype p
 		   WHERE r.variant_record_primary_key = id.source_id
 		   AND r.neg_log10_pvalue >= 3.0
 		   AND p.protocol_app_node_id = r.protocol_app_node_id
-		   ORDER BY p.category, p.phenotype
+		   ORDER BY category, p.phenotype
 		   ),
 		   
 		   ycategories AS (
@@ -302,64 +287,45 @@
 		 WITH id AS ( ##WDK_ID_SQL## ),
 
 		 bi AS (
-		 SELECT id.source_id AS record_primary_key, 
-		 v.bin_index, 
-		 (v.display_attributes->>'location_start')::int AS location_start,
-		 (v.display_attributes->>'location_end')::int AS location_end,
-		 v.position AS location,
-		 v.chromosome
-		 FROM AnnotatedVDB.Variant v, id 
-		 WHERE record_primary_key = id.source_id),
-		 
-		 
-		 cv AS (
-		 SELECT v.record_primary_key, v.ref_snp_id, v.metaseq_id, v.position AS location
-		 FROM AnnotatedVDB.Variant v
-		 WHERE v.bin_index @> (SELECT bin_index FROM bi)
-		 AND int8range((SELECT bi.location_start FROM bi), (SELECT bi.location_end FROM bi), '[]') 
-		 && int8range((v.display_attributes->>'location_start')::int, (v.display_attributes->>'location_end')::int, '[]')
-		 AND v.record_primary_key NOT IN (SELECT record_primary_key FROM bi)	 
-		 ) ,
-
-		 flags AS (
-		 SELECT bi.record_primary_key AS source_id, cv.record_primary_key, 
-		 CASE WHEN SUM((cv.location = bi.location)::integer) > 0 THEN TRUE ELSE FALSE END AS is_multi_allelic,
-		 SUM((cv.location != bi.location)::integer) AS num_colocated_variants
-		 FROM cv, bi GROUP BY bi.record_primary_key, cv.record_primary_key),
-		 
-		 colocv AS (
-		 SELECT flags.record_primary_key,
-		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
-		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS colocated_variants
-		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
-		 AND split_part(flags.source_id, ':', 2) != split_part(cv.record_primary_key, ':', 2)),
-
-		
-		 altv AS (
-		 SELECT DISTINCT flags.record_primary_key, 
-		 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
-		 '/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS alternative_variants
-		 FROM flags LEFT OUTER JOIN cv ON cv.record_primary_key = flags.record_primary_key
-		 AND split_part(flags.source_id, ':', 2) = split_part(cv.record_primary_key, ':', 2)
-		 ),
-
-		 result AS (
-		 SELECT flags.source_id,
-		 flags.num_colocated_variants,
-		 flags.is_multi_allelic,
-		 NULLIF(jsonb_agg(DISTINCT altv.alternative_variants)::text, '[null]') AS alternative_variants,
-		 NULLIF(jsonb_agg(DISTINCT colocv.colocated_variants)::text, '[null]') AS colocated_variants
-		 FROM flags, colocv, altv
-		 WHERE flags.record_primary_key = colocv.record_primary_key AND flags.record_primary_key = altv.record_primary_key
-		 GROUP BY flags.source_id, is_multi_allelic, num_colocated_variants)
-
-		 SELECT id.source_id,
-		 '@PROJECT_ID@'::text AS project_id,
-		 r.num_colocated_variants,
-		 r.is_multi_allelic,
-		 r.alternative_variants,
-		 r.colocated_variants
-		 FROM id LEFT OUTER JOIN result r ON id.source_id = r.source_id	
+			SELECT id.source_id AS record_primary_key, 
+			v.bin_index, 
+			(v.display_attributes->>'location_start')::int AS location_start,
+			(v.display_attributes->>'location_end')::int AS location_end,
+			v.position AS location,
+			v.chromosome,
+			v.ref_snp_id,
+			split_part(record_primary_key, ':', 3) AS ref_allele
+			FROM AnnotatedVDB.Variant v, id 
+			WHERE record_primary_key = id.source_id),
+   
+			cv AS (
+			SELECT v.record_primary_key, v.ref_snp_id, 
+			v.metaseq_id, v.position AS location,
+			split_part(v.record_primary_key, ':', 3) AS ref_allele
+			FROM AnnotatedVDB.Variant v
+			WHERE v.bin_index @> (SELECT bin_index FROM bi)
+			AND int8range((SELECT bi.location_start FROM bi), (SELECT bi.location_end FROM bi), '[]') 
+			&& int8range((v.display_attributes->>'location_start')::int, (v.display_attributes->>'location_end')::int, '[]')
+			AND v.record_primary_key NOT IN (SELECT record_primary_key FROM bi)	 
+			) ,
+   
+			result AS (
+			SELECT bi.record_primary_key AS source_id, cv.record_primary_key, cv.ref_snp_id,
+			CASE WHEN bi.ref_snp_id = cv.ref_snp_id 
+			OR (cv.location = bi.location AND cv.ref_allele = bi.ref_allele)
+			THEN TRUE ELSE FALSE END AS is_alt_allele,
+			 build_link_attribute(truncate_str(cv.metaseq_id, 27) || COALESCE(' (' || cv.ref_snp_id || ')', ''), 
+			'/record/variant/', cv.record_primary_key, truncate_str(metaseq_id, 100)) AS variant_link
+			FROM cv, bi)
+			
+			SELECT id.source_id,
+			'@PROJECT_ID@'::text AS project_id,
+			jsonb_agg(variant_link ORDER BY ref_snp_id) FILTER (WHERE is_alt_allele) AS alternative_variants,
+			jsonb_agg(variant_link ORDER BY ref_snp_id) FILTER (WHERE NOT is_alt_allele) AS colocated_variants,
+			SUM(is_alt_allele::integer) > 0 AS is_multi_allelic,
+			SUM((NOT is_alt_allele)::integer) AS num_colocated_variants
+			FROM id LEFT OUTER JOIN result r ON id.source_id = r.source_id	
+			GROUP BY id.source_id
 	]]>
       </sql>
     </sqlQuery>
