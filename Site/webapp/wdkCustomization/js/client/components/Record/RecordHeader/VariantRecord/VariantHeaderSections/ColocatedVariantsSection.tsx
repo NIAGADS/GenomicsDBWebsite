@@ -7,28 +7,31 @@ import Typography from "@material-ui/core/Typography";
 
 import { StyledTooltip as Tooltip } from "@components/MaterialUI";
 import { LinkAttributeList } from "@components/Record/Attributes";
+import { useHeadingStyles } from "@components/Record/RecordHeader";
 
-export const ColocatedVariantsSection: React.FC<{ variants: string; position: string; chromosome: string }> = ({
+export const ColocatedVariantsSection: React.FC<{ variants: string; span:string; }> = ({
     variants,
-    position,
-    chromosome,
-}) => (
+    span
+}) => {
+    const classes = useHeadingStyles();
+    return (
     <Box>
         <Tooltip
             arrow
             title={
                 <Typography color="inherit" variant="caption">
-                    Follow the links below to view annotations for co-located/overlapping variants, such as indels,
-                    structural variants, and colocated SNVs not in dbSNP.
+                    {`Follow the links below to view annotations for variants co-located or overlapping the span ${span}.  These may include indels,
+                    structural variants, as well as additional SNVs.`}
                 </Typography>
             }
         >
-            <Chip
+            <Chip className={classes.chipHeading}
                 color="secondary"
                 icon={<InfoIcon />}
-                label={`This position (${chromosome}:${position}) coincides with:`}
+                label={`This variant overlaps with:`}
             />
         </Tooltip>
         <LinkAttributeList value={variants} />
     </Box>
 );
+        }

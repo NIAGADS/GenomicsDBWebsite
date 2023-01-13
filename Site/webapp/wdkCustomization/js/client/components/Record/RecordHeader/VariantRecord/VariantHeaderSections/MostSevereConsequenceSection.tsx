@@ -12,20 +12,24 @@ import {
     LinkAttribute,
 } from "@components/Record/Attributes";
 
-import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
-import { useTypographyStyles } from "@components/MaterialUI/styles";
+import {
+    UnpaddedListItem as ListItem,
+    useTypographyStyles,
+    StyledTooltip as Tooltip,
+    CustomLink as Link,
+} from "@components/MaterialUI";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const attributes = record.attributes;
-    const classes = useTypographyStyles();
+    const tClasses = useTypographyStyles();
 
     return (
         <Box paddingTop={1} paddingBottom={1}>
             <List disablePadding={true}>
                 <ListItem>
-                    <Typography className={classes.small}>
+                    <Typography className={tClasses.small}>
                         <strong>Consequence:</strong> {attributes.most_severe_consequence}{" "}
                         {attributes.msc_is_coding && (
                             <LabeledBooleanAttribute
@@ -55,8 +59,17 @@ export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> 
                     {attributes.msc_impacted_transcript && (
                         <ListItem>
                             <Typography variant="caption">
-                                Impacted Transcript:&nbsp;
-                                <LinkAttribute value={attributes.msc_impacted_transcript.toString()} />
+                                Impacted Transcript: {` ${attributes.msc_impacted_transcript.toString()} `}
+                                <Tooltip
+                                    title="Explore Ensembl record for this transcript"
+                                    aria-label="Explore Ensembl record for this transcript"
+                                >
+                                    <Link
+                                        href={`${_externalUrls.ENSEMBL_TRANSCRIPT_URL}${attributes.msc_impacted_transcript}`}
+                                    >
+                                        <i className={`${tClasses.small} fa fa-external-link`}></i>
+                                    </Link>
+                                </Tooltip>
                             </Typography>
                         </ListItem>
                     )}

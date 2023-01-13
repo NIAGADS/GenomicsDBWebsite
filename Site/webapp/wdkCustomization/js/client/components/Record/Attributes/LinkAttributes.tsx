@@ -1,7 +1,8 @@
 import React from "react";
 import { isObject } from "lodash";
 import List from "@material-ui/core/List";
-import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
+import ListItem from "@material-ui/core/ListItem";
+//import { UnpaddedListItem as ListItem } from "@components/MaterialUI";
 import { LinkAccessor, DefaultTextAccessor, ColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 export const LinkAttribute: React.FC<{value:string}> = ({value}) => {
@@ -26,7 +27,7 @@ export const LinkAttributeList: React.FC<{ value: string; asString?: boolean }> 
     ) : (
         <List>
             {list.map((item: any, i: number) => (
-                <ListItem key={i}>
+                <ListItem key={i} dense={true} disableGutters={true}>
                     <LinkAccessor value={item} />
                 </ListItem>
             ))}
