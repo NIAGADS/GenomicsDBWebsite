@@ -35,6 +35,7 @@ export const TrackAttributesList: React.FC<{ record: RecordInstance }> = ({ reco
                 <ListItem>
                     <RecordAttributeItem
                         label="Related Tracks"
+                        small={true}
                         children={
                             <LinkAttributeList value={attributes.related_tracks.toString()} asString={true} />
                         }

@@ -9,7 +9,7 @@ import ListItem from "@material-ui/core/ListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 import { LabeledBooleanAttribute, TrackAttributesList } from "@components/Record/Attributes";
-import { useHeadingStyles, RecordHeader } from "@components/Record/RecordHeader";
+import { useHeadingStyles, RecordHeader, SummaryPlotHeader } from "@components/Record/RecordHeader";
 import { RecordHeading } from "@components/Record/Types";
 
 import { RootState } from "wdk-client/Core/State/Types";
@@ -79,20 +79,60 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
         </Box>
     );
 
-    const renderSummary = <TrackAttributesList record={record} />;
+    const renderSummary = (
+        <Box>
+            <Typography>{convertHtmlEntites(attributes.description.toString())}</Typography>
+            <TrackAttributesList record={record} />
+        </Box>
+    );
 
     const renderPlotHelp = (
         <Box>
-            <Typography variant="caption">TBD</Typography>
+            <Box>
+                <Typography variant="caption">
+                    Interactive manhattan plot illustrating variant risk-associations.
+                </Typography>
+                <Typography variant="caption">
+                    Mouse over indivdiual points to view information on the variant, including the observed p-value and
+                    predicted gene impacts.
+                </Typography>
+            </Box>
+            <Box mt={2}>
+                <Typography variant="caption">
+                    <span className="red">Red</span> points indicate variants found to have significant genome-wide
+                    risk-association (p ≤ 5e<sup>-8</sup>).
+                </Typography>
+                <Typography variant="caption">
+                    <span className="blue">Blue</span> points indicate variants found to have significant
+                    risk-association (5e<sup>-8</sup> &lt; p ≤ 1e<sup>-6</sup>).
+                </Typography>
+            </Box>
+            <Box mt={2}>
+                <Typography variant="caption">
+                    To improve rendering the interactive plots are filtered to remove variants with p-values &gt; 0.001
+                    and are capped at 1e<sup>-50</sup>.
+                </Typography>
+                <Typography variant="caption">
+                    In the interactive plot, chromosome 23 = chromosome X; chromosome 24 = chromosome Y.
+                </Typography>
+            </Box>
         </Box>
     );
 
     const renderImage = (
-        <PlotlyManhattan
-            track={record.id[0].value}
-            accession={record.attributes.niagads_accession.toString()}
-            webAppUrl={webAppUrl}
-        />
+        <Box mt={4} style={{ width: "100%" }}>
+            <SummaryPlotHeader
+                text={`Manhattan plot providing an overview of association results for variants in this genome-wide association study`}
+                anchor="#top_variants"
+                help={renderPlotHelp}
+            />
+
+            <PlotlyManhattan
+                track={record.id[0].value}
+                accession={record.attributes.niagads_accession.toString()}
+                webAppUrl={webAppUrl}
+            />
+        </Box>
     );
 
     return <RecordHeader title={renderTitle} summary={renderSummary} image={renderImage} />;
