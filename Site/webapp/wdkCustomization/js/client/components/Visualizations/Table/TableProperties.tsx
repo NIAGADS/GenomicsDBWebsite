@@ -16,6 +16,7 @@ export interface TableProperties {
     canFilter: boolean;
     canExport?: boolean;
     canToggleColumns: boolean;
+    locusZoomView?: boolean;
     fullWidth?: boolean;
     sortedBy?: TableColumnSort[];
     accessors?: {[key: string]: ColumnAccessorType };

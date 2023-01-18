@@ -1,11 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 
+import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { CustomLink as Link } from "@components/MaterialUI";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 import { LabeledBooleanAttribute, TrackAttributesList } from "@components/Record/Attributes";
@@ -13,43 +11,37 @@ import { useHeadingStyles, RecordHeader, SummaryPlotHeader } from "@components/R
 import { RecordHeading } from "@components/Record/Types";
 
 import { RootState } from "wdk-client/Core/State/Types";
-import { makeClassNameHelper } from "wdk-client/Utils/ComponentUtils";
 
-import { useTypographyStyles } from "@components/MaterialUI";
+import { useTypographyStyles, CustomLink as Link } from "@components/MaterialUI";
 
 import { convertHtmlEntites } from "genomics-client/util/util";
 
 import { PlotlyManhattan } from "@viz/Manhattan";
 
-//import { GWASDatasetLZPlot } from "@viz/LocusZoom";
-
-import "./TrackRecordHeading.scss";
-import Box from "@material-ui/core/Box";
 
 interface HeaderImage {
     src: string;
     type?: string;
 }
 
-const cx = makeClassNameHelper("gwas-RecordHeading");
 
-const DatasetHeaderImage: React.FC<HeaderImage> = ({ src, type }) => {
+
+const ManhattanThumbnails: React.FC<HeaderImage> = ({ src, type }) => {
+    const classes = useHeadingStyles();
     const enclosingGrid = useRef(0);
 
-    const wrapperClass = cx(`--${type}-wrapper`);
-
     const handleImgError = () => {
-        (document.getElementsByClassName(wrapperClass)[0] as HTMLElement).style.display = "none";
+        (document.getElementsByClassName(classes.thumbnails)[0] as HTMLElement).style.display = "none";
     };
 
     return (
-        <Grid item container direction="column" className={wrapperClass}>
+        <Grid item container direction="column" className={classes.thumbnails}>
             <Grid item>
-                <img className={cx(`--${type}`)} src={src} onError={handleImgError} />
+                <img className={classes.thumbnails} src={src} onError={handleImgError} />
             </Grid>
             <Grid>
                 <Link color="initial" href={src}>
-                    View HighRes Image <GetAppIcon fontSize="small" />
+                    Download HighRes Image <GetAppIcon fontSize="small" />
                 </Link>
             </Grid>
         </Grid>

@@ -10,6 +10,9 @@ export const useHeadingStyles = makeStyles((theme: Theme) =>
         },
         chipHeading: {
             marginLeft: -1 * theme.spacing(2)
+        },
+        thumbnails: {
+
         }
     })
 );

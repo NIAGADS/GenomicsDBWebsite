@@ -134,6 +134,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}
+            locusZoomView={get(properties, "locusZoomView", null)}
         />
     );
 };
