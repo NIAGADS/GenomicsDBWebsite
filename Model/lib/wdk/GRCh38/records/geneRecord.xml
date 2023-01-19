@@ -330,15 +330,11 @@
 
 				<description>
 					<![CDATA[
-		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS 
-		   summary statistics dataset for Alzheimer's disease.<br/>
-		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts 
-		   the <em>p</em>-value distribution for the AD risk-associated
-		   variants co-located with this gene.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a 
-		   <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about 
-		   the dataset or to request access to the full GWAS dataset.</p>
+		   <p>Variants contained within &plusmn;100kb of this gene that have been identified in a NIAGADS GWAS 
+		   summary statistics dataset for Alzheimer's disease.</p>
+
+		   <p>By default, the table is filtered for variants whose risk-association is supported by a 
+		   <strong><em>p</em>-value &lt; 5e<sup>-8</sup></strong>.</p>
 	  ]]>
 				</description>
 			</table>
@@ -408,12 +404,10 @@
 
 				<description>
 					<![CDATA[
-		   <p>Variants contained within &plusmn;10kb of this gene that have been identified in a NIAGADS GWAS summary statistics dataset for an AD-related disease or neuropathology.<br/>
-		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the AD risk-associated
-		   variants co-located with this gene.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/>
-		   Click on <strong class="blue">accession numbers</strong> to view a detailed report about the dataset or to request access to the full GWAS dataset.</p>
-	  ]]>
+						<p>Variants contained within &plusmn;100kb of this gene that have been identified in a NIAGADS GWAS summary statistics 
+							dataset for an AD-related disease or neuropathology.</p>
+						<p>By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5e<sup>-8</sup></strong>.</p>
+	  				]]>
 				</description>
 			</table>
 

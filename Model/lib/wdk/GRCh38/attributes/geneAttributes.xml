@@ -203,32 +203,17 @@
 		 phenotype AS (
 		 SELECT DISTINCT t.protocol_app_node_id,
 		 c.characteristic_type AS category,
-		 CASE WHEN c.characteristic_type = 'diagnosis' THEN
-		 CASE WHEN c.characteristic ILIKE 'late onset Alz%' THEN 'LOAD'
-		 WHEN c.characteristic ILIKE '%Alzheimer%' AND c.characteristic NOT ILIKE 'late%' THEN 'AD'
-		 WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
-		 WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
-                 WHEN c.characteristic ILIKE 'Lewy%' THEN 'LBD'
-                 WHEN c.characteristic = 'dementia' THEN 'DEM'
-                 WHEN c.characteristic = 'cognitive impairment' THEN 'CI' 
-		 END
-		 
-                 WHEN c.characteristic_type = 'neuropathology' THEN -- neuropathology
-                 CASE WHEN c.characteristic ILIKE '%Braak%' THEN 'Braak Stages'
-                 WHEN c.characteristic ILIKE '%CERAD%' THEN 'CERAD Score'
-                 WHEN c.characteristic ILIKE '%angiopathy%' THEN 'CAA'
-                 WHEN c.characteristic ILIKE '%hippo%' THEN 'Hs-Aging'
-                 WHEN c.characteristic ILIKE 'Lewy%' THEN 'LB'
-                 WHEN c.characteristic ILIKE '%plaques%' THEN 'NP'
-                 WHEN c.characteristic ILIKE '%tangles%' THEN 'NT'
-                 WHEN c.characteristic ILIKE '%vascular%' THEN 'VBI'
-                 END
-		 
-                 ELSE -- biomarkers
-                 CASE WHEN c.characteristic IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
-                 THEN 'CIM'
-		 ELSE
-		 c.characteristic END
+		 CASE WHEN c.characteristic_type = 'diagnosis' OR c.characteristic_type = 'neuropathology' THEN
+			CASE WHEN c.characteristic ILIKE '%Alz%' THEN 'AD/LOAD'
+				WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
+				WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
+						WHEN c.characteristic ILIKE 'Lewy%' THEN 'Lewy Body Dementia'
+						WHEN c.characteristic = 'dementia' THEN 'Dementia'
+						WHEN c.characteristic = 'cognitive impairment' THEN 'Cognitive Impairment' 
+						ELSE 'Other Neuropathology'
+				END		 
+			ELSE -- biomarkers
+			c.characteristic
 		 END AS phenotype
 		 
 		 FROM  NIAGADS.TrackAttributes t,
@@ -238,6 +223,7 @@
 		 AND c.protocol_app_node_id = t.protocol_app_node_id
 		 AND c.characteristic_type IN ('diagnosis', 'neuropathology', 'biomarker')
 		 AND c.characteristic NOT IN ('autopsy-based diagnosis')
+		 AND c.characteristic NOT IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
 		 ),
 		 
 		 hits AS (
@@ -247,15 +233,17 @@
 		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end THEN 'downstream'
 		 ELSE 'in gene' END AS relative_position,
 		 p.phenotype,
-		 p.category
-		 FROM Results.VariantGWAS r, CBIL.GeneAttributes ga, id, phenotype p
-		 WHERE ga.source_id = id.source_id
+		 CASE WHEN p.category = 'biomarker' THEN 'biomarker' ELSE 'diagnosis' END AS category
+
+		 FROM NIAGADS.VariantGWASTopHits r, CBIL.GeneAttributes ga, id, phenotype p
+		 WHERE id.source_id = ga.source_id
 		 AND ga.bin_index_100kb_flank @> r.bin_index
-		 AND int8range(ga.location_start - 100000, ga.location_end + 100000, '[]') 
-		 @> split_part(variant_record_primary_key, ':', 2)::bigint
-		 AND r.neg_log10_pvalue >= -1 * log(5e-8)
-		 AND p.protocol_app_node_id = r.protocol_app_node_id
-  		 ORDER BY p.category, p.phenotype
+		 AND int4range(ga.location_start - 100000, ga.location_end + 100000, '[]')
+		 @> r.position
+		 AND ga.chromosome = r.chromosome
+		  AND r.neg_log10_pvalue > -1 * log(5e-8)
+		  AND p.protocol_app_node_id = r.protocol_app_node_id
+			ORDER BY category, p.phenotype
 		 ),
 		 
 		 sorted_hits AS (

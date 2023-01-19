@@ -24,6 +24,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: true,
+        locusZoomView: true,
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
             adsp_variant_flag: "BooleanRedCheck",

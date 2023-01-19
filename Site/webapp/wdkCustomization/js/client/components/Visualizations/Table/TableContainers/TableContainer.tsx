@@ -1,6 +1,6 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { assign } from "lodash";
 
 import Typography from "@material-ui/core/Typography";
@@ -31,7 +31,14 @@ import {
     FilterGroup,
 } from "@viz/Table/TableFilters";
 
-import { Table, TableToolbar, ToggleColumnsPanel, FilterPanel, FilterChipBar } from "@viz/Table/TableSections";
+import {
+    Table,
+    TableToolbar,
+    ToggleColumnsPanel,
+    FilterPanel,
+    FilterChipBar,
+    LocusZoomPanel,
+} from "@viz/Table/TableSections";
 
 import { useTableStyles } from "@viz/Table";
 
@@ -63,6 +70,7 @@ export interface TableContainerProps {
     requiredColumns?: string[];
     initialFilters?: any;
     initialSort?: any;
+    locusZoomView?: boolean;
 }
 
 const hooks = [
@@ -92,11 +100,13 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     initialFilters,
     initialSort,
     title,
+    locusZoomView,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
+    const [lzIsOpen, setLzIsOpen] = useState(false);
 
     const classes = useTableStyles();
 
@@ -209,7 +219,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
 
     const renderDrawerHeaderContents = (
         <>
-            <Typography variant="h6" style={{padding:"8px"}}>
+            <Typography variant="h6" style={{ padding: "8px" }}>
                 Modify table: <em className="red">{title}</em>
             </Typography>
         </>
@@ -218,8 +228,9 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     // Render the UI for the table
     return (
         <CustomPanel justifyContent="flex-start">
+            <LocusZoomPanel isOpen={lzIsOpen} datasets={null}/>
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} />}
+                navigation={<TableToolbar instance={instance} canFilter={canFilter} locusZoomView={locusZoomView} />}
                 toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Select columns and advanced filters"

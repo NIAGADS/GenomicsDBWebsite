@@ -5,3 +5,4 @@ export * from "./VariantConsequenceImpactSpan";
 export * from "./BooleanAttributes";
 export * from "./LinkAttributes";
 export * from "./MetaseqIdAttribute";
+export * from "./TrackRecordAttributes"

@@ -128,9 +128,22 @@
     </ant>
 
     <echo message="Unpack manhattan plots" />
-    <untar src="${webappTargetDir}/images/manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
-    <delete file="${webappTargetDir}/images/manhattan.tar.gz" quiet="true" />
-
+    <untar src="${webappTargetDir}/images/${build}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
+    <delete file="${webappTargetDir}/images/GRCh38_manhattan.tar.gz" quiet="true" />
+    <delete file="${webappTargetDir}/images/GRCh37_manhattan.tar.gz" quiet="true" />
+    <exec executable="find">
+      <arg value="${webappTargetDir}/images/manhattan"/>
+      <arg value="-name"/>
+      <arg value="*.gz"/>
+      <arg value="-type"/>
+      <arg value="f"/>
+      <arg value="-exec"/>
+      <arg value="gunzip"/>
+      <arg value="{}"/>
+      <arg value=";"/>
+  </exec>
+  
+   
     <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />
       <replacefilter token="@build@" property="build" />

@@ -1,4 +1,4 @@
-import RecordHeading from "@components/Record/RecordHeading/TrackRecordHeading";
+import RecordHeading from "genomics-client/components/Record/RecordHeader/TrackRecordHeader";
 import { RecordMainSection } from "@components/Record/Sections/RecordMainSection";
 import RecordUI from "@components/Record/RecordUI";
 

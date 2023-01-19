@@ -586,9 +586,9 @@
 
 				<description>
 					<![CDATA[
-		   <p>Associations for this variant to Alzheimer's disease identified in a NIAGADS GWAS summary statistics dataset.<br/>
-		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the risk-associations.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/></p>
+		   <p>Associations for this variant to Alzheimer's disease identified in a NIAGADS GWAS summary statistics dataset.</p>
+				   <p>By default, the table is filtered for variants whose risk-association is
+					supported by a <strong><em>p</em>-value &lt; 5e<sup>-8</sup></strong>.</p>
 	  ]]>
 				</description>
 			</table>
@@ -637,9 +637,9 @@
 
 				<description>
 					<![CDATA[
-		   <p>Associations for this variant to an AD-related disease, biomarker, or neuropathology identified in a NIAGADS GWAS summary statistics dataset.<br/>
-		   This table can be dynamically filtered by <em>p</em>-value using the paired chart which depicts the <em>p</em>-value distribution for the risk-associations.<br/>
-		   By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5 x 10<sup>-8</sup></strong>.<br/></p>
+		   <p>Associations for this variant to an AD-related disease, biomarker, or neuropathology identified 
+			in a NIAGADS GWAS summary statistics dataset.</p>
+		<p>By default, the table is filtered for variants whose risk-association is supported by a <strong><em>p</em>-value &lt; 5e<sup>-8</sup></strong>.</p>
 
 	  ]]>
 				</description>
