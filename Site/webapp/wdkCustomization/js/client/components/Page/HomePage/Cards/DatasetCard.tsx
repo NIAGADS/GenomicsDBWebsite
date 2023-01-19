@@ -21,8 +21,8 @@ const useStyles = makeStyles({
         fontSize: "0.8rem",
     },
     attribution: {
-        fontSize: "0.9rem"
-    }
+        fontSize: "0.9rem",
+    },
 });
 
 export interface DatasetRecord {
@@ -42,11 +42,18 @@ interface CardProps {
 export const DatasetCard: React.FC<CardProps & PanelProps> = (props) => {
     const classes = useStyles();
     const panelClasses = props.classes;
-    const { title, description, accession, date, attribution, tracks } = props.dataset;
+    const { dataset, projectId } = props;
+    const { title, description, accession, date, attribution, tracks } = dataset;
+    const datasetGenomeBuild = dataset.genomeBuild;
 
-    const img = props.webAppUrl + "/images/manhattan/" + accession + "/png/" + tracks[0] + "-manhattan.png";
-    const track = props.webAppUrl === "/genomics" && !tracks[0].includes('GRCh38') ? tracks[0].replace('_', '_GRCh38_') : tracks[0];
-    const url = props.webAppUrl + "/app/record/track/" + track; 
+    const track =
+        projectId === "GRCh38" && datasetGenomeBuild === "GRCh37" && !tracks[0].includes("GRCh38")
+            ? tracks[0].includes("_")
+                ? tracks[0].replace("_", "_GRCh38_")
+                : tracks[0] + "_GRCh38"
+            : tracks[0];
+    const img = props.webAppUrl + "/images/manhattan/" + accession + "/png/" + track + "-manhattan.png";
+    const url = props.webAppUrl + "/app/record/track/" + track;
     return (
         <Card className={classes.root}>
             <CardActionArea>
