@@ -5,9 +5,10 @@ export const _currentRelease = "2021-06-01";
 export const _datasetReleases = [
     {
         date: "2022-07-01",
-        genomeBuild: "GRCh38",
+        genomeBuild: "GRCh37",
+        project: "GRCh38",
         title: "Genetic architecture of AD and differential effect between sexes",
-        tracks: ["NG00115_GRCh38_FEMALE", "NG00115_GRCh38_MALE"],
+        tracks: ["NG00115_FEMALE", "NG00115_MALE"],
         accession: "NG00115",
         attribution: "Wang et al. 2021",
         description:
@@ -15,7 +16,8 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
-        genomeBuild: "both",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "IGAP Rare Variants",
         tracks: ["NG00075_STAGE1", "NG00075_STAGE2"],
         accession: "NG00075",
@@ -25,7 +27,8 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
-        genomeBuild: "both",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "Cognitively defined late-onset Alzheimer\u2019s disease subgroups",
         tracks: ["NG00073_MEM", "NG00073_VSP", "NG00073_LANG", "NG00073_NONE", "NG00073_MIX"],
         accession: "NG00073",
@@ -36,6 +39,7 @@ export const _datasetReleases = [
     {
         date: "2021-06-01",
         genomeBuild: "GRCh37",
+        project: "both",
         title: "Informed conditioning on African American LOAD genetic risk",
         tracks: ["NG00088"],
         accession: "NG00088",
@@ -45,6 +49,8 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "ADGC LOAD Subset (non-IGAP Discovery Phase)",
         tracks: ["NG00076"],
         accession: "NG00076",
@@ -54,6 +60,8 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "CSF TREM2",
         tracks: ["NG00089"],
         accession: "NG00089",
@@ -63,6 +71,8 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "IGAP APOE-Stratified Analysis",
         tracks: ["NG00078_ALL", "NG00078_APOE4_CARRIERS", "NG00078_APOE4_NON_CARRIERS", "NG00078_INT"],
         accession: "NG00078",
@@ -72,6 +82,8 @@ export const _datasetReleases = [
     },
     {
         date: "2021-06-01",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "IGAP: AD Age of Onset Survival",
         tracks: ["NG00058"],
         accession: "NG00058",
@@ -81,6 +93,8 @@ export const _datasetReleases = [
     },
     {
         date: "2018-10-12",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "ADSP Annotation Pipeline",
         tracks: ["VEP"],
         accession: "NG00061",
@@ -90,6 +104,8 @@ export const _datasetReleases = [
     },
     {
         date: "2018-10-12",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "CSF: clusterin (CLU)",
         tracks: ["NG00052"],
         accession: "NG00052",
@@ -99,6 +115,8 @@ export const _datasetReleases = [
     },
     {
         date: "2018-10-12",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "ADSP Case/Control Association Results",
         tracks: [
             "NG00065_EA_SKATO_CADD15_M0",
@@ -163,6 +181,8 @@ export const _datasetReleases = [
     },
     {
         date: "2017-12-12",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "Transethnic LOAD",
         tracks: ["NG00056_ALL", "NG00056_APOE_E4", "NG00056_NON_APOE_E4", "NG00056_ALL_APOE_ADJ"],
         accession: "NG00056",
@@ -172,6 +192,8 @@ export const _datasetReleases = [
     },
     {
         date: "2017-12-12",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "CSF: A\u03b2\u2084\u2082, tau, and pTau181",
         tracks: ["NG00055_AB42", "NG00055_TAU", "NG00055_PTAU"],
         accession: "NG00055",
@@ -181,6 +203,8 @@ export const _datasetReleases = [
     },
     {
         date: "2017-12-12",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "IGAP Stage 1: ADGC Subset",
         tracks: ["NG00053"],
         accession: "NG00053",
@@ -190,6 +214,8 @@ export const _datasetReleases = [
     },
     {
         date: "2016-09-13",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "Progressive Supranuclear Palsy (PSP)",
         tracks: ["NG00045_STAGE1", "NG00045_EUR_STAGE1", "NG00045_STAGE12", "NG00045_EUR_STAGE12"],
         accession: "NG00045",
@@ -199,6 +225,8 @@ export const _datasetReleases = [
     },
     {
         date: "2016-09-13",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "ADGC LOAD: Age at Onset",
         tracks: ["NG00048"],
         accession: "NG00048",
@@ -208,6 +236,8 @@ export const _datasetReleases = [
     },
     {
         date: "2016-09-13",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "CSF: A\u03b2\u2084\u2082, tau, and pTau181",
         tracks: ["NG00049_AB42", "NG00049_TAU", "NG00049_PTAU"],
         accession: "NG00049",
@@ -217,6 +247,8 @@ export const _datasetReleases = [
     },
     {
         date: "2016-03-21",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "Neuropathologic Features of AD and Related Dementias",
         tracks: [
             "NG00041_LEWY",
@@ -241,6 +273,8 @@ export const _datasetReleases = [
     },
     {
         date: "2016-03-21",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "Multi-ethnic exome array: AD, FTP, and PSP",
         tracks: ["NG00040_AD", "NG00040_PSP", "NG00040_FTD"],
         accession: "NG00040",
@@ -250,6 +284,8 @@ export const _datasetReleases = [
     },
     {
         date: "2015-02-03",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "IGAP",
         tracks: ["NG00036_STAGE1", "NG00036_STAGE12"],
         accession: "NG00036",
@@ -259,6 +295,8 @@ export const _datasetReleases = [
     },
     {
         date: "2014-01-14",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "ADGC LOAD",
         tracks: [
             "NG00027_ADJ_STAGE1",
@@ -275,6 +313,8 @@ export const _datasetReleases = [
     },
     {
         date: "2014-01-14",
+        genomeBuild: "GRCh37",
+        project: "both",
         title: "ADGC LOAD: African Americans",
         tracks: ["NG00039_ADJ", "NG00039"],
         accession: "NG00039",
