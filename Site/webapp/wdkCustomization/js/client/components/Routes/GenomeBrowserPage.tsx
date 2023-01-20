@@ -46,9 +46,13 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [loadingTrack, setLoadingTrack] = useState<string>(null);
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
     const [browserOptions, setBrowserOptions] = useState<any>(null);
+    const [loadedTracks, setLoadedTracks] = useState<any>(null);
+
     // [reloadKey, setReloadKey] = useState(makeReloadKey()),
 
     const classes = useStyles();
+
+    
 
     const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
         selectedTracks.forEach((trackKey: string) =>
@@ -77,8 +81,11 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             const loadedTracks = getLoadedTracks(browser);
             loadTracks(selectedTracks, loadedTracks);
             unloadTracks(selectedTracks, loadedTracks);
+            setLoadedTracks(selectedTracks);
         }
     };
+
+
 
     /* const unloadTrack = (config: TrackConfig, browser: any) => {
         browser.removeTrackByName(config.name);
@@ -147,6 +154,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                     handleClose={setTrackSelectorIsOpen.bind(null, false)}
                     columnConfig={serviceTrackConfig.columns}
                     data={resolvedSelectorData}
+                    loadedTracks={loadedTracks}
                     handleTrackSelect={toggleTracks}
                 />
             ) : null}
