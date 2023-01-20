@@ -52,7 +52,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const classes = useStyles();
 
-    
 
     const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
         selectedTracks.forEach((trackKey: string) =>
