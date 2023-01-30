@@ -141,9 +141,8 @@
       <arg value="gunzip"/>
       <arg value="{}"/>
       <arg value=";"/>
-  </exec>
+    </exec>
   
-   
     <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />
       <replacefilter token="@build@" property="build" />
@@ -152,13 +151,12 @@
       <replacefilter token="@webappCtx@" property="webappCtx" />
     </replace>
 
-    <!-- <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js; assuming GRCh37 and 38 builds have same model.prop"/>
+    <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js"/>
     <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstantsJson"/>
     <exec executable="${extract-urls}">
-      <arg line="-\-modelPropFile ${projectsDir}/${project}/Model/config/GRCh37/model.prop.sample"/>
-      <arg line="-\-outputFile ${webappTargetDir}/wdkCustomization/js/client/data/externalUrls.js"/>
-    </exec> -->
-
+      <arg line="--modelPropFile ${targetDir}/config/${build}/model.prop"/>
+      <arg line="--outputFile ${webappTargetDir}/wdkCustomization/js/client/data/_externalUrls.js"/>
+    </exec>
   </target>
 
   <target name="GenomicsDBWebsite/View-WebInstallation">
