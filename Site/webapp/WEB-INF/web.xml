@@ -95,7 +95,7 @@
     <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
     <init-param>
       <param-name>cors.allowed.origins</param-name>
-      <param-value>@CORS_ALLOWED_ORIGINS@</param-value>
+      <param-value>@corsAllowedOrigins@</param-value>
     </init-param>
     <init-param>
       <param-name>cors.allowed.methods</param-name>
