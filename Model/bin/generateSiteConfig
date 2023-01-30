@@ -1,0 +1,68 @@
+#!/bin/sh
+# update config files (perform docker substitutions)
+echo "Usage $GUS_HOME/$PROJECT_HOME pulled from environemnt."
+echo "All other properties need to be passed via a properties file"
+echo "See docker build .env and site-admin.properties files for complete listing"
+
+PROPERTIES_FILE=$1
+
+if test -f "$PROPERTIES_FILE"; then
+    echo "Parsing property file."
+    while IFS='=' read -r key value
+    do
+        key=$(echo $key)
+        eval ${key}=\${value}
+    done < "$PROPERTIES_FILE"
+    echo "Done."
+else
+    echo "$PROPERTIES_FILE does not exist - exiting"
+    exit 1
+fi
+
+# set webapp properties
+echo "Setting webapp properties (webapp.prop file)"
+cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/webapp.prop.sample $GUS_HOME/config/webapp.prop 
+sed -i "s|@WEBAPP@|$WEBAPP|g" $GUS_HOME/config/webapp.prop
+sed -i "s|@PROJECT_ID@|$PROJECT_ID|g" $GUS_HOME/config/webapp.prop
+sed -i "s|@GOOGLE_ANALYTICS_ID@|$GOOGLE_ANALYTICS_ID|g" $GUS_HOME/config/webapp.prop
+sed -i "s|@CORS_ALLOWED_ORIGINS@|$CORS_ALLOWED_ORIGINS|g" $GUS_HOME/config/webapp.prop
+
+# TODO: add production build flag to webapp.prop if $BUILD == "prod"
+
+echo "Creating secret key file"
+# secret key file for cookie-based authentication
+echo $SECRET_KEY > $COMMON_DIR/secret/.wdk_key
+
+# model.props (specific for genome build b/c of third-party URLs)
+echo "Setting model properties (model.prop file)"
+cp $GUS_HOME/config/$PROJECT_ID/model.prop.sample $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@WEBAPP@|$WEBAPP|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@SITE_ADMIN_EMAIL@|$SITE_ADMIN_EMAIL|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@GENOME_BUILD@|$GENOME_BUILD|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@PROJECT_ID@|$PROJECT_ID|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@GENCODE_VERSION@|$GENCODE_VERSION|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@DBSNP_VERSION@|$DBSNP_VERSION|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@ALT_BUILD_LINK@|$ALT_BUILD_LINK|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@GENOME_BROWSER_SERVICE_BASE_URL@|${GENOME_BROWSER_SERVICE_BASE_URL}|g" $GUS_HOME/config/$PROJECT_ID/model.prop
+sed -i "s|@LOCUS_ZOOM_SERVICE_BASE_URL@|${LOCUS_ZOOM_SERVICE_BASE_URL}|g" $GUS_HOME/config/$PROJECT_ID/model.prop 
+   
+# model-config
+echo "Setting model configuration (model-config.xml file)"
+cp $GUS_HOME/config/model-config.xml.sample $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@MODEL@|$PROJECT_ID|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@SITE_ADMIN_EMAIL@|$SITE_ADMIN_EMAIL|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@DB_USER@|$WEB_DB_USER|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@DB_PASSWORD@|$WEB_DB_PASSWORD|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@DB_HOST@|$WEB_DB_HOST|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@DB_PORT@|$WEB_DB_PORT|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+sed -i "s|@DB_NAME@|$WEB_DB_NAME|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml 
+
+# tomcat-context.xml
+echo "Setting tomcat context (tomcat-context.xml file)"
+# mkdir -p $CATALINA_HOME/conf/Catalina/localhost
+# cp $GUS_HOME/config/tomcat-context.xml.sample $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
+# sed -i "s|@MODEL@|$PROJECT_ID|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
+# sed -i "s|@WEBAPP@|$WEBAPP|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
+# cp $GUS_HOME/config/tomcat-users.xml.sample $CATALINA_HOME/conf/tomcat-users.xml
+# sed -i "s|@TOMCAT_MANAGER_PASSWORD@|$TOMCAT_MANAGER_PASSWORD|g" $CATALINA_HOME/conf/tomcat-users.xml
+# cp $GUS_HOME/config/tomcat-manager-context.xml $CATALINA_HOME/webapps/manager/META-INF/context.xml
