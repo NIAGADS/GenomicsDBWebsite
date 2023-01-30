@@ -127,7 +127,7 @@
       <property name="component" value="Site" />
     </ant>
 
-    <echo message="Unpack manhattan plots" />
+    <echo message="Unpack manhattan plots for ${projectId}" />
     <untar src="${webappTargetDir}/images/${projectId}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
     <delete file="${webappTargetDir}/images/GRCh38_manhattan.tar.gz" quiet="true" />
     <delete file="${webappTargetDir}/images/GRCh37_manhattan.tar.gz" quiet="true" />
