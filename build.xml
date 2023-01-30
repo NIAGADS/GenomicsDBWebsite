@@ -128,7 +128,7 @@
     </ant>
 
     <echo message="Unpack manhattan plots" />
-    <untar src="${webappTargetDir}/images/${build}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
+    <untar src="${webappTargetDir}/images/${projectId}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
     <delete file="${webappTargetDir}/images/GRCh38_manhattan.tar.gz" quiet="true" />
     <delete file="${webappTargetDir}/images/GRCh37_manhattan.tar.gz" quiet="true" />
     <exec executable="find">
@@ -145,16 +145,21 @@
   
     <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />
-      <replacefilter token="@build@" property="build" />
+      <replacefilter token="@project@" property="projectId" />
       <replacefilter token="@assetPath@" property="assetPath" />
       <replacefilter token="@googleAnalyticsId@" property="googleAnalyticsId" />
       <replacefilter token="@webappCtx@" property="webappCtx" />
     </replace>
 
+    <replace dir="${webappTargetDir}/WEB-INF" propertyFile="${webPropFile}">
+      <include name="web.xml" />
+      <replacefilter token="@corsAllowedOrigins@" property="corsAllowedOrigins" />>
+    </replace>
+
     <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js"/>
     <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstantsJson"/>
     <exec executable="${extract-urls}">
-      <arg line="--modelPropFile ${targetDir}/config/${build}/model.prop"/>
+      <arg line="--modelPropFile ${targetDir}/config/${projectId}/model.prop"/>
       <arg line="--outputFile ${webappTargetDir}/wdkCustomization/js/client/data/_externalUrls.js"/>
     </exec>
   </target>
