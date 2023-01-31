@@ -348,8 +348,14 @@ public class TrackConfigService extends AbstractWdkService {
         return dsStr; // remove trailing comma
     }
 
-    private String replaceEndpoints(String str) {
-        String serviceBaseUri = getContextUri() + "/service";
+    private String replaceEndpoints(String str) throws WdkModelException {
+        // we use a set property instead of retrieving the context b/c 
+        // docker containers create an overhead and the docker-ip is returned as the context
+        // instead of the correct (proxy)git domain
+        String serviceBaseUri = getWdkModel().getProperties().get("GENOME_BROWSER_SERVICE_BASE_URL");
+        if (serviceBaseUri == null) {
+            throw new WdkModelException("Need to specify GENOME_BROWSER_SERVICE_BASE_URL in model.prop");
+        }
         return str.replace("@SERVICE_BASE_URI@", serviceBaseUri);
     }
 

@@ -127,8 +127,8 @@
       <property name="component" value="Site" />
     </ant>
 
-    <echo message="Unpack manhattan plots" />
-    <untar src="${webappTargetDir}/images/${build}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
+    <echo message="Unpack manhattan plots for ${projectId}" />
+    <untar src="${webappTargetDir}/images/${projectId}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
     <delete file="${webappTargetDir}/images/GRCh38_manhattan.tar.gz" quiet="true" />
     <delete file="${webappTargetDir}/images/GRCh37_manhattan.tar.gz" quiet="true" />
     <exec executable="find">
@@ -141,24 +141,27 @@
       <arg value="gunzip"/>
       <arg value="{}"/>
       <arg value=";"/>
-  </exec>
+    </exec>
   
-   
     <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />
-      <replacefilter token="@build@" property="build" />
+      <replacefilter token="@project@" property="projectId" />
       <replacefilter token="@assetPath@" property="assetPath" />
       <replacefilter token="@googleAnalyticsId@" property="googleAnalyticsId" />
       <replacefilter token="@webappCtx@" property="webappCtx" />
     </replace>
 
-    <!-- <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js; assuming GRCh37 and 38 builds have same model.prop"/>
+    <replace dir="${webappTargetDir}/WEB-INF" propertyFile="${webPropFile}">
+      <include name="web.xml" />
+      <replacefilter token="@corsAllowedOrigins@" property="corsAllowedOrigins" />
+    </replace>
+
+    <echo message="Extracting URLs from model.prop.sample file to create externalUrls.js"/>
     <property name="extract-urls" location="${targetDir}/bin/generateExternalUrlConstantsJson"/>
     <exec executable="${extract-urls}">
-      <arg line="-\-modelPropFile ${projectsDir}/${project}/Model/config/GRCh37/model.prop.sample"/>
-      <arg line="-\-outputFile ${webappTargetDir}/wdkCustomization/js/client/data/externalUrls.js"/>
-    </exec> -->
-
+      <arg line="--modelPropFile ${targetDir}/config/${projectId}/model.prop"/>
+      <arg line="--outputFile ${webappTargetDir}/wdkCustomization/js/client/data/_externalUrls.js"/>
+    </exec>
   </target>
 
   <target name="GenomicsDBWebsite/View-WebInstallation">

@@ -27,30 +27,18 @@ WDK_VERSION=API_BUILD_50
 
 NIAGADS_BASE_URL=https://www.niagads.org
 WEBAPP=@WEBAPP@
-
-FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
+ALT_BUILD_LINK=@ALT_BUILD_LINK@
+GENOME_BROWSER_SERVICE_BASE_URL=@GENOME_BROWSER_SERVICE_BASE_URL@
+LOCUS_ZOOM_SERVICE_BASE_URL=@LOCUS_ZOOM_SERVICE_BASE_URL@
 
 #----------------------------------------------------------
 # Project Identifiers & Configuration
 #----------------------------------------------------------
 
-#PROJECT_ID=GRCh37
-#GENOME_BUILD=GRCh37.p13
-#GENCODE_VERSION=v19
-#dbSNP_VERSION=151
-#ALT_BUILD_LINK=
-
-#PROJECT_ID=GRCh38
-#GENOME_BUILD=GRCh38.p8
-#GENCODE_VERSION=v36
-#dbSNP_VERSION=155
-#ALT_BUILD_LINK=
-
 PROJECT_ID=@PROJECT_ID@
 GENOME_BUILD=@GENOME_BUILD@
 GENCODE_VERSION=@GENCODE_VERSION@
 dbSNP_VERSION=@DBSNP_VERSION@
-ALT_BUILD_LINK=@ALT_BUILD_LINK@
 
 #----------------------------------------------------------
 # Constants
@@ -74,7 +62,6 @@ LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 
 ADSP_CC_ACCESSION=NG00065
 GWAS_CATALOG_ACCESSIONS=NHGRI_GWAS_CATALOG,ADVP
-INFERNO_PUBMED_ID=30113658
 GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
 
 #----------------------------------------------------------
