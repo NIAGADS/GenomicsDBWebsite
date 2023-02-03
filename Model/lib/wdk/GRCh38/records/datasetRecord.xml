@@ -69,6 +69,8 @@
 	<columnAttribute name="track" displayName="Track"  internal="true" inReportMaker="true" />
 	<columnAttribute name="name" displayName="Dataset"  internal="true" inReportMaker="true" />
 	<columnAttribute name="dataset_record_link" displayName="Dataset"  inReportMaker="false" />
+	<columnAttribute name="publication_date" displayName="Year" 
+		help="Publication or release date (if data are unpublished)"/>
 	<columnAttribute name="attribution" displayName="Attribution"  />
 	<columnAttribute name="consortium" displayName="Consortium"  />
 	<columnAttribute name="description" displayName="Description"  />

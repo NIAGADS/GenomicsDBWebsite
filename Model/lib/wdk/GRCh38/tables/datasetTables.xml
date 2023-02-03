@@ -16,6 +16,7 @@
       <column name="consortium" columnType="string"/>
       <column name="description" columnType="string"/>
       <column name="attribution" columnType="string"/>
+	  <column name="publication_date" columnType="string"/>
       <column name="dataset_accession" columnType="string"/>
       <column name="biomarker" columnType="string"/>
       <column name="neuropathology" columnType="string"/>
@@ -74,7 +75,13 @@
 		 ta.name,
 		 build_link_attribute(ta.name, '../track/', ta.track) AS dataset_record_link,
 		 split_part(ta.description, '; adjusted', 1) AS description, -- remove covariates from single variant study descriptions
-		 ta.attribution, ta.dataset_accession, 
+		 ta.attribution, 
+		 
+		 -- should get the last "word" in the string; the date, but sometimes there is no date, so make sure the last word is a 
+		 -- number before converting
+		 CASE WHEN regexp_replace(ta.attribution, '^.* ', '')  ~ '^[0-9\.]+$'
+		 THEN regexp_replace(ta.attribution, '^.* ', '')::numeric ELSE NULL END AS publication_date,
+		 ta.dataset_accession, 
 		 CASE WHEN n.characteristic IS NULL THEN 'Alzheimer''s disease/late onset AD (AD/LOAD)' ELSE n.characteristic END AS neuropathology,
 		 b.characteristic AS biomarker,
 		 CASE WHEN p.characteristic IS NULL THEN 'European' ELSE p.characteristic END AS population, -- patch for missing data
@@ -86,7 +93,7 @@
 		 AND n.track = p.track
 		 AND n.track = c.track
 		 AND ta.track = n.track
-		 ORDER BY consortium, ta.dataset_accession, ta.track
+		 ORDER BY publication_date DESC NULLS LAST, ta.attribution, consortium, ta.dataset_accession, ta.track
 	]]>
       </sql>
     </sqlQuery>

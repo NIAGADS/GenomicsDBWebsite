@@ -1,5 +1,6 @@
 import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
 
+//  sortedBy: [{ id: "publication_date", descending: true }, { id: "attribution", descending: false}],
 export const _datasetTableProperties: { [name: string]: TableProperties } = {
     gwas: {
         filters: {
