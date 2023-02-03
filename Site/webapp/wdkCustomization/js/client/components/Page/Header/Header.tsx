@@ -4,6 +4,8 @@ import { theme } from "@components/MaterialUI";
 import SearchAppBar from "./ApplicationNavBar";
 
 import CookieConsent, { Cookies, resetCookieConsentValue } from "react-cookie-consent";
+import { CustomLink as Link} from "@components/MaterialUI"
+
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 export const Header: React.FC<{}> = () => {
@@ -21,7 +23,7 @@ export const Header: React.FC<{}> = () => {
             >
                 This website requires cookies &#38; limited processing of your personal data in order to function properly. 
                 By clicking any link on this page you are giving your consent to this as outlined in our {" "}
-                <a href={`${_externalUrls.NIAGADS_BASE_URL}/privacy-policy`}>Privacy Policy</a>.
+                <Link style="secondary" href={`${_externalUrls.NIAGADS_BASE_URL}/privacy-policy`}>Privacy Policy</Link>.
             </CookieConsent>
         </ThemeProvider>
     );

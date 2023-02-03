@@ -56,7 +56,7 @@ const GenomeBuildBanner: React.FC<any> = ({}) => {
                 </Box>
                 {" / "}
                 <Box component="span">
-                    Looking for <Link className={classes.secondaryLink} href={buildInfo.alt_build_target}>{buildInfo.alt_build}</Link>?
+                    Looking for <Link style="secondary" href={buildInfo.alt_build_target}>{buildInfo.alt_build}</Link>?
                 </Box>
             </Typography>
         </Box>
