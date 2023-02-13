@@ -25,4 +25,4 @@ sed -i "s|@MODEL@|$PROJECT_ID|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP
 sed -i "s|@WEBAPP@|$WEBAPP|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
 cp $GUS_HOME/config/tomcat-users.xml.sample $CATALINA_HOME/conf/tomcat-users.xml
 sed -i "s|@TOMCAT_MANAGER_PASSWORD@|$(props 'TOMCAT_MANAGER_PASSWORD')|g" $CATALINA_HOME/conf/tomcat-users.xml
-cp $GUS_HOME/config/tomcat-manager-context.xml $CATALINA_HOME/webapps/manager/META-INF/context.xml
+cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/tomcat-manager-context.xml $CATALINA_HOME/webapps/manager/META-INF/context.xml
