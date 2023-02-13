@@ -20,8 +20,8 @@ prop() {
 HOST_URL=$(prop 'HOST_URL')
 ALT_BUILD_LINK=$(prop 'ALT_BUILD_LINK')
 
-if [$ALT_BUILD_LINK = "auto"]; then 
-  if [$PROJECT_ID = "GRCh38"]; then
+if [ $ALT_BUILD_LINK = "auto" ]; then 
+  if [ $PROJECT_ID = "GRCh38" ]; then
     ALT_BUILD_LINK=${HOST_URL}/genomics37
   else 
     ALT_BUILD_LINK=${HOST_URL}/genomics38
@@ -33,7 +33,7 @@ echo "Setting ALT_BUILD_LINK=$ALT_BUILD_LINK"
 GENOME_BROWSER_SERVICE_BASE_URL=${HOST_URL}/${WEBAPP}/service
 LOCUS_ZOOM_SERVICE_BASE_URL=${HOST_URL}/${WEBAPP}/service
 
-echo "Setting SERVICE URLS = $GENOME_BROWSER_SERVICE_URL"
+echo "Setting SERVICE URLS = $GENOME_BROWSER_SERVICE_BASE_URL"
 
 # set webapp properties
 echo "Setting webapp properties (webapp.prop file)"
