@@ -25,6 +25,7 @@ if [$ALT_BUILD_LINK = "auto"]; then
     ALT_BUILD_LINK=${HOST_URL}/genomics37
   else 
     ALT_BUILD_LINK=${HOST_URL}/genomics38
+  fi
 fi
 
 echo "Setting ALT_BUILD_LINK=$ALT_BUILD_LINK"
