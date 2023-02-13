@@ -20,7 +20,7 @@ prop() {
 # tomcat-context.xml
 echo "Setting tomcat context (tomcat-context.xml file)"
 mkdir -p $CATALINA_HOME/conf/Catalina/localhost
-cp $GUS_HOME/config/tomcat-context.xml.sample $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
+cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/tomcat-context.xml.sample $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
 sed -i "s|@MODEL@|$PROJECT_ID|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
 sed -i "s|@WEBAPP@|$WEBAPP|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
 cp $GUS_HOME/config/tomcat-users.xml.sample $CATALINA_HOME/conf/tomcat-users.xml
