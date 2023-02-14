@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ 
 queries against the db for site statistics that should be static per release / creates json file to be referenced by the build

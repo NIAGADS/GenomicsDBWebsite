@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ 
 grants usage on foreign schema to specified user; login in gus.config file must be admin

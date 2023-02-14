@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 extracts urls from model.prop.sample and creates a pipes to stdout a JSON object containing the macro -> value mappings
