@@ -65,7 +65,6 @@ flycheck_*.el
 
 # vscode gitignore
 
-*.code-workspace
 .classpath
 .settings/*
 .project
