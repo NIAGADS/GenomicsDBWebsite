@@ -33,7 +33,7 @@ echo "Setting ALT_BUILD_LINK=$ALT_BUILD_LINK"
 GENOME_BROWSER_SERVICE_BASE_URL=${HOST_URL}/${WEBAPP}/service
 LOCUS_ZOOM_SERVICE_BASE_URL=${HOST_URL}/${WEBAPP}/service
 
-echo "Setting SERVICE URLS = $GENOME_BROWSER_SERVICE_BASE_URL"
+echo "Setting SERVICE URLS=$GENOME_BROWSER_SERVICE_BASE_URL"
 
 # set webapp properties
 echo "Setting webapp properties (webapp.prop file)"
@@ -47,7 +47,7 @@ sed -i "s|@CORS_ALLOWED_ORIGINS@|$(prop 'CORS_ALLOWED_ORIGINS')|g" $GUS_HOME/con
 
 echo "Creating secret key file"
 # secret key file for cookie-based authentication
-echo $(prop 'SECRET_KEY') > $(prop 'COMMON_DIR')/secret/.wdk_key
+echo $(prop 'SECRET_KEY') > /www/common/secret/.wdk_key
 
 
 # model.props (specific for genome build b/c of third-party URLs)
@@ -74,12 +74,4 @@ sed -i "s|@DB_HOST@|$(prop 'WEB_DB_HOST')|g" $GUS_HOME/config/$PROJECT_ID/model-
 sed -i "s|@DB_PORT@|$(prop 'WEB_DB_PORT')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
 sed -i "s|@DB_NAME@|$(prop 'WEB_DB_NAME')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml 
 
-# tomcat-context.xml
-# echo "Setting tomcat context (tomcat-context.xml file)"
-# mkdir -p $CATALINA_HOME/conf/Catalina/localhost
-# cp $GUS_HOME/config/tomcat-context.xml.sample $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
-# sed -i "s|@MODEL@|$PROJECT_ID|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
-# sed -i "s|@WEBAPP@|$WEBAPP|g" $CATALINA_HOME/conf/Catalina/localhost/${WEBAPP}.xml
-# cp $GUS_HOME/config/tomcat-users.xml.sample $CATALINA_HOME/conf/tomcat-users.xml
-# sed -i "s|@TOMCAT_MANAGER_PASSWORD@|$TOMCAT_MANAGER_PASSWORD|g" $CATALINA_HOME/conf/tomcat-users.xml
-# cp $GUS_HOME/config/tomcat-manager-context.xml $CATALINA_HOME/webapps/manager/META-INF/context.xml
+
