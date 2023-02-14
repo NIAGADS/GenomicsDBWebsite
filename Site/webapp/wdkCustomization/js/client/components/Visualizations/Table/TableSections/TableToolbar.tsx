@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import DownloadIcon from "@material-ui/icons/GetApp";
 
@@ -9,6 +9,7 @@ import { StyledTooltip as Tooltip } from "@components/MaterialUI";
 import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 
 interface FilterToolbarProps {
     canFilter: boolean;
@@ -27,8 +28,15 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
     const [lzIsOpen, setLzIsOpen] = useState(false);
-
     const classes = useFilterStyles();
+
+    useEffect(() => {
+        toggleLocusZoom && toggleLocusZoom(lzIsOpen);
+    }, [lzIsOpen]);
+
+    const _toggleLocusZoomView = () => {
+        setLzIsOpen(!lzIsOpen);
+    };
 
     return (
         <>
@@ -37,7 +45,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                 <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
                     <span>
                         <Button
-                            endIcon={<DownloadIcon />}
+                            startIcon={<DownloadIcon />}
                             variant="text"
                             color="primary"
                             aria-label="download table data"
@@ -48,12 +56,8 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                     </span>
                 </Tooltip>
             )}
-            {locusZoomView && (
-                <FormControlLabel
-                    control={<Switch checked={true} onChange={toggleLocusZoom} />}
-                    label={`${lzIsOpen}` ? "Show LocusZoom" : "Hide LocusZoom"}
-                />
-            )}
+         
+
             {canFilter && (
                 <GlobalFilterFlat
                     preGlobalFilteredRows={preGlobalFilteredRows}
@@ -63,6 +67,13 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
             )}
 
             <TablePagination instance={instance} />
+
+            {locusZoomView && (
+                <FormControlLabel
+                    control={<Switch defaultChecked={lzIsOpen} onChange={_toggleLocusZoomView} />}
+                    label={`${lzIsOpen}` ? "Show LocusZoom" : "Hide LocusZoom"}
+                />
+            )}
         </>
     );
 };

@@ -225,12 +225,17 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         </>
     );
 
+    const toggleLocusZoomPanel = (isOpen: boolean) => {   
+        setLzIsOpen(isOpen);
+    }
+    
+
     // Render the UI for the table
     return (
         <CustomPanel justifyContent="flex-start">
             <LocusZoomPanel isOpen={lzIsOpen} datasets={null}/>
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} locusZoomView={locusZoomView} />}
+                navigation={<TableToolbar instance={instance} canFilter={canFilter} locusZoomView={locusZoomView} toggleLocusZoom={toggleLocusZoomPanel}/>}
                 toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Select columns and advanced filters"
