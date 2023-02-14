@@ -35,6 +35,7 @@ LOCUS_ZOOM_SERVICE_BASE_URL=${HOST_URL}/${WEBAPP}/service
 
 echo "Setting SERVICE URLS=$GENOME_BROWSER_SERVICE_BASE_URL"
 
+
 # set webapp properties
 echo "Setting webapp properties (webapp.prop file)"
 cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/webapp.prop.sample $GUS_HOME/config/webapp.prop 
@@ -49,6 +50,8 @@ echo "Creating secret key file"
 # secret key file for cookie-based authentication
 echo $(prop 'SECRET_KEY') > /www/common/secret/.wdk_key
 
+echo "Copying gus.config"
+cp $PROJECT_HOME/install/gus.config.sample $GUS_HOME/config/gus.config
 
 # model.props (specific for genome build b/c of third-party URLs)
 echo "Setting model properties (model.prop file)"
