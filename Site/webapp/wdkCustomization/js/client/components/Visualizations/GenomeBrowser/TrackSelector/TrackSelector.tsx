@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { isObject, merge, forIn, indexOf, has, get } from "lodash";
 
 import { Column } from "react-table";
@@ -22,7 +22,6 @@ import { TissueColumnFilter } from "@viz/GenomeBrowser/TrackSelector";
 import { ConfigServiceResponse, TrackSelectorRow, TrackColumnConfig } from "@viz/GenomeBrowser/TrackSelector";
 
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
-import { useWdkEffect } from "wdk-client/Service/WdkService";
 
 export const resolveSelectorData = (response: ConfigServiceResponse): TrackSelectorRow[] => {
     const expectedColumns = Object.keys(response.columns.columns);
@@ -40,7 +39,7 @@ export const resolveSelectorData = (response: ConfigServiceResponse): TrackSelec
         missingColumns.forEach((col) => {
             resolvedTrack[col] = null;
         });
-
+        resolvedTrack["row_id"] = resolvedTrack["track"];
         return resolvedTrack;
     });
 
@@ -53,7 +52,7 @@ interface TrackSelector {
     browser: any;
     isOpen: boolean;
     handleClose: any;
-    preSelectedTracks?: string[];
+    loadedTracks?: string[];
     handleTrackSelect?: any;
 }
 
@@ -76,27 +75,28 @@ export const TrackSelector: React.FC<TrackSelector> = ({
     browser,
     handleClose,
     handleTrackSelect,
-    preSelectedTracks,
+    loadedTracks,
 }) => {
     const { columns, order } = columnConfig;
     const [open, setOpen] = useState<boolean>(isOpen);
-    const [selectedTracks, setSelectedTracks] = useState<string[]>(preSelectedTracks ? preSelectedTracks : []);
+    const [selectedTracks, setSelectedTracks] = useState<string[]>(loadedTracks ? loadedTracks : null);
     const classes = useStyles();
     const filterTypes = {
         global: useMemo(() => globalTextFilter, []),
     };
 
+    // tracks is json object {track_id:true}
     const updateSelectedTracks = (tracks: any) => {
-        setSelectedTracks(
-            tracks.map((track: any) => {
-                return track.original.track;
-            })
-        );
+        Array.isArray(tracks) ? setSelectedTracks(tracks) : setSelectedTracks(Object.keys(tracks));
     };
 
-    useWdkEffect(() => {
-        handleTrackSelect(selectedTracks);
+    useEffect(() => {
+        selectedTracks != null && handleTrackSelect(selectedTracks);
     }, [selectedTracks]);
+
+    useEffect(() => {
+        // not sure but something about preselected tracks /handling when track is removed from the genome browser
+    }, [loadedTracks]);
 
     const buildColumns = () => {
         if (!data) {

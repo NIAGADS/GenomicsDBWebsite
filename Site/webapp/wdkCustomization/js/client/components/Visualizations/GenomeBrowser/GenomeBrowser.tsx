@@ -3,6 +3,7 @@ import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
 import { GWASTrack, VariantTrack, GWASServiceReader } from "../../../../lib/igv/CustomTracks";
 import { RawTrackConfig } from "@viz/GenomeBrowser/TrackSelector";
+import { idListToArray } from "wdk-client/Views/Question/Params/DatasetParamUtils";
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
@@ -16,18 +17,24 @@ interface GenomeBrowser {
 
 //loadedTracks.filter((track) => !selectedTracks.includes(track));
 
-/* note that id is unreliable, not necessarily passed from config to trackView.track, at least
- --> todo: make sure to pass into config during conversion */
+
+const getTrackID = (trackView: any) => {
+    const track = trackView.track;
+    return 'id' in track ? track.id : track.config.id
+}
+
 export const getLoadedTracks = (browser: any): string[] =>
-    get(browser, "trackViews", []).map((view: any) => view.track.id).filter((track: string) => !ALWAYS_ON_TRACKS.includes(track));
+    get(browser, "trackViews", []).map((view: any) => getTrackID(view)).filter((track: string) => !ALWAYS_ON_TRACKS.includes(track));
 
 export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(browser).includes(config.id);
 
 // we want to find track by ID b/c some names may be duplicated; so modeled after:
 // https://github.com/igvteam/igv.js/blob/0dfb1f7b02d9660ff1ef0169899c4711496158e8/js/browser.js#L1104
+
+
 export const removeTrackById = (trackId: string, browser: any) => {
     const trackViews = get(browser, "trackViews", []);
-    const trackView = trackViews.filter((view: any) => view.track.id === trackId);
+    const trackView = trackViews.filter((view: any) => getTrackID(view) === trackId);
     browser.removeTrack(trackView[0].track);
 };
 

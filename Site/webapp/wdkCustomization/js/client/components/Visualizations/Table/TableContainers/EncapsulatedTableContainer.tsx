@@ -169,6 +169,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
+            getRowId: (row: any, index) => {
+                return 'row_id' in row ? row.row_id : index;
+            },
         },
         ...hooks,
         (hooks) => {
@@ -228,8 +231,8 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
     }, [setInitialState, debouncedState]);
 
     useEffect(() => {
-        onRowSelect && onRowSelect(selectedFlatRows);
-    }, [selectedFlatRows.length]);
+        onRowSelect(selectedRowIds);
+    }, [selectedRowIds]);
 
     const _buildDrawerSections = () => {
         const sections: React.ReactNode[] = showHideColumns
