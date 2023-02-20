@@ -27,5 +27,8 @@
 		{
 			"path": "../../../../WSF"
 		}
-	]
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "disabled"
+	}
 }
