@@ -37,7 +37,7 @@ interface LocusZoomPlotProps {
     maxWidthAsRatioToBody?: number;
     population: string;
     variant: string;
-    selectClass: string;
+    divId?: string;
     start?: number;
     span?: string;
     flank?: number;
@@ -50,7 +50,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     maxWidthAsRatioToBody,
     population,
     variant,
-    selectClass,
+    divId,
     start,
     track,
     span,
@@ -102,7 +102,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
 
     const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
-        const plot = _buildLocusZoomPlot(selectClass, lzState, population, track, webAppUrl + "/service/locuszoom", width);
+        const plot = _buildLocusZoomPlot(divId, lzState, population, track, webAppUrl + "/service/locuszoom", width);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -128,7 +128,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     return (
         <Grid container alignItems="center" direction="column">
             {loading && <Loading />}
-            <div id={selectClass} />
+            <div id={divId ? divId : "locus-zoom"} />
         </Grid>
     );
 };
