@@ -83,6 +83,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
                 start: start,
                 end: end,
                 ldrefvar: variant,
+                population: population
             };
         }
 
@@ -102,7 +103,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
 
     const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
-        const plot = _buildLocusZoomPlot(divId, lzState, population, track, webAppUrl + "/service/locuszoom", width);
+        const plot = _buildLocusZoomPlot(divId, lzState, track, webAppUrl + "/service/locuszoom", width);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -136,7 +137,6 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
 const _buildLocusZoomPlot = (
     selector: string,
     lzState: LocusZoomPlotState,
-    population: string,
     track: string,
     endpoint: string,
     width: number

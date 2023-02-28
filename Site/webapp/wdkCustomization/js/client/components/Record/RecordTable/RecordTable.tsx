@@ -6,6 +6,7 @@ import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
+import { LocusZoomPlot } from "@viz/LocusZoom";
 import { TableContainer } from "@viz/Table";
 import {
     SelectColumnFilter,
@@ -15,9 +16,15 @@ import {
     globalTextFilter,
     PieChartColumnFilter,
 } from "@viz/Table/TableFilters";
-import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 
-import { resolveColumnAccessor, resolveData, RecordTableProps } from "@components/Record/RecordTable";
+import {
+    resolveColumnAccessor,
+    resolveData,
+    extractPrimaryKeysFromRecordLink,
+    RecordTableProps,
+    RecordTableColumnAccessorType as ColumnAccessorType,
+    RecordTableProperties as TableProperties
+} from "@components/Record/RecordTable";
 
 import {
     negLog10pFilter,
@@ -28,7 +35,7 @@ import {
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
-import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,16 +43,15 @@ const useStyles = makeStyles((theme: Theme) =>
             /* minHeight: 500,
           maxHeight: 500,
           overflowY: "scroll", */
-         
         },
         fullWidth: {
             width: "100%",
-            overflowX: "scroll"
+            overflowX: "scroll",
         },
     })
 );
 
-export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
+export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties, recordPrimaryKey }) => {
     const { attributes } = table;
     const classes = useStyles();
     const filterTypes = {
@@ -75,8 +81,8 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                         accessors && accessors.hasOwnProperty(attribute.name)
                             ? accessors[attribute.name]
                             : attribute.name.includes("link")
-                            ? "Link"
-                            : "Default";
+                                ? "Link"
+                                : "Default";
 
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
@@ -100,6 +106,15 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         }
     };
 
+    const renderLocusZoom = (hasLZView: boolean) => {
+        if (hasLZView) {
+            const topVariant = extractPrimaryKeysFromRecordLink(data, "variant_link")[0];
+            return <LocusZoomPlot variant={topVariant} track={recordPrimaryKey} divId="record-table-locus-zoom" population="ADSP"></LocusZoomPlot>
+        } else {
+            return null;
+        }
+    };
+
     const defaultHiddenColumns = get(properties, "hiddenColumns");
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
     const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
@@ -107,11 +122,15 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
 
+    const hasLocusZoomView = get(properties, "locusZoomView", false);
+    const locusZoomView = useMemo(() => renderLocusZoom(hasLocusZoomView), [data]);
+
+
     const canFilter = get(properties, "canFilter", true); // default to true if missing
     const hasColumnFilters = properties.hasOwnProperty("filters");
     const initialFilters = _setInitialFilters(table, properties);
     const initialSort = _setInitialSort(table, properties);
-    const hasLocusZoomView = get(properties, "locusZoomView", false);
+
 
     if (data.length === 0 || columns.length === 0) {
         return (
@@ -135,7 +154,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}
-            linkedPanel={hasLocusZoomView? {contents: <p>Test</p>, label:"LocusZoom"} : null}
+            linkedPanel={hasLocusZoomView ? { contents: locusZoomView, label: "LocusZoom" } : null}
         />
     );
 };
