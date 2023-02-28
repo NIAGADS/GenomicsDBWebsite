@@ -51,3 +51,8 @@ export const abbreviateLargeNumber = function(n:number) {
     if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
     return n;
 };
+
+/* takes url or path extracts value after final / */
+export const getLastPath = ( path: string): string => {
+    return path.substring(path.lastIndexOf('/') + 1)
+}
