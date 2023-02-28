@@ -73,7 +73,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
 
     const renderSummary = (
         <Box>
-            <Typography>{convertHtmlEntites(attributes.description.toString())}</Typography>
+            <Typography>{attributes.description}</Typography>
             <TrackAttributesList record={record} />
         </Box>
     );
