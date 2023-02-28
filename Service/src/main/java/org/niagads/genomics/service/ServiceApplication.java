@@ -10,6 +10,7 @@ import org.niagads.genomics.service.services.LocusZoom.*;
 import org.niagads.genomics.service.services.Dataset.*;
 import org.niagads.genomics.service.services.Variant.*;
 import org.niagads.genomics.service.services.GenomeBrowser.*;
+import org.niagads.genomics.service.services.Gene.*;
 
 // import static org.gusdb.fgputil.functional.Functions.filter;
 import org.gusdb.fgputil.SetBuilder;
@@ -51,6 +52,8 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(TrackConfigService.class)
     .add(FeatureLookupService.class)
     .add(GeneTrackService.class)
+
+    .add(GeneFeatureOverlapService.class)
     
     .toSet();
   }
