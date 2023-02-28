@@ -1,7 +1,7 @@
 import * as lz from "locuszoom";
 export const LocusZoom = lz.default as any;
 
-const DEFAULT_LD_POPULATION = 'EUR';
+const DEFAULT_LD_POPULATION = 'ADSP';
 
 export interface RequestOptions {
     chr?: string;
@@ -37,7 +37,8 @@ export class CustomAssociationAdapter extends AssociationLZ {
             chr: plot_state.chr ? plot_state.chr : initialState.chr,
             start: plot_state.chr ? plot_state.start : initialState.start,
             end: plot_state.chr ? plot_state.end : initialState.end,
-            track: this._config.track }, plot_state);
+            track: this._config.track
+        }, plot_state);
 
         return requestOptions;
     }
@@ -54,7 +55,8 @@ export class CustomRecombAdapter extends RecombLZ {
         const requestOptions = Object.assign({
             chr: plot_state.chr ? plot_state.chr : initialState.chr,
             start: plot_state.chr ? plot_state.start : initialState.start,
-            end: plot_state.chr ? plot_state.end : initialState.end}, plot_state);
+            end: plot_state.chr ? plot_state.end : initialState.end
+        }, plot_state);
 
         return requestOptions;
     }
@@ -75,8 +77,9 @@ export class CustomLDServerAdapter extends LDServer {
         const initialState = this._config.initial_state;
         const requestOptions = Object.assign({
             ld_refvar: plot_state.ld_refvar ? plot_state.ld_refvar : initialState.ldrefvar,
-            ld_population: plot_state.ld_population ? plot_state.ld_population : DEFAULT_LD_POPULATION}, plot_state);
-       
+            ld_population: plot_state.ld_population ? plot_state.ld_population : initialState.population ? initialState.population : DEFAULT_LD_POPULATION
+        }, plot_state);
+
         return requestOptions;
     }
 
@@ -110,7 +113,8 @@ export class CustomGeneAdapter extends GeneLZ {
         const requestOptions = Object.assign({
             chr: plot_state.chr ? plot_state.chr : initialState.chr,
             start: plot_state.chr ? plot_state.start : initialState.start,
-            end: plot_state.chr ? plot_state.end : initialState.end}, plot_state);
+            end: plot_state.chr ? plot_state.end : initialState.end
+        }, plot_state);
         return requestOptions;
     }
 }

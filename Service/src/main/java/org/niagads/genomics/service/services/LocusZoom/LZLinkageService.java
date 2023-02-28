@@ -31,31 +31,50 @@ public class LZLinkageService extends AbstractWdkService {
     private static final String POPULATION_PARAM = "population";
 
     private static final String LINKAGE_QUERY = "WITH id AS (SELECT ?::text AS source_id)," + NL
-        + "variant AS (SELECT source_id," + NL
-        + "'chr' || split_part(source_id, ':', 1)::text AS chromosome," + NL
-        + "CASE WHEN split_part(source_id, '_', 2) IS NULL THEN split_part(source_id, '_', 1)" + NL
-        + "ELSE split_part(source_id, '_', 2) END AS pattern," + NL
-        + "split_part(source_id, '_', 2) AS ref_snp_id" + NL
-        + "FROM id)," + NL
-        + "LDResult AS (" + NL
-        + "SELECT CASE WHEN v.pattern = r.variants[1]" + NL
-        + "THEN find_variant_primary_key(r.variants[2])" + NL
-        + "ELSE find_variant_primary_key(r.variants[1])" + NL
-        + "END AS variant, r.r_squared, r.chromosome" + NL
-        + "FROM Results.VariantLD r," + NL
-        + "variant v" + NL
-        + "WHERE r.variants @> ARRAY[v.pattern]" + NL
-        + "AND r.chromosome = ?" + NL
-        + "AND r.population_protocol_app_node_id = ?" + NL
-        + "UNION" + NL
-        + "SELECT id.source_id AS variant, 1.0 AS r_squared," + NL
-        + "split_part(id.source_id, ':', 1) AS chromosome FROM id)" + NL
+        + "Variant AS (SELECT * FROM id, get_variant_display_details(id.source_id) v)," + NL
+
+        + "Linkage AS ("
+        + "SELECT v.details->>'chromosome' AS chromosome," + NL
+        + "(v.details->>'position')::int AS position," + NL 
+        + "v.details->>'ref_snp_id' AS ref_snp_id, vl.*" + NL 
+        + "FROM variant v, get_variant_linkage(v.record_primary_key) vl)," + NL 
+
+        + "ExpandedLinkage AS (" + NL
+        + "SELECT record_primary_key, chromosome," + NL
+        + "(r.linkage->>'d_prime')::numeric AS d_prime," + NL
+        + "(r.linkage->>'r_squared')::numeric AS r_squared," + NL
+        + "(r.linkage->>'distance')::int AS distance," + NL
+        + "CASE WHEN r.position = ((r.linkage->'locations')[0])::int" + NL
+        + "THEN ((r.linkage->'locations')[1])::int ELSE ((r.linkage->'locations')[0])::int" + NL
+        + "END AS linked_position," + NL
+        + "CASE WHEN r.position = ((r.linkage->'locations')[0])::int " + NL
+        + "THEN ((r.linkage->'minor_allele_frequency')[0])::numeric ELSE ((r.linkage->'minor_allele_frequency')[1])::numeric" + NL
+        + "END AS minor_allele_frequency_ld_ref," + NL
+        + "CASE WHEN r.position = ((r.linkage->'locations')[0])::int" + NL
+        + "THEN ((r.linkage->'minor_allele_frequency')[1])::numeric ELSE ((r.linkage->'minor_allele_frequency')[0])::numeric" + NL
+        + "END AS minor_allele_frequency," + NL
+        + "CASE WHEN r.position = ((r.linkage->'locations')[0])::int" + NL
+        + "THEN (r.linkage->'variants')[1] ELSE (r.linkage->'variants')[0]" + NL
+        + "END AS linked_variant" + NL
+        + "FROM linkage r" + NL
+        + "WHERE (r.linkage->>'population_id')::int = ?)," + NL
+
+        + "MappedLinkage AS (" + NL
+        + "SELECT replace(r.chromosome, 'chr', '') AS chromosome2, r.r_squared AS rsquare," + NL
+        + "r.linked_position AS position2," + NL
+        + "CASE WHEN r.linked_variant IS NULL" + NL
+        + "THEN position_pk.record_primary_key" + NL
+        + "ELSE r.linked_variant::text END AS variant2" + NL
+        + "FROM ExpandedLinkage r," + NL
+        + "get_variant_pk_by_position(replace(r.chromosome::text, 'chr', '') || ':' || r.linked_position::text, false) position_pk)" + NL
+
         + "SELECT jsonb_build_object('data'," + NL
-        + "jsonb_build_object('variant2', jsonb_agg(variant ORDER BY variant)) || " + NL
-        + "jsonb_build_object('chromosome2', jsonb_agg(replace(chromosome, 'chr', ''))) || " + NL
-        + "jsonb_build_object('position2', jsonb_agg(split_part(variant, ':', 2) ORDER BY variant)) || " + NL
-        + "jsonb_build_object('rsquare', jsonb_agg(r_squared ORDER BY variant)))::text AS result" + NL
-        + "FROM LDResult";
+        + "jsonb_build_object('variant2', jsonb_agg(m.variant2 ORDER BY variant2)) ||" + NL
+        + "jsonb_build_object('chromosome2', jsonb_agg(m.chromosome2)) ||" + NL
+        + "jsonb_build_object('position2', jsonb_agg(m.position2 ORDER BY variant2)) ||" + NL
+        + "jsonb_build_object('rsquare', jsonb_agg(m.rsquare ORDER BY variant2)))::text AS result" + NL
+        + "FROM MappedLinkage m";
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,11 +101,21 @@ public class LZLinkageService extends AbstractWdkService {
 
     private long getPopulationProtocolAppNode(String population) throws WdkModelException {
 
+        String sql = "SELECT protocol_app_node_id" + NL
+            + "FROM Study.ProtocolAppNode" + NL 
+            + "WHERE source_id LIKE '1000%_" + population  + "_%LD%'" + NL 
+            + "OR source_id LIKE '" + population + "_%LD'";
+        
+        if (population.equals("ADSP")) {
+            sql += " LIMIT 1";
+        }
+
         DataSource ds = getWdkModel().getAppDb().getDataSource();
-        String sql = "SELECT protocol_app_node_id FROM Study.ProtocolAppNode WHERE source_id = '1000GenomesLD_" + population + "'";
+
         long result = new SQLRunner(ds, sql, "lz-linkage-pop-lookup").executeQuery(new SingleLongResultSetHandler())
         .orElseThrow(() -> new WdkModelException("No match found for the population: " + population));
 
+        LOG.debug("DEBUG: Population - " + population + " -> " + result);
         return result;
     }
 
@@ -96,11 +125,14 @@ public class LZLinkageService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
         
-        String variantLoc[] = variant.split(":");
-        String chromosome = "chr" + variantLoc[0];
+        //String variantLoc[] = variant.split(":");
+        //String chromosome = "chr" + variantLoc[0];
      
+        //LOG.debug("DEBUG: Query Params: variant = " + variant + "; pan = " + populationProtocolAppNode);
+        //LOG.debug("DEBUG: sql = " + LINKAGE_QUERY);
+
         SQLRunner runner = new SQLRunner(ds, LINKAGE_QUERY, "linkage-query");
-        runner.executeQuery(new Object[] {variant, chromosome, populationProtocolAppNode}, handler);
+        runner.executeQuery(new Object[] {variant, populationProtocolAppNode}, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
