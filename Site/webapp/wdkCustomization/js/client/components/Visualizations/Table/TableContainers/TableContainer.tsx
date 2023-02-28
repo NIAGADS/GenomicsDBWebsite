@@ -58,7 +58,7 @@ import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
 interface LinkedPanelOptions {
     label: string;
-    contents: React.ReactElement;
+    contents: any;
 }
 
 export interface TableContainerProps {
