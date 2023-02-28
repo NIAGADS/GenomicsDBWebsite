@@ -14,6 +14,17 @@ import {
 import { parseFieldValue as defaultParseFieldValue, resolveNullFieldValue } from "@viz/Table";
 
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
+import { getLastPath } from "genomics-client/util/util";
+
+export const extractFieldValues = (data: { [key: string]: any }[], field: string, isJSON: boolean): string[] => {
+    return data.map(a => isJSON ? JSON.parse(a[field]) : a[field]);
+}
+
+
+export const extractPrimaryKeysFromRecordLink = (data: { [key: string]: any }[], field: string): string[] => {
+    return data.map(a => getLastPath(JSON.parse(a[field]).url));
+}
+
 
 export const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
