@@ -37,7 +37,7 @@ import {
     ToggleColumnsPanel,
     FilterPanel,
     FilterChipBar,
-    LocusZoomPanel,
+    LinkedPanel,
 } from "@viz/Table/TableSections";
 
 import { useTableStyles } from "@viz/Table";
@@ -56,6 +56,11 @@ import TableSortingFunctions, {
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
+interface LinkedPanelOptions {
+    label: string;
+    contents: React.ReactElement;
+}
+
 export interface TableContainerProps {
     columns: Column<{}>[];
     title?: string;
@@ -70,7 +75,7 @@ export interface TableContainerProps {
     requiredColumns?: string[];
     initialFilters?: any;
     initialSort?: any;
-    locusZoomView?: boolean;
+    linkedPanel?: LinkedPanelOptions;
 }
 
 const hooks = [
@@ -100,13 +105,13 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     initialFilters,
     initialSort,
     title,
-    locusZoomView,
+    linkedPanel,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
-    const [lzIsOpen, setLzIsOpen] = useState(false);
+    const [linkedPanelIsOpen, setlinkedPanelIsOpen] = useState(false);
 
     const classes = useTableStyles();
 
@@ -225,17 +230,19 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         </>
     );
 
-    const toggleLocusZoomPanel = (isOpen: boolean) => {   
-        setLzIsOpen(isOpen);
+    const toggleLinkedPanel = (isOpen: boolean) => {
+        setlinkedPanelIsOpen(isOpen);
     }
-    
+
+    const hasLinkedPanel = linkedPanel !== null;
 
     // Render the UI for the table
     return (
         <CustomPanel justifyContent="flex-start">
-            <LocusZoomPanel isOpen={lzIsOpen} datasets={null}/>
+            {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} locusZoomView={locusZoomView} toggleLocusZoom={toggleLocusZoomPanel}/>}
+                navigation={<TableToolbar instance={instance} canFilter={canFilter} hasLinkedPanel={hasLinkedPanel}
+                    linkedPanelOptions={{ toggle: toggleLinkedPanel, label: "LocusZoom" }} />}
                 toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Select columns and advanced filters"

@@ -111,6 +111,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const hasColumnFilters = properties.hasOwnProperty("filters");
     const initialFilters = _setInitialFilters(table, properties);
     const initialSort = _setInitialSort(table, properties);
+    const hasLocusZoomView = get(properties, "locusZoomView", false);
 
     if (data.length === 0 || columns.length === 0) {
         return (
@@ -134,7 +135,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}
-            locusZoomView={get(properties, "locusZoomView", null)}
+            linkedPanel={hasLocusZoomView? {contents: <p>Test</p>, label:"LocusZoom"} : null}
         />
     );
 };

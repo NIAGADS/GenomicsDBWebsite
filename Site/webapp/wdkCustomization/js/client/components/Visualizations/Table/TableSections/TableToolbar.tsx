@@ -11,31 +11,36 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 
+interface PanelOptions {
+    toggle: any;
+    label: string;
+}
+
 interface FilterToolbarProps {
     canFilter: boolean;
     canExport?: boolean;
-    locusZoomView?: boolean;
-    toggleLocusZoom?: any;
+    hasLinkedPanel?: boolean;
+    linkedPanelOptions?: PanelOptions;
 }
 
 export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
     canFilter,
     instance,
     canExport = true,
-    locusZoomView = false,
-    toggleLocusZoom,
+    hasLinkedPanel = false,
+    linkedPanelOptions
 }) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
-    const [lzIsOpen, setLzIsOpen] = useState(false);
+    const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState(false);
     const classes = useFilterStyles();
 
     useEffect(() => {
-        toggleLocusZoom && toggleLocusZoom(lzIsOpen);
-    }, [lzIsOpen]);
+        hasLinkedPanel && linkedPanelOptions.toggle(linkedPanelIsOpen);
+    }, [linkedPanelIsOpen]);
 
-    const _toggleLocusZoomView = () => {
-        setLzIsOpen(!lzIsOpen);
+    const _toggleLinkedPanel = () => {
+        setLinkedPanelIsOpen(!linkedPanelIsOpen);
     };
 
     return (
@@ -56,7 +61,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                     </span>
                 </Tooltip>
             )}
-         
+
 
             {canFilter && (
                 <GlobalFilterFlat
@@ -67,13 +72,13 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
             )}
 
             <TablePagination instance={instance} />
-
-            {locusZoomView && (
+            
+            {hasLinkedPanel &&
                 <FormControlLabel
-                    control={<Switch defaultChecked={lzIsOpen} onChange={_toggleLocusZoomView} />}
-                    label={`${lzIsOpen}` ? "Show LocusZoom" : "Hide LocusZoom"}
+                    control={<Switch checked={linkedPanelIsOpen || false} onChange={_toggleLinkedPanel} />}
+                    label={linkedPanelIsOpen ? `Hide ${linkedPanelOptions.label}` : `Show ${linkedPanelOptions.label}`}
                 />
-            )}
+            }
         </>
     );
 };
