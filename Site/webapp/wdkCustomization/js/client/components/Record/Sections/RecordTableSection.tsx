@@ -74,7 +74,7 @@ export function RecordTableSection(props: RecordTableSection) {
                     <Typography variant="body1" color="primary">Loading..</Typography>
                     </>
                 ) : (
-                    <RecordTable data={data} table={table} properties={properties} />
+                    <RecordTable data={data} table={table} properties={properties} recordPrimaryKey={record.id[0].value}/>
                 )}
             </ErrorBoundary>
         </CollapsibleSection>
