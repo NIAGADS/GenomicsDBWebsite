@@ -1,4 +1,5 @@
 import * as lz from "locuszoom";
+import { string } from "wdk-client/Utils/Json";
 export const LocusZoom = lz.default as any;
 
 const DEFAULT_LD_POPULATION = 'ADSP';
@@ -83,20 +84,28 @@ export class CustomLDServerAdapter extends LDServer {
         return requestOptions;
     }
 
-    /*_normalizeResponse(data: any) {
-        const position = data.id2.map((datum:any) => +/\:(\d+):/.exec(datum)[1]),
-            chr = lzState.chromosome.replace("chr", ""),
-            chromosome = data.id2.map(() => chr);
-        return {
-            variant1: data.id2.map(() => lzState.ldrefvar),
-            variant2: data.id2,
-            chromosome1: chromosome,
-            chromosome2: chromosome,
-            correlation: data.value,
-            position1: position,
-            position2: position,
-        };
-    };*/
+    // GenomicsDB Webservice returns linked_variant and r_squared only to reduce repsonse
+    // size; need to convert to expected response, which includes 
+    // repeated chromosome (chromosome1, chromosome2), reference variant (variant1), 
+    // and positional info (position1, position2)
+    // and renames r_squared to correlation
+    _normalizeResponse(raw_response: any, request_options: RequestOptions) {
+        const { ld_refvar } = request_options;
+        const [chromosome, position1, ...rest] = ld_refvar.split(':');
+
+        const records = raw_response.data.linked_variant.map((lv: string, index: number) => (
+            {
+                variant1: ld_refvar,
+                variant2: lv,
+                chromosome1: chromosome,
+                chromosome2: chromosome,
+                correlation: raw_response.data.r_squared[index],
+                position1: position1,
+                position2: lv.split(':')[1]
+            }));
+
+        return records;
+    };
 }
 
 //note that other sources have to be transformed into array of objects, but not LD source....
@@ -110,11 +119,13 @@ export class CustomGeneAdapter extends GeneLZ {
 
     _buildRequestOptions(plot_state: any, ...dependent_data: any) {
         const initialState = this._config.initial_state;
+
         const requestOptions = Object.assign({
             chr: plot_state.chr ? plot_state.chr : initialState.chr,
             start: plot_state.chr ? plot_state.start : initialState.start,
             end: plot_state.chr ? plot_state.end : initialState.end
         }, plot_state);
+
         return requestOptions;
     }
 }
