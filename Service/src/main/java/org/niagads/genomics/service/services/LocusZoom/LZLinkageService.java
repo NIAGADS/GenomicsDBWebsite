@@ -60,19 +60,16 @@ public class LZLinkageService extends AbstractWdkService {
         + "WHERE (r.linkage->>'population_id')::int = ?)," + NL
 
         + "MappedLinkage AS (" + NL
-        + "SELECT replace(r.chromosome, 'chr', '') AS chromosome2, r.r_squared AS rsquare," + NL
-        + "r.linked_position AS position2," + NL
+        + "SELECT r.r_squared," + NL
         + "CASE WHEN r.linked_variant IS NULL" + NL
         + "THEN position_pk.record_primary_key" + NL
-        + "ELSE r.linked_variant::text END AS variant2" + NL
+        + "ELSE r.linked_variant::text END AS linked_variant" + NL
         + "FROM ExpandedLinkage r," + NL
         + "get_variant_pk_by_position(replace(r.chromosome::text, 'chr', '') || ':' || r.linked_position::text, false) position_pk)" + NL
 
         + "SELECT jsonb_build_object('data'," + NL
-        + "jsonb_build_object('variant2', jsonb_agg(m.variant2 ORDER BY variant2)) ||" + NL
-        + "jsonb_build_object('chromosome2', jsonb_agg(m.chromosome2)) ||" + NL
-        + "jsonb_build_object('position2', jsonb_agg(m.position2 ORDER BY variant2)) ||" + NL
-        + "jsonb_build_object('rsquare', jsonb_agg(m.rsquare ORDER BY variant2)))::text AS result" + NL
+        + "jsonb_build_object('linked_variant', jsonb_agg(m.linked_variant ORDER BY linked_variant)) ||" + NL
+        + "jsonb_build_object('r_squared', jsonb_agg(m.r_squared ORDER BY linked_variant)))::text AS result" + NL
         + "FROM MappedLinkage m";
 
 
