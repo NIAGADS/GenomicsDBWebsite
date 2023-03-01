@@ -100,12 +100,13 @@ export class CustomLDServerAdapter extends LDServer {
                 chromosome1: chromosome,
                 chromosome2: chromosome,
                 correlation: raw_response.data.r_squared[index],
-                position1: position1,
-                position2: lv.split(':')[1]
+                position1: parseInt(position1),
+                position2: parseInt(lv.split(':')[1])
             }));
 
         return records;
     };
+
 }
 
 //note that other sources have to be transformed into array of objects, but not LD source....
