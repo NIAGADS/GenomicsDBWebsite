@@ -90,7 +90,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         return initializeLocusZoomStateFromSpan(span ? span : variant, flank, variant);
     }
 
-    const initializeLocusZoomStateFromSpan = (span: string, flank:number, variant: string) => ({
+    const initializeLocusZoomStateFromSpan = (span: string, flank: number, variant: string) => ({
         chr: "chr" + span.split(":")[0],
         start: parseInt(span.split(":")[1]) - (flank ? flank : DEFAULT_FLANK),
         end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
@@ -98,7 +98,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     });
 
     const buildLocusZoomPlot = () => {
-      
+
     }
 
     const initializeLocusZoomPlot = () => {
@@ -149,10 +149,10 @@ const _buildLocusZoomPlot = (
 
     // set data sources
     const dataSources = new LocusZoom.DataSources();
-    dataSources.add("assoc", ['NIAGADS_assoc', {url: endpoint, initial_state: lzState, track: track}]);
-    dataSources.add("ld", ['NIAGADS_ldserver', {url: endpoint, initial_state: lzState}]);
-    dataSources.add("gene", ['NIAGADS_gene', {url: endpoint, initial_state: lzState}]);
-    dataSources.add("recomb", ['NIAGADS_recomb', {url: endpoint, initial_state: lzState}]);
+    dataSources.add("assoc", ['NIAGADS_assoc', { url: endpoint, initial_state: lzState, track: track }]);
+    dataSources.add("ld", ['NIAGADS_ldserver', { url: endpoint, initial_state: lzState }]);
+    dataSources.add("genes", ['NIAGADS_gene', { url: endpoint, initial_state: lzState }]);
+    dataSources.add("recomb", ['NIAGADS_recomb', { url: endpoint, initial_state: lzState }]);
 
     const layout = _buildLayout(lzState, width);
 
@@ -160,6 +160,15 @@ const _buildLocusZoomPlot = (
 };
 
 const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
+    // TODO: debug statements to help design layout
+    // remove when complete
+    console.log("Locus Zoom panels, toolbar_widgets, toolbars, tooltips, plot types");
+    console.log(LocusZoom.Layouts.list('panel'));
+    console.log(LocusZoom.Layouts.list('toolbar_widgets'));
+    console.log(LocusZoom.Layouts.list('toolbar'));
+    console.log(LocusZoom.Layouts.list('tooltip'));
+    console.log(LocusZoom.Layouts.list('plot'));
+
     return LocusZoom.Layouts.get("plot", "standard_association", {
         state: state,
         // Override select fields of a pre-made layout
@@ -170,9 +179,9 @@ const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
                 height: 400,
                 id: "association_panel", // Give each panel a unique ID
             }),
-            // Even though genes are part of the original "standard association plot" layout, overriding the panels array means replacing *all* of the panels.
-            //LocusZoom.Layouts.get('panel', 'genes', { height: 400 })
-            //genesPanel,
+           /* LocusZoom.Layouts.get('panel', 'genes', { 
+                height: 225
+            }) */
         ],
     });
 };
