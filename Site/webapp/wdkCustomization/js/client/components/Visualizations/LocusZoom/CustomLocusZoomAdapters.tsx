@@ -64,22 +64,88 @@ export class CustomRecombAdapter extends RecombLZ {
 }
 
 export class CustomLDServerAdapter extends LDServer {
-    /*constructor(config: any) {
-        config.prefix_namespace = false;
+    constructor(config: any) {
         super(config);
-    }*/
+    }
+
+    // modified from https://statgen.github.io/locuszoom/docs/api/data_adapters.js.html#line478
+    // added types
+    __find_ld_refvar(state: any, assoc_data: any): string {
+        const assoc_variant_name = this._findPrefixedKey(assoc_data[0], 'variant');
+        const assoc_logp_name = this._findPrefixedKey(assoc_data[0], 'log_pvalue');
+
+        let refvar = "";
+        let best_hit: any = {};
+
+        // Determine the reference variant (via user selected OR automatic-per-track)
+        if (state.ldrefvar) { // passed by state
+            refvar = state.ldrefvar;
+            best_hit = assoc_data.find((item: string) => item[assoc_variant_name] === refvar) || {};
+        }
+        else {
+            // find highest log-value and associated var spec
+            let best_logp = 0;
+            for (let item of assoc_data) {
+                const { [assoc_variant_name]: variant, [assoc_logp_name]: log_pvalue } = item;
+                if (log_pvalue > best_logp) {
+                    best_logp = log_pvalue;
+                    refvar = variant;
+                    best_hit = item;
+                }
+            }
+        }
+
+        // Add a special field that is not part of the assoc or 
+        // LD data from the server, but has significance for plotting.
+        //  Since we already know the best hit, it's easier to do this here rather than in annotate or join phase.
+        // fossilfriend: WHY!!!? nothing is done w/it --> maybe it is updated by reference?!
+        best_hit.lz_is_ld_refvar = true;
+
+        // Last step: sanity check the proposed reference variant. Is it inside the view region? If not, we're probably
+        //  remembering a user choice from before user jumped to a new region. LD should be relative to something nearby.
+        let [chrom, pos, ...rest] = refvar.split(":");
+        let coord = +pos;
+        if ((coord && state.ldrefvar && state.chr) && (chrom !== String(state.chr) || coord < state.start || coord > state.end)) {
+            // Rerun this method, after clearing out the proposed reference variant. NOTE: Adapter call receives a
+            //   *copy* of plot.state, so wiping here doesn't remove the original value.
+            state.ldrefvar = null;
+            return this.__find_ld_refvar(state, assoc_data);
+        }
+
+        return refvar;
+    }
 
     _getURL(request_options: RequestOptions) {
         const { ld_population, ld_refvar } = request_options;
         return `${this._url}/linkage?population=${ld_population}&variant=${ld_refvar}`;
     }
 
-    _buildRequestOptions(plot_state: any, ...dependent_data: any) {
+
+    _buildRequestOptions(plot_state: any, assoc_data: any) {
+        if (!assoc_data) {
+            throw new Error('LD request must depend on association data');
+        }
+
+        const base = super._buildRequestOptions(...arguments);
+        if (!assoc_data.length) {
+            // No variants, so no need to annotate association data with LD!
+            // may be buggy, if allowing multiple tracks in one graphic; see original LDServer adapter
+            base._skip_request = true;
+            return base;
+        }
+
         const initialState = this._config.initial_state;
-        const requestOptions = Object.assign({
-            ld_refvar: plot_state.ld_refvar ? plot_state.ld_refvar : initialState.ldrefvar,
-            ld_population: plot_state.ld_population ? plot_state.ld_population : initialState.population ? initialState.population : DEFAULT_LD_POPULATION
-        }, plot_state);
+
+        if (!plot_state.ld_refvar) { plot_state.ld_refvar = initialState.ldrefvar };
+        base.ld_refvar = this.__find_ld_refvar(plot_state, assoc_data);
+
+        const ld_population = plot_state.ld_population
+            ? plot_state.ld_population
+            : initialState.population
+                ? initialState.population
+                : DEFAULT_LD_POPULATION;
+
+        const requestOptions = Object.assign({}, base, { ld_population });
 
         return requestOptions;
     }
@@ -93,6 +159,19 @@ export class CustomLDServerAdapter extends LDServer {
         const { ld_refvar } = request_options;
         const [chromosome, position1, ...rest] = ld_refvar.split(':');
 
+        // no variants in LD, return self
+        if (raw_response.data.linked_variant[0] == null) { 
+            return { 
+                variant1: ld_refvar,
+                variant2: ld_refvar,
+                chromosome1: chromosome,
+                chromosome2: chromosome,
+                correlation: 1.0,
+                position1: parseInt(position1),
+                position2: parseInt(position1),
+            }
+        }
+     
         const records = raw_response.data.linked_variant.map((lv: string, index: number) => (
             {
                 variant1: ld_refvar,
