@@ -112,12 +112,12 @@ export const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset })
             </Grid>
             <Grid item>
                 {/* right col - plot */}
-                <LocusZoomPlot
+                {/*<LocusZoomPlot genomeBuild={}
                     population={population}
                     variant={variant}
                     divId={divId.current}
                     track={dataset}
-                />
+                        />*/}
             </Grid>
         </Grid>
     ) : (
