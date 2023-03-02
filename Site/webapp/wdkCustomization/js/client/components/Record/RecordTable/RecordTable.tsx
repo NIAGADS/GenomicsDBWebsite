@@ -1,10 +1,13 @@
 import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "wdk-client/Core/State/Types";
 import { findIndex, has, get } from "lodash";
 import classNames from "classnames";
 
 import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { LocusZoomPlot } from "@viz/LocusZoom";
 import { TableContainer } from "@viz/Table";
@@ -37,6 +40,7 @@ import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
 
 
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
@@ -54,6 +58,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties, recordPrimaryKey }) => {
     const { attributes } = table;
     const classes = useStyles();
+    const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
+
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
         boolean_pie: useMemo(() => booleanFlagFilter, []),
@@ -109,7 +115,9 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const renderLocusZoom = (hasLZView: boolean) => {
         if (hasLZView) {
             const topVariant = extractPrimaryKeysFromRecordLink(data, "variant_link")[0];
-            return <LocusZoomPlot variant={topVariant} track={recordPrimaryKey} divId="record-table-locus-zoom" population="ADSP"></LocusZoomPlot>
+            return projectId
+                ? <LocusZoomPlot genomeBuild={projectId} variant={topVariant} track={recordPrimaryKey} divId="record-table-locus-zoom" population="ADSP"></LocusZoomPlot>
+                : <CircularProgress />
         } else {
             return null;
         }
