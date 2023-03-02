@@ -161,7 +161,7 @@ export class CustomLDServerAdapter extends LDServer {
 
         // no variants in LD, return self
         if (raw_response.data.linked_variant[0] == null) { 
-            return { 
+            return [{ 
                 variant1: ld_refvar,
                 variant2: ld_refvar,
                 chromosome1: chromosome,
@@ -169,7 +169,7 @@ export class CustomLDServerAdapter extends LDServer {
                 correlation: 1.0,
                 position1: parseInt(position1),
                 position2: parseInt(position1),
-            }
+            }]
         }
      
         const records = raw_response.data.linked_variant.map((lv: string, index: number) => (
