@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { cloneDeep, get, noop } from "lodash";
 
 import {
     LocusZoom,
@@ -9,8 +10,8 @@ import {
     CustomLDServerAdapter
 } from "../LocusZoom";
 
-import { cloneDeep, get, noop } from "lodash";
-import { Grid } from "@material-ui/core";
+
+import Grid  from "@material-ui/core/Grid";
 
 import { selectAll } from "d3";
 
@@ -22,12 +23,12 @@ import "locuszoom/dist/locuszoom.css";
 
 const DEFAULT_FLANK = 100000;
 
-
 interface LocusZoomPlotState {
     chr?: string;
     start?: number;
     end?: number;
     ldrefvar?: string;
+    build?: string;
 }
 
 
@@ -37,6 +38,7 @@ interface LocusZoomPlotProps {
     maxWidthAsRatioToBody?: number;
     population: string;
     variant: string;
+    genomeBuild: string;
     divId?: string;
     start?: number;
     span?: string;
@@ -55,6 +57,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     track,
     span,
     flank,
+    genomeBuild
 }) => {
     const [loading, setLoading] = useState(false);
     const interval: NodeJS.Timeout = useRef().current;
@@ -83,7 +86,8 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
                 start: start,
                 end: end,
                 ldrefvar: variant,
-                population: population
+                population: population,
+                build: genomeBuild
             };
         }
 
@@ -95,15 +99,12 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         start: parseInt(span.split(":")[1]) - (flank ? flank : DEFAULT_FLANK),
         end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
         ldrefvar: variant,
+        build: genomeBuild
     });
-
-    const buildLocusZoomPlot = () => {
-
-    }
 
     const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
-        const plot = _buildLocusZoomPlot(divId, lzState, track, webAppUrl + "/service/locuszoom", width);
+        const plot = _buildLocusZoomPlot(divId, lzState, track, webAppUrl + "/service/locuszoom", width, genomeBuild);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -139,7 +140,8 @@ const _buildLocusZoomPlot = (
     lzState: LocusZoomPlotState,
     track: string,
     endpoint: string,
-    width: number
+    width: number,
+    genomeBuild: string
 ) => {
     // Register Adaptors
     LocusZoom.Adapters.add("NIAGADS_assoc", CustomAssociationAdapter, true); //override if exists
@@ -151,8 +153,12 @@ const _buildLocusZoomPlot = (
     const dataSources = new LocusZoom.DataSources();
     dataSources.add("assoc", ['NIAGADS_assoc', { url: endpoint, initial_state: lzState, track: track }]);
     dataSources.add("ld", ['NIAGADS_ldserver', { url: endpoint, initial_state: lzState }]);
-    dataSources.add("genes", ['NIAGADS_gene', { url: endpoint, initial_state: lzState }]);
+    dataSources.add("gene", ['NIAGADS_gene', { url: endpoint, initial_state: lzState }]);
     dataSources.add("recomb", ['NIAGADS_recomb', { url: endpoint, initial_state: lzState }]);
+
+    // LocusZoomshould ignore if build is GRCh38, will decide later if to host locally for GRCh37
+    // see https://statgen.github.io/locuszoom/docs/api/data_adapters.js.html#line403
+    dataSources.add("constraint", ['GeneConstraintLZ', { url: 'https://gnomad.broadinstitute.org/api/', build: genomeBuild }]);
 
     const layout = _buildLayout(lzState, width);
 
@@ -179,9 +185,9 @@ const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
                 height: 400,
                 id: "association_panel", // Give each panel a unique ID
             }),
-           /* LocusZoom.Layouts.get('panel', 'genes', { 
+            LocusZoom.Layouts.get('panel', 'genes', {
                 height: 225
-            }) */
+            })
         ],
     });
 };
