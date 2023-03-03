@@ -175,6 +175,9 @@ const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
     console.log(LocusZoom.Layouts.list('tooltip'));
     console.log(LocusZoom.Layouts.list('plot'));
 
+    // TODO: modify lz pop toolbar widget 
+    // see https://github.com/statgen/locuszoom/blob/a271a0321339fb223721476244ece2fa7dec9820/esm/layouts/index.js#L671
+
     return LocusZoom.Layouts.get("plot", "standard_association", {
         state: state,
         // Override select fields of a pre-made layout
