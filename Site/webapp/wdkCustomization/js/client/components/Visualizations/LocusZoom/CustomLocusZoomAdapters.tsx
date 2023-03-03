@@ -1,5 +1,4 @@
 import * as lz from "locuszoom";
-import { string } from "wdk-client/Utils/Json";
 export const LocusZoom = lz.default as any;
 
 const DEFAULT_LD_POPULATION = 'ADSP';
