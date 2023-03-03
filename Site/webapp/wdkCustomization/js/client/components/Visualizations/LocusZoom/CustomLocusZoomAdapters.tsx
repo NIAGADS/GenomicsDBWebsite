@@ -18,6 +18,7 @@ const AssociationLZ = LocusZoom.Adapters.get("AssociationLZ"),
     GeneLZ = LocusZoom.Adapters.get("GeneLZ"),
     RecombLZ = LocusZoom.Adapters.get("RecombLZ");
 
+
 export class CustomAssociationAdapter extends AssociationLZ {
     /*constructor(config: any) {
         config.prefix_namespace = false;
@@ -42,6 +43,30 @@ export class CustomAssociationAdapter extends AssociationLZ {
         }, plot_state);
 
         return requestOptions;
+    }
+
+    _normalizeResponse(raw_response: any, request_options: RequestOptions) {
+        const { chr } = request_options;
+
+        // for some strange reason; the raw_response is a string
+        // even though the service returns an object
+        let response = JSON.parse(raw_response);
+
+        // catch empty spans
+        if (response.data.variant == null)
+            return [];
+
+        const records = response.data.variant.map((variant: string, index: number) => (
+            {
+                variant: variant,
+                pvalue: response.data.pvalue[index],
+                log_pvalue: response.data.log_pvalue[index],
+                chromosome: chr,
+                test_allele: response.data.test_allele[index],
+                position: parseInt(response.data.position[index])
+            }));
+
+        return records;
     }
 }
 
@@ -74,7 +99,7 @@ export class CustomLDServerAdapter extends LDServer {
         const assoc_variant_name = this._findPrefixedKey(assoc_data[0], 'variant');
         const assoc_logp_name = this._findPrefixedKey(assoc_data[0], 'log_pvalue');
 
-        let refvar = "";
+        let refvar: string = null;
         let best_hit: any = {};
 
         // Determine the reference variant (via user selected OR automatic-per-track)
@@ -98,7 +123,7 @@ export class CustomLDServerAdapter extends LDServer {
         // Add a special field that is not part of the assoc or 
         // LD data from the server, but has significance for plotting.
         //  Since we already know the best hit, it's easier to do this here rather than in annotate or join phase.
-        // fossilfriend: WHY!!!? nothing is done w/it --> maybe it is updated by reference?!
+        // fossilfriend: NOTE - this updates the best hit variant by reference
         best_hit.lz_is_ld_refvar = true;
 
         // Last step: sanity check the proposed reference variant. Is it inside the view region? If not, we're probably
@@ -157,11 +182,17 @@ export class CustomLDServerAdapter extends LDServer {
     // and renames r_squared to correlation
     _normalizeResponse(raw_response: any, request_options: RequestOptions) {
         const { ld_refvar } = request_options;
-        const [chromosome, position1, ...rest] = ld_refvar.split(':');
 
+        // ld_refvar undefined b/c no association data in span
+        if (ld_refvar == null) {
+            return [];
+        } 
+
+        const [chromosome, position1, ...rest] = ld_refvar.split(':');
+        
         // no variants in LD, return self
-        if (raw_response.data.linked_variant[0] == null) { 
-            return [{ 
+        if (raw_response.data.linked_variant[0] == null) {
+            return [{
                 variant1: ld_refvar,
                 variant2: ld_refvar,
                 chromosome1: chromosome,
@@ -171,7 +202,7 @@ export class CustomLDServerAdapter extends LDServer {
                 position2: parseInt(position1),
             }]
         }
-     
+
         const records = raw_response.data.linked_variant.map((lv: string, index: number) => (
             {
                 variant1: ld_refvar,
