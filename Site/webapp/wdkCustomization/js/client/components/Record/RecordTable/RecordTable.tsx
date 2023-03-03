@@ -38,9 +38,6 @@ import {
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
-
-
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
