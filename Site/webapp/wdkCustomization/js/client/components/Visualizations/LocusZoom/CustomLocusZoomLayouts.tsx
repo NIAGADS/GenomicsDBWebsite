@@ -41,3 +41,25 @@ export const standard_association_toolbar = function () {
     return base;
 }();
 
+export const _ldColorScale = [
+    {
+        // Name of a function specified in `LocusZoom.ScaleFunctions`
+        scale_function: 'if',
+        // The field whose value will be passed to the scale function
+        field: 'lz_is_ld_refvar',
+        // Options that will be passed to the scale function; see documentation for available options
+        parameters: {
+            field_value: 1,
+            then: '#9632b8',
+        },
+    },
+    {
+        scale_function: 'numerical_bin',
+        field: 'ld:correlation',
+        parameters: {
+            breaks: [0, 0.2, 0.4, 0.6, 0.8],
+            values: ['#B8B8B8', '#46b8da', '#5cb85c', '#eea236', '#d43f3a'],
+        },
+    },
+    '#B8B8B8',
+];

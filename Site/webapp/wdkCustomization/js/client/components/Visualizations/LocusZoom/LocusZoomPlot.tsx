@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { cloneDeep, noop } from "lodash";
+import { noop } from "lodash";
 
 import {
     LocusZoom,
@@ -8,7 +8,8 @@ import {
     CustomGeneAdapter,
     CustomRecombAdapter,
     CustomLDServerAdapter,
-    standard_association_toolbar
+    standard_association_toolbar,
+    _ldColorScale
 } from "../LocusZoom";
 
 
@@ -161,25 +162,13 @@ const _buildLocusZoomPlot = (
     // see https://statgen.github.io/locuszoom/docs/api/data_adapters.js.html#line403
     dataSources.add("constraint", ['GeneConstraintLZ', { url: 'https://gnomad.broadinstitute.org/api/', build: genomeBuild }]);
 
-    const layout = _buildLayout(lzState, width);
+    const layout = _buildLayout(lzState, width); 
 
     return LocusZoom.populate(`#${selector}`, dataSources, layout);
 };
 
 const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
-    // TODO: debug statements to help design layout
-    // remove when complete
-    console.log("Locus Zoom panels, toolbar_widgets, toolbars, tooltips, plot types");
-    console.log(LocusZoom.Layouts.list('panel'));
-    console.log(LocusZoom.Layouts.list('toolbar_widgets'));
-    console.log(LocusZoom.Layouts.list('toolbar'));
-    console.log(LocusZoom.Layouts.list('tooltip'));
-    console.log(LocusZoom.Layouts.list('plot'));
-
-    // TODO: modify lz pop toolbar widget 
-    // see https://github.com/statgen/locuszoom/blob/a271a0321339fb223721476244ece2fa7dec9820/esm/layouts/index.js#L671
-
-    return LocusZoom.Layouts.get("plot", "standard_association", {
+    let layout =  LocusZoom.Layouts.get("plot", "standard_association", {
         state: state,
         responsive_resize: true,
         min_region_scale: 20000,
@@ -196,6 +185,19 @@ const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
             })
         ],
     });
+
+    // data layer customizations
+    /* for (const [pindex, panel] of layout.panels.entries()) {
+        if (panel.id == 'association_panel') {
+            for (const [dindex, dataLayer] of panel.data_layers.entries()) {
+                if (dataLayer.id == 'associationpvalues') {
+                    layout.panels[pindex].data_layers[dindex].color = _ldColorScale;
+                }
+            }
+        }
+    } */
+
+    return layout;
 };
 
 
