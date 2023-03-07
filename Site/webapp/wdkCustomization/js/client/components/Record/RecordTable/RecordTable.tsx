@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "wdk-client/Core/State/Types";
 import { findIndex, has, get } from "lodash";
@@ -23,10 +23,11 @@ import {
 import {
     resolveColumnAccessor,
     resolveData,
-    extractPrimaryKeysFromRecordLink,
+    extractIndexedPrimaryKeyFromRecordLink,
+    extractPrimaryKeyFromRecordLink,
     RecordTableProps,
     RecordTableColumnAccessorType as ColumnAccessorType,
-    RecordTableProperties as TableProperties
+    RecordTableProperties as TableProperties,
 } from "@components/Record/RecordTable";
 
 import {
@@ -56,6 +57,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const { attributes } = table;
     const classes = useStyles();
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
+    const [ lzPlot, setLzPlot ] = useState<any>(null);
 
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
@@ -84,8 +86,8 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                         accessors && accessors.hasOwnProperty(attribute.name)
                             ? accessors[attribute.name]
                             : attribute.name.includes("link")
-                                ? "Link"
-                                : "Default";
+                            ? "Link"
+                            : "Default";
 
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
@@ -111,31 +113,42 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
     const renderLocusZoom = (hasLZView: boolean) => {
         if (hasLZView) {
-            const topVariant = extractPrimaryKeysFromRecordLink(data, "variant_link")[0];
-            return projectId
-                ? <LocusZoomPlot genomeBuild={projectId} variant={topVariant} track={recordPrimaryKey} divId="record-table-locus-zoom" population="ADSP"></LocusZoomPlot>
-                : <CircularProgress />
+            const topVariant = setLocusZoomTargetVariant(0);
+            return projectId ? (
+                <LocusZoomPlot
+                    genomeBuild={projectId}
+                    variant={topVariant}
+                    track={recordPrimaryKey}
+                    divId="record-table-locus-zoom"
+                    population="ADSP"
+                               
+                ></LocusZoomPlot>
+            ) : (
+                <CircularProgress />
+            );
         } else {
             return null;
         }
     };
 
+    const setLocusZoomTargetVariant = (selectedRow: number) => {
+        return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", selectedRow);
+    }
+
     const defaultHiddenColumns = get(properties, "hiddenColumns");
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
     const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
 
-    const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
-    const resolvedData: any = useMemo(() => resolveData(data), [data]);
-
     const hasLocusZoomView = get(properties, "locusZoomView", false);
     const locusZoomView = useMemo(() => renderLocusZoom(hasLocusZoomView), [data]);
 
+    const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
+    const resolvedData: any = useMemo(() => resolveData(data), [data]);
 
     const canFilter = get(properties, "canFilter", true); // default to true if missing
     const hasColumnFilters = properties.hasOwnProperty("filters");
     const initialFilters = _setInitialFilters(table, properties);
     const initialSort = _setInitialSort(table, properties);
-
 
     if (data.length === 0 || columns.length === 0) {
         return (
@@ -159,7 +172,18 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}
-            linkedPanel={hasLocusZoomView ? { contents: locusZoomView, label: "LocusZoom" } : null}
+            linkedPanel={
+                hasLocusZoomView
+                    ? {
+                          contents: locusZoomView,
+                          label: "LocusZoom",
+                          select: {
+                              action: setLocusZoomTargetVariant,
+                              type: "Button"
+                          },
+                      }
+                    : null
+            }
         />
     );
 };
