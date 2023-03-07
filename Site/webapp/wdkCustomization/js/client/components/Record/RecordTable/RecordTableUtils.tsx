@@ -22,9 +22,16 @@ export const extractFieldValues = (data: { [key: string]: any }[], field: string
 
 
 export const extractPrimaryKeysFromRecordLink = (data: { [key: string]: any }[], field: string): string[] => {
-    return data.map(a => getLastPath(JSON.parse(a[field]).url));
+    return data.map(a => extractPrimaryKeyFromRecordLink(a[field].url));
 }
 
+export const extractIndexedPrimaryKeyFromRecordLink = (data: { [key: string]: any }[], field: string, index: number): string => {
+    return data.map(a => extractPrimaryKeyFromRecordLink(a[field].url))[index];
+}
+
+export const extractPrimaryKeyFromRecordLink = (value: string): string => {
+    return getLastPath(JSON.parse(value).url);
+}
 
 export const resolveData = (data: { [key: string]: any }[]): { [key: string]: any }[] => {
     return data.map((datum) => {
