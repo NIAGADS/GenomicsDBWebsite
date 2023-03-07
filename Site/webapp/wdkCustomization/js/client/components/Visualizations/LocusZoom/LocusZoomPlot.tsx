@@ -127,19 +127,16 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         };
     };
 
-    function updatePlotRegion(targetRegion: string) {
-        const [chrm, span] = targetRegion.split(":");
-        let start = span;
-        let end = span;
-        if (span.includes("-")) {
-            [start, end] = span.split("-");
-        }
-
+    function updatePlotRegionByVariant(variant: string) {
+        const [chrm, position, ...rest] = variant.split(":"); // chr:pos:ref:alt
+        const start = parseInt(position) - DEFAULT_FLANK;
+        const end = parseInt(position) + DEFAULT_FLANK;
+ 
         plot.applyState({
             chr: chrm,
-            start: parseInt(start) - DEFAULT_FLANK,
-            end: parseInt(end) + DEFAULT_FLANK,
-            ldrefvar: "",
+            start: start,
+            end: end,
+            ldrefvar: variant,
         });
         return false;
     }
