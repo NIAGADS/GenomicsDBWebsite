@@ -1,4 +1,5 @@
 import * as lz from "locuszoom";
+import { record } from "wdk-client/Utils/Json";
 export const LocusZoom = lz.default as any;
 
 const DEFAULT_LD_POPULATION = 'ADSP';
@@ -188,18 +189,20 @@ export class CustomLDServerAdapter extends LDServer {
         } 
 
         const [chromosome, position1, ...rest] = ld_refvar.split(':');
-        
+        const ldSelf = {
+            variant1: ld_refvar,
+            variant2: ld_refvar,
+            chromosome1: chromosome,
+            chromosome2: chromosome,
+            correlation: 1.0,
+            position1: parseInt(position1),
+            position2: parseInt(position1),
+        };
+
+
         // no variants in LD, return self
         if (raw_response.data.linked_variant[0] == null) {
-            return [{
-                variant1: ld_refvar,
-                variant2: ld_refvar,
-                chromosome1: chromosome,
-                chromosome2: chromosome,
-                correlation: 1.0,
-                position1: parseInt(position1),
-                position2: parseInt(position1),
-            }]
+            return [ ldSelf ]
         }
 
         const records = raw_response.data.linked_variant.map((lv: string, index: number) => (
@@ -212,6 +215,8 @@ export class CustomLDServerAdapter extends LDServer {
                 position1: parseInt(position1),
                 position2: parseInt(lv.split(':')[1])
             }));
+
+        records.push(ldSelf);
 
         return records;
     };

@@ -9,11 +9,13 @@ import {
     CustomRecombAdapter,
     CustomLDServerAdapter,
     standard_association_toolbar,
-    _ldColorScale
+    standard_association_tooltip,
+    standard_genes_tooltip,
+    _ldColorScale,
+    _ldLegend
 } from "../LocusZoom";
 
-
-import Grid  from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid";
 
 import { selectAll } from "d3";
 
@@ -32,7 +34,6 @@ interface LocusZoomPlotState {
     ldrefvar?: string;
     build?: string;
 }
-
 
 interface LocusZoomPlotProps {
     chromosome?: string;
@@ -59,9 +60,10 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     track,
     span,
     flank,
-    genomeBuild
+    genomeBuild,
 }) => {
     const [loading, setLoading] = useState(false);
+    const [plot, setPlot] = useState<any>(null);
     const interval: NodeJS.Timeout = useRef().current;
     const layoutRendered = useRef(false);
 
@@ -89,7 +91,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
                 end: end,
                 ldrefvar: variant,
                 population: population,
-                build: genomeBuild
+                build: genomeBuild,
             };
         }
 
@@ -101,12 +103,13 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         start: parseInt(span.split(":")[1]) - (flank ? flank : DEFAULT_FLANK),
         end: parseInt(span.split(":")[1]) + (flank ? flank : DEFAULT_FLANK),
         ldrefvar: variant,
-        build: genomeBuild
+        build: genomeBuild,
     });
 
     const initializeLocusZoomPlot = () => {
         const lzState = initializeLocusZoomState();
         const plot = _buildLocusZoomPlot(divId, lzState, track, webAppUrl + "/service/locuszoom", width, genomeBuild);
+        setPlot(plot);
         setLoading(plot.loading_data);
         startPoll(plot);
     };
@@ -123,6 +126,23 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
             }
         };
     };
+
+    function updatePlotRegion(targetRegion: string) {
+        const [chrm, span] = targetRegion.split(":");
+        let start = span;
+        let end = span;
+        if (span.includes("-")) {
+            [start, end] = span.split("-");
+        }
+
+        plot.applyState({
+            chr: chrm,
+            start: parseInt(start) - DEFAULT_FLANK,
+            end: parseInt(end) + DEFAULT_FLANK,
+            ldrefvar: "",
+        });
+        return false;
+    }
 
     selectAll(".lz-data_layer-scatter").on("click", function (d: any) {
         //d.getPlot().panels.association_panel.x_scale(d.position) will give x coordinate
@@ -153,22 +173,25 @@ const _buildLocusZoomPlot = (
 
     // set data sources
     const dataSources = new LocusZoom.DataSources();
-    dataSources.add("assoc", ['NIAGADS_assoc', { url: endpoint, initial_state: lzState, track: track }]);
-    dataSources.add("ld", ['NIAGADS_ldserver', { url: endpoint, initial_state: lzState }]);
-    dataSources.add("gene", ['NIAGADS_gene', { url: endpoint, initial_state: lzState }]);
-    dataSources.add("recomb", ['NIAGADS_recomb', { url: endpoint, initial_state: lzState }]);
+    dataSources.add("assoc", ["NIAGADS_assoc", { url: endpoint, initial_state: lzState, track: track }]);
+    dataSources.add("ld", ["NIAGADS_ldserver", { url: endpoint, initial_state: lzState }]);
+    dataSources.add("gene", ["NIAGADS_gene", { url: endpoint, initial_state: lzState }]);
+    dataSources.add("recomb", ["NIAGADS_recomb", { url: endpoint, initial_state: lzState }]);
 
     // LocusZoomshould ignore if build is GRCh38, will decide later if to host locally for GRCh37
     // see https://statgen.github.io/locuszoom/docs/api/data_adapters.js.html#line403
-    dataSources.add("constraint", ['GeneConstraintLZ', { url: 'https://gnomad.broadinstitute.org/api/', build: genomeBuild }]);
+    dataSources.add("constraint", [
+        "GeneConstraintLZ",
+        { url: "https://gnomad.broadinstitute.org/api/", build: genomeBuild },
+    ]);
 
-    const layout = _buildLayout(lzState, width); 
+    const layout = _buildLayout(lzState, width);
 
     return LocusZoom.populate(`#${selector}`, dataSources, layout);
 };
 
 const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
-    let layout =  LocusZoom.Layouts.get("plot", "standard_association", {
+    let layout = LocusZoom.Layouts.get("plot", "standard_association", {
         state: state,
         responsive_resize: true,
         min_region_scale: 20000,
@@ -180,22 +203,31 @@ const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
                 height: 400,
                 id: "association_panel", // Give each panel a unique ID
             }),
-            LocusZoom.Layouts.get('panel', 'genes', {
-                height: 225
-            })
+            LocusZoom.Layouts.get("panel", "genes", {
+                height: 225,
+            }),
         ],
     });
 
     // data layer customizations
-    /* for (const [pindex, panel] of layout.panels.entries()) {
+    for (const [pindex, panel] of layout.panels.entries()) {
         if (panel.id == 'association_panel') {
             for (const [dindex, dataLayer] of panel.data_layers.entries()) {
                 if (dataLayer.id == 'associationpvalues') {
-                    layout.panels[pindex].data_layers[dindex].color = _ldColorScale;
+                    layout.panels[pindex].data_layers[dindex].legend = _ldLegend;
+                    layout.panels[pindex].data_layers[dindex].tooltip = standard_association_tooltip;
                 }
             }
         }
-    } */
+        
+        if (panel.id == 'genes') {
+            for (const [dindex, dataLayer] of panel.data_layers.entries()) {
+                if (dataLayer.id == 'genes') {
+                    layout.panels[pindex].data_layers[dindex].tooltip = standard_genes_tooltip;
+                }
+            }
+        }
+    } 
 
     return layout;
 };
