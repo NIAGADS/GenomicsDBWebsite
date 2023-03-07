@@ -21,6 +21,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
         ],
         defaultFilter: "pvalue",
         requiredColumns: ["variant", "pvalue"],
+        hiddenColumns: ["chromosome", "position", "msc_is_coding_flag", "msc_impact"],
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: true,
