@@ -24,4 +24,5 @@ export interface ColumnAccessor {
     htmlColor?: string;
     className?: string;
     maxLength?: number;
+
 }
