@@ -24,7 +24,6 @@ import {
     resolveColumnAccessor,
     resolveData,
     extractIndexedPrimaryKeyFromRecordLink,
-    extractPrimaryKeyFromRecordLink,
     RecordTableProps,
     RecordTableColumnAccessorType as ColumnAccessorType,
     RecordTableProperties as TableProperties,
@@ -132,6 +131,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     };
 
     const setLocusZoomTargetVariant = (selectedRow: number) => {
+        alert("selected " + selectedRow.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", selectedRow));
         return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", selectedRow);
     }
 
@@ -179,7 +179,9 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                           label: "LocusZoom",
                           select: {
                               action: setLocusZoomTargetVariant,
-                              type: "Button"
+                              initialSelectRowId: 0,
+                              type: "Check",
+                              tooltip: "Select to move LocusZoom View to this variant"
                           },
                       }
                     : null

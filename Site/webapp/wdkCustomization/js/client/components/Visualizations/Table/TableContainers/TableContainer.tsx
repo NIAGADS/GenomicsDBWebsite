@@ -16,6 +16,7 @@ import {
     useFilters,
     useGlobalFilter,
     useAsyncDebounce,
+    TableInstance,
     useRowSelect,
     Column,
 } from "react-table";
@@ -58,11 +59,13 @@ import {
 } from "@viz/Table/TableSortingFunctions";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
+import RowsPerPageMenu from "wdk-client/Components/Mesa/Ui/RowsPerPageMenu";
 
 interface LinkedPanelAction {
     action: any;
     type: "Button" | "Check";
     initialSelectRowId?: number; // can provide either
+    tooltip: string;
 }
 
 interface LinkedPanelOptions {
@@ -99,7 +102,7 @@ const hooks = [
     useFilters,
     useSortBy,
     usePagination,
-    //useRowSelect,
+    useRowSelect,
     //selectionHook,
 ];
 
@@ -125,7 +128,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     const [linkedPanelIsOpen, setlinkedPanelIsOpen] = useState(false);
 
     const hasLinkedPanel = linkedPanel !== null;
-    const useRowSelect = hasLinkedPanel && linkedPanel.select !== null;
+    const canSelect = hasLinkedPanel && linkedPanel.select !== null;
 
     const classes = useTableStyles();
 
@@ -175,124 +178,103 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         []
     );
 
-    const instance =
-        useRowSelect
-            ? useTable(
-                  {
-                      columns,
-                      data,
-                      initialState: {
-                          // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
-                          pageIndex: 0,
-                          pageSize: 10,
-                          filters: [initialFilters ? initialFilters : {}],
-                          sortBy: initialSort ? initialSort : [],
-                          selectedRowIds: useRowSelect ? linkedPanel.select.initialSelectRowId : [],
-                          hiddenColumns: columns
-                              .filter((col: any) => col.show === false)
-                              .map((col) => col.id || col.accessor) as any,
-                      },
-                      defaultCanFilter: false,
-                      //@ts-ignore
-                      defaultColumn: _defaultColumn,
-                      globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
-                      filterTypes: tableFilterTypes,
-                      sortTypes: sortingFunctions,
-                  },
-                  ...hooks
-              )
-            : useTable(
-                  {
-                      columns,
-                      data,
-                      initialState: {
-                          // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
-                          pageIndex: 0,
-                          pageSize: 10,
-                          filters: [initialFilters ? initialFilters : {}],
-                          sortBy: initialSort ? initialSort : [],
-                          hiddenColumns: columns
-                              .filter((col: any) => col.show === false)
-                              .map((col) => col.id || col.accessor) as any,
-                      },
-                      defaultCanFilter: false,
-                      //@ts-ignore
-                      defaultColumn: _defaultColumn,
-                      globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
-                      filterTypes: tableFilterTypes,
-                      sortTypes: sortingFunctions,
-                      getRowId: (row: any, index) => {
-                          return "row_id" in row ? row.row_id : index;
-                      },
-                      stateReducer: (newState, action) => {
-                          // allows only one row to be selected
-                          if (action.type === "toggleRowSelected") {
-                              //@ts-ignore
-                              newState.selectedRowIds = {
-                                  [action.id]: true,
-                              };
-                          }
+    const buildTableProps = (rowSelectEnabled: boolean) => {
+        const initialState = {
+            // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
+            pageIndex: 0,
+            pageSize: 10,
+            filters: [initialFilters ? initialFilters : {}],
+            sortBy: initialSort ? initialSort : [],
+            hiddenColumns: columns
+                .filter((col: any) => col.show === false)
+                .map((col) => col.id || col.accessor) as any,
+        };
 
-                          return newState;
-                      },
-                      
-                  },
-                  ...hooks,
-                  (hooks) => {
-                    hooks.visibleColumns.push((columns: any) => [
-                        // Let's make a column for selection
-                        {
-                            id: "selection",
-                            width: 50,
-                            sortable: false,
-                            // The header can use the table's getToggleAllRowsSelectedProps method
-                            // to render a checkbox
-                            Header: `View in ${linkedPanel.label}`, 
-                            // The cell can use the individual row's getToggleRowSelectedProps method
-                            // to the render a checkbox
-                            Cell: (cell: any) => (
-                                <div>
-                                    {linkedPanel.select.type == 'Check' ?
+        let tableProps = {
+            columns,
+            data,
+            initialState: initialState,
+            defaultCanFilter: false,
+            //@ts-ignore
+            defaultColumn: _defaultColumn,
+            globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
+            filterTypes: tableFilterTypes,
+            sortTypes: sortingFunctions
+        };
+
+        if (rowSelectEnabled) {
+            tableProps = Object.assign(tableProps, {
+                intitalState: Object.assign(initialState, {
+                    selectedRowIds: rowSelectEnabled && linkedPanel.select && linkedPanel.select.initialSelectRowId
+                        ? linkedPanel.select.initialSelectRowId
+                        : []
+                }),
+                getRowId: (row: any, index: number) => {
+                    return "row_id" in row ? row.row_id : index;
+                },
+                stateReducer: (newState: any, action: any) => {
+                    // allows only one row to be selected
+                    if (action.type === "toggleRowSelected") {
+                        //@ts-ignore
+                        newState.selectedRowIds = {
+                            [action.id]: true,
+                        };
+                    }
+                    return newState;
+                }
+            })
+        }
+
+        return tableProps;
+    }
+
+
+
+    const instance:TableInstance = canSelect
+        ? useTable(
+            buildTableProps(canSelect),
+            ...hooks,
+            (hooks) => {
+                hooks.visibleColumns.push((columns: any) => [
+                    // Let's make a column for selection
+                    {
+                        id: "selection",
+                        width: 50,
+                        sortable: false,
+                        // The header can use the table's getToggleAllRowsSelectedProps method
+                        // to render a checkbox
+                        Header: `View in ${linkedPanel.label}`,
+                        // The cell can use the individual row's getToggleRowSelectedProps method
+                        // to the render a checkbox
+                        Cell: (cell: any) => (
+                            <div>
+                                {linkedPanel.select.type == 'Check' ?
                                     <RowSelectCheckbox {...cell.row.getToggleRowSelectedProps()} />
                                     :
                                     <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
                                 }
-                                </div>
-                            ),
-                        },
-                        ...columns,
-                    ]);
-                }
-              );
+                            </div>
+                        ),
+                    },
+                    ...columns,
+                ]);
+            }) :
+        useTable(buildTableProps(canSelect), ...hooks)
+ 
+    // @ts-ignore
+    const { state: { selectedRowIds }, state, toggleRowSelected } = instance;
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        prepareRow,
-        setFilter,
-        setSortBy,
-        preGlobalFilteredRows,
-        preFilteredRows,
-        setGlobalFilter,
-        globalFilter,
-        page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
-        state: {selectedRowIds}, //: { pageIndex, pageSize },
-        selectedFlatRows,
-        state,
-        toggleRowSelected,
-    } = instance;
-
-    const debouncedState = useAsyncDebounce(state, 500);
+    const debouncedState = useAsyncDebounce(state as any, 500);
 
     useEffect(() => {
-        const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
+        const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
         const val = {
             sortBy,
             filters,
             pageSize,
             columnResizing,
             hiddenColumns,
+            selectedRowIds
         };
         setInitialState(val);
     }, [setInitialState, debouncedState]);
@@ -323,8 +305,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
 
     // Render the UI for the table
     return (
-        <CustomPanel justifyContent="flex-start">
-            {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
+        <CustomPanel justifyContent="flex-start">      
             <NavigationDrawer
                 navigation={
                     <TableToolbar
@@ -347,6 +328,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             </NavigationDrawer>
 
             <Table className={className} instance={instance} />
+            {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
         </CustomPanel>
     );
 };

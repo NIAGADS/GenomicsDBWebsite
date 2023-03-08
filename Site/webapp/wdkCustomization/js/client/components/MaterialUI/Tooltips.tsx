@@ -23,7 +23,6 @@ export const StyledTooltip = withStyles((theme: Theme) => ({
 export const WhiteTooltip = withStyles((theme: Theme) => ({
     tooltip: {
         backgroundColor: "white",
-
     },
 }))(StyledTooltip);
 
@@ -42,17 +41,17 @@ export const KeyedTooltip = (target: React.ReactElement, tooltip: string) => {
     );
 };
 
-export const DefaultHelpIcon = (tooltip: React.ReactElement) => {
+export const HelpIcon = (tooltip: string) => {
     return (
-        <StyledTooltip title={tooltip}>
-            <IconButton aria-label="info" size="small">
+        <StyledTooltip title={<Typography variant="caption">{safeHtml(tooltip)}</Typography>}>
+            <HelpIconButton aria-label="info" size="small">
                 <MUIHelpIcon />
-            </IconButton>
+            </HelpIconButton>
         </StyledTooltip>
     );
 };
 
-export const HelpIcon = withStyles((theme) => ({
+const HelpIconButton = withStyles((theme) => ({
     root: {
         color: theme.palette.getContrastText(blue[800]),
         backgroundColor: blue[800],
@@ -60,4 +59,4 @@ export const HelpIcon = withStyles((theme) => ({
             backgroundColor: blue[500],
         },
     },
-}))(DefaultHelpIcon);
+}))(IconButton);
