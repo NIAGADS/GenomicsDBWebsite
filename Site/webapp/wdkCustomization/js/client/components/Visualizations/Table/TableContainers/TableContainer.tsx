@@ -325,9 +325,9 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             >
                 {canFilter && <FilterChipBar instance={instance} />}
             </NavigationDrawer>
-
-            <Table className={className} instance={instance} />
             {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
+            <Table className={className} instance={instance} />
+           
         </CustomPanel>
     );
 };
