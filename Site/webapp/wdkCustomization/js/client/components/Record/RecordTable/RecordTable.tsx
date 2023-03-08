@@ -130,9 +130,9 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         }
     };
 
-    const setLocusZoomTargetVariant = (selectedRow: number) => {
-        alert("selected " + selectedRow.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", selectedRow));
-        return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", selectedRow);
+    const setLocusZoomTargetVariant = (index: number ) => {
+        alert("selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
+        return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index);
     }
 
     const defaultHiddenColumns = get(properties, "hiddenColumns");
@@ -179,7 +179,6 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                           label: "LocusZoom",
                           select: {
                               action: setLocusZoomTargetVariant,
-                              initialSelectRowId: 0,
                               type: "Check",
                               tooltip: "Select to move LocusZoom View to this variant"
                           },

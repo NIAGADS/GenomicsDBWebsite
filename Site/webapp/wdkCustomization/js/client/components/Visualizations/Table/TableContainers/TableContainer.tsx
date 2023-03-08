@@ -64,7 +64,6 @@ import RowsPerPageMenu from "wdk-client/Components/Mesa/Ui/RowsPerPageMenu";
 interface LinkedPanelAction {
     action: any;
     type: "Button" | "Check";
-    initialSelectRowId?: number; // can provide either
     tooltip: string;
 }
 
@@ -204,10 +203,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
 
         if (rowSelectEnabled) {
             tableProps = Object.assign(tableProps, {
-                intitalState: Object.assign(initialState, {
-                    selectedRowIds: rowSelectEnabled && linkedPanel.select && linkedPanel.select.initialSelectRowId
-                        ? linkedPanel.select.initialSelectRowId
-                        : []
+                intitialState: Object.assign(initialState, {
+                    selectedRowIds: rowSelectEnabled? { 0: true}: {}
                 }),
                 getRowId: (row: any, index: number) => {
                     return "row_id" in row ? row.row_id : index;
@@ -243,13 +240,13 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                         sortable: false,
                         // The header can use the table's getToggleAllRowsSelectedProps method
                         // to render a checkbox
-                        Header: `View in ${linkedPanel.label}`,
+                        Header: linkedPanel.label,
                         // The cell can use the individual row's getToggleRowSelectedProps method
                         // to the render a checkbox
                         Cell: (cell: any) => (
                             <div>
                                 {linkedPanel.select.type == 'Check' ?
-                                    <RowSelectCheckbox {...cell.row.getToggleRowSelectedProps()} />
+                                    <RowSelectCheckbox {...cell.row.getToggleRowSelectedProps()} title={`Shift ${linkedPanel.label} to selected variant`} />
                                     :
                                     <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
                                 }
@@ -280,7 +277,9 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     }, [setInitialState, debouncedState]);
 
     useEffect(() => {
-        hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(selectedRowIds);
+        // for now only allowing one row to be selected at a time, so can just return
+        // the rowId at index [0]
+        hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
     }, [selectedRowIds]);
 
     const _buildDrawerSections = () => {

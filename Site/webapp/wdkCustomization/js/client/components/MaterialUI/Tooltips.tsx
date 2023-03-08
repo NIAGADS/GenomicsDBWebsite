@@ -41,7 +41,7 @@ export const KeyedTooltip = (target: React.ReactElement, tooltip: string) => {
     );
 };
 
-export const HelpIcon = (tooltip: string) => {
+export const HelpIcon: React.FC<{tooltip: string}> = ({tooltip}) => {
     return (
         <StyledTooltip title={<Typography variant="caption">{safeHtml(tooltip)}</Typography>}>
             <HelpIconButton aria-label="info" size="small">
