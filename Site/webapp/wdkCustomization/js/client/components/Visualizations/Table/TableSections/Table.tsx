@@ -16,11 +16,11 @@ import { TableHeaderCell } from "@viz/Table/TableSections";
 
 import { InfoAlert } from "@components/MaterialUI";
 
+
 export const Table: React.FC<TableProps> = ({ instance, className }) => {
     const classes = useTableStyles();
     const {
         getTableProps,
-        getTableBodyProps,
         headerGroups,
         prepareRow,
         //@ts-ignore
@@ -30,13 +30,15 @@ export const Table: React.FC<TableProps> = ({ instance, className }) => {
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
     } = instance;
 
-    return preFilteredRows.length === 0 ? (
-        <InfoAlert
-            title="No rows meet the selected search or filter criteria."
-            message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
-        />
+    return preFilteredRows.length === 0 || page.length === 0 ? (
+        <Box className={className ? className : null}>
+            <InfoAlert
+                title="No rows meet the selected search or filter criteria."
+                message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
+            />
+        </Box>
     ) : (
-        <Box className={className ? className: null}>
+        <Box className={className ? className : null}>
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>
                     {headerGroups.map((headerGroup: HeaderGroup<object>) => (
