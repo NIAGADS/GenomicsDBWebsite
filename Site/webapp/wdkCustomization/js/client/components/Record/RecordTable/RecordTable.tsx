@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "wdk-client/Core/State/Types";
 import { findIndex, has, get } from "lodash";
@@ -9,7 +9,7 @@ import { Column } from "react-table";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { LocusZoomPlot } from "@viz/LocusZoom";
+import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
 import { TableContainer } from "@viz/Table";
 import {
     SelectColumnFilter,
@@ -38,6 +38,8 @@ import {
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
+const MemoLocusZoomPlot = React.memo(LocusZoomPlot);
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
@@ -56,7 +58,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const { attributes } = table;
     const classes = useStyles();
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
-    const [ lzPlot, setLzPlot ] = useState<any>(null);
+    const [lzPlot, setLzPlot] = useState<any>(null);
 
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
@@ -112,16 +114,16 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
     const renderLocusZoom = (hasLZView: boolean) => {
         if (hasLZView) {
-            const topVariant = setLocusZoomTargetVariant(0);
+            const topVariant = getLocusZoomTargetVariant(0); // sorted so first row should be top hit
             return projectId ? (
-                <LocusZoomPlot
+                <MemoLocusZoomPlot
                     genomeBuild={projectId}
                     variant={topVariant}
                     track={recordPrimaryKey}
                     divId="record-table-locus-zoom"
                     population="ADSP"
-                               
-                ></LocusZoomPlot>
+                    setPlotState={setLocusZoomPlot}
+                ></MemoLocusZoomPlot>
             ) : (
                 <CircularProgress />
             );
@@ -130,10 +132,30 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         }
     };
 
-    const setLocusZoomTargetVariant = (index: number ) => {
-        alert("selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
+    const setLocusZoomPlot = useCallback((plot:any) => { setLzPlot(plot)}, []);
+
+    const getLocusZoomTargetVariant = (index: number) => {
+        // alert("DEBUG: selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
         return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index);
-    }
+    };
+
+    const updateLocusZoomPlot = useCallback(
+        (index: number) => {
+            //alert("DEBUG: selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
+            const targetVariant = getLocusZoomTargetVariant(index);
+            const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
+            const start = parseInt(position) - LZ_DEFAULT_FLANK;
+            const end = parseInt(position) + LZ_DEFAULT_FLANK;
+            lzPlot && lzPlot.applyState({
+                chr: chrm,
+                start: start,
+                end: end,
+                ldrefvar: targetVariant,
+            });
+        },
+        // setLzPlot(lzPlot); // update?
+        []
+    );
 
     const defaultHiddenColumns = get(properties, "hiddenColumns");
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
@@ -178,9 +200,9 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                           contents: locusZoomView,
                           label: "LocusZoom",
                           select: {
-                              action: setLocusZoomTargetVariant,
+                              action: updateLocusZoomPlot,
                               type: "Check",
-                              tooltip: "Select to move LocusZoom View to this variant"
+                              tooltip: "Select to move LocusZoom View to this variant",
                           },
                       }
                     : null

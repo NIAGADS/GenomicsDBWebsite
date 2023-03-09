@@ -1,6 +1,6 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { noop } from "lodash";
+
 
 import {
     LocusZoom,
@@ -17,15 +17,14 @@ import {
 
 import Grid from "@material-ui/core/Grid";
 
-import { selectAll } from "d3";
-
 import { useDynamicWidth } from "genomics-client/hooks";
 import { RootState } from "wdk-client/Core/State/Types";
-import { Loading } from "wdk-client/Components";
 
 import "locuszoom/dist/locuszoom.css";
+import { useWdkEffect } from "wdk-client/Service/WdkService";
+import { callbackify } from "util";
 
-const DEFAULT_FLANK = 100000;
+export const DEFAULT_FLANK = 100000;
 
 interface LocusZoomPlotState {
     chr?: string;
@@ -47,7 +46,9 @@ interface LocusZoomPlotProps {
     span?: string;
     flank?: number;
     track: string;
+    setPlotState?: any
 }
+
 
 export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     chromosome,
@@ -61,27 +62,24 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     span,
     flank,
     genomeBuild,
+    setPlotState
 }) => {
-    const [loading, setLoading] = useState(false);
     const [plot, setPlot] = useState<any>(null);
-    const interval: NodeJS.Timeout = useRef().current;
+    //const interval: NodeJS.Timeout = useRef().current;
     const layoutRendered = useRef(false);
 
     const width = useDynamicWidth() * (maxWidthAsRatioToBody || 0.5);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
 
-    useEffect(() => {
-        if (layoutRendered.current) {
-            initializeLocusZoomPlot();
-            return () => clearInterval(interval);
-        }
-        return noop;
-    }, [variant, track, width, span, chromosome, start, end]);
-
     useLayoutEffect(() => {
         initializeLocusZoomPlot();
         layoutRendered.current = true;
     }, []);
+
+
+    useEffect(() => {
+        setPlotState(plot);
+    }, [plot]);
 
     function initializeLocusZoomState() {
         if (chromosome && start && end) {
@@ -110,45 +108,23 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         const lzState = initializeLocusZoomState();
         const plot = _buildLocusZoomPlot(divId, lzState, track, webAppUrl + "/service/locuszoom", width, genomeBuild);
         setPlot(plot);
-        setLoading(plot.loading_data);
-        startPoll(plot);
     };
 
-    //we have to poll b/c plot is outside of react and we can't show loading indicator otherwise
-    const startPoll = (val: { loading_data: boolean }) => {
-        const initVal = val.loading_data,
-            interval = setInterval(() => _checkVal(val), 50);
-        const _checkVal = (val: { loading_data: boolean }) => {
-            if (val.loading_data != initVal) {
-                setLoading(val.loading_data);
-                clearInterval(interval);
-                startPoll(val);
-            }
-        };
-    };
-
-    function updatePlotRegionByVariant(variant: string) {
-        const [chrm, position, ...rest] = variant.split(":"); // chr:pos:ref:alt
+    
+    const updateRegionByVariant = (targetVariant: string) => {
+        const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
         const start = parseInt(position) - DEFAULT_FLANK;
         const end = parseInt(position) + DEFAULT_FLANK;
- 
         plot.applyState({
             chr: chrm,
             start: start,
             end: end,
-            ldrefvar: variant,
+            ldrefvar: targetVariant,
         });
-        return false;
-    }
-
-    selectAll(".lz-data_layer-scatter").on("click", function (d: any) {
-        //d.getPlot().panels.association_panel.x_scale(d.position) will give x coordinate
-        //leaving this in b/c we can use it to create our own tooltip if we want to keep setNewRef behavior
-    });
+    };
 
     return (
         <Grid container alignItems="center" direction="column">
-            {loading && <Loading />}
             <div id={divId ? divId : "locus-zoom"} />
         </Grid>
     );

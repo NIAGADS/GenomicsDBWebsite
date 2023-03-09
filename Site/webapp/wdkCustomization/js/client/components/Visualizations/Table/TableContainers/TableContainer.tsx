@@ -236,7 +236,6 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                     // Let's make a column for selection
                     {
                         id: "selection",
-                        width: 50,
                         sortable: false,
                         // The header can use the table's getToggleAllRowsSelectedProps method
                         // to render a checkbox
@@ -280,7 +279,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         // for now only allowing one row to be selected at a time, so can just return
         // the rowId at index [0]
         hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
-    }, [selectedRowIds]);
+    }, [selectedRowIds]); 
 
     const _buildDrawerSections = () => {
         const sections: React.ReactNode[] = showHideColumns
@@ -324,7 +323,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                 className={classes.navigationToolbar}
             >
                 {canFilter && <FilterChipBar instance={instance} />}
-            </NavigationDrawer>
+            </NavigationDrawer> 
             {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
             <Table className={className} instance={instance} />
            

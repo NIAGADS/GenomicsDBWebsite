@@ -45,7 +45,7 @@ export const HelpIcon: React.FC<{tooltip: string}> = ({tooltip}) => {
     return (
         <StyledTooltip title={<Typography variant="caption">{safeHtml(tooltip)}</Typography>}>
             <HelpIconButton aria-label="info" size="small">
-                <MUIHelpIcon />
+                <MUIHelpIcon fontSize="small"/>
             </HelpIconButton>
         </StyledTooltip>
     );
@@ -53,10 +53,10 @@ export const HelpIcon: React.FC<{tooltip: string}> = ({tooltip}) => {
 
 const HelpIconButton = withStyles((theme) => ({
     root: {
-        color: theme.palette.getContrastText(blue[800]),
-        backgroundColor: blue[800],
+        backgroundColor: theme.palette.getContrastText(blue[800]),
+        color: blue[800],
         "&:hover": {
-            backgroundColor: blue[500],
+            backgroundColor: blue[200],
         },
     },
 }))(IconButton);
