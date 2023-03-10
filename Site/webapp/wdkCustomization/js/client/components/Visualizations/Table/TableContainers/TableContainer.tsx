@@ -1,6 +1,6 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { assign } from "lodash";
 
 import Typography from "@material-ui/core/Typography";
@@ -71,7 +71,6 @@ interface LinkedPanelOptions {
     label: string;
     contents: any;
     select: LinkedPanelAction;
-
 }
 
 export interface TableContainerProps {
@@ -125,8 +124,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
     const [linkedPanelIsOpen, setlinkedPanelIsOpen] = useState(false);
+    const [hasLinkedPanel, setHasLinkedPanel] = useState(linkedPanel !== null);
 
-    const hasLinkedPanel = linkedPanel !== null;
     const canSelect = hasLinkedPanel && linkedPanel.select !== null;
 
     const classes = useTableStyles();
@@ -184,9 +183,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             pageSize: 10,
             filters: [initialFilters ? initialFilters : {}],
             sortBy: initialSort ? initialSort : [],
-            hiddenColumns: columns
-                .filter((col: any) => col.show === false)
-                .map((col) => col.id || col.accessor) as any,
+            hiddenColumns: columns.filter((col: any) => col.show === false).map((col) => col.id || col.accessor) as any,
         };
 
         let tableProps = {
@@ -198,13 +195,13 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             defaultColumn: _defaultColumn,
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
-            sortTypes: sortingFunctions
+            sortTypes: sortingFunctions,
         };
 
         if (rowSelectEnabled) {
             tableProps = Object.assign(tableProps, {
                 intitialState: Object.assign(initialState, {
-                    selectedRowIds: rowSelectEnabled? { 0: true}: {}
+                    selectedRowIds: rowSelectEnabled ? { 0: true } : {},
                 }),
                 getRowId: (row: any, index: number) => {
                     return "row_id" in row ? row.row_id : index;
@@ -218,47 +215,45 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                         };
                     }
                     return newState;
-                }
-            })
+                },
+            });
         }
 
         return tableProps;
-    }
+    };
 
+    const instance: TableInstance = canSelect
+        ? useTable(buildTableProps(canSelect), ...hooks, (hooks) => {
+              hooks.visibleColumns.push((columns: any) => [
+                  // Let's make a column for selection
+                  {
+                      id: "selection",
+                      sortable: false,
+                      // The header can use the table's getToggleAllRowsSelectedProps method
+                      // to render a checkbox
+                      Header: linkedPanel.label,
+                      // The cell can use the individual row's getToggleRowSelectedProps method
+                      // to the render a checkbox
+                      Cell: (cell: any) => (
+                          <div>
+                              {linkedPanel.select.type == "Check" ? (
+                                  <RowSelectCheckbox
+                                      {...cell.row.getToggleRowSelectedProps()}
+                                      title={`Shift ${linkedPanel.label} to selected variant`}
+                                  />
+                              ) : (
+                                  <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
+                              )}
+                          </div>
+                      ),
+                  },
+                  ...columns,
+              ]);
+          })
+        : useTable(buildTableProps(canSelect), ...hooks);
 
-
-    const instance:TableInstance = canSelect
-        ? useTable(
-            buildTableProps(canSelect),
-            ...hooks,
-            (hooks) => {
-                hooks.visibleColumns.push((columns: any) => [
-                    // Let's make a column for selection
-                    {
-                        id: "selection",
-                        sortable: false,
-                        // The header can use the table's getToggleAllRowsSelectedProps method
-                        // to render a checkbox
-                        Header: linkedPanel.label,
-                        // The cell can use the individual row's getToggleRowSelectedProps method
-                        // to the render a checkbox
-                        Cell: (cell: any) => (
-                            <div>
-                                {linkedPanel.select.type == 'Check' ?
-                                    <RowSelectCheckbox {...cell.row.getToggleRowSelectedProps()} title={`Shift ${linkedPanel.label} to selected variant`} />
-                                    :
-                                    <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
-                                }
-                            </div>
-                        ),
-                    },
-                    ...columns,
-                ]);
-            }) :
-        useTable(buildTableProps(canSelect), ...hooks)
- 
     // @ts-ignore
-    const { state: { selectedRowIds }, state, toggleRowSelected } = instance;
+    const { state: { selectedRowIds },state, toggleRowSelected} = instance;
 
     const debouncedState = useAsyncDebounce(state as any, 500);
 
@@ -270,7 +265,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             pageSize,
             columnResizing,
             hiddenColumns,
-            selectedRowIds
+            selectedRowIds,
         };
         setInitialState(val);
     }, [setInitialState, debouncedState]);
@@ -279,7 +274,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         // for now only allowing one row to be selected at a time, so can just return
         // the rowId at index [0]
         hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
-    }, [selectedRowIds]); 
+    }, [selectedRowIds]);
 
     const _buildDrawerSections = () => {
         const sections: React.ReactNode[] = showHideColumns
@@ -297,13 +292,16 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         </>
     );
 
-    const toggleLinkedPanel = (isOpen: boolean) => {
-        setlinkedPanelIsOpen(isOpen);
-    };
+    const toggleLinkedPanel = useCallback(
+        (isOpen: boolean) => {
+            setlinkedPanelIsOpen(isOpen);
+        },
+        [hasLinkedPanel]
+    );
 
     // Render the UI for the table
     return (
-        <CustomPanel justifyContent="flex-start">      
+        <CustomPanel justifyContent="flex-start">
             <NavigationDrawer
                 navigation={
                     <TableToolbar
@@ -323,10 +321,9 @@ export const TableContainer: React.FC<TableContainerProps> = ({
                 className={classes.navigationToolbar}
             >
                 {canFilter && <FilterChipBar instance={instance} />}
-            </NavigationDrawer> 
+            </NavigationDrawer>
             {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
             <Table className={className} instance={instance} />
-           
         </CustomPanel>
     );
 };

@@ -132,7 +132,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         }
     };
 
-    const setLocusZoomPlot = useCallback((plot:any) => { setLzPlot(plot)}, []);
+    const setLocusZoomPlot = useCallback((plot:any) => { plot && setLzPlot(plot)}, [lzPlot]);
 
     const getLocusZoomTargetVariant = (index: number) => {
         // alert("DEBUG: selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
@@ -147,14 +147,14 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             const start = parseInt(position) - LZ_DEFAULT_FLANK;
             const end = parseInt(position) + LZ_DEFAULT_FLANK;
             lzPlot && lzPlot.applyState({
-                chr: chrm,
+                chr: 'chr' + chrm,
                 start: start,
                 end: end,
                 ldrefvar: targetVariant,
             });
         },
         // setLzPlot(lzPlot); // update?
-        []
+        [lzPlot]
     );
 
     const defaultHiddenColumns = get(properties, "hiddenColumns");
