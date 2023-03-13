@@ -66,7 +66,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         global: useMemo(() => globalTextFilter, []),
     };
 
-    const buildColumns = () => {
+    const buildColumns = useCallback(() => {
         if (!data) {
             return [];
         }
@@ -110,7 +110,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
             return columns;
         }
-    };
+    }, [table]);
 
     const renderLocusZoom = (hasLZView: boolean) => {
         if (hasLZView) {
@@ -134,14 +134,12 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
     const setLocusZoomPlot = useCallback((plot:any) => { plot && setLzPlot(plot)}, [lzPlot]);
 
-    const getLocusZoomTargetVariant = (index: number) => {
-        // alert("DEBUG: selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
+    const getLocusZoomTargetVariant = useCallback((index: number) => {
         return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index);
-    };
+    }, [data]);
 
     const updateLocusZoomPlot = useCallback(
         (index: number) => {
-            //alert("DEBUG: selected " + index.toString() + " - " + extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index));
             const targetVariant = getLocusZoomTargetVariant(index);
             const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
             const start = parseInt(position) - LZ_DEFAULT_FLANK;
@@ -153,7 +151,6 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 ldrefvar: targetVariant,
             });
         },
-        // setLzPlot(lzPlot); // update?
         [lzPlot]
     );
 

@@ -21,8 +21,7 @@ import { useDynamicWidth } from "genomics-client/hooks";
 import { RootState } from "wdk-client/Core/State/Types";
 
 import "locuszoom/dist/locuszoom.css";
-import { useWdkEffect } from "wdk-client/Service/WdkService";
-import { callbackify } from "util";
+
 
 export const DEFAULT_FLANK = 100000;
 
@@ -108,19 +107,6 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         const lzState = initializeLocusZoomState();
         const plot = _buildLocusZoomPlot(divId, lzState, track, webAppUrl + "/service/locuszoom", width, genomeBuild);
         setPlot(plot);
-    };
-
-    
-    const updateRegionByVariant = (targetVariant: string) => {
-        const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
-        const start = parseInt(position) - DEFAULT_FLANK;
-        const end = parseInt(position) + DEFAULT_FLANK;
-        plot.applyState({
-            chr: chrm,
-            start: start,
-            end: end,
-            ldrefvar: targetVariant,
-        });
     };
 
     return (

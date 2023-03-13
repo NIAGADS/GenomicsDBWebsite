@@ -112,6 +112,9 @@ export class CustomLDServerAdapter extends LDServer {
             let best_logp = 0;
             for (let item of assoc_data) {
                 const { [assoc_variant_name]: variant, [assoc_logp_name]: log_pvalue } = item;
+                if (item.hasOwnProperty('lz_is_ld_refvar')) {
+                    delete item.lz_is_ld_refvar; // for updates based on state
+                }
                 if (log_pvalue > best_logp) {
                     best_logp = log_pvalue;
                     refvar = variant;
@@ -128,14 +131,18 @@ export class CustomLDServerAdapter extends LDServer {
 
         // Last step: sanity check the proposed reference variant. Is it inside the view region? If not, we're probably
         //  remembering a user choice from before user jumped to a new region. LD should be relative to something nearby.
-        let [chrom, pos, ...rest] = refvar.split(":");
+
+        // NOTE: fossilfriend - removing this b/c when doing update based on table select, it's setting the refvar to null
+        // if the refvar is outside the current span
+        
+        /* let [chrom, pos, ...rest] = refvar.split(":");
         let coord = +pos;
         if ((coord && state.ldrefvar && state.chr) && (chrom !== String(state.chr) || coord < state.start || coord > state.end)) {
             // Rerun this method, after clearing out the proposed reference variant. NOTE: Adapter call receives a
             //   *copy* of plot.state, so wiping here doesn't remove the original value.
             state.ldrefvar = null;
             return this.__find_ld_refvar(state, assoc_data);
-        }
+        } */
 
         return refvar;
     }
