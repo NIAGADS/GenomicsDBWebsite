@@ -80,7 +80,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                     control={<Switch checked={linkedPanelIsOpen || false} onChange={_toggleLinkedPanel} />}
                     label={linkedPanelIsOpen ? `Hide ${linkedPanelOptions.label}` : `Show ${linkedPanelOptions.label}`}
                 />  
-                <HelpIcon tooltip={`Click to reveal or hide ${linkedPanelOptions.label} explorer (below table)`}></HelpIcon>
+                <HelpIcon tooltip={`Click to reveal or hide ${linkedPanelOptions.label} explorer`}></HelpIcon>
              </Box>
             }
         </>

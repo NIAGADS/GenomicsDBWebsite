@@ -7,14 +7,15 @@ import Box from "@material-ui/core/Box";
 
 interface LinkedPanelSection {
     isOpen: boolean;
-    children: React.ReactNode
+    children: React.ReactNode;
+    className?: string;
 }
 
-export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, children }) => {
+export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, children, className }) => {
     // const classes = useStyles();
     return (
 
-            <Collapse in={isOpen} style={{marginTop: "20px"}}>
+            <Collapse in={isOpen} style={{marginTop: "20px"}} className={className ? className : null}>
                 {children}
             </Collapse>
     );
