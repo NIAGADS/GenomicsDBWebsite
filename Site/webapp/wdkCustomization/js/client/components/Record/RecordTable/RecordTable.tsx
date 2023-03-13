@@ -1,11 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "wdk-client/Core/State/Types";
 import { findIndex, has, get } from "lodash";
 import classNames from "classnames";
 
 import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
+import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
 import { TableContainer } from "@viz/Table";
 import {
     SelectColumnFilter,
@@ -15,9 +19,15 @@ import {
     globalTextFilter,
     PieChartColumnFilter,
 } from "@viz/Table/TableFilters";
-import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 
-import { resolveColumnAccessor, resolveData, RecordTableProps } from "@components/Record/RecordTable";
+import {
+    resolveColumnAccessor,
+    resolveData,
+    extractIndexedPrimaryKeyFromRecordLink,
+    RecordTableProps,
+    RecordTableColumnAccessorType as ColumnAccessorType,
+    RecordTableProperties as TableProperties,
+} from "@components/Record/RecordTable";
 
 import {
     negLog10pFilter,
@@ -28,7 +38,7 @@ import {
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
 
-import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
+const MemoLocusZoomPlot = React.memo(LocusZoomPlot);
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,25 +46,27 @@ const useStyles = makeStyles((theme: Theme) =>
             /* minHeight: 500,
           maxHeight: 500,
           overflowY: "scroll", */
-         
         },
         fullWidth: {
             width: "100%",
-            overflowX: "scroll"
+            overflowX: "scroll",
         },
     })
 );
 
-export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties }) => {
+export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties, recordPrimaryKey }) => {
     const { attributes } = table;
     const classes = useStyles();
+    const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
+    const [lzPlot, setLzPlot] = useState<any>(null);
+
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
         boolean_pie: useMemo(() => booleanFlagFilter, []),
         global: useMemo(() => globalTextFilter, []),
     };
 
-    const buildColumns = () => {
+    const buildColumns = useCallback(() => {
         if (!data) {
             return [];
         }
@@ -98,11 +110,56 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
             return columns;
         }
+    }, [table]);
+
+    const renderLocusZoom = (hasLZView: boolean) => {
+        if (hasLZView) {
+            const topVariant = getLocusZoomTargetVariant(0); // sorted so first row should be top hit
+            return projectId ? (
+                <MemoLocusZoomPlot
+                    genomeBuild={projectId}
+                    variant={topVariant}
+                    track={recordPrimaryKey}
+                    divId="record-table-locus-zoom"
+                    population="ADSP"
+                    setPlotState={setLocusZoomPlot}
+                ></MemoLocusZoomPlot>
+            ) : (
+                <CircularProgress />
+            );
+        } else {
+            return null;
+        }
     };
+
+    const setLocusZoomPlot = useCallback((plot:any) => { plot && setLzPlot(plot)}, [lzPlot]);
+
+    const getLocusZoomTargetVariant = useCallback((index: number) => {
+        return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index);
+    }, [data]);
+
+    const updateLocusZoomPlot = useCallback(
+        (index: number) => {
+            const targetVariant = getLocusZoomTargetVariant(index);
+            const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
+            const start = parseInt(position) - LZ_DEFAULT_FLANK;
+            const end = parseInt(position) + LZ_DEFAULT_FLANK;
+            lzPlot && lzPlot.applyState({
+                chr: 'chr' + chrm,
+                start: start,
+                end: end,
+                ldrefvar: targetVariant,
+            });
+        },
+        [lzPlot]
+    );
 
     const defaultHiddenColumns = get(properties, "hiddenColumns");
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
     const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
+
+    const hasLocusZoomView = get(properties, "locusZoomView", false);
+    const locusZoomView = useMemo(() => renderLocusZoom(hasLocusZoomView), [data]);
 
     const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
     const resolvedData: any = useMemo(() => resolveData(data), [data]);
@@ -134,7 +191,19 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             initialFilters={initialFilters}
             initialSort={initialSort}
             title={table.displayName}
-            locusZoomView={get(properties, "locusZoomView", null)}
+            linkedPanel={
+                hasLocusZoomView
+                    ? {
+                          contents: locusZoomView,
+                          label: "LocusZoom",
+                          select: {
+                              action: updateLocusZoomPlot,
+                              type: "Check",
+                              tooltip: "Select to move LocusZoom View to this variant",
+                          },
+                      }
+                    : null
+            }
         />
     );
 };

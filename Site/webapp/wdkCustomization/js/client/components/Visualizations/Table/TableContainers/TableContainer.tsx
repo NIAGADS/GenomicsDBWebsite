@@ -1,6 +1,6 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { assign } from "lodash";
 
 import Typography from "@material-ui/core/Typography";
@@ -16,6 +16,8 @@ import {
     useFilters,
     useGlobalFilter,
     useAsyncDebounce,
+    TableInstance,
+    useRowSelect,
     Column,
 } from "react-table";
 
@@ -37,12 +39,14 @@ import {
     ToggleColumnsPanel,
     FilterPanel,
     FilterChipBar,
-    LocusZoomPanel,
+    LinkedPanel,
 } from "@viz/Table/TableSections";
 
 import { useTableStyles } from "@viz/Table";
 
-import TableSortingFunctions, {
+import { RowSelectCheckbox, RowSelectButton } from "@viz/Table/RowSelectors";
+
+import {
     alphanumericSort,
     alphanumericCaseSensitiveSort,
     linkSort,
@@ -55,6 +59,19 @@ import TableSortingFunctions, {
 } from "@viz/Table/TableSortingFunctions";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
+import RowsPerPageMenu from "wdk-client/Components/Mesa/Ui/RowsPerPageMenu";
+
+interface LinkedPanelAction {
+    action: any;
+    type: "Button" | "Check";
+    tooltip: string;
+}
+
+interface LinkedPanelOptions {
+    label: string;
+    contents: any;
+    select: LinkedPanelAction;
+}
 
 export interface TableContainerProps {
     columns: Column<{}>[];
@@ -70,7 +87,7 @@ export interface TableContainerProps {
     requiredColumns?: string[];
     initialFilters?: any;
     initialSort?: any;
-    locusZoomView?: boolean;
+    linkedPanel?: LinkedPanelOptions;
 }
 
 const hooks = [
@@ -83,7 +100,7 @@ const hooks = [
     useFilters,
     useSortBy,
     usePagination,
-    //useRowSelect,
+    useRowSelect,
     //selectionHook,
 ];
 
@@ -100,13 +117,16 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     initialFilters,
     initialSort,
     title,
-    locusZoomView,
+    linkedPanel,
 }) => {
     // Use the state and functions returned from useTable to build your UI
     //const instance = useTable({ columns, data }, ...hooks) as TableTypeWorkaround<T>;
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
-    const [lzIsOpen, setLzIsOpen] = useState(false);
+    const [linkedPanelIsOpen, setlinkedPanelIsOpen] = useState(false);
+    const [hasLinkedPanel, setHasLinkedPanel] = useState(linkedPanel !== null);
+
+    const canSelect = hasLinkedPanel && linkedPanel.select !== null;
 
     const classes = useTableStyles();
 
@@ -156,58 +176,105 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         []
     );
 
-    const instance = useTable(
-        {
+    const buildTableProps = (rowSelectEnabled: boolean) => {
+        const initialState = {
+            // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
+            pageIndex: 0,
+            pageSize: 10,
+            filters: [initialFilters ? initialFilters : {}],
+            sortBy: initialSort ? initialSort : [],
+            hiddenColumns: columns.filter((col: any) => col.show === false).map((col) => col.id || col.accessor) as any,
+        };
+
+        let tableProps = {
             columns,
             data,
-            initialState: {
-                // @ts-ignore -- TODO will be fixed in react-table v8 / basically @types/react-table is no longer being updated
-                pageIndex: 0,
-                pageSize: 10,
-                filters: [initialFilters ? initialFilters : {}],
-                sortBy: initialSort ? initialSort : [],
-                hiddenColumns: columns
-                    .filter((col: any) => col.show === false)
-                    .map((col) => col.id || col.accessor) as any,
-            },
+            initialState: initialState,
             defaultCanFilter: false,
             //@ts-ignore
             defaultColumn: _defaultColumn,
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
-        },
-        ...hooks
-    );
+        };
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        prepareRow,
-        setFilter,
-        setSortBy,
-        preGlobalFilteredRows,
-        preFilteredRows,
-        setGlobalFilter,
-        globalFilter,
-        page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
-        state, //: { pageIndex, pageSize },
-    } = instance;
+        if (rowSelectEnabled) {
+            tableProps = Object.assign(tableProps, {
+                intitialState: Object.assign(initialState, {
+                    selectedRowIds: rowSelectEnabled ? { 0: true } : {},
+                }),
+                getRowId: (row: any, index: number) => {
+                    return "row_id" in row ? row.row_id : index;
+                },
+                stateReducer: (newState: any, action: any) => {
+                    // allows only one row to be selected
+                    if (action.type === "toggleRowSelected") {
+                        //@ts-ignore
+                        newState.selectedRowIds = {
+                            [action.id]: true,
+                        };
+                    }
+                    return newState;
+                },
+            });
+        }
 
-    const debouncedState = useAsyncDebounce(state, 500);
+        return tableProps;
+    };
+
+    const instance: TableInstance = canSelect
+        ? useTable(buildTableProps(canSelect), ...hooks, (hooks) => {
+              hooks.visibleColumns.push((columns: any) => [
+                  // Let's make a column for selection
+                  {
+                      id: "selection",
+                      sortable: false,
+                      // The header can use the table's getToggleAllRowsSelectedProps method
+                      // to render a checkbox
+                      Header: linkedPanel.label,
+                      // The cell can use the individual row's getToggleRowSelectedProps method
+                      // to the render a checkbox
+                      Cell: (cell: any) => (
+                          <div>
+                              {linkedPanel.select.type == "Check" ? (
+                                  <RowSelectCheckbox
+                                      {...cell.row.getToggleRowSelectedProps()}
+                                      title={`Shift ${linkedPanel.label} to selected variant`}
+                                  />
+                              ) : (
+                                  <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
+                              )}
+                          </div>
+                      ),
+                  },
+                  ...columns,
+              ]);
+          })
+        : useTable(buildTableProps(canSelect), ...hooks);
+
+    // @ts-ignore
+    const { state: { selectedRowIds },state, toggleRowSelected} = instance;
+
+    const debouncedState = useAsyncDebounce(state as any, 500);
 
     useEffect(() => {
-        const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
+        const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
         const val = {
             sortBy,
             filters,
             pageSize,
             columnResizing,
             hiddenColumns,
+            selectedRowIds,
         };
         setInitialState(val);
     }, [setInitialState, debouncedState]);
+
+    useEffect(() => {
+        // for now only allowing one row to be selected at a time, so can just return
+        // the rowId at index [0]
+        hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
+    }, [selectedRowIds]);
 
     const _buildDrawerSections = () => {
         const sections: React.ReactNode[] = showHideColumns
@@ -225,12 +292,25 @@ export const TableContainer: React.FC<TableContainerProps> = ({
         </>
     );
 
+    const toggleLinkedPanel = useCallback(
+        (isOpen: boolean) => {
+            setlinkedPanelIsOpen(isOpen);
+        },
+        [hasLinkedPanel]
+    );
+
     // Render the UI for the table
     return (
         <CustomPanel justifyContent="flex-start">
-            <LocusZoomPanel isOpen={lzIsOpen} datasets={null}/>
             <NavigationDrawer
-                navigation={<TableToolbar instance={instance} canFilter={canFilter} locusZoomView={locusZoomView} />}
+                navigation={
+                    <TableToolbar
+                        instance={instance}
+                        canFilter={canFilter}
+                        hasLinkedPanel={hasLinkedPanel}
+                        linkedPanelOptions={{ toggle: toggleLinkedPanel, label: "LocusZoom" }}
+                    />
+                }
                 toggleAnchor="left"
                 toggleIcon={showAdvancedFilter || showHideColumns ? <FilterListIcon /> : null}
                 toggleHelp="Select columns and advanced filters"
@@ -242,7 +322,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             >
                 {canFilter && <FilterChipBar instance={instance} />}
             </NavigationDrawer>
-
+            {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
             <Table className={className} instance={instance} />
         </CustomPanel>
     );

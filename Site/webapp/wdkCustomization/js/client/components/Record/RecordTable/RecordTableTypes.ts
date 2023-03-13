@@ -19,6 +19,7 @@ export interface RecordTableProps {
     table: TableField;
     data: TableValue;
     properties?: RecordTableProperties;
+    recordPrimaryKey: string;
     onLoad?: (ref: React.MutableRefObject<TableInstance>) => void;
 }
 

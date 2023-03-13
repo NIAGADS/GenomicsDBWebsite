@@ -50,7 +50,7 @@ public class LZGWASService extends AbstractWdkService {
         + "AND 'chr' || split_part(variant_record_primary_key, ':', 1)::text = ?" + NL
         + "AND split_part(variant_record_primary_key, ':', 2)::bigint" + NL
         + "<@ int8range(?, ?))" + NL
-        + "SELECT jsonb_build_object('data', jsonb_build_object('chromosome', jsonb_agg(chromosome)," + NL
+        + "SELECT jsonb_build_object('data', jsonb_build_object(" + NL
         + "'position', jsonb_agg(position ORDER BY variant_gwas_id)," + NL
         + "'variant', jsonb_agg(variant_record_primary_key ORDER BY variant_gwas_id)," + NL
         + "'pvalue', jsonb_agg(pvalue_display ORDER BY variant_gwas_id)," + NL

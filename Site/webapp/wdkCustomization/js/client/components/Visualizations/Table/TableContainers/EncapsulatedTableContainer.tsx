@@ -19,10 +19,6 @@ import {
     useGlobalFilter,
     useAsyncDebounce,
     useRowSelect,
-    Column,
-    Row,
-    TableCellProps,
-    UseRowSelectRowProps,
 } from "react-table";
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
@@ -33,14 +29,14 @@ import {
     greaterThanFilter,
     includesFilter,
     includesAnyFilter,
-    FilterGroup,
 } from "@viz/Table/TableFilters";
 
 import { Table, TableToolbar, ToggleColumnsPanel, FilterPanel, FilterChipBar } from "@viz/Table/TableSections";
 
 import { useTableStyles, TableContainerProps } from "@viz/Table";
+import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
-import TableSortingFunctions, {
+import {
     alphanumericSort,
     alphanumericCaseSensitiveSort,
     linkSort,
@@ -53,7 +49,7 @@ import TableSortingFunctions, {
 } from "@viz/Table/TableSortingFunctions";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
-import { RowSelectCheckbox } from "./RowSelectCheckbox";
+
 
 interface EncapsulatedTableContainerProps extends TableContainerProps {
     isOpen: boolean;
@@ -170,7 +166,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
             getRowId: (row: any, index) => {
-                return 'row_id' in row ? row.row_id : index;
+                return "row_id" in row ? row.row_id : index;
             },
         },
         ...hooks,
@@ -210,9 +206,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         setGlobalFilter,
         globalFilter,
         page, // Instead of using 'rows', we'll use page, which has only the rows for the active page
-        state, //: { pageIndex, pageSize },
         selectedFlatRows,
         state: { selectedRowIds },
+        state,
         toggleRowSelected,
     } = instance;
 

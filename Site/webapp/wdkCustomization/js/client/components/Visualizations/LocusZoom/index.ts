@@ -1,4 +1,4 @@
 export * from "./LocusZoomPlot"
-export * from "./GWASDatasetLZPlot";
+//export * from "./GWASDatasetLZPlot";
 export * from "./CustomLocusZoomAdapters";
-//export * from "./CustomLocusZoomLayouts";
+export * from "./CustomLocusZoomLayouts";

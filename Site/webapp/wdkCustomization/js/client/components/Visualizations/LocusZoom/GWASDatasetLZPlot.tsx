@@ -48,7 +48,7 @@ export const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset })
         { SAS: "SAS: South Asian" },
     ];
 
-    const selectClass = useRef(Math.random().toString(32).slice(2).replace(/\d/g, ""));
+    const divId = useRef(Math.random().toString(32).slice(2).replace(/\d/g, ""));
 
     const loadTopHit = (hit: TopHit) => {
         setRange({ start: hit.start, end: hit.end });
@@ -112,12 +112,12 @@ export const GWASDatasetLZPlot: React.FC<GWASDatasetLZPlotProps> = ({ dataset })
             </Grid>
             <Grid item>
                 {/* right col - plot */}
-                <LocusZoomPlot
+                {/*<LocusZoomPlot genomeBuild={}
                     population={population}
                     variant={variant}
-                    selectClass={selectClass.current}
+                    divId={divId.current}
                     track={dataset}
-                />
+                        />*/}
             </Grid>
         </Grid>
     ) : (
