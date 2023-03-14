@@ -141,8 +141,10 @@ export const TrackSelector: React.FC<TrackSelector> = ({
     const hasColumnFilters = properties.hasOwnProperty("filters");
 
     // component here
-    return (
-        <TableContainer
+    return ( <p> temp</p> );
+};
+
+ /*  <TableContainer
             className={classes.table}
             columns={selectorColumns}
             data={data}
@@ -157,10 +159,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
             isOpen={open}
             handleClose={handleClose}
             onRowSelect={updateSelectedTracks}
-        />
-    );
-};
-
+    /> */
 const _addColumnFilters = (column: any, filterType: FilterType) => {
     switch (filterType) {
         case "select":

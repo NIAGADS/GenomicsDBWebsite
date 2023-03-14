@@ -1,17 +1,34 @@
-import { MouseEventHandler } from 'react';
-import {
-    UsePaginationState,
-    TableInstance
-} from "react-table";
+import { Column } from "react-table";
 
-export interface TableState<D extends object = {}> extends UsePaginationState<D> {}
-
-export type TableMouseEventHandler = (instance: TableInstance) => MouseEventHandler;
+import { FilterGroup } from "@viz/Table/TableFilters";
 
 export type TableData = Record<string, string>;
 
-export interface TableProps {
-    instance: TableInstance;
+export interface RowSelectOptions {
+    label: string;
+    tooltip: string;
+    action: any;
+    type: "Check" | "Button";
+}
+
+export interface TableOptions {
+    canFilter: boolean;
+    canExport?: boolean;
+    rowSelect?: RowSelectOptions;
+    filterTypes?: any; // json object of filter types
+    filterGroups?: FilterGroup[];   
+    showAdvancedFilter?: boolean;
+    showHideColumns?: boolean;
+    requiredColumns?: string[];
+    initialFilters?: any;
+    initialSort?: any;
+}
+
+export interface Table {
     className?: string;
+    columns: Column<{}>[];
+    title?: string;
+    data: any;
+    options: TableOptions
 }
 

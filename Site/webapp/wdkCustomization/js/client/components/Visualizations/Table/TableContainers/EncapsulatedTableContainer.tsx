@@ -72,8 +72,9 @@ const hooks = [
     //selectionHook,
 ];
 
+
 export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProps> = ({
-    columns,
+ /*   columns,
     data,
     filterTypes,
     filterGroups,
@@ -84,7 +85,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
     showHideColumns,
     requiredColumns,
     initialFilters,
-    initialSort,
+    initialSort, */
     initialSelectedRows,
     onRowSelect,
     title,
@@ -113,7 +114,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
     };
 
     // add custom filterTypes into the default / overwrite defaults
-    const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes;
+    //const tableFilterTypes = filterTypes ? assign({}, defaultFilterTypes, filterTypes) : defaultFilterTypes;
 
     const sortingFunctions = {
         alphanumeric: useMemo(() => alphanumericSort, []),
@@ -144,7 +145,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         []
     );
 
-    const instance = useTable(
+    /*const instance = useTable(
         {
             columns,
             data,
@@ -192,9 +193,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                 ...columns,
             ]);
         }
-    );
+    ); */
 
-    const {
+   /* const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
@@ -210,11 +211,13 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         state: { selectedRowIds },
         state,
         toggleRowSelected,
-    } = instance;
+    } = instance; */
 
-    const debouncedState = useAsyncDebounce(state, 500);
+    const instance: any = null;
 
-    useEffect(() => {
+    //const debouncedState = useAsyncDebounce(state, 500);
+
+    /*useEffect(() => {
         const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
         const val = {
             sortBy,
@@ -224,9 +227,9 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
             hiddenColumns,
         };
         setInitialState(val);
-    }, [setInitialState, debouncedState]);
+    }, [setInitialState, debouncedState]); */
 
-    useEffect(() => {
+   /* useEffect(() => {
         onRowSelect(selectedRowIds);
     }, [selectedRowIds]);
 
@@ -237,7 +240,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
         showAdvancedFilter &&
             sections.push(<FilterPanel includeChips={false} instance={instance} filterGroups={filterGroups} />);
         return sections;
-    };
+    }; */
 
     const renderDrawerHeaderContents = (
         <>
@@ -250,18 +253,19 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
     const renderGlobalFilter = (
         <AppBar position="static" elevation={0} className={classes.navigationToolbar}>
             <Toolbar variant="dense" disableGutters>
-                <TableToolbar instance={instance} canFilter={canFilter} canExport={canExport} />
+               {/* <TableToolbar instance={instance} canFilter={canFilter} canExport={canExport} /> */}
             </Toolbar>
         </AppBar>
     );
 
     // Render the UI for the table
+    //{/*_buildDrawerSections()}*/}
     return (
         <CustomPanel justifyContent="flex-start">
             <NavigationDrawer
                 navigation={null}
                 toggleAnchor="left"
-                drawerSections={_buildDrawerSections()}
+                drawerSections={null} 
                 drawerCloseLabel="Close Track Selector"
                 toggleIcon={<LibraryBooksIcon />}
                 toggleHelp="Display track selector"
@@ -274,7 +278,7 @@ export const EncapsulatedTableContainer: React.FC<EncapsulatedTableContainerProp
                 <>
                     {renderGlobalFilter}
                     <FilterChipBar instance={instance} />
-                    <Table className={className} instance={instance} />
+                  {/*  <Table className={className} instance={instance} /> */}
                 </>
             </NavigationDrawer>
         </CustomPanel>

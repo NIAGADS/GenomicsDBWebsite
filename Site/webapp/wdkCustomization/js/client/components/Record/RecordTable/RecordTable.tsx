@@ -10,7 +10,8 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
-import { TableContainer } from "@viz/Table";
+import { TableOptions } from "@viz/Table";
+import { Table } from "@viz/Table/TableSections";
 import {
     SelectColumnFilter,
     RadioSelectColumnFilter,
@@ -18,6 +19,7 @@ import {
     TypeAheadSelectColumnFilter,
     globalTextFilter,
     PieChartColumnFilter,
+    FilterGroup
 } from "@viz/Table/TableFilters";
 
 import {
@@ -92,8 +94,8 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                         accessors && accessors.hasOwnProperty(attribute.name)
                             ? accessors[attribute.name]
                             : attribute.name.includes("link")
-                            ? "Link"
-                            : "Default";
+                                ? "Link"
+                                : "Default";
 
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
@@ -131,14 +133,14 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     className={classes.lzPanel}
                 ></MemoLocusZoomPlot>
             ) : (
-                <CircularProgress />
-            );
+                    <CircularProgress />
+                );
         } else {
             return null;
         }
     };
 
-    const setLocusZoomPlot = useCallback((plot:any) => { plot && setLzPlot(plot)}, [lzPlot]);
+    const setLocusZoomPlot = useCallback((plot: any) => { plot && setLzPlot(plot) }, [lzPlot]);
 
     const getLocusZoomTargetVariant = useCallback((index: number) => {
         return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index);
@@ -183,36 +185,58 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         );
     }
 
+    const filterGroups = get(properties, "filterGroups", null);
+    const requiredColumns = get(properties, "requiredColumns", null);
+
+    const options:TableOptions = useMemo(() => {
+        let opts = {
+            showAdvancedFilter: hasColumnFilters,
+            canFilter: canFilter,
+            initialFilters: initialFilters,
+            initialSort: initialSort,
+            filterTypes: filterTypes,
+            filterGroups: filterGroups,
+            showHideColumns: canToggleColumns,
+            requiredColumns: requiredColumns
+        };
+        
+        if (hasLocusZoomView) {
+            opts = Object.assign(opts, 
+                {
+                    rowSelect: {
+                        label: "LocusZoom",
+                        action: updateLocusZoomPlot,
+                        type: "Check",
+                        tooltip: "Select to move LocusZoom View to this variant",
+                    }
+                }
+            );
+        }
+        return opts;
+    }, []);
+
     return (
-        <TableContainer
+        <Table
             className={classNames(get(properties, "fullWidth", true) ? classes.fullWidth : "shrink", classes.table)}
             columns={columns}
             data={resolvedData}
-            filterTypes={filterTypes}
-            filterGroups={get(properties, "filterGroups", null)}
-            canFilter={canFilter}
-            showAdvancedFilter={hasColumnFilters}
-            showHideColumns={canToggleColumns}
-            requiredColumns={get(properties, "requiredColumns", null)}
-            initialFilters={initialFilters}
-            initialSort={initialSort}
             title={table.displayName}
-            linkedPanel={
-                hasLocusZoomView
-                    ? {
-                          contents: locusZoomView,
-                          label: "LocusZoom",
-                          select: {
-                              action: updateLocusZoomPlot,
-                              type: "Check",
-                              tooltip: "Select to move LocusZoom View to this variant",
-                          },
-                      }
-                    : null
-            }
-        />
+            options={options}/>
+
     );
 };
+
+/* linkedPanel={
+hasLocusZoomView
+? {
+contents: locusZoomView,
+label: "LocusZoom",
+select: {
+action: updateLocusZoomPlot,
+type: "Check",
+tooltip: "Select to move LocusZoom View to this variant",
+},
+}*/
 
 const _setInitialFilters = (table: TableField, properties: TableProperties) => {
     let columnFilters: any = get(properties, "filters", null);
