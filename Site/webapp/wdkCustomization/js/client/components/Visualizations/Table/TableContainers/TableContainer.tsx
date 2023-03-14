@@ -59,7 +59,6 @@ import {
 } from "@viz/Table/TableSortingFunctions";
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
-import RowsPerPageMenu from "wdk-client/Components/Mesa/Ui/RowsPerPageMenu";
 
 interface LinkedPanelAction {
     action: any;
@@ -70,6 +69,7 @@ interface LinkedPanelAction {
 interface LinkedPanelOptions {
     label: string;
     contents: any;
+    className?: any;
     select: LinkedPanelAction;
 }
 
@@ -322,7 +322,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             >
                 {canFilter && <FilterChipBar instance={instance} />}
             </NavigationDrawer>
-            {hasLinkedPanel && <LinkedPanel isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
+            {hasLinkedPanel && <LinkedPanel className={linkedPanel.className} isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
             <Table className={className} instance={instance} />
         </CustomPanel>
     );

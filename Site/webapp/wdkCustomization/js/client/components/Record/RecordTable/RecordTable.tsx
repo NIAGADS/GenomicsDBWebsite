@@ -47,6 +47,11 @@ const useStyles = makeStyles((theme: Theme) =>
           maxHeight: 500,
           overflowY: "scroll", */
         },
+        lzPanel: {
+            border: "2px solid #1f1f1f",
+            padding: "20px",
+            marginBottom: "10px",
+        },
         fullWidth: {
             width: "100%",
             overflowX: "scroll",
@@ -123,6 +128,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     divId="record-table-locus-zoom"
                     population="ADSP"
                     setPlotState={setLocusZoomPlot}
+                    className={classes.lzPanel}
                 ></MemoLocusZoomPlot>
             ) : (
                 <CircularProgress />

@@ -46,6 +46,7 @@ interface LocusZoomPlotProps {
     flank?: number;
     track: string;
     setPlotState?: any
+    className?: string;
 }
 
 
@@ -61,7 +62,8 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     span,
     flank,
     genomeBuild,
-    setPlotState
+    setPlotState,
+    className
 }) => {
     const [plot, setPlot] = useState<any>(null);
     //const interval: NodeJS.Timeout = useRef().current;
@@ -111,7 +113,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
 
     return (
         <Grid container alignItems="center" direction="column">
-            <div id={divId ? divId : "locus-zoom"} />
+            <div id={divId ? divId : "locus-zoom"} className={className ? className : null}/>
         </Grid>
     );
 };
