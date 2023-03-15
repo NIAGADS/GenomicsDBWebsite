@@ -1,6 +1,7 @@
 // modeled after https://github.com/ggascoigne/react-table-example
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import cx from "classnames";
+import { get } from "lodash";
 
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -59,20 +60,20 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
 
-    const defaultFilterTypes =  {
-            fuzzyText: useMemo(() => fuzzyTextFilter, []),
-            numeric: useMemo(() => numericTextFilter, []),
-            greater: useMemo(() => greaterThanFilter, []),
-            select: useMemo(() => includesFilter, []),
-            multi_select: useMemo(() => includesAnyFilter, []),
-            typeahead_select: useMemo(() => includesAnyFilter, []),
-            pie: useMemo(() => includesFilter, []),
-            boolean_pie: useMemo(() => includesFilter, []),
-            pvalue: useMemo(() => greaterThanFilter, []),
-            greater_than_threshold: useMemo(() => greaterThanFilter, []),
-            less_than_threshold: useMemo(() => lessThanFilter, []),
-        };
-    
+    const defaultFilterTypes = {
+        fuzzyText: useMemo(() => fuzzyTextFilter, []),
+        numeric: useMemo(() => numericTextFilter, []),
+        greater: useMemo(() => greaterThanFilter, []),
+        select: useMemo(() => includesFilter, []),
+        multi_select: useMemo(() => includesAnyFilter, []),
+        typeahead_select: useMemo(() => includesAnyFilter, []),
+        pie: useMemo(() => includesFilter, []),
+        boolean_pie: useMemo(() => includesFilter, []),
+        pvalue: useMemo(() => greaterThanFilter, []),
+        greater_than_threshold: useMemo(() => greaterThanFilter, []),
+        less_than_threshold: useMemo(() => lessThanFilter, []),
+    };
+
 
     const hooks = useMemo(() => {
         return [
@@ -93,17 +94,17 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             : defaultFilterTypes;
     }, [options.filterTypes]);
 
-    const sortingFunctions =  {
-            alphanumeric: useMemo(() => alphanumericSort, []),
-            alphanumericCaseSensitiveSort: useMemo(() => alphanumericCaseSensitiveSort, []),
-            basic: useMemo(() => basicSort, []),
-            textCaseSensitive: useMemo(() => textCaseSensitiveSort, []),
-            text: useMemo(() => textSort, []),
-            stackedBar: useMemo(() => barChartSort, []),
-            booleanFlag: useMemo(() => booleanFlagSort, []),
-            link: useMemo(() => linkSort, []),
-            scientificNotation: useMemo(() => scientificNotationSort, []),
-        };
+    const sortingFunctions = {
+        alphanumeric: useMemo(() => alphanumericSort, []),
+        alphanumericCaseSensitiveSort: useMemo(() => alphanumericCaseSensitiveSort, []),
+        basic: useMemo(() => basicSort, []),
+        textCaseSensitive: useMemo(() => textCaseSensitiveSort, []),
+        text: useMemo(() => textSort, []),
+        stackedBar: useMemo(() => barChartSort, []),
+        booleanFlag: useMemo(() => booleanFlagSort, []),
+        link: useMemo(() => linkSort, []),
+        scientificNotation: useMemo(() => scientificNotationSort, []),
+    };
 
 
     const buildTableProps = useCallback(() => {
@@ -123,75 +124,79 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             // fix to force table to always take full width of container
             // https://stackoverflow.com/questions/64094137/how-to-resize-columns-with-react-table-hooks-with-a-specific-table-width
             // https://spectrum.chat/react-table/general/v7-resizing-columns-no-longer-fit-to-width~4ea8a7c3-b21a-49a0-8582-baf0a6202d43
-            defaultColumn: {        
+            defaultColumn: {
                 minWidth: 30, // minWidth is only used as a limit for resizing
                 width: 150, // width is used for both the flex-basis and flex-grow
                 maxWidth: 300, // maxWidth is only used as a limit for resizing
-                Filter: ():any => null, // overcome the issue that useGlobalFilter sets canFilter to true
+                Filter: (): any => null, // overcome the issue that useGlobalFilter sets canFilter to true
             },
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
         };
 
-        if (options.hasOwnProperty('rowSelect')) {
-            tableProps = Object.assign(tableProps, {
-                intitialState: Object.assign(initialState, {
-                    selectedRowIds:  { 0: true },
-                }),
-                getRowId: (row: any, index: number) => {
-                    return "row_id" in row ? row.row_id : index;
-                },
-                stateReducer: (newState: any, action: any) => {
-                    // allows only one row to be selected
-                    if (action.type === "toggleRowSelected") {
-                        //@ts-ignore
-                        newState.selectedRowIds = {
-                            [action.id]: true,
-                        };
+        // if row select is button, it is handled in the cell rendering
+        // this is only for global select boxes
+        const rowSelect = get(options, "rowSelect.type", null);
+        if (rowSelect) {
+            if (rowSelect.includes("Check")) { // Check or MultiCheck
+                tableProps = Object.assign(tableProps, {
+                    getRowId: (row: any, index: number) => {
+                        return "row_id" in row ? row.row_id : index;
                     }
-                    return newState;
-                },
-            });
+                });
+            }
+            if (rowSelect === "Check") { // allow only one row to be selected at a time
+                tableProps = Object.assign(tableProps, {
+                    intitialState: Object.assign(initialState, {
+                        selectedRowIds: { 0: true },
+                    }),
+                    stateReducer: (newState: any, action: any) => {
+                        // allows only one row to be selected
+                        if (action.type === "toggleRowSelected") {
+                            //@ts-ignore
+                            newState.selectedRowIds = {
+                                [action.id]: true,
+                            };
+                        }
+                        return newState;
+                    }
+                }
+                );
+            }
         }
-
         return tableProps;
     }, [options]);
 
 
 
-    const instance: TableInstance = options.hasOwnProperty('rowSelect')
+    const instance: TableInstance = (get(options, "rowSelect.type", null) === "Check")
         ? useTable(buildTableProps(), ...hooks, (hooks) => {
             hooks.visibleColumns.push((columns: any) => [
-            {
-                id: "selection",
-                sortable: false,
-                Header: options.rowSelect.label,
-                Cell: (cell: any) => (
-                    <div>
-                        {options.rowSelect.type == "Check" ? (
-                            <RowSelectCheckbox 
+                {
+                    id: "selection",
+                    sortable: false,
+                    Header: options.rowSelect.label,
+                    Cell: (cell: any) => (
+                        <div>
+                            <RowSelectCheckbox
                                 {...cell.row.getToggleRowSelectedProps()}
-                                title={options.rowSelect.tooltip} 
-                                onChange={alert(cell.row.index)}
+                                title={options.rowSelect.tooltip}
                             />
-                        ) : (
-                            <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
-                        )}
-                    </div>
-                ),
-            },
-            ...columns,
+                        </div>
+                    ),
+                },
+                ...columns,
             ]);
         })
         : useTable(buildTableProps(), ...hooks);
 
     const {
         //@ts-ignore
-        state: { selectedRowIds }, 
-        state, 
+        state: { selectedRowIds },
+        state,
         //@ts-ignore
-        toggleRowSelected, 
+        toggleRowSelected,
         getTableProps,
         headerGroups,
         prepareRow,

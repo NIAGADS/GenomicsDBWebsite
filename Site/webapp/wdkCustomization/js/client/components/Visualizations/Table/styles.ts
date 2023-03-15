@@ -5,12 +5,21 @@ export const useTableStyles = makeStyles((theme: Theme) =>
         root: {
             height: 500
         },
+        table: {
+            
+        },
+        borderedLinkedPanel: {
+            border: "2px solid #1f1f1f",
+            padding: "20px",
+            marginBottom: "10px",
+        },
         navigationToolbar: {
             color: theme.palette.primary.dark,
             backgroundColor: "transparent"
         },
         fullWidth: {
-            width: "100%"
+            width: "100%",
+            overflowX: "scroll"
         },
         hide: {
             display: "none"

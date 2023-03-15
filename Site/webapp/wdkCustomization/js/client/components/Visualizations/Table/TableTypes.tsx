@@ -5,10 +5,16 @@ import { FilterGroup } from "@viz/Table/TableFilters";
 export type TableData = Record<string, string>;
 
 export interface RowSelectOptions {
-    label: string;
+    label?: string;
+    column?: string;
     tooltip: string;
     action: any;
-    type: "Check" | "Button";
+    type: "Check" | "Button" | "MultiCheck"
+}
+
+interface LinkedPanelOptions  {
+    type: "LocusZoom",
+    renderer: any;
 }
 
 export interface TableOptions {
@@ -22,6 +28,7 @@ export interface TableOptions {
     requiredColumns?: string[];
     initialFilters?: any;
     initialSort?: any;
+    linkedPanel?: LinkedPanelOptions;
 }
 
 export interface Table {

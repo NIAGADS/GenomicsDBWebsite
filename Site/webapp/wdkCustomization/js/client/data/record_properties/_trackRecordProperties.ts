@@ -27,8 +27,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         linkedPanel: {
             type: "LocusZoom",
-            canSelect: true,
-            selectValueSource: "variant_link"
+            column: "locus_zoom_target"
         },
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {

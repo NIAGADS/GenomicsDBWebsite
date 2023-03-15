@@ -58,6 +58,7 @@
         <sqlQuery name="TopVariants">
             <column name="track"/>
             <column name="project_id"/>
+            <column name="locus_zoom_target"/>
             <column name="variant_link"/>
             <column name="chromosome"/>
             <column name="position"/>
@@ -72,12 +73,13 @@
                 <![CDATA[
                         SELECT track
                         , '@PROJECT_ID@'::text AS project_id
-			, record_link('variant', variant_record_primary_key, metaseq_id, TRUE) AS variant_link
-            ,chromosome, position
+                        , variant_record_primary_key AS locus_zoom_target
+                        , record_link('variant', variant_record_primary_key, metaseq_id, TRUE) AS variant_link
+                        ,chromosome, position
                         , ref_snp_id
                         , adsp_variant_flag(is_adsp_variant) AS adsp_variant_flag
-			, replace(consequence_terms(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'), ',', ' // ') AS most_severe_consequence
-			, annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'impact' AS msc_impact
+                        , replace(consequence_terms(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'), ',', ' // ') AS most_severe_consequence
+                        , annotation->'ADSP_MOST_SEVERE_CONSEQUENCE'->>'impact' AS msc_impact
                         , msc_impacted_gene_link(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_impacted_gene_link
                         , msc_is_coding_flag(annotation->'ADSP_MOST_SEVERE_CONSEQUENCE') AS msc_is_coding_flag
                         , neg_log10_pvalue

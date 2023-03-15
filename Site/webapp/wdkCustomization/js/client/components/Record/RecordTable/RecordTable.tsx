@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "wdk-client/Core/State/Types";
 import { findIndex, has, get } from "lodash";
@@ -6,11 +6,11 @@ import classNames from "classnames";
 
 import { Column } from "react-table";
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
 
 import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
-import { TableOptions } from "@viz/Table";
+import { TableOptions, useTableStyles } from "@viz/Table";
 import { Table } from "@viz/Table/TableSections";
 import {
     SelectColumnFilter,
@@ -19,13 +19,12 @@ import {
     TypeAheadSelectColumnFilter,
     globalTextFilter,
     PieChartColumnFilter,
-    FilterGroup
 } from "@viz/Table/TableFilters";
 
 import {
     resolveColumnAccessor,
     resolveData,
-    extractIndexedPrimaryKeyFromRecordLink,
+    extractIndexedFieldValue,
     RecordTableProps,
     RecordTableColumnAccessorType as ColumnAccessorType,
     RecordTableProperties as TableProperties,
@@ -39,34 +38,15 @@ import {
 } from "@components/Record/RecordTable/RecordTableFilters";
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
-import Button from "@material-ui/core/Button";
 
 const MemoLocusZoomPlot = React.memo(LocusZoomPlot);
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        table: {
-            /* minHeight: 500,
-          maxHeight: 500,
-          overflowY: "scroll", */
-        },
-        lzPanel: {
-            border: "2px solid #1f1f1f",
-            padding: "20px",
-            marginBottom: "10px",
-        },
-        fullWidth: {
-            width: "100%",
-            overflowX: "scroll",
-        },
-    })
-);
-
 export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties, recordPrimaryKey }) => {
     const { attributes } = table;
-    const classes = useStyles();
+    const classes = useTableStyles();
+
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
-    const [lzPlot, setLzPlot] = useState<any>(null);
+    const [panelContents, setPanelContents] = useState<any>(null);
 
     const filterTypes = {
         pvalue: useMemo(() => negLog10pFilter, []),
@@ -74,18 +54,50 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         global: useMemo(() => globalTextFilter, []),
     };
 
-    const buildColumns = useCallback(() => {
-        if (!data) {
+    const options = useMemo(() => {
+        const hasHiddenColumns = get(properties, "hiddenColumns", null);
+        const linkedPanel = get(properties, "linkedPanel", {});
+        let opts: TableOptions = {
+            showAdvancedFilter: properties.hasOwnProperty("filters"),
+            canFilter: get(properties, "canFilter", true), // default to true if missing
+            initialFilters: _setInitialFilters(table, properties),
+            initialSort: _setInitialSort(table, properties),
+            filterTypes: filterTypes,
+            filterGroups: get(properties, "filterGroups", null),
+            showHideColumns: hasHiddenColumns || get(properties, "canToggleColumns", false),
+            requiredColumns: get(properties, "requiredColumns", null),
+        };
+
+        if (Object.keys(linkedPanel).length > 0) {
+            const linkedPanelType = get(properties, "linkedPanel.type");
+            opts = Object.assign(opts,
+                {
+                    rowSelect: {
+                        column: get(properties, "linkedPanel.column", null),
+                        action: setLinkedPanelAction(linkedPanelType),
+                        tooltip: setLinkedPanelHelp(linkedPanelType)
+                    },
+                    linkedPanel: {
+                        type: linkedPanelType,
+                        renderer: setLinkedPanelRenderer(linkedPanelType),
+                    }
+                }
+            );
+        }
+        return opts;
+    }, [Object.keys(properties).length, Object.keys(table).length]);
+
+    const columns: Column<{}>[] = useMemo(() => {
+        if (!data || !options) { // just so no calculations are done unless options are set
             return [];
         }
         if (data.length === 0) {
             return [];
         } else {
-
             let columnFilters: any = get(properties, "filters", null);
             let attributes: AttributeField[] = table.attributes;
             const accessors: any = get(properties, "accessors", null);
-            const canSelect: boolean = get(properties, "linkedPanel.canSelect", false);
+            const defaultHiddenColumns = get(properties, "hiddenColumns", null)
 
             let columns: Column<{}>[] = Object.keys(data[0])
                 .filter((k) => {
@@ -111,7 +123,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
                     column = _setColumnBehavior(column, filterType, accessorType);
 
-                    if (defaultHiddenColumns && defaultHiddenColumns.includes(column.id)) {
+                    if (options.showHideColumns && defaultHiddenColumns.includes(column.id)) {
                         column.show = false;
                     }
 
@@ -119,46 +131,60 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 })
                 .sort((c1, c2) => _indexSort(c1, c2, attributes));
 
-            if (canSelect) {
-                const label = get(properties, "linkedPanel.type", "ERROR");
-                columns.unshift({
-                    Header: label,
-                    //@ts-ignore
-                    sortable: false,
-                    id: 'selection'
-                });
-            }
-
             return columns;
         }
-    }, [table]);
+    }, [options, data.length]);
 
-    const renderLocusZoom = (hasLZView: boolean) => {
-        if (hasLZView) {
-            const topVariant = getLocusZoomTargetVariant(0); // sorted so first row should be top hit
-            return projectId ? (
-                <MemoLocusZoomPlot
-                    genomeBuild={projectId}
-                    variant={topVariant}
-                    track={recordPrimaryKey}
-                    divId="record-table-locus-zoom"
-                    population="ADSP"
-                    setPlotState={setLocusZoomPlot}
-                    className={classes.lzPanel}
-                ></MemoLocusZoomPlot>
-            ) : (
-                    <CircularProgress />
-                );
-        } else {
-            return null;
+    const setLinkedPanelRenderer = (panelType: string) => {
+        switch (panelType) {
+            case "LocusZoom":
+                return renderLocusZoom;
+            default:
+                return "Not yet implemented";
         }
-    };
+    }
 
-    const setLocusZoomPlot = useCallback((plot: any) => { plot && setLzPlot(plot) }, [lzPlot]);
+    const setLinkedPanelHelp = (panelType: string) => {
+        switch (panelType) {
+            case "LocusZoom":
+                return "Click to center LocusZoom view on this variant";
+            default:
+                return "Not yet implemented";
+        }
+    }
+
+    const setLinkedPanelAction: any = (panelType: string) => {
+        switch (panelType) {
+            case "LocusZoom":
+                return updateLocusZoomPlot;
+            default:
+                return null
+        }   
+    }
+
+    const renderLocusZoom = useCallback(() => {
+        const topVariant = getLocusZoomTargetVariant(0); // sorted so first row should be top hit
+        return projectId ? (
+            <MemoLocusZoomPlot
+                genomeBuild={projectId}
+                variant={topVariant}
+                track={recordPrimaryKey}
+                divId="record-table-locus-zoom"
+                population="ADSP"
+                setPlotState={setLocusZoomPlot}
+                className={classes.borderedLinkedPanel}
+            ></MemoLocusZoomPlot>
+        ) : (
+                <CircularProgress />
+            );
+
+    }, [projectId]);
+
+    const setLocusZoomPlot = useCallback((plot: any) => { plot && setPanelContents(plot) }, [panelContents]);
 
     const getLocusZoomTargetVariant = useCallback((index: number) => {
-        return extractIndexedPrimaryKeyFromRecordLink(data, "variant_link", index);
-    }, [data]);
+        return extractIndexedFieldValue(data, options.rowSelect.column, false, index);
+    }, []);
 
     const updateLocusZoomPlot = useCallback(
         (index: number) => {
@@ -166,32 +192,17 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
             const start = parseInt(position) - LZ_DEFAULT_FLANK;
             const end = parseInt(position) + LZ_DEFAULT_FLANK;
-            lzPlot && lzPlot.applyState({
+            panelContents && panelContents.applyState({
                 chr: 'chr' + chrm,
                 start: start,
                 end: end,
                 ldrefvar: targetVariant,
             });
         },
-        [lzPlot]
+        []
     );
 
-    const defaultHiddenColumns = get(properties, "hiddenColumns");
-    const hasHiddenColumns = defaultHiddenColumns ? true : false;
-    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
-
-    const linkedPanel = get(properties, "linkedPanel", null);
-
-    const hasLocusZoomView = linkedPanel ? linkedPanel.type === "LocusZoom" : false;
-    const locusZoomView = useMemo(() => renderLocusZoom(hasLocusZoomView), [data]);
-
-    const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
-    const resolvedData: any = useMemo(() => resolveData(data), [data]);
-
-    const canFilter = get(properties, "canFilter", true); // default to true if missing
-    const hasColumnFilters = properties.hasOwnProperty("filters");
-    const initialFilters = _setInitialFilters(table, properties);
-    const initialSort = _setInitialSort(table, properties);
+    const resolvedData: any = useMemo(() => resolveData(data), [data.length]);
 
     if (data.length === 0 || columns.length === 0) {
         return (
@@ -200,36 +211,6 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             </p>
         );
     }
-
-    const filterGroups = get(properties, "filterGroups", null);
-    const requiredColumns = get(properties, "requiredColumns", null);
-
-    const options: TableOptions = useMemo(() => {
-        let opts = {
-            showAdvancedFilter: hasColumnFilters,
-            canFilter: canFilter,
-            initialFilters: initialFilters,
-            initialSort: initialSort,
-            filterTypes: filterTypes,
-            filterGroups: filterGroups,
-            showHideColumns: canToggleColumns,
-            requiredColumns: requiredColumns
-        };
-
-        if (hasLocusZoomView) {
-            opts = Object.assign(opts,
-                {
-                    rowSelect: {
-                        label: "LocusZoom",
-                        action: updateLocusZoomPlot,
-                        type: "Check",
-                        tooltip: "Select to move LocusZoom View to this variant",
-                    }
-                }
-            );
-        }
-        return opts;
-    }, []);
 
     return (
         <Table
@@ -242,18 +223,6 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     );
 };
 
-/* linkedPanel={
-hasLocusZoomView
-? {
-contents: locusZoomView,
-label: "LocusZoom",
-select: {
-action: updateLocusZoomPlot,
-type: "Check",
-tooltip: "Select to move LocusZoom View to this variant",
-},
-}*/
-
 const _setInitialFilters = (table: TableField, properties: TableProperties) => {
     let columnFilters: any = get(properties, "filters", null);
     if (columnFilters && "pvalue" in columnFilters) {
@@ -264,7 +233,7 @@ const _setInitialFilters = (table: TableField, properties: TableProperties) => {
 
 const _setInitialSort = (table: TableField, properties: TableProperties) => {
     let sortBy: any = get(properties, "sortedBy", null);
-    return useMemo(() => sortBy, []);
+    return sortBy;
 };
 
 const _setColumnBehavior = (column: any, filterType: string, accessorType: ColumnAccessorType = "Default") => {
@@ -348,3 +317,4 @@ const _buildColumn: any = (attribute: AttributeField, accessorType: ColumnAccess
     id: attribute.name,
     sortType: "alphanumeric",
 });
+

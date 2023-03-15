@@ -8,8 +8,7 @@ export interface TableColumnSort {
 
 export interface TableLinkedPanel {
     type: "LocusZoom",
-    canSelect: boolean,
-    selectValueSource: string;
+    column: string;
 }
 
 export interface TableProperties {
