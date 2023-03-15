@@ -39,6 +39,7 @@ import {
 } from "@components/Record/RecordTable/RecordTableFilters";
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
+import Button from "@material-ui/core/Button";
 
 const MemoLocusZoomPlot = React.memo(LocusZoomPlot);
 
@@ -80,9 +81,12 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         if (data.length === 0) {
             return [];
         } else {
+
             let columnFilters: any = get(properties, "filters", null);
             let attributes: AttributeField[] = table.attributes;
             const accessors: any = get(properties, "accessors", null);
+            const canSelect: boolean = get(properties, "linkedPanel.canSelect", false);
+
             let columns: Column<{}>[] = Object.keys(data[0])
                 .filter((k) => {
                     const attribute: AttributeField = attributes.find((item) => item.name === k);
@@ -114,6 +118,16 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     return column;
                 })
                 .sort((c1, c2) => _indexSort(c1, c2, attributes));
+
+            if (canSelect) {
+                const label = get(properties, "linkedPanel.type", "ERROR");
+                columns.unshift({
+                    Header: label,
+                    //@ts-ignore
+                    sortable: false,
+                    id: 'selection'
+                });
+            }
 
             return columns;
         }
@@ -166,7 +180,9 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const hasHiddenColumns = defaultHiddenColumns ? true : false;
     const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
 
-    const hasLocusZoomView = get(properties, "locusZoomView", false);
+    const linkedPanel = get(properties, "linkedPanel", null);
+
+    const hasLocusZoomView = linkedPanel ? linkedPanel.type === "LocusZoom" : false;
     const locusZoomView = useMemo(() => renderLocusZoom(hasLocusZoomView), [data]);
 
     const columns: Column<{}>[] = useMemo(() => buildColumns(), [table]);
@@ -188,7 +204,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const filterGroups = get(properties, "filterGroups", null);
     const requiredColumns = get(properties, "requiredColumns", null);
 
-    const options:TableOptions = useMemo(() => {
+    const options: TableOptions = useMemo(() => {
         let opts = {
             showAdvancedFilter: hasColumnFilters,
             canFilter: canFilter,
@@ -199,9 +215,9 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             showHideColumns: canToggleColumns,
             requiredColumns: requiredColumns
         };
-        
+
         if (hasLocusZoomView) {
-            opts = Object.assign(opts, 
+            opts = Object.assign(opts,
                 {
                     rowSelect: {
                         label: "LocusZoom",
@@ -221,7 +237,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             columns={columns}
             data={resolvedData}
             title={table.displayName}
-            options={options}/>
+            options={options} />
 
     );
 };

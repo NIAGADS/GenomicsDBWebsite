@@ -20,16 +20,21 @@ export const resolveNullFieldValue = (value: string, returnNA: boolean) => {
 };
 
 
+const getAccessorType = (value: any) => {
+    const accessorType = value.type
+        ? value.type.hasOwnProperty('type') // when memoized, get type is react.memo, and nested type is the accessor type
+            ? value.type.type.name
+            : value.type.name
+        : "String";
+    return accessorType.includes("Boolean") ? "BooleanCheckAccessor" : accessorType;
+}
+
 export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
     if (!value) {
         return resolveNullFieldValue(null, returnNA);
     }
 
-    const accessorType = value.type
-        ? value.type.name.includes("Boolean")
-            ? "BooleanCheckAccessor"
-            : value.type.name
-        : "String";
+    const accessorType = getAccessorType(value);
 
     switch (accessorType) {
         case "String":

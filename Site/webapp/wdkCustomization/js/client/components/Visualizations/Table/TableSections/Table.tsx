@@ -159,6 +159,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     }, [options]);
 
 
+
     const instance: TableInstance = options.hasOwnProperty('rowSelect')
         ? useTable(buildTableProps(), ...hooks, (hooks) => {
             hooks.visibleColumns.push((columns: any) => [
@@ -172,6 +173,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                             <RowSelectCheckbox 
                                 {...cell.row.getToggleRowSelectedProps()}
                                 title={options.rowSelect.tooltip} 
+                                onChange={alert(cell.row.index)}
                             />
                         ) : (
                             <RowSelectButton {...cell.row.getToggleRowSelectedProps()} />
@@ -200,7 +202,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     } = instance;
 
     const debouncedState = useAsyncDebounce(state as any, 500);
-    const testSelect = useCallback(() =>{console.log(selectedRowIds)}, []);
+
     useEffect(() => {
         const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
         const val = {
@@ -213,14 +215,6 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         };
         setInitialState(val);
     }, [setInitialState, debouncedState]);
-
-
-    useEffect(() => {
-        // for now only allowing one row to be selected at a time, so can just return
-        // the rowId at index [0]
-        options.rowSelect && options.rowSelect.action(Object.keys(selectedRowIds)[0]);
-        alert("selected = " + Object.keys(selectedRowIds)[0]);
-    }, [selectedRowIds]); 
 
     return preFilteredRows.length === 0 || page.length === 0 ? (
         <Box className={className ? className : null}>

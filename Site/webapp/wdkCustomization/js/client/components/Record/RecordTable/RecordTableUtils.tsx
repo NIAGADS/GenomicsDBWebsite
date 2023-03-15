@@ -41,18 +41,25 @@ export const resolveData = (data: { [key: string]: any }[]): { [key: string]: an
     });
 };
 
+
+
 export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default") => {
+    const MemoRelativePositionSpan = React.memo(RelativePositionSpan);
+    const MemoVariantConsequenceImpactSpan = React.memo(VariantConsequenceImpactSpan);
+    const MemoMetaseqIdAttribute = React.memo(MetaseqIdAttribute);
+    const MemoBooleanCheckAccessor = React.memo(BooleanCheckAccessor);
+
     switch (accessorType) {
         case "RelativePosition":
-            return (row: any) => resolveNAs(row[key], <RelativePositionSpan value={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <MemoRelativePositionSpan value={row[key]} />);
         case "VariantImpact":
-            return (row: any) => resolveNAs(row[key], <VariantConsequenceImpactSpan value={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <MemoVariantConsequenceImpactSpan value={row[key]} />);
         case "MetaseqID":
-            return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <MemoMetaseqIdAttribute value={row[key]} />);
         case "BooleanGreenCheck":
-            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="green" />;
+            return (row: any) => <MemoBooleanCheckAccessor value={row[key]} htmlColor="green" />;
         case "BooleanRedCheck":
-            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="red" />;
+            return (row: any) => <MemoBooleanCheckAccessor value={row[key]} htmlColor="red" />;
         default:
             return defaultResolveColumnAccessor(key, accessorType);
     }

@@ -13,7 +13,7 @@ export const RowSelectCheckbox = forwardRef(({ indeterminate, ...rest }, ref) =>
   
     return (
         <>
-             <Checkbox ref={resolvedRef} {...rest}/>
+             <Checkbox ref={resolvedRef} {...rest} style={{padding: "0px"}}/>
         </>
     );
 });
