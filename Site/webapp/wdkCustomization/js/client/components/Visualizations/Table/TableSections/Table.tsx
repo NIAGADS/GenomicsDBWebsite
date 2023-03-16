@@ -25,7 +25,7 @@ import {
     useAsyncDebounce,
     TableInstance,
     useRowSelect,
-    HeaderGroup
+    HeaderGroup,
 } from "react-table";
 
 import { useTableStyles, Table as TableProps } from "@viz/Table";
@@ -38,7 +38,7 @@ import {
     greaterThanFilter,
     lessThanFilter,
     includesFilter,
-    includesAnyFilter
+    includesAnyFilter,
 } from "@viz/Table/TableFilters";
 
 import {
@@ -74,24 +74,13 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         less_than_threshold: useMemo(() => lessThanFilter, []),
     };
 
-
     const hooks = useMemo(() => {
-        return [
-            useFlexLayout,
-            useResizeColumns,
-            useGlobalFilter,
-            useFilters,
-            useSortBy,
-            usePagination,
-            useRowSelect
-        ]
+        return [useFlexLayout, useResizeColumns, useGlobalFilter, useFilters, useSortBy, usePagination, useRowSelect];
     }, []);
 
     // add custom filterTypes into the default / overwrite defaults
     const tableFilterTypes = useMemo(() => {
-        return options.filterTypes
-            ? Object.assign({}, defaultFilterTypes, options.filterTypes)
-            : defaultFilterTypes;
+        return options.filterTypes ? Object.assign({}, defaultFilterTypes, options.filterTypes) : defaultFilterTypes;
     }, [options.filterTypes]);
 
     const sortingFunctions = {
@@ -105,7 +94,6 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         link: useMemo(() => linkSort, []),
         scientificNotation: useMemo(() => scientificNotationSort, []),
     };
-
 
     const buildTableProps = useCallback(() => {
         const initialState = {
@@ -133,20 +121,23 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
+            disableMultiSort: true
         };
 
         // if row select is button, it is handled in the cell rendering
         // this is only for global select boxes
         const rowSelect = get(options, "rowSelect.type", null);
         if (rowSelect) {
-            if (rowSelect.includes("Check")) { // Check or MultiCheck
+            if (rowSelect.includes("Check")) {
+                // Check or MultiCheck
                 tableProps = Object.assign(tableProps, {
                     getRowId: (row: any, index: number) => {
                         return "row_id" in row ? row.row_id : index;
-                    }
+                    },
                 });
             }
-            if (rowSelect === "Check") { // allow only one row to be selected at a time
+            if (rowSelect === "Check") {
+                // allow only one row to be selected at a time
                 tableProps = Object.assign(tableProps, {
                     intitialState: Object.assign(initialState, {
                         selectedRowIds: { 0: true },
@@ -160,36 +151,34 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                             };
                         }
                         return newState;
-                    }
-                }
-                );
+                    },
+                });
             }
         }
         return tableProps;
     }, [options]);
 
-
-
-    const instance: TableInstance = (get(options, "rowSelect.type", null) === "Check")
-        ? useTable(buildTableProps(), ...hooks, (hooks) => {
-            hooks.visibleColumns.push((columns: any) => [
-                {
-                    id: "selection",
-                    sortable: false,
-                    Header: options.rowSelect.label,
-                    Cell: (cell: any) => (
-                        <div>
-                            <RowSelectCheckbox
-                                {...cell.row.getToggleRowSelectedProps()}
-                                title={options.rowSelect.tooltip}
-                            />
-                        </div>
-                    ),
-                },
-                ...columns,
-            ]);
-        })
-        : useTable(buildTableProps(), ...hooks);
+    const instance: TableInstance =
+        get(options, "rowSelect.type", null) === "Check"
+            ? useTable(buildTableProps(), ...hooks, (hooks) => {
+                  hooks.visibleColumns.push((columns: any) => [
+                      {
+                          id: "selection",
+                          sortable: false,
+                          Header: options.rowSelect.label,
+                          Cell: (cell: any) => (
+                              <div>
+                                  <RowSelectCheckbox
+                                      {...cell.row.getToggleRowSelectedProps()}
+                                      title={options.rowSelect.tooltip}
+                                  />
+                              </div>
+                          ),
+                      },
+                      ...columns,
+                  ]);
+              })
+            : useTable(buildTableProps(), ...hooks);
 
     const {
         //@ts-ignore
@@ -224,4 +213,44 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     return preFilteredRows.length === 0 || page.length === 0 ? (
         <Box className={className ? className : null}>
             <InfoAlert
-                title="No
+                title="No rows meet the selected search or filter criteria."
+                message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
+            />
+        </Box>
+    ) : (
+        <Box className={className ? className : null}>
+            <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
+                <TableHead classes={{ root: classes.tableHead }}>
+                    {headerGroups.map((headerGroup: HeaderGroup<object>) => (
+                        <TableRow {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                //@ts-ignore -- TODO --getSortByToggleProps will be add to types in react-table v8
+                                <TableHeaderCell key={column.id} column={column} />
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableHead>
+                <TableBody>
+                    {page.map((row: any, i: any) => {
+                        prepareRow(row);
+                        return (
+                            <TableRow {...row.getRowProps()}>
+                                {row.cells.map((cell: any) => {
+                                    return (
+                                        <TableCell
+                                            size="small"
+                                            {...cell.getCellProps()}
+                                            className={cx({ [classes.tableCell]: true })}
+                                        >
+                                            {cell.render("Cell")}
+                                        </TableCell>
+                                    );
+                                })}
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </MaUTable>
+        </Box>
+    );
+};
