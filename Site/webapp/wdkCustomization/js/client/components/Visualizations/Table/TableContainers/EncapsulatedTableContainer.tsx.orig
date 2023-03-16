@@ -33,7 +33,7 @@ import {
 
 import { Table, TableToolbar, ToggleColumnsPanel, FilterPanel, FilterChipBar } from "@viz/Table/TableSections";
 
-import { useTableStyles, TableContainerProps } from "@viz/Table";
+import { useTableStyles } from "@viz/Table";
 import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
 import {
@@ -50,6 +50,37 @@ import {
 
 import { CustomPanel, NavigationDrawer } from "@components/MaterialUI";
 
+
+
+interface LinkedPanelAction {
+    action: any;
+    type: "Button" | "Check";
+    tooltip: string;
+}
+
+interface LinkedPanelOptions {
+    label: string;
+    contents: any;
+    className?: any;
+    select: LinkedPanelAction;
+}
+
+export interface TableContainerProps {
+    columns: Column<{}>[];
+    title?: string;
+    data: any;
+    canFilter: boolean;
+    canExport?: boolean;
+    filterTypes?: any; // json object of filter types
+    filterGroups?: FilterGroup[];
+    className?: string;
+    showAdvancedFilter?: boolean;
+    showHideColumns?: boolean;
+    requiredColumns?: string[];
+    initialFilters?: any;
+    initialSort?: any;
+    linkedPanel?: LinkedPanelOptions;
+}
 
 interface EncapsulatedTableContainerProps extends TableContainerProps {
     isOpen: boolean;

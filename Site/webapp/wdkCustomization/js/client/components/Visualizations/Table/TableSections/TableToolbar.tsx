@@ -1,88 +1,124 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 
 import DownloadIcon from "@material-ui/icons/GetApp";
 
+import { useTableStyles } from "@viz/Table";
 import { FilterPageProps, GlobalFilterFlat, useFilterStyles } from "@viz/Table/TableFilters";
 import { TablePagination } from "@viz/Table/TableSections";
 
 import { StyledTooltip as Tooltip, HelpIcon } from "@components/MaterialUI";
+
 import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 interface PanelOptions {
     toggle: any;
     label: string;
+    tooltip?: string;
 }
 
 interface FilterToolbarProps {
-    canFilter: boolean;
+    canAdvanceFilter?: boolean;
+    columnsPanel?: PanelOptions;
+    hasGlobalFilter: boolean;
     canExport?: boolean;
-    hasLinkedPanel?: boolean;
-    linkedPanelOptions?: PanelOptions;
+    linkedPanel?: PanelOptions;
 }
 
 export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
     canFilter,
     instance,
     canExport = true,
-    hasLinkedPanel = false,
-    linkedPanelOptions
+    linkedPanel,
 }) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
-    const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState(false);
+    // const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState(false);
     const classes = useFilterStyles();
+    const tClasses = useTableStyles();
 
-    useEffect(() => {
-        hasLinkedPanel && linkedPanelOptions.toggle(linkedPanelIsOpen);
-    }, [linkedPanelIsOpen]);
+    const _toggleLinkedPanel = useCallback(
+        (toggleState: boolean) => {
+            linkedPanel && linkedPanel.toggle(toggleState);
+            // setLinkedPanelIsOpen(!linkedPanelIsOpen);
+        },
+        [linkedPanel]
+    );
 
-    const _toggleLinkedPanel = () => {
-        setLinkedPanelIsOpen(!linkedPanelIsOpen);
-    };
+    const _toggleColumnsPanel = useCallback((toggleState: boolean) => {
+        alert("toggle columns");
+        //linkedPanel && linkedPanel.toggle(toggleState);
+        // setLinkedPanelIsOpen(!linkedPanelIsOpen);
+    }, []);
 
     return (
-        <>
-            {/* span is b/c button is disabled, allows tooltip to fire */}
-            {canExport && (
-                <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
-                    <span>
-                        <Button
-                            startIcon={<DownloadIcon />}
-                            variant="text"
-                            color="primary"
-                            aria-label="download table data"
-                            disabled={true}
-                        >
-                            Export
-                        </Button>
-                    </span>
-                </Tooltip>
-            )}
+        <AppBar position="static" elevation={0} className={tClasses.navigationToolbar}>
+            <Toolbar variant="dense" disableGutters>
+                {/* span is b/c button is disabled, allows tooltip to fire */}
+                {canExport && (
+                    <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
+                        <span>
+                            <Button
+                                startIcon={<DownloadIcon />}
+                                variant="text"
+                                color="primary"
+                                aria-label="download table data"
+                                disabled={true}
+                            >
+                                Export
+                            </Button>
+                        </span>
+                    </Tooltip>
+                )}
 
+                {hasGlobalFilter && (
+                    <GlobalFilterFlat
+                        preGlobalFilteredRows={preGlobalFilteredRows}
+                        globalFilter={globalFilter}
+                        setGlobalFilter={setGlobalFilter}
+                    />
+                )}
 
-            {canFilter && (
-                <GlobalFilterFlat
-                    preGlobalFilteredRows={preGlobalFilteredRows}
-                    globalFilter={globalFilter}
-                    setGlobalFilter={setGlobalFilter}
-                />
-            )}
+                <TablePagination instance={instance} />
 
-            <TablePagination instance={instance} />
-            
-            {hasLinkedPanel && 
-            <Box>
-                <FormControlLabel
-                    control={<Switch checked={linkedPanelIsOpen || false} onChange={_toggleLinkedPanel} />}
-                    label={linkedPanelIsOpen ? `Hide ${linkedPanelOptions.label}` : `Show ${linkedPanelOptions.label}`}
-                />  
-                <HelpIcon tooltip={`Click to reveal or hide ${linkedPanelOptions.label} explorer`}></HelpIcon>
-             </Box>
-            }
-        </>
+                {linkedPanel && (
+                    <Box>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={false}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                        _toggleLinkedPanel(event.target.checked)
+                                    }
+                                />
+                            }
+                            label={linkedPanel.label}
+                        />
+                        <HelpIcon tooltip={`Toggle to reveal or hide ${linkedPanel.label} explorer`}></HelpIcon>
+                    </Box>
+                )}
+
+                {columnsPanel && (
+                    <Box>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={false}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                        _toggleColumnsPanel(event.target.checked)
+                                    }
+                                />
+                            }
+                            label={columnsPanel.label}
+                        />
+                        <HelpIcon tooltip={``}></HelpIcon>
+                    </Box>
+                )}
+            </Toolbar>
+        </AppBar>
     );
 };

@@ -53,27 +53,25 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         Object.keys(get(properties, "linkedPanel", {})).length > 0
     );
 
-    const renderLocusZoom = useCallback(() => {
-        const topVariant = extractIndexedFieldValue(data, rowSelectTarget, false, 0); // sorted so first row should be top hit
-        return projectId ? (
-            <MemoLocusZoomPlot
-                genomeBuild={projectId}
-                variant={topVariant}
-                track={recordPrimaryKey}
-                divId="record-table-locus-zoom"
-                population="ADSP"
-                setPlotState={setLocusZoomPlot}
-                className={classes.borderedLinkedPanel}
-            />
-        ) : (
-            <CircularProgress />
-        );
-    }, [projectId, rowSelectTarget]);
-
     const setLinkedPanelRenderer = (panelType: string) => {
         switch (panelType) {
             case "LocusZoom":
-                return renderLocusZoom;
+                return useMemo(() => {
+                    const topVariant = extractIndexedFieldValue(data, rowSelectTarget, false, 0); // sorted so first row should be top hit
+                    return projectId ? (
+                        <MemoLocusZoomPlot
+                            genomeBuild={projectId}
+                            variant={topVariant}
+                            track={recordPrimaryKey}
+                            divId="record-table-locus-zoom"
+                            population="ADSP"
+                            setPlotState={setLocusZoomPlot}
+                            className={classes.borderedLinkedPanel}
+                        />
+                    ) : (
+                        <CircularProgress />
+                    );
+                }, [projectId]);
             default:
                 return "Not yet implemented";
         }
@@ -247,6 +245,7 @@ const _setColumnBehavior = (column: any, filterType: string, accessorType: Colum
             column.disableGlobalFilter = true;
             delete column.sortType;
             column.canSort = false;
+            column.disableSortBy = true;
         default:
             // catch legacy links
             if (column.id.endsWith("link") || column.id.endsWith("links")) {
@@ -298,6 +297,7 @@ const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) =>
 const _buildColumn: any = (attribute: AttributeField, accessorType: ColumnAccessorType, userProps: any) => ({
     Header: attribute.displayName,
     canSort: attribute.isSortable,
+    disable: attribute.isSortable,
     accessor:
         accessorType === "RowSelectButton"
             ? resolveColumnAccessor(attribute.name, accessorType, userProps)

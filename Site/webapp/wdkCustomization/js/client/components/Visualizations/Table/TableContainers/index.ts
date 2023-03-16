@@ -1,2 +1,2 @@
-export * from "./TableContainer";
-export * from "./EncapsulatedTableContainer";
+//export * from "./EncapsulatedTableContainer";
+

@@ -302,6 +302,7 @@ export const TableContainer: React.FC<TableContainerProps> = ({
     // Render the UI for the table
     return (
         <CustomPanel justifyContent="flex-start">
+            {/*
             <NavigationDrawer
                 navigation={
                     <TableToolbar
@@ -322,8 +323,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
             >
                 {canFilter && <FilterChipBar instance={instance} />}
             </NavigationDrawer>
-            {hasLinkedPanel && <LinkedPanel className={linkedPanel.className} isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>}
-           {/* <Table className={className} instance={instance} /> */}
-        </CustomPanel>
+            hasLinkedPanel && <LinkedPanel className={linkedPanel.className} isOpen={linkedPanelIsOpen}>{linkedPanel.contents}</LinkedPanel>
+           <Table className={className} instance={instance} /> */}
+        </CustomPanel> 
     );
 };

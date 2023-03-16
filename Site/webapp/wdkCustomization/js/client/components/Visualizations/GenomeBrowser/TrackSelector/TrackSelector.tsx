@@ -5,7 +5,7 @@ import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
+//import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
 import { ColumnAccessorType, resolveColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 import {

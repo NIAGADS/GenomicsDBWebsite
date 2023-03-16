@@ -10,7 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 
-import { InfoAlert } from "@components/MaterialUI";
+import { InfoAlert, CustomPanel } from "@components/MaterialUI";
 
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 
@@ -59,6 +59,9 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     const classes = useTableStyles();
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
+    const [hasLinkedPanel, setHasLinkedPanel] = useState<boolean>(options.linkedPanel && true);
+    const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
+    const [columnsPanelIsOpen, setColumnsPanelIsOpen] = useState<boolean>(false);
 
     const defaultFilterTypes = {
         fuzzyText: useMemo(() => fuzzyTextFilter, []),
@@ -121,7 +124,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             globalFilter: "global" in tableFilterTypes ? "global" : "text", // text is the react-table default
             filterTypes: tableFilterTypes,
             sortTypes: sortingFunctions,
-            disableMultiSort: true
+            disableMultiSort: true,
         };
 
         // if row select is button, it is handled in the cell rendering
@@ -210,6 +213,20 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
+    const toggleLinkedPanel = useCallback(
+        (isOpen: boolean) => {
+            setLinkedPanelIsOpen(isOpen);
+        },
+        []
+    );
+
+    const toggleColumnsPanel = useCallback(
+        (isOpen: boolean) => {
+            setColumnsPanelIsOpen(isOpen);
+        },
+        []
+    );
+
     return preFilteredRows.length === 0 || page.length === 0 ? (
         <Box className={className ? className : null}>
             <InfoAlert
@@ -218,7 +235,22 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             />
         </Box>
     ) : (
-        <Box className={className ? className : null}>
+        <CustomPanel justifyContent="flex-start">
+            <TableToolbar
+                instance={instance}
+                hasGlobalFilter={options.canFilter}
+                canAdvancedFilter={options.showAdvancedFilter}
+                columnsPanel={
+                    options.showHideColumns
+                        ? {
+                              toggle: toggleColumnsPanel,
+                              label: "Columns",
+                              tooltip: "Toggle to add or remove columns from the table",
+                          }
+                        : null
+                }
+                linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
+            />
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>
                     {headerGroups.map((headerGroup: HeaderGroup<object>) => (
@@ -251,6 +283,6 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                     })}
                 </TableBody>
             </MaUTable>
-        </Box>
+        </CustomPanel>
     );
 };
