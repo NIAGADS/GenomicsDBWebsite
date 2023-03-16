@@ -29,7 +29,8 @@ import {
 } from "react-table";
 
 import { useTableStyles, Table as TableProps } from "@viz/Table";
-import { RowSelectCheckbox, RowSelectButton } from "@viz/Table/RowSelectors";
+
+import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
 import {
     fuzzyTextFilter,
@@ -52,7 +53,7 @@ import {
     booleanFlagSort,
 } from "@viz/Table/TableSortingFunctions";
 
-import { TableHeaderCell } from "@viz/Table/TableSections";
+import { TableHeaderCell, TableToolbar } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
     const classes = useTableStyles();
@@ -223,45 +224,4 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     return preFilteredRows.length === 0 || page.length === 0 ? (
         <Box className={className ? className : null}>
             <InfoAlert
-                title="No rows meet the selected search or filter criteria."
-                message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
-            />
-        </Box>
-    ) : (
-            <Box className={className ? className : null}>
-                <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
-                    <TableHead classes={{ root: classes.tableHead }}>
-                        {headerGroups.map((headerGroup: HeaderGroup<object>) => (
-                            <TableRow {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    //@ts-ignore -- TODO --getSortByToggleProps will be add to types in react-table v8
-                                    <TableHeaderCell key={column.id} column={column} />
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableHead>
-                    <TableBody>
-                        {page.map((row: any, i: any) => {
-                            prepareRow(row);
-                            return (
-                                <TableRow {...row.getRowProps()}>
-                                    {row.cells.map((cell: any) => {
-                                        return (
-                                            <TableCell
-                                                size="small"
-                                                {...cell.getCellProps()}
-                                                className={cx({ [classes.tableCell]: true })}
-                                            >
-                                                {cell.render("Cell")}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </MaUTable>
-            </Box>
-        );
-};
-
+                title="No

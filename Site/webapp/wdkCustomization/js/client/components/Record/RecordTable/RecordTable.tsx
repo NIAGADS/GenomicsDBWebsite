@@ -195,7 +195,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     ? Object.assign(options, {
                           linkedPanel: {
                               type: get(properties, "linkedPanel.type"),
-                              renderer: setLinkedPanelRenderer(get(properties, "linkedPanel.type")),
+                              contents: setLinkedPanelRenderer(get(properties, "linkedPanel.type")),
                           },
                       })
                     : options

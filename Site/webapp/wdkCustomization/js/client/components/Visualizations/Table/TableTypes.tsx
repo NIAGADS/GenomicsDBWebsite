@@ -14,7 +14,8 @@ export interface RowSelectOptions {
 
 interface LinkedPanelOptions  {
     type: "LocusZoom",
-    renderer: any;
+    contents: any;
+    className?: any;
 }
 
 export interface TableOptions {
