@@ -22,7 +22,7 @@ interface PanelOptions {
 }
 
 interface FilterToolbarProps {
-    canAdvanceFilter?: boolean;
+    canAdvancedFilter?: boolean;
     columnsPanel?: PanelOptions;
     hasGlobalFilter: boolean;
     canExport?: boolean;
