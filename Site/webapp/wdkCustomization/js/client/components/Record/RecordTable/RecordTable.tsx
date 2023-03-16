@@ -113,7 +113,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 end: end,
                 ldrefvar: targetVariant,
             });
-    }, [panelContents]);
+    }, []);
 
     const columns: Column<{}>[] = useMemo(() => {
         if (!data) {
