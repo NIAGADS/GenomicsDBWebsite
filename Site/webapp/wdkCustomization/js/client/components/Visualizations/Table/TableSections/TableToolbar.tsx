@@ -34,6 +34,8 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
     instance,
     canExport = true,
     linkedPanel,
+    columnsPanel,
+    hasGlobalFilter
 }) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
