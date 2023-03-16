@@ -80,7 +80,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const setLinkedPanelHelp = (panelType: string) => {
         switch (panelType) {
             case "LocusZoom":
-                return "Click to center LocusZoom view on variant: ";
+                return "Center LocusZoom view on variant: ";
             default:
                 return "Not yet implemented";
         }
@@ -102,7 +102,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         [panelContents]
     );
 
-    const updateLocusZoomPlot = (targetVariant: string) => {
+    const updateLocusZoomPlot = useCallback((targetVariant: string) => {
         const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
         const start = parseInt(position) - LZ_DEFAULT_FLANK;
         const end = parseInt(position) + LZ_DEFAULT_FLANK;
@@ -113,7 +113,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 end: end,
                 ldrefvar: targetVariant,
             });
-    };
+    }, [panelContents]);
 
     const columns: Column<{}>[] = useMemo(() => {
         if (!data) {

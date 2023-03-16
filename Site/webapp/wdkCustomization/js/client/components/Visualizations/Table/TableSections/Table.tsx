@@ -53,7 +53,7 @@ import {
     booleanFlagSort,
 } from "@viz/Table/TableSortingFunctions";
 
-import { TableHeaderCell, TableToolbar } from "@viz/Table/TableSections";
+import { TableHeaderCell, TableToolbar, LinkedPanel } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
     const classes = useTableStyles();
@@ -213,19 +213,13 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         setInitialState(val);
     }, [setInitialState, debouncedState]);
 
-    const toggleLinkedPanel = useCallback(
-        (isOpen: boolean) => {
-            setLinkedPanelIsOpen(isOpen);
-        },
-        []
-    );
+    const toggleLinkedPanel = useCallback((isOpen: boolean) => {
+        setLinkedPanelIsOpen(isOpen);
+    }, []);
 
-    const toggleColumnsPanel = useCallback(
-        (isOpen: boolean) => {
-            setColumnsPanelIsOpen(isOpen);
-        },
-        []
-    );
+    const toggleColumnsPanel = useCallback((isOpen: boolean) => {
+        setColumnsPanelIsOpen(isOpen);
+    }, []);
 
     return preFilteredRows.length === 0 || page.length === 0 ? (
         <Box className={className ? className : null}>
@@ -251,6 +245,13 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 }
                 linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
             />
+            
+            {hasLinkedPanel && (
+                <LinkedPanel className={options.linkedPanel.className} isOpen={linkedPanelIsOpen}>
+                    {options.linkedPanel.contents}
+                </LinkedPanel>
+            )}
+
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>
                     {headerGroups.map((headerGroup: HeaderGroup<object>) => (

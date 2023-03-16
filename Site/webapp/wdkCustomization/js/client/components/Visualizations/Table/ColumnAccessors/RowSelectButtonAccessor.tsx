@@ -30,7 +30,6 @@ export const RowSelectButtonAccessor: React.SFC<ColumnAccessor> = ({ value, user
                 onClick={() => userProps.action(value)}
                 endIcon={<OpenInBrowserIcon className={classes.endIcon}/>}
             >
-                Apply
             </Button>
         </Box>
     );

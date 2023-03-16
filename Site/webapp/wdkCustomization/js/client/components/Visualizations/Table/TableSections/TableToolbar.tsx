@@ -87,11 +87,10 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                 <TablePagination instance={instance} />
 
                 {linkedPanel && (
-                    <Box>
+                    <Box pr={2}>
                         <FormControlLabel
                             control={
                                 <Switch
-                                    checked={false}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                                         _toggleLinkedPanel(event.target.checked)
                                     }
