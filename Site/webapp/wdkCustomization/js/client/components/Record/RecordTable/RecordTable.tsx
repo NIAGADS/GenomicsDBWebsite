@@ -47,33 +47,85 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const [panelContents, setPanelContents] = useState<any>(null);
+    const [options, setOptions] = useState<TableOptions>(_initializeTableOptions(table, properties));
+    const [ rowSelectTarget, setRowSelectTarget ] = useState<string>(null);
+    const [ hasLinkedPanel, setHasLinkedPanel ] = useState<boolean>(Object.keys(get(properties, "linkedPanel", {})).length > 0);
 
-    const filterTypes = {
-        pvalue: useMemo(() => negLog10pFilter, []),
-        boolean_pie: useMemo(() => booleanFlagFilter, []),
-        global: useMemo(() => globalTextFilter, []),
-    };
+    const renderLocusZoom = useCallback(() => {
+        const topVariant = extractIndexedFieldValue(data, options.rowSelect.column, false, 0); // sorted so first row should be top hit
+        return projectId ? (
+            <MemoLocusZoomPlot
+                genomeBuild={projectId}
+                variant={topVariant}
+                track={recordPrimaryKey}
+                divId="record-table-locus-zoom"
+                population="ADSP"
+                setPlotState={setLocusZoomPlot}
+                className={classes.borderedLinkedPanel}
+            />
+        ) : (
+                <CircularProgress />
+            );
 
-    const options = useMemo(() => {
-        const hasHiddenColumns = get(properties, "hiddenColumns", null);
-        const linkedPanel = get(properties, "linkedPanel", {});
-        let opts: TableOptions = {
-            showAdvancedFilter: properties.hasOwnProperty("filters"),
-            canFilter: get(properties, "canFilter", true), // default to true if missing
-            initialFilters: _setInitialFilters(table, properties),
-            initialSort: _setInitialSort(table, properties),
-            filterTypes: filterTypes,
-            filterGroups: get(properties, "filterGroups", null),
-            showHideColumns: hasHiddenColumns || get(properties, "canToggleColumns", false),
-            requiredColumns: get(properties, "requiredColumns", null),
-        };
+    }, [projectId, rowSelectTarget]);
 
-        if (Object.keys(linkedPanel).length > 0) {
+    const setLinkedPanelRenderer = (panelType: string) => {
+        switch (panelType) {
+            case "LocusZoom":
+                return renderLocusZoom;
+            default:
+                return "Not yet implemented";
+        }
+    }
+
+    const setLinkedPanelHelp = (panelType: string) => {
+        switch (panelType) {
+            case "LocusZoom":
+                return "Click to center LocusZoom view on this variant";
+            default:
+                return "Not yet implemented";
+        }
+    }
+
+    const setLinkedPanelAction: any = (panelType: string) => {
+        switch (panelType) {
+            case "LocusZoom":
+                return updateLocusZoomPlot;
+            default:
+                return null
+        }
+    }
+
+    const setLocusZoomPlot = useCallback((plot: any) => { plot && setPanelContents(plot) }, [panelContents]);
+
+    const updateLocusZoomPlot = useCallback(
+        (index: number) => {
+            const targetVariant = extractIndexedFieldValue(data, rowSelectTarget, false, index);
+            const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
+            const start = parseInt(position) - LZ_DEFAULT_FLANK;
+            const end = parseInt(position) + LZ_DEFAULT_FLANK;
+            panelContents && panelContents.applyState({
+                chr: 'chr' + chrm,
+                start: start,
+                end: end,
+                ldrefvar: targetVariant,
+            });
+        },
+        [rowSelectTarget]
+    );
+
+    // add linkedPanel info to options after they are generated
+    // needed b/c some options are required by the callbacks
+    useEffect(() => {  
+        if (options && hasLinkedPanel) {
             const linkedPanelType = get(properties, "linkedPanel.type");
-            opts = Object.assign(opts,
+            const targetColumn = get(properties, "linkedPanel.column", null);
+            setRowSelectTarget(targetColumn);
+
+            const opts = Object.assign(options,
                 {
                     rowSelect: {
-                        column: get(properties, "linkedPanel.column", null),
+                        column: targetColumn,
                         action: setLinkedPanelAction(linkedPanelType),
                         tooltip: setLinkedPanelHelp(linkedPanelType)
                     },
@@ -83,9 +135,10 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                     }
                 }
             );
+            setOptions(opts);
         }
-        return opts;
-    }, [Object.keys(properties).length, Object.keys(table).length]);
+     
+    }, [options, hasLinkedPanel])
 
     const columns: Column<{}>[] = useMemo(() => {
         if (!data || !options) { // just so no calculations are done unless options are set
@@ -134,73 +187,6 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             return columns;
         }
     }, [options, data.length]);
-
-    const setLinkedPanelRenderer = (panelType: string) => {
-        switch (panelType) {
-            case "LocusZoom":
-                return renderLocusZoom;
-            default:
-                return "Not yet implemented";
-        }
-    }
-
-    const setLinkedPanelHelp = (panelType: string) => {
-        switch (panelType) {
-            case "LocusZoom":
-                return "Click to center LocusZoom view on this variant";
-            default:
-                return "Not yet implemented";
-        }
-    }
-
-    const setLinkedPanelAction: any = (panelType: string) => {
-        switch (panelType) {
-            case "LocusZoom":
-                return updateLocusZoomPlot;
-            default:
-                return null
-        }   
-    }
-
-    const renderLocusZoom = useCallback(() => {
-        const topVariant = getLocusZoomTargetVariant(0); // sorted so first row should be top hit
-        return projectId ? (
-            <MemoLocusZoomPlot
-                genomeBuild={projectId}
-                variant={topVariant}
-                track={recordPrimaryKey}
-                divId="record-table-locus-zoom"
-                population="ADSP"
-                setPlotState={setLocusZoomPlot}
-                className={classes.borderedLinkedPanel}
-            ></MemoLocusZoomPlot>
-        ) : (
-                <CircularProgress />
-            );
-
-    }, [projectId]);
-
-    const setLocusZoomPlot = useCallback((plot: any) => { plot && setPanelContents(plot) }, [panelContents]);
-
-    const getLocusZoomTargetVariant = useCallback((index: number) => {
-        return extractIndexedFieldValue(data, options.rowSelect.column, false, index);
-    }, []);
-
-    const updateLocusZoomPlot = useCallback(
-        (index: number) => {
-            const targetVariant = getLocusZoomTargetVariant(index);
-            const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
-            const start = parseInt(position) - LZ_DEFAULT_FLANK;
-            const end = parseInt(position) + LZ_DEFAULT_FLANK;
-            panelContents && panelContents.applyState({
-                chr: 'chr' + chrm,
-                start: start,
-                end: end,
-                ldrefvar: targetVariant,
-            });
-        },
-        []
-    );
 
     const resolvedData: any = useMemo(() => resolveData(data), [data.length]);
 
@@ -318,3 +304,22 @@ const _buildColumn: any = (attribute: AttributeField, accessorType: ColumnAccess
     sortType: "alphanumeric",
 });
 
+const _initializeTableOptions = (table: any, properties: any) => {
+    const filterTypes = {
+        pvalue: useMemo(() => negLog10pFilter, []),
+        boolean_pie: useMemo(() => booleanFlagFilter, []),
+        global: useMemo(() => globalTextFilter, []),
+    };
+    const hasHiddenColumns = get(properties, "hiddenColumns", null);
+    const opts: TableOptions = {
+        showAdvancedFilter: properties.hasOwnProperty("filters"),
+        canFilter: get(properties, "canFilter", true), // default to true if missing
+        initialFilters: _setInitialFilters(table, properties),
+        initialSort: _setInitialSort(table, properties),
+        filterTypes: filterTypes,
+        filterGroups: get(properties, "filterGroups", null),
+        showHideColumns: hasHiddenColumns || get(properties, "canToggleColumns", false),
+        requiredColumns: get(properties, "requiredColumns", null),
+    };
+    return opts;
+}
