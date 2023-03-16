@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useEffect } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "wdk-client/Core/State/Types";
 import { findIndex, has, get } from "lodash";
@@ -7,7 +7,6 @@ import classNames from "classnames";
 import { Column } from "react-table";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
 
 import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
 import { TableOptions, useTableStyles } from "@viz/Table";
@@ -38,6 +37,7 @@ import {
 } from "@components/Record/RecordTable/RecordTableFilters";
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
+import { nullValue } from "wdk-client/Utils/Json";
 
 const MemoLocusZoomPlot = React.memo(LocusZoomPlot);
 
@@ -48,11 +48,13 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const [panelContents, setPanelContents] = useState<any>(null);
     const [options, setOptions] = useState<TableOptions>(_initializeTableOptions(table, properties));
-    const [ rowSelectTarget, setRowSelectTarget ] = useState<string>(null);
-    const [ hasLinkedPanel, setHasLinkedPanel ] = useState<boolean>(Object.keys(get(properties, "linkedPanel", {})).length > 0);
+    const [rowSelectTarget, setRowSelectTarget] = useState<string>(get(properties, "linkedPanel.column"));
+    const [hasLinkedPanel, setHasLinkedPanel] = useState<boolean>(
+        Object.keys(get(properties, "linkedPanel", {})).length > 0
+    );
 
     const renderLocusZoom = useCallback(() => {
-        const topVariant = extractIndexedFieldValue(data, options.rowSelect.column, false, 0); // sorted so first row should be top hit
+        const topVariant = extractIndexedFieldValue(data, rowSelectTarget, false, 0); // sorted so first row should be top hit
         return projectId ? (
             <MemoLocusZoomPlot
                 genomeBuild={projectId}
@@ -64,9 +66,8 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 className={classes.borderedLinkedPanel}
             />
         ) : (
-                <CircularProgress />
-            );
-
+            <CircularProgress />
+        );
     }, [projectId, rowSelectTarget]);
 
     const setLinkedPanelRenderer = (panelType: string) => {
@@ -76,72 +77,49 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             default:
                 return "Not yet implemented";
         }
-    }
+    };
 
     const setLinkedPanelHelp = (panelType: string) => {
         switch (panelType) {
             case "LocusZoom":
-                return "Click to center LocusZoom view on this variant";
+                return "Click to center LocusZoom view on variant: ";
             default:
                 return "Not yet implemented";
         }
-    }
+    };
 
     const setLinkedPanelAction: any = (panelType: string) => {
         switch (panelType) {
             case "LocusZoom":
                 return updateLocusZoomPlot;
             default:
-                return null
+                return null;
         }
-    }
+    };
 
-    const setLocusZoomPlot = useCallback((plot: any) => { plot && setPanelContents(plot) }, [panelContents]);
+    const setLocusZoomPlot = useCallback(
+        (plot: any) => {
+            plot && setPanelContents(plot);
+        },
+        [panelContents]
+    );
 
-    const updateLocusZoomPlot = useCallback(
-        (index: number) => {
-            const targetVariant = extractIndexedFieldValue(data, rowSelectTarget, false, index);
-            const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
-            const start = parseInt(position) - LZ_DEFAULT_FLANK;
-            const end = parseInt(position) + LZ_DEFAULT_FLANK;
-            panelContents && panelContents.applyState({
-                chr: 'chr' + chrm,
+    const updateLocusZoomPlot = (targetVariant: string) => {
+        const [chrm, position, ...rest] = targetVariant.split(":"); // chr:pos:ref:alt
+        const start = parseInt(position) - LZ_DEFAULT_FLANK;
+        const end = parseInt(position) + LZ_DEFAULT_FLANK;
+        panelContents &&
+            panelContents.applyState({
+                chr: "chr" + chrm,
                 start: start,
                 end: end,
                 ldrefvar: targetVariant,
             });
-        },
-        [rowSelectTarget]
-    );
-
-    // add linkedPanel info to options after they are generated
-    // needed b/c some options are required by the callbacks
-    useEffect(() => {  
-        if (options && hasLinkedPanel) {
-            const linkedPanelType = get(properties, "linkedPanel.type");
-            const targetColumn = get(properties, "linkedPanel.column", null);
-            setRowSelectTarget(targetColumn);
-
-            const opts = Object.assign(options,
-                {
-                    rowSelect: {
-                        column: targetColumn,
-                        action: setLinkedPanelAction(linkedPanelType),
-                        tooltip: setLinkedPanelHelp(linkedPanelType)
-                    },
-                    linkedPanel: {
-                        type: linkedPanelType,
-                        renderer: setLinkedPanelRenderer(linkedPanelType),
-                    }
-                }
-            );
-            setOptions(opts);
-        }
-     
-    }, [options, hasLinkedPanel])
+    };
 
     const columns: Column<{}>[] = useMemo(() => {
-        if (!data || !options) { // just so no calculations are done unless options are set
+        if (!data) {
+            // just so no calculations are done unless options are set
             return [];
         }
         if (data.length === 0) {
@@ -150,7 +128,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             let columnFilters: any = get(properties, "filters", null);
             let attributes: AttributeField[] = table.attributes;
             const accessors: any = get(properties, "accessors", null);
-            const defaultHiddenColumns = get(properties, "hiddenColumns", null)
+            const defaultHiddenColumns = get(properties, "hiddenColumns", null);
 
             let columns: Column<{}>[] = Object.keys(data[0])
                 .filter((k) => {
@@ -159,16 +137,24 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 })
                 .map((k): Column => {
                     const attribute: AttributeField = attributes.find((item) => item.name === k);
+
                     const accessorType: ColumnAccessorType =
                         accessors && accessors.hasOwnProperty(attribute.name)
                             ? accessors[attribute.name]
                             : attribute.name.includes("link")
-                                ? "Link"
-                                : "Default";
+                            ? "Link"
+                            : "Default";
 
+                    const userProps =
+                        accessorType === "RowSelectButton"
+                            ? {
+                                  action: setLinkedPanelAction(get(properties, "linkedPanel.type")),
+                                  tooltip: setLinkedPanelHelp(get(properties, "linkedPanel.type")),
+                              }
+                            : null;
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
-                    let column = _buildColumn(attribute, accessorType);
+                    let column = _buildColumn(attribute, accessorType, userProps);
 
                     if (attribute.help) {
                         column.help = attribute.help;
@@ -186,7 +172,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
 
             return columns;
         }
-    }, [options, data.length]);
+    }, [options, rowSelectTarget, data.length]);
 
     const resolvedData: any = useMemo(() => resolveData(data), [data.length]);
 
@@ -204,8 +190,17 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             columns={columns}
             data={resolvedData}
             title={table.displayName}
-            options={options} />
-
+            options={
+                hasLinkedPanel
+                    ? Object.assign(options, {
+                          linkedPanel: {
+                              type: get(properties, "linkedPanel.type"),
+                              renderer: setLinkedPanelRenderer(get(properties, "linkedPanel.type")),
+                          },
+                      })
+                    : options
+            }
+        />
     );
 };
 
@@ -247,6 +242,11 @@ const _setColumnBehavior = (column: any, filterType: string, accessorType: Colum
             column.disableGlobalFilter = true;
             column.sortType = "scientificNotation";
             break;
+        case "RowSelectButton":
+            //@ts-ignore
+            column.disableGlobalFilter = true;
+            delete column.sortType;
+            column.canSort = false;
         default:
             // catch legacy links
             if (column.id.endsWith("link") || column.id.endsWith("links")) {
@@ -295,10 +295,13 @@ const _indexSort = (col1: Column, col2: Column, attributes: AttributeField[]) =>
     return idx2 > idx1 ? -1 : 1;
 };
 
-const _buildColumn: any = (attribute: AttributeField, accessorType: ColumnAccessorType) => ({
+const _buildColumn: any = (attribute: AttributeField, accessorType: ColumnAccessorType, userProps: any) => ({
     Header: attribute.displayName,
-    sortable: attribute.isSortable,
-    accessor: resolveColumnAccessor(attribute.name, accessorType),
+    canSort: attribute.isSortable,
+    accessor:
+        accessorType === "RowSelectButton"
+            ? resolveColumnAccessor(attribute.name, accessorType, userProps)
+            : resolveColumnAccessor(attribute.name, accessorType),
     accessorType: accessorType,
     id: attribute.name,
     sortType: "alphanumeric",
@@ -321,5 +324,6 @@ const _initializeTableOptions = (table: any, properties: any) => {
         showHideColumns: hasHiddenColumns || get(properties, "canToggleColumns", false),
         requiredColumns: get(properties, "requiredColumns", null),
     };
+
     return opts;
-}
+};

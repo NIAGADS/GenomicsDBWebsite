@@ -36,6 +36,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
             variant_link: "Link",
             pvalue: "ScientificNotation",
             msc_impacted_gene_link: "Link",
+            locus_zoom_target: "RowSelectButton"
         },
     },
 };

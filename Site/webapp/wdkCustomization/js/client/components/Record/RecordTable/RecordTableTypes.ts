@@ -13,7 +13,8 @@ export type RecordTableColumnAccessorType =
     | "AnnotatedText"
     | "MetaseqID"
     | "BooleanGreenCheck"
-    | "BooleanRedCheck";
+    | "BooleanRedCheck"
+    | "RowSelectButton";
 
 export interface RecordTableProps {
     table: TableField;

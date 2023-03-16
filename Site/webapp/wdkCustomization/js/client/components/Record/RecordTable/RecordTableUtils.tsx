@@ -1,5 +1,5 @@
 import React from "react";
-import { isString, forIn } from "lodash";
+import { forIn } from "lodash";
 import {
     RelativePositionSpan,
     VariantConsequenceImpactSpan,
@@ -10,6 +10,7 @@ import {
     resolveNAs,
     resolveColumnAccessor as defaultResolveColumnAccessor,
     BooleanCheckAccessor,
+    RowSelectButtonAccessor
 } from "@viz/Table/ColumnAccessors";
 import { parseFieldValue as defaultParseFieldValue, resolveNullFieldValue } from "@viz/Table";
 
@@ -46,11 +47,12 @@ export const resolveData = (data: { [key: string]: any }[]): { [key: string]: an
 
 
 
-export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default") => {
+export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default", userProps?:any) => {
     const MemoRelativePositionSpan = React.memo(RelativePositionSpan);
     const MemoVariantConsequenceImpactSpan = React.memo(VariantConsequenceImpactSpan);
     const MemoMetaseqIdAttribute = React.memo(MetaseqIdAttribute);
     const MemoBooleanCheckAccessor = React.memo(BooleanCheckAccessor);
+    const MemoRowSelectButtonAccessor = React.memo(RowSelectButtonAccessor);
 
     switch (accessorType) {
         case "RelativePosition":
@@ -63,6 +65,8 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
             return (row: any) => <MemoBooleanCheckAccessor value={row[key]} htmlColor="green" />;
         case "BooleanRedCheck":
             return (row: any) => <MemoBooleanCheckAccessor value={row[key]} htmlColor="red" />;
+        case "RowSelectButton":
+            return (row: any) => <MemoRowSelectButtonAccessor value={row[key]} userProps={userProps}/>;
         default:
             return defaultResolveColumnAccessor(key, accessorType);
     }

@@ -25,7 +25,6 @@ import {
     useAsyncDebounce,
     TableInstance,
     useRowSelect,
-    Column,
     HeaderGroup
 } from "react-table";
 
