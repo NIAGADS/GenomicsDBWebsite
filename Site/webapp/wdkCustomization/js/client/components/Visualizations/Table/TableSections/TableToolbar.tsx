@@ -30,7 +30,6 @@ interface FilterToolbarProps {
 }
 
 export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
-    canFilter,
     instance,
     canExport = true,
     linkedPanel,
