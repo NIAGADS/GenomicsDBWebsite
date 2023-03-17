@@ -237,20 +237,16 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 columnsPanel={
                     options.showHideColumns
                         ? {
-                              toggle: toggleColumnsPanel,
-                              label: "Columns",
-                              tooltip: "Toggle to add or remove columns from the table",
+                            toggle: toggleColumnsPanel,
+                            label: "Columns",
+                            tooltip: "Toggle to add or remove columns from the table",
                           }
                         : null
                 }
                 linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
             />
             
-            {hasLinkedPanel && (
-                <LinkedPanel className={options.linkedPanel.className} isOpen={linkedPanelIsOpen}>
-                    {options.linkedPanel.contents}
-                </LinkedPanel>
-            )}
+            {hasLinkedPanel && options.linkedPanel.contents}
 
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>

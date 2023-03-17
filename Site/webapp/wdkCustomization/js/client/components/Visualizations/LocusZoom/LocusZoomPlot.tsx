@@ -194,3 +194,4 @@ const _buildLayout = (state: LocusZoomPlotState, containerWidth: number) => {
 };
 
 
+export const MemoLocusZoomPlot = React.memo(LocusZoomPlot);

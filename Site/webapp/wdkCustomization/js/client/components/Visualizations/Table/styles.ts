@@ -8,11 +8,6 @@ export const useTableStyles = makeStyles((theme: Theme) =>
         table: {
             
         },
-        borderedLinkedPanel: {
-            border: "2px solid #1f1f1f",
-            padding: "20px",
-            marginBottom: "10px",
-        },
         navigationToolbar: {
             color: theme.palette.primary.dark,
             backgroundColor: "transparent"

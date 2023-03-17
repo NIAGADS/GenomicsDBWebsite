@@ -9,6 +9,7 @@ export interface RowSelectOptions {
     column?: string;
     tooltip: string;
     action: any;
+    actionTarget: any;
     type: "Check" | "Button" | "MultiCheck"
 }
 
