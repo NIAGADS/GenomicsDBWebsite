@@ -28,7 +28,7 @@ import {
     HeaderGroup,
 } from "react-table";
 
-import { useTableStyles, Table as TableProps } from "@viz/Table";
+import { useTableStyles, Table as TableProps, RowSelectOptions } from "@viz/Table";
 
 import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
@@ -59,9 +59,12 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     const classes = useTableStyles();
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
-    const [hasLinkedPanel, setHasLinkedPanel] = useState<boolean>(options.linkedPanel && true);
     const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
     const [columnsPanelIsOpen, setColumnsPanelIsOpen] = useState<boolean>(false);
+    const [filterPanelIsOpen, setFilterPanelIsOpen] = useState<boolean>(false);
+
+    const hasLinkedPanel = options.linkedPanel && true;
+    const rowSelectProps = options.rowSelect ? options.rowSelect : get(options, "linkedPanel.rowSelect", null);
 
     const defaultFilterTypes = {
         fuzzyText: useMemo(() => fuzzyTextFilter, []),
@@ -98,7 +101,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         scientificNotation: useMemo(() => scientificNotationSort, []),
     };
 
-    const buildTableProps = useCallback(() => {
+    const tableProps = useMemo(() => {
         const initialState = {
             pageIndex: 0,
             pageSize: 10,
@@ -127,11 +130,8 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             disableMultiSort: true,
         };
 
-        // if row select is button, it is handled in the cell rendering
-        // this is only for global select boxes
-        const rowSelect = get(options, "rowSelect.type", null);
-        if (rowSelect) {
-            if (rowSelect.includes("Check")) {
+        if (rowSelectProps !== null) {
+            if (rowSelectProps.type.includes("Check")) {
                 // Check or MultiCheck
                 tableProps = Object.assign(tableProps, {
                     getRowId: (row: any, index: number) => {
@@ -139,7 +139,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                     },
                 });
             }
-            if (rowSelect === "Check") {
+            if (rowSelectProps.type === "Check") {
                 // allow only one row to be selected at a time
                 tableProps = Object.assign(tableProps, {
                     intitialState: Object.assign(initialState, {
@@ -158,22 +158,24 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 });
             }
         }
-        return tableProps;
-    }, [options]);
 
-    const instance: TableInstance =
-        get(options, "rowSelect.type", null) === "Check"
-            ? useTable(buildTableProps(), ...hooks, (hooks) => {
+        return tableProps;
+    }, []);
+
+    const instance =
+        rowSelectProps !== null
+            ? useTable(tableProps, ...hooks, (hooks) => {
                   hooks.visibleColumns.push((columns: any) => [
                       {
                           id: "selection",
                           sortable: false,
-                          Header: options.rowSelect.label,
+                          Header: rowSelectProps.label,
+                          help: rowSelectProps.tooltip.replace(":", ""),
                           Cell: (cell: any) => (
                               <div>
                                   <RowSelectCheckbox
                                       {...cell.row.getToggleRowSelectedProps()}
-                                      title={options.rowSelect.tooltip}
+                                      title={rowSelectProps.tooltip}
                                   />
                               </div>
                           ),
@@ -181,7 +183,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                       ...columns,
                   ]);
               })
-            : useTable(buildTableProps(), ...hooks);
+            : useTable(tableProps, ...hooks);
 
     const {
         //@ts-ignore
@@ -221,6 +223,10 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         setColumnsPanelIsOpen(isOpen);
     }, []);
 
+    const toggleFilterPanel = useCallback((isOpen: boolean) => {
+        setFilterPanelIsOpen(isOpen);
+    }, []);
+
     return preFilteredRows.length === 0 || page.length === 0 ? (
         <Box className={className ? className : null}>
             <InfoAlert
@@ -237,16 +243,16 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 columnsPanel={
                     options.showHideColumns
                         ? {
-                            toggle: toggleColumnsPanel,
-                            label: "Columns",
-                            tooltip: "Toggle to add or remove columns from the table",
+                              toggle: toggleColumnsPanel,
+                              label: "Columns",
+                              tooltip: "Toggle to add or remove columns from the table",
                           }
                         : null
                 }
                 linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
             />
-            
-            {hasLinkedPanel && options.linkedPanel.contents}
+
+            {/*hasLinkedPanel && options.linkedPanel.contents */}
 
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>

@@ -5,24 +5,22 @@ import { FilterGroup } from "@viz/Table/TableFilters";
 export type TableData = Record<string, string>;
 
 export interface RowSelectOptions {
-    label?: string;
-    column?: string;
+    label: string;
     tooltip: string;
-    action: any;
-    actionTarget: any;
-    type: "Check" | "Button" | "MultiCheck"
+    action?: any;
+    type: "Check" | "MultiCheck"
 }
 
-interface LinkedPanelOptions  {
+export interface LinkedPanelOptions  {
     type: "LocusZoom",
-    contents: any;
-    className?: any;
+    label: string;
+    initialState: { [key: string]: any},
+    rowSelect: RowSelectOptions
 }
 
 export interface TableOptions {
     canFilter: boolean;
     canExport?: boolean;
-    rowSelect?: RowSelectOptions;
     filterTypes?: any; // json object of filter types
     filterGroups?: FilterGroup[];   
     showAdvancedFilter?: boolean;
@@ -31,6 +29,7 @@ export interface TableOptions {
     initialFilters?: any;
     initialSort?: any;
     linkedPanel?: LinkedPanelOptions;
+    rowSelect?: RowSelectOptions;
 }
 
 export interface Table {

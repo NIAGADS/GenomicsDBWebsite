@@ -8,8 +8,8 @@ import { Column } from "react-table";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { TableOptions, useTableStyles } from "@viz/Table";
-import { Table, LinkedPanel } from "@viz/Table/TableSections";
+import { TableOptions, useTableStyles, LinkedPanelOptions } from "@viz/Table";
+import { Table } from "@viz/Table/TableSections";
 import {
     SelectColumnFilter,
     RadioSelectColumnFilter,
@@ -36,66 +36,52 @@ import {
 } from "@components/Record/RecordTable/RecordTableFilters";
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
-import { nullValue } from "wdk-client/Utils/Json";
-import { setColumns } from "wdk-client/Components/Mesa/Utils/MesaState";
 
 export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties, recordPrimaryKey }) => {
     const { attributes } = table;
     const classes = useTableStyles();
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
-    const [columns, setColumns] = useState<Column[]>(null);
     const [options, setOptions] = useState<TableOptions>(_initializeTableOptions(table, properties));
-    const [rowSelectTarget, setRowSelectTarget] = useState<string>(get(properties, "linkedPanel.column"));
-    const [linkedPanelAction, setLinkedPanelAction] = useState<any>(null);
     const [hasLinkedPanel, setHasLinkedPanel] = useState<boolean>(
         Object.keys(get(properties, "linkedPanel", {})).length > 0
     );
 
-    const initializeLinkedPanel = useCallback(
+    const linkedPanelOptions = useCallback(
         (panelType: string) => {
             if (panelType && panelType === "LocusZoom") {
                 return {
-                    genomeBuild: projectId,
-                    variant: extractIndexedFieldValue(data, rowSelectTarget, false, 0),
-                    track: recordPrimaryKey,
+                    type: "LocusZoom",
+                    label: "LocusZoom",                
+                    rowSelect: {
+                        type: "Check",
+                        label: "LocusZoom",
+                        tooltip: "Select to center LocusZoom view on variant",
+                    },
+                    initialState: {
+                        genomeBuild: projectId,
+                        variant: extractIndexedFieldValue(
+                            data,
+                            properties.linkedPanel.column,
+                            properties.linkedPanel.isJSON,
+                            0
+                        ),
+                        track: recordPrimaryKey,
+                    },
                 };
             }
             return null;
         },
-        [projectId, data.length]
+        [projectId]
     );
 
-    const setLinkedPanelUpdateAction = useCallback((action: any) => {
-        action && setLinkedPanelAction(action);
-    }, []);
-
-    const renderLinkedPanel = useMemo(() => {
-        const panelType = get(properties, "linkedPanel.type", null);
-        if (!panelType) {
-            return null;
-        }
-        return (
-            <LinkedPanel
-                isOpen={false}
-                type={panelType}
-                initialState={initializeLinkedPanel(panelType)}
-                setUpdateAction={setLinkedPanelUpdateAction}
-            ></LinkedPanel>
-        );
-    }, [projectId, data.length]);
-
-    useEffect(() => {
+    const columns = useMemo(() => {
         if (!data) {
             // just so no calculations are done unless options are set
-            setColumns([]);
+            return [];
         }
         if (data.length === 0) {
-            setColumns([]);
-        } 
-        if (hasLinkedPanel && linkedPanelAction !== null) { 
-            setColumns(null);
-        }
-        else {
+            return [];
+        } else {
             let columnFilters: any = get(properties, "filters", null);
             let attributes: AttributeField[] = table.attributes;
             const accessors: any = get(properties, "accessors", null);
@@ -116,13 +102,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                             ? "Link"
                             : "Default";
 
-                    const userProps =
-                        accessorType === "RowSelectButton"
-                            ? {
-                                  action: linkedPanelAction,
-                                  tooltip: _setLinkedPanelHelp(get(properties, "linkedPanel.type")),
-                              }
-                            : null;
+                    const userProps: any = null; // placeholder to pass additionl props to accessor
                     let filterType =
                         columnFilters && has(columnFilters, attribute.name) ? columnFilters[attribute.name] : null;
                     let column = _buildColumn(attribute, accessorType, userProps);
@@ -141,13 +121,13 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                 })
                 .sort((c1, c2) => _indexSort(c1, c2, attributes));
 
-            setColumns(columns);
+            return columns;
         }
-    }, [options, linkedPanelAction]);
+    }, [options]);
 
     const resolvedData: any = useMemo(() => resolveData(data), [data.length]);
 
-    if (data.length === 0 || (columns && columns.length === 0)) {
+    if (data.length === 0 || columns.length === 0) {
         return (
             <p>
                 <em>No data available</em>
@@ -155,7 +135,7 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
         );
     }
 
-    return columns ? (
+    return (
         <Table
             className={classNames(get(properties, "fullWidth", true) ? classes.fullWidth : "shrink", classes.table)}
             columns={columns}
@@ -163,17 +143,10 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
             title={table.displayName}
             options={
                 hasLinkedPanel
-                    ? Object.assign(options, {
-                          linkedPanel: {
-                              type: get(properties, "linkedPanel.type"),
-                              contents: renderLinkedPanel,
-                          },
-                      })
+                    ? Object.assign(options, {linkedPanel: linkedPanelOptions(properties.linkedPanel.type)})
                     : options
             }
         />
-    ) : (
-        <CircularProgress size="small" />
     );
 };
 
@@ -301,13 +274,4 @@ const _initializeTableOptions = (table: any, properties: any) => {
     };
 
     return opts;
-};
-
-const _setLinkedPanelHelp = (panelType: string) => {
-    switch (panelType) {
-        case "LocusZoom":
-            return "Center LocusZoom view on variant: ";
-        default:
-            return "Not yet implemented";
-    }
 };

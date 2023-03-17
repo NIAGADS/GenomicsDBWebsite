@@ -105,7 +105,6 @@
                   </attributeQueryRef>
 
                   <table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
-                        <columnAttribute name="locus_zoom_target" help="Click button to move LocusZoom overview to the reported variant" displayName="LocusZoom" inReportMaker="false"/>
                         <columnAttribute name="chromosome" displayName="Chromosome" />
                         <columnAttribute name="position" displayName="Position" />
                         <columnAttribute name="variant_link" displayName="Variant" />

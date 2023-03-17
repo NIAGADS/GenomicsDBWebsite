@@ -9,6 +9,8 @@ export interface TableColumnSort {
 export interface TableLinkedPanel {
     type: "LocusZoom",
     column: string;
+    isJSON: boolean;
+    enableRowSelect: boolean;
 }
 
 export interface TableProperties {

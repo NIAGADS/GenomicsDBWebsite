@@ -27,7 +27,9 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: true,
         linkedPanel: {
             type: "LocusZoom",
-            column: "locus_zoom_target"
+            column: "variant_link",
+            isJSON: true,
+            enableRowSelect: true
         },
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
@@ -35,8 +37,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
             msc_is_coding_flag: "BooleanGreenCheck",
             variant_link: "Link",
             pvalue: "ScientificNotation",
-            msc_impacted_gene_link: "Link",
-            locus_zoom_target: "RowSelectButton"
+            msc_impacted_gene_link: "Link"
         },
     },
 };
