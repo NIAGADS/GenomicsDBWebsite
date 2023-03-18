@@ -20,18 +20,20 @@ interface LinkedPanelSection {
     isOpen: boolean;
     type: "LocusZoom";
     initialState: { [key: string]: any };
-    setUpdateAction: any;
+    updatePanelContents: any;
+    togglePanel: any;
     className?: string;
 }
 
 export const LinkedPanel: React.FC<LinkedPanelSection> = ({
-    isOpen,
     type,
     initialState,
     className,
-    setUpdateAction,
+    updatePanelContents,
+    togglePanel
 }) => {
     const [actionTarget, setActionTarget] = useState<any>(null);
+    const [isOpen, setIsOpen ] = useState<boolean>(false);
     const classes = useStyles();
 
     const updateActionTarget = useCallback(
@@ -41,9 +43,6 @@ export const LinkedPanel: React.FC<LinkedPanelSection> = ({
         [actionTarget]
     );
 
-    useEffect(() => {
-        actionTarget && setUpdateAction(updateActionTargetContents);
-    }, [actionTarget]);
 
     const updateActionTargetContents = useCallback(
         (value: any) => {
