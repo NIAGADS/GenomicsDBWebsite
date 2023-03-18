@@ -12,6 +12,8 @@ import Box from "@material-ui/core/Box";
 
 import { InfoAlert, CustomPanel } from "@components/MaterialUI";
 
+import { DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
+
 import useLocalStorage from "genomics-client/hooks/useLocalStorage";
 
 import {
@@ -53,8 +55,7 @@ import {
     booleanFlagSort,
 } from "@viz/Table/TableSortingFunctions";
 
-import { TableHeaderCell, TableToolbar, LinkedPanel } from "@viz/Table/TableSections";
-
+import { TableHeaderCell, TableToolbar, MemoLinkedPanel as LinkedPanel } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
     const classes = useTableStyles();
@@ -63,7 +64,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
     const [columnsPanelIsOpen, setColumnsPanelIsOpen] = useState<boolean>(false);
     const [filterPanelIsOpen, setFilterPanelIsOpen] = useState<boolean>(false);
-    const [ linkedPanelCallback, setLinkedPanelCallback] = useState<any>(null);
+    const [linkedPanelTarget, setLinkedPanelTarget] = useState<any>(null);
     /* const [linkedPanelState, setLinkedPanelState] = useState<{ [key: string]: any }>(
         get(options, "linkedPanel.initialState", null)
     );*/
@@ -233,11 +234,19 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             }
             if (options.linkedPanel.type === "LocusZoom") {
                 // for LocusZoom, only one row is ever selected
-                const newTargetVariant = parseFieldValue(selectedFlatRows[0].values[options.linkedPanel.rowSelect.column]);
-                linkedPanelCallback(newTargetVariant);
+                const variant = parseFieldValue(selectedFlatRows[0].values[options.linkedPanel.rowSelect.column]);
+                const [chrm, position, ...rest] = variant.split(":"); // chr:pos:ref:alt
+                const start = parseInt(position) - LZ_DEFAULT_FLANK;
+                const end = parseInt(position) + LZ_DEFAULT_FLANK;
+                linkedPanelTarget &&
+                    linkedPanelTarget.applyState({
+                        chr: "chr" + chrm,
+                        start: start,
+                        end: end,
+                        ldrefvar: variant,
+                    });
             }
         }
-
         //hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
     }, [selectedRowIds]);
 
@@ -283,7 +292,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                     isOpen={linkedPanelIsOpen}
                     type={options.linkedPanel.type}
                     initialState={options.linkedPanel.initialState}
-                    setCallback={setLinkedPanelCallback}
+                    setActionTarget={setLinkedPanelTarget}
                 ></LinkedPanel>
             )}
 

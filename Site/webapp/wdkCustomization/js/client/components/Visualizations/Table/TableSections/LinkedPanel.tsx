@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 
-import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
+import { MemoLocusZoomPlot as LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
@@ -24,45 +24,23 @@ interface LinkedPanelSection {
     initialState: { [key: string]: any };
     className?: string;
     handleClose?: any;
-    setCallback: any;
+    setActionTarget: any;
 }
 
-export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, initialState, className, handleClose, setCallback }) => {
-    const [actionTarget, setActionTarget] = useState<any>(null);
+export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, initialState, className, handleClose, setActionTarget }) => {
+    // const [actionTarget, setActionTarget] = useState<any>(null);
     const classes = useStyles();
 
     const firstUpdate = useRef(true);
 
     const updateActionTarget = useCallback(
         (target: any) => {
-            target && setActionTarget(target);
+            if (target) {
+                setActionTarget(target);
+            }
         },
-        [actionTarget]
+        []
     );
-
-    useEffect(() => {
-          // this should keep the update from running on the initial render
-          if (firstUpdate.current) {
-            firstUpdate.current = false;
-            return;
-        }
-        actionTarget && setCallback(updatePanelContents);
-    }, [actionTarget]);
-
-    const updatePanelContents = useCallback((value: any) => {
-        if (value && type === "LocusZoom") {
-            const [chrm, position, ...rest] = value.split(":"); // chr:pos:ref:alt
-            const start = parseInt(position) - LZ_DEFAULT_FLANK;
-            const end = parseInt(position) + LZ_DEFAULT_FLANK;
-            actionTarget &&
-                actionTarget.applyState({
-                    chr: "chr" + chrm,
-                    start: start,
-                    end: end,
-                    ldrefvar: value,
-                });
-        }
-    }, []);
 
     // const classes = useStyles();
     return (
@@ -92,3 +70,5 @@ export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, initia
         </>
     );
 };
+
+export const MemoLinkedPanel = React.memo(LinkedPanel);
