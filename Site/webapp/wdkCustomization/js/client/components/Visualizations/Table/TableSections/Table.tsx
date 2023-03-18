@@ -1,5 +1,5 @@
 // modeled after https://github.com/ggascoigne/react-table-example
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import cx from "classnames";
 import { get } from "lodash";
 
@@ -28,7 +28,7 @@ import {
     HeaderGroup,
 } from "react-table";
 
-import { useTableStyles, Table as TableProps, RowSelectOptions } from "@viz/Table";
+import { useTableStyles, Table as TableProps, RowSelectOptions, parseFieldValue } from "@viz/Table";
 
 import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
@@ -55,6 +55,7 @@ import {
 
 import { TableHeaderCell, TableToolbar, LinkedPanel } from "@viz/Table/TableSections";
 
+
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
     const classes = useTableStyles();
 
@@ -62,6 +63,11 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
     const [columnsPanelIsOpen, setColumnsPanelIsOpen] = useState<boolean>(false);
     const [filterPanelIsOpen, setFilterPanelIsOpen] = useState<boolean>(false);
+    const [linkedPanelState, setLinkedPanelState] = useState<{ [key: string]: any }>(
+        get(options, "linkedPanel.initialState", null)
+    );
+
+    const firstUpdate = useRef(true);
 
     const hasLinkedPanel = options.linkedPanel && true;
     const rowSelectProps = options.rowSelect ? options.rowSelect : get(options, "linkedPanel.rowSelect", null);
@@ -142,7 +148,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             if (rowSelectProps.type === "Check") {
                 // allow only one row to be selected at a time
                 tableProps = Object.assign(tableProps, {
-                    intitialState: Object.assign(initialState, {
+                    initialState: Object.assign(initialState, {
                         selectedRowIds: { 0: true },
                     }),
                     stateReducer: (newState: any, action: any) => {
@@ -190,6 +196,8 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         state: { selectedRowIds },
         state,
         //@ts-ignore
+        selectedFlatRows,
+        //@ts-ignore
         toggleRowSelected,
         getTableProps,
         headerGroups,
@@ -214,6 +222,23 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         };
         setInitialState(val);
     }, [setInitialState, debouncedState]);
+
+    useEffect(() => {
+        // this should keep the update from running on the initial render
+        if (hasLinkedPanel) {
+            if (firstUpdate.current) {
+                firstUpdate.current = false;
+                return;
+            }
+            if (options.linkedPanel.type === "LocusZoom") {
+                // for LocusZoom, only one row is ever selected
+                const newTargetVariant = parseFieldValue(selectedFlatRows[0].values[options.linkedPanel.rowSelect.column]);
+                setLinkedPanelState(Object.assign(linkedPanelState, {variant: newTargetVariant}));
+            }
+        }
+
+        //hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
+    }, [selectedRowIds]);
 
     const toggleLinkedPanel = useCallback((isOpen: boolean) => {
         setLinkedPanelIsOpen(isOpen);
@@ -252,7 +277,13 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
             />
 
-            {/*hasLinkedPanel && options.linkedPanel.contents */}
+            {hasLinkedPanel && (
+                <LinkedPanel
+                    isOpen={linkedPanelIsOpen}
+                    type={options.linkedPanel.type}
+                    state={linkedPanelState}
+                ></LinkedPanel>
+            )}
 
             <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
                 <TableHead classes={{ root: classes.tableHead }}>

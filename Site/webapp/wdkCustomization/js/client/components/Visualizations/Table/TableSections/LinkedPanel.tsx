@@ -1,10 +1,12 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 import { LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
-import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import CloseIcon from "@material-ui/icons/Close";
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,22 +21,16 @@ export const useStyles = makeStyles((theme: Theme) =>
 interface LinkedPanelSection {
     isOpen: boolean;
     type: "LocusZoom";
-    initialState: { [key: string]: any };
-    updatePanelContents: any;
-    togglePanel: any;
+    state: { [key: string]: any };
     className?: string;
+    handleClose?: any;
 }
 
-export const LinkedPanel: React.FC<LinkedPanelSection> = ({
-    type,
-    initialState,
-    className,
-    updatePanelContents,
-    togglePanel
-}) => {
+export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, state, className, handleClose }) => {
     const [actionTarget, setActionTarget] = useState<any>(null);
-    const [isOpen, setIsOpen ] = useState<boolean>(false);
     const classes = useStyles();
+
+    const firstUpdate = useRef(true);
 
     const updateActionTarget = useCallback(
         (target: any) => {
@@ -43,39 +39,51 @@ export const LinkedPanel: React.FC<LinkedPanelSection> = ({
         [actionTarget]
     );
 
-
-    const updateActionTargetContents = useCallback(
-        (value: any) => {
-            if (value && type === "LocusZoom") {
-                const [chrm, position, ...rest] = value.split(":"); // chr:pos:ref:alt
-                const start = parseInt(position) - LZ_DEFAULT_FLANK;
-                const end = parseInt(position) + LZ_DEFAULT_FLANK;
-                actionTarget &&
-                    actionTarget.applyState({
-                        chr: "chr" + chrm,
-                        start: start,
-                        end: end,
-                        ldrefvar: value,
-                    });
-            }
-        },
-        [actionTarget]
-    );
+    useEffect(() => {
+        // this should keep the update from running on the initial render
+        if (state && firstUpdate.current) {
+            firstUpdate.current = false;
+            return;
+        }
+        if (state.value && type === "LocusZoom") {
+            const [chrm, position, ...rest] = state.value.split(":"); // chr:pos:ref:alt
+            const start = parseInt(position) - LZ_DEFAULT_FLANK;
+            const end = parseInt(position) + LZ_DEFAULT_FLANK;
+            actionTarget &&
+                actionTarget.applyState({
+                    chr: "chr" + chrm,
+                    start: start,
+                    end: end,
+                    ldrefvar: state.value,
+                });
+        }
+    }, [state]);
 
     // const classes = useStyles();
     return (
-        <Collapse in={isOpen} style={{ marginTop: "20px" }} className={className ? className : null}>
-            {type === "LocusZoom" && (
-                <LocusZoomPlot
-                    genomeBuild={initialState.genomeBuild}
-                    variant={initialState.variant}
-                    track={initialState.track}
-                    divId="record-table-locus-zoom"
-                    population="ADSP"
-                    setPlotState={updateActionTarget}
-                    className={classes.bordered}
-                />
+        <>
+            <Collapse in={isOpen} style={{ marginTop: "20px" }} className={className ? className : null}>
+                {type === "LocusZoom" && (
+                    <LocusZoomPlot
+                        genomeBuild={state.genomeBuild}
+                        variant={state.variant}
+                        track={state.track}
+                        divId="record-table-locus-zoom"
+                        population="ADSP"
+                        setPlotState={updateActionTarget}
+                        className={classes.bordered}
+                    />
+                )}
+            </Collapse>
+            {handleClose && (
+                <Grid container alignContent="flex-end">
+                    <Button
+                        variant="contained"
+                        endIcon={<CloseIcon />}
+                        onClick={handleClose}
+                    >{`Hide ${type} view`}</Button>
+                </Grid>
             )}
-        </Collapse>
+        </>
     );
 };

@@ -23,6 +23,7 @@ import {
     resolveColumnAccessor,
     resolveData,
     extractIndexedFieldValue,
+    extractIndexedPrimaryKeyFromRecordLink,
     RecordTableProps,
     RecordTableColumnAccessorType as ColumnAccessorType,
     RecordTableProperties as TableProperties,
@@ -36,6 +37,7 @@ import {
 } from "@components/Record/RecordTable/RecordTableFilters";
 
 import { TableField, AttributeField } from "wdk-client/Utils/WdkModel";
+
 
 export const RecordTable: React.FC<RecordTableProps> = ({ table, data, properties, recordPrimaryKey }) => {
     const { attributes } = table;
@@ -56,13 +58,13 @@ export const RecordTable: React.FC<RecordTableProps> = ({ table, data, propertie
                         type: "Check",
                         label: "LocusZoom",
                         tooltip: "Select to center LocusZoom view on variant",
+                        column: properties.linkedPanel.column
                     },
                     initialState: {
                         genomeBuild: projectId,
-                        variant: extractIndexedFieldValue(
+                        variant: extractIndexedPrimaryKeyFromRecordLink(
                             data,
                             properties.linkedPanel.column,
-                            properties.linkedPanel.isJSON,
                             0
                         ),
                         track: recordPrimaryKey,

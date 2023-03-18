@@ -7,6 +7,7 @@ export type TableData = Record<string, string>;
 export interface RowSelectOptions {
     label: string;
     tooltip: string;
+    column?: string;
     action?: any;
     type: "Check" | "MultiCheck"
 }
