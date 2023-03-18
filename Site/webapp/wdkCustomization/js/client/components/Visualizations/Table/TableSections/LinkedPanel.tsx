@@ -21,12 +21,13 @@ export const useStyles = makeStyles((theme: Theme) =>
 interface LinkedPanelSection {
     isOpen: boolean;
     type: "LocusZoom";
-    state: { [key: string]: any };
+    initialState: { [key: string]: any };
     className?: string;
     handleClose?: any;
+    setCallback: any;
 }
 
-export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, state, className, handleClose }) => {
+export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, initialState, className, handleClose, setCallback }) => {
     const [actionTarget, setActionTarget] = useState<any>(null);
     const classes = useStyles();
 
@@ -40,13 +41,17 @@ export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, state,
     );
 
     useEffect(() => {
-        // this should keep the update from running on the initial render
-        if (state && firstUpdate.current) {
+          // this should keep the update from running on the initial render
+          if (firstUpdate.current) {
             firstUpdate.current = false;
             return;
         }
-        if (state.value && type === "LocusZoom") {
-            const [chrm, position, ...rest] = state.value.split(":"); // chr:pos:ref:alt
+        actionTarget && setCallback(updatePanelContents);
+    }, [actionTarget]);
+
+    const updatePanelContents = useCallback((value: any) => {
+        if (value && type === "LocusZoom") {
+            const [chrm, position, ...rest] = value.split(":"); // chr:pos:ref:alt
             const start = parseInt(position) - LZ_DEFAULT_FLANK;
             const end = parseInt(position) + LZ_DEFAULT_FLANK;
             actionTarget &&
@@ -54,10 +59,10 @@ export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, state,
                     chr: "chr" + chrm,
                     start: start,
                     end: end,
-                    ldrefvar: state.value,
+                    ldrefvar: value,
                 });
         }
-    }, [state]);
+    }, []);
 
     // const classes = useStyles();
     return (
@@ -65,9 +70,9 @@ export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, state,
             <Collapse in={isOpen} style={{ marginTop: "20px" }} className={className ? className : null}>
                 {type === "LocusZoom" && (
                     <LocusZoomPlot
-                        genomeBuild={state.genomeBuild}
-                        variant={state.variant}
-                        track={state.track}
+                        genomeBuild={initialState.genomeBuild}
+                        variant={initialState.variant}
+                        track={initialState.track}
                         divId="record-table-locus-zoom"
                         population="ADSP"
                         setPlotState={updateActionTarget}

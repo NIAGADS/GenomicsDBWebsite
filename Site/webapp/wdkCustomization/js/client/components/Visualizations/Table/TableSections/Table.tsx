@@ -63,9 +63,10 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
     const [columnsPanelIsOpen, setColumnsPanelIsOpen] = useState<boolean>(false);
     const [filterPanelIsOpen, setFilterPanelIsOpen] = useState<boolean>(false);
-    const [linkedPanelState, setLinkedPanelState] = useState<{ [key: string]: any }>(
+    const [ linkedPanelCallback, setLinkedPanelCallback] = useState<any>(null);
+    /* const [linkedPanelState, setLinkedPanelState] = useState<{ [key: string]: any }>(
         get(options, "linkedPanel.initialState", null)
-    );
+    );*/
 
     const firstUpdate = useRef(true);
 
@@ -233,7 +234,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             if (options.linkedPanel.type === "LocusZoom") {
                 // for LocusZoom, only one row is ever selected
                 const newTargetVariant = parseFieldValue(selectedFlatRows[0].values[options.linkedPanel.rowSelect.column]);
-                setLinkedPanelState(Object.assign(linkedPanelState, {variant: newTargetVariant}));
+                linkedPanelCallback(newTargetVariant);
             }
         }
 
@@ -281,7 +282,8 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 <LinkedPanel
                     isOpen={linkedPanelIsOpen}
                     type={options.linkedPanel.type}
-                    state={linkedPanelState}
+                    initialState={options.linkedPanel.initialState}
+                    setCallback={setLinkedPanelCallback}
                 ></LinkedPanel>
             )}
 
