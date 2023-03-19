@@ -8,8 +8,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
-import Link from "@material-ui/core/Link";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Collapse from "@material-ui/core/Collapse"
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import InfoIcon from "@material-ui/icons/Info";
 
@@ -38,7 +37,12 @@ export function FilterDialog({
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
 
-    const renderFilterPanelHelp = useMemo(() => {}, []);
+    const renderFilterPanelHelp = useMemo(() => {
+        <Collapse in={helpPanelIsOpen} >
+            
+            </Collapse>
+
+    }, []);
 
     const toggleHelp = () => setHelpPanelIsOpen(!helpPanelIsOpen);
 
