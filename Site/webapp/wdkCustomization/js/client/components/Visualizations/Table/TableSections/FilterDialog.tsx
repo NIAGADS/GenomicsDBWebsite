@@ -17,7 +17,7 @@ import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/Reco
 import { FilterChipBar } from "@viz/Table/TableSections";
 import { HelpIcon } from "wdk-client/Components";
 
-export function FilterDialog({ instance, filterGroups, includeChips=true }: FilterPageProps): ReactElement {
+export function FilterDialog({ instance, filterGroups, includeChips = true }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
@@ -38,18 +38,8 @@ export function FilterDialog({ instance, filterGroups, includeChips=true }: Filt
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
         ).length > 0;
 
-    const renderCollapsibleFilterGroup = (group: FilterGroup) => {
-        return (
-            <CollapsableCardPanel
-                className={classes.collapsiblePanelFilterGroupPanel}
-                key={group.label + "-collapse"}
-                title={group.label}
-                defaultOpen={group.defaultOpen != null ? group.defaultOpen : false}
-            >
-                {renderStaticFilterGroup(group, classes.collapsibleFilterGroup)}
-            </CollapsableCardPanel>
-        );
-    };
+    const renderCollapsibleFilterGroup = (group: FilterGroup) =>
+        renderStaticFilterGroup(group, classes.collapsibleFilterGroup);
 
     const renderStaticFilterGroup = (group: FilterGroup, className?: string) => {
         return (
@@ -82,7 +72,7 @@ export function FilterDialog({ instance, filterGroups, includeChips=true }: Filt
 
     return (
         <>
-             <Grid
+            <Grid
                 container
                 //direction="column"
                 justifyContent="center"
@@ -91,26 +81,28 @@ export function FilterDialog({ instance, filterGroups, includeChips=true }: Filt
             >
                 <Grid item>
                     <Box component="span">
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<RotateLeftIcon />}
-                        //fullWidth={true}
-                        size="small"
-                        onClick={resetFilters}
-                    >
-                        Reset Filters
-                    </Button>
-                    
-                    <HelpIcon>
-                        Remove or reset filter criteria to table defaults. This will not clear terms entered in the text
-                        search box.
-                    </HelpIcon>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<RotateLeftIcon />}
+                            //fullWidth={true}
+                            size="small"
+                            onClick={resetFilters}
+                        >
+                            Reset Filters
+                        </Button>
+
+                        <HelpIcon>
+                            Remove or reset filter criteria to table defaults. This will not clear terms entered in the
+                            text search box.
+                        </HelpIcon>
                     </Box>
                 </Grid>
-                {includeChips && <Grid item>
-                    <FilterChipBar instance={instance} />
-                </Grid>}
+                {includeChips && (
+                    <Grid item>
+                        <FilterChipBar instance={instance} />
+                    </Grid>
+                )}
                 <Grid item>{filterGroups.map((fg) => renderFilterGroup(fg))}</Grid>
             </Grid>
         </>
