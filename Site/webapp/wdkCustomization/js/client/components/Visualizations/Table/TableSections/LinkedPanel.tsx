@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
 import { MemoLocusZoomPlot as LocusZoomPlot, DEFAULT_FLANK as LZ_DEFAULT_FLANK } from "@viz/LocusZoom";
 
@@ -30,8 +30,6 @@ interface LinkedPanelSection {
 export const LinkedPanel: React.FC<LinkedPanelSection> = ({ isOpen, type, initialState, className, handleClose, setActionTarget }) => {
     // const [actionTarget, setActionTarget] = useState<any>(null);
     const classes = useStyles();
-
-    const firstUpdate = useRef(true);
 
     const updateActionTarget = useCallback(
         (target: any) => {

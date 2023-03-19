@@ -31,7 +31,7 @@ import {
     HeaderGroup,
 } from "react-table";
 
-import { useTableStyles, Table as TableProps, RowSelectOptions, parseFieldValue } from "@viz/Table";
+import { useTableStyles, Table as TableProps, parseFieldValue, ROW_SELECTION_FIELD } from "@viz/Table";
 
 import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
@@ -60,7 +60,7 @@ import {
     TableHeaderCell,
     TableToolbar,
     MemoLinkedPanel as LinkedPanel,
-    TablePagination,
+    TablePagination
 } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
@@ -181,7 +181,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             ? useTable(tableProps, ...hooks, (hooks) => {
                   hooks.visibleColumns.push((columns: any) => [
                       {
-                          id: "selection",
+                          id: ROW_SELECTION_FIELD,
                           sortable: false,
                           Header: rowSelectProps.label,
                           help: rowSelectProps.tooltip.replace(":", ""),
@@ -286,12 +286,12 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                         instance={instance}
                         hasGlobalFilter={options.canFilter}
                         canAdvancedFilter={options.showAdvancedFilter}
-                        columnsPanel={
+                        columnsDialog={
                             options.showHideColumns
                                 ? {
-                                      toggle: toggleColumnsPanel,
                                       label: "Columns",
                                       tooltip: "Toggle to add or remove columns from the table",
+                                      options: {requiredColumns: options.requiredColumns}
                                   }
                                 : null
                         }
