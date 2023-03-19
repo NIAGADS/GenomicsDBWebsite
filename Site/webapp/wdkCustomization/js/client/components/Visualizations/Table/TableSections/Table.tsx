@@ -61,6 +61,7 @@ import {
     TableToolbar,
     MemoLinkedPanel as LinkedPanel,
     TablePagination,
+    FilterChipBar
 } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
@@ -297,6 +298,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                             hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null
                         }
                     />
+                    {options.canFilter && <FilterChipBar instance={instance} />}
                 </Grid>
                 <Grid item xs={12}>
                     <TablePagination instance={instance} />

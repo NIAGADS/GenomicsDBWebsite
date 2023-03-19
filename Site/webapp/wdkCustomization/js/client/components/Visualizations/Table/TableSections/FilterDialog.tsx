@@ -1,28 +1,46 @@
 // modified from https://github.com/ggascoigne/react-table-example
-import React, { ReactElement, useCallback } from "react";
+import React, { ReactElement, useCallback, useState, useMemo } from "react";
 
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
+import Link from "@material-ui/core/Link";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import InfoIcon from "@material-ui/icons/Info";
 
-import { StyledTooltip as Tooltip } from "@components/MaterialUI";
+import { CollapsableCardPanel, StyledTooltip as Tooltip, MaterialUIThemedButton as BlueButton } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
 import { FilterChipBar } from "@viz/Table/TableSections";
-import { HelpIcon } from "wdk-client/Components";
 
-export function FilterDialog({ instance, filterGroups, includeChips = true }: FilterPageProps): ReactElement {
+interface FilterDialog {
+    handleClose: any;
+    isOpen: boolean;
+}
+
+export function FilterDialog({
+    isOpen,
+    handleClose,
+    instance,
+    filterGroups,
+    includeChips = true,
+}: FilterPageProps & FilterDialog): ReactElement {
+    const [helpPanelIsOpen, setHelpPanelIsOpen] = useState<boolean>(false);
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
+
+    const renderFilterPanelHelp = useMemo(() => {}, []);
+
+    const toggleHelp = () => setHelpPanelIsOpen(!helpPanelIsOpen);
 
     const resetFilters = useCallback(() => {
         if (hasPvalueFilter) {
@@ -38,12 +56,23 @@ export function FilterDialog({ instance, filterGroups, includeChips = true }: Fi
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
         ).length > 0;
 
-    const renderCollapsibleFilterGroup = (group: FilterGroup) =>
-        renderStaticFilterGroup(group, classes.collapsibleFilterGroup);
+    const renderCollapsibleFilterGroup = (group: FilterGroup) => {
+        return (
+            <CollapsableCardPanel
+                className={classes.collapsiblePanelFilterGroupPanel}
+                key={group.label + "-collapse"}
+                title={group.label}
+                defaultOpen={group.defaultOpen != null ? group.defaultOpen : false}
+            >
+                {renderStaticFilterGroup(group, classes.collapsibleFilterGroup)}
+            </CollapsableCardPanel>
+        );
+    };
 
     const renderStaticFilterGroup = (group: FilterGroup, className?: string) => {
         return (
             <Grid
+                item
                 key={group.label + "-static"}
                 container
                 className={className ? className : classes.filterGroup}
@@ -64,47 +93,62 @@ export function FilterDialog({ instance, filterGroups, includeChips = true }: Fi
         return allColumns
             .filter((column) => column.id === columnName)
             .map((column) => (
-                <Grid item key={column.id}>
-                    <Box className={classes.filterCell}>{column.render("Filter")}</Box>
+                <Grid item xs={6}>
+                    <Box className={classes.filterCell}>{column.render("Filter")}</Box>{" "}
                 </Grid>
             ));
     };
 
     return (
-        <>
-            <Grid
-                container
-                //direction="column"
-                justifyContent="center"
-                alignItems="flex-start"
-                className={classes.root}
-            >
-                <Grid item>
-                    <Box component="span">
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<RotateLeftIcon />}
-                            //fullWidth={true}
-                            size="small"
-                            onClick={resetFilters}
-                        >
-                            Reset Filters
-                        </Button>
-
-                        <HelpIcon>
-                            Remove or reset filter criteria to table defaults. This will not clear terms entered in the
-                            text search box.
-                        </HelpIcon>
-                    </Box>
+        <Dialog maxWidth="md" aria-labelledby="dialog-title" open={isOpen} onClose={handleClose}>
+            <DialogTitle id="dialog-title">
+                Table Overview and Filters{"   "}
+                <BlueButton
+                    size="small"
+                    aria-label="how-to-filter"
+                    variant="text"
+                    color="primary"
+                    title="About the filter/summary interface"
+                    endIcon={<InfoIcon />}
+                >
+                    More Info
+                </BlueButton>
+            </DialogTitle>
+            <DialogContent dividers>
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    className={classes.root}
+                >
+                    <Grid container item direction="column">
+                        {filterGroups.map((fg) => renderFilterGroup(fg))}
+                    </Grid>
                 </Grid>
+            </DialogContent>
+            <DialogActions>
                 {includeChips && (
                     <Grid item>
                         <FilterChipBar instance={instance} />
                     </Grid>
                 )}
-                <Grid item>{filterGroups.map((fg) => renderFilterGroup(fg))}</Grid>
-            </Grid>
-        </>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<RotateLeftIcon />}
+                    //fullWidth={true}
+                    size="small"
+                    onClick={resetFilters}
+                    title="Remove or reset filter criteria to table defaults. This will not clear terms entered in
+                                    the text search box."
+                >
+                    Reset Filters
+                </Button>
+                <Button onClick={handleClose} color="primary">
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }

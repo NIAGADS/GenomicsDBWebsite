@@ -4,7 +4,7 @@ import DownloadIcon from "@material-ui/icons/GetApp";
 
 import { useTableStyles } from "@viz/Table";
 import { FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
-import { SelectColumnsDialog } from "@viz/Table/TableSections";
+import { SelectColumnsDialog, FilterDialog } from "@viz/Table/TableSections";
 
 import { StyledTooltip as Tooltip, HelpIcon } from "@components/MaterialUI";
 
@@ -50,7 +50,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
 
     const closeFilterDialog = () => {
         setFilterDialogIsOpen(false);
-    }
+    };
 
     const closeColumnsDialog = () => {
         setColumnsDialogIsOpen(false);
@@ -137,6 +137,13 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                 handleClose={closeColumnsDialog}
                 instance={instance}
                 requiredColumns={columnsDialog.options.requiredColumns}
+            />
+            <FilterDialog
+                isOpen={filterDialogIsOpen}
+                handleClose={closeFilterDialog}
+                instance={instance}
+                filterGroups={filter.advancedFilter.options.filterGroups}
+                includeChips={false}
             />
         </>
     );
