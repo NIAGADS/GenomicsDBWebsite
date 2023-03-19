@@ -9,6 +9,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 
 import { InfoAlert, CustomPanel } from "@components/MaterialUI";
 
@@ -55,7 +56,12 @@ import {
     booleanFlagSort,
 } from "@viz/Table/TableSortingFunctions";
 
-import { TableHeaderCell, TableToolbar, MemoLinkedPanel as LinkedPanel } from "@viz/Table/TableSections";
+import {
+    TableHeaderCell,
+    TableToolbar,
+    MemoLinkedPanel as LinkedPanel,
+    TablePagination,
+} from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
     const classes = useTableStyles();
@@ -170,7 +176,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         return tableProps;
     }, []);
 
-    const instance =
+    const instance: TableInstance =
         rowSelectProps !== null
             ? useTable(tableProps, ...hooks, (hooks) => {
                   hooks.visibleColumns.push((columns: any) => [
@@ -235,7 +241,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             if (options.linkedPanel.type === "LocusZoom") {
                 // for LocusZoom, only one row is ever selected
                 const variant = parseFieldValue(selectedFlatRows[0].values[options.linkedPanel.rowSelect.column]);
-                const refSnpId = parseFieldValue(selectedFlatRows[0].values['ref_snp_id']); // TODO - fix this to pull variant ID out of url of variant field
+                const refSnpId = parseFieldValue(selectedFlatRows[0].values["ref_snp_id"]); // TODO - fix this to pull variant ID out of url of variant field
                 const [chrm, position, ...rest] = variant.split(":"); // chr:pos:ref:alt
                 const start = parseInt(position) - LZ_DEFAULT_FLANK;
                 const end = parseInt(position) + LZ_DEFAULT_FLANK;
@@ -244,7 +250,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                         chr: "chr" + chrm,
                         start: start,
                         end: end,
-                        ldrefvar: refSnpId !== null ? variant + ':' + refSnpId : variant,
+                        ldrefvar: refSnpId !== null ? variant + ":" + refSnpId : variant,
                     });
             }
         }
@@ -274,65 +280,68 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 ></LinkedPanel>
             )}
 
-            <TableToolbar
-                instance={instance}
-                hasGlobalFilter={options.canFilter}
-                canAdvancedFilter={options.showAdvancedFilter}
-                columnsPanel={
-                    options.showHideColumns
-                        ? {
-                              toggle: toggleColumnsPanel,
-                              label: "Columns",
-                              tooltip: "Toggle to add or remove columns from the table",
-                          }
-                        : null
-                }
-                linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
-            />
+            <Grid container alignContent="flex-end">
+                <TableToolbar
+                    instance={instance}
+                    hasGlobalFilter={options.canFilter}
+                    canAdvancedFilter={options.showAdvancedFilter}
+                    columnsPanel={
+                        options.showHideColumns
+                            ? {
+                                  toggle: toggleColumnsPanel,
+                                  label: "Columns",
+                                  tooltip: "Toggle to add or remove columns from the table",
+                              }
+                            : null
+                    }
+                    linkedPanel={hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null}
+                />
+                <TablePagination instance={instance} />
+            </Grid>
 
-            {preFilteredRows.length === 0 || page.length === 0 ? (
-                <Box className={className ? className : null}>
-                    <InfoAlert
-                        title="No rows meet the selected search or filter criteria."
-                        message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
-                    />
-                </Box>
-            ) : (
-                <>
-                    <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
-                        <TableHead classes={{ root: classes.tableHead }}>
-                            {headerGroups.map((headerGroup: HeaderGroup<object>) => (
-                                <TableRow {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map((column) => (
-                                        //@ts-ignore -- TODO --getSortByToggleProps will be add to types in react-table v8
-                                        <TableHeaderCell key={column.id} column={column} />
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableHead>
-                        <TableBody>
-                            {page.map((row: any, i: any) => {
-                                prepareRow(row);
-                                return (
-                                    <TableRow {...row.getRowProps()}>
-                                        {row.cells.map((cell: any) => {
-                                            return (
-                                                <TableCell
-                                                    size="small"
-                                                    {...cell.getCellProps()}
-                                                    className={cx({ [classes.tableCell]: true })}
-                                                >
-                                                    {cell.render("Cell")}
-                                                </TableCell>
-                                            );
-                                        })}
+                {preFilteredRows.length === 0 || page.length === 0 ? (
+                    <Box className={className ? className : null}>
+                        <InfoAlert
+                            title="No rows meet the selected search or filter criteria."
+                            message={`Unfiltered table contains ${data.length} rows. Remove or adjust filter criteria to view.`}
+                        />
+                    </Box>
+                ) : (
+                    <>
+                        <MaUTable {...getTableProps()} classes={{ root: classes.tableBody }}>
+                            <TableHead classes={{ root: classes.tableHead }}>
+                                {headerGroups.map((headerGroup: HeaderGroup<object>) => (
+                                    <TableRow {...headerGroup.getHeaderGroupProps()}>
+                                        {headerGroup.headers.map((column) => (
+                                            //@ts-ignore -- TODO --getSortByToggleProps will be add to types in react-table v8
+                                            <TableHeaderCell key={column.id} column={column} />
+                                        ))}
                                     </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </MaUTable>
-                </>
-            )}
+                                ))}
+                            </TableHead>
+                            <TableBody>
+                                {page.map((row: any, i: any) => {
+                                    prepareRow(row);
+                                    return (
+                                        <TableRow {...row.getRowProps()}>
+                                            {row.cells.map((cell: any) => {
+                                                return (
+                                                    <TableCell
+                                                        size="small"
+                                                        {...cell.getCellProps()}
+                                                        className={cx({ [classes.tableCell]: true })}
+                                                    >
+                                                        {cell.render("Cell")}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </MaUTable>
+                    </>
+                )}
         </CustomPanel>
     );
 };

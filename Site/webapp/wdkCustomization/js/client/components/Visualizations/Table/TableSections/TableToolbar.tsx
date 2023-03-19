@@ -14,6 +14,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 
 interface PanelOptions {
     toggle: any;
@@ -21,7 +22,7 @@ interface PanelOptions {
     tooltip?: string;
 }
 
-interface FilterToolbarProps {
+interface TableToolbar {
     canAdvancedFilter?: boolean;
     columnsPanel?: PanelOptions;
     hasGlobalFilter: boolean;
@@ -29,35 +30,19 @@ interface FilterToolbarProps {
     linkedPanel?: PanelOptions;
 }
 
-export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
+export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     instance,
     canExport = true,
     linkedPanel,
     columnsPanel,
-    hasGlobalFilter
+    hasGlobalFilter,
 }) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
-    // const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState(false);
-    const classes = useFilterStyles();
     const tClasses = useTableStyles();
 
-    const _toggleLinkedPanel = useCallback(
-        (toggleState: boolean) => {
-            linkedPanel && linkedPanel.toggle(toggleState);
-            // setLinkedPanelIsOpen(!linkedPanelIsOpen);
-        },
-        [linkedPanel]
-    );
-
-    const _toggleColumnsPanel = useCallback((toggleState: boolean) => {
-        alert("toggle columns");
-        //linkedPanel && linkedPanel.toggle(toggleState);
-        // setLinkedPanelIsOpen(!linkedPanelIsOpen);
-    }, []);
-
     return (
-        <AppBar position="static" elevation={0} className={tClasses.navigationToolbar}>
+        <AppBar position="static" elevation={1} className={tClasses.navigationToolbar}>
             <Toolbar variant="dense" disableGutters>
                 {/* span is b/c button is disabled, allows tooltip to fire */}
                 {canExport && (
@@ -84,27 +69,34 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                     />
                 )}
 
-                <TablePagination instance={instance} />
-
                 {linkedPanel && (
-                    <Box pr={2}>
+                    <Box mr={1} ml={2}>
                         <FormControlLabel
                             control={
                                 <Switch
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                        _toggleLinkedPanel(event.target.checked)
+                                        linkedPanel.toggle(event.target.checked)
                                     }
                                 />
                             }
                             label={linkedPanel.label}
+                            title={`Toggle to reveal or hide ${linkedPanel.label} explorer`}
                         />
-                        <HelpIcon tooltip={`Toggle to reveal or hide ${linkedPanel.label} explorer`}></HelpIcon>
                     </Box>
                 )}
 
                 {columnsPanel && (
-                    <Box>
-                        <FormControlLabel
+                    <Box mr={1} ml={1}>
+                        <Button
+                            variant="text"
+                            color="primary"
+                            startIcon={<ViewColumnIcon />}
+                            onClick={columnsPanel.toggle}
+                            title={`Set visible columns`}
+                        >
+                            Columns
+                        </Button>
+                        {/*<FormControlLabel
                             control={
                                 <Switch
                                     checked={false}
@@ -114,8 +106,7 @@ export const TableToolbar: React.FC<FilterToolbarProps & FilterPageProps> = ({
                                 />
                             }
                             label={columnsPanel.label}
-                        />
-                        <HelpIcon tooltip={``}></HelpIcon>
+                        />8*/}
                     </Box>
                 )}
             </Toolbar>
