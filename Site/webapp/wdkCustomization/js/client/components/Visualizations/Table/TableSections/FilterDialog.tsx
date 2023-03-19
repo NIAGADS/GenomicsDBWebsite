@@ -8,15 +8,25 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
-import Collapse from "@material-ui/core/Collapse"
+import Collapse from "@material-ui/core/Collapse";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import InfoIcon from "@material-ui/icons/Info";
 
-import { CollapsableCardPanel, StyledTooltip as Tooltip, MaterialUIThemedButton as BlueButton } from "@components/MaterialUI";
+import {
+    CollapsableCardPanel,
+    StyledTooltip as Tooltip,
+    MaterialUIThemedButton as BlueButton,
+    CollapseWithClose,
+} from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
 import { FilterChipBar } from "@viz/Table/TableSections";
+
+import { webAppUrl } from "ebrc-client/config";
 
 interface FilterDialog {
     handleClose: any;
@@ -38,10 +48,21 @@ export function FilterDialog({
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
 
     const renderFilterPanelHelp = useMemo(() => {
-        <Collapse in={helpPanelIsOpen} >
-            
+        const imgPath = webAppUrl + "/images/help/table";
+        return (
+            <CollapseWithClose in={helpPanelIsOpen} handleClose={()=>setHelpPanelIsOpen(false)}>
+                <Paper variant="outlined" elevation={1}>
+                    <Typography variant="h5">About the Advanced Filters</Typography>
+                    <Typography variant="body1">
+                        The advanced table filters are a set of column-based filters that summarize column information
+                        into interact plots or other simple input fields to facilitate mining the associated table data.
+                    </Typography>
+                    <Divider />
+                    <Typography variant="h5">Statistics</Typography>
+                    <img src={`${imagePath}/filter-value.png`} />
+                </Paper>
             </Collapse>
-
+        );
     }, []);
 
     const toggleHelp = () => setHelpPanelIsOpen(!helpPanelIsOpen);
@@ -117,6 +138,7 @@ export function FilterDialog({
                 >
                     More Info
                 </BlueButton>
+                {renderFilterPanelHelp}
             </DialogTitle>
             <DialogContent dividers>
                 <Grid
