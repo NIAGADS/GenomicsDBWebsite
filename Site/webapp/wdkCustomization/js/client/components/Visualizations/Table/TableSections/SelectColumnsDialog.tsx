@@ -4,7 +4,6 @@ import { TableInstance } from "react-table";
 
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 
@@ -14,7 +13,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 
-import { useTableStyles, ROW_SELECTION_FIELD } from "@viz/Table";
+import { ROW_SELECTION_FIELD } from "@viz/Table";
 
 type HideColumnProps<T extends Record<string, unknown>> = {
     instance: TableInstance<T>;

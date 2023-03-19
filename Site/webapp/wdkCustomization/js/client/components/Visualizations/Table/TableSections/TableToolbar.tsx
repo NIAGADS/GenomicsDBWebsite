@@ -14,6 +14,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
+import FilterIcon from "@material-ui/icons/FilterList";
 
 interface PanelOptions {
     toggle: any;
@@ -26,9 +27,8 @@ interface DialogOptions extends Omit<PanelOptions, "toggle"> {
 }
 
 interface TableToolbar {
-    canAdvancedFilter?: boolean;
+    filter?: { hasGlobalFilter: boolean; advancedFilter: DialogOptions };
     columnsDialog?: DialogOptions;
-    hasGlobalFilter: boolean;
     canExport?: boolean;
     linkedPanel?: PanelOptions;
 }
@@ -38,12 +38,19 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     canExport = true,
     linkedPanel,
     columnsDialog,
-    hasGlobalFilter,
+    filter,
 }) => {
     //@ts-ignore
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
     const [columnsDialogIsOpen, setColumnsDialogIsOpen] = useState<boolean>(false);
+    const [filterDialogIsOpen, setFilterDialogIsOpen] = useState<boolean>(false);
     const tClasses = useTableStyles();
+
+    const hasGlobalFilter = filter.hasGlobalFilter === null ? false : filter.hasGlobalFilter;
+
+    const closeFilterDialog = () => {
+        setFilterDialogIsOpen(false);
+    }
 
     const closeColumnsDialog = () => {
         setColumnsDialogIsOpen(false);
@@ -93,7 +100,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                     </Tooltip>
                 )}
 
-                {columnsDialog && (
+                {columnsDialog !== null && (
                     <Box mr={1} ml={1}>
                         <Button
                             variant="text"
@@ -105,6 +112,22 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                             title="Set visible columns"
                         >
                             Columns
+                        </Button>
+                    </Box>
+                )}
+
+                {filter.advancedFilter !== null && (
+                    <Box mr={1} ml={1}>
+                        <Button
+                            variant="text"
+                            color="primary"
+                            startIcon={<FilterIcon />}
+                            onClick={() => {
+                                setFilterDialogIsOpen(true);
+                            }}
+                            title="View advanced filters"
+                        >
+                            Filter
                         </Button>
                     </Box>
                 )}

@@ -5,16 +5,19 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import Dialog from "@material-ui/core/Dialog";
 
-import { CollapsableCardPanel, LabelButton, StyledTooltip as Tooltip } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
 import { DEFAULT_PVALUE_FILTER_VALUE } from "@components/Record/RecordTable/RecordTableFilters";
 import { FilterChipBar } from "@viz/Table/TableSections";
 import { HelpIcon } from "wdk-client/Components";
 
-export function FilterPanel({ instance, filterGroups, includeChips=true }: FilterPageProps): ReactElement {
+export function FilterDialog({ instance, filterGroups, includeChips=true }: FilterPageProps): ReactElement {
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
@@ -34,20 +37,6 @@ export function FilterPanel({ instance, filterGroups, includeChips=true }: Filte
             //@ts-ignore
             (item) => item.canFilter && item.filter && item.filter.toLowerCase().includes("pvalue")
         ).length > 0;
-
-    const renderFilterHeader = (
-        <LabelButton
-            variant="text"
-            color="default"
-            startIcon={<FilterListIcon />}
-            fullWidth={true}
-            size="small"
-            disableElevation
-            disableRipple
-        >
-            Filter Table
-        </LabelButton>
-    );
 
     const renderCollapsibleFilterGroup = (group: FilterGroup) => {
         return (
@@ -92,8 +81,8 @@ export function FilterPanel({ instance, filterGroups, includeChips=true }: Filte
     };
 
     return (
-        <CollapsableCardPanel headerContents={renderFilterHeader} defaultOpen={true} borderedHeader={true}>
-            <Grid
+        <>
+             <Grid
                 container
                 //direction="column"
                 justifyContent="center"
@@ -124,6 +113,6 @@ export function FilterPanel({ instance, filterGroups, includeChips=true }: Filte
                 </Grid>}
                 <Grid item>{filterGroups.map((fg) => renderFilterGroup(fg))}</Grid>
             </Grid>
-        </CollapsableCardPanel>
+        </>
     );
 }

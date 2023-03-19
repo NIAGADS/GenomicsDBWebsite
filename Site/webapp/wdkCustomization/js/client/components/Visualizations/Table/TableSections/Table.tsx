@@ -60,7 +60,7 @@ import {
     TableHeaderCell,
     TableToolbar,
     MemoLinkedPanel as LinkedPanel,
-    TablePagination
+    TablePagination,
 } from "@viz/Table/TableSections";
 
 export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
@@ -68,8 +68,6 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
     const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
-    const [columnsPanelIsOpen, setColumnsPanelIsOpen] = useState<boolean>(false);
-    const [filterPanelIsOpen, setFilterPanelIsOpen] = useState<boolean>(false);
     const [linkedPanelTarget, setLinkedPanelTarget] = useState<any>(null);
     /* const [linkedPanelState, setLinkedPanelState] = useState<{ [key: string]: any }>(
         get(options, "linkedPanel.initialState", null)
@@ -261,14 +259,6 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         setLinkedPanelIsOpen(isOpen);
     }, []);
 
-    const toggleColumnsPanel = useCallback((isOpen: boolean) => {
-        setColumnsPanelIsOpen(isOpen);
-    }, []);
-
-    const toggleFilterPanel = useCallback((isOpen: boolean) => {
-        setFilterPanelIsOpen(isOpen);
-    }, []);
-
     return (
         <CustomPanel justifyContent="flex-start">
             {hasLinkedPanel && (
@@ -280,18 +270,26 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                 ></LinkedPanel>
             )}
 
-            <Grid container justifyContent="flex-end"  direction="column">
+            <Grid container justifyContent="flex-end" direction="column">
                 <Grid item xs={12}>
                     <TableToolbar
                         instance={instance}
-                        hasGlobalFilter={options.canFilter}
-                        canAdvancedFilter={options.showAdvancedFilter}
+                        filter={{
+                            hasGlobalFilter: options.canFilter,
+                            advancedFilter: options.showAdvancedFilter
+                                ? {
+                                      label: "Filter",
+                                      tooltip: "View and filter table by summary graphics",
+                                      options: { filterGroups: options.filterGroups },
+                                  }
+                                : null,
+                        }}
                         columnsDialog={
                             options.showHideColumns
                                 ? {
                                       label: "Columns",
-                                      tooltip: "Toggle to add or remove columns from the table",
-                                      options: {requiredColumns: options.requiredColumns}
+                                      tooltip: "View column list to add or remove from the table",
+                                      options: { requiredColumns: options.requiredColumns },
                                   }
                                 : null
                         }

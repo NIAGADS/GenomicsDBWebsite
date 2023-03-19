@@ -1,4 +1,4 @@
-export * from "./FilterPanel"
+export * from "./FilterDialog"
 export * from "./TableHeaderCell"
 export * from "./TablePagination"
 export * from "./TableToolbar"
