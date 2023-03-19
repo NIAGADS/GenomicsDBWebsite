@@ -20,6 +20,7 @@ import {
     StyledTooltip as Tooltip,
     MaterialUIThemedButton as BlueButton,
     CollapseWithClose,
+    ComingSoonAlert,
 } from "@components/MaterialUI";
 
 import { useFilterPanelStyles, FilterPageProps, FilterGroup } from "@viz/Table/TableFilters";
@@ -44,13 +45,11 @@ export function FilterDialog({
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
-    //@ts-ignore
-    const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
 
     const renderFilterPanelHelp = useMemo(() => {
-        const imgPath = webAppUrl + "/images/help/table";
+        const imagePath = webAppUrl + "/images/help/table";
         return (
-            <CollapseWithClose in={helpPanelIsOpen} handleClose={()=>setHelpPanelIsOpen(false)}>
+            <CollapseWithClose isOpen={helpPanelIsOpen} handleClose={() => setHelpPanelIsOpen(false)}>
                 <Paper variant="outlined" elevation={1}>
                     <Typography variant="h5">About the Advanced Filters</Typography>
                     <Typography variant="body1">
@@ -58,14 +57,15 @@ export function FilterDialog({
                         into interact plots or other simple input fields to facilitate mining the associated table data.
                     </Typography>
                     <Divider />
+                    <ComingSoonAlert message="More information about the table filters will be coming soon." />
                     <Typography variant="h5">Statistics</Typography>
                     <img src={`${imagePath}/filter-value.png`} />
                 </Paper>
-            </Collapse>
+            </CollapseWithClose>
         );
     }, []);
 
-    const toggleHelp = () => setHelpPanelIsOpen(!helpPanelIsOpen);
+    const openHelp = () => setHelpPanelIsOpen(!helpPanelIsOpen);
 
     const resetFilters = useCallback(() => {
         if (hasPvalueFilter) {
@@ -134,6 +134,7 @@ export function FilterDialog({
                     variant="text"
                     color="primary"
                     title="About the filter/summary interface"
+                    onClick={openHelp}
                     endIcon={<InfoIcon />}
                 >
                     More Info

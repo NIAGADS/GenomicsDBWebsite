@@ -4,6 +4,7 @@ import React, { ReactElement, useCallback, useState, useMemo } from "react";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
 
 interface CollapseWithClose {
     isOpen: boolean;
