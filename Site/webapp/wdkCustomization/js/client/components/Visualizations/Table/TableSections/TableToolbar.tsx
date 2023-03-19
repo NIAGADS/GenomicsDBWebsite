@@ -1,12 +1,10 @@
 import React, { useState, useCallback } from "react";
 
-import DownloadIcon from "@material-ui/icons/GetApp";
-
 import { useTableStyles } from "@viz/Table";
 import { FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
 import { SelectColumnsDialog, FilterDialog } from "@viz/Table/TableSections";
 
-import { StyledTooltip as Tooltip, HelpIcon } from "@components/MaterialUI";
+import { StyledTooltip as Tooltip, MaterialUIThemedButton as BlueButton } from "@components/MaterialUI";
 
 import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
@@ -15,6 +13,8 @@ import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FilterIcon from "@material-ui/icons/FilterList";
+import InfoIcon from "@material-ui/icons/Info";
+import DownloadIcon from "@material-ui/icons/GetApp";
 
 interface PanelOptions {
     toggle: any;
@@ -44,6 +44,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
     const [columnsDialogIsOpen, setColumnsDialogIsOpen] = useState<boolean>(false);
     const [filterDialogIsOpen, setFilterDialogIsOpen] = useState<boolean>(false);
+    const [helpDialogIsOpen, setHelpDialogIsOpen] = useState<boolean>(false);
     const tClasses = useTableStyles();
 
     const hasGlobalFilter = filter.hasGlobalFilter === null ? false : filter.hasGlobalFilter;
@@ -55,6 +56,10 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     const closeColumnsDialog = () => {
         setColumnsDialogIsOpen(false);
     };
+
+    const closeHelpDialog = () => {
+        setHelpDialogIsOpen(false);
+    }
 
     return (
         <>
@@ -109,7 +114,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                             onClick={() => {
                                 setColumnsDialogIsOpen(true);
                             }}
-                            title="Set visible columns"
+                            title="Set visible columns."
                         >
                             Columns
                         </Button>
@@ -125,12 +130,24 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                             onClick={() => {
                                 setFilterDialogIsOpen(true);
                             }}
-                            title="View advanced filters"
+                            title="View advanced filters."
                         >
                             Filter
                         </Button>
                     </Box>
                 )}
+                <Box mr={1} ml={1}>
+                    <BlueButton
+                        variant="text"
+                        color="primary"
+                        onClick={() => {
+                            setHelpDialogIsOpen(true);
+                        }}
+                        title="Learn about searching, filtering, and modifying this table."
+                    >
+                        <InfoIcon />
+                    </BlueButton>
+                </Box>
             </Toolbar>
             <SelectColumnsDialog
                 isOpen={columnsDialogIsOpen}
