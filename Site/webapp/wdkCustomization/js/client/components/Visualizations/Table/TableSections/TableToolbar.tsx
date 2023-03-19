@@ -42,74 +42,63 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     const tClasses = useTableStyles();
 
     return (
-        <AppBar position="static" elevation={1} className={tClasses.navigationToolbar}>
-            <Toolbar variant="dense" disableGutters>
-                {/* span is b/c button is disabled, allows tooltip to fire */}
-                {canExport && (
-                    <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
-                        <span>
-                            <Button
-                                startIcon={<DownloadIcon />}
-                                variant="text"
-                                color="primary"
-                                aria-label="download table data"
-                                disabled={true}
-                            >
-                                Export
-                            </Button>
-                        </span>
-                    </Tooltip>
-                )}
 
-                {hasGlobalFilter && (
-                    <GlobalFilterFlat
-                        preGlobalFilteredRows={preGlobalFilteredRows}
-                        globalFilter={globalFilter}
-                        setGlobalFilter={setGlobalFilter}
-                    />
-                )}
-
-                {linkedPanel && (
-                    <Box mr={1} ml={2}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                        linkedPanel.toggle(event.target.checked)
-                                    }
-                                />
-                            }
-                            label={linkedPanel.label}
-                            title={`Toggle to reveal or hide ${linkedPanel.label} explorer`}
-                        />
-                    </Box>
-                )}
-
-                {columnsPanel && (
-                    <Box mr={1} ml={1}>
+        <Toolbar variant="dense" disableGutters style={{display:'flex', justifyContent:"flex-end"}}>
+            {/* span is b/c button is disabled, allows tooltip to fire */}
+            {canExport && (
+                <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
+                    <span>
                         <Button
+                            startIcon={<DownloadIcon />}
                             variant="text"
                             color="primary"
-                            startIcon={<ViewColumnIcon />}
-                            onClick={columnsPanel.toggle}
-                            title={`Set visible columns`}
+                            aria-label="download table data"
+                            disabled={true}
                         >
-                            Columns
+                            Export
                         </Button>
-                        {/*<FormControlLabel
-                            control={
-                                <Switch
-                                    checked={false}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                        _toggleColumnsPanel(event.target.checked)
-                                    }
-                                />
-                            }
-                            label={columnsPanel.label}
-                        />8*/}
-                    </Box>
-                )}
-            </Toolbar>
-        </AppBar>
+                    </span>
+                </Tooltip>
+            )}
+
+            {hasGlobalFilter && (
+                <GlobalFilterFlat
+                    preGlobalFilteredRows={preGlobalFilteredRows}
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                />
+            )}
+
+            {linkedPanel && (
+                <Box mr={1} ml={2}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                    linkedPanel.toggle(event.target.checked)
+                                }
+                            />
+                        }
+                        label={linkedPanel.label}
+                        title={`Toggle to reveal or hide ${linkedPanel.label} explorer`}
+                    />
+                </Box>
+            )}
+
+            {columnsPanel && (
+                <Box mr={1} ml={1}>
+                    <Button
+                        variant="text"
+                        color="primary"
+                        startIcon={<ViewColumnIcon />}
+                        onClick={columnsPanel.toggle}
+                        title="Set visible columns"
+                    >
+                        Columns
+                    </Button>
+                </Box>
+            )}
+        </Toolbar>
+
     );
 };
