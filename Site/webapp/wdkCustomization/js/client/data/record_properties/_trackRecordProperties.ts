@@ -20,19 +20,24 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
             },
         ],
         defaultFilter: "pvalue",
-        requiredColumns: ["variant", "pvalue"],
+        requiredColumns: ["variant_link", "pvalue"],
         hiddenColumns: ["chromosome", "position", "msc_is_coding_flag", "msc_impact"],
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: true,
-        locusZoomView: true,
+        linkedPanel: {
+            type: "LocusZoom",
+            column: "variant_link",
+            isJSON: true,
+            enableRowSelect: true
+        },
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
             adsp_variant_flag: "BooleanRedCheck",
             msc_is_coding_flag: "BooleanGreenCheck",
-            variant: "Link",
+            variant_link: "Link",
             pvalue: "ScientificNotation",
-            msc_impacted_gene_link: "Link",
+            msc_impacted_gene_link: "Link"
         },
     },
 };

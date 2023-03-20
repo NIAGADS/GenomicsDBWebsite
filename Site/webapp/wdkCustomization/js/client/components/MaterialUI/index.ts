@@ -13,6 +13,7 @@ export * from "./Lists";
 export * from "./Panels";
 export * from "./Alerts";
 export * from "./Links";
+export * from "./CollapseWithClose";
 
 // TODO: Clean-up/Remove
 export * from "./Buttons";

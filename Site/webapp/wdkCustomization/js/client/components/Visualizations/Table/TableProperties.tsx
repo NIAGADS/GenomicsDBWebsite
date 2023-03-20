@@ -6,6 +6,13 @@ export interface TableColumnSort {
     descending: boolean;
 }
 
+export interface TableLinkedPanel {
+    type: "LocusZoom",
+    column: string;
+    isJSON: boolean;
+    enableRowSelect: boolean;
+}
+
 export interface TableProperties {
     filters?: { [columnId: string]: FilterType };
     filterGroups?: FilterGroup[];
@@ -16,7 +23,7 @@ export interface TableProperties {
     canFilter: boolean;
     canExport?: boolean;
     canToggleColumns: boolean;
-    locusZoomView?: boolean;
+    linkedPanel?: TableLinkedPanel;
     fullWidth?: boolean;
     sortedBy?: TableColumnSort[];
     accessors?: {[key: string]: ColumnAccessorType };

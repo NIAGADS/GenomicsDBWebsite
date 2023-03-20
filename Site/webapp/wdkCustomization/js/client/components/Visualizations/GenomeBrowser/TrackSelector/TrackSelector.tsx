@@ -5,7 +5,7 @@ import { Column } from "react-table";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
+//import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
 import { ColumnAccessorType, resolveColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 import {
@@ -141,8 +141,10 @@ export const TrackSelector: React.FC<TrackSelector> = ({
     const hasColumnFilters = properties.hasOwnProperty("filters");
 
     // component here
-    return (
-        <TableContainer
+    return ( <p> temp</p> );
+};
+
+ /*  <TableContainer
             className={classes.table}
             columns={selectorColumns}
             data={data}
@@ -157,10 +159,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
             isOpen={open}
             handleClose={handleClose}
             onRowSelect={updateSelectedTracks}
-        />
-    );
-};
-
+    /> */
 const _addColumnFilters = (column: any, filterType: FilterType) => {
     switch (filterType) {
         case "select":

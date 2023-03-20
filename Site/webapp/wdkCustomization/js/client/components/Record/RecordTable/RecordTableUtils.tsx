@@ -1,5 +1,5 @@
 import React from "react";
-import { isString, forIn } from "lodash";
+import { forIn } from "lodash";
 import {
     RelativePositionSpan,
     VariantConsequenceImpactSpan,
@@ -10,6 +10,7 @@ import {
     resolveNAs,
     resolveColumnAccessor as defaultResolveColumnAccessor,
     BooleanCheckAccessor,
+    RowSelectButtonAccessor
 } from "@viz/Table/ColumnAccessors";
 import { parseFieldValue as defaultParseFieldValue, resolveNullFieldValue } from "@viz/Table";
 
@@ -20,6 +21,9 @@ export const extractFieldValues = (data: { [key: string]: any }[], field: string
     return data.map(a => isJSON ? JSON.parse(a[field]) : a[field]);
 }
 
+export const extractIndexedFieldValue = (data: { [key: string]: any }[], field: string, isJSON: boolean, index: number): string => {
+    return data.map(a => isJSON ? JSON.parse(a[field]) : a[field])[index];
+}
 
 export const extractPrimaryKeysFromRecordLink = (data: { [key: string]: any }[], field: string): string[] => {
     return data.map(a => extractPrimaryKeyFromRecordLink(a[field]));
@@ -41,18 +45,28 @@ export const resolveData = (data: { [key: string]: any }[]): { [key: string]: an
     });
 };
 
-export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default") => {
+
+
+export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorType = "Default", userProps?:any) => {
+    const MemoRelativePositionSpan = React.memo(RelativePositionSpan);
+    const MemoVariantConsequenceImpactSpan = React.memo(VariantConsequenceImpactSpan);
+    const MemoMetaseqIdAttribute = React.memo(MetaseqIdAttribute);
+    const MemoBooleanCheckAccessor = React.memo(BooleanCheckAccessor);
+    const MemoRowSelectButtonAccessor = React.memo(RowSelectButtonAccessor);
+
     switch (accessorType) {
         case "RelativePosition":
-            return (row: any) => resolveNAs(row[key], <RelativePositionSpan value={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <MemoRelativePositionSpan value={row[key]} />);
         case "VariantImpact":
-            return (row: any) => resolveNAs(row[key], <VariantConsequenceImpactSpan value={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <MemoVariantConsequenceImpactSpan value={row[key]} />);
         case "MetaseqID":
-            return (row: any) => resolveNAs(row[key], <MetaseqIdAttribute value={row[key]} />);
+            return (row: any) => resolveNAs(row[key], <MemoMetaseqIdAttribute value={row[key]} />);
         case "BooleanGreenCheck":
-            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="green" />;
+            return (row: any) => <MemoBooleanCheckAccessor value={row[key]} htmlColor="green" />;
         case "BooleanRedCheck":
-            return (row: any) => <BooleanCheckAccessor value={row[key]} htmlColor="red" />;
+            return (row: any) => <MemoBooleanCheckAccessor value={row[key]} htmlColor="red" />;
+        case "RowSelectButton":
+            return (row: any) => <MemoRowSelectButtonAccessor value={row[key]} userProps={userProps}/>;
         default:
             return defaultResolveColumnAccessor(key, accessorType);
     }

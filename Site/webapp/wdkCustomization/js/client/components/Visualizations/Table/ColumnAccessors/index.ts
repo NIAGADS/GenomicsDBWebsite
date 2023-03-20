@@ -7,6 +7,7 @@ export * from "./SparkPercentageBarAccessor";
 export * from "./BooleanCheckAccessor";
 export * from "./JSONAccessor";
 export * from "./LinkAccessor";
+export * from "./RowSelectButtonAccessor";
 
 export type ColumnAccessorType =
     | "PercentageBar"
@@ -24,5 +25,6 @@ export interface ColumnAccessor {
     htmlColor?: string;
     className?: string;
     maxLength?: number;
+    userProps?: any;
 
 }

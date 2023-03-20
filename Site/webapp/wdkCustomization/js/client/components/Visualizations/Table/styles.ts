@@ -5,12 +5,16 @@ export const useTableStyles = makeStyles((theme: Theme) =>
         root: {
             height: 500
         },
+        table: {
+            
+        },
         navigationToolbar: {
             color: theme.palette.primary.dark,
             backgroundColor: "transparent"
         },
         fullWidth: {
-            width: "100%"
+            width: "100%",
+            overflowX: "scroll"
         },
         hide: {
             display: "none"

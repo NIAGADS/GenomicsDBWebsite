@@ -166,3 +166,5 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
         </Card>
     ) : null;
 };
+
+export const MemoCollapsableCardPanel = React.memo(CollapsableCardPanel);
