@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 
 import { useTableStyles } from "@viz/Table";
 import { FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
-import { SelectColumnsDialog, FilterDialog } from "@viz/Table/TableSections";
+import { SelectColumnsDialog, FilterDialog, MemoTableHelpDialog as TableHelpDialog } from "@viz/Table/TableSections";
 
 import { StyledTooltip as Tooltip, MaterialUIThemedButton as BlueButton } from "@components/MaterialUI";
 
@@ -59,7 +59,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
 
     const closeHelpDialog = () => {
         setHelpDialogIsOpen(false);
-    }
+    };
 
     return (
         <>
@@ -162,6 +162,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                 filterGroups={filter.advancedFilter.options.filterGroups}
                 includeChips={false}
             />
+            <TableHelpDialog isOpen={helpDialogIsOpen} handleClose={closeHelpDialog}/>
         </>
     );
 };

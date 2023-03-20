@@ -34,6 +34,27 @@ interface FilterDialog {
     isOpen: boolean;
 }
 
+const FilterHelpPanel: React.FC<{ isOpen: boolean; handleClose: any }> = React.memo(({ isOpen, handleClose }) => {
+    const imagePath = webAppUrl + "/images/help/table";
+    return (
+        <CollapseWithClose isOpen={isOpen} handleClose={handleClose}>
+            <Paper variant="outlined" elevation={1}>
+                <Box p={2}>
+                    <Typography variant="h5">About the Advanced Filters</Typography>
+                    <Typography variant="body1">
+                        The advanced table filters are a set of column-based filters that summarize column information
+                        into interact plots or other simple input fields to facilitate mining the associated table data.
+                    </Typography>
+                    <Divider />
+                    <ComingSoonAlert message="More information about the table filters will be coming soon." />
+                    {/*<Typography variant="h5">Statistics</Typography>
+                <img src={`${imagePath}/filter-value.png`} /> */}
+                </Box>
+            </Paper>
+        </CollapseWithClose>
+    );
+});
+
 export function FilterDialog({
     isOpen,
     handleClose,
@@ -45,27 +66,6 @@ export function FilterDialog({
     const classes = useFilterPanelStyles();
     //@ts-ignore
     const { allColumns, setAllFilters } = instance;
-
-    const renderFilterPanelHelp = useMemo(() => {
-        const imagePath = webAppUrl + "/images/help/table";
-        return (
-            <CollapseWithClose isOpen={helpPanelIsOpen} handleClose={() => setHelpPanelIsOpen(false)}>
-                <Paper variant="outlined" elevation={1}>
-                    <Typography variant="h5">About the Advanced Filters</Typography>
-                    <Typography variant="body1">
-                        The advanced table filters are a set of column-based filters that summarize column information
-                        into interact plots or other simple input fields to facilitate mining the associated table data.
-                    </Typography>
-                    <Divider />
-                    <ComingSoonAlert message="More information about the table filters will be coming soon." />
-                    <Typography variant="h5">Statistics</Typography>
-                    <img src={`${imagePath}/filter-value.png`} />
-                </Paper>
-            </CollapseWithClose>
-        );
-    }, []);
-
-    const openHelp = () => setHelpPanelIsOpen(!helpPanelIsOpen);
 
     const resetFilters = useCallback(() => {
         if (hasPvalueFilter) {
@@ -118,7 +118,7 @@ export function FilterDialog({
         return allColumns
             .filter((column) => column.id === columnName)
             .map((column) => (
-                <Grid item xs={6}>
+                <Grid key={column.id} item xs={6}>
                     <Box className={classes.filterCell}>{column.render("Filter")}</Box>{" "}
                 </Grid>
             ));
@@ -134,12 +134,17 @@ export function FilterDialog({
                     variant="text"
                     color="primary"
                     title="About the filter/summary interface"
-                    onClick={openHelp}
+                    onClick={() => {
+                        setHelpPanelIsOpen(true);
+                    }}
                     endIcon={<InfoIcon />}
-                >
-                    More Info
-                </BlueButton>
-                {renderFilterPanelHelp}
+                ></BlueButton>
+                <FilterHelpPanel
+                    isOpen={helpPanelIsOpen}
+                    handleClose={() => {
+                        setHelpPanelIsOpen(false);
+                    }}
+                />
             </DialogTitle>
             <DialogContent dividers>
                 <Grid

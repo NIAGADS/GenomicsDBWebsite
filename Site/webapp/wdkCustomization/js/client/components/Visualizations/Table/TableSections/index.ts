@@ -6,3 +6,4 @@ export * from "./SelectColumnsDialog"
 export * from "./FilterChipBar"
 export * from "./LinkedPanel"
 export * from "./Table";
+export * from "./TableHelpDialog";
