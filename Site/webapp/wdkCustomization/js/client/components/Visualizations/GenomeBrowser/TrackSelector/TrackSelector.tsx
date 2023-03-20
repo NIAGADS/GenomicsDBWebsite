@@ -1,11 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { isObject, merge, forIn, indexOf, has, get } from "lodash";
+import { isObject, merge, indexOf, has, get } from "lodash";
+import classNames from "classnames";
 
 import { Column } from "react-table";
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-
-//import { EncapsulatedTableContainer as TableContainer } from "@viz/Table";
+import { TableOptions, TableProperties, useTableStyles } from "@viz/Table";
+import { Table } from "@viz/Table/TableSections";
 import { ColumnAccessorType, resolveColumnAccessor } from "@viz/Table/ColumnAccessors";
 
 import {
@@ -18,10 +18,12 @@ import {
     FilterType,
 } from "@viz/Table/TableFilters";
 
-import { TissueColumnFilter } from "@viz/GenomeBrowser/TrackSelector";
-import { ConfigServiceResponse, TrackSelectorRow, TrackColumnConfig } from "@viz/GenomeBrowser/TrackSelector";
-
-import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
+import {
+    TissueColumnFilter,
+    ConfigServiceResponse,
+    TrackSelectorRow,
+    TrackColumnConfig,
+} from "@viz/GenomeBrowser/TrackSelector";
 
 export const resolveSelectorData = (response: ConfigServiceResponse): TrackSelectorRow[] => {
     const expectedColumns = Object.keys(response.columns.columns);
@@ -49,42 +51,24 @@ export const resolveSelectorData = (response: ConfigServiceResponse): TrackSelec
 interface TrackSelector {
     columnConfig: TrackColumnConfig;
     data: any;
-    browser: any;
-    isOpen: boolean;
-    handleClose: any;
+    //browser: any;
     loadedTracks?: string[];
+    type?: "Reference" | "Variant" | "GWAS" | "FunctionalGenomics";
     handleTrackSelect?: any;
+    properties: TableProperties;
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        table: {
-            width: "100%",
-            minHeight: 500,
-            //maxHeight: 1000,
-            overflowY: "scroll",
-            overflowX: "scroll",
-        },
-    })
-);
 
 export const TrackSelector: React.FC<TrackSelector> = ({
     columnConfig,
     data,
-    isOpen,
-    browser,
-    handleClose,
+    properties,
     handleTrackSelect,
     loadedTracks,
 }) => {
     const { columns, order } = columnConfig;
-    const [open, setOpen] = useState<boolean>(isOpen);
     const [selectedTracks, setSelectedTracks] = useState<string[]>(loadedTracks ? loadedTracks : null);
-    const classes = useStyles();
-    const filterTypes = {
-        global: useMemo(() => globalTextFilter, []),
-    };
-
+    const [options, setOptions] = useState<TableOptions>(_initializeTableOptions(properties));
+    const classes = useTableStyles();
     // tracks is json object {track_id:true}
     const updateSelectedTracks = (tracks: any) => {
         Array.isArray(tracks) ? setSelectedTracks(tracks) : setSelectedTracks(Object.keys(tracks));
@@ -94,11 +78,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
         selectedTracks != null && handleTrackSelect(selectedTracks);
     }, [selectedTracks]);
 
-    useEffect(() => {
-        // not sure but something about preselected tracks /handling when track is removed from the genome browser
-    }, [loadedTracks]);
-
-    const buildColumns = () => {
+    const tableColumns = useMemo(() => {
         if (!data) {
             return [];
         }
@@ -107,6 +87,8 @@ export const TrackSelector: React.FC<TrackSelector> = ({
         } else {
             let columnFilters: any = get(properties, "filters", null);
             const accessors: any = get(properties, "accessors", null);
+            const defaultHiddenColumns = get(properties, "hiddenColumns", null);
+
             let selectorColumns: Column<{}>[] = order.map((name) => {
                 const header = columns[name];
                 const accessorType: ColumnAccessorType =
@@ -120,7 +102,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
                 let tableColumn = _buildColumn(name, header, accessorType);
                 tableColumn = _addColumnFilters(tableColumn, filterType);
 
-                if (defaultHiddenColumns && defaultHiddenColumns.includes(name)) {
+                if (options.showHideColumns && defaultHiddenColumns.includes(tableColumn.id)) {
                     tableColumn.show = false;
                 }
 
@@ -129,37 +111,27 @@ export const TrackSelector: React.FC<TrackSelector> = ({
 
             return selectorColumns;
         }
-    };
+    }, [options]);
 
-    const defaultHiddenColumns = get(properties, "hiddenColumns");
-    const hasHiddenColumns = defaultHiddenColumns ? true : false;
-    const canToggleColumns = hasHiddenColumns || get(properties, "canToggleColumns", false);
-
-    const selectorColumns: Column<{}>[] = useMemo(() => buildColumns(), [columnConfig]);
-
-    const canFilter = get(properties, "canFilter", true); // default to true if missing
-    const hasColumnFilters = properties.hasOwnProperty("filters");
-
-    // component here
-    return ( <p> temp</p> );
+    return (
+        <Table
+            className={classNames(get(properties, "fullWidth", true) ? classes.fullWidth : "shrink", classes.table)}
+            columns={tableColumns}
+            data={data}
+            title="Available Tracks"
+            options={Object.assign(options, {
+                canExport: false,
+                rowSelect: {
+                    label: "Display Track",
+                    tooltip: "Toggle track display",
+                    type: "MultiCheck",
+                    action: handleTrackSelect,
+                },
+            })}
+        />
+    );
 };
 
- /*  <TableContainer
-            className={classes.table}
-            columns={selectorColumns}
-            data={data}
-            filterTypes={filterTypes}
-            filterGroups={get(properties, "filterGroups", null)}
-            canFilter={canFilter}
-            canExport={false}
-            showAdvancedFilter={hasColumnFilters}
-            showHideColumns={canToggleColumns}
-            requiredColumns={get(properties, "requiredColumns", null)}
-            title="Genome Browser Track Selector"
-            isOpen={open}
-            handleClose={handleClose}
-            onRowSelect={updateSelectedTracks}
-    /> */
 const _addColumnFilters = (column: any, filterType: FilterType) => {
     switch (filterType) {
         case "select":
@@ -204,3 +176,20 @@ const _buildColumn: any = (name: string, header: string, accessorType: ColumnAcc
     id: name,
     sortType: "alphanumeric",
 });
+
+const _initializeTableOptions = (properties: any) => {
+    const filterTypes = {
+        global: useMemo(() => globalTextFilter, []),
+    };
+    const hasHiddenColumns = get(properties, "hiddenColumns", null);
+    const opts: TableOptions = {
+        showAdvancedFilter: properties.hasOwnProperty("filters"),
+        canFilter: get(properties, "canFilter", true), // default to true if missing
+        filterTypes: filterTypes,
+        filterGroups: get(properties, "filterGroups", null),
+        showHideColumns: hasHiddenColumns || get(properties, "canToggleColumns", false),
+        requiredColumns: get(properties, "requiredColumns", null),
+    };
+
+    return opts;
+};
