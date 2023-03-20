@@ -8,6 +8,7 @@ import { useWdkEffect } from "wdk-client/Service/WdkService";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Box from "@material-ui/core/Box";
 
 import { CustomPanel } from "@components/MaterialUI";
 
@@ -22,6 +23,7 @@ import {
 } from "@viz/GenomeBrowser/TrackSelector";
 
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
+import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
 
 const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(GenomeBrowser);
@@ -33,6 +35,20 @@ export const useStyles = makeStyles((theme: Theme) =>
             position: "relative",
             top: theme.spacing(3),
             //paddingLeft: "50px",
+        },
+        selectorHeader: {
+            backgroundColor: theme.palette.secondary.main,
+            //backgroundColor: "#f0f1f2",
+            borderRadius: "4px",
+            marginTop: theme.spacing(5),
+            borderTop: "4px solid " + theme.palette.primary.main,
+            width: "100%",
+        },
+        selectorHeaderText: {
+            color: theme.palette.primary.main,
+            fontSize: "1.2em",
+            fontWeight: 500,
+            padding: theme.spacing(1),
         },
     })
 );
@@ -52,7 +68,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const classes = useStyles();
 
-
     const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
         selectedTracks.forEach((trackKey: string) =>
             browserTrackConfig
@@ -70,7 +85,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             browserTrackConfig
                 .filter((track: any) => track.id === trackKey)
                 .map((track: any) => {
-                    removeTrackById(track.id, browser); 
+                    removeTrackById(track.id, browser);
                 })
         );
     };
@@ -83,8 +98,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             setLoadedTracks(selectedTracks);
         }
     };
-
-
 
     /* const unloadTrack = (config: TrackConfig, browser: any) => {
         browser.removeTrackByName(config.name);
@@ -146,24 +159,22 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             alignItems="flex-start"
             justifyContent="space-between"
         >
-            {browser ? (
-                <TrackSelector
-                    browser={browser}
-                    isOpen={trackSelectorIsOpen}
-                    handleClose={setTrackSelectorIsOpen.bind(null, false)}
-                    columnConfig={serviceTrackConfig.columns}
-                    data={resolvedSelectorData}
-                    loadedTracks={loadedTracks}
-                    handleTrackSelect={toggleTracks}
-                />
-            ) : null}
-
             <MemoBroswer
                 //locus="ABCA"
                 //disableRefTrack={true}
                 onBrowserLoad={buildBrowser}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
+            />
+            <Box className={classes.selectorHeader}>
+                <Typography variant="h3" className={classes.selectorHeaderText}>Available Tracks</Typography>
+            </Box>
+            <TrackSelector
+                properties={properties}
+                columnConfig={serviceTrackConfig.columns}
+                data={resolvedSelectorData}
+                loadedTracks={loadedTracks}
+                handleTrackSelect={toggleTracks}
             />
         </CustomPanel>
     ) : (

@@ -85,13 +85,18 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         greater: useMemo(() => greaterThanFilter, []),
         select: useMemo(() => includesFilter, []),
         multi_select: useMemo(() => includesAnyFilter, []),
+        checkbox_select: useMemo(() => includesAnyFilter, []),
+        radio_select: useMemo(() => includesFilter, []),
         typeahead_select: useMemo(() => includesAnyFilter, []),
         pie: useMemo(() => includesFilter, []),
         boolean_pie: useMemo(() => includesFilter, []),
         pvalue: useMemo(() => greaterThanFilter, []),
+        tissue: useMemo(() => includesFilter, []), // I think this is necessary as a placeholder
         greater_than_threshold: useMemo(() => greaterThanFilter, []),
         less_than_threshold: useMemo(() => lessThanFilter, []),
     };
+
+
 
     const hooks = useMemo(() => {
         return [useFlexLayout, useResizeColumns, useGlobalFilter, useFilters, useSortBy, usePagination, useRowSelect];
@@ -252,6 +257,9 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                         ldrefvar: refSnpId !== null ? variant + ":" + refSnpId : variant,
                     });
             }
+        }
+        else {
+            rowSelectProps.action(Object.keys(selectedRowIds));
         }
         //hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
     }, [selectedRowIds]);
