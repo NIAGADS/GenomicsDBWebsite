@@ -30,13 +30,17 @@ export interface CollapsablePanelProps {
     title?: string;
     defaultOpen?: boolean;
     headerContents?: React.ReactNode;
-    borderedHeader?: boolean
+    borderedHeader?: boolean;
+    dark?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         primaryBackground: {
             background: theme.palette.primary.main,
+        },
+        whiteText: {
+            color: "white"
         },
         lightBackground: {
             background: lighten(theme.palette.primary.main, 0.95),
@@ -60,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         borderBottom: {
             borderBottom: "1px solid " + theme.palette.secondary.main,
-        }
+        },
     })
 );
 
@@ -78,7 +82,14 @@ export const CustomPanel: React.FC<PanelProps & Custom> = ({
     hasBaseArrow = false,
 }) => {
     return (
-        <Grid item container justifyContent={justifyContent} alignItems={alignItems} className={className ? className : ""} xs={12}>
+        <Grid
+            item
+            container
+            justifyContent={justifyContent}
+            alignItems={alignItems}
+            className={className ? className : ""}
+            xs={12}
+        >
             {children}
             {hasBaseArrow && <DownArrowRow color="primary" />}
         </Grid>
@@ -134,28 +145,37 @@ export const CollapsableCardPanel: React.FC<PanelProps & CollapsablePanelProps> 
     children,
     hasBaseArrow = false,
     defaultOpen = false,
-    borderedHeader = false
+    borderedHeader = false,
+    dark = false,
 }) => {
     const [expanded, setExpanded] = useState(defaultOpen);
     const classes = useStyles();
+
+    const collapseHeaderClass = borderedHeader
+        ? classes.borderBottom
+        : dark
+        ? classes.primaryBackground
+        : null;
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
     return children ? (
         <Card elevation={0} className={className}>
-            <CardActions disableSpacing className={borderedHeader ? classes.borderBottom : ""}>
-                {title && <Typography>{title}</Typography>}
+            <CardActions disableSpacing className={collapseHeaderClass} style={dark ? {marginTop: "16px"}: null}>
+                {title && <Typography className={dark ? classes.whiteText : null}>{title}</Typography>}
                 {headerContents && headerContents}
                 <IconButton
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: expanded,
-                    })}
+                    className={
+                        clsx(classes.expand, {
+                            [classes.expandOpen]: expanded,
+                        })
+                    }
                     onClick={handleExpandClick}
                     aria-expanded={expanded}
                     size="small"
                     aria-label="show more"
-                    color="default"
+                    color={dark ? "secondary" : "default"}
                 >
                     <ExpandMoreIcon />
                 </IconButton>

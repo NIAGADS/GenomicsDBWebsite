@@ -88,6 +88,7 @@ export function FilterDialog({
                 key={group.label + "-collapse"}
                 title={group.label}
                 defaultOpen={group.defaultOpen != null ? group.defaultOpen : false}
+                dark={true}
             >
                 {renderStaticFilterGroup(group, classes.collapsibleFilterGroup)}
             </CollapsableCardPanel>
