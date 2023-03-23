@@ -47,7 +47,7 @@
         c.annotation_type, c.annotation_subtype, c.biosample_type,
         d.display_value AS term, 
         d.source_id,
-        CASE WHEN source_id LIKE 'ERO%' OR source_id LIKE 'NO%' THEN NULL
+        CASE WHEN source_id LIKE 'ERO%' OR source_id LIKE 'NO%' OR parent_term = 'genome build' THEN NULL
 WHEN uri IS NULL THEN 
 jsonb_build_object('url', 'http://purl.obolibrary.org/obo/' || source_id, 
                    'value', 'http://purl.obolibrary.org/obo/' || source_id, 
