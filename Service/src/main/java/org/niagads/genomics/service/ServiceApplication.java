@@ -34,6 +34,7 @@ public class ServiceApplication extends EuPathServiceApplication {
     .add(OntologySearchService.class)
     .add(DataDictionaryValidationService.class)
     .add(DataDictionarySearchService.class)
+    .add(DataDictionaryLookupService.class)
 
     .add(DatasetModelRefService.class)
     .add(DatasetLookupService.class)

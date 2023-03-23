@@ -29,7 +29,7 @@ const OntologyRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, he
     );
 
     const renderSummary = (
-        <ComingSoonAlert message="More information about using the data dictionary will be coming soon." />
+        <ComingSoonAlert message="More information about how to use the data dictionary will be coming soon." />
     );
 
     return <RecordHeader title={renderTitle} summary={renderSummary} />;
