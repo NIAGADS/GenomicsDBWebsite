@@ -56,19 +56,15 @@
       <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
       <table name="terms" displayName="Data Dictionary" queryRef="OntologyTables.terms">
         <description>Curated terms in the NIAGADS Data Dictionary</description>
-        <columnAttribute name="term_source_id" displayName="ID"  inReportMaker="true"/>
-        <columnAttribute name="name" displayName="Term"  inReportMaker="true"/>
+        <columnAttribute name="source_id" displayName="Ontology Source ID"  help="unique ontology term identifier" inReportMaker="true"/>
+        <columnAttribute name="term" displayName="Term"  inReportMaker="true"/>
+        <columnAttribute name="term_link" displayName="Ontology Reference"  inReportMaker="false" help="View mapped term in its source ontology"/>       
         <columnAttribute name="definition" displayName="Definition"  inReportMaker="true"/>
-        <columnAttribute name="uri" displayName="URI"  internal="true" inReportMaker="true"/>
-        <columnAttribute name="external_link" displayName="URI"  inReportMaker="false"/>
-        <columnAttribute name="category_level_1" displayName="Category"  inReportMaker="true"/>
-        <columnAttribute name="category_level_2" displayName="Subcategory"  inReportMaker="true"/>
-
-
-        
-
-        
-
+        <columnAttribute name="annotation_type" displayName="Annotation Type" inReportMaker="true"/>
+        <columnAttribute name="annotation_subtype" displayName="Annotation Subtype" inReportMaker="true"/>
+        <columnAttribute name="biosample_type" displayName="Biosample Type" help="indicates whether a biosample annotation is a cell, cell line or tissue" inReportMaker="true"/>
+        <columnAttribute name="synonyms" displayName="Synonyms" inReportMaker="true"/>
+ 
       </table>
 
     </recordClass>
