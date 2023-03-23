@@ -146,7 +146,7 @@ class RecordUI extends Component {
                         />
                     </Grid>
                 </Grid>
-                <RecordNavigationPanel
+                {this.props.recordClass.shortDisplayName !== "Ontology" && <RecordNavigationPanel
                     isOpen={this.state.navigationIsOpen}
                     handleClose={this._handleNavigationClose.bind(this)}
                     title="Page Navigation"
@@ -179,7 +179,7 @@ class RecordUI extends Component {
                             formatSpan(this.props.record.attributes.span.toString())}>
                     </RecordActionButtons>
 
-                </RecordNavigationPanel>
+                </RecordNavigationPanel>}
 
                 <div className="wdk-RecordMain">
                     <RecordMainSection

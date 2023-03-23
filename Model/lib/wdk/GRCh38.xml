@@ -56,7 +56,7 @@
   <import file="GRCh38/tables/trackTables.xml" />
 
   <!-- ONTOLOGIES -->
-  <!-- <import file="GRCh38/ontologies/record.xml"/> -->
-  <!-- <import file="GRCh38/ontologies/queries/attributes.xml" /> -->
-  <!-- <import file="GRCh38/ontologies/queries/tables.xml" /> -->
+  <import file="GRCh38/records/ontologyRecord.xml"/> 
+  <import file="GRCh38/attributes/ontologyAttributes.xml" /> 
+  <import file="GRCh38/tables/ontologyTables.xml" /> 
 </wdkModel>

@@ -4,10 +4,12 @@ import { _geneTableProperties as _geneRecordTableProperties } from "./_geneRecor
 import { _variantTableProperties as _variantRecordTableProperties } from "./_variantRecordProperties";
 import { _trackTableProperties as _trackRecordTableProperties } from "./_trackRecordProperties";
 import { _datasetTableProperties as _datasetRecordTableProperties } from "./_datasetRecordProperties";
+import { _ontologyTableProperties as _ontologyRecordTableProperties } from "./_ontologyRecordProperties";
 
 export const _tableProperties: { [table: string]: { [name: string]: TableProperties } } = {
     Gene: _geneRecordTableProperties,
     Variant: _variantRecordTableProperties,
     Track: _trackRecordTableProperties,
-    Dataset: _datasetRecordTableProperties
+    Dataset: _datasetRecordTableProperties,
+    Ontology: _ontologyRecordTableProperties
 };
