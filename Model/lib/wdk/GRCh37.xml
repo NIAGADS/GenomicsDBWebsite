@@ -49,9 +49,9 @@
 
 
     <!-- ONTOLOGIES -->
-    <import file="GRCh37/ontologies/record.xml"/>
+    <!-- <import file="GRCh37/ontologies/record.xml"/> 
     <import file="GRCh37/ontologies/queries/attributes.xml" />
-    <import file="GRCh37/ontologies/queries/tables.xml" />
+    <import file="GRCh37/ontologies/queries/tables.xml" /> -->
     
     <!-- GENES  -->
     <import file="GRCh37/genes/record.xml" />

@@ -47,7 +47,7 @@ public class OntologySearchService extends AbstractWdkService {
             String body, @QueryParam(CATEGORY_PARAM)@DefaultValue("any") String category, 
             @QueryParam(TERM_PARAM) String term) throws WdkModelException {
 
-        LOG.info("Starting 'Ontology Term Lookup' Service");
+        LOG.info("Starting 'Ontology Term Search' Service");
 
         String response = "{}";
         try {

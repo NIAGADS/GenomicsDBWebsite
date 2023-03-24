@@ -259,7 +259,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
             }
         }
         else {
-            rowSelectProps.action(Object.keys(selectedRowIds));
+            rowSelectProps !== null && rowSelectProps.action(Object.keys(selectedRowIds));
         }
         //hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
     }, [selectedRowIds]);

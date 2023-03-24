@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+   <querySet name="OntologyTables" queryType="table" isCacheable="false">
+
+    
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="terms">
+      <column name="ontology" columnType="string"/>
+      <column name="annotation_type"/>
+      <column name="annotation_subtype"/>
+      <column name="biosample_type"/>
+      <column name="term"/>
+      <column name="term_link"/>
+      <column name="synonyms"/>
+      <column name="definition"/>
+      <column name="source_id"/>
+      <sql>
+        <![CDATA[
+        WITH RECURSIVE Parents(child, parentlist) AS (
+          SELECT display_value , ARRAY[]::TEXT[] FROM NIAGADS.DataDictionaryTerms WHERE parent_term IS NULL
+          UNION
+          SELECT rel.display_value, 
+          CASE WHEN rel.parent_term = 'extract' THEN 'material type'
+          WHEN rel.parent_term = 'platform' THEN 'platform type'
+          WHEN rel.parent_term = 'life cycle stage' THEN 'life stage'
+          WHEN rel.parent_term = 'software pipeline' THEN 'pipeline'  
+          ELSE rel.parent_term END  || parents.parentlist 
+            FROM NIAGADS.DataDictionaryTerms rel 
+            JOIN parents ON rel.parent_term = parents.child
+        ),
+        Categories AS (
+        SELECT child AS term,
+        CASE WHEN array_length(parentlist, 1) = 1 THEN parentlist[1]
+        WHEN array_length(parentlist, 1) = 2 THEN parentlist[2]
+        ELSE parentlist[3] END AS annotation_type,
+        CASE WHEN array_length(parentlist, 1) = 2 THEN parentlist[1]
+        ELSE parentlist [2] END AS annotation_subtype,
+        CASE WHEN 'biosample type' = ANY(parentlist) AND array_length(parentlist, 1) = 3 THEN parentlist[1] 
+        ELSE NULL END AS biosample_type
+        FROM Parents)
+        
+        SELECT 'NDD' AS ontology,
+        c.annotation_type, c.annotation_subtype, c.biosample_type,
+        d.display_value AS term, 
+        d.source_id,
+        CASE WHEN source_id LIKE 'ERO%' OR source_id LIKE 'NO%' OR parent_term = 'genome build' THEN NULL
+WHEN uri IS NULL THEN 
+jsonb_build_object('url', 'http://purl.obolibrary.org/obo/' || source_id, 
+                   'value', 'http://purl.obolibrary.org/obo/' || source_id, 
+                   'tooltip', 'Explore mapped term <em>' || display_value || '</em> in its original ontology',
+                   'type', 'link')
+ELSE jsonb_build_object('url', uri, 
+                   'value', uri, 
+                   'tooltip', 'Explore mapped term <em>' || display_value || '</em> in its original ontology',
+                   'type', 'link') END AS term_link,
+       
+        d.synonyms, d.definition
+        FROM 
+        NIAGADS.DataDictionaryTerms d, Categories c
+        WHERE c.term = d.display_value
+	]]>
+      </sql>
+    </sqlQuery>
+   </querySet>
+</wdkModel>
