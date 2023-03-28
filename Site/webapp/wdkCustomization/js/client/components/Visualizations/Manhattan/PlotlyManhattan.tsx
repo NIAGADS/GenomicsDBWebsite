@@ -35,7 +35,7 @@ export const PlotlyManhattan: React.SFC<ManhattanPlot> = ({ accession, track, we
     const [plotData, setPlotData] = useState<any>(null);
     const [fetchError, setFetchError] = useState<boolean>(false);
 
-    const DATA_FILE_URL = webAppUrl + "/images/manhattan/" + accession + "/" + track + "-manhattan.json";
+    const DATA_FILE_URL = webAppUrl + "/files/manhattan/" + accession + "/" + track + "-manhattan.json";
 
     const fetchPlotData = async () => {
         const responseJson = await _fetchDataFile(DATA_FILE_URL);

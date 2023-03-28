@@ -25,7 +25,6 @@ interface HeaderImage {
 }
 
 
-
 const ManhattanThumbnails: React.FC<HeaderImage> = ({ src, type }) => {
     const classes = useHeadingStyles();
     const enclosingGrid = useRef(0);
@@ -55,7 +54,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
     const classes = useHeadingStyles();
     const tClasses = useTypographyStyles();
 
-    let imgPrefix = `${webAppUrl}/images/manhattan/${record.attributes.niagads_accession}/png/${record.id[0].value}`;
+    let imgLink = `${webAppUrl}/files/${record.attributes.niagads_accession}/png/${record.id[0].value}`;
 
     const { attributes } = record;
 

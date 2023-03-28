@@ -121,11 +121,6 @@
     <exec executable="${patch-full-path-wdkclient}" />
   </target>
 
-  <target name="manhattan-files-exist">
-    <condition property="expand-manhattan">
-      <available file="${webappTargetDir}/images/${project_id}_manhattan" type="dir"/>
-    </condition>
-   </target>
 
   <target name="GenomicsDBWebsite/Site-WebInstallation" depends="GenomicsDBWebsite-Website-Patch">
 
@@ -134,22 +129,7 @@
       <property name="component" value="Site" />
     </ant>
 
-    <echo message="Unpack manhattan plots for ${projectId}" />
-    <untar src="${webappTargetDir}/images/${projectId}_manhattan.tar.gz" compression="gzip" dest="${webappTargetDir}/images" />
-    <delete file="${webappTargetDir}/images/GRCh38_manhattan.tar.gz" quiet="true" />
-    <delete file="${webappTargetDir}/images/GRCh37_manhattan.tar.gz" quiet="true" />
-    <exec executable="find">
-      <arg value="${webappTargetDir}/images/manhattan"/>
-      <arg value="-name"/>
-      <arg value="*.gz"/>
-      <arg value="-type"/>
-      <arg value="f"/>
-      <arg value="-exec"/>
-      <arg value="gunzip"/>
-      <arg value="{}"/>
-      <arg value=";"/>
-    </exec>
-  
+
     <replace dir="${webappTargetDir}/WEB-INF/includes" propertyFile="${webPropFile}">
       <include name="client.html" />
       <replacefilter token="@project@" property="projectId" />
