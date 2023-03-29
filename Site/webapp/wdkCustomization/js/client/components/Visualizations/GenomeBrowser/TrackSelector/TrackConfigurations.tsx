@@ -1,4 +1,5 @@
 import { merge } from "lodash";
+import { GWASServiceReader } from "@viz/GenomeBrowser";
 
 export interface BaseTrackConfig {
     name: string;
@@ -47,6 +48,7 @@ export interface IgvTrackProps {
     visibilityWindow?: number;
     type: string;
     id: string;
+    colorBy?: any;
 }
 
 export const convertRawToIgvTrack = (tracks: RawTrackConfig[]): any => {
@@ -59,7 +61,11 @@ export const convertRawToIgvTrack = (tracks: RawTrackConfig[]): any => {
             visibilityWindow: track.track_type === 'variant_service' ? 1000000 : -1
         } 
 
-        if (track.track_type.includes("_service")) {
+        if (track.track_type == 'gwas_service') {
+            options.reader = new GWASServiceReader({});
+        }
+
+        if (track.track_type.includes("variant_service")) {
             options.reader = track.track_type;
         }
 

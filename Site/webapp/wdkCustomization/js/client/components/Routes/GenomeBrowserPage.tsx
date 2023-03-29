@@ -12,20 +12,20 @@ import Box from "@material-ui/core/Box";
 
 import { CustomPanel } from "@components/MaterialUI";
 
-import { GenomeBrowser, getLoadedTracks, removeTrackById } from "@viz/GenomeBrowser";
-
 import {
+    IGVBrowser as GenomeBrowser,
+    getLoadedTracks,
+    removeTrackById,
     ConfigServiceResponse,
     TrackSelectorRow,
     resolveSelectorData,
     TrackSelector,
     convertRawToIgvTrack,
-} from "@viz/GenomeBrowser/TrackSelector";
+} from "@viz/GenomeBrowser";
 
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
 
-const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(GenomeBrowser);
 
 export const useStyles = makeStyles((theme: Theme) =>
@@ -167,7 +167,9 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 options={browserOptions}
             />
             <Box className={classes.selectorHeader}>
-                <Typography variant="h3" className={classes.selectorHeaderText}>Available Tracks</Typography>
+                <Typography variant="h3" className={classes.selectorHeaderText}>
+                    Available Tracks
+                </Typography>
             </Box>
             <TrackSelector
                 properties={properties}

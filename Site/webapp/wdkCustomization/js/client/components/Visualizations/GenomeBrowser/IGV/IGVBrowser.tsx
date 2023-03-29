@@ -1,14 +1,13 @@
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
-import { GWASTrack, VariantTrack, GWASServiceReader } from "../../../../lib/igv/CustomTracks";
-import { RawTrackConfig } from "@viz/GenomeBrowser/TrackSelector";
-import { idListToArray } from "wdk-client/Views/Question/Params/DatasetParamUtils";
+import { GWASTrack, VariantTrack } from "../../../../../lib/igv/CustomTracks";
+
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
 
-interface GenomeBrowser {
+interface IGVBrowser {
     searchUrl: string;
     options: any;
     locus?: string;
@@ -38,7 +37,8 @@ export const removeTrackById = (trackId: string, browser: any) => {
     browser.removeTrack(trackView[0].track);
 };
 
-export const GenomeBrowser: React.FC<GenomeBrowser> = ({ locus, searchUrl, options, onBrowserLoad }) => {
+export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, onBrowserLoad }) => {
+
     useLayoutEffect(() => {
         window.addEventListener("ERROR: Genome Browser - ", (event) => {
             console.log(event);
@@ -76,4 +76,4 @@ export const GenomeBrowser: React.FC<GenomeBrowser> = ({ locus, searchUrl, optio
     return <span style={{ width: "100%" }} id="genome-browser" />;
 };
 
-export default GenomeBrowser;
+export default IGVBrowser;
