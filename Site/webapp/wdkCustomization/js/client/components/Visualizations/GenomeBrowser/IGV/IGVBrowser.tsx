@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
-import { GWASTrack, VariantTrack } from "../../../../../lib/igv/CustomTracks";
+import { GWASTrack } from "@viz/GenomeBrowser";
 
 
 const HASH_PREFIX = "#/locus/";
@@ -29,8 +29,6 @@ export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(brow
 
 // we want to find track by ID b/c some names may be duplicated; so modeled after:
 // https://github.com/igvteam/igv.js/blob/0dfb1f7b02d9660ff1ef0169899c4711496158e8/js/browser.js#L1104
-
-
 export const removeTrackById = (trackId: string, browser: any) => {
     const trackViews = get(browser, "trackViews", []);
     const trackView = trackViews.filter((view: any) => getTrackID(view) === trackId);
@@ -64,10 +62,10 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
 
             browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new GWASTrack(config, browser));
 
-            browser.addTrackToFactory(
+           /* browser.addTrackToFactory(
                 "variant_service",
                 (config: any, browser: any) => new VariantTrack(config, browser)
-            );
+            ); */
 
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
