@@ -99,9 +99,9 @@ public class GWASSummaryStatisticsTrackService extends AbstractWdkService {
             + "WHEN neg_log10_pvalue > 15 THEN 15 ELSE neg_log10_pvalue END," + NL
             + "'pvalue', pvalue_display," + NL
             + "'record_pk', r.variant_record_primary_key," + NL
-            + "'variant', split_part(r.variant_record_primary_key, '_', 1)" + NL
+            + "'variant', CASE WHEN v.details->>'ref_snp_id' IS NULL THEN v.details->>'display_id' ELSE v.details->>'ref_snp_id' END" + NL
             + ") AS rjson" + NL
-            + "FROM Results.VariantGWAS r, dataset, bin" + NL 
+            + "FROM Results.VariantGWAS r, dataset, bin, get_variant_display_details(r.variant_record_primary_key) v	" + NL 
             + "WHERE r.protocol_app_node_id = dataset.protocol_app_node_id" + NL
             + "AND r.bin_index <@ bin.bin" + NL
             + "AND int8range(?, ?) @> split_part(r.variant_record_primary_key, ':', 2)::bigint)";
