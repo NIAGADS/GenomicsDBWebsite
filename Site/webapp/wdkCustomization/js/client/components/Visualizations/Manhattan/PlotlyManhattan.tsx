@@ -14,15 +14,15 @@ interface ManhattanPlot {
 // https://stackoverflow.com/questions/60610256/what-is-the-proper-way-to-fetch-json-in-react-with-hooks
 // https://plotly.com/javascript/react/
 
-function _fetchDataFile(url: string) {
-    return fetch(url)
-        .then((response) => {
-            let responseJson = response.json();
-            return responseJson;
-        })
-        .catch((error) => {
-            return null;
-        });
+async function _fetchDataFile(url: string) {
+    try {
+        const response = await fetch(url);
+        let responseJson = response.json();
+        return responseJson;
+    }
+    catch (error) {
+        return null;
+    }
 }
 
 function _correctNewLines(data: any) {
