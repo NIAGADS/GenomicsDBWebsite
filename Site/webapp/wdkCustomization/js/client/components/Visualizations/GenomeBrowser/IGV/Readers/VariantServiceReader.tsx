@@ -1,13 +1,15 @@
 import {fetchJson} from "@viz/GenomeBrowser";
 import igv from "igv/dist/igv.esm";
+import { VcfInfo } from "@viz/GenomeBrowser/IGV/Tracks/VariantServiceTrack";
 
 interface VariantServiceResponse {
-    chr: string;
-    start: number;
-    end: number;
-    info: any;
-    record_pk: string;
-    variant: string;
+   chrom: string;
+   pos: number;
+   ref: string;
+   alt: string;
+   qual: string;
+   filter: number;
+   info: VcfInfo;
 }
 
 export class VariantServiceReader {
@@ -36,7 +38,17 @@ export class VariantServiceReader {
 
         //const response = await fetchJson(this.endpoint + '?' + queryString);
         if (response && response.data) {
-            return response.data;
+            return response.data.map((entry: VariantServiceResponse) => {
+                const start = entry.info.location.includes("-") ? parseInt(entry.info.location.split(" - ")[0]): entry.pos;
+                const end = entry.info.location.includes("-") ? parseInt(entry.info.location.split(" - ")[1]) - 1: entry.pos;
+                
+            return {
+                ...entry,
+                start: start - 1, // IGV is zero-based
+                end: end,
+                chr: entry.chrom // needed by cache
+            }}
+            );
         } else {
             return undefined;
         }

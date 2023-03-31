@@ -2,10 +2,33 @@
 import igv from "igv/dist/igv.esm";
 
 const isString = igv.StringUtils.isString;
-
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;
 const TOP_MARGIN = 10;
+
+export interface ConsequenceData {
+    conseq: string;
+    impact: string;
+    is_coding: boolean;
+    codon_change: string;
+    amino_acid_change: string;
+    impacted_gene: string;
+    impacted_gene_symbol:string;  
+}
+
+export interface VcfInfo {
+    location: string;
+    position: number;
+    chromosome: string;
+    display_id: string;
+    metaseq_id: string;
+    ref_snp_id: string;
+    variant_class: string;
+    display_allele: string;
+    is_adsp_variant: boolean;
+    variant_class_abbreviation: string;
+    most_severe_consequence: ConsequenceData;
+}
 
 class VariantServiceTrack extends igv.TrackBase {
     constructor(config: any, browser: any) {
@@ -54,12 +77,12 @@ class VariantServiceTrack extends igv.TrackBase {
     }
 
     async postInit() {
-        this.header = await this.getHeader(); // cricital, don't remove'
-        if (undefined === this.visibilityWindow && this.config.indexed !== false) {
-            const fn = igv.FileUtils.isFile(this.config.url) ? this.config.url.name : this.config.url;
-            if (isString(fn) && fn.toLowerCase().includes("gnomad")) {
-                this.visibilityWindow = 1000; // these are known to be very dense
-            } else if (typeof this.featureSource.defaultVisibilityWindow === "function") {
+        this.header = await this.getHeader(); // cricital, don't remove' -- fossilfriend: don't think we need
+        if (this.config.id === 'dbSNP') {
+            this.visibilityWindow = 10000; // these are known to be very dense
+        }
+        else if (undefined === this.visibilityWindow && this.config.indexed !== false) {
+            if (typeof this.featureSource.defaultVisibilityWindow === "function") {
                 this.visibilityWindow = await this.featureSource.defaultVisibilityWindow();
             } else {
                 this.visibilityWindow = DEFAULT_VISIBILITY_WINDOW;
@@ -81,6 +104,7 @@ class VariantServiceTrack extends igv.TrackBase {
         this.colorBy = undefined;
     }
 
+    // leaving this in for now, but may be irrelevant
     async getHeader() {
         if (!this.header) {
             if (typeof this.featureSource.getHeader === "function") {
@@ -509,6 +533,7 @@ class VariantServiceTrack extends igv.TrackBase {
         return menuItems;
     }
 
+    //@ts-ignore
     contextMenuItemList(clickState: any) {
         // Experimental JBrowse circular view integration
         if (this.browser.circularView && true === this.browser.circularViewVisible) {
