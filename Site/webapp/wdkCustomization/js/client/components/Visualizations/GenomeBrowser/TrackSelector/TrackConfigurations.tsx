@@ -62,7 +62,7 @@ export const convertRawToIgvTrack = (trackConfigs: RawTrackConfig[]): any => {
             type: config.track_type,
             id: config.track,
             supportsWholeGenome: false,
-            visibilityWindow: config.track_type === "variant_service" ? 1000000 : -1,
+            visibilityWindow: config.track_type.includes("_service") ? 1000000 : -1,
             removable: true,
         };
         

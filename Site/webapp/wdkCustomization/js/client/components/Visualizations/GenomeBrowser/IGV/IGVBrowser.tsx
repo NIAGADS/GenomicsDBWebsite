@@ -11,6 +11,7 @@ interface IGVBrowser {
     searchUrl: string;
     options: any;
     locus?: string;
+    onTrackRemoved?: (tracks: any) => void;
     onBrowserLoad?: (Browser: any) => void;
 }
 
@@ -35,7 +36,7 @@ export const removeTrackById = (trackId: string, browser: any) => {
     browser.removeTrack(trackView[0].track);
 };
 
-export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, onBrowserLoad }) => {
+export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
 
     useLayoutEffect(() => {
         window.addEventListener("ERROR: Genome Browser - ", (event) => {
@@ -58,6 +59,13 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
             browser.on("locuschange", function (referenceFrameList: any) {
                 let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
                 window.location.replace(HASH_PREFIX + loc);
+            });
+
+            // perform action in encapsulating component if track is removed
+            browser.on('trackremoved', function (removedTracks: any) {
+                alert('tracks removed');
+                console.log(removedTracks);
+                onTrackRemoved && onTrackRemoved(removedTracks);
             });
 
             browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new GWASTrack(config, browser));

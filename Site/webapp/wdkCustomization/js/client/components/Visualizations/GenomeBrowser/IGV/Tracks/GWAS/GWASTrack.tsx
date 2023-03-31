@@ -17,24 +17,25 @@ class GWASTrack extends igv.TrackBase {
 
         super.init(config)
 
-        this.useChrColors = config.useChrColors === undefined ? true : config.useChrColors
-        this.trait = config.trait
-        this.posteriorProbability = config.posteriorProbability
-        this.valueProperty = "bed" === config.format ? "score" : "value"
+        this.useChrColors = false // config.useChrColors === undefined ? true : config.useChrColors
+        this.valueProperty = "value"
         this.height = config.height || 100   // The preferred height
         this.autoscale = config.autoscale
-        this.autoscalePercentile = config.autoscalePercentile === undefined ? 98 : config.autoscalePercentile
         this.background = config.background    // No default
         this.divider = config.divider || "rgb(225,225,225)"
         this.dotSize = config.dotSize || 3
         this.popoverWindow = (config.popoverWindow === undefined ? DEFAULT_POPOVER_WINDOW : config.popoverWindow)
+        this.maxValue = config.max || 25
+        // this.minThreshold = 1 * (10**(this.maxValue * -1))
 
         this.colorScales = config.color ?
             new igv.ConstantColorScale(config.color) :
             {
                 "*": new igv.BinnedColorScale(config.colorScale || {
-                    thresholds: [5e-8, 5e-4, 0.5],
-                    colors: ["rgb(255,50,50)", "rgb(251,100,100)", "rgb(251,170,170)", "rgb(227,238,249)"],
+                    //thresholds: [this.minThreshold, 5e-8, 1e-6, 0.5],
+                    //colors: ["rgb(16,151,230)", "rgb(0,104,55)", "rgb(255,166,0)", "rgb(251,170,170)", "rgb(227,238,249)"],
+                    thresholds: [0.3, 3, 6, 7.3, this.maxValue],
+                    colors: ["rgb(227,238,249)", "rgb(251,170,170)", "rgb(245, 12, 12)", "rgb(255,166,0)", "rgb(20, 186, 59)", "rgb(16,151,230)"]
                 })
             }
 
@@ -54,17 +55,10 @@ class GWASTrack extends igv.TrackBase {
 
         // Set initial range if specfied, unless autoscale == true
         if (!this.autoscale) {
-            if (this.posteriorProbability) {
-                this.dataRange = {
-                    min: this.config.min === undefined ? 0 : this.config.min,
-                    max: this.config.max === undefined ? 1 : this.config.max
-                }
-            } else {
-                this.dataRange = {
-                    min: this.config.min === undefined ? 0 : this.config.min,
-                    max: this.config.max === undefined ? 25 : this.config.max
-                }
-            }
+            this.dataRange = {
+                min: this.config.min === undefined ? 0 : this.config.min,
+                max: this.maxValue
+            }           
         }
 
         return this
@@ -77,7 +71,6 @@ class GWASTrack extends igv.TrackBase {
 
     async getFeatures(chr: string, start: number, end: number) {
         const visibilityWindow = this.visibilityWindow
-        const x = this.featureSource.getFeatures({chr, start, end, visibilityWindow});
         return this.featureSource.getFeatures({chr, start, end, visibilityWindow});
     }
 
@@ -86,13 +79,14 @@ class GWASTrack extends igv.TrackBase {
         const ctx = options.context
         const pixelWidth = options.pixelWidth
         const pixelHeight = options.pixelHeight
+        const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight
+
         if (this.background) {
             igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': this.background})
         }
         igv.IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, {'strokeStyle': this.divider})
 
         if (featureList) {
-
             const bpPerPixel = options.bpPerPixel
             const bpStart = options.bpStart
             const bpEnd = bpStart + pixelWidth * bpPerPixel + 1
@@ -102,12 +96,10 @@ class GWASTrack extends igv.TrackBase {
                 if (pos > bpEnd) break
 
                 const colorScale = this.getColorScale(variant._f ? variant._f.chr : variant.chr)
-
-
-                let val = variant.neg_log10_pvalue
+                
+                let val = variant.neg_log10_pvalue > this.maxValue ? this.maxValue : variant.neg_log10_pvalue;
                 let color = colorScale.getColor(val)
             
-                const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight
                 const px = Math.round((pos - bpStart) / bpPerPixel)
                 const py = Math.max(this.dotSize, pixelHeight - Math.round((val - this.dataRange.min) / yScale))
 
@@ -132,7 +124,7 @@ class GWASTrack extends igv.TrackBase {
             }
             return cs
         } else {
-            return this.colorScales("*")
+            return this.colorScales["*"]
         }
     }
 
@@ -179,25 +171,22 @@ class GWASTrack extends igv.TrackBase {
             for (let f of features) {
                 const xDelta = Math.abs(clickState.canvasX - f.px)
                 const yDelta = Math.abs(clickState.canvasY - f.py)
-                const pvalue = f.pvalue
                 if (xDelta < this.dotSize && yDelta < this.dotSize) {
                     if (count > 0) {
                         data.push("<HR/>")
                     }
                     if (count == 5) {
-                        data.push("...")
+                        data.push("...");
                         break
                     }
                     if (typeof f.popupData === 'function') {
                         data = data.concat(f.popupData())
                     } else {
-                        const chr = f.realChr || f.chr
-                        const pos = (f.realStart || f.start) + 1
-                        data.push({name: 'chromosome', value: chr})
-                        data.push({name: 'position', value: pos})
-                        data.push({name: 'name', value: f.variant})
-                        data.push({name: 'pValue', value: pvalue})
-                        
+                        const pos = f.end; // IGV is zero-based, so end of the variant is the position
+                        const href = this.config.endpoint.replace('service/track/gwas', 'app/record/variant') + '/' + f.record_pk;
+                        data.push({name: 'Variant', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "View GenomicsDB record for variant" + f.variant})
+                        data.push({name: 'Location', value: f.chr + ':' + pos})
+                        data.push({name: 'p-Value', value: f.pvalue})  
                     }
                     count++
                 }
@@ -212,28 +201,17 @@ class GWASTrack extends igv.TrackBase {
     }
 
     doAutoscale(featureList: any) {
-
         if (featureList.length > 0) {
-            // posterior probabilities are treated without modification, but we need to take a negative logarithm of P values
-            const valueProperty = this.valueProperty
-            const posterior = this.posteriorProbability
             const features =
                 featureList.map(function (feature: any) {
-                    const v = feature[valueProperty]
-                    return {value: posterior ? v : -Math.log(v) / Math.LN10}
+                    return {value: feature.neg_log10_pvalue}
                 })
             this.dataRange = igv.doAutoscale(features)
 
         } else {
-            // No features -- pick something reasonable for PPAs and p-values
-            if (this.posteriorProbability) {
-                this.dataRange.min = this.config.min || 0
-                this.dataRange.max = this.config.max || 1
-            } else {
-                this.dataRange.max = this.config.max || 25
-                this.dataRange.min = this.config.min || 0
-            }
-
+            // No features --  p-values
+            this.dataRange.max = this.maxValue;
+            this.dataRange.min = this.config.min || 0
         }
 
         return this.dataRange
