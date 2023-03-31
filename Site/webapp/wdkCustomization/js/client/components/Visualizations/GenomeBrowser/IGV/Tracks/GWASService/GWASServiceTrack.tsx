@@ -7,7 +7,7 @@ const DEFAULT_POPOVER_WINDOW = 100000000
 
 //const type = "gwas";
 
-class GWASTrack extends igv.TrackBase {
+class GWASServiceTrack extends igv.TrackBase {
 
     constructor(config: any, browser: any) {
         super(config, browser)
@@ -219,5 +219,5 @@ class GWASTrack extends igv.TrackBase {
 
 }
 
-export default GWASTrack
+export default GWASServiceTrack
 

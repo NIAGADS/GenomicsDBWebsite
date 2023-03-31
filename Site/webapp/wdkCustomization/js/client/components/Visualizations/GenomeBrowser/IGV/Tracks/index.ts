@@ -1,3 +1,4 @@
-import GWASTrack from "./GWAS/GWASTrack";
+import GWASServiceTrack from "./GWASService/GWASServiceTrack";
+import VariantServiceTrack from "./VariantServiceTrack"
 
-export { GWASTrack };
+export { GWASServiceTrack, VariantServiceTrack };
