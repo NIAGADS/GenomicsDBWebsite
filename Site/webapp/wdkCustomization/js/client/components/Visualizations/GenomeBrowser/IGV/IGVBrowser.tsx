@@ -1,8 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
-import { GWASTrack } from "@viz/GenomeBrowser";
-
+import { GWASServiceTrack as GWASTrack, VariantServiceTrack as VariantTrack } from "@viz/GenomeBrowser";
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
@@ -17,14 +16,15 @@ interface IGVBrowser {
 
 //loadedTracks.filter((track) => !selectedTracks.includes(track));
 
-
 const getTrackID = (trackView: any) => {
     const track = trackView.track;
-    return 'id' in track ? track.id : track.config.id
-}
+    return "id" in track ? track.id : track.config.id;
+};
 
 export const getLoadedTracks = (browser: any): string[] =>
-    get(browser, "trackViews", []).map((view: any) => getTrackID(view)).filter((track: string) => !ALWAYS_ON_TRACKS.includes(track));
+    get(browser, "trackViews", [])
+        .map((view: any) => getTrackID(view))
+        .filter((track: string) => !ALWAYS_ON_TRACKS.includes(track));
 
 export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(browser).includes(config.id);
 
@@ -37,7 +37,6 @@ export const removeTrackById = (trackId: string, browser: any) => {
 };
 
 export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
-
     useLayoutEffect(() => {
         window.addEventListener("ERROR: Genome Browser - ", (event) => {
             console.log(event);
@@ -62,16 +61,16 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
             });
 
             // perform action in encapsulating component if track is removed
-            browser.on('trackremoved', function (track: any) {
+            browser.on("trackremoved", function (track: any) {
                 onTrackRemoved && onTrackRemoved(track.config.id);
             });
 
             browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new GWASTrack(config, browser));
 
-           /* browser.addTrackToFactory(
+            browser.addTrackToFactory(
                 "variant_service",
                 (config: any, browser: any) => new VariantTrack(config, browser)
-            ); */
+            );
 
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });

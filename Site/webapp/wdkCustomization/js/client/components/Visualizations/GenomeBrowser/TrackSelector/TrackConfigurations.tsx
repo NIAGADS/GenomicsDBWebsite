@@ -1,6 +1,5 @@
 import { merge } from "lodash";
-import { GWASServiceReader } from "@viz/GenomeBrowser";
-import { configLoaded } from "wdk-client/Actions/StaticDataActions";
+import { GWASServiceReader, VariantServiceReader } from "@viz/GenomeBrowser";
 
 export interface BaseTrackConfig {
     name: string;
@@ -21,6 +20,7 @@ export interface RawTrackConfig extends BaseTrackConfig {
     track_type_display: string;
     biosample_characteristics: { [key: string]: string };
     experimental_design: { [key: string]: string };
+    supports_whole_genome?: boolean;
 }
 
 export interface TrackSelectorRow extends Omit<RawTrackConfig, "biomsample_characteristics" | "experimental_design"> {
@@ -61,31 +61,34 @@ export const convertRawToIgvTrack = (trackConfigs: RawTrackConfig[]): any => {
             displayMode: "expanded",
             type: config.track_type,
             id: config.track,
-            supportsWholeGenome: false,
-            visibilityWindow: config.track_type.includes("_service") ? 1000000 : -1,
+            supportsWholeGenome: config.supports_whole_genome || true,
+            visibilityWindow: -1,
             removable: true,
         };
-        
+
         if (config.track_type.includes("_service")) {
             options.reader = resolveTrackReader(config.track_type, { endpoint: config.endpoint, track: config.track });
             options.queryable = true;
             options.expandQuery = false;
             options.sourceType = "custom";
+            options.visibilityWindow = 1000000;
+            options.supportsWholeGenome = false;
         }
 
         return merge(config, options);
     });
 };
 
-const resolveTrackReader = (trackType: string, config:any):any => {
-    switch(trackType) {
+const resolveTrackReader = (trackType: string, config: any): any => {
+    switch (trackType) {
         case "gwas_service":
             return new GWASServiceReader(config);
         case "variant_service":
+            return new VariantServiceReader(config);
         default:
-            return null
+            return null;
     }
-}
+};
 
 export const fetchJson = async (url: string) => {
     try {
