@@ -11,7 +11,7 @@ interface IGVBrowser {
     searchUrl: string;
     options: any;
     locus?: string;
-    onTrackRemoved?: (tracks: any) => void;
+    onTrackRemoved?: (track: string) => void;
     onBrowserLoad?: (Browser: any) => void;
 }
 
@@ -62,10 +62,8 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
             });
 
             // perform action in encapsulating component if track is removed
-            browser.on('trackremoved', function (removedTracks: any) {
-                alert('tracks removed');
-                console.log(removedTracks);
-                onTrackRemoved && onTrackRemoved(removedTracks);
+            browser.on('trackremoved', function (track: any) {
+                onTrackRemoved && onTrackRemoved(track.config.id);
             });
 
             browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new GWASTrack(config, browser));
