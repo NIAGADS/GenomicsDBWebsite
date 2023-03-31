@@ -1,10 +1,18 @@
 // modified from https://github.com/igvteam/igv.js/tree/master/js/variant/variantTrack.js
 import igv from "igv/dist/igv.esm";
 
+// TODO: Filter on CADD Score
+
 const isString = igv.StringUtils.isString;
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;
+const DEFAULT_COLOR_BY = "type";
 const TOP_MARGIN = 10;
+
+interface ColorByCategory {
+    field: string;
+    label: string;
+}
 
 export interface ConsequenceData {
     conseq: string;
@@ -13,7 +21,7 @@ export interface ConsequenceData {
     codon_change: string;
     amino_acid_change: string;
     impacted_gene: string;
-    impacted_gene_symbol:string;  
+    impacted_gene_symbol: string;
 }
 
 export interface VcfInfo {
@@ -29,6 +37,15 @@ export interface VcfInfo {
     variant_class_abbreviation: string;
     most_severe_consequence: ConsequenceData;
 }
+
+const COLOR_BY_FIELDS: ColorByCategory[] = [
+    { field: "type", label: "Variant Type" },
+    //  { field: "filter", label: "CADD Score" },
+    { field: "is_adsp_variant", label: "ADSP Variant" },
+    { field: "impact", label: "Consequence Severity" },
+    { field: "consequence", label: "Consequence Type" },
+    { field: "is_coding", label: "Coding Variant"}
+];
 
 class VariantServiceTrack extends igv.TrackBase {
     constructor(config: any, browser: any) {
@@ -62,8 +79,8 @@ class VariantServiceTrack extends igv.TrackBase {
         this.sortDirection = "ASC";
         this.type = config.type || "variant";
 
-        this.colorBy = config.colorBy; // Can be undefined => default
-        this._initColorBy = config.colorBy;
+        this.colorBy = config.colorBy === undefined ? DEFAULT_COLOR_BY : config.colorBy; // Can be undefined => default
+        this._initColorBy = config.colorBy === undefined ? DEFAULT_COLOR_BY : config.colorBy;
         if (config.colorTable) {
             this.colorTables = new Map();
             this.colorTables.set(config.colorBy, new igv.ColorTable(config.colorTable));
@@ -78,10 +95,10 @@ class VariantServiceTrack extends igv.TrackBase {
 
     async postInit() {
         this.header = await this.getHeader(); // cricital, don't remove' -- fossilfriend: don't think we need
-        if (this.config.id === 'dbSNP') {
-            this.visibilityWindow = 10000; // these are known to be very dense
-        }
-        else if (undefined === this.visibilityWindow && this.config.indexed !== false) {
+        if (this.config.id === "dbSNP") {
+            this.visibilityWindow = 100000; // these are very dense
+            this.displayMode = "SQUISHED";
+        } else if (undefined === this.visibilityWindow && this.config.indexed !== false) {
             if (typeof this.featureSource.defaultVisibilityWindow === "function") {
                 this.visibilityWindow = await this.featureSource.defaultVisibilityWindow();
             } else {
@@ -267,12 +284,29 @@ class VariantServiceTrack extends igv.TrackBase {
         }
     }
 
+    getColorByValue(info: VcfInfo) {
+        switch (this.colorBy) {
+            case "type":
+                return info.variant_class_abbreviation;
+            case "is_adsp_variant":
+                return info.is_adsp_variant;
+            case "impact":
+                return info.most_severe_consequence.impact;
+            case "consequence":
+                return info.most_severe_consequence.conseq;
+            case "is_coding":
+                return info.most_severe_consequence.is_coding;
+            default:
+                return "";
+        }
+    }
+
     getVariantColor(variant: any) {
         const v = variant._f || variant;
         let variantColor;
 
         if (this.colorBy) {
-            const value = v.info[this.colorBy];
+            const value = this.getColorByValue(v.info);
             variantColor = this.getVariantColorTable(this.colorBy).getColor(value);
             if (!variantColor) {
                 variantColor = "gray";
@@ -334,8 +368,8 @@ class VariantServiceTrack extends igv.TrackBase {
         for (let v of featureList) {
             const f = v._f || v; // Get real variant from psuedo-variant, e.g. whole genome or SV mate
 
-            if (popupData.length > 0) {
-                popupData.push({ html: '<hr style="border-top-width:2px ;border-color: #c9c3ba" />' });
+            if (popupData.length > 1) {
+                popupData.push({ html: "<hr/>" });
             }
 
             if (typeof f.popupData === "function") {
@@ -383,97 +417,26 @@ class VariantServiceTrack extends igv.TrackBase {
         return popupData;
     }
 
-    // VariantTrack.prototype.contextMenuItemList = function (clickState) {
-    //
-    //     const self = this;
-    //     const menuItems = [];
-    //
-    //     const featureList = this.clickedFeatures(clickState);
-    //
-    //     if (this.callSets && featureList && featureList.length > 0) {
-    //
-    //         featureList.forEach(function (variant) {
-    //
-    //             if ('str' === variant.type) {
-    //
-    //                 menuItems.push({
-    //                     label: 'Sort by allele length',
-    //                     click: function () {
-    //                         sortCallSetsByAlleleLength(self.callSets, variant, self.sortDirection);
-    //                         self.sortDirection = (self.sortDirection === "ASC") ? "DESC" : "ASC";
-    //                         self.trackView.repaintViews();
-    //                     }
-    //                 });
-    //
-    //             }
-    //
-    //         });
-    //     }
-    //
-    //
-    //     function sortCallSetsByAlleleLength(callSets, variant, direction) {
-    //         var d = (direction === "DESC") ? 1 : -1;
-    //         Object.keys(callSets).forEach(function (property) {
-    //             callSets[property].sort(function (a, b) {
-    //                 var aNan = isNaN(variant.calls[a.id].genotype[0]);
-    //                 var bNan = isNaN(variant.calls[b.id].genotype[0]);
-    //                 if (aNan && bNan) {
-    //                     return 0;
-    //                 } else if (aNan) {
-    //                     return 1;
-    //                 } else if (bNan) {
-    //                     return -1;
-    //                 } else {
-    //                     var a0 = getAlleleString(variant.calls[a.id], variant, 0);
-    //                     var a1 = getAlleleString(variant.calls[a.id], variant, 1);
-    //                     var b0 = getAlleleString(variant.calls[b.id], variant, 0);
-    //                     var b1 = getAlleleString(variant.calls[b.id], variant, 1);
-    //                     var result = Math.max(b0.length, b1.length) - Math.max(a0.length, a1.length);
-    //                     if (result === 0) {
-    //                         result = Math.min(b0.length, b1.length) - Math.min(a0.length, a1.length);
-    //                     }
-    //                     return d * result;
-    //                 }
-    //             });
-    //         });
-    //     }
-    //
-    //
-    //     return menuItems;
-    //
-    // };
-
     menuItemList() {
         const menuItems = [];
+        menuItems.push("<hr/>");
+        const $e = $('<div class="igv-track-menu-category igv-track-menu-border-top">');
+        $e.text("Color by:");
+        menuItems.push({ name: undefined, object: $e, click: undefined, init: undefined });
 
-        // color-by INFO attribute
-        if (this.header.INFO) {
-            //Code below will present checkboxes for all info fields of type "String".   Wait until this is requested
-            //const stringInfoKeys = Object.keys(this.header.INFO).filter(key => "String" === this.header.INFO[key].Type);
-
-            // For now stick to explicit info fields (well, exactly 1 for starters)
-            if (this.header.INFO) {
-                //const stringInfoKeys = Object.keys(this.header.INFO).filter(key => this.header.INFO[key].Type === "String")
-                const stringInfoKeys = this.header.INFO.SVTYPE ? ["SVTYPE"] : [];
-                if (this._initColorBy && this._initColorBy !== "SVTYPE") {
-                    stringInfoKeys.push(this._initColorBy);
-                }
-                if (stringInfoKeys.length > 0) {
-                    menuItems.push("<hr/>");
-                    const $e = $('<div class="igv-track-menu-category igv-track-menu-border-top">');
-                    $e.text("Color by:");
-                    menuItems.push({ name: undefined, object: $e, click: undefined, init: undefined });
-                    stringInfoKeys.sort();
-                    for (let item of stringInfoKeys) {
-                        const selected = this.colorBy === item;
-                        const label = item ? item : "None";
-                        menuItems.push(this.colorByCB({ key: item, label: label }, selected));
-                    }
-                    menuItems.push(this.colorByCB({ key: undefined, label: "None" }, this.colorBy === undefined));
-                    menuItems.push("<hr/>");
-                }
+        COLOR_BY_FIELDS.forEach((item: ColorByCategory) => {
+            const selected = this.colorBy === item.field;
+            // don't color by ADSP variant for ADSP tracks
+            if (item.field === "is_adsp_variant") {
+                !this.config.id.includes("ADSP") &&
+                    menuItems.push(this.colorByCB({ key: item.field, label: item.label }, selected));
+            } else {
+                menuItems.push(this.colorByCB({ key: item.field, label: item.label }, selected));
             }
-        }
+        });
+
+        menuItems.push(this.colorByCB({ key: undefined, label: "None" }, this.colorBy === undefined));
+        menuItems.push("<hr/>");
 
         if (this.getCallsetsLength() > 0) {
             menuItems.push({ object: $('<div class="igv-track-menu-border-top">') });
@@ -598,8 +561,14 @@ class VariantServiceTrack extends igv.TrackBase {
         if (!this.colorTables.has(key)) {
             let tbl;
             switch (key) {
-                case "SVTYPE":
+                case "type":
                     tbl = SV_COLOR_TABLE;
+                    break;
+                case "is_adsp_variant":
+                    tbl = new igv.PaletteColorTable("Set2");
+                    break;
+                case "is_coding":
+                    tbl = new igv.PaletteColorTable("Set1");
                     break;
                 default:
                     tbl = new igv.PaletteColorTable("Set1");
