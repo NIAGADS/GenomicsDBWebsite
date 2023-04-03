@@ -184,9 +184,9 @@ class GWASServiceTrack extends igv.TrackBase {
                     } else {
                         const pos = f.end; // IGV is zero-based, so end of the variant is the position
                         const href = this.config.endpoint.replace('service/track/gwas', 'app/record/variant') + '/' + f.record_pk;
-                        data.push({name: 'Variant', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "View GenomicsDB record for variant" + f.variant})
-                        data.push({name: 'Location', value: f.chr + ':' + pos})
-                        data.push({name: 'p-Value', value: f.pvalue})  
+                        data.push({name: 'Variant:', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "View GenomicsDB record for variant " + f.variant})
+                        data.push({name: 'Location:', value: f.chr + ':' + pos})
+                        data.push({name: 'p-Value:', value: f.pvalue})  
                     }
                     count++
                 }
