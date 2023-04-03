@@ -2,6 +2,7 @@
 import igv from "igv/dist/igv.esm";
 import { InfoAlert } from "genomics-client/components/MaterialUI";
 import { filterInvalidAttributes } from "wdk-client/Utils/UserPreferencesUtils";
+import CSS from "csstype";
 
 // TODO: Filter on CADD Score
 
@@ -444,6 +445,8 @@ class VariantServiceTrack extends igv.TrackBase {
                 } */
 
                 const recHref = this.config.endpoint.replace("service/track/variant", "app/record");
+                const color = this.getVariantColor(call);
+
                 popupData.push({
                     name: "Variant:",
                     html: `<a target="_blank" href="${recHref}/variant/${call.id}">${call.info.display_id}</a>`,
@@ -455,31 +458,78 @@ class VariantServiceTrack extends igv.TrackBase {
                 }
                 popupData.push({ name: "Location:", value: call.chr + ":" + call.info.location });
                 popupData.push({ name: "Allele:", value: call.info.display_allele });
-                popupData.push({
-                    name: "Class:",
-                    value: this.getVariantClass(call.info.variant_class_abbrev, call.info.display_allele),
-                });
-                popupData.push({
-                    name: "ADSP Variant?",
-                    value: call.info.is_adsp_variant === null ? "No" : "Yes",
-                });
+
+                if (this.colorBy === "type") {
+                    popupData.push({
+                        name: "Class:",
+                        value: this.getVariantClass(call.info.variant_class_abbrev, call.info.display_allele),
+                        color: color,
+                    });
+                } else {
+                    popupData.push({
+                        name: "Class:",
+                        value: this.getVariantClass(call.info.variant_class_abbrev, call.info.display_allele),
+                    });
+                }
+
+                if (this.colorBy === "is_adsp_variant") {
+                    popupData.push({
+                        name: "ADSP Variant?",
+                        value: call.info.is_adsp_variant === null ? "No" : "Yes",
+                        color: color,
+                    });
+                } else {
+                    popupData.push({
+                        name: "ADSP Variant?",
+                        value: call.info.is_adsp_variant === null ? "No" : "Yes",
+                    });
+                }
 
                 if (this.getFilterValue(call.filter) > 0) {
-                    popupData.push({
-                        name: "CADD (PHRED):",
-                        value: call.filter,
-                    });
+                    if (this.colorBy === "filter") {
+                        popupData.push({
+                            name: "CADD (PHRED):",
+                            value: call.filter,
+                            color: color,
+                        });
+                    } else {
+                        popupData.push({
+                            name: "CADD (PHRED):",
+                            value: call.filter,
+                        });
+                    }
                 }
 
                 if (call.info.most_severe_consequence !== null) {
                     const msc = call.info.most_severe_consequence;
-                    popupData.push({ name: "Consequence:", value: msc.conseq });
-                    popupData.push({ name: "Impact:", value: msc.impact });
-                    popupData.push({
-                        name: "Is Coding?",
-                        value: msc.is_coding === null ? "No" : msc.is_coding ? "Yes" : "No",
-                    });
+                    if (this.colorBy === "consequence") {
+                        popupData.push({
+                            name: "Consequence:",
+                            value: msc.conseq,
+                            color: color,
+                        });
+                    } else {
+                        popupData.push({ name: "Consequence:", value: msc.conseq });
+                    }
 
+                    if (this.colorBy === "impact") {
+                        popupData.push({ name: "Impact:", value: msc.impact, color: color });
+                    } else {
+                        popupData.push({ name: "Impact:", value: msc.impact });
+                    }
+
+                    if (this.colorBy === "is_coding") {
+                        popupData.push({
+                            name: "Is Coding?",
+                            value: msc.is_coding === null ? "No" : msc.is_coding ? "Yes" : "No",
+                            color: color,
+                        });
+                    } else {
+                        popupData.push({
+                            name: "Is Coding?",
+                            value: msc.is_coding === null ? "No" : msc.is_coding ? "Yes" : "No",
+                        });
+                    }
                     if (msc.impacted_gene !== null) {
                         popupData.push({
                             name: "Impacted Gene:",

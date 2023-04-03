@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: Theme) =>
             background: "transparent",
             position: "relative",
             top: theme.spacing(3),
-            //paddingLeft: "50px",
         },
+
     })
 );
 
@@ -60,14 +60,21 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
             return false;
         }
 
-        let markup = '<table class"' + tableClass + '">';
+        const tableStartMarkup = '<table class="' + tableClass + '">';
+        let markup = tableStartMarkup;
 
         popoverData.forEach(function (item: any) {
             if (item === "<hr>" || item === "<HR>") {
-                markup += '</table> ' + item + ' <table class="styled-table">';
+                markup += '</table> ' + item + ' ' + tableStartMarkup;
             }
     
             let value = item.html ? item.html : (item.value ? item.value : item.toString());
+            let color = item.color ? item.color : null;
+            
+            if (color !== null) {
+                value = '<span style="padding-left: 8px; border-left: 4px solid ' + color + '">'  + value + '</span>';
+            }
+
             const title = item.title ? item.title : null;
             const label = item.name ? item.name : null;
             
