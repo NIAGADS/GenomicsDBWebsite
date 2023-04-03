@@ -1,5 +1,7 @@
 // modified from https://github.com/igvteam/igv.js/tree/master/js/variant/variantTrack.js
 import igv from "igv/dist/igv.esm";
+import { InfoAlert } from "genomics-client/components/MaterialUI";
+import { filterInvalidAttributes } from "wdk-client/Utils/UserPreferencesUtils";
 
 // TODO: Filter on CADD Score
 
@@ -40,7 +42,7 @@ export interface VcfInfo {
 
 const COLOR_BY_FIELDS: ColorByCategory[] = [
     { field: "type", label: "Variant Type" },
-    //  { field: "filter", label: "CADD Score" },
+    { field: "filter", label: "CADD Score" },
     { field: "is_adsp_variant", label: "ADSP Variant" },
     { field: "impact", label: "Consequence Severity" },
     { field: "consequence", label: "Consequence Type" },
@@ -289,10 +291,29 @@ class VariantServiceTrack extends igv.TrackBase {
         return conseqValue.includes(",") ? conseqValue.split(",")[0] : conseqValue;
     }
 
+    getVariantClass(vc: string, allele: string) {
+        if (allele.includes("dup")) {
+            return "DUP";
+        }
+        const isIns = allele.includes("ins");
+        const isDel = allele.includes("del");
+        if (isIns && isDel) {
+            return "INDEL";
+        }
+        if (isIns) {
+            return "INS";
+        }
+        if (isDel) {
+            return "DEL";
+        }
+
+        return vc;
+    }
+
     getColorByValue(info: VcfInfo) {
         switch (this.colorBy) {
             case "type":
-                return info.variant_class_abbrev;
+                return this.getVariantClass(info.variant_class_abbrev, info.display_allele);
             case "is_adsp_variant":
                 return info.is_adsp_variant;
             case "impact":
@@ -308,12 +329,16 @@ class VariantServiceTrack extends igv.TrackBase {
         }
     }
 
+    getFilterValue(fValue: string) {
+        return fValue === "." || fValue === null ? 0 : parseFloat(fValue);
+    }
+
     getVariantColor(variant: any) {
         const v = variant._f || variant;
         let variantColor;
 
         if (this.colorBy) {
-            const value = this.getColorByValue(v.info);
+            const value = this.colorBy === "filter" ? this.getFilterValue(v.filter) : this.getColorByValue(v.info);
             variantColor = this.getVariantColorTable(this.colorBy).getColor(value);
             if (!variantColor) {
                 variantColor = "gray";
@@ -430,11 +455,21 @@ class VariantServiceTrack extends igv.TrackBase {
                 }
                 popupData.push({ name: "Location:", value: call.chr + ":" + call.info.location });
                 popupData.push({ name: "Allele:", value: call.info.display_allele });
-                popupData.push({ name: "Class:", value: call.info.variant_class_abbrev });
+                popupData.push({
+                    name: "Class:",
+                    value: this.getVariantClass(call.info.variant_class_abbrev, call.info.display_allele),
+                });
                 popupData.push({
                     name: "ADSP Variant?",
                     value: call.info.is_adsp_variant === null ? "No" : "Yes",
                 });
+
+                if (this.getFilterValue(call.filter) > 0) {
+                    popupData.push({
+                        name: "CADD (PHRED):",
+                        value: call.filter,
+                    });
+                }
 
                 if (call.info.most_severe_consequence !== null) {
                     const msc = call.info.most_severe_consequence;
@@ -612,6 +647,9 @@ class VariantServiceTrack extends igv.TrackBase {
                 case "impact":
                     tbl = IMPACT_COLOR_TABLE;
                     break;
+                case "filter":
+                    tbl = CADD_COLOR_SCALE;
+                    break;
                 default:
                     tbl = new igv.PaletteColorTable("Set1");
             }
@@ -646,27 +684,32 @@ function expandGenotype(call: any, variant: any) {
     }
 }
 
+const CADD_COLOR_SCALE = new igv.BinnedColorScale({
+    thresholds: [0, 1, 10, 20, 30, 40, 50],
+    colors: ["#45515c", "#440d53", "#443983", "#32678d", "#23908c", "#37b779", "#8fd744", "#fce724"],
+});
+
 const SV_COLOR_TABLE = new igv.ColorTable({
     DEL: "#ff2101",
-    INS: "#001888",
+    INS: "#f59300",
     DUP: "#028401",
     INV: "#008688",
     CNV: "#8931ff",
     INDEL: "#891100",
-    "*": "#377eb8",
+    "*": "#45515c",
 });
 
 const IMPACT_COLOR_TABLE = new igv.ColorTable({
     HIGH: "#ff00ff",
     MODERATE: "#f59300",
     LOW: "#008000",
-    MODIFIER: "#45515c",
-    "*": "#377eb8",
+    MODIFIER: "#377eb8",
+    "*": "#45515c",
 });
 
 const BOOLEAN_COLOR_TABLE = new igv.ColorTable({
     true: "#e41a1c",
-    "*": "#377eb8",
+    "*": "#45515c",
 });
 
 const CONSEQUENCE_COLOR_TABLE = new igv.ColorTable({

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { find } from "lodash";
+import clsx from "clsx";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
@@ -9,8 +10,11 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
+import Collapse from "@material-ui/core/Collapse";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import { CustomPanel } from "@components/MaterialUI";
+import { CustomPanel, WhiteTooltip } from "@components/MaterialUI";
 
 import {
     IGVBrowser as GenomeBrowser,
@@ -50,6 +54,18 @@ export const useStyles = makeStyles((theme: Theme) =>
             fontSize: "1.3em",
             fontWeight: 500,
             padding: theme.spacing(1.5),
+        },
+        expand: {
+            transform: "rotate(0deg)",
+            marginLeft: "auto",
+            color: "white",
+            transition: theme.transitions.create("transform", {
+                duration: theme.transitions.duration.shortest,
+            }),
+        },
+        expandOpen: {
+            color: "white",
+            transform: "rotate(180deg)",
         },
     })
 );
@@ -167,11 +183,24 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
             />
+
             <Box className={classes.selectorHeader}>
                 <Typography variant="h3" className={classes.selectorHeaderText}>
-                    Available Tracks
+                    Select Tracks
                 </Typography>
+                {/*<IconButton
+                    className={clsx(classes.expand, {
+                        [classes.expandOpen]: trackSelectorIsOpen,
+                    })}
+                    onClick={() => {setTrackSelectorIsOpen(!trackSelectorIsOpen)}}
+                    aria-expanded={trackSelectorIsOpen}
+                    size="small"
+                    aria-label="show more"
+                >
+                    <ExpandMoreIcon />
+                </IconButton>*/}
             </Box>
+
             <TrackSelector
                 properties={properties}
                 columnConfig={serviceTrackConfig.columns}

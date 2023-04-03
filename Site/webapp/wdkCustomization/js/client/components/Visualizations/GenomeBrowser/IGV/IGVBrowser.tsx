@@ -2,9 +2,23 @@ import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
 import { GWASServiceTrack as GWASTrack, VariantServiceTrack as VariantTrack } from "@viz/GenomeBrowser";
+import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
+
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        popupTable: {
+            background: "transparent",
+            position: "relative",
+            top: theme.spacing(3),
+            //paddingLeft: "50px",
+        },
+    })
+);
+
 
 interface IGVBrowser {
     searchUrl: string;
@@ -37,6 +51,46 @@ export const removeTrackById = (trackId: string, browser: any) => {
 };
 
 export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
+    const classes = useStyles();
+    const tableClass = classes.popupTable.toString();
+
+    const _customTrackPopup = (track: any, popoverData: any) => {
+        // Don't show a pop-over when there's no data.
+        if (!popoverData || !popoverData.length) {
+            return false;
+        }
+
+        let markup = '<table class"' + tableClass + '">';
+
+        popoverData.forEach(function (item: any) {
+            if (item === "<hr>" || item === "<HR>") {
+                markup += '</table> ' + item + ' <table class="styled-table">';
+            }
+    
+            let value = item.html ? item.html : (item.value ? item.value : item.toString());
+            const title = item.title ? item.title : null;
+            const label = item.name ? item.name : null;
+            
+            if (title) {
+                value = `<div title="${title}">${value}</div>`
+            }
+            
+            if (label) {
+                markup += "<tr><td>" + label + "</td><td>" + value + "</td></tr>";
+            }
+            else {
+                // not a name/value pair
+                markup += "<tr><td>" + value + "</td></tr>";
+            }
+        });
+    
+        markup += "</table>";
+    
+        // By returning a string from the trackclick handler we're asking IGV to use our custom HTML in its pop-over.
+        return markup;
+    }
+
+
     useLayoutEffect(() => {
         window.addEventListener("ERROR: Genome Browser - ", (event) => {
             console.log(event);
@@ -60,6 +114,8 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
                 window.location.replace(HASH_PREFIX + loc);
             });
 
+            browser.on('trackclick', _customTrackPopup);
+
             // perform action in encapsulating component if track is removed
             browser.on("trackremoved", function (track: any) {
                 onTrackRemoved && onTrackRemoved(track.config.id);
@@ -80,3 +136,4 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
 };
 
 export default IGVBrowser;
+
