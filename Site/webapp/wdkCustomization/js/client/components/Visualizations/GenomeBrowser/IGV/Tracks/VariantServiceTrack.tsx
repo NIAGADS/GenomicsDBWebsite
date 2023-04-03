@@ -6,7 +6,7 @@ import igv from "igv/dist/igv.esm";
 const isString = igv.StringUtils.isString;
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;
-const DEFAULT_COLOR_BY = "type";
+const DEFAULT_COLOR_BY = "impact";
 const TOP_MARGIN = 10;
 
 interface ColorByCategory {
@@ -34,7 +34,7 @@ export interface VcfInfo {
     variant_class: string;
     display_allele: string;
     is_adsp_variant: boolean;
-    variant_class_abbreviation: string;
+    variant_class_abbrev: string;
     most_severe_consequence: ConsequenceData;
 }
 
@@ -44,7 +44,7 @@ const COLOR_BY_FIELDS: ColorByCategory[] = [
     { field: "is_adsp_variant", label: "ADSP Variant" },
     { field: "impact", label: "Consequence Severity" },
     { field: "consequence", label: "Consequence Type" },
-    { field: "is_coding", label: "Coding Variant"}
+    { field: "is_coding", label: "Coding Variant" },
 ];
 
 class VariantServiceTrack extends igv.TrackBase {
@@ -284,20 +284,27 @@ class VariantServiceTrack extends igv.TrackBase {
         }
     }
 
+    getConsequenceValue(conseqStr: string) {
+        let conseqValue = conseqStr.replace(/ /g, "_");
+        return conseqValue.includes(",") ? conseqValue.split(",")[0] : conseqValue;
+    }
+
     getColorByValue(info: VcfInfo) {
         switch (this.colorBy) {
             case "type":
-                return info.variant_class_abbreviation;
+                return info.variant_class_abbrev;
             case "is_adsp_variant":
                 return info.is_adsp_variant;
             case "impact":
-                return info.most_severe_consequence.impact;
+                return info.most_severe_consequence !== null ? info.most_severe_consequence.impact : "*";
             case "consequence":
-                return info.most_severe_consequence.conseq;
+                return info.most_severe_consequence !== null
+                    ? this.getConsequenceValue(info.most_severe_consequence.conseq)
+                    : "*";
             case "is_coding":
-                return info.most_severe_consequence.is_coding;
+                return info.most_severe_consequence !== null ? info.most_severe_consequence.is_coding : "*";
             default:
-                return "";
+                return "*";
         }
     }
 
@@ -373,8 +380,8 @@ class VariantServiceTrack extends igv.TrackBase {
             }
 
             if (typeof f.popupData === "function") {
-                const v = f.popupData(genomicLocation, genomeID);
-                Array.prototype.push.apply(popupData, v);
+                const vf = f.popupData(genomicLocation, genomeID);
+                Array.prototype.push.apply(popupData, vf);
             } else {
                 // Assume this is a call (genotype)
                 const call = f;
@@ -405,13 +412,47 @@ class VariantServiceTrack extends igv.TrackBase {
                     }
                 }
 
-                var infoKeys = Object.keys(call.info);
-                if (infoKeys.length) {
+                //var infoKeys = Object.keys(call.info);
+
+                /* if (sampleInformation && infoKeys.length) {
                     popupData.push("<hr/>");
-                }
-                infoKeys.forEach(function (key) {
-                    popupData.push({ name: key, value: decodeURIComponent(call.info[key]) });
+                } */
+
+                const recHref = this.config.endpoint.replace("service/track/variant", "app/record");
+                popupData.push({
+                    name: "Variant:",
+                    html: `<a target="_blank" href="${recHref}/variant/${call.id}">${call.info.display_id}</a>`,
+                    title: "View GenomicsDB record for variant " + call.info.display_id,
                 });
+
+                if (call.info.ref_snp_id !== null) {
+                    popupData.push({ name: "Ref SNP ID:", value: call.info.ref_snp_id });
+                }
+                popupData.push({ name: "Location:", value: call.chr + ":" + call.info.location });
+                popupData.push({ name: "Allele:", value: call.info.display_allele });
+                popupData.push({ name: "Class:", value: call.info.variant_class_abbrev });
+                popupData.push({
+                    name: "ADSP Variant?",
+                    value: call.info.is_adsp_variant === null ? "No" : "Yes",
+                });
+
+                if (call.info.most_severe_consequence !== null) {
+                    const msc = call.info.most_severe_consequence;
+                    popupData.push({ name: "Consequence:", value: msc.conseq });
+                    popupData.push({ name: "Impact:", value: msc.impact });
+                    popupData.push({
+                        name: "Is Coding?",
+                        value: msc.is_coding === null ? "No" : msc.is_coding ? "Yes" : "No",
+                    });
+
+                    if (msc.impacted_gene !== null) {
+                        popupData.push({
+                            name: "Impacted Gene:",
+                            html: `<a target="_blank" href="${recHref}/gene/${msc.impacted_gene}">${msc.impacted_gene_symbol}</a>`,
+                            title: "View GenomicsDB record for gene " + msc.impacted_gene_symbol,
+                        });
+                    }
+                }
             }
         }
         return popupData;
@@ -565,10 +606,11 @@ class VariantServiceTrack extends igv.TrackBase {
                     tbl = SV_COLOR_TABLE;
                     break;
                 case "is_adsp_variant":
-                    tbl = new igv.PaletteColorTable("Set2");
-                    break;
                 case "is_coding":
-                    tbl = new igv.PaletteColorTable("Set1");
+                    tbl = BOOLEAN_COLOR_TABLE;
+                    break;
+                case "impact":
+                    tbl = IMPACT_COLOR_TABLE;
                     break;
                 default:
                     tbl = new igv.PaletteColorTable("Set1");
@@ -610,8 +652,44 @@ const SV_COLOR_TABLE = new igv.ColorTable({
     DUP: "#028401",
     INV: "#008688",
     CNV: "#8931ff",
-    BND: "#891100",
-    "*": "#002eff",
+    INDEL: "#891100",
+    "*": "#377eb8",
+});
+
+const IMPACT_COLOR_TABLE = new igv.ColorTable({
+    HIGH: "#ff00ff",
+    MODERATE: "#f59300",
+    LOW: "#008000",
+    MODIFIER: "#45515c",
+    "*": "#377eb8",
+});
+
+const BOOLEAN_COLOR_TABLE = new igv.ColorTable({
+    true: "#e41a1c",
+    "*": "#377eb8",
+});
+
+const CONSEQUENCE_COLOR_TABLE = new igv.ColorTable({
+    splice_acceptor_variant: igv.appleCrayonPalette.salmon,
+    start_lost: igv.appleCrayonPalette.honeydew,
+    splice_region_variant: igv.appleCrayonPalette.fern,
+    prime_UTR_variant: igv.appleCrayonPalette.clover,
+    splice_donor_variant: igv.appleCrayonPalette.moss,
+    inframe_insertion: igv.appleCrayonPalette.teal,
+    splice_donor_region_variant: igv.appleCrayonPalette.midnight,
+    non_coding_transcript_exon_variant: igv.appleCrayonPalette.eggplant,
+    stop_gained: igv.appleCrayonPalette.plum,
+    inframe_deletion: igv.appleCrayonPalette.maroon,
+    stop_retained_variant: igv.appleCrayonPalette.aqua,
+    intron_variant: igv.appleCrayonPalette.mocha,
+    missense_variant: igv.appleCrayonPalette.maraschino,
+    synonymous_variant: igv.appleCrayonPalette.tangerine,
+    intergenic_variant: igv.appleCrayonPalette.ocean,
+    frameshift_variant: igv.appleCrayonPalette.bubblegum,
+    protein_altering_variant: igv.appleCrayonPalette.lemon,
+    coding_sequence_variant: igv.appleCrayonPalette.spring,
+    stop_lost: igv.appleCrayonPalette.cantaloupe,
+    "*": "#377eb8",
 });
 
 export default VariantServiceTrack;
