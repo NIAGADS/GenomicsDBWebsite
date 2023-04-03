@@ -37,18 +37,19 @@ export const useStyles = makeStyles((theme: Theme) =>
             //paddingLeft: "50px",
         },
         selectorHeader: {
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
             //backgroundColor: "#f0f1f2",
-            borderRadius: "4px",
-            marginTop: theme.spacing(5),
-            borderTop: "4px solid " + theme.palette.primary.main,
+            // borderRadius: "4px",
+            marginTop: theme.spacing(10),
+            marginBottom: theme.spacing(1),
+            borderTop: "4px solid " + theme.palette.secondary.main,
             width: "100%",
         },
         selectorHeaderText: {
-            color: theme.palette.primary.main,
-            fontSize: "1.2em",
+            color: "white",
+            fontSize: "1.3em",
             fontWeight: 500,
-            padding: theme.spacing(1),
+            padding: theme.spacing(1.5),
         },
     })
 );
