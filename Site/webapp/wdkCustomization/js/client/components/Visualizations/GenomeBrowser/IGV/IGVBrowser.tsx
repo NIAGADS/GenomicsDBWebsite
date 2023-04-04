@@ -51,11 +51,21 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
     const classes = useStyles();
     const tableClass = classes.popupTable.toString();
 
+    const _geneTrackPopoverData = (info: any) => {
+        let pData = [];
+        let fields = info.map((elem: any, index: number) => elem.name.toLowerCase().replace(':', '').replace(' ', '_'));
+        let index = fields.indexOf('gene_id');
+        // find first location and after that, take everything in a list of selected fields
+        return info;
+    }
+
     const _customTrackPopup = (track: any, popoverData: any) => {
         // Don't show a pop-over when there's no data.
         if (!popoverData || !popoverData.length) {
             return false;
         }
+
+        popoverData = (track.id === "ENSEMBL_GENE" ? _geneTrackPopoverData(popoverData) : popoverData);
 
         const tableStartMarkup = '<table class="' + tableClass + '">';
         let markup = tableStartMarkup;

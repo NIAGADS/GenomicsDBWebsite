@@ -141,7 +141,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         if (webAppUrl) {
             track.url = track.url.replace('@WEBAPP_URL@', webAppUrl);
             track.indexURL = track.indexURL.replace('@WEBAPP_URL@', webAppUrl);
-            Object.assign(track, { infoURL: webAppUrl + '/app/record/gene?$$'});
         }
         return track;
     }
