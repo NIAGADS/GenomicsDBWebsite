@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { find } from "lodash";
-import clsx from "clsx";
+//import clsx from "clsx";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
@@ -10,11 +10,11 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import Collapse from "@material-ui/core/Collapse";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+//import IconButton from "@material-ui/core/IconButton";
+//import Collapse from "@material-ui/core/Collapse";
+//import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import { CustomPanel, WhiteTooltip } from "@components/MaterialUI";
+import { CustomPanel } from "@components/MaterialUI";
 
 import {
     IGVBrowser as GenomeBrowser,
@@ -29,6 +29,7 @@ import {
 
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const MemoBroswer = React.memo(GenomeBrowser);
 
@@ -136,10 +137,23 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setServiceTrackConfig(response);
     };
 
+    const setUrls = (track: any) => {
+        if (webAppUrl) {
+            track.url = track.url.replace('@WEBAPP_URL@', webAppUrl);
+            track.indexURL = track.indexURL.replace('@WEBAPP_URL@', webAppUrl);
+            Object.assign(track, { infoURL: webAppUrl + '/app/record/gene?$$'});
+        }
+        return track;
+    }
+
     useEffect(() => {
         if (projectId) {
             const referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
             const referenceTrackConfig = find(_genomes, { id: referenceTrackId });
+
+            // set gene track urls
+            referenceTrackConfig.tracks[0] = setUrls(referenceTrackConfig.tracks[0]);
+            
             setBrowserOptions({
                 reference: {
                     id: referenceTrackId,
@@ -151,7 +165,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 },
             });
         }
-    }, [projectId]);
+    }, [projectId, webAppUrl]);
 
     useWdkEffect((service) => {
         service._fetchJson<ConfigServiceResponse>("GET", `/track/config`).then(function (res: ConfigServiceResponse) {

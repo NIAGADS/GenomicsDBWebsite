@@ -7,7 +7,6 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
 
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         popupTable: {
@@ -15,10 +14,8 @@ const useStyles = makeStyles((theme: Theme) =>
             position: "relative",
             top: theme.spacing(3),
         },
-
     })
 );
-
 
 interface IGVBrowser {
     searchUrl: string;
@@ -65,38 +62,36 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
 
         popoverData.forEach(function (item: any) {
             if (item === "<hr>" || item === "<HR>") {
-                markup += '</table> ' + item + ' ' + tableStartMarkup;
+                markup += "</table> " + item + " " + tableStartMarkup;
             }
-    
-            let value = item.html ? item.html : (item.value ? item.value : item.toString());
+
+            let value = item.html ? item.html : item.value ? item.value : item.toString();
             let color = item.color ? item.color : null;
-            
+
             if (color !== null) {
-                value = '<span style="padding-left: 8px; border-left: 4px solid ' + color + '">'  + value + '</span>';
+                value = '<span style="padding-left: 8px; border-left: 4px solid ' + color + '">' + value + "</span>";
             }
 
             const title = item.title ? item.title : null;
             const label = item.name ? item.name : null;
-            
+
             if (title) {
-                value = `<div title="${title}">${value}</div>`
+                value = `<div title="${title}">${value}</div>`;
             }
-            
+
             if (label) {
                 markup += "<tr><td>" + label + "</td><td>" + value + "</td></tr>";
-            }
-            else {
+            } else {
                 // not a name/value pair
                 markup += "<tr><td>" + value + "</td></tr>";
             }
         });
-    
+
         markup += "</table>";
-    
+
         // By returning a string from the trackclick handler we're asking IGV to use our custom HTML in its pop-over.
         return markup;
-    }
-
+    };
 
     useLayoutEffect(() => {
         window.addEventListener("ERROR: Genome Browser - ", (event) => {
@@ -106,13 +101,16 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
         options = merge(options, {
             locus: locus || "ABCA7",
             supportQueryParameters: true,
-            tracks: [ "ADSP_17K"],
             flanking: 1000,
             minimumBases: 40,
             search: {
                 url: `${searchUrl}$FEATURE$`,
             },
         });
+
+        if (!options.hasOwnProperty("tracks")) {
+            options = merge(options, { tracks: [] });
+        }
 
         const targetDiv = document.getElementById("genome-browser");
         igv.createBrowser(targetDiv, options).then(function (browser: any) {
@@ -122,7 +120,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
                 window.location.replace(HASH_PREFIX + loc);
             });
 
-            browser.on('trackclick', _customTrackPopup);
+            browser.on("trackclick", _customTrackPopup);
 
             // perform action in encapsulating component if track is removed
             browser.on("trackremoved", function (track: any) {
@@ -144,4 +142,3 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
 };
 
 export default IGVBrowser;
-

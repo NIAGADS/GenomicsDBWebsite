@@ -8,19 +8,18 @@ export const _genomes = [
     "aliasURL": "https://s3.amazonaws.com/igv.org.genomes/hg38/hg38_alias.tab",
     "tracks": [
       {
-        "name": "Genes (RefSeq)",
-        "id": "REFSEQ_GENE",
-        "track": "REFSEQ_GENE",
-        "description": "Gene models from NCBI Gene (RefSeq)",
+        "name": "Genes",
+        "id": "ENSEMBL_GENE",
+        "track": "ENSEMBL_GENE",
+        "description": "Gene models from ENSEMBL",
         "format": "refgene",
-        "url": "https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq.txt.gz",
-        "indexURL": "https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq.txt.gz.tbi",
+        "url": "@WEBAPP_URL@/files/tracks/gene/hs.GRCh38.108.gff3.gz",
+        "indexURL": "@WEBAPP_URL@/files/tracks/gene/hs.GRCh38.108.gff3.gz.tbi",
         "visibilityWindow": -1,
         "supportsWholeGenome": false,
         "removable": false,
-        "order": 1000000,
-        "infoURL": "https://www.ncbi.nlm.nih.gov/gene/?term=$$"
-      }
+        "order": 1000000
+      },
     ],
     "chromosomeOrder": "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10, chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, chr20, chr21, chr22, chrX, chrY"
   },
