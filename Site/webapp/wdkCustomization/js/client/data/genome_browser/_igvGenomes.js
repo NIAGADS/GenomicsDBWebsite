@@ -12,7 +12,7 @@ export const _genomes = [
         "id": "ENSEMBL_GENE",
         "track": "ENSEMBL_GENE",
         "description": "Gene models from ENSEMBL",
-        "format": "refgene",
+        "format": "gff3",
         "url": "@WEBAPP_URL@/files/tracks/gene/hs.GRCh38.108.gff3.gz",
         "indexURL": "@WEBAPP_URL@/files/tracks/gene/hs.GRCh38.108.gff3.gz.tbi",
         "visibilityWindow": -1,

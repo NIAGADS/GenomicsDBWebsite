@@ -192,6 +192,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             <MemoBroswer
                 //locus="ABCA"
                 //disableRefTrack={true}
+                webAppUrl={webAppUrl}
                 onBrowserLoad={buildBrowser}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}

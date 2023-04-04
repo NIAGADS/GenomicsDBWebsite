@@ -21,6 +21,7 @@ interface IGVBrowser {
     searchUrl: string;
     options: any;
     locus?: string;
+    webAppUrl: string;
     onTrackRemoved?: (track: string) => void;
     onBrowserLoad?: (Browser: any) => void;
 }
@@ -47,14 +48,19 @@ export const removeTrackById = (trackId: string, browser: any) => {
     browser.removeTrack(trackView[0].track);
 };
 
-export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
+export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, webAppUrl, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
     const classes = useStyles();
     const tableClass = classes.popupTable.toString();
 
     const _geneTrackPopoverData = (info: any) => {
+        const fields = info.map((elem: any, index: number) => elem.name.toLowerCase().replace(':', '').replace(' ', '_'));
         let pData = [];
-        let fields = info.map((elem: any, index: number) => elem.name.toLowerCase().replace(':', '').replace(' ', '_'));
-        let index = fields.indexOf('gene_id');
+
+        const geneId = info[fields.indexOf('gene_id')];
+        const geneSymbol = info[fields.indexOf('name')]
+        const recHref = webAppUrl + "/record/gene/";
+        //let value = '<a href="' + recHref + gene
+        //pData.push({name: "Gene", html})
         // find first location and after that, take everything in a list of selected fields
         return info;
     }
