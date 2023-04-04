@@ -105,7 +105,8 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ locus, searchUrl, options, on
 
         options = merge(options, {
             locus: locus || "ABCA7",
-            tracks: [],
+            supportQueryParameters: true,
+            tracks: [ "ADSP_17K"],
             flanking: 1000,
             minimumBases: 40,
             search: {
