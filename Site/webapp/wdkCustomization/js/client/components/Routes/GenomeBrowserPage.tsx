@@ -32,6 +32,7 @@ import { _trackSelectorTableProperties as properties } from "genomics-client/dat
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const MemoBroswer = React.memo(GenomeBrowser);
+const DEFAULT_ADSP_TRACK = 'ADSP_17K';
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -137,22 +138,36 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setServiceTrackConfig(response);
     };
 
-    const setUrls = (track: any) => {
+    const setUrls = useCallback((track: any) => {
         if (webAppUrl) {
             track.url = track.url.replace('@WEBAPP_URL@', webAppUrl);
             track.indexURL = track.indexURL.replace('@WEBAPP_URL@', webAppUrl);
         }
         return track;
-    }
+    }, [webAppUrl]);
+
+    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
+        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
+        [serviceTrackConfig]
+    );
+
+    const browserTrackConfig: any = useMemo(
+        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
+        [serviceTrackConfig]
+    );
+
 
     useEffect(() => {
-        if (projectId) {
+        if (projectId && browserTrackConfig) {
             const referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
-            const referenceTrackConfig = find(_genomes, { id: referenceTrackId });
+            let referenceTrackConfig = find(_genomes, { id: referenceTrackId });
 
             // set gene track urls
             referenceTrackConfig.tracks[0] = setUrls(referenceTrackConfig.tracks[0]);
-            
+
+            //const adspTrack = browserTrackConfig.filter((tc:any) => tc.id == DEFAULT_ADSP_TRACK)[0];
+            //referenceTrackConfig.tracks.push(adspTrack);
+
             setBrowserOptions({
                 reference: {
                     id: referenceTrackId,
@@ -166,23 +181,13 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 genomeList: _genomes,
             });
         }
-    }, [projectId, webAppUrl]);
+    }, [projectId, webAppUrl, browserTrackConfig]);
 
     useWdkEffect((service) => {
         service._fetchJson<ConfigServiceResponse>("GET", `/track/config`).then(function (res: ConfigServiceResponse) {
             return parseTrackConfigServiceResponse(res);
         });
     }, []);
-
-    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
-        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
-        [serviceTrackConfig]
-    );
-
-    const browserTrackConfig: any = useMemo(
-        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
-        [serviceTrackConfig]
-    );
 
     return browserOptions && serviceUrl && webAppUrl && resolvedSelectorData ? (
         <CustomPanel
