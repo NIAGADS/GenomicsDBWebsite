@@ -48,7 +48,6 @@ export const removeTrackById = (trackId: string, browser: any) => {
 };
 
 export const IGVBrowser: React.FC<IGVBrowser> = ({
-    locus,
     webAppUrl,
     searchUrl,
     options,
@@ -201,8 +200,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         });
 
         options = merge(options, {
-            locus: locus || "ABCA7",
-            supportQueryParameters: true,
+            locus: options.locus || "ABCA7",
             showAllChromosomes: false,
             flanking: 1000,
             minimumBases: 40,
@@ -239,7 +237,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
 
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
-    }, [locus, onBrowserLoad]);
+    }, [ onBrowserLoad ]);
 
     return <span style={{ width: "100%" }} id="genome-browser" />;
 };
