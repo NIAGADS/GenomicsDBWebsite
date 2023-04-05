@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme: Theme) =>
         popupTable: {
             background: "transparent",
             position: "relative",
-            top: theme.spacing(3),
         },
     })
 );
@@ -67,8 +66,10 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         // ends with _id    / some may have transcript or exon id plus another id
         // location
         // number -- catch outside
-        pData.push({ name: "Feature:", value: info[fields.indexOf("type")].value });
-        pData.push({ name: "Name:", value: info[fields.indexOf("name")].value });
+        pData.push({ name: "Feature:", value: info[fields.indexOf("type")].value.replace(/_/g, " ") });
+        if (fields.includes("name")) {
+            pData.push({ name: "Name:", value: info[fields.indexOf("name")].value });
+        }
         if (fields.includes("biotype")) {
             pData.push({ name: "Biotype:", value: info[fields.indexOf("biotype")].value.replace(/_/g, " ") });
         }
@@ -82,7 +83,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
             .filter(String);
 
         idIndices.forEach((index: any) => {
-            let idName = info[index].name;
+            let idName = info[index].name.replace(":", "");
             idName = idName.includes("_")
                 ? idName.charAt(0).toUpperCase() + idName.slice(1).replace("_id", " ID:")
                 : idName.toUpperCase().replace("ID", " ID:");
@@ -111,7 +112,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         pData.push({ name: "Name:", value: geneSymbol });
         pData.push({
             name: "More Info:",
-            html: '<a target="_blank" href="' + recHref + '" title=""/>',
+            html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + '</a>',
             title: "View GenomicsDB report for gene " + geneSymbol,
         });
         pData.push({ name: "Product:", value: product });
