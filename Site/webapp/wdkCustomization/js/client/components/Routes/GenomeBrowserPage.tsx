@@ -32,7 +32,6 @@ import { _trackSelectorTableProperties as properties } from "genomics-client/dat
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const MemoBroswer = React.memo(GenomeBrowser);
-const DEFAULT_ADSP_TRACK = 'ADSP_17K';
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -158,15 +157,12 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
 
     useEffect(() => {
-        if (projectId && browserTrackConfig) {
+        if (projectId) {
             const referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
-            let referenceTrackConfig = find(_genomes, { id: referenceTrackId });
+            const referenceTrackConfig = find(_genomes, { id: referenceTrackId });
 
             // set gene track urls
             referenceTrackConfig.tracks[0] = setUrls(referenceTrackConfig.tracks[0]);
-
-            //const adspTrack = browserTrackConfig.filter((tc:any) => tc.id == DEFAULT_ADSP_TRACK)[0];
-            //referenceTrackConfig.tracks.push(adspTrack);
 
             setBrowserOptions({
                 reference: {
@@ -181,7 +177,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 genomeList: _genomes,
             });
         }
-    }, [projectId, webAppUrl, browserTrackConfig]);
+    }, [projectId, webAppUrl]);
 
     useWdkEffect((service) => {
         service._fetchJson<ConfigServiceResponse>("GET", `/track/config`).then(function (res: ConfigServiceResponse) {
