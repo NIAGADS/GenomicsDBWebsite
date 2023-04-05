@@ -162,6 +162,8 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                     cytobandURL: referenceTrackConfig.cytobandURL,
                     tracks: referenceTrackConfig.tracks,
                 },
+                loadDefaultGenomes: false,
+                genomeList: _genomes,
             });
         }
     }, [projectId, webAppUrl]);

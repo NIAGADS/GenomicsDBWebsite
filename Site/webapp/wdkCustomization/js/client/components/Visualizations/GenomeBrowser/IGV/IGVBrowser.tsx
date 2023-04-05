@@ -3,10 +3,9 @@ import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
 import { GWASServiceTrack as GWASTrack, VariantServiceTrack as VariantTrack } from "@viz/GenomeBrowser";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
-import { analysisBaseTabConfigs } from "wdk-client/Core/MoveAfterRefactor/StoreModules/StepAnalysis/StepAnalysisSelectors";
 
 const HASH_PREFIX = "#/locus/";
-const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "REFSEQ_GENE"];
+const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -59,14 +58,14 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
     const classes = useStyles();
     const tableClass = classes.popupTable.toString();
 
-    const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) => {
+    const _geneComponentFeaturePopoverData = (fields: string[], info: any, pData: any[]) => {
         // type
         // name
         // biotype - most
         // ends with _id    / some may have transcript or exon id plus another id
         // location
         // number -- catch outside
-        pData.push({ name: "Feature:", value: info[fields.indexOf("type")].value.replace(/_/g, " ") });
+        pData.push({ name: "Feature Type:", value: info[fields.indexOf("type")].value.replace(/_/g, " ") });
         if (fields.includes("name")) {
             pData.push({ name: "Name:", value: info[fields.indexOf("name")].value });
         }
@@ -102,24 +101,37 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         let fields = info.map((elem: any) => {
             return elem.hasOwnProperty("name") ? elem.name.toLowerCase().replace(":", "").replace(" ", "_") : "hr";
         });
-        let pData = [];
+        let pData:any = [];
 
-        const geneId = info[fields.indexOf("gene_id")].value;
-        const geneSymbol = info[fields.indexOf("name")].value;
-        const product = info[fields.indexOf("description")].value.replace(regexp, "");
-        const recHref = webAppUrl + "/app/record/gene/" + geneId;
-        pData.push({ name: "Feature:", value: "gene" });
-        pData.push({ name: "Name:", value: geneSymbol });
-        pData.push({
-            name: "More Info:",
-            html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + '</a>',
-            title: "View GenomicsDB report for gene " + geneSymbol,
-        });
-        pData.push({ name: "Product:", value: product });
-        pData.push({ name: "Biotype:", value: info[fields.indexOf("biotype")].value.replace(/_/g, " ") });
-        pData.push({ name: "Location:", value: info[fields.indexOf("location")].value });
+        const featureType = info[fields.indexOf("type")].value;
+        if (featureType === "gene") {
+            const geneId = info[fields.indexOf("gene_id")].value;
+            const geneSymbol = info[fields.indexOf("name")].value;
+            const product = info[fields.indexOf("description")].value.replace(regexp, "");
+            const recHref = webAppUrl + "/app/record/gene/" + geneId;
+            pData.push({ name: "Feature Type:", value: featureType });
+            pData.push({ name: "Name:", value: geneSymbol });
+            pData.push({
+                name: "More Info:",
+                html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
+                title: "View GenomicsDB report for gene " + geneSymbol,
+            });
+            pData.push({ name: "Product:", value: product });
 
-        // find first divider and take everything from that point on
+            const biotype = info[fields.indexOf("biotype")];
+            if (biotype.hasOwnProperty("color")) {
+                pData.push({ name: "Biotype:", value: biotype.value.replace(/_/g, " "), color: biotype.color });
+            } else {
+                pData.push({ name: "Biotype:", value: biotype.value.replace(/_/g, " ") });
+            }
+
+            pData.push({ name: "Location:", value: info[fields.indexOf("location")].value });
+        }
+        else {
+            pData = _geneComponentFeaturePopoverData(fields, info, pData); // floating transcript
+        }
+
+        // find first divider and take everything from that point as a component feature of the gene
         let infoSlice = info;
         while (fields.includes("hr")) {
             const dividerIndex = fields.indexOf("hr"); // find next divider
@@ -127,7 +139,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
             fields = fields.splice(dividerIndex + 1);
             infoSlice = infoSlice.splice(dividerIndex + 1);
             if (fields.length > 1) {
-                pData = _geneSubFeaturePopoverData(fields, infoSlice, pData);
+                pData = _geneComponentFeaturePopoverData(fields, infoSlice, pData);
             } else {
                 // should be Exon Number
                 if (fields[0] === "exon_number") {
@@ -150,7 +162,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         let markup = tableStartMarkup;
 
         popoverData.forEach(function (item: any) {
-            if (item === '<hr>' || item === '<hr/>' || item === '<HR>' || item === '<HR/>') {
+            if (item === "<hr>" || item === "<hr/>" || item === "<HR>" || item === "<HR/>") {
                 markup += "</table>" + " <hr> " + tableStartMarkup;
             } else {
                 let value = item.html ? item.html : item.value ? item.value : item.toString();
@@ -191,6 +203,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         options = merge(options, {
             locus: locus || "ABCA7",
             supportQueryParameters: true,
+            showAllChromosomes: false,
             flanking: 1000,
             minimumBases: 40,
             search: {
