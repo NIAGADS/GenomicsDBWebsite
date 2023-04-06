@@ -33,6 +33,8 @@ import { _externalUrls } from "genomics-client/data/_externalUrls";
 
 const MemoBroswer = React.memo(GenomeBrowser);
 
+const DEFAULT_TRACKS = ["ADSP_17K"];
+
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         panel: {
@@ -83,8 +85,17 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [loadedTracks, setLoadedTracks] = useState<any>(null);
 
     // [reloadKey, setReloadKey] = useState(makeReloadKey()),
-
     const classes = useStyles();
+    
+    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
+        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
+        [serviceTrackConfig]
+    );
+
+    const browserTrackConfig: any = useMemo(
+        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
+        [serviceTrackConfig]
+    );
 
     const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
         selectedTracks.forEach((trackKey: string) =>
@@ -145,16 +156,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         return track;
     }, [webAppUrl]);
 
-    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
-        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
-        [serviceTrackConfig]
-    );
-
-    const browserTrackConfig: any = useMemo(
-        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
-        [serviceTrackConfig]
-    );
-
 
     useEffect(() => {
         if (projectId) {
@@ -163,8 +164,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
             // set gene track urls
             referenceTrackConfig.tracks[0] = setUrls(referenceTrackConfig.tracks[0]);
-
-            setBrowserOptions({
+            let boptions = {
                 reference: {
                     id: referenceTrackId,
                     name: referenceTrackConfig.name,
@@ -175,7 +175,24 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 },
                 loadDefaultGenomes: false,
                 genomeList: _genomes,
-            });
+            };
+
+            const queryParams = new URLSearchParams(window.location.search);
+            if (queryParams.get("locus")) {
+                boptions = Object.assign({boptions, locus: queryParams.get("locus")});
+            }
+
+            if (queryParams.get("track")) {
+                let initTracks = queryParams.get("track").split(",").concat(DEFAULT_TRACKS);
+                let tSet = new Set(initTracks); // remove duplicates
+                boptions = Object.assign(boptions, { initTracks: Array.from(tSet)});
+            }
+
+            if (queryParams.get("file")) {
+                
+            }
+        
+            setBrowserOptions(boptions);
         }
     }, [projectId, webAppUrl]);
 
@@ -193,8 +210,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             justifyContent="space-between"
         >
             <MemoBroswer
-                //locus="ABCA"
-                //disableRefTrack={true}
                 webAppUrl={webAppUrl}
                 onBrowserLoad={buildBrowser}
                 searchUrl={`${serviceUrl}/track/feature?id=`}

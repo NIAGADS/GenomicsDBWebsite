@@ -6,7 +6,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
-const DEFAULT_FLANK = 10000;
+const DEFAULT_FLANK = 1000;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,13 +48,7 @@ export const removeTrackById = (trackId: string, browser: any) => {
     browser.removeTrack(trackView[0].track);
 };
 
-export const IGVBrowser: React.FC<IGVBrowser> = ({
-    webAppUrl,
-    searchUrl,
-    options,
-    onBrowserLoad,
-    onTrackRemoved,
-}) => {
+export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
     const classes = useStyles();
     const tableClass = classes.popupTable.toString();
 
@@ -101,7 +95,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         let fields = info.map((elem: any) => {
             return elem.hasOwnProperty("name") ? elem.name.toLowerCase().replace(":", "").replace(" ", "_") : "hr";
         });
-        let pData:any = [];
+        let pData: any = [];
 
         const featureType = info[fields.indexOf("type")].value;
         if (featureType === "gene") {
@@ -126,8 +120,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
             }
 
             pData.push({ name: "Location:", value: info[fields.indexOf("location")].value });
-        }
-        else {
+        } else {
             pData = _geneComponentFeaturePopoverData(fields, info, pData); // floating transcript
         }
 
@@ -217,10 +210,10 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         const targetDiv = document.getElementById("genome-browser");
         igv.createBrowser(targetDiv, options).then(function (browser: any) {
             // browser is initialized and can now be used
-            browser.on("locuschange", function (referenceFrameList: any) {
+            /* browser.on("locuschange", function (referenceFrameList: any) {
                 let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
                 window.location.replace(HASH_PREFIX + loc);
-            });
+            });*/
 
             browser.on("trackclick", _customTrackPopup);
 
@@ -236,9 +229,15 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
                 (config: any, browser: any) => new VariantTrack(config, browser)
             );
 
+           /* browser.createTrack({
+                url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg38/1/ENCFF002HCJ.bed.gz",
+                indexURL:
+                    "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg38/1/ENCFF002HCJ.bed.gz.tbi",
+            }); */
+
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
-    }, [ onBrowserLoad ]);
+    }, [onBrowserLoad]);
 
     return <span style={{ width: "100%" }} id="genome-browser" />;
 };
