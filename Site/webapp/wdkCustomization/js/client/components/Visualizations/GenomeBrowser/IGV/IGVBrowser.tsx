@@ -97,20 +97,27 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
         });
         let pData: any = [];
 
-        const featureType = info[fields.indexOf("type")].value;
-        if (featureType === "gene") {
-            const geneId = info[fields.indexOf("gene_id")].value;
+        const featureType = info[fields.indexOf("type")].value.replace('_', ' ');
+        if (featureType === "gene" || featureType.endsWith("gene")) {  
             const geneSymbol = info[fields.indexOf("name")].value;
-            const product = info[fields.indexOf("description")].value.replace(regexp, "");
-            const recHref = webAppUrl + "/app/record/gene/" + geneId;
             pData.push({ name: "Feature Type:", value: featureType });
             pData.push({ name: "Name:", value: geneSymbol });
-            pData.push({
-                name: "More Info:",
-                html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
-                title: "View GenomicsDB report for gene " + geneSymbol,
-            });
-            pData.push({ name: "Product:", value: product });
+
+            if (fields.includes("gene_id")) {
+                const geneId = info[fields.indexOf("gene_id")].value;
+                const recHref = webAppUrl + "/app/record/gene/" + geneId;
+  
+                pData.push({
+                    name: "More Info:",
+                    html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
+                    title: "View GenomicsDB report for gene " + geneSymbol,
+                });
+            }
+
+            if (fields.includes("description")) {
+                const product = info[fields.indexOf("description")].value.replace(regexp, "");
+                pData.push({ name: "Product:", value: product });
+            }   
 
             const biotype = info[fields.indexOf("biotype")];
             if (biotype.hasOwnProperty("color")) {
