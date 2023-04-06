@@ -6,6 +6,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
+const DEFAULT_FLANK = 10000;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -202,10 +203,10 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
         options = merge(options, {
             locus: options.locus || "ABCA7",
             showAllChromosomes: false,
-            flanking: 1000,
+            flanking: DEFAULT_FLANK,
             minimumBases: 40,
             search: {
-                url: `${searchUrl}$FEATURE$`,
+                url: `${searchUrl}$FEATURE$&flank=${DEFAULT_FLANK}`,
             },
         });
 
