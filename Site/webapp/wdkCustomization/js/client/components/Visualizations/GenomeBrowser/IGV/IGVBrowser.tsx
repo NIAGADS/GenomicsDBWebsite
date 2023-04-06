@@ -229,12 +229,6 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
                 (config: any, browser: any) => new VariantTrack(config, browser)
             );
 
-           /* browser.createTrack({
-                url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg38/1/ENCFF002HCJ.bed.gz",
-                indexURL:
-                    "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg38/1/ENCFF002HCJ.bed.gz.tbi",
-            }); */
-
             onBrowserLoad ? onBrowserLoad(browser) : noop();
         });
     }, [onBrowserLoad]);

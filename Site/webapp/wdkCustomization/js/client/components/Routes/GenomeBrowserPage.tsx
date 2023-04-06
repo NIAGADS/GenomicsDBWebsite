@@ -151,6 +151,24 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             // update track selector state
 
             // load files from query string
+
+            // https://lisanwanglab.org/GADB/FILER2/Annotationtracks/EpiMap_enhancers/ChromHMM/bed9/hg38/
+            // formatted_output_BSS00001_ENCODE_Enh_hg38.bed.gz
+            if (browser.config.hasOwnProperty("files")) {
+                const filesAreIndexed = browser.config.files.indexed;
+                browser.config.files.urls.forEach((url: string) => {
+                    const id = url.split("/").pop().replace(/\..+$/, "");
+                    const newTrackConfig = filesAreIndexed
+                        ? { url: url, indexURL: url + ".tbi", label: "USER: " + id, id: id }
+                        : { url: url, label: "USER: " + id, id: id };
+
+                    browser
+                        .loadTrack(newTrackConfig)
+                        .catch(function (error: any) {
+                            alert("Unable to load user track from: " + url + "\n" + error.toString());
+                        });
+                });
+            }
         }
     }, [browserIsLoaded]);
 
@@ -200,16 +218,24 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 boptions = Object.assign(boptions, { locus: queryParams.get("locus") });
             }
 
-            let initTracks = queryParams.get("track")
+            const initTracks = queryParams.get("track")
                 ? queryParams.get("track").split(",").concat(DEFAULT_TRACKS)
                 : DEFAULT_TRACKS;
-            let tSet = new Set(initTracks); // remove duplicates
+            const tSet = new Set(initTracks); // remove duplicates
             boptions = Object.assign(boptions, { initTracks: Array.from(tSet) });
 
             if (queryParams.get("file")) {
-                let files = queryParams.get("file").split(",");
-                let fSet = new Set(files);
-                boptions = Object.assign(boptions, { files: Array.from(fSet) });
+                const files = queryParams.get("file").split(",");
+                const fSet = new Set(files);
+
+                // indexed = "" means &indexed was in the url, but not set
+                // as opposed to &indexed=true or &indexed=false
+                // indexed is null means, &indexed was not in the url
+                let indexed = queryParams.get("indexed") === null ? "false" : queryParams.get("indexed");
+
+                boptions = Object.assign(boptions, {
+                    files: { urls: Array.from(fSet), indexed: indexed === "" || indexed === "true" ? true : false },
+                });
             }
 
             setBrowserOptions(boptions);
