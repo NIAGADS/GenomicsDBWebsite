@@ -30,6 +30,7 @@ import {
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { badType } from "wdk-client/Components/Mesa/Utils/Errors";
 
 const MemoBroswer = React.memo(GenomeBrowser);
 
@@ -78,6 +79,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
     const [browser, setBrowser] = useState<any>();
+    const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
     const [trackSelectorIsOpen, setTrackSelectorIsOpen] = useState<boolean>(false);
     const [loadingTrack, setLoadingTrack] = useState<string>(null);
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
@@ -86,7 +88,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     // [reloadKey, setReloadKey] = useState(makeReloadKey()),
     const classes = useStyles();
-    
+
     const resolvedSelectorData: TrackSelectorRow[] = useMemo(
         () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
         [serviceTrackConfig]
@@ -134,9 +136,23 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setReloadKey(makeReloadKey());
     }; */
 
-    const buildBrowser = useCallback((b: any) => {
+    const initializeBrowser = useCallback((b: any) => {
         setBrowser(b);
+        setBrowserIsLoaded(true);
     }, []);
+
+    // load initTracks, files and ROI from query string
+    useEffect(() => {
+        if (browserIsLoaded) {
+            // load initial tracks
+            const loadedTracks = getLoadedTracks(browser);
+            loadTracks(browser.config.initTracks, loadedTracks);
+
+            // update track selector state
+
+            // load files from query string
+        }
+    }, [browserIsLoaded]);
 
     const loadTrack = async (config: any, browser: any) => {
         setLoadingTrack(config.id);
@@ -148,14 +164,16 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setServiceTrackConfig(response);
     };
 
-    const setUrls = useCallback((track: any) => {
-        if (webAppUrl) {
-            track.url = track.url.replace('@WEBAPP_URL@', webAppUrl);
-            track.indexURL = track.indexURL.replace('@WEBAPP_URL@', webAppUrl);
-        }
-        return track;
-    }, [webAppUrl]);
-
+    const setUrls = useCallback(
+        (track: any) => {
+            if (webAppUrl) {
+                track.url = track.url.replace("@WEBAPP_URL@", webAppUrl);
+                track.indexURL = track.indexURL.replace("@WEBAPP_URL@", webAppUrl);
+            }
+            return track;
+        },
+        [webAppUrl]
+    );
 
     useEffect(() => {
         if (projectId) {
@@ -179,19 +197,21 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
             const queryParams = new URLSearchParams(window.location.search);
             if (queryParams.get("locus")) {
-                boptions = Object.assign({boptions, locus: queryParams.get("locus")});
+                boptions = Object.assign(boptions, { locus: queryParams.get("locus") });
             }
 
-            if (queryParams.get("track")) {
-                let initTracks = queryParams.get("track").split(",").concat(DEFAULT_TRACKS);
-                let tSet = new Set(initTracks); // remove duplicates
-                boptions = Object.assign(boptions, { initTracks: Array.from(tSet)});
-            }
+            let initTracks = queryParams.get("track")
+                ? queryParams.get("track").split(",").concat(DEFAULT_TRACKS)
+                : DEFAULT_TRACKS;
+            let tSet = new Set(initTracks); // remove duplicates
+            boptions = Object.assign(boptions, { initTracks: Array.from(tSet) });
 
             if (queryParams.get("file")) {
-                
+                let files = queryParams.get("file").split(",");
+                let fSet = new Set(files);
+                boptions = Object.assign(boptions, { files: Array.from(fSet) });
             }
-        
+
             setBrowserOptions(boptions);
         }
     }, [projectId, webAppUrl]);
@@ -211,7 +231,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         >
             <MemoBroswer
                 webAppUrl={webAppUrl}
-                onBrowserLoad={buildBrowser}
+                onBrowserLoad={initializeBrowser}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
             />
