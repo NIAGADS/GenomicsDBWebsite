@@ -18,7 +18,7 @@
         "d3": "5.16.0",
         "highcharts": "^7.1.2",
         "highcharts-react-official": "^2.2.2",
-        "igv": "https://github.com/NIAGADS/igv.js.git#NIAGADS-v2.11.0-revert",
+        "igv": "https://github.com/NIAGADS/igv.js.git#NIAGADS-v2.11.0-test",
         "locuszoom": "^0.14.0",
         "match-sorter": "^6.3.0",
         "plotly.js": "^2.16.5",
