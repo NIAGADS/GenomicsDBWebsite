@@ -52,6 +52,11 @@ const COLOR_BY_FIELDS: ColorByCategory[] = [
 
 class VariantServiceTrack extends igv.TrackBase {
     constructor(config: any, browser: any) {
+        // this way we can use the description() function to color the tracks
+        if (config.hasOwnProperty("description")) {
+            config.metadata = {"Description" : config.description};
+            delete config.description;
+        }
         super(config, browser);
     }
 
@@ -646,6 +651,12 @@ class VariantServiceTrack extends igv.TrackBase {
             list.push("<hr/>");
             return list;
         }
+    }
+
+    
+    description() {
+        let desc = super.description();
+        return desc;
     }
 
     /**
