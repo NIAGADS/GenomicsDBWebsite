@@ -655,7 +655,42 @@ class VariantServiceTrack extends igv.TrackBase {
 
     
     description() {
-        let desc = super.description();
+        const wrapKeyValue = (k: string, v:any) => `<div class="igv-track-label-popup-shim"><b>${k}: </b>${v}</div>`;
+
+        let str = '<div class="igv-track-label-popup">'
+    
+        str += wrapKeyValue("Track", this.name)
+
+        if (this.config) {
+            if (this.config.metadata) {
+                for (let key of Object.keys(this.config.metadata)) {
+                    const value = this.config.metadata[key]
+                    str += wrapKeyValue(key, value)
+                }
+            }
+
+            // Add any config properties that are capitalized
+            for (let key of Object.keys(this.config)) {
+                if (key.startsWith("_")) continue   // transient property
+                let first = key.substr(0, 1)
+                if (first !== first.toLowerCase()) {
+                    const value = this.config[key]
+                    if (value && isSimpleType(value)) {
+                        str += wrapKeyValue(key, value)
+                    }
+                }
+            }
+
+        }
+        str += '</div>'
+
+        if (this.colorBy) {
+            const cbLabel = COLOR_BY_FIELDS.filter((f:any) => (f.type == this.colorBy))[0].label;
+
+            str += `<i class="fa fa-square"></i>`
+        }
+
+      
         return desc;
     }
 
