@@ -1,12 +1,6 @@
 // modified from https://github.com/igvteam/igv.js/tree/master/js/variant/variantTrack.js
 import igv from "igv/dist/igv.esm";
-import { InfoAlert } from "genomics-client/components/MaterialUI";
-import { filterInvalidAttributes } from "wdk-client/Utils/UserPreferencesUtils";
-import CSS from "csstype";
 
-// TODO: Filter on CADD Score
-
-const isString = igv.StringUtils.isString;
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;
 const DEFAULT_COLOR_BY = "impact";
@@ -15,6 +9,7 @@ const TOP_MARGIN = 10;
 interface ColorByCategory {
     field: string;
     label: string;
+    default: string;
 }
 
 export interface ConsequenceData {
@@ -42,19 +37,23 @@ export interface VcfInfo {
 }
 
 const COLOR_BY_FIELDS: ColorByCategory[] = [
-    { field: "type", label: "Variant Type" },
-    { field: "filter", label: "CADD Score" },
-    { field: "is_adsp_variant", label: "ADSP Variant" },
-    { field: "impact", label: "Consequence Severity" },
-    { field: "consequence", label: "Consequence Type" },
-    { field: "is_coding", label: "Coding Variant" },
+    { field: "type", label: "Variant Type", default: "SNV" },
+    { field: "filter", label: "CADD Score", default: "Not reported" },
+    { field: "is_adsp_variant", label: "ADSP Variant", default: "No" },
+    { field: "impact", label: "Consequence Severity", default: "NONE" },
+    { field: "consequence", label: "Consequence Type", default: "other / no predicted consequence" },
+    { field: "is_coding", label: "Coding Variant", default: "No" },
 ];
 
 class VariantServiceTrack extends igv.TrackBase {
     constructor(config: any, browser: any) {
         // this way we can use the description() function to color the tracks
         if (config.hasOwnProperty("description")) {
-            config.metadata = {"Description" : config.description};
+            if (config.hasOwnProperty("metadata")) {
+                config.metadata = Object.assign(config.metadata, { Descripton: config.description });
+            } else {
+                config.metadata = { Description: config.description };
+            }
             delete config.description;
         }
         super(config, browser);
@@ -653,45 +652,50 @@ class VariantServiceTrack extends igv.TrackBase {
         }
     }
 
-    
     description() {
-        const wrapKeyValue = (k: string, v:any) => `<div class="igv-track-label-popup-shim"><b>${k}: </b>${v}</div>`;
+        const wrapKeyValue = (k: string, v: any) => `<div class="igv-track-label-popup-shim"><b>${k}: </b>${v}</div>`;
+        const wrapLegendValue = (v: string, c: any) =>
+            `<div class="igv-track-label-popup-shim"><i class="fa fa-square" style="color:${c}"></i> ${v}</div>`;
 
-        let str = '<div class="igv-track-label-popup">'
-    
-        str += wrapKeyValue("Track", this.name)
+        let str = '<div class="igv-track-label-popup">';
+
+        str += wrapKeyValue("Track", this.name);
 
         if (this.config) {
             if (this.config.metadata) {
                 for (let key of Object.keys(this.config.metadata)) {
-                    const value = this.config.metadata[key]
-                    str += wrapKeyValue(key, value)
+                    const value = this.config.metadata[key];
+                    str += wrapKeyValue(key, value);
                 }
             }
-
-            // Add any config properties that are capitalized
-            for (let key of Object.keys(this.config)) {
-                if (key.startsWith("_")) continue   // transient property
-                let first = key.substr(0, 1)
-                if (first !== first.toLowerCase()) {
-                    const value = this.config[key]
-                    if (value && isSimpleType(value)) {
-                        str += wrapKeyValue(key, value)
-                    }
-                }
-            }
-
         }
-        str += '</div>'
+
+        str += "</div>";
 
         if (this.colorBy) {
-            const cbLabel = COLOR_BY_FIELDS.filter((f:any) => (f.type == this.colorBy))[0].label;
-
-            str += `<i class="fa fa-square"></i>`
+            str += '<hr><div class="igv-track-label-popup">';
+            const cbOptions = COLOR_BY_FIELDS.filter((f: any) => f.field == this.colorBy)[0];
+            str += wrapKeyValue("Legend", cbOptions.label);
+            str += "<br>";
+            if (this.colorBy === "filter") {
+                const cScale = this.getVariantColorTable(this.colorBy);
+                for (const [index, color] of cScale.colors.entries()) {
+                    const bin = cScale.thresholds[index];
+                    str += wrapLegendValue(bin === 0 ? "N/A" : bin, color);
+                }
+            } else {
+                const cTable = this.getVariantColorTable(this.colorBy).colorTable;
+                for (const [value, color] of Object.entries(cTable)) {
+                    str += wrapLegendValue(
+                        value.includes("*") ? cbOptions.default : value === "true" ? "Yes" : value.replace("_", " "),
+                        color
+                    );
+                }
+            }
+            str += "</div>";
         }
 
-      
-        return desc;
+        return str;
     }
 
     /**
@@ -735,6 +739,9 @@ class VariantServiceTrack extends igv.TrackBase {
             switch (key) {
                 case "type":
                     tbl = SV_COLOR_TABLE;
+                    break;
+                case "consequence":
+                    tbl = CONSEQUENCE_COLOR_TABLE;
                     break;
                 case "is_adsp_variant":
                 case "is_coding":
@@ -782,7 +789,7 @@ function expandGenotype(call: any, variant: any) {
 
 const CADD_COLOR_SCALE = new igv.BinnedColorScale({
     thresholds: [0, 1, 10, 20, 30, 40, 50],
-    colors: ["#45515c", "#440d53", "#443983", "#32678d", "#23908c", "#37b779", "#8fd744", "#fce724"],
+    colors: ["#45515c", "#440d53", "#443983", "#32678d", "#23908c", "#37b779", "#8fd744"],
 });
 
 const SV_COLOR_TABLE = new igv.ColorTable({
