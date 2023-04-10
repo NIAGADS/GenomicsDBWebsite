@@ -1,4 +1,5 @@
 import { merge } from "lodash";
+import { GWASServiceReader, VariantServiceReader } from "@viz/GenomeBrowser";
 
 export interface BaseTrackConfig {
     name: string;
@@ -19,10 +20,11 @@ export interface RawTrackConfig extends BaseTrackConfig {
     track_type_display: string;
     biosample_characteristics: { [key: string]: string };
     experimental_design: { [key: string]: string };
+    supports_whole_genome?: boolean;
 }
 
 export interface TrackSelectorRow extends Omit<RawTrackConfig, "biomsample_characteristics" | "experimental_design"> {
-    // remove experimental_design & biosample_characteristics 
+    // remove experimental_design & biosample_characteristics
     // & allow other key value pairs b/c will not know columns
     // this will allow us to check that required columns are present
     [additionalFields: string]: unknown;
@@ -47,22 +49,53 @@ export interface IgvTrackProps {
     visibilityWindow?: number;
     type: string;
     id: string;
+    colorBy?: any;
+    queryable?: boolean; // query webservice when scrolling
+    expandQuery?: boolean; // expand the query to the whole genome & cache?
+    sourceType?: string;
 }
 
-export const convertRawToIgvTrack = (tracks: RawTrackConfig[]): any => {
-    return tracks.map((track: RawTrackConfig) => {
+export const convertRawToIgvTrack = (trackConfigs: RawTrackConfig[]): any => {
+    return trackConfigs.map((config: RawTrackConfig) => {
         const options: IgvTrackProps = {
             displayMode: "expanded",
-            type: track.track_type,
-            id: track.track,
-            supportsWholeGenome: false,
-            visibilityWindow: track.track_type === 'variant_service' ? 1000000 : -1
-        } 
+            type: config.track_type,
+            id: config.track,
+            supportsWholeGenome: config.supports_whole_genome || true,
+            visibilityWindow: -1,
+            removable: true,
+        };
 
-        if (track.track_type.includes("_service")) {
-            options.reader = track.track_type;
+        if (config.track_type.includes("_service")) {
+            options.reader = resolveTrackReader(config.track_type, { endpoint: config.endpoint, track: config.track });
+            options.queryable = true;
+            options.expandQuery = false;
+            options.sourceType = "custom";
+            options.visibilityWindow = 1000000;
+            options.supportsWholeGenome = false;
         }
 
-        return merge(track, options);
+        return merge(config, options);
     });
+};
+
+const resolveTrackReader = (trackType: string, config: any): any => {
+    switch (trackType) {
+        case "gwas_service":
+            return new GWASServiceReader(config);
+        case "variant_service":
+            return new VariantServiceReader(config);
+        default:
+            return null;
+    }
+};
+
+export const fetchJson = async (url: string) => {
+    try {
+        const response = await fetch(url);
+        let responseJson = response.json();
+        return responseJson;
+    } catch (error) {
+        return null;
+    }
 };

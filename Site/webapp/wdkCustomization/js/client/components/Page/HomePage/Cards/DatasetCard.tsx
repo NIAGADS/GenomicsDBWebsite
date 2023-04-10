@@ -52,7 +52,7 @@ export const DatasetCard: React.FC<CardProps & PanelProps> = (props) => {
                 ? tracks[0].replace("_", "_GRCh38_")
                 : tracks[0] + "_GRCh38"
             : tracks[0];
-    const img = props.webAppUrl + "/images/manhattan/" + accession + "/png/" + track + "-manhattan.png";
+    const img = props.webAppUrl + "/files/manhattan/" + accession + "/png/" + track + "-manhattan.png";
     const url = props.webAppUrl + "/app/record/track/" + track;
     return (
         <Card className={classes.root}>

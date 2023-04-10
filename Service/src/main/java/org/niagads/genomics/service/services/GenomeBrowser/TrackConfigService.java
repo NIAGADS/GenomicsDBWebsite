@@ -26,8 +26,7 @@ import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 
 import com.google.common.base.Enums;
 

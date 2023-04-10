@@ -1,2 +1,2 @@
-export * from "./GenomeBrowser";
-export * from "./TrackSelector/TrackSelector";
+export * from "./IGV";
+export * from "./TrackSelector";

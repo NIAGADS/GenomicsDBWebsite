@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,110 +21,126 @@ import org.gusdb.wdk.model.WdkModel;
 import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Path("track/feature")
 public class FeatureLookupService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(FeatureLookupService.class);
     private static final String ID_PARAM = "id";
+    private static final String FLANK_PARAM = "flank";
 
     // TODO add variant lookup back in
-    private static final String GENE_LOOKUP_SQL = "SELECT jsonb_agg(location)::text AS result" + NL
-            + "FROM (" + NL
-            + "SELECT jsonb_build_object('chromosome', chromosome," + NL 
-            + "'start', location_start, 'end', location_end) AS location" + NL
-            + "FROM CBIL.GeneAttributes" + NL
-            + "WHERE gene_symbol = ? OR source_id = ? OR annotation->>'entrez_id' = ?) a";
 
-    private static final String VARIANT_POSITION_LOOKUP_SQL = "SELECT jsonb_agg(location)::text AS result" + NL
-        + "FROM (" + NL
-        + "SELECT jsonb_build_object('chromosome', split_part(?, ':', 1)::text," + NL
-        + "'start', split_part(?, ':', 2)::integer - 25," + NL
-        + "'end', split_part(?, ':', 2)::integer  + 25) AS location) a";
+    private static final String ID_CTE = "WITH lookup AS (SELECT ?::text AS id, ?::int AS flank)";
 
-    private static final String VARIANT_LOOKUP_SQL = "SELECT jsonb_agg(DISTINCT location)::text AS result" + NL
-        + "FROM (" + NL
-        + "SELECT jsonb_build_object('chromosome', 'chr' || split_part(metaseq_id, ':', 1)::text," + NL
-        + "'start', da.location_start - 25," + NL
-        + "'end', da.location_end + 25) AS location" + NL
-        + "FROM find_variant_by_refsnp(?::text) v," + NL
-        + "normalize_alleles(split_part(v.metaseq_id, ':', 3), split_part(v.metaseq_id, ':', 4)) na," + NL
-        + "display_allele_attributes(split_part(v.metaseq_id, ':', 3), split_part(v.metaseq_id, ':', 4), na.ref, na.alt, split_part(v.metaseq_id, ':', 2)::int) da" + NL
-        + ") a";
-        
-    @GET    
+    private static final String VARIANT_ID_CTE = "variantId AS (" + NL
+            + "SELECT lookup.flank, find_variant_primary_key(lookup.id) AS mapped_pk" + NL
+            + "FROM lookup)";
+
+    private static final String VARIANT_LOC_CTE = "variant AS (" + NL
+            + "SELECT variantId.flank, v.details->>'chromosome' AS chr," + NL
+            + "v.details->>'location' AS span" + NL
+            + "FROM variantId," + NL
+            + "get_variant_display_details(variantId.mapped_pk) v)";
+
+    private static final String GENE_LOOKUP_SQL = "SELECT jsonb_build_object(" + NL
+            + "'chromosome', chromosome," + NL
+            + "'start', location_start - lookup.flank, " + NL
+            + "'end', location_end + lookup.flank) AS location" + NL
+            + "FROM CBIL.GeneAttributes, lookup" + NL
+            + "WHERE lower(gene_symbol) = lower(lookup.id)" + NL
+            + "OR source_id = lookup.id" + NL
+            + "OR annotation->>'entrez_id' = lookup.id";
+
+    private static final String VARIANT_LOOKUP_SQL = VARIANT_ID_CTE + "," + NL
+            + VARIANT_LOC_CTE + NL
+            + "SELECT jsonb_build_object(" + NL
+            + "'chromosome', chr," + NL
+            + "'start'," + NL
+            + "CASE WHEN span LIKE '%-%'" + NL
+            + "THEN split_part(span, ' - ', 1)::int" + NL
+            + "ELSE span::int END - flank," + NL
+            + "'end'," + NL
+            + "CASE WHEN span LIKE '%-%'" + NL
+            + "THEN split_part(span, ' - ', 2)::int" + NL
+            + "ELSE span::int END + flank) AS location" + NL
+            + "FROM variant";
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.track.feature.get-response")
-    public Response buildResponse(String body
-        , @QueryParam(ID_PARAM) String id ) throws WdkModelException {
-        
+    public Response buildResponse(String body, @DefaultValue("0") @QueryParam(FLANK_PARAM) int flank,
+            @QueryParam(ID_PARAM) String id) throws WdkModelException {
+
         LOG.info("Starting 'TrackConfig' Service");
         String response = "[{}]";
         try {
-            response = lookup(id, isPositionalVariant(id));
+            // replace chr:pos:ref/alt or chr:pos:ref_alt with chr:pos:ref:alt
+            String[] values = id.split(":");
+
+            if (values.length == 2) {
+                String chromosome = values[0].contains("chr") ? values[0] : "chr" + values[0];
+                int start = values[1].contains("-") ? Integer.valueOf(values[1].split("-")[0])
+                        : Integer.valueOf(values[1]);
+                int end = values[1].contains("-") ? Integer.valueOf(values[1].split("-")[1]) : start;
+                JSONObject rJson = new JSONObject();
+                rJson.put("chromosome", chromosome);
+                rJson.put("start", start - flank);
+                rJson.put("end", end + flank);
+                JSONArray rArray = new JSONArray();
+                rArray.put(rJson);
+                return Response.ok(rArray).build();
+            } else {
+                response = lookup(id, flank);
+            }
+
             LOG.debug("query result: " + response);
         }
-        
-        catch(WdkRuntimeException ex) {
+
+        catch (WdkRuntimeException ex) {
             throw new WdkModelException(ex);
         }
-        
-        return Response.ok(response).build();
-    }
-    
-    private boolean isPositionalVariant(String id) {
-        CharSequence delim = ":";
-        return id.contains(delim);
-    }
 
-    private boolean isRefSnp(String id) {
-        return id.toLowerCase().startsWith("rs");
+        return Response.ok(response).build();
     }
 
     // first pass -- variant only if positional, b/c some genes start w/RS
-    private String lookup(String id, boolean isVariant) {   
-        
+    private String lookup(String id, int flank) {
+
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-        String sql = (isVariant) ? selectVariantQuerySql(id) : GENE_LOOKUP_SQL;
-        if (isVariant) {
-            LOG.debug(sql);
+        if (id.contains(":")) {
+            id = id.replace("_", ":").replace("/", ":")
+                    .replace("chr", "").replace("CHR", "");
         }
 
+        String sql = "SELECT jsonb_agg(location)::text AS result" + NL
+                + "FROM (" + NL
+                + ID_CTE + "," + NL
+                + VARIANT_LOOKUP_SQL + NL
+                + "UNION ALL" + NL
+                + GENE_LOOKUP_SQL + NL
+                + ") a";
+
+        LOG.debug("Featuere Lookup SQL: " + sql);
+
         SQLRunner runner = new SQLRunner(ds, sql, "track-feature-lookup-query");
-   
-        if (isVariant && isRefSnp(id)) {
-            runner.executeQuery(new Object[] {id.toLowerCase()}, handler);
-        }
-        else {
-            runner.executeQuery(new Object[] {id, id, id}, handler);
-        }
-        
-        List <Map <String, Object>> results = handler.getResults();
+
+        runner.executeQuery(new Object[] { id, flank }, handler);
+
+        List<Map<String, Object>> results = handler.getResults();
         String resultStr = null;
-        if (!results.isEmpty()) 
+        if (!results.isEmpty())
             resultStr = (String) results.get(0).get("result");
 
         if (resultStr == null) {
-            if (!isVariant && isRefSnp(id))  // not a gene starting w/RS, so assume refSnp ID, end condition for recursion
-                return lookup(id, true);
-            else
-                return "[{}]";
-        }
-        else {
+            return "[{}]";
+        } else {
             return resultStr;
-        }    
+        }
     }
 
-    private String selectVariantQuerySql(String id) {
-        if (isPositionalVariant(id)) {
-            return VARIANT_POSITION_LOOKUP_SQL;
-        }
-        else if (isRefSnp(id)) {
-            return VARIANT_LOOKUP_SQL;
-        }
-        return null;
-    }
 }

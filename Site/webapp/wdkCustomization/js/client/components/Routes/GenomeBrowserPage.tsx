@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { find } from "lodash";
+//import clsx from "clsx";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { useWdkEffect } from "wdk-client/Service/WdkService";
@@ -9,24 +10,31 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
+//import IconButton from "@material-ui/core/IconButton";
+//import Collapse from "@material-ui/core/Collapse";
+//import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { CustomPanel } from "@components/MaterialUI";
 
-import { GenomeBrowser, getLoadedTracks, removeTrackById } from "@viz/GenomeBrowser";
-
 import {
+    IGVBrowser as GenomeBrowser,
+    getLoadedTracks,
+    removeTrackById,
     ConfigServiceResponse,
     TrackSelectorRow,
     resolveSelectorData,
     TrackSelector,
     convertRawToIgvTrack,
-} from "@viz/GenomeBrowser/TrackSelector";
+} from "@viz/GenomeBrowser";
 
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
+import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { badType } from "wdk-client/Components/Mesa/Utils/Errors";
 
-const makeReloadKey = () => Math.random().toString(36).slice(2);
 const MemoBroswer = React.memo(GenomeBrowser);
+
+const DEFAULT_TRACKS = ["ADSP_17K"];
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,18 +45,31 @@ export const useStyles = makeStyles((theme: Theme) =>
             //paddingLeft: "50px",
         },
         selectorHeader: {
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
             //backgroundColor: "#f0f1f2",
-            borderRadius: "4px",
-            marginTop: theme.spacing(5),
-            borderTop: "4px solid " + theme.palette.primary.main,
+            // borderRadius: "4px",
+            marginTop: theme.spacing(10),
+            marginBottom: theme.spacing(1),
+            borderTop: "4px solid " + theme.palette.secondary.main,
             width: "100%",
         },
         selectorHeaderText: {
-            color: theme.palette.primary.main,
-            fontSize: "1.2em",
+            color: "white",
+            fontSize: "1.3em",
             fontWeight: 500,
-            padding: theme.spacing(1),
+            padding: theme.spacing(1.5),
+        },
+        expand: {
+            transform: "rotate(0deg)",
+            marginLeft: "auto",
+            color: "white",
+            transition: theme.transitions.create("transform", {
+                duration: theme.transitions.duration.shortest,
+            }),
+        },
+        expandOpen: {
+            color: "white",
+            transform: "rotate(180deg)",
         },
     })
 );
@@ -58,6 +79,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
     const [browser, setBrowser] = useState<any>();
+    const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
     const [trackSelectorIsOpen, setTrackSelectorIsOpen] = useState<boolean>(false);
     const [loadingTrack, setLoadingTrack] = useState<string>(null);
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
@@ -65,8 +87,17 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [loadedTracks, setLoadedTracks] = useState<any>(null);
 
     // [reloadKey, setReloadKey] = useState(makeReloadKey()),
-
     const classes = useStyles();
+
+    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
+        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
+        [serviceTrackConfig]
+    );
+
+    const browserTrackConfig: any = useMemo(
+        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
+        [serviceTrackConfig]
+    );
 
     const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
         selectedTracks.forEach((trackKey: string) =>
@@ -105,9 +136,41 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setReloadKey(makeReloadKey());
     }; */
 
-    const buildBrowser = useCallback((b: any) => {
+    const initializeBrowser = useCallback((b: any) => {
         setBrowser(b);
+        setBrowserIsLoaded(true);
     }, []);
+
+    // load initTracks, files and ROI from query string
+    useEffect(() => {
+        if (browserIsLoaded) {
+            // load initial tracks
+            const loadedTracks = getLoadedTracks(browser);
+            loadTracks(browser.config.initTracks, loadedTracks);
+
+            // update track selector state
+
+            // load files from query string
+
+            // https://lisanwanglab.org/GADB/FILER2/Annotationtracks/EpiMap_enhancers/ChromHMM/bed9/hg38/
+            // formatted_output_BSS00001_ENCODE_Enh_hg38.bed.gz
+            if (browser.config.hasOwnProperty("files")) {
+                const filesAreIndexed = browser.config.files.indexed;
+                browser.config.files.urls.forEach((url: string) => {
+                    const id = url.split("/").pop().replace(/\..+$/, "");
+                    const newTrackConfig = filesAreIndexed
+                        ? { url: url, indexURL: url + ".tbi", label: "USER: " + id, id: id }
+                        : { url: url, label: "USER: " + id, id: id };
+
+                    browser
+                        .loadTrack(newTrackConfig)
+                        .catch(function (error: any) {
+                            alert("Unable to load user track from: " + url + "\n" + error.toString());
+                        });
+                });
+            }
+        }
+    }, [browserIsLoaded]);
 
     const loadTrack = async (config: any, browser: any) => {
         setLoadingTrack(config.id);
@@ -119,11 +182,25 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         setServiceTrackConfig(response);
     };
 
+    const setUrls = useCallback(
+        (track: any) => {
+            if (webAppUrl) {
+                track.url = track.url.replace("@WEBAPP_URL@", webAppUrl);
+                track.indexURL = track.indexURL.replace("@WEBAPP_URL@", webAppUrl);
+            }
+            return track;
+        },
+        [webAppUrl]
+    );
+
     useEffect(() => {
         if (projectId) {
             const referenceTrackId = projectId === "GRCh37" ? "hg19" : "hg38";
             const referenceTrackConfig = find(_genomes, { id: referenceTrackId });
-            setBrowserOptions({
+
+            // set gene track urls
+            referenceTrackConfig.tracks[0] = setUrls(referenceTrackConfig.tracks[0]);
+            let boptions = {
                 reference: {
                     id: referenceTrackId,
                     name: referenceTrackConfig.name,
@@ -132,25 +209,44 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                     cytobandURL: referenceTrackConfig.cytobandURL,
                     tracks: referenceTrackConfig.tracks,
                 },
-            });
+                loadDefaultGenomes: false,
+                genomeList: _genomes,
+            };
+
+            const queryParams = new URLSearchParams(window.location.search);
+            if (queryParams.get("locus")) {
+                boptions = Object.assign(boptions, { locus: queryParams.get("locus") });
+            }
+
+            const initTracks = queryParams.get("track")
+                ? queryParams.get("track").split(",").concat(DEFAULT_TRACKS)
+                : DEFAULT_TRACKS;
+            const tSet = new Set(initTracks); // remove duplicates
+            boptions = Object.assign(boptions, { initTracks: Array.from(tSet) });
+
+            if (queryParams.get("file")) {
+                const files = queryParams.get("file").split(",");
+                const fSet = new Set(files);
+
+                // indexed = "" means &indexed was in the url, but not set
+                // as opposed to &indexed=true or &indexed=false
+                // indexed is null means, &indexed was not in the url
+                let indexed = queryParams.get("indexed") === null ? "false" : queryParams.get("indexed");
+
+                boptions = Object.assign(boptions, {
+                    files: { urls: Array.from(fSet), indexed: indexed === "" || indexed === "true" ? true : false },
+                });
+            }
+
+            setBrowserOptions(boptions);
         }
-    }, [projectId]);
+    }, [projectId, webAppUrl]);
 
     useWdkEffect((service) => {
         service._fetchJson<ConfigServiceResponse>("GET", `/track/config`).then(function (res: ConfigServiceResponse) {
             return parseTrackConfigServiceResponse(res);
         });
     }, []);
-
-    const resolvedSelectorData: TrackSelectorRow[] = useMemo(
-        () => serviceTrackConfig && resolveSelectorData(serviceTrackConfig),
-        [serviceTrackConfig]
-    );
-
-    const browserTrackConfig: any = useMemo(
-        () => serviceTrackConfig && convertRawToIgvTrack([...serviceTrackConfig.tracks]),
-        [serviceTrackConfig]
-    );
 
     return browserOptions && serviceUrl && webAppUrl && resolvedSelectorData ? (
         <CustomPanel
@@ -160,15 +256,29 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             justifyContent="space-between"
         >
             <MemoBroswer
-                //locus="ABCA"
-                //disableRefTrack={true}
-                onBrowserLoad={buildBrowser}
+                webAppUrl={webAppUrl}
+                onBrowserLoad={initializeBrowser}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
             />
+
             <Box className={classes.selectorHeader}>
-                <Typography variant="h3" className={classes.selectorHeaderText}>Available Tracks</Typography>
+                <Typography variant="h3" className={classes.selectorHeaderText}>
+                    Select Tracks
+                </Typography>
+                {/*<IconButton
+                    className={clsx(classes.expand, {
+                        [classes.expandOpen]: trackSelectorIsOpen,
+                    })}
+                    onClick={() => {setTrackSelectorIsOpen(!trackSelectorIsOpen)}}
+                    aria-expanded={trackSelectorIsOpen}
+                    size="small"
+                    aria-label="show more"
+                >
+                    <ExpandMoreIcon />
+                </IconButton>*/}
             </Box>
+
             <TrackSelector
                 properties={properties}
                 columnConfig={serviceTrackConfig.columns}
