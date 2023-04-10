@@ -32,7 +32,6 @@ const MemoBroswer = React.memo(GenomeBrowser);
 
 const DEFAULT_TRACKS = ["ADSP_17K"];
 
-
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         panel: {
@@ -114,32 +113,46 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         );
     };
 
-    const toggleTracks = useCallback((selectedTracks: string[]) => {
-        if (browser && browserTrackConfig) {
-            const loadedTracks = getLoadedTracks(browser);
-            loadTracks(selectedTracks, loadedTracks);
-            unloadTracks(selectedTracks, loadedTracks);
-        }
-    }, [browser, browserTrackConfig]);
-
-    const updateSelectorTrackState = useCallback((tracks: string[], action: "add" | "remove") => {
-        let invalidTracks:string [] = [];
-        tracks.forEach((id: string) => {
-            if (trackSelector.data.filter((row:any) => row.row_id === id).length > 0) {
-                const trackState = action === "add" ? true : false;
-                trackSelector.toggleRowSelected(id, trackState);
-                //trackSelector.state.selectedRowIds.push({id: trackState});
-                //var selectedRowIds = Object.assign({}, state.selectedRowIds);
+    const toggleTracks = useCallback(
+        (selectedTracks: string[]) => {
+            if (browser && browserTrackConfig) {
+                const loadedTracks = getLoadedTracks(browser);
+                loadTracks(selectedTracks, loadedTracks);
+                unloadTracks(selectedTracks, loadedTracks);
             }
-            else {
-                invalidTracks.push(id);
-            }
-        });
+        },
+        [browser, browserTrackConfig]
+    );
 
-        if (invalidTracks.length > 0) { 
-            alert(`Invalid track identifier(s): ${invalidTracks.toString()} specified in URL string or session file`);
-        }
-    }, [trackSelector]);
+    const removeTrack = (trackId: string) => {
+        updateSelectorTrackState([trackId], "remove");
+    };
+
+    const updateSelectorTrackState = useCallback(
+        (tracks: string[], action: "add" | "remove") => {
+            if (action === "add") {
+                // need to validate tracks before trying to add
+                let invalidTracks: string[] = [];
+                tracks.forEach((id: string) => {
+                    if (trackSelector.data.filter((row: any) => row.row_id === id).length > 0) {
+                        trackSelector.toggleRowSelected(id, true);
+                    } else {
+                        invalidTracks.push(id);
+                    }
+                });
+                if (invalidTracks.length > 0) {
+                    alert(
+                        `Invalid track identifier(s): ${invalidTracks.toString()} specified in URL string or session file.\nNOTE: track identifiers are CASE SENSITIVE.`
+                    );
+                }
+            } else {
+                tracks.forEach((id: string) => {
+                    trackSelector.toggleRowSelected(id, false);
+                });
+            }
+        },
+        [trackSelector]
+    );
 
     const initializeBrowser = useCallback((b: any) => {
         setBrowser(b);
@@ -154,8 +167,6 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     // load initTracks, files and ROI from query string
     useEffect(() => {
         if (browserIsLoaded && trackSelectorIsLoaded) {
-
-
             // load initial tracks from query string
             //let loadedTracks = getLoadedTracks(browser); // reference tracks
             if (browser.config.initTracks) {
@@ -267,6 +278,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             <MemoBroswer
                 webAppUrl={webAppUrl}
                 onBrowserLoad={initializeBrowser}
+                onTrackRemoved={updateSelectorTrackState}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
             />
