@@ -278,7 +278,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             <MemoBroswer
                 webAppUrl={webAppUrl}
                 onBrowserLoad={initializeBrowser}
-                onTrackRemoved={updateSelectorTrackState}
+                onTrackRemoved={removeTrack}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
             />
