@@ -76,7 +76,9 @@ public class TrackConfigService extends AbstractWdkService {
 
     private static final String COLUMN_JSON_SQL = "SELECT" + NL
         + "jsonb_build_object('columns'," + NL
-        + "jsonb_build_object('name', 'Track', 'description', 'Description'," + NL
+        + "jsonb_build_object('name', 'Track'," + NL 
+        + "'track', 'Track ID'," + NL
+        + "'description', 'Description'," + NL
         + "'consortium', 'AD Genetics Consortium'," + NL
         + "'repository', 'Repository'," + NL
         + "'data_source', 'Data Source'," + NL 
@@ -86,7 +88,7 @@ public class TrackConfigService extends AbstractWdkService {
         + "CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END," + NL
         + "CASE WHEN field = 'APOE carrier status' THEN 'Genotype' ELSE column_name END)," + NL
         + "'order'," + NL
-        + "array_to_json(array['name','description','data_source'," + NL 
+        + "array_to_json(array['track', 'name','description','data_source'," + NL 
         + "'consortium', 'repository', 'feature_type', 'track_type_display'])::jsonb" + NL
         + "|| jsonb_agg(CASE WHEN field = 'APOE carrier status' THEN 'genotype' ELSE field END" + NL
         + "ORDER BY category, custom_sort(ARRAY['Diagnosis', 'Neuropathology', 'Population', 'Antibody Target', 'Assay'," + NL
