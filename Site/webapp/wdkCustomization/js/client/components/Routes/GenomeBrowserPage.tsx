@@ -13,8 +13,6 @@ import Box from "@material-ui/core/Box";
 
 import { CustomPanel } from "@components/MaterialUI";
 
-import { RowCheckedState as TrackState } from "@viz/Table"
-
 import {
     IGVBrowser as GenomeBrowser,
     getLoadedTracks,
@@ -29,8 +27,6 @@ import {
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
-import { select } from "d3";
-import { RowSelectCheckbox } from "../Visualizations/Table/RowSelectors";
 
 const MemoBroswer = React.memo(GenomeBrowser);
 
