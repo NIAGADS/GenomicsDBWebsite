@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { isObject, merge, indexOf, has, get } from "lodash";
+import React, { useMemo, useState, useEffect, useLayoutEffect } from "react";
+import { isObject, merge, indexOf, has, get, noop } from "lodash";
 import classNames from "classnames";
 
 import { Column } from "react-table";
@@ -51,11 +51,9 @@ export const resolveSelectorData = (response: ConfigServiceResponse): TrackSelec
 interface TrackSelector {
     columnConfig: TrackColumnConfig;
     data: any;
-    //browser: any;
-    loadedTracks?: string[];
-    type?: "Reference" | "Variant" | "GWAS" | "FunctionalGenomics";
-    handleTrackSelect?: any;
     properties: TableProperties;
+    handleTrackSelect: any;
+    onSelectorLoad: any;
 }
 
 export const TrackSelector: React.FC<TrackSelector> = ({
@@ -63,18 +61,17 @@ export const TrackSelector: React.FC<TrackSelector> = ({
     data,
     properties,
     handleTrackSelect,
-    loadedTracks,
+    onSelectorLoad,
 }) => {
     const { columns, order } = columnConfig;
-    const [selectedTracks, setSelectedTracks] = useState<string[]>(loadedTracks ? loadedTracks : null);
+    const [selectedTracks, setSelectedTracks] = useState<string[]>(null);
     const [options, setOptions] = useState<TableOptions>(_initializeTableOptions(properties));
+
     const classes = useTableStyles();
-    // tracks is json object {track_id:true}
-    const updateSelectedTracks = (tracks: any) => {
-        Array.isArray(tracks) ? setSelectedTracks(tracks) : setSelectedTracks(Object.keys(tracks));
-    };
 
     useEffect(() => {
+        // only want to handle track select if selected tracks were changed based
+        // on interacting w/the selector
         selectedTracks != null && handleTrackSelect(selectedTracks);
     }, [selectedTracks]);
 
@@ -118,6 +115,7 @@ export const TrackSelector: React.FC<TrackSelector> = ({
             className={classNames(get(properties, "fullWidth", true) ? classes.fullWidth : "shrink", classes.table)}
             columns={tableColumns}
             data={data}
+            onTableLoad={onSelectorLoad}
             title="Available Tracks"
             options={Object.assign(options, {
                 canExport: false,

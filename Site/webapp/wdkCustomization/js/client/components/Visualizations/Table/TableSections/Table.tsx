@@ -1,5 +1,5 @@
 // modeled after https://github.com/ggascoigne/react-table-example
-import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
+import React, { useMemo, useState, useEffect, useCallback, useRef, useLayoutEffect } from "react";
 import cx from "classnames";
 import { get } from "lodash";
 
@@ -31,7 +31,7 @@ import {
     HeaderGroup,
 } from "react-table";
 
-import { useTableStyles, Table as TableProps, parseFieldValue, ROW_SELECTION_FIELD } from "@viz/Table";
+import { useTableStyles, Table as TableProps, parseFieldValue, ROW_SELECTION_FIELD, RowCheckedState } from "@viz/Table";
 
 import { RowSelectCheckbox } from "@viz/Table/RowSelectors";
 
@@ -61,18 +61,15 @@ import {
     TableToolbar,
     MemoLinkedPanel as LinkedPanel,
     TablePagination,
-    FilterChipBar
+    FilterChipBar,
 } from "@viz/Table/TableSections";
 
-export const Table: React.FC<TableProps> = ({ className, columns, title, data, options }) => {
+export const Table: React.FC<TableProps> = ({ className, columns, title, data, options, onTableLoad }) => {
     const classes = useTableStyles();
 
     const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {});
     const [linkedPanelIsOpen, setLinkedPanelIsOpen] = useState<boolean>(false);
     const [linkedPanelTarget, setLinkedPanelTarget] = useState<any>(null);
-    /* const [linkedPanelState, setLinkedPanelState] = useState<{ [key: string]: any }>(
-        get(options, "linkedPanel.initialState", null)
-    );*/
 
     const firstUpdate = useRef(true);
 
@@ -96,8 +93,6 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
         less_than_threshold: useMemo(() => lessThanFilter, []),
     };
 
-
-
     const hooks = useMemo(() => {
         return [useFlexLayout, useResizeColumns, useGlobalFilter, useFilters, useSortBy, usePagination, useRowSelect];
     }, []);
@@ -120,7 +115,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     };
 
     const tableProps = useMemo(() => {
-        const initialState = {
+        let initialState = {
             pageIndex: 0,
             pageSize: 10,
             filters: [options.initialFilters ? options.initialFilters : {}],
@@ -222,6 +217,11 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
 
     const debouncedState = useAsyncDebounce(state as any, 500);
 
+    const toggleRow = useCallback((rowCheckState: RowCheckedState) => {
+        const [rowId, rowState] = Object.entries(rowCheckState)[0];
+        toggleRowSelected(rowId, rowState);
+    }, []);
+
     useEffect(() => {
         const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
         const val = {
@@ -257,8 +257,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                         ldrefvar: refSnpId !== null ? variant + ":" + refSnpId : variant,
                     });
             }
-        }
-        else {
+        } else {
             rowSelectProps !== null && rowSelectProps.action(Object.keys(selectedRowIds));
         }
         //hasLinkedPanel && linkedPanel.select && linkedPanel.select.action(Object.keys(selectedRowIds)[0]);
@@ -267,6 +266,12 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     const toggleLinkedPanel = useCallback((isOpen: boolean) => {
         setLinkedPanelIsOpen(isOpen);
     }, []);
+
+    useLayoutEffect(() => {
+        if (firstUpdate.current) {
+            instance && onTableLoad(instance);
+        }
+    }, [instance]);
 
     return (
         <CustomPanel justifyContent="flex-start">
