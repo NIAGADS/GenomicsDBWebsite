@@ -4,7 +4,9 @@ import { RootState } from "wdk-client/Core/State/Types";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { CustomLink as Link} from "@components/MaterialUI"
+import { CustomLink as Link, StyledTooltip as Tooltip } from "@components/MaterialUI";
+
+const DISABLE_ALT_VERSION_LINK = true;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,6 +21,11 @@ const useStyles = makeStyles((theme: Theme) =>
         altBuild: {
             color: theme.palette.grey[100],
             fontWeight: "bold",
+        },
+        disabled: {
+            textDecoration: "underline",
+            fontSize: "0.8rem",
+            color: theme.palette.primary.contrastText,
         },
         banner: {
             //display: "flex",
@@ -54,10 +61,26 @@ const GenomeBuildBanner: React.FC<any> = ({}) => {
                 <Box component="span" className={classes.currentBuild}>
                     v. {buildInfo.build}
                 </Box>
+
                 {" / "}
-                <Box component="span">
-                    Looking for <Link style="secondary" href={buildInfo.alt_build_target}>{buildInfo.alt_build}</Link>?
-                </Box>
+                {DISABLE_ALT_VERSION_LINK ? (
+                    <Tooltip title={`The ${buildInfo.alt_build} site is being updated.  Please check back soon.`}>
+                        <Box component="span">
+                            Looking for{" "}
+                            <Typography className={classes.disabled} component="span" color="secondary">
+                                {" "}
+                                {buildInfo.alt_build}
+                            </Typography>
+                        </Box>
+                    </Tooltip>
+                ) : (
+                    <Box component="span">
+                        Looking for{" "}
+                        <Link style="secondary" target="_blank" href={buildInfo.alt_build_target}>
+                            {buildInfo.alt_build}
+                        </Link>
+                    </Box>
+                )}
             </Typography>
         </Box>
     ) : null;

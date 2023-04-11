@@ -55,7 +55,7 @@ export const DatasetCard: React.FC<CardProps & PanelProps> = (props) => {
     const img = props.webAppUrl + "/files/manhattan/" + accession + "/png/" + track + "-manhattan.png";
     const url = props.webAppUrl + "/app/record/track/" + track;
     return (
-        <Card className={classes.root}>
+        <Card className={classes.root} elevation={0}>
             <CardActionArea>
                 <CardMedia component="img" alt={title} height="140" image={img} title={title} />
                 <CardContent>

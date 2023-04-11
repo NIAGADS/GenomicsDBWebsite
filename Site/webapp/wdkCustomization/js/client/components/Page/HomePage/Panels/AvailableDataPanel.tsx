@@ -35,7 +35,7 @@ export const AvailableDataPanel: React.FC<PanelProps> = ({ background = "light",
                 </Grid>
                 <Grid item>
                     <Typography variant="body1" className={bodyText} align="left">
-                        The NIAGADS Alzheimer's Genomics Database enables browsing, searching, and analysis of{" "}
+                        The NIAGADS Alzheimer's Genomics Database <strong>v.{projectId}</strong> enables browsing, searching, and analysis of{" "}
                         <strong>{stats.DATASETS}</strong> publicly available summary statistics from AD/ADRD
                         genome-wide association studies (GWAS) deposited at{" "}
                         <Link href={_externalUrls.NIAGADS_BASE_URL} color={linkType}>

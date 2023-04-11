@@ -138,13 +138,11 @@ function PrimarySearchAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            {isGuest ? (
-                <Tooltip title="coming soon">
-                    <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
-                </Tooltip>
-            ) : (
-                <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
-            )}
+            isGuest ? (
+            <Tooltip title="coming soon">
+                <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
+            </Tooltip>
+            ) : (<MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>)
             {!isGuest && <MenuItem onClick={handleMenuClose}>My Account</MenuItem>}
             {!isGuest && <MenuItem onClick={handleMenuClose}>Favorites</MenuItem>}
         </Menu>
@@ -239,7 +237,7 @@ function PrimarySearchAppBar() {
             {/*<TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
                 About
     </TextButton>*/}
-            <IconButton
+            {/* <IconButton
                 edge="end"
                 aria-label="account of current user"
                 aria-controls={accountMenuId}
@@ -248,7 +246,7 @@ function PrimarySearchAppBar() {
                 color="inherit"
             >
                 <AccountCircle />
-            </IconButton>
+</IconButton> */}
         </div>
     );
 
@@ -294,7 +292,7 @@ function PrimarySearchAppBar() {
                         <GenomeBuildBanner />
                     </AppBar>
                     {/*renderMobileMenu*/}
-                    {renderAccountMenu}
+                    {/*renderAccountMenu*/}
                 </>
             </ElevationScroll>{" "}
         </>
