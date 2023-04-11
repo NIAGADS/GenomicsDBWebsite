@@ -8,7 +8,7 @@ export const resolveJSONFieldValue = (value: string) => {
         }
         // JSON parse yields scientific notation parsed correctly, so this will return
         // correctly formatted numbers
-        return "value" in jsonValue ? jsonValue.value : jsonValue;
+        return jsonValue.hasOwnProperty("value") ? jsonValue.value : jsonValue;
     } catch (e) {
         // regular string
         return value;
