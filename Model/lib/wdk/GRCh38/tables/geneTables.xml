@@ -627,7 +627,7 @@ THEN 'in gene'
 	<![CDATA[
 		 SELECT source_id,
 		 ontology,
-		 go_evidence_code,
+		 replace(go_evidence_code, ',', ' // ') AS go_evidence_code,
 		 replace(go_accession::text, '+AMIGO_URL+', '@AMIGO_URL@')::jsonb AS go_accession,
 		 term,
 		 multi_replace(evidence_table_dropdown::text, ARRAY['+PUBMED_URL+', '+REACTOME_PATHWAY_URL+', '+DOI_URL+'], 
