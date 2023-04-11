@@ -67,17 +67,22 @@ export const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+
+
 const GenomeBrowserPage: React.FC<{}> = () => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
+
     const [browser, setBrowser] = useState<any>();
     const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
-    const [trackSelectorIsLoaded, setTrackSelectorIsLoaded] = useState<boolean>(false);
-    const [trackSelector, setTrackSelector] = useState<any>(null);
+    const [trackSelectorIsLoaded, setTrackSelectorIsLoaded] = useState<boolean>(null);
+    const [trackSelector, setTrackSelector] = useState<any>();
+
     const [loadingTrack, setLoadingTrack] = useState<string>(null);
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
     const [browserOptions, setBrowserOptions] = useState<any>(null);
+    const [triggerRemoveTrack, setTriggerRemoveTrack] = useState<string>(null);
 
     const classes = useStyles();
 
@@ -124,9 +129,10 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         [browser, browserTrackConfig]
     );
 
-    const removeTrack = (trackId: string) => {
-        updateSelectorTrackState([trackId], "remove");
-    };
+    useEffect(() => {
+        triggerRemoveTrack && updateSelectorTrackState([triggerRemoveTrack], "remove");
+        setTriggerRemoveTrack(null);
+    }, [triggerRemoveTrack])
 
     const updateSelectorTrackState = useCallback(
         (tracks: string[], action: "add" | "remove") => {
@@ -278,7 +284,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             <MemoBroswer
                 webAppUrl={webAppUrl}
                 onBrowserLoad={initializeBrowser}
-                onTrackRemoved={removeTrack}
+                onTrackRemoved={setTriggerRemoveTrack}
                 searchUrl={`${serviceUrl}/track/feature?id=`}
                 options={browserOptions}
             />
