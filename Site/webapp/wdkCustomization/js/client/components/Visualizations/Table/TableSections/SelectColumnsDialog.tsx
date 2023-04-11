@@ -49,7 +49,7 @@ export function SelectColumnsDialog<T extends Record<string, unknown>>({
                                         value={`${column.id}`}
                                         disabled={
                                             (column.isVisible && onlyOneOptionLeft) ||
-                                            requiredColumns.includes(column.id)
+                                            (requiredColumns && requiredColumns.includes(column.id))
                                         }
                                     />
                                 }
