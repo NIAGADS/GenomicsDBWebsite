@@ -268,8 +268,10 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
     }, []);
 
     useLayoutEffect(() => {
-        if (firstUpdate.current) {
-            instance && onTableLoad(instance);
+        if (onTableLoad) {
+            if (firstUpdate.current) {
+                instance && onTableLoad(instance);
+            }
         }
     }, [instance]);
 
