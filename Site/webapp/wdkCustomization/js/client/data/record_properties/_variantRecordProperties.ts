@@ -133,7 +133,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
             impact: "select",
         },
         filterGroups: [{ label: "Consequence", columns: ["consequence", "gene_link", "impact"], defaultOpen: true }],
-        hiddenColumns: ["exon", "cds_position", "cdna_position", "protein_link", "protein_position", "rank"],
+        hiddenColumns: ["exon", "cds_position", "cdna_position", "protein_link", "protein_position", "rank", "strand","is_canonical_transcript"],
         requiredColumns: ["consequence"],
         canFilter: true,
         defaultOpen: true,
