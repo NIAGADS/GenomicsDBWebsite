@@ -15,6 +15,7 @@ import { CustomPanel } from "@components/MaterialUI";
 
 import {
     IGVBrowser as GenomeBrowser,
+    DEFAULT_FLANK,
     getLoadedTracks,
     removeTrackById,
     ConfigServiceResponse,
@@ -67,8 +68,6 @@ export const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-
-
 const GenomeBrowserPage: React.FC<{}> = () => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
@@ -83,6 +82,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
     const [browserOptions, setBrowserOptions] = useState<any>(null);
     const [triggerRemoveTrack, setTriggerRemoveTrack] = useState<string>(null);
+    const [highlightInitialLocus, setHighlightInitialLocus] = useState<boolean>(false);
 
     const classes = useStyles();
 
@@ -130,9 +130,11 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     );
 
     useEffect(() => {
-        triggerRemoveTrack && updateSelectorTrackState([triggerRemoveTrack], "remove");
-        setTriggerRemoveTrack(null);
-    }, [triggerRemoveTrack])
+        if (triggerRemoveTrack) {
+            updateSelectorTrackState([triggerRemoveTrack], "remove");
+            setTriggerRemoveTrack(null);
+        }
+    }, [triggerRemoveTrack]);
 
     const updateSelectorTrackState = useCallback(
         (tracks: string[], action: "add" | "remove") => {
@@ -173,6 +175,27 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     // load initTracks, files and ROI from query string
     useEffect(() => {
         if (browserIsLoaded && trackSelectorIsLoaded) {
+            // if locus passed through query string, highlight
+            if (highlightInitialLocus) {
+                const initialFrame: any = browser.referenceFrameList[0];
+                const regionOfInterest = [
+                    {
+                        name: "Initial Locus",
+                        color: "rgba(245,215,95,0.5)",
+                        features: [
+                            {
+                                chr: initialFrame.chr,
+                                start: initialFrame.start + DEFAULT_FLANK,
+                                end: initialFrame.end - DEFAULT_FLANK,
+                                name: browser.config.locus
+                            },
+                        ],
+                    },
+                ];
+
+                browser.loadROI(regionOfInterest);
+            }
+
             // load initial tracks from query string
             //let loadedTracks = getLoadedTracks(browser); // reference tracks
             if (browser.config.initTracks) {
@@ -195,6 +218,8 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                     });
                 });
             }
+
+            // regions of interest
         }
     }, [browserIsLoaded, trackSelectorIsLoaded]);
 
@@ -242,6 +267,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             const queryParams = new URLSearchParams(window.location.search);
             if (queryParams.get("locus")) {
                 boptions = Object.assign(boptions, { locus: queryParams.get("locus") });
+                setHighlightInitialLocus(true);
             }
 
             const initTracks = queryParams.get("track")
@@ -285,7 +311,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 webAppUrl={webAppUrl}
                 onBrowserLoad={initializeBrowser}
                 onTrackRemoved={setTriggerRemoveTrack}
-                searchUrl={`${serviceUrl}/track/feature?id=`}
+                searchUrl={`${serviceUrl}/track/feature?&id=`}
                 options={browserOptions}
             />
 
