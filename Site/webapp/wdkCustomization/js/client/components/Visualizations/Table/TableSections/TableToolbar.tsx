@@ -149,20 +149,24 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                     </BlueButton>
                 </Box>
             </Toolbar>
-            <SelectColumnsDialog
-                isOpen={columnsDialogIsOpen}
-                handleClose={closeColumnsDialog}
-                instance={instance}
-                requiredColumns={columnsDialog.options.requiredColumns}
-            />
-            <FilterDialog
-                isOpen={filterDialogIsOpen}
-                handleClose={closeFilterDialog}
-                instance={instance}
-                filterGroups={filter.advancedFilter.options.filterGroups}
-                includeChips={false}
-            />
-            <TableHelpDialog isOpen={helpDialogIsOpen} handleClose={closeHelpDialog}/>
+            {columnsDialog !== null && (
+                <SelectColumnsDialog
+                    isOpen={columnsDialogIsOpen}
+                    handleClose={closeColumnsDialog}
+                    instance={instance}
+                    requiredColumns={columnsDialog.options.requiredColumns}
+                />
+            )}
+            {filter.advancedFilter !== null && (
+                <FilterDialog
+                    isOpen={filterDialogIsOpen}
+                    handleClose={closeFilterDialog}
+                    instance={instance}
+                    filterGroups={filter.advancedFilter.options.filterGroups}
+                    includeChips={false}
+                />
+            )}
+            <TableHelpDialog isOpen={helpDialogIsOpen} handleClose={closeHelpDialog} />
         </>
     );
 };
