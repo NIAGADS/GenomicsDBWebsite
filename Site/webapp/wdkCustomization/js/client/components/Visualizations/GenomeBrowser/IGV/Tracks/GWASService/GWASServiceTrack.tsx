@@ -161,14 +161,12 @@ class GWASServiceTrack extends igv.TrackBase {
         }
     }
 
-    popupData(clickState: any) {
+    popupData(clickState: any, features: any) {
+        const featureList = this.clickedFeatures(clickState, features);
         let data:any = []
-        const track = clickState.viewport.trackView.track
-        const features = clickState.viewport.getCachedFeatures()
-
-        if (features) {
+        if (featureList) {
             let count = 0
-            for (let f of features) {
+            for (let f of featureList) {
                 const xDelta = Math.abs(clickState.canvasX - f.px)
                 const yDelta = Math.abs(clickState.canvasY - f.py)
                 if (xDelta < this.dotSize && yDelta < this.dotSize) {

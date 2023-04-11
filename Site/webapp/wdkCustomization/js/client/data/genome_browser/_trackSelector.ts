@@ -2,6 +2,7 @@ import { TableProperties } from "@viz/Table/TableProperties";
 
 /*"column": {
     "name": "Track",
+    "track": "Track ID"
     f "assay": "Assay",
     "gender": "Gender",
    f "tissue": "Tissue",
@@ -59,7 +60,8 @@ export const _trackSelectorTableProperties: TableProperties = {
         "biosample",
         "repository",
         "consortium",
-        "antibody_target"
+        "antibody_target",
+        "track"
     ],
     requiredColumns: ["name", "track_type_display", "feature_type"],
     canFilter: true,

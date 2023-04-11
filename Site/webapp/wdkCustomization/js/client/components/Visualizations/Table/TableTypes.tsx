@@ -4,12 +4,16 @@ import { FilterGroup } from "@viz/Table/TableFilters";
 
 export type TableData = Record<string, string>;
 
+
+export type RowCheckedState =  {[key: string]: boolean};
+
 export interface RowSelectOptions {
     label: string;
     tooltip: string;
     column?: string;
     action?: any;
     type: "Check" | "MultiCheck"
+    selectedRows?: any;
 }
 
 export interface LinkedPanelOptions  {
@@ -39,5 +43,6 @@ export interface Table {
     title?: string;
     data: any;
     options: TableOptions
+    onTableLoad?: any;
 }
 

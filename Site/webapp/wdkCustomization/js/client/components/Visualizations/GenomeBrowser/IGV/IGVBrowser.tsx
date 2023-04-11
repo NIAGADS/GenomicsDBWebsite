@@ -6,7 +6,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 const HASH_PREFIX = "#/locus/";
 const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
-const DEFAULT_FLANK = 1000;
+export const DEFAULT_FLANK = 1000;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

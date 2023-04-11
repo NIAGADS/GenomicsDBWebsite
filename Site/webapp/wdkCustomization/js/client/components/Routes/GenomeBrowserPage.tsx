@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { find } from "lodash";
 //import clsx from "clsx";
@@ -10,14 +10,12 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
-//import IconButton from "@material-ui/core/IconButton";
-//import Collapse from "@material-ui/core/Collapse";
-//import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { CustomPanel } from "@components/MaterialUI";
 
 import {
     IGVBrowser as GenomeBrowser,
+    DEFAULT_FLANK,
     getLoadedTracks,
     removeTrackById,
     ConfigServiceResponse,
@@ -30,7 +28,6 @@ import {
 import { _genomes } from "genomics-client/data/genome_browser/_igvGenomes";
 import { _trackSelectorTableProperties as properties } from "genomics-client/data/genome_browser/_trackSelector";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
-import { badType } from "wdk-client/Components/Mesa/Utils/Errors";
 
 const MemoBroswer = React.memo(GenomeBrowser);
 
@@ -42,12 +39,9 @@ export const useStyles = makeStyles((theme: Theme) =>
             background: "transparent",
             position: "relative",
             top: theme.spacing(3),
-            //paddingLeft: "50px",
         },
         selectorHeader: {
             backgroundColor: theme.palette.primary.main,
-            //backgroundColor: "#f0f1f2",
-            // borderRadius: "4px",
             marginTop: theme.spacing(10),
             marginBottom: theme.spacing(1),
             borderTop: "4px solid " + theme.palette.secondary.main,
@@ -78,15 +72,18 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const serviceUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.endpoint);
+
     const [browser, setBrowser] = useState<any>();
     const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
-    const [trackSelectorIsOpen, setTrackSelectorIsOpen] = useState<boolean>(false);
+    const [trackSelectorIsLoaded, setTrackSelectorIsLoaded] = useState<boolean>(null);
+    const [trackSelector, setTrackSelector] = useState<any>();
+
     const [loadingTrack, setLoadingTrack] = useState<string>(null);
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
     const [browserOptions, setBrowserOptions] = useState<any>(null);
-    const [loadedTracks, setLoadedTracks] = useState<any>(null);
+    const [triggerRemoveTrack, setTriggerRemoveTrack] = useState<string>(null);
+    const [highlightInitialLocus, setHighlightInitialLocus] = useState<string>(null);
 
-    // [reloadKey, setReloadKey] = useState(makeReloadKey()),
     const classes = useStyles();
 
     const resolvedSelectorData: TrackSelectorRow[] = useMemo(
@@ -121,56 +118,110 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         );
     };
 
-    const toggleTracks = (selectedTracks: string[]) => {
-        if (browser && browserTrackConfig) {
-            const loadedTracks = getLoadedTracks(browser);
-            loadTracks(selectedTracks, loadedTracks);
-            unloadTracks(selectedTracks, loadedTracks);
-            setLoadedTracks(selectedTracks);
-        }
-    };
+    const toggleTracks = useCallback(
+        (selectedTracks: string[]) => {
+            if (browser && browserTrackConfig) {
+                const loadedTracks = getLoadedTracks(browser);
+                loadTracks(selectedTracks, loadedTracks);
+                unloadTracks(selectedTracks, loadedTracks);
+            }
+        },
+        [browser, browserTrackConfig]
+    );
 
-    /* const unloadTrack = (config: TrackConfig, browser: any) => {
-        browser.removeTrackByName(config.name);
-        //force react to update based on imperative change // i dont think we need this?
-        setReloadKey(makeReloadKey());
-    }; */
+    useEffect(() => {
+        if (triggerRemoveTrack) {
+            updateSelectorTrackState([triggerRemoveTrack], "remove");
+            setTriggerRemoveTrack(null);
+        }
+    }, [triggerRemoveTrack]);
+
+    const updateSelectorTrackState = useCallback(
+        (tracks: string[], action: "add" | "remove") => {
+            if (action === "add") {
+                // need to validate tracks before trying to add
+                let invalidTracks: string[] = [];
+                tracks.forEach((id: string) => {
+                    if (trackSelector.data.filter((row: any) => row.row_id === id).length > 0) {
+                        trackSelector.toggleRowSelected(id, true);
+                    } else {
+                        invalidTracks.push(id);
+                    }
+                });
+                if (invalidTracks.length > 0) {
+                    alert(
+                        `Invalid track identifier(s): ${invalidTracks.toString()} specified in URL string or session file.\nNOTE: track identifiers are CASE SENSITIVE.`
+                    );
+                }
+            } else {
+                tracks.forEach((id: string) => {
+                    trackSelector.toggleRowSelected(id, false);
+                });
+            }
+        },
+        [trackSelector]
+    );
 
     const initializeBrowser = useCallback((b: any) => {
         setBrowser(b);
         setBrowserIsLoaded(true);
     }, []);
 
+    const initializeTrackSelector = useCallback((s: any) => {
+        setTrackSelector(s);
+        setTrackSelectorIsLoaded(true);
+    }, []);
+
     // load initTracks, files and ROI from query string
     useEffect(() => {
-        if (browserIsLoaded) {
-            // load initial tracks
-            const loadedTracks = getLoadedTracks(browser);
-            loadTracks(browser.config.initTracks, loadedTracks);
+        if (browserIsLoaded && trackSelectorIsLoaded) {
+            // if locus passed through query string, highlight
+            if (highlightInitialLocus !== null) {
+                const initialFrame: any = browser.referenceFrameList[0];
+                const regionOfInterest = [
+                    {
+                        name: "Initial Locus",
+                        color: "rgba(245,215,95,0.5)",
+                        features: [
+                            {
+                                chr: initialFrame.chr,
+                                start: initialFrame.start + DEFAULT_FLANK,
+                                end: initialFrame.end - DEFAULT_FLANK,
+                                name: highlightInitialLocus
+                            },
+                        ],
+                    },
+                ];
 
-            // update track selector state
+                browser.loadROI(regionOfInterest);
+            }
+
+            // load initial tracks from query string
+            //let loadedTracks = getLoadedTracks(browser); // reference tracks
+            if (browser.config.initTracks) {
+                //loadTracks(browser.config.initTracks, loadedTracks);
+                updateSelectorTrackState(browser.config.initTracks, "add");
+            }
 
             // load files from query string
-
-            // https://lisanwanglab.org/GADB/FILER2/Annotationtracks/EpiMap_enhancers/ChromHMM/bed9/hg38/
-            // formatted_output_BSS00001_ENCODE_Enh_hg38.bed.gz
             if (browser.config.hasOwnProperty("files")) {
                 const filesAreIndexed = browser.config.files.indexed;
+                let fileIds: string[] = [];
                 browser.config.files.urls.forEach((url: string) => {
-                    const id = url.split("/").pop().replace(/\..+$/, "");
+                    const id = "file_" + url.split("/").pop().replace(/\..+$/, "");
                     const newTrackConfig = filesAreIndexed
                         ? { url: url, indexURL: url + ".tbi", label: "USER: " + id, id: id }
                         : { url: url, label: "USER: " + id, id: id };
 
-                    browser
-                        .loadTrack(newTrackConfig)
-                        .catch(function (error: any) {
-                            alert("Unable to load user track from: " + url + "\n" + error.toString());
-                        });
+                    browser.loadTrack(newTrackConfig).catch(function (error: any) {
+                        alert("Unable to load user track from: " + url + "\n" + error.toString());
+                    });
                 });
             }
+
+            // regions of interest
         }
-    }, [browserIsLoaded]);
+    }, [browserIsLoaded, trackSelectorIsLoaded]);
 
     const loadTrack = async (config: any, browser: any) => {
         setLoadingTrack(config.id);
@@ -214,8 +265,20 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             };
 
             const queryParams = new URLSearchParams(window.location.search);
-            if (queryParams.get("locus")) {
-                boptions = Object.assign(boptions, { locus: queryParams.get("locus") });
+            let locus = queryParams.get("locus");
+            let label = queryParams.get("roiLabel");
+            if (locus) {
+                if (locus.startsWith('chr')) {
+                    let [chr, position] = locus.split(':');
+                    position = position.replace(/,/g, ''); // remove any commas
+                    let start = position.includes('-') ? parseInt(position.split('-')[0]) : parseInt(position);
+                    let end = position.includes('-') ? parseInt(position.split('-')[1]) : parseInt(position);
+                    start = start - DEFAULT_FLANK;
+                    end = end + DEFAULT_FLANK;
+                    locus = chr +':' + start.toString() + '-' + end.toString()
+                }
+                boptions = Object.assign(boptions, { locus: locus });
+                setHighlightInitialLocus(label ? label : locus);
             }
 
             const initTracks = queryParams.get("track")
@@ -258,7 +321,8 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             <MemoBroswer
                 webAppUrl={webAppUrl}
                 onBrowserLoad={initializeBrowser}
-                searchUrl={`${serviceUrl}/track/feature?id=`}
+                onTrackRemoved={setTriggerRemoveTrack}
+                searchUrl={`${serviceUrl}/track/feature?&id=`}
                 options={browserOptions}
             />
 
@@ -266,25 +330,14 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 <Typography variant="h3" className={classes.selectorHeaderText}>
                     Select Tracks
                 </Typography>
-                {/*<IconButton
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: trackSelectorIsOpen,
-                    })}
-                    onClick={() => {setTrackSelectorIsOpen(!trackSelectorIsOpen)}}
-                    aria-expanded={trackSelectorIsOpen}
-                    size="small"
-                    aria-label="show more"
-                >
-                    <ExpandMoreIcon />
-                </IconButton>*/}
             </Box>
 
             <TrackSelector
                 properties={properties}
                 columnConfig={serviceTrackConfig.columns}
                 data={resolvedSelectorData}
-                loadedTracks={loadedTracks}
                 handleTrackSelect={toggleTracks}
+                onSelectorLoad={initializeTrackSelector}
             />
         </CustomPanel>
     ) : (
