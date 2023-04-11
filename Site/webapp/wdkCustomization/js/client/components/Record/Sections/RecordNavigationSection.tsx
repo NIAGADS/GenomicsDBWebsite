@@ -8,13 +8,17 @@ import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 import Icon from "@material-ui/core/Icon";
 import MenuIcon from "@material-ui/icons/Menu";
 import ShareIcon from "@material-ui/icons/Share";
 import BookIcon from "@material-ui/icons/Book";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
-import Grid from "@material-ui/core/Grid";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -26,7 +30,7 @@ import { RecordClass } from "wdk-client/Utils/WdkModel";
 export interface RecordActions {
     primaryKey: string;
     recordClass: RecordClass;
-    browserSpan?: string;
+    browserLocus?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,7 +79,7 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
                 arrow
                 title={
                     <Typography color="inherit" variant="caption">
-                        Show table of contents panel
+                        Show page navigation and contents panel
                     </Typography>
                 }
             >
@@ -93,7 +97,7 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
 };
 
 /* genome browser, export, share, bookmark */
-export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recordClass, browserSpan }) => {
+export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recordClass, browserLocus }) => {
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const isGuest = useSelector((state: RootState) => state.globalData?.user?.isGuest);
     const [exportUrl, setExportUrl] = useState<string>("loading");
@@ -112,26 +116,40 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
         }
     }, [webAppUrl, isGuest]);
 
-    const toggleShareModal = (event: React.MouseEvent<HTMLElement>) => {
+    const toggleShareModal = () => {
         setShareIsOpen(!shareIsOpen);
     };
 
     const handleCopyClick = (event: React.MouseEvent<HTMLElement>) => {
-        navigator.clipboard.writeText(window.location.toString());
+        const shareLink = window.location.toString().split("#")[0]; // remove anchors
+        navigator.clipboard.writeText(shareLink);
+        toggleShareModal();
     };
+
+    const roiLabel = primaryKey.startsWith("ENS")
+        ? primaryKey
+        : primaryKey.includes(":rs")
+        ? "rs" + primaryKey.split(":rs")[1]
+        : primaryKey;
+
+    let additionalParams = '&roiLabel=' + roiLabel;
+    if (primaryKey.includes(":rs")) {
+        additionalParams += '&track=dbSNP';
+    }
 
     return (
         <>
             <Grid item>
-                {browserSpan && (
+                {browserLocus && (
                     <Button
                         variant="contained"
                         color="default"
                         startIcon={<LineStyleIcon />}
-                        href={`${webAppUrl}/app/visualizations/browser?#locus=${browserSpan}`}
+                        href={`${webAppUrl}/app/visualizations/browser?locus=${browserLocus}${additionalParams}`}
                         fullWidth={true}
                         size="small"
                         className={classes.actionButton}
+                        target="_blank"
                     >
                         View on genome browser
                     </Button>
@@ -169,7 +187,7 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                     </Button>
                 </Tooltip>
                 {/* span allow tooltip to fire, since button is disabled */}
-                <Tooltip
+                {/* <Tooltip
                     arrow
                     title={
                         <Typography color="inherit" variant="caption">
@@ -190,8 +208,20 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
                             Bookmark
                         </Button>
                     </span>
-                </Tooltip>
+                </Tooltip>*/}
             </Grid>
+            <Dialog open={shareIsOpen} onClose={() => toggleShareModal()} aria-labelledby="alert-dialog-description">
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Share link for this record copied to clipboard.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => toggleShareModal()} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };

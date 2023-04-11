@@ -82,7 +82,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
     const [browserOptions, setBrowserOptions] = useState<any>(null);
     const [triggerRemoveTrack, setTriggerRemoveTrack] = useState<string>(null);
-    const [highlightInitialLocus, setHighlightInitialLocus] = useState<boolean>(false);
+    const [highlightInitialLocus, setHighlightInitialLocus] = useState<string>(null);
 
     const classes = useStyles();
 
@@ -176,7 +176,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     useEffect(() => {
         if (browserIsLoaded && trackSelectorIsLoaded) {
             // if locus passed through query string, highlight
-            if (highlightInitialLocus) {
+            if (highlightInitialLocus !== null) {
                 const initialFrame: any = browser.referenceFrameList[0];
                 const regionOfInterest = [
                     {
@@ -187,7 +187,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                                 chr: initialFrame.chr,
                                 start: initialFrame.start + DEFAULT_FLANK,
                                 end: initialFrame.end - DEFAULT_FLANK,
-                                name: browser.config.locus
+                                name: highlightInitialLocus
                             },
                         ],
                     },
@@ -265,9 +265,20 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             };
 
             const queryParams = new URLSearchParams(window.location.search);
-            if (queryParams.get("locus")) {
-                boptions = Object.assign(boptions, { locus: queryParams.get("locus") });
-                setHighlightInitialLocus(true);
+            let locus = queryParams.get("locus");
+            let label = queryParams.get("roiLabel");
+            if (locus) {
+                if (locus.startsWith('chr')) {
+                    let [chr, position] = locus.split(':');
+                    position = position.replace(/,/g, ''); // remove any commas
+                    let start = position.includes('-') ? parseInt(position.split('-')[0]) : parseInt(position);
+                    let end = position.includes('-') ? parseInt(position.split('-')[1]) : parseInt(position);
+                    start = start - DEFAULT_FLANK;
+                    end = end + DEFAULT_FLANK;
+                    locus = chr +':' + start.toString() + '-' + end.toString()
+                }
+                boptions = Object.assign(boptions, { locus: locus });
+                setHighlightInitialLocus(label ? label : locus);
             }
 
             const initTracks = queryParams.get("track")
