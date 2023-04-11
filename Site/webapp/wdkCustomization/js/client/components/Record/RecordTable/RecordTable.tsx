@@ -6,9 +6,7 @@ import classNames from "classnames";
 
 import { Column } from "react-table";
 
-import CircularProgress from "@material-ui/core/CircularProgress";
-
-import { TableOptions, useTableStyles, LinkedPanelOptions } from "@viz/Table";
+import { TableOptions, useTableStyles } from "@viz/Table";
 import { Table } from "@viz/Table/TableSections";
 import {
     SelectColumnFilter,
