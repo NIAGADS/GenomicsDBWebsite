@@ -73,43 +73,50 @@ export const TableHelpDialog: React.FC<TableHelpOptions> = ({
 
             <List>
                 <ListItem>
-                    <Typography variant="subtitle1">Select</Typography>
-                    <Typography variant="body1">
-                        These filters will provide a list of available values for the column of which one or more can be
-                        selected from either a drop down box or checklist. For fields with a large number of possible
-                        values (e.g., biosample type), the select will be a type-ahead. Type 3 or more characters to get
-                        suggestions.
-                    </Typography>
-                    <img src={`${imagePath}/filter-select.png`} />
+                    <Box>
+                        <Typography variant="subtitle1">Select</Typography>
+                        <Typography variant="body1">
+                            These filters will provide a list of available values for the column of which one or more
+                            can be selected from either a drop down box or checklist. For fields with a large number of
+                            possible values (e.g., biosample type), the select will be a type-ahead. Type 3 or more
+                            characters to get suggestions.
+                        </Typography>
+                        <img src={`${imagePath}/filter-select.png`} />
+                    </Box>
                 </ListItem>
                 <ListItem>
-                    <Typography variant="subtitle1">Numeric</Typography>
-                    <Typography variant="body1">
-                        Numeric filters are used to filter fields containing numeric values. Values can usually be
-                        entered in decimal or scientific notation. Additional restrictions (e.g., non-negative) are
-                        provided when entering a value. Click the <span className={classes.iconWrapper}>APPLY</span>{" "}
-                        button to apply the numeric filter.
-                    </Typography>
-                    <img src={`${imagePath}/filter-value.png`} />
+                    <Box>
+                        <Typography variant="subtitle1">Numeric</Typography>
+                        <Typography variant="body1">
+                            Numeric filters are used to filter fields containing numeric values. Values can usually be
+                            entered in decimal or scientific notation. Additional restrictions (e.g., non-negative) are
+                            provided when entering a value. Click the <span className={classes.iconWrapper}>APPLY</span>{" "}
+                            button to apply the numeric filter.
+                        </Typography>
+                        <img src={`${imagePath}/filter-value.png`} />
+                    </Box>
                 </ListItem>
                 <ListItem>
-                    <Typography variant="subtitle1">Pie Charts</Typography>
-                    <Typography variant="body1">
-                        Pie chart filters summarize possible values and counts of rows per value in the table. Counts
-                        will be dynamically updated as search criteria or other filters are applied. Click on a pie
-                        slice (<strong>B</strong>, below) to filter the table for the selected value, which will be
-                        colored red upon selection. To remove the filter, click the red slice again or remove by
-                        clearing the chip in the advanced filter indicator above the table (<strong>Overview, 4</strong>
-                        ).
-                    </Typography>
-                    <Typography>
-                        In some cases, a column may contain many rows for which the value is <strong>NA</strong>. NAs
-                        will always be assigned to a grey-colored slice in the pie chart (<strong>A</strong>). The NA slice
-                        can be hidden by clicking on "NA" in the chart legend (click again to add the NA slice back in).
-                        The pie will readjust allowing easy selection of annotations of interest
-                        for filtering (<strong>B</strong>). 
-                    </Typography>
-                    <img src={`${imagePath}/filter-pie.png`} />
+                    <Box>
+                        <Typography variant="subtitle1">Pie Charts</Typography>
+                        <Typography variant="body1">
+                            Pie chart filters summarize possible values and counts of rows per value in the table.
+                            Counts will be dynamically updated as search criteria or other filters are applied. Click on
+                            a pie slice (<strong>B</strong>, below) to filter the table for the selected value, which
+                            will be colored red upon selection. To remove the filter, click the red slice again or
+                            remove by clearing the chip in the advanced filter indicator above the table (
+                            <strong>Overview, 4</strong>
+                            ).
+                        </Typography>
+                        <Typography>
+                            In some cases, a column may contain many rows for which the value is <strong>NA</strong>.
+                            NAs will always be assigned to a grey-colored slice in the pie chart (<strong>A</strong>).
+                            The NA slice can be hidden by clicking on "NA" in the chart legend (click again to add the
+                            NA slice back in). The pie will readjust allowing easy selection of annotations of interest
+                            for filtering (<strong>B</strong>).
+                        </Typography>
+                        <img src={`${imagePath}/filter-pie.png`} />
+                    </Box>
                 </ListItem>
             </List>
 
@@ -120,7 +127,7 @@ export const TableHelpDialog: React.FC<TableHelpOptions> = ({
             <img src={`${imagePath}/filter-chip-bar.png`} />
 
             <Typography variant="body1">
-                Alternatively, the filter dialog provides a reset button that will reset the table to its defaults
+                The filter dialog provides a reset button that will reset the table to its defaults
                 (e.g., no filters or the initial p-value filter, if applicable). The reset button will not clear
                 anything typed in the "Search" field in the table toolbar.
             </Typography>
