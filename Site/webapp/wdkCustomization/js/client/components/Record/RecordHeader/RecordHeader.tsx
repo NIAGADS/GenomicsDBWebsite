@@ -58,6 +58,7 @@ export const RecordHeader: React.FC<RecordHeader> = ({ title, summary, image, re
                 isOpen={aboutThisPageDialogIsOpen}
                 handleClose={closeAboutThisPageDialog}
                 recordClass={recordClass}
+                categoryTree={categoryTree}
             ></AboutThisPageDialog>
         </>
     );

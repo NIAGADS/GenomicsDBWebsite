@@ -18,6 +18,9 @@ import { blue } from "@material-ui/core/colors";
 
 import { ComingSoonAlert, InfoAlert } from "@components/MaterialUI";
 
+import { isLeaf, getLeaves, getBranches } from "wdk-client/Utils/TreeUtils";
+import { getNodeChildren } from "wdk-client/Utils/OntologyUtils";
+
 const useStyles = makeStyles((theme) => ({
     title: {
         marginTop: theme.spacing(2),
@@ -42,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const recordOverview = {
+const recordOverview: { [key: string]: any } = {
     Dataset: <Typography variant="body1">About dataset reports</Typography>,
     Gene: <Typography variant="body1">About gene reports</Typography>,
     Variant: <Typography variant="body1">About variant reports</Typography>,
@@ -52,11 +55,19 @@ interface AboutThisPageDialogOptions {
     isOpen: boolean;
     handleClose: any;
     recordClass: any;
+    categoryTree: any;
 }
 
-export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({ isOpen, handleClose, recordClass }) => {
+export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
+    isOpen,
+    handleClose,
+    recordClass,
+    categoryTree,
+}) => {
     const imagePath = webAppUrl + "/images/help/records";
     const classes = useStyles();
+
+    const renderSections = () => <Box className={classes.mx}>{getLeaves(categoryTree, getNodeChildren)}</Box>;
 
     const renderNav = () => (
         <Box>
@@ -67,23 +78,19 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({ isOp
                 <ListItem>
                     <a href="#export">Export</a>
                 </ListItem>
-                <ListItem>
-                    <a href="#links">Link Outs</a>
-                </ListItem>
                 {recordClass.shortDisplayName === "Dataset" && (
                     <ListItem>
                         <a href="#manhattan">Manhattan Plot</a>
                     </ListItem>
                 )}
+                <ListItem>
+                    <a href="#sections">Sections</a>
+                </ListItem>
             </List>
         </Box>
     );
 
-    const renderOverview = () => (
-        <Box mt={2} mb={2}>
-            recordOverview[recordClass.shortDisplayName]
-        </Box>
-    );
+    const renderOverview = () => <Box className={classes.mx}>{recordOverview[recordClass.shortDisplayName]}</Box>;
 
     return recordClass.shortDisplayName == "Ontology" ? (
         <ComingSoonAlert message="More information about navigating the data dictionary is coming soon."></ComingSoonAlert>
@@ -108,6 +115,13 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({ isOp
                     </Typography>
                 </a>
                 <ComingSoonAlert message="More about Exporting this record coming soon" />
+
+                <a id="sections">
+                    <Typography variant="subtitle1" className={classes.title}>
+                        Sections
+                    </Typography>
+                </a>
+                {renderSections()}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
