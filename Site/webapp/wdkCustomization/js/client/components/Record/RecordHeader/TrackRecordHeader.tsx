@@ -45,7 +45,7 @@ const ManhattanThumbnails: React.FC<HeaderImage> = ({ src, type }) => {
     );
 };
 
-const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
+const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, headerActions, categoryTree }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
 
@@ -124,7 +124,15 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
         </Box>
     );
 
-    return <RecordHeader recordClass={recordClass} title={renderTitle} summary={renderSummary} image={renderImage} />;
+    return (
+        <RecordHeader
+            categoryTree={categoryTree}
+            recordClass={recordClass}
+            title={renderTitle}
+            summary={renderSummary}
+            image={renderImage}
+        />
+    );
 };
 
 export default TrackRecordSummary;

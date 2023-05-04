@@ -11,12 +11,13 @@ import { AboutThisPageDialog } from "./AboutThisPageDialog";
 interface RecordHeader {
     title: React.ReactElement;
     recordClass: any;
+    categoryTree: any;
     summary: React.ReactElement;
     image?: React.ReactElement;
-    actions?: React.ReactElement;
+    actions?: React.ReactElement;    
 }
 
-export const RecordHeader: React.FC<RecordHeader> = ({ title, summary, image, recordClass }) => {
+export const RecordHeader: React.FC<RecordHeader> = ({ title, summary, image, recordClass, categoryTree }) => {
     const classes = useHeadingStyles();
 
     const [aboutThisPageDialogIsOpen, setAboutThisPageDialogIsOpen] = useState(false);

@@ -10,6 +10,7 @@ export interface RecordHeading {
     headerActions: HeaderActions[];
     record: RecordInstance;
     recordClass: RecordClass;
+    categoryTree: any;
     webAppUrl?: string;
 }
 

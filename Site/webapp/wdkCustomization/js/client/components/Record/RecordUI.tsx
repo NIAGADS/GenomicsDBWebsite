@@ -141,6 +141,7 @@ class RecordUI extends Component {
                     <Grid item>
                         <RecordHeading
                             record={this.props.record}
+                            categoryTree={this.props.recordCategoryTree}
                             recordClass={this.props.recordClass}
                             headerActions={this.props.headerActions}
                         />

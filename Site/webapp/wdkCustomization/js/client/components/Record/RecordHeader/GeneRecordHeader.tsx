@@ -3,7 +3,6 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
-
 import { HighchartsColumnTrellis } from "@components/Visualizations";
 import { useTypographyStyles, StyledTooltip as Tooltip, CustomLink as Link } from "@components/MaterialUI";
 import { RecordHeader, SummaryPlotHeader, AboutThisPageDialog } from "@components/Record/RecordHeader";
@@ -12,7 +11,7 @@ import { GeneAttributeList as AttributeList } from "@components/Record/Attribute
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
-const GeneRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
+const GeneRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, categoryTree, headerActions }) => {
     const { displayName, attributes } = record;
     const tClasses = useTypographyStyles();
     const linkOutRef = React.createRef();
@@ -61,7 +60,15 @@ const GeneRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, header
         </Box>
     ) : null;
 
-    return <RecordHeader recordClass={recordClass} title={renderTitle} summary={renderSummary} image={renderImage} />;
+    return (
+        <RecordHeader
+            categoryTree={categoryTree}
+            recordClass={recordClass}
+            title={renderTitle}
+            summary={renderSummary}
+            image={renderImage}
+        />
+    );
 };
 
 export default GeneRecordHeader;

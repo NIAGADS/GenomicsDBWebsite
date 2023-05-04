@@ -14,7 +14,7 @@ import { RecordHeading } from "@components/Record/Types";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 
-const OntologyRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, headerActions }) => {
+const OntologyRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, categoryTree, headerActions }) => {
     const { displayName, attributes } = record;
     const tClasses = useTypographyStyles();
     const linkOutRef = React.createRef();
@@ -32,7 +32,14 @@ const OntologyRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, he
         <ComingSoonAlert message="More information about how to use the data dictionary will be coming soon." />
     );
 
-    return <RecordHeader recordClass={recordClass} title={renderTitle} summary={renderSummary} />;
+    return (
+        <RecordHeader
+            categoryTree={categoryTree}
+            recordClass={recordClass}
+            title={renderTitle}
+            summary={renderSummary}
+        />
+    );
 };
 
 export default OntologyRecordHeader;
