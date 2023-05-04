@@ -32,7 +32,7 @@ const OntologyRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, he
         <ComingSoonAlert message="More information about how to use the data dictionary will be coming soon." />
     );
 
-    return <RecordHeader title={renderTitle} summary={renderSummary} />;
+    return <RecordHeader recordClass={recordClass} title={renderTitle} summary={renderSummary} />;
 };
 
 export default OntologyRecordHeader;

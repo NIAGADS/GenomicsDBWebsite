@@ -3,9 +3,10 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
+
 import { HighchartsColumnTrellis } from "@components/Visualizations";
 import { useTypographyStyles, StyledTooltip as Tooltip, CustomLink as Link } from "@components/MaterialUI";
-import { RecordHeader, SummaryPlotHeader } from "@components/Record/RecordHeader";
+import { RecordHeader, SummaryPlotHeader, AboutThisPageDialog } from "@components/Record/RecordHeader";
 import { RecordHeading } from "@components/Record/Types";
 import { GeneAttributeList as AttributeList } from "@components/Record/Attributes";
 
@@ -15,6 +16,7 @@ const GeneRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, header
     const { displayName, attributes } = record;
     const tClasses = useTypographyStyles();
     const linkOutRef = React.createRef();
+
     const renderTitle = (
         <Box pb={1}>
             <Typography variant="h5">
@@ -59,7 +61,7 @@ const GeneRecordHeader: React.FC<RecordHeading> = ({ record, recordClass, header
         </Box>
     ) : null;
 
-    return <RecordHeader title={renderTitle} summary={renderSummary} image={renderImage} />;
+    return <RecordHeader recordClass={recordClass} title={renderTitle} summary={renderSummary} image={renderImage} />;
 };
 
 export default GeneRecordHeader;

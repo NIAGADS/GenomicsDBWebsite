@@ -18,12 +18,10 @@ import { convertHtmlEntites } from "genomics-client/util/util";
 
 import { PlotlyManhattan } from "@viz/Manhattan";
 
-
 interface HeaderImage {
     src: string;
     type?: string;
 }
-
 
 const ManhattanThumbnails: React.FC<HeaderImage> = ({ src, type }) => {
     const classes = useHeadingStyles();
@@ -126,7 +124,7 @@ const TrackRecordSummary: React.FC<RecordHeading> = ({ record, recordClass, head
         </Box>
     );
 
-    return <RecordHeader title={renderTitle} summary={renderSummary} image={renderImage} />;
+    return <RecordHeader recordClass={recordClass} title={renderTitle} summary={renderSummary} image={renderImage} />;
 };
 
 export default TrackRecordSummary;

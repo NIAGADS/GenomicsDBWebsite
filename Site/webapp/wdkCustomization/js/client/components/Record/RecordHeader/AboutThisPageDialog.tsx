@@ -42,6 +42,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const recordOverview = {
+    Dataset: <Typography variant="body1">About dataset reports</Typography>,
+    Gene: <Typography variant="body1">About gene reports</Typography>,
+    Variant: <Typography variant="body1">About variant reports</Typography>,
+};
+
 interface AboutThisPageDialogOptions {
     isOpen: boolean;
     handleClose: any;
@@ -75,17 +81,13 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({ isOp
 
     const renderOverview = () => (
         <Box mt={2} mb={2}>
-            <Typography variant="body1">
-                The GenomicsDB use tables (<strong>1</strong>) to report metadata and annotations. When a table contains
-                more than 10 rows, the results are paged and a table navigation bar is provided (<strong>2</strong>).
-                Tables that can be searched, filtered, or have selectable rows have a toolbar and applied filter
-                indicator (<strong>3</strong> and <strong>4</strong>, respectively).
-            </Typography>
-            <img src={`${imagePath}/table-overview.png`} width="100%" />
+            recordOverview[recordClass.shortDisplayName]
         </Box>
     );
 
-    return (
+    return recordClass.shortDisplayName == "Ontology" ? (
+        <ComingSoonAlert message="More information about navigating the data dictionary is coming soon."></ComingSoonAlert>
+    ) : (
         <Dialog maxWidth="md" aria-labelledby="dialog-title" open={isOpen} onClose={handleClose}>
             <DialogTitle id="dialog-title">
                 About this Page
@@ -94,7 +96,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({ isOp
             <DialogContent dividers>
                 <a id="overview">
                     <Typography variant="subtitle1" className={classes.title}>
-                        Overview
+                        Overview: {recordClass.shortDisplayName} Report
                     </Typography>
                 </a>
 
@@ -105,8 +107,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({ isOp
                         Export
                     </Typography>
                 </a>
-
-                <ComingSoonAlert message="More about Exporting this record coming soon"/>
+                <ComingSoonAlert message="More about Exporting this record coming soon" />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
