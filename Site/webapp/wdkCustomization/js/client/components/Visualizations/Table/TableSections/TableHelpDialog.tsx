@@ -18,6 +18,7 @@ import Icon from "@material-ui/core/Icon";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FilterIcon from "@material-ui/icons/FilterList";
 import DownloadIcon from "@material-ui/icons/GetApp";
+import ToggleIcon from "@material-ui/icons/ToggleOff";
 
 import { blue } from "@material-ui/core/colors";
 
@@ -25,6 +26,13 @@ import { InfoAlert } from "@components/MaterialUI";
 
 const useStyles = makeStyles((theme) => ({
     title: {
+        marginTop: theme.spacing(2),
+    },
+    mb: {
+        marginBottom: theme.spacing(2),
+    },
+    mx: {
+        marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2),
     },
     nav: {
@@ -89,9 +97,8 @@ export const TableHelpDialog: React.FC<TableHelpOptions> = ({
                         <Typography variant="subtitle1">Numeric</Typography>
                         <Typography variant="body1">
                             Numeric filters are used to filter fields containing numeric values. Values can usually be
-                            entered in decimal or scientific notation. Additional restrictions (e.g., non-negative) are
-                            provided when entering a value. Click the <span className={classes.iconWrapper}>APPLY</span>{" "}
-                            button to apply the numeric filter.
+                            entered in decimal or scientific notation. Click the{" "}
+                            <span className={classes.iconWrapper}>APPLY</span> button to apply the numeric filter.
                         </Typography>
                         <img src={`${imagePath}/filter-value.png`} />
                     </Box>
@@ -99,7 +106,7 @@ export const TableHelpDialog: React.FC<TableHelpOptions> = ({
                 <ListItem>
                     <Box>
                         <Typography variant="subtitle1">Pie Charts</Typography>
-                        <Typography variant="body1">
+                        <Typography variant="body1" className={classes.mb}>
                             Pie chart filters summarize possible values and counts of rows per value in the table.
                             Counts will be dynamically updated as search criteria or other filters are applied. Click on
                             a pie slice (<strong>B</strong>, below) to filter the table for the selected value, which
@@ -118,26 +125,60 @@ export const TableHelpDialog: React.FC<TableHelpOptions> = ({
                         <img src={`${imagePath}/filter-pie.png`} />
                     </Box>
                 </ListItem>
+                <ListItem>
+                    <Box>
+                        <Typography variant="subtitle1">Removing Filters</Typography>
+                        <Typography variant="body1">
+                            Once applied, filters will be listed in the filter-indicator/chip-bar above the table. A
+                            specific can be quickly removed by selecting the "X" in the chip corresponding to the
+                            filter (see also <strong>Overview, 4</strong>).
+                        </Typography>
+                        <img src={`${imagePath}/filter-chip-bar.png`} />
+
+                        <Typography variant="body1">
+                            The filter dialog provides a reset button that will reset the table to its defaults (e.g.,
+                            no filters or the initial p-value filter, if applicable). The reset button will not clear
+                            anything typed in the "Search" field in the table toolbar.
+                        </Typography>
+                        <img src={`${imagePath}/filter-reset.png`} />
+                    </Box>
+                </ListItem>
             </List>
-
-            <Typography variant="body1">
-                Once applied, filters will be listed in the filter-indicator/chip-bar above the table. A specific can be
-                quickly removed by selecting the "X" in the chip corresponding to the filter.
-            </Typography>
-            <img src={`${imagePath}/filter-chip-bar.png`} />
-
-            <Typography variant="body1">
-                The filter dialog provides a reset button that will reset the table to its defaults
-                (e.g., no filters or the initial p-value filter, if applicable). The reset button will not clear
-                anything typed in the "Search" field in the table toolbar.
-            </Typography>
-            <img src={`${imagePath}/filter-reset.png`} />
         </Box>
     );
 
     const renderLinkedPanelHelp = () => (
         <Box>
+            <Typography variant="body1" className={classes.mb}>
+                This table has a linked LocusZoom view of the association results. Show or hide the LocusZoom plot by
+                clicking the{" "}
+                <span className={classes.iconWrapper}>
+                    <ToggleIcon />
+                    {"  "}LocusZoom
+                </span>
+                {"  "}
+                toggle in the table toolbar.
+            </Typography>
+            <Typography className={classes.mb}>
+                {" "}
+                Select a row by checking the box in the <strong>LocusZoom</strong> field in the table to recenter
+                LocusZoom and set the selected variant as the LD reference.
+            </Typography>
             <img src={`${imagePath}/row-select-locuszoom.png`} />
+            <Typography className={classes.mx}>
+                The LocusZoom plot is fully interactive. Hover over variants or genes for more information. Click on the
+                variant or gene to hold the pop-up on the screen to interact with links or set the selected variant as
+                the LD reference (<strong>1</strong>). The LD population is by default set to the most recent ADSP
+                release, but other populations can be selected (when available) by clicking the <strong>LD Population</strong>{" "}
+                button (<strong>2</strong>). The view window can be changed by clicking anywhere in view and dragging,
+                or by selecting a new variant in the paired table. The gene track (<strong>3</strong>) is filtered for
+                coding genes. This filter can be removed by selecting the <strong>Filter</strong> button above the track.
+            </Typography>
+            <img src={`${imagePath}/locuszoom.png`} />
+            <InfoAlert
+                title="Note"
+                message={`The GenomicsDB only stores LD values with r²≥0.2 and cannot distiguish between a low r² and lack of correlation. Therefore, all variants with no information are colored grey.`}
+            ></InfoAlert>
         </Box>
     );
 
