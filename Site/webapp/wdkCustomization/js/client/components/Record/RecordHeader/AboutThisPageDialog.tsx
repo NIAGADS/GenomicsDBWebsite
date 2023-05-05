@@ -67,6 +67,26 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
     const imagePath = webAppUrl + "/images/help/records";
     const classes = useStyles();
 
+/* 
+categoryTree.children -> array, in which item.properties["EuPathDB alternative term"]
+"properties": {
+  "": [
+    "Phenomes, or the study of the change in phenotype (the physical and biochemical traits of organisms) in response to genetic and environmental factors. "
+  ],
+  "EuPathDB alternative term": [
+    "Trait associations"
+  ],
+  "display order": [
+    "1"
+  ],
+  "definition": [
+    "Phenomes, or the study of the change in phenotype (the physical and biochemical traits of organisms) in response to genetic and environmental factors. "
+  ],
+  "label": [
+    "Phenomics"
+  ]
+},*/
+
     const renderSections = () => <Box className={classes.mx}>{getLeaves(categoryTree, getNodeChildren)}</Box>;
 
     const renderNav = () => (
