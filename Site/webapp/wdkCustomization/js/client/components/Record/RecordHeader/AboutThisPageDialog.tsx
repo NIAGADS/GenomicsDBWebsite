@@ -18,8 +18,8 @@ import { blue } from "@material-ui/core/colors";
 
 import { ComingSoonAlert, InfoAlert } from "@components/MaterialUI";
 
-import { isLeaf, getLeaves, getBranches } from "wdk-client/Utils/TreeUtils";
-import { getNodeChildren } from "wdk-client/Utils/OntologyUtils";
+import { RecordSectionDocumentation } from "@components/Record/Types";
+import _recordDocumentation from "genomics-client/data/record_properties/_recordDocumentation";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -66,28 +66,61 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
 }) => {
     const imagePath = webAppUrl + "/images/help/records";
     const classes = useStyles();
+    const rcName = recordClass.shortDisplayName;
 
-/* 
-categoryTree.children -> array, in which item.properties["EuPathDB alternative term"]
-"properties": {
-  "": [
-    "Phenomes, or the study of the change in phenotype (the physical and biochemical traits of organisms) in response to genetic and environmental factors. "
-  ],
-  "EuPathDB alternative term": [
-    "Trait associations"
-  ],
-  "display order": [
-    "1"
-  ],
-  "definition": [
-    "Phenomes, or the study of the change in phenotype (the physical and biochemical traits of organisms) in response to genetic and environmental factors. "
-  ],
-  "label": [
-    "Phenomics"
-  ]
-},*/
+    const renderSectionDocumentation = (documentation: RecordSectionDocumentation[]) => (
+        <Box>
+            {documentation.map((item: RecordSectionDocumentation) => (
+                <Typography className={classes.mx}>
+                    {item.text}
+                    {item.routerLink && <h1>ROUTER LINK FOUND!!!!</h1>}
+                    {item.link && <h1>LINK FOUND!!!</h1>}
+                </Typography>
+            ))}
+        </Box>
+    );
 
-    const renderSections = () => <Box className={classes.mx}>{getLeaves(categoryTree, getNodeChildren)}</Box>;
+    const renderSections = () => {
+        const doc = _recordDocumentation[rcName];
+        return (
+            <>
+                {categoryTree.children.map((category: any) => {
+                    const anchor = category.properties["label"][0].toLowerCase().replace(/, /g, "-").replace(/ /g, "-");
+                    const title = category.properties["EuPathDB alternative term"][0];
+                    const key = category.properties["display order"][0];
+                    return (
+                        <Box className={classes.mx}>
+                            <a id={anchor} key={`target_${key}`}>
+                                <Typography key={`title_${key}`} variant="subtitle1" className={classes.title}>
+                                    {title}
+                                </Typography>
+                            </a>
+                            {renderSectionDocumentation(doc[anchor])}
+                        </Box>
+                    );
+                })}
+            </>
+        );
+    };
+
+    const renderSectionNav = () => {
+        return (
+            <>
+                {categoryTree.children.map((category: any) => {
+                    const anchor = category.properties["label"][0].toLowerCase().replace(/, /g, "-").replace(/ /g, "-");
+                    const title = category.properties["EuPathDB alternative term"][0];
+                    const key = category.properties["display order"][0];
+                    return (
+                        <ListItem key={`item_${key}`}>
+                            <a key={`anchor_${key}`} href={`#${anchor}`}>
+                                {title}
+                            </a>
+                        </ListItem>
+                    );
+                })}
+            </>
+        );
+    };
 
     const renderNav = () => (
         <Box>
@@ -95,22 +128,24 @@ categoryTree.children -> array, in which item.properties["EuPathDB alternative t
                 <ListItem>
                     <a href="#overview">Overview</a>
                 </ListItem>
-                <ListItem>
-                    <a href="#export">Export</a>
-                </ListItem>
                 {recordClass.shortDisplayName === "Dataset" && (
                     <ListItem>
                         <a href="#manhattan">Manhattan Plot</a>
                     </ListItem>
                 )}
+                {categoryTree && renderSectionNav()}
                 <ListItem>
-                    <a href="#sections">Sections</a>
+                    <a href="#export">Export this Report</a>
                 </ListItem>
             </List>
         </Box>
     );
 
-    const renderOverview = () => <Box className={classes.mx}>{recordOverview[recordClass.shortDisplayName]}</Box>;
+    const renderOverview = () => (
+        <Box className={classes.mx}>
+            <ComingSoonAlert message="header documentation coming soon"></ComingSoonAlert>
+        </Box>
+    );
 
     return recordClass.shortDisplayName == "Ontology" ? (
         <ComingSoonAlert message="More information about navigating the data dictionary is coming soon."></ComingSoonAlert>
@@ -123,7 +158,7 @@ categoryTree.children -> array, in which item.properties["EuPathDB alternative t
             <DialogContent dividers>
                 <a id="overview">
                     <Typography variant="subtitle1" className={classes.title}>
-                        Overview: {recordClass.shortDisplayName} Report
+                        {recordClass.shortDisplayName} Report Overview
                     </Typography>
                 </a>
 
@@ -136,12 +171,7 @@ categoryTree.children -> array, in which item.properties["EuPathDB alternative t
                 </a>
                 <ComingSoonAlert message="More about Exporting this record coming soon" />
 
-                <a id="sections">
-                    <Typography variant="subtitle1" className={classes.title}>
-                        Sections
-                    </Typography>
-                </a>
-                {renderSections()}
+                {categoryTree && renderSections()}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">

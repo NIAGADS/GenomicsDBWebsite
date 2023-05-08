@@ -1,4 +1,57 @@
 import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
+import { RecordSectionDocumentation } from "@components/Record/Types";
+import { _externalUrls } from "../_externalUrls";
+
+export const _geneDocumentation: { [category: string]: RecordSectionDocumentation[] } = {
+    phenomics: [
+        {
+            text: "This section reports variants contained within ±100kb of this gene that have been associated with a clinical phenotype.",
+        },
+        { text: "Trait associations have been segregated by datasource:" },
+        {
+            text: "Section 1.1 reports risk-associations from AD- or AD-related GWAS datasets in the NIAGADS repository.",
+            routerLink: "record/dataset/accessions",
+        },
+        {
+            text: "Section 1.2 reports all known phenotype associations (including AD-related) and from manually curated GWAS catalogs",
+            routerLink: "record/annotation/variant#phenomics",
+        },
+        {
+            text: "By default, the table is filtered for variants whose risk-association is supported by a p-value ≤ 5e-8.",
+        },
+    ],
+    "data-identity-and-mapping": [
+        {
+            text:
+                "This section provides link outs to related gene resources.  " +
+                "GenomicsDB gene records are uniquely identified by Ensembl gene identifiers," +
+                "as are any sub features (e.g., transcripts, exons) and protein products. " +
+                "Alternative gene (incl. NCBI Gene IDs, UCSC Gene IDs) or protein identifiers " +
+                "(UniProtKB IDs) are mapped to Ensembl IDs via the UniProtKB ID mapping file for human genes; " +
+                "additional standard gene nomenclature is imported from the HUGO Gene Nomenclature Committee at the European Bioinformatics Institute",
+        },
+        {
+            text: "Details and versioning information for the annotation files are available here:",
+            routerLink: "record/annotation/gene#data-identity-and-mapping",
+        },
+    ],
+    "function-analysis": [
+        {
+            text: "This section provides predictions and annotations of known gene-function from the Gene Ontology",
+            link: _externalUrls.GENE_ONTOLOGY_URL,
+        },
+        {
+            text: "GO associations are mapped to Ensembl Gene Identifiers using the UniProtKB GOA and ID mapping files.  Annotation file versions available here:",
+            routerLink: "record/annotation/gene#function-analysis",
+        },
+    ],
+    "molecular-interactions-pathways-and-networks": [
+        {
+            text: "Gene membership in molecular and metabolic pathways is obtained from the Kyoto Encyclopedia of Genes and Genomes (KEGG) and Reactome.  Data source and versioning information available here:",
+            routerLink: "record/annotation/gene#molecular-interactions-pathways-and-networks",
+        },
+    ],
+};
 
 export const _geneTableProperties: { [name: string]: TableProperties } = {
     ad_variants_from_gwas: {

@@ -20,3 +20,10 @@ export const isVariantRecord = (item: any) => {
     return item.recordClassName === "VariantRecordClasses.VariantRecordClass"
 };
 
+export interface RecordSectionDocumentation {
+    text: string;
+    image?: string;
+    routerLink?: string; // internal relative link
+    link?:string; // external link
+}
+
