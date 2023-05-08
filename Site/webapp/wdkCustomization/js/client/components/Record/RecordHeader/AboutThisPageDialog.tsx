@@ -73,8 +73,6 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
             {documentation.map((item: RecordSectionDocumentation) => (
                 <Typography className={classes.mx}>
                     {item.text}
-                    {item.routerLink && <h1>ROUTER LINK FOUND!!!!</h1>}
-                    {item.link && <h1>LINK FOUND!!!</h1>}
                 </Typography>
             ))}
         </Box>

@@ -10,11 +10,11 @@ export const _geneDocumentation: { [category: string]: RecordSectionDocumentatio
         { text: "Trait associations have been segregated by datasource:" },
         {
             text: "Section 1.1 reports risk-associations from AD- or AD-related GWAS datasets in the NIAGADS repository.",
-            routerLink: "record/dataset/accessions",
+            dataSourceKey: "variant|niagads",
         },
         {
             text: "Section 1.2 reports all known phenotype associations (including AD-related) and from manually curated GWAS catalogs",
-            routerLink: "record/annotation/variant#phenomics",
+            dataSourceKey: "variant|catalog",
         },
         {
             text: "By default, the table is filtered for variants whose risk-association is supported by a p-value ≤ 5e-8.",
@@ -32,23 +32,22 @@ export const _geneDocumentation: { [category: string]: RecordSectionDocumentatio
         },
         {
             text: "Details and versioning information for the annotation files are available here:",
-            routerLink: "record/annotation/gene#data-identity-and-mapping",
+            dataSourceKey: "gene|identifiers",
         },
     ],
     "function-analysis": [
         {
-            text: "This section provides predictions and annotations of known gene-function from the Gene Ontology",
-            link: _externalUrls.GENE_ONTOLOGY_URL,
+            text: "This section provides predictions and annotations of known gene-function from the Gene Ontology"
         },
         {
             text: "GO associations are mapped to Ensembl Gene Identifiers using the UniProtKB GOA and ID mapping files.  Annotation file versions available here:",
-            routerLink: "record/annotation/gene#function-analysis",
+            dataSourceKey: "gene|function",
         },
     ],
     "molecular-interactions-pathways-and-networks": [
         {
             text: "Gene membership in molecular and metabolic pathways is obtained from the Kyoto Encyclopedia of Genes and Genomes (KEGG) and Reactome.  Data source and versioning information available here:",
-            routerLink: "record/annotation/gene#molecular-interactions-pathways-and-networks",
+            dataSourceKey: "gene|interactions",
         },
     ],
 };

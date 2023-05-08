@@ -23,7 +23,6 @@ export const isVariantRecord = (item: any) => {
 export interface RecordSectionDocumentation {
     text: string;
     image?: string;
-    routerLink?: string; // internal relative link
-    link?:string; // external link
+    dataSourceKey?: string;
 }
 
