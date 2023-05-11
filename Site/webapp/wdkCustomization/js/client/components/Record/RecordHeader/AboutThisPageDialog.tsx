@@ -19,6 +19,7 @@ import { blue } from "@material-ui/core/colors";
 import { ComingSoonAlert, InfoAlert } from "@components/MaterialUI";
 
 import { RecordSectionDocumentation } from "@components/Record/Types";
+import { DatasourceTable } from "@components/Documentation/DatasourceTable";
 import _recordDocumentation from "genomics-client/data/record_properties/_recordDocumentation";
 
 const useStyles = makeStyles((theme) => ({
@@ -70,11 +71,16 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
 
     const renderSectionDocumentation = (documentation: RecordSectionDocumentation[]) => (
         <Box>
-            {documentation.map((item: RecordSectionDocumentation) => (
-                <Typography className={classes.mx}>
-                    {item.text}
-                </Typography>
-            ))}
+            {documentation.map((item: RecordSectionDocumentation) => {
+                const text = item.text;
+                const [dsRecord, dsCategory] = item.dataSourceKey ? item.dataSourceKey.split("|") : null;
+                return (
+                    <Typography className={classes.mx}>
+                        {item.text}
+                        {dsRecord && <DatasourceTable recordClass={dsRecord} category={dsCategory} />}
+                    </Typography>
+                );
+            })}
         </Box>
     );
 

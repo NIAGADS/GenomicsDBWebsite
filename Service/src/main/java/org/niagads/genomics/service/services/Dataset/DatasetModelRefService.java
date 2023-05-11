@@ -30,11 +30,10 @@ public class DatasetModelRefService extends AbstractWdkService {
     private static final String SEARCH_QUERY = "SELECT jsonb_agg(jsonb_build_object(" + NL
             + "'record_class', ds.record_class," + NL
             + "'category', ds.website_category," + NL
-            + "'name', d.name," + NL
+            + "'resource', build_link_attribute(d.name, '', r.id_url, d.name)," + NL
             + "'release_date', r.release_date," + NL
             + "'version', r.version," + NL
-            + "'download_url', r.download_url," + NL
-            + "'resource_url', r.id_url," + NL
+            + "'download_url', build_link_attribute(r.download_url,'',r.download_url)," + NL
             + "'description' , r.description))::text AS result" + NL
             + "FROM NIAGADS.WebsiteDatasources ds," + NL
             + "SRes.ExternalDatabase d," + NL
