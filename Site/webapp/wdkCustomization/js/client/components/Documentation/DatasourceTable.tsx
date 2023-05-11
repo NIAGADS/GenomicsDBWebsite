@@ -37,8 +37,10 @@ export const DatasourceTable: React.FC<DatasourceTableProps> = ({ recordClass, c
         return {
             showAdvancedFilters: false,
             canFilter: false,
-            showHideColumns: false
-        }
+            showHideColumns: false,
+            hideToolbar: true,
+            hideNavigation: true
+        };
     }, []);
 
     useWdkEffect((service: WdkService) => {
@@ -70,11 +72,11 @@ export const DatasourceTable: React.FC<DatasourceTableProps> = ({ recordClass, c
 
                 if (name === "version" || name === "release_date") {
                     column.help =
-                        "Resource versioning information.  Maybe a version, data freeze, DOI, official release date or download date.";
+                        "Resource versioning information.  One of a version, data freeze, DOI, official release date or download date.";
                 }
 
-                if (name === 'download_url') {
-                    column.help = "Link for original file download (may be an FTP site)."
+                if (name === "download_url") {
+                    column.help = "Link for original file download (may be an FTP site).";
                 }
 
                 return column;
@@ -84,22 +86,20 @@ export const DatasourceTable: React.FC<DatasourceTableProps> = ({ recordClass, c
         }
     }, [data]);
 
-    if (data.length === 0 || columns.length === 0) {
-        return (
+    return data ? (
+        data.length === 0 || columns.length === 0 ? (
             <p>
                 <em>No data available</em>
             </p>
-        );
-    }
-
-    return data ? (
-        <Table
-            className={classNames(false ? classes.fullWidth : "shrink", classes.table)}
-            columns={columns}
-            data={data}
-            title="Resources"
-            options={options}
-        />
+        ) : (
+            <Table
+                className={classNames(false ? classes.fullWidth : "shrink", classes.table)}
+                columns={columns}
+                data={data}
+                title="Resources"
+                options={options}
+            />
+        )
     ) : (
         <CircularProgress size="sm"></CircularProgress>
     );

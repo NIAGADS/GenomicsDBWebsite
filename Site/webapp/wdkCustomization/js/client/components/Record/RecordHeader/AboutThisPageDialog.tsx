@@ -73,7 +73,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
         <Box>
             {documentation.map((item: RecordSectionDocumentation) => {
                 const text = item.text;
-                const [dsRecord, dsCategory] = item.dataSourceKey ? item.dataSourceKey.split("|") : null;
+                const [dsRecord, dsCategory] = item.dataSourceKey ? item.dataSourceKey.split("|") : [null, null];
                 return (
                     <Typography className={classes.mx}>
                         {item.text}

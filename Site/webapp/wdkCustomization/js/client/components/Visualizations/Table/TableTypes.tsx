@@ -35,6 +35,8 @@ export interface TableOptions {
     initialSort?: any;
     linkedPanel?: LinkedPanelOptions;
     rowSelect?: RowSelectOptions;
+    hideToolbar?: boolean;
+    hideNavigation?: boolean;
 }
 
 export interface Table {
