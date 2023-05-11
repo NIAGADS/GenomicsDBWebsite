@@ -27,7 +27,7 @@ public class DatasetModelRefService extends AbstractWdkService {
     private static final String RECORD_CLASS_PARAM = "record";
     private static final String CATEGORY_PARAM = "category";
 
-    private static final String SEARCH_QUERY = "SELECT jsonb_build_object(" + NL
+    private static final String SEARCH_QUERY = "SELECT jsonb_agg(jsonb_build_object(" + NL
             + "'record_class', ds.record_class," + NL
             + "'category', ds.website_category," + NL
             + "'name', d.name," + NL
@@ -35,14 +35,14 @@ public class DatasetModelRefService extends AbstractWdkService {
             + "'version', r.version," + NL
             + "'download_url', r.download_url," + NL
             + "'resource_url', r.id_url," + NL
-            + "'description' , r.description)::text AS result" + NL
+            + "'description' , r.description))::text AS result" + NL
             + "FROM NIAGADS.WebsiteDatasources ds," + NL
             + "SRes.ExternalDatabase d," + NL
             + "SRes.ExternalDatabaseRelease r" + NL
             + "WHERE ds.external_database_release_id = r.external_database_release_id" + NL
             + "AND r.external_database_id = d.external_database_id" + NL
-            + "AND ds.website_category = ?" + NL
-            + "AND ds.record_class = ?";
+            + "AND ds.record_class = ?" + NL
+            + "AND ds.website_category = ?";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,17 +73,19 @@ public class DatasetModelRefService extends AbstractWdkService {
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
+        // LOG.debug("resource query: " + SEARCH_QUERY);
+        
         SQLRunner runner = new SQLRunner(ds, SEARCH_QUERY, "site-datasource-lookup-query");
         runner.executeQuery(new Object[] { recordClass, category }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {
-            return "{}";
+            return "[]";
         }
 
         String resultStr = (String) results.get(0).get("result");
         if (resultStr == "null" || resultStr == null) {
-            return "{}";
+            return "[]";
         }
 
         //LOG.debug("RESULT:  " + resultStr);
