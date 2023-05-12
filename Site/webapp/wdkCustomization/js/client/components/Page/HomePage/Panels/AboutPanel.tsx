@@ -62,7 +62,7 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
                         <Typography variant="body1">
                             <em>
                                 The results published here are in whole or part based on data obtained from the NIAGADS
-                                Alzheimer's GenomicsDB, available at https://www.niagads.org/{webAppUrl}.
+                                Alzheimer's GenomicsDB, available at https://www.niagads.org{webAppUrl}.
                             </em>
                         </Typography>
                     </Box>
@@ -74,7 +74,7 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
                     <Box mt={2}>
                         <Typography variant="body1">
                             Greenfest-Allen et al. (28 April 2023). "NIAGADS Alzheimer’s GenomicsDB: A resource for
-                            exploring Alzheimer’s Disease genetic and genomic knowledge":
+                            exploring Alzheimer’s Disease genetic and genomic knowledge":{" "}
                             <a href="https://doi.org/10.1101/2020.09.23.310276">
                                 https://doi.org/10.1101/2020.09.23.310276
                             </a>
