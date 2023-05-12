@@ -3,22 +3,21 @@ import { RecordSectionDocumentation } from "@components/Record/Types";
 import { _externalUrls } from "../_externalUrls";
 
 export const _geneDocumentation: { [category: string]: RecordSectionDocumentation[] } = {
+    overview: [
+        {
+            text: "The gene report header provides basic information about a gene.  Gene model reference, standard nomenclature, and gene types are obtained from the following resources:",
+            dataSourceKey: "gene|overview",
+        },
+    ],
+
     phenomics: [
         {
-            text: "This section reports variants contained within ±100kb of this gene that have been associated with a clinical phenotype.",
-        },
-        { text: "Trait associations have been segregated by datasource:" },
-        {
-            text: "Section 1.1 reports risk-associations from AD- or AD-related GWAS datasets in the NIAGADS repository.",
-            dataSourceKey: "variant|niagads",
+            text: "This section reports variants contained within ±100kb of this gene that have been associated with a clinical phenotype.  Trait associations are segregated by original data source.  <strong>Section 1.1</strong> reports risk-associations from AD- or AD-related GWAS datasets in the NIAGADS Repository.  <strong>Section 1.2</strong> reports known associations (including AD-related) from manually curated GWAS Catalogs</strong>",
         },
         {
-            text: "Section 1.2 reports all known phenotype associations (including AD-related) and from manually curated GWAS catalogs",
-            dataSourceKey: "variant|catalog",
+            text: "By default, the tables is filtered for variants whose risk-association is supported by a p-value ≤ 5e-8.",
         },
-        {
-            text: "By default, the table is filtered for variants whose risk-association is supported by a p-value ≤ 5e-8.",
-        },
+        { text: "Trait associations are pulled from the following resources", dataSourceKey: "variant|gwas" },
     ],
     "data-identity-and-mapping": [
         {
@@ -31,23 +30,23 @@ export const _geneDocumentation: { [category: string]: RecordSectionDocumentatio
                 "additional standard gene nomenclature is imported from the HUGO Gene Nomenclature Committee at the European Bioinformatics Institute",
         },
         {
-            text: "Details and versioning information for the annotation files are available here:",
-            dataSourceKey: "gene|identifiers",
+            text: "Annotation files used to map identifiers are as follows:",
+            dataSourceKey: "gene|identity",
         },
     ],
     "function-analysis": [
         {
-            text: "This section provides predictions and annotations of known gene-function from the Gene Ontology"
+            text: "This section provides predictions and annotations of known gene-function from the Gene Ontology (GO). GO associations (GOA) are mapped to Ensembl Gene Identifiers using the UniProtKB GOA and ID mapping files.",
         },
         {
-            text: "GO associations are mapped to Ensembl Gene Identifiers using the UniProtKB GOA and ID mapping files.  Annotation file versions available here:",
+            text: "Current versions of the association and annotation files used in the GenomicsDB are as follows",
             dataSourceKey: "gene|function",
         },
     ],
     "molecular-interactions-pathways-and-networks": [
         {
-            text: "Gene membership in molecular and metabolic pathways is obtained from the Kyoto Encyclopedia of Genes and Genomes (KEGG) and Reactome.  Data source and versioning information available here:",
-            dataSourceKey: "gene|interactions",
+            text: "This section provides lists of known pathway memberships for the gene.  Gene membership in molecular and metabolic pathways is obtained from the following resources:" ,
+            dataSourceKey: "gene|interaction",
         },
     ],
 };

@@ -21,6 +21,7 @@ import { ComingSoonAlert, InfoAlert } from "@components/MaterialUI";
 import { RecordSectionDocumentation } from "@components/Record/Types";
 import { DatasourceTable } from "@components/Documentation/DatasourceTable";
 import _recordDocumentation from "genomics-client/data/record_properties/_recordDocumentation";
+import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -71,14 +72,15 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
 
     const renderSectionDocumentation = (documentation: RecordSectionDocumentation[]) => (
         <Box>
-            {documentation.map((item: RecordSectionDocumentation) => {
+            {documentation.map((item: RecordSectionDocumentation, index: number) => {
                 const text = item.text;
                 const [dsRecord, dsCategory] = item.dataSourceKey ? item.dataSourceKey.split("|") : [null, null];
                 return (
-                    <Typography className={classes.mx}>
-                        {item.text}
+                    <Box className={classes.mx} key={index}>
+                        <Typography>{safeHtml(item.text)}</Typography>
+                        {item.comingSoon && <ComingSoonAlert message={item.comingSoon}></ComingSoonAlert>}
                         {dsRecord && <DatasourceTable recordClass={dsRecord} category={dsCategory} />}
-                    </Typography>
+                    </Box>
                 );
             })}
         </Box>
@@ -93,7 +95,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
                     const title = category.properties["EuPathDB alternative term"][0];
                     const key = category.properties["display order"][0];
                     return (
-                        <Box className={classes.mx}>
+                        <Box className={classes.mx} key={key}>
                             <a id={anchor} key={`target_${key}`}>
                                 <Typography key={`title_${key}`} variant="subtitle1" className={classes.title}>
                                     {title}
@@ -145,11 +147,10 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
         </Box>
     );
 
-    const renderOverview = () => (
-        <Box className={classes.mx}>
-            <ComingSoonAlert message="header documentation coming soon"></ComingSoonAlert>
-        </Box>
-    );
+    const renderOverview = () => {
+        const doc = _recordDocumentation[rcName];
+        return <Box className={classes.mx}>{renderSectionDocumentation(doc["overview"])}</Box>;
+    };
 
     return recordClass.shortDisplayName == "Ontology" ? (
         <ComingSoonAlert message="More information about navigating the data dictionary is coming soon."></ComingSoonAlert>

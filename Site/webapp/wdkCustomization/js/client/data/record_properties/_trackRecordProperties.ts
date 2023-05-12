@@ -1,4 +1,15 @@
 import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
+import { RecordSectionDocumentation } from "@components/Record/Types";
+
+export const _trackDocumentation: { [category: string]: RecordSectionDocumentation[] } = {
+    overview: [{ text: "", comingSoon: "Information about the Manhattan plot summary coming soon." }],
+    "genetic-variation": [
+        {
+            text: "This section reports the top variants (p <0.001) from this GWAS summary statistics dataset.",
+            comingSoon: "Additional documentation coming soon",
+        },
+    ],
+};
 
 export const _trackTableProperties: { [name: string]: TableProperties } = {
     top_variants: {
@@ -29,7 +40,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
             type: "LocusZoom",
             column: "variant_link",
             isJSON: true,
-            enableRowSelect: true
+            enableRowSelect: true,
         },
         sortedBy: [{ id: "pvalue", descending: false }],
         accessors: {
@@ -37,7 +48,7 @@ export const _trackTableProperties: { [name: string]: TableProperties } = {
             msc_is_coding_flag: "BooleanGreenCheck",
             variant_link: "Link",
             pvalue: "ScientificNotation",
-            msc_impacted_gene_link: "Link"
+            msc_impacted_gene_link: "Link",
         },
     },
 };

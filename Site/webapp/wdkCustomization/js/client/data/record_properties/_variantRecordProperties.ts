@@ -1,5 +1,34 @@
 import { RecordTableProperties as TableProperties } from "@components/Record/RecordTable";
-import { BooleanCheckAccessor } from "genomics-client/components/Visualizations/Table/ColumnAccessors";
+import { RecordSectionDocumentation } from "@components/Record/Types";
+
+export const _variantDocumentation: { [category: string]: RecordSectionDocumentation[] } = {
+    overview: [
+        {
+            text: "The variant report header provides basic information about a variant, including variant type, reference and alternative alleles, and dbSNP rsID, if relevant.  The most damaging variant consequence predicted by the ADSP annotation pipeline is also provided, as well as a flag if the variant was present in an ADSP joint-genotype calling effort.",
+            dataSourceKey: "variant|overview",
+            comingSoon: "Information about the ADSP annotation pipeline and ADSP variants will be coming soon.",
+        },
+    ],
+    phenomics: [
+        {
+            text: "This section reports known associations for this variant with a clinical phenotype.  Trait associations are segregated by original data source.  <strong>Section 1.1</strong> reports risk-associations from AD- or AD-related GWAS datasets in the NIAGADS Repository.  <strong>Section 1.2</strong> reports known associations (including AD-related) from manually curated GWAS Catalogs</strong>",
+            dataSourceKey: "variant|gwas",
+        },
+    ],
+    "genetic-variation": [
+        {
+            text: "",
+            comingSoon: "Documentation about allele frequencies and linkage disequilibrium is coming soon.",
+        },
+    ],
+    "function-analysis": [
+        {
+            text: "",
+            comingSoon:
+                "Function prediction was accomplished using the ADSP Annotation pipeline.  More information coming soon.",
+        },
+    ],
+};
 
 export const _variantTableProperties: { [name: string]: TableProperties } = {
     ad_associations_from_gwas: {
@@ -133,7 +162,16 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
             impact: "select",
         },
         filterGroups: [{ label: "Consequence", columns: ["consequence", "gene_link", "impact"], defaultOpen: true }],
-        hiddenColumns: ["exon", "cds_position", "cdna_position", "protein_link", "protein_position", "rank", "strand","is_canonical_transcript"],
+        hiddenColumns: [
+            "exon",
+            "cds_position",
+            "cdna_position",
+            "protein_link",
+            "protein_position",
+            "rank",
+            "strand",
+            "is_canonical_transcript",
+        ],
         requiredColumns: ["consequence"],
         canFilter: true,
         defaultOpen: true,
@@ -173,9 +211,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
             consequence: "select",
             impact: "select",
         },
-        filterGroups: [
-            { label: "Consequence", columns: ["consequence", "impact"], defaultOpen: true },
-        ],
+        filterGroups: [{ label: "Consequence", columns: ["consequence", "impact"], defaultOpen: true }],
         hiddenColumns: ["rank"],
         requiredColumns: ["consequence"],
         canFilter: true,
@@ -186,7 +222,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         },
     },
 
-      motif_consequences: {
+    motif_consequences: {
         filters: {
             consequence: "select",
             feature_biotype: "select",
@@ -203,7 +239,7 @@ export const _variantTableProperties: { [name: string]: TableProperties } = {
         accessors: {
             is_most_severe_consequence: "BooleanRedCheck",
             feature_link: "Link",
-            motif_link: "Link"
+            motif_link: "Link",
         },
-      }
+    },
 };

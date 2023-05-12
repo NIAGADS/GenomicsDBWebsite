@@ -24,5 +24,6 @@ export interface RecordSectionDocumentation {
     text: string;
     image?: string;
     dataSourceKey?: string;
+    comingSoon?: string;
 }
 
