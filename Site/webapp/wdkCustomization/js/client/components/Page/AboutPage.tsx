@@ -101,7 +101,7 @@ const AboutPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
 
     return (
         <Grid container spacing={2} alignContent="flex-start">
-            <Grid item xs={3}>
+            <Grid item xs={1}>
                 <AboutPageNav></AboutPageNav>
             </Grid>
             <Grid item xs={9}>
