@@ -6,7 +6,7 @@ import { theme } from "../components/MaterialUI";
 
 export default class HomePageController extends PageController {
     getTitle() {
-        return "NIAGADS|GenomicsDB";
+        return "GDB | Home";
     }
 
     renderView = () => (
