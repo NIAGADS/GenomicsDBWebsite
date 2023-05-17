@@ -50,47 +50,6 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
                         may also provide funding or governance:
                     </Typography>
                 </Grid>
-                <Grid item>
-                    <Typography variant="h5">How to cite this resource</Typography>
-                </Grid>
-                <Grid item>
-                    <Typography variant="body1" className={bodyText} align="left">
-                        We encourage you to use the data and insights offered in the NIAGADS Alzheimers's Genomics
-                        database along with the following acknowledgement statement:
-                    </Typography>
-                    <Box mt={2}>
-                        <Typography variant="body1">
-                            <em>
-                                The results published here are in whole or part based on data obtained from the NIAGADS
-                                Alzheimer's GenomicsDB, available at https://www.niagads.org{webAppUrl}.
-                            </em>
-                        </Typography>
-                    </Box>
-                    <Box mt={2}>
-                        <Typography variant="body1" className={bodyText} align="left">
-                            To cite the resource using the following:
-                        </Typography>
-                    </Box>
-                    <Box mt={2}>
-                        <Typography variant="body1">
-                            Greenfest-Allen et al. (28 April 2023). "NIAGADS Alzheimer’s GenomicsDB: A resource for
-                            exploring Alzheimer’s Disease genetic and genomic knowledge":{" "}
-                            <a href="https://doi.org/10.1101/2020.09.23.310276">
-                                https://doi.org/10.1101/2020.09.23.310276
-                            </a>
-                        </Typography>
-                    </Box>
-                    <Box mt={2}>
-                        <Typography className={bodyText} align="left">
-                            If referencing a specific GWAS summary statistics dataset from the NIAGADS repository,
-                            please follow the accession link provided in the{" "}
-                            <a href="dataset/accessions" target="_blank">
-                                dataset browser
-                            </a>{" "}
-                            to obtain original publication information for the dataset to directly acknowledge.
-                        </Typography>
-                    </Box>
-                </Grid>
 
                 <Grid item>
                     <Grid container item spacing={4} direction="row" justifyContent="space-between" alignItems="center">

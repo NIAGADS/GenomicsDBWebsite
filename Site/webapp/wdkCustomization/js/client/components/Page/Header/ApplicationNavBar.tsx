@@ -235,7 +235,7 @@ function PrimarySearchAppBar() {
     </TextButton>*/}
 
             {
-                <TextButton aria-label="about" color="inherit" href={`${webAppUrl}/app#about`}>
+                <TextButton aria-label="about" color="inherit" href={`${webAppUrl}/app/documentation/about`}>
                     About
                 </TextButton>
             }
