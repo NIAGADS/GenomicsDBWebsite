@@ -34,7 +34,7 @@ export const CustomLink = React.forwardRef((props: LinkProps & CustomLinkProps, 
             href={href}
             color={color ? color : "initial"}
             className={linkClassName}
-            target="_blank"
+            target={props.target ? props.target : "_blank"}
             rel="noopener"
         >
             {children}
