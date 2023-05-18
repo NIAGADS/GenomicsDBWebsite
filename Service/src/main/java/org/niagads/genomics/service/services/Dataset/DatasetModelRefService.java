@@ -29,7 +29,7 @@ public class DatasetModelRefService extends AbstractWdkService {
 
     private static final String SEARCH_QUERY = "SELECT jsonb_agg(DISTINCT jsonb_build_object(" + NL
             + "'record_class', ds.record_class," + NL
-            + "'category', ds.website_category," + NL
+         //   + "'category', ds.website_category," + NL
             + "'resource', build_link_attribute(d.name, ''," + NL
             + "CASE WHEN d.name = 'NIAGADS' THEN '../dataset/accession' ELSE r.id_url END," + NL
             + "d.name)," + NL

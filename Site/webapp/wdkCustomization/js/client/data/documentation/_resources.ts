@@ -15,7 +15,7 @@ export const dataSources: DocumentationItem[] = [
     },
     {
         anchor: "variants",
-        dataSourceKey: "gene|all",
+        dataSourceKey: "variant|all",
         title: "Variant Annotation",
         text: "The following resources are used to provide gene annotations.  More details about specific use-cases can be found on <strong>variant</strong> report pages (click the <strong>About this Page</strong> button).",
     },
