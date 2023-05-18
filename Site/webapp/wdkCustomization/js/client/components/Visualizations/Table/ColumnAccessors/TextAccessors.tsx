@@ -11,11 +11,14 @@ export const isJSON = (value: any) => {
     try {
         value = JSON.parse(value);
     } catch (e) {
-        return false;
+        // catch numbers, nulls, booleans
+        return isObject(value) && value != null;
+        // return false;
     }
 
     // catch numbers, nulls, booleans
     return isObject(value) && value != null;
+    
 };
 
 export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLength = 100 }) => {

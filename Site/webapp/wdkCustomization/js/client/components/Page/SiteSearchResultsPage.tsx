@@ -29,28 +29,28 @@ const SiteSearchResultsNav: React.FC<SiteSearchResultsNavProps> = ({ genes, vari
         <List disablePadding={true}>
             {genes > 0 && (
                 <ListItem>
-                    <Link color="initial" href="#genes">
+                    <Link color="initial" href="#genes" target="_self">
                         {genes} Gene{genes > 1 ? "s" : ""}
                     </Link>
                 </ListItem>
             )}
             {variants > 0 && (
                 <ListItem>
-                    <Link color="initial" href="#variants">
+                    <Link color="initial" href="#variants" target="_self">
                         {variants} Variant{variants > 1 ? "s" : ""}
                     </Link>
                 </ListItem>
             )}
             {accessions > 0 && (
                 <ListItem>
-                    <Link color="initial" href="#accessions">
+                    <Link color="initial" href="#accessions" target="_self">
                         {accessions} NIAGADS Accession{accessions > 1 ? "s" : ""}
                     </Link>
                 </ListItem>
             )}
             {datasets > 0 && (
                 <ListItem>
-                    <Link color="initial" href="#datasets">
+                    <Link color="initial" href="#datasets" target="_self">
                         {datasets} Summary Statistics Dataset{datasets > 1 ? "s" : ""}
                     </Link>
                 </ListItem>

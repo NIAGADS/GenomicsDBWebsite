@@ -21,57 +21,75 @@ import org.gusdb.wdk.model.WdkModelException;
 import org.gusdb.wdk.model.WdkRuntimeException;
 import org.gusdb.wdk.service.service.AbstractWdkService;
 
-
 @Path("dataset/reference")
 public class DatasetModelRefService extends AbstractWdkService {
     private static final Logger LOG = Logger.getLogger(DatasetModelRefService.class);
-    private static final String SEARCH_RECORD_TYPE_PARAM = "record_type";
-    private static final String SEARCH_TARGET_TYPE_PARAM = "target_type";
-    private static final String SEARCH_TARGET_NAME_PARAM = "target_name";
+    private static final String RECORD_CLASS_PARAM = "record";
+    private static final String CATEGORY_PARAM = "category";
 
-    private static final String SEARCH_QUERY = "SELECT jsonb_agg(dataset)::text AS result FROM (" + NL
-        + "SELECT jsonb_build_object('dataset_id', da.accession, 'name', da.name || ' (' || da.attribution || ')', 'description', da.description) AS dataset" + NL
-        + "FROM CBIL.DatasetModelRef dmr," + NL
-        + "NIAGADS.DatasetAttributes da" + NL
-        + "WHERE record_type = ?" + NL
-        + "AND target_type = ?" + NL
-        + "AND target_name = ?" + NL
-        + "AND da.accession = dmr.accession" + NL
-        + "ORDER BY da.accession) a";
+    private static final String SEARCH_QUERY = "SELECT jsonb_agg(DISTINCT jsonb_build_object(" + NL
+            + "'record_class', ds.record_class," + NL
+         //   + "'category', ds.website_category," + NL
+            + "'resource', build_link_attribute(d.name, ''," + NL
+            + "CASE WHEN d.name = 'NIAGADS' THEN '../dataset/accession' ELSE r.id_url END," + NL
+            + "d.name)," + NL
+            + "'release_date', r.release_date," + NL
+            + "'version', r.version," + NL
+            + "'download_url', build_link_attribute(r.download_url,'',r.download_url)," + NL
+            + "'description' , r.description))::text AS result" + NL
+            + "FROM NIAGADS.WebsiteDatasources ds," + NL
+            + "SRes.ExternalDatabase d," + NL
+            + "SRes.ExternalDatabaseRelease r" + NL
+            + "WHERE ds.external_database_release_id = r.external_database_release_id" + NL
+            + "AND r.external_database_id = d.external_database_id" + NL
+            + "AND ds.record_class = ?" + NL
+            + "AND (ds.website_category = ? OR ? = 'all')";
 
-    @GET    
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     // @OutSchema("niagads.search.sitesearch.get-response")
-    public Response buildResponse(String body
-        , @QueryParam(SEARCH_RECORD_TYPE_PARAM) String recordType
-        , @QueryParam(SEARCH_TARGET_TYPE_PARAM) String targetType
-        , @QueryParam(SEARCH_TARGET_NAME_PARAM) String targetName ) throws WdkModelException {
-        
+    public Response buildResponse(String body, @QueryParam(RECORD_CLASS_PARAM) String recordClass,
+            @QueryParam(CATEGORY_PARAM) String category) throws WdkModelException {
+
         LOG.info("Starting 'DatasetModelRef' Service");
         String response = "{}";
         try {
-            response = lookupDatasets(recordType, targetType, targetName);
-            if (response == null) { response = "{}";}
+            response = lookup(recordClass, category);
+            if (response == null) {
+                response = "{}";
+            }
             LOG.debug("query result: " + response);
         }
-        
-        catch(WdkRuntimeException ex) {
+
+        catch (WdkRuntimeException ex) {
             throw new WdkModelException(ex);
         }
-        
+
         return Response.ok(response).build();
     }
-    
-    private String lookupDatasets(String recordType, String targetType, String targetName) {   
-        
+
+    private String lookup(String recordClass, String category) {
+
         WdkModel wdkModel = getWdkModel();
         DataSource ds = wdkModel.getAppDb().getDataSource();
         BasicResultSetHandler handler = new BasicResultSetHandler();
 
-        SQLRunner runner = new SQLRunner(ds, SEARCH_QUERY, "site-search-query");
-        runner.executeQuery(new Object[] {recordType, targetType, targetName}, handler);
+        // LOG.debug("resource query: " + SEARCH_QUERY);
         
-        List <Map <String, Object>> results = handler.getResults();
-        return (String) results.get(0).get("result");
+        SQLRunner runner = new SQLRunner(ds, SEARCH_QUERY, "site-datasource-lookup-query");
+        runner.executeQuery(new Object[] { recordClass, category, category }, handler);
+
+        List<Map<String, Object>> results = handler.getResults();
+        if (results.isEmpty()) {
+            return "[]";
+        }
+
+        String resultStr = (String) results.get(0).get("result");
+        if (resultStr == "null" || resultStr == null) {
+            return "[]";
+        }
+
+        //LOG.debug("RESULT:  " + resultStr);
+        return resultStr;
     }
 }

@@ -166,7 +166,13 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                     includeChips={false}
                 />
             )}
-            <TableHelpDialog isOpen={helpDialogIsOpen} handleClose={closeHelpDialog} />
+            <TableHelpDialog
+                isOpen={helpDialogIsOpen}
+                handleClose={closeHelpDialog}
+                canAddColumns={columnsDialog !== null}
+                hasLinkedPanel={linkedPanel !== null}
+                canFilter={filter.advancedFilter !== null}
+            />
         </>
     );
 };

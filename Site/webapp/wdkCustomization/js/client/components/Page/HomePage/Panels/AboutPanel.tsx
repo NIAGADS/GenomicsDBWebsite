@@ -2,13 +2,14 @@ import React from "react";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { CustomLink as Link} from "@components/MaterialUI"
+import { CustomLink as Link } from "@components/MaterialUI";
 
 import { PanelProps, DefaultBackgroundPanel } from "@components/MaterialUI";
 import { _externalUrls } from "genomics-client/data/_externalUrls";
 import { _siteStatistics } from "genomics-client/data/_siteStatistics";
 
 import useHomePageStyles, { useTypographyStyles as useHomePageTypographyStyles } from "../styles";
+import Box from "@material-ui/core/Box";
 
 export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppUrl }) => {
     const classes = useHomePageStyles();
@@ -17,7 +18,7 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
     const headingTextColor = background === "dark" ? classes.secondaryText : classes.primaryText;
     const linkType = background === "dark" ? "secondary" : "initial";
     const bodyText = bodyTextColor + " " + tClasses.largeBody;
-    
+
     return (
         <DefaultBackgroundPanel classes={classes} hasBaseArrow={false}>
             <Grid item container direction="column" spacing={6} xs={12} sm={10}>

@@ -234,9 +234,11 @@ function PrimarySearchAppBar() {
                 API
     </TextButton>*/}
 
-            {/*<TextButton aria-label="about" color="inherit" href={`${webAppUrl}/`}>
-                About
-    </TextButton>*/}
+            {
+                <TextButton aria-label="about" color="inherit" href={`${webAppUrl}/app/documentation/about`}>
+                    About
+                </TextButton>
+            }
             {/* <IconButton
                 edge="end"
                 aria-label="account of current user"

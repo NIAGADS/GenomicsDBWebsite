@@ -50,6 +50,9 @@ export const primaryThemeOptions: ThemeOptions = {
       body1: {
         // fontSize: "1.2rem",
         fontFamily: '"Roboto", "Arial", "sans-serif"'
+      },
+      subtitle1: {
+        fontWeight: "bold"
       }
     }
   };

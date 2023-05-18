@@ -73,6 +73,9 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
 
     const firstUpdate = useRef(true);
 
+    const showToolbar = options.hideToolbar && options.hideToolbar !== null ? !options.hideToolbar : true;
+    const showNavigation = options.hideNavigation && options.hideNavigation !== null ? !options.hideNavigation : true;
+
     const hasLinkedPanel = options.linkedPanel && true;
     const rowSelectProps = options.rowSelect ? options.rowSelect : get(options, "linkedPanel.rowSelect", null);
 
@@ -288,7 +291,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
 
             <Grid container justifyContent="flex-end" direction="column">
                 <Grid item xs={12}>
-                    <TableToolbar
+                    {showToolbar && <TableToolbar
                         instance={instance}
                         filter={{
                             hasGlobalFilter: options.canFilter,
@@ -312,12 +315,12 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
                         linkedPanel={
                             hasLinkedPanel ? { toggle: toggleLinkedPanel, label: options.linkedPanel.type } : null
                         }
-                    />
+                    />}
                     {options.canFilter && <FilterChipBar instance={instance} />}
                 </Grid>
-                <Grid item xs={12}>
+                {showNavigation && <Grid item xs={12}>
                     <TablePagination instance={instance} />
-                </Grid>
+                </Grid>}
             </Grid>
 
             {preFilteredRows.length === 0 || page.length === 0 ? (

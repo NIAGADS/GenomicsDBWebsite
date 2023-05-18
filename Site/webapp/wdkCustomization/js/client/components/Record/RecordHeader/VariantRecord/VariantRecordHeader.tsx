@@ -89,7 +89,7 @@ const VariantRecordHeader: React.FC<RecordHeading> = (props) => {
         </Box>
     ) : null;
 
-    return <RecordHeader title={renderTitle} summary={renderSummary} image={renderImage} />;
+    return <RecordHeader categoryTree={props.categoryTree} recordClass={recordClass} title={renderTitle} summary={renderSummary} image={renderImage} />;
 };
 
 export default VariantRecordHeader;
