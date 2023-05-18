@@ -27,7 +27,7 @@ public class DatasetModelRefService extends AbstractWdkService {
     private static final String RECORD_CLASS_PARAM = "record";
     private static final String CATEGORY_PARAM = "category";
 
-    private static final String SEARCH_QUERY = "SELECT jsonb_agg(jsonb_build_object(" + NL
+    private static final String SEARCH_QUERY = "SELECT jsonb_agg(DISTINCT jsonb_build_object(" + NL
             + "'record_class', ds.record_class," + NL
             + "'category', ds.website_category," + NL
             + "'resource', build_link_attribute(d.name, ''," + NL
@@ -43,7 +43,7 @@ public class DatasetModelRefService extends AbstractWdkService {
             + "WHERE ds.external_database_release_id = r.external_database_release_id" + NL
             + "AND r.external_database_id = d.external_database_id" + NL
             + "AND ds.record_class = ?" + NL
-            + "AND ds.website_category = ?";
+            + "AND (ds.website_category = ? OR ? = 'all')";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,7 +77,7 @@ public class DatasetModelRefService extends AbstractWdkService {
         // LOG.debug("resource query: " + SEARCH_QUERY);
         
         SQLRunner runner = new SQLRunner(ds, SEARCH_QUERY, "site-datasource-lookup-query");
-        runner.executeQuery(new Object[] { recordClass, category }, handler);
+        runner.executeQuery(new Object[] { recordClass, category, category }, handler);
 
         List<Map<String, Object>> results = handler.getResults();
         if (results.isEmpty()) {

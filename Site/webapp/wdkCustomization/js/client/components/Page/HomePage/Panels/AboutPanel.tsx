@@ -21,7 +21,6 @@ export const AboutPanel: React.FC<PanelProps> = ({ background = "light", webAppU
 
     return (
         <DefaultBackgroundPanel classes={classes} hasBaseArrow={false}>
-            <a id="about" />
             <Grid item container direction="column" spacing={6} xs={12} sm={10}>
                 <Grid item>
                     <Typography variant="h3" className={headingTextColor} align="center">

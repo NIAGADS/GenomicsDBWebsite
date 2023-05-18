@@ -1,7 +1,7 @@
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import { lighten } from "@material-ui/core/styles";
 
-export const useTypographyStyles = makeStyles((theme:Theme) => 
+export const useTypographyStyles = makeStyles((theme: Theme) =>
     createStyles({
         largeBody: {
             fontSize: "1.2rem",
@@ -66,6 +66,13 @@ const useStyles = makeStyles((theme: Theme) =>
                 color: theme.palette.secondary.light,
             },
         },
+        inset: {
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "75%",
+            color: theme.palette.primary.light
+        }
+      
     })
 );
 

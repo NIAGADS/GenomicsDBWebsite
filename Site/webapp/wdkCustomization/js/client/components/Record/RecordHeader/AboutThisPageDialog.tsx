@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     mb: {
         marginBottom: theme.spacing(2),
     },
-    mx: {
+    my: {
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2),
     },
@@ -76,7 +76,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
                 const text = item.text;
                 const [dsRecord, dsCategory] = item.dataSourceKey ? item.dataSourceKey.split("|") : [null, null];
                 return (
-                    <Box className={classes.mx} key={index}>
+                    <Box className={classes.my} key={index}>
                         <Typography>{safeHtml(item.text)}</Typography>
                         {item.comingSoon && <ComingSoonAlert message={item.comingSoon}></ComingSoonAlert>}
                         {dsRecord && <DatasourceTable recordClass={dsRecord} category={dsCategory} />}
@@ -95,7 +95,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
                     const title = category.properties["EuPathDB alternative term"][0];
                     const key = category.properties["display order"][0];
                     return (
-                        <Box className={classes.mx} key={key}>
+                        <Box className={classes.my} key={key}>
                             <a id={anchor} key={`target_${key}`}>
                                 <Typography key={`title_${key}`} variant="subtitle1" className={classes.title}>
                                     {title}
@@ -149,7 +149,7 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
 
     const renderOverview = () => {
         const doc = _recordDocumentation[rcName];
-        return <Box className={classes.mx}>{renderSectionDocumentation(doc["overview"])}</Box>;
+        return <Box className={classes.my}>{renderSectionDocumentation(doc["overview"])}</Box>;
     };
 
     return recordClass.shortDisplayName == "Ontology" ? (

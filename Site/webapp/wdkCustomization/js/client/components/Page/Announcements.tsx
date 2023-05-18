@@ -76,7 +76,7 @@ export default function Announcements({
     // a unique id for the announcement, and a function that takes props and returns a React Element.
     // Use props as an opportunity to determine if the message should be displayed for the given context.
     const siteAnnouncements = [
-      /*  {
+      /*{
             id: "live-beta",
             renderDisplay: (props: any) => {
                 if (param("beta", window.location) === "true" || /^(beta|b1|b2)/.test(window.location.hostname)) {
@@ -94,7 +94,7 @@ export default function Announcements({
                 }
                 return null;
             },
-        },*/
+        }*/
         {id: "mobile-warning",
         renderDisplay: (props: any) => {
             if (window.innerHeight > window.innerWidth && window.innerWidth < 800) {
