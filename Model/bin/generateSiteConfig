@@ -1,6 +1,6 @@
 #!/bin/sh
 # update config files (perform docker substitutions)
-echo "Usage GUS_HOME=$GUS_HOME, PROJECT_HOME=$PROJECT_HOME, WEBAPP=$WEBAPP, PROJECT_ID=$PROJECT_ID pulled from environemnt."
+echo "Usage GUS_HOME=$GUS_HOME, PROJECT_HOME=$PROJECT_HOME, WEBAPP=$WEBAPP, PROJECT_ID=$PROJECT_ID, IGV_BRANCH=$IGV_BRANCH pulled from environemnt."
 echo "All other properties need to be passed via a properties file: $SITE_ADMIN_PROPERTIES_FILE"
 echo "See docker build .env and site-admin.properties files or guide"
 
@@ -77,4 +77,6 @@ sed -i "s|@DB_HOST@|$(prop 'WEB_DB_HOST')|g" $GUS_HOME/config/$PROJECT_ID/model-
 sed -i "s|@DB_PORT@|$(prop 'WEB_DB_PORT')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
 sed -i "s|@DB_NAME@|$(prop 'WEB_DB_NAME')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml 
 
-
+# package.json
+echo "Setting IGV version (package.json file)"
+sed -i "s|@IGV_BRANCH@|$IGV_BRANCH|g" $PROJECT_HOME/GenomicsDBWebsite/Site/package.json
