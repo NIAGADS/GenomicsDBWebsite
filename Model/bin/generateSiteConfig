@@ -74,11 +74,11 @@ sed -i "s|@DB_HOST@|$(prop 'WEB_DB_HOST')|g" $GUS_HOME/config/$PROJECT_ID/model-
 sed -i "s|@DB_PORT@|$(prop 'WEB_DB_PORT')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
 sed -i "s|@DB_NAME@|$(prop 'WEB_DB_NAME')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml 
 
-# tomcat-context.xml
+# tomcat context & users
 echo "Setting tomcat context (tomcat-context.xml file)"
 cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/tomcat-context.xml.sample $PROJECT_HOME/config/tomcat-context.xml
 sed -i "s|@MODEL@|$PROJECT_ID|g" $PROJECT_HOME/config/tomcat-context.xml
-sed -i "s|@WEBAPP@|$WEBAPP|g" $PROJECT_HOME/config/${WEBAPP}.xml
+sed -i "s|@WEBAPP@|$WEBAPP|g" $PROJECT_HOME/config/tomcat-context.xml
 echo "Configuring Tomcat Manager (tomcat-users.xml / tomcat-manager-context.xml)"
 cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/tomcat-users.xml.sample $PROJECT_HOME/config/tomcat-users.xml
 sed -i "s|@TOMCAT_MANAGER_PASSWORD@|$(prop 'TOMCAT_MANAGER_PASSWORD')|g" $PROJECT_HOME/config/tomcat-users.xml
