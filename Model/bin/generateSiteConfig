@@ -40,11 +40,11 @@ echo "Setting SERVICE URLS=$GENOME_BROWSER_SERVICE_BASE_URL"
 
 # set webapp properties
 echo "Setting webapp properties (webapp.prop file)"
-cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/webapp.prop.sample $GUS_HOME/config/webapp.prop 
-sed -i "s|@WEBAPP@|$WEBAPP|g" $GUS_HOME/config/webapp.prop
-sed -i "s|@PROJECT_ID@|$PROJECT_ID|g" $GUS_HOME/config/webapp.prop
-sed -i "s|@GOOGLE_ANALYTICS_ID@|$(prop 'GOOGLE_ANALYTICS_ID')|g" $GUS_HOME/config/webapp.prop
-sed -i "s|@CORS_ALLOWED_ORIGINS@|$(prop 'CORS_ALLOWED_ORIGINS')|g" $GUS_HOME/config/webapp.prop
+cp $PROJECT_HOME/GenomicsDBWebsite/Site/config/webapp.prop.sample $PROJECT_HOME/config/webapp.prop 
+sed -i "s|@WEBAPP@|$WEBAPP|g" $PROJECT_HOME/config/webapp.prop
+sed -i "s|@PROJECT_ID@|$PROJECT_ID|g" $PROJECT_HOME/config/webapp.prop
+sed -i "s|@GOOGLE_ANALYTICS_ID@|$(prop 'GOOGLE_ANALYTICS_ID')|g" $PROJECT_HOME/config/webapp.prop
+sed -i "s|@CORS_ALLOWED_ORIGINS@|$(prop 'CORS_ALLOWED_ORIGINS')|g" $PROJECT_HOME/config/webapp.prop
 # TODO: add production build flag to webapp.prop if $BUILD == "prod"
 
 echo "Copying gus.config"
