@@ -8,7 +8,7 @@ export function globalTextFilter(rows: Array<Row<any>>, ids: Array<IdType<any>>,
     rows = rows.filter((row) => {
       return ids.some(id => {
         const rowValue = row.values[id];
-        return rowValue && parseFieldValue(rowValue).toLowerCase().includes(String(filterValue).toLowerCase());
+        return rowValue && parseFieldValue(rowValue).toString().toLowerCase().includes(String(filterValue).toLowerCase());
       })
     });
   
