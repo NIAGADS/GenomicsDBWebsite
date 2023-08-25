@@ -26,7 +26,6 @@ export const TutorialPanel: React.FC<PanelProps> = ({ background = "light", webA
     // <DefaultBackgroundPanel classes={classes} hasBaseArrow={true}></DefaultBackgroundPanel>
     return (
         <LightBackgroundPanel classes={classes} hasBaseArrow={true}>
-        
             <Grid item container direction="column" spacing={6} xs={12} sm={10}>
                 <Grid item>
                     <Typography variant="h3" className={headingTextColor} align="center">
@@ -42,7 +41,12 @@ export const TutorialPanel: React.FC<PanelProps> = ({ background = "light", webA
                                     Introduction to the NIAGADS Alzheimer's Genomics Database
                                 </Typography>
                             </CardContent>
-                            <CardMedia className={cClasses.media} component="iframe" src="https://www.youtube.com/embed/vfs11w4-u_Q"></CardMedia>
+                            <CardMedia
+                                className={cClasses.media}
+                                component="iframe"
+                                allow="fullscreen"
+                                src="https://www.youtube.com/embed/vfs11w4-u_Q"
+                            ></CardMedia>
                         </Card>
                     </Grid>
                     <Grid item>
@@ -50,7 +54,12 @@ export const TutorialPanel: React.FC<PanelProps> = ({ background = "light", webA
                             <CardContent className={cClasses.label}>
                                 <Typography>Navigating the Gene Report</Typography>
                             </CardContent>
-                            <CardMedia className={cClasses.media} component="iframe" src="https://www.youtube.com/embed/y_wemO6kHoU"></CardMedia>
+                            <CardMedia
+                                className={cClasses.media}
+                                component="iframe"
+                                allow="fullscreen"
+                                src="https://www.youtube.com/embed/y_wemO6kHoU"
+                            ></CardMedia>
                         </Card>
                     </Grid>
                     <Grid item>
@@ -58,7 +67,12 @@ export const TutorialPanel: React.FC<PanelProps> = ({ background = "light", webA
                             <CardContent className={cClasses.label}>
                                 <Typography>Navigating the NIAGADS Genome Browser</Typography>
                             </CardContent>
-                            <CardMedia className={cClasses.media} component="iframe" src="https://www.youtube.com/embed/h6ImfJwByyU"></CardMedia>
+                            <CardMedia
+                                className={cClasses.media}
+                                component="iframe"
+                                allow="fullscreen"
+                                src="https://www.youtube.com/embed/h6ImfJwByyU"
+                            ></CardMedia>
                         </Card>
                     </Grid>
                     <Grid item>

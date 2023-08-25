@@ -10,8 +10,12 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import InfoIcon from "@material-ui/icons/Info";
 
 import { CustomPanel } from "@components/MaterialUI";
+import AboutThisPageDialog from "@components/Page/AboutGenomeBrowserDialog";
 
 import {
     IGVBrowser as GenomeBrowser,
@@ -83,6 +87,12 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [browserOptions, setBrowserOptions] = useState<any>(null);
     const [triggerRemoveTrack, setTriggerRemoveTrack] = useState<string>(null);
     const [highlightInitialLocus, setHighlightInitialLocus] = useState<string>(null);
+
+    const [aboutThisPageDialogIsOpen, setAboutThisPageDialogIsOpen] = useState(false);
+
+    const closeAboutThisPageDialog = () => {
+        setAboutThisPageDialogIsOpen(false);
+    };
 
     const classes = useStyles();
 
@@ -187,7 +197,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                                 chr: initialFrame.chr,
                                 start: initialFrame.start + DEFAULT_FLANK,
                                 end: initialFrame.end - DEFAULT_FLANK,
-                                name: highlightInitialLocus
+                                name: highlightInitialLocus,
                             },
                         ],
                     },
@@ -268,14 +278,14 @@ const GenomeBrowserPage: React.FC<{}> = () => {
             let locus = queryParams.get("locus");
             let label = queryParams.get("roiLabel");
             if (locus) {
-                if (locus.startsWith('chr')) {
-                    let [chr, position] = locus.split(':');
-                    position = position.replace(/,/g, ''); // remove any commas
-                    let start = position.includes('-') ? parseInt(position.split('-')[0]) : parseInt(position);
-                    let end = position.includes('-') ? parseInt(position.split('-')[1]) : parseInt(position);
+                if (locus.startsWith("chr")) {
+                    let [chr, position] = locus.split(":");
+                    position = position.replace(/,/g, ""); // remove any commas
+                    let start = position.includes("-") ? parseInt(position.split("-")[0]) : parseInt(position);
+                    let end = position.includes("-") ? parseInt(position.split("-")[1]) : parseInt(position);
                     start = start - DEFAULT_FLANK;
                     end = end + DEFAULT_FLANK;
-                    locus = chr +':' + start.toString() + '-' + end.toString()
+                    locus = chr + ":" + start.toString() + "-" + end.toString();
                 }
                 boptions = Object.assign(boptions, { locus: locus });
                 setHighlightInitialLocus(label ? label : locus);
@@ -311,42 +321,65 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         });
     }, []);
 
-    return browserOptions && serviceUrl && webAppUrl && resolvedSelectorData ? (
-        <CustomPanel
-            hasBaseArrow={false}
-            className={classes.panel}
-            alignItems="flex-start"
-            justifyContent="space-between"
-        >
-            <MemoBroswer
-                webAppUrl={webAppUrl}
-                onBrowserLoad={initializeBrowser}
-                onTrackRemoved={setTriggerRemoveTrack}
-                searchUrl={`${serviceUrl}/track/feature?&id=`}
-                options={browserOptions}
-            />
+    return (
+        <>
+            {browserOptions && serviceUrl && webAppUrl && resolvedSelectorData ? (
+                <CustomPanel
+                    hasBaseArrow={false}
+                    className={classes.panel}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                >
+                    <Grid item container sm={12} justifyContent="flex-end" alignItems="baseline">
+                        <Grid item>
+                            <Button
+                                endIcon={<InfoIcon />}
+                                size="small"
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => {
+                                    setAboutThisPageDialogIsOpen(true);
+                                }}
+                            >
+                                About this Page
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <MemoBroswer
+                        webAppUrl={webAppUrl}
+                        onBrowserLoad={initializeBrowser}
+                        onTrackRemoved={setTriggerRemoveTrack}
+                        searchUrl={`${serviceUrl}/track/feature?&id=`}
+                        options={browserOptions}
+                    />
 
-            <Box className={classes.selectorHeader}>
-                <Typography variant="h3" className={classes.selectorHeaderText}>
-                    Select Tracks
-                </Typography>
-            </Box>
+                    <Box className={classes.selectorHeader}>
+                        <Typography variant="h3" className={classes.selectorHeaderText}>
+                            Select Tracks
+                        </Typography>
+                    </Box>
 
-            <TrackSelector
-                properties={properties}
-                columnConfig={serviceTrackConfig.columns}
-                data={resolvedSelectorData}
-                handleTrackSelect={toggleTracks}
-                onSelectorLoad={initializeTrackSelector}
-            />
-        </CustomPanel>
-    ) : (
-        <CustomPanel>
-            <Typography component="span">
-                Loading...
-                <CircularProgress size="small" color="secondary" />
-            </Typography>
-        </CustomPanel>
+                    <TrackSelector
+                        properties={properties}
+                        columnConfig={serviceTrackConfig.columns}
+                        data={resolvedSelectorData}
+                        handleTrackSelect={toggleTracks}
+                        onSelectorLoad={initializeTrackSelector}
+                    />
+                </CustomPanel>
+            ) : (
+                <CustomPanel>
+                    <Typography component="span">
+                        Loading...
+                        <CircularProgress size="small" color="secondary" />
+                    </Typography>
+                </CustomPanel>
+            )}
+            <AboutThisPageDialog
+                isOpen={aboutThisPageDialogIsOpen}
+                handleClose={closeAboutThisPageDialog}
+            ></AboutThisPageDialog>
+        </>
     );
 };
 
