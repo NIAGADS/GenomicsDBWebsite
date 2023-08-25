@@ -9,6 +9,20 @@ export const useTypographyStyles = makeStyles((theme: Theme) =>
     })
 );
 
+export const useCardStyles = makeStyles((theme:Theme) => 
+    createStyles({
+        card: {
+            width: "300px"
+        },
+        label: {
+            height: "80px"
+        },
+        media: {
+            height: "250px"
+        }
+    })
+);
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         primaryBackground: {
