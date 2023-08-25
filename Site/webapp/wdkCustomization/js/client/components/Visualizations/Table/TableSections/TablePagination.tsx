@@ -6,7 +6,7 @@ import { TableInstance,  UsePaginationOptions } from 'react-table';
 
 import { useTableStyles } from '@viz/Table'
 
-const rowsPerPageOptions = [10, 20, 50, { label: 'All', value: -1 }]
+const rowsPerPageOptions = [10, 20, 50, 100, 500 ]
 
 // avoid all of the redraws caused by the internal withStyles
 const interestingPropsEqual = (prevProps: any, nextProps: any) =>
