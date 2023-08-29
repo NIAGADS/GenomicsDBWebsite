@@ -480,7 +480,7 @@
 	<description><![CDATA[coming soon]]></description>
       </table> -->
 
-			<table
+			<!-- <table
 					name="linkage"
 					displayName="Linkage"
 					queryRef="VariantTables.Linkage">
@@ -520,7 +520,7 @@
 						help="minor allele frequency in the population for the LD reference variant (record being browsed)" />
 
 
-			</table>
+			</table>-->
 
 			<table
 					name="allele_frequencies"
