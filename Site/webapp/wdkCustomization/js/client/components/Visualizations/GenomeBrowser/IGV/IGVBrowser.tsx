@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
 import { VariantPValueTrack, VariantServiceTrack as VariantTrack } from "@viz/GenomeBrowser";
@@ -24,6 +24,7 @@ interface IGVBrowser {
     webAppUrl: string;
     onTrackRemoved?: (track: string) => void;
     onBrowserLoad?: (Browser: any) => void;
+    onLocusChanged?: (Browser: any) => void;
 }
 
 //loadedTracks.filter((track) => !selectedTracks.includes(track));
@@ -48,7 +49,16 @@ export const removeTrackById = (trackId: string, browser: any) => {
     browser.removeTrack(trackView[0].track);
 };
 
-export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options, onBrowserLoad, onTrackRemoved }) => {
+export const IGVBrowser: React.FC<IGVBrowser> = ({
+    webAppUrl,
+    searchUrl,
+    options,
+    onBrowserLoad,
+    onTrackRemoved,
+    onLocusChanged,
+}) => {
+    const isDragging = useRef<boolean>(false);
+
     const classes = useStyles();
     const tableClass = classes.popupTable.toString();
 
@@ -97,8 +107,8 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
         });
         let pData: any = [];
 
-        const featureType = info[fields.indexOf("type")].value.replace('_', ' ');
-        if (featureType === "gene" || featureType.endsWith("gene")) {  
+        const featureType = info[fields.indexOf("type")].value.replace("_", " ");
+        if (featureType === "gene" || featureType.endsWith("gene")) {
             const geneSymbol = info[fields.indexOf("name")].value;
             pData.push({ name: "Feature Type:", value: featureType });
             pData.push({ name: "Name:", value: geneSymbol });
@@ -106,7 +116,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
             if (fields.includes("gene_id")) {
                 const geneId = info[fields.indexOf("gene_id")].value;
                 const recHref = webAppUrl + "/app/record/gene/" + geneId;
-  
+
                 pData.push({
                     name: "More Info:",
                     html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
@@ -117,7 +127,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
             if (fields.includes("description")) {
                 const product = info[fields.indexOf("description")].value.replace(regexp, "");
                 pData.push({ name: "Product:", value: product });
-            }   
+            }
 
             const biotype = info[fields.indexOf("biotype")];
             if (biotype.hasOwnProperty("color")) {
@@ -217,10 +227,12 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
         const targetDiv = document.getElementById("genome-browser");
         igv.createBrowser(targetDiv, options).then(function (browser: any) {
             // browser is initialized and can now be used
-            /* browser.on("locuschange", function (referenceFrameList: any) {
-                let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
-                window.location.replace(HASH_PREFIX + loc);
-            });*/
+            browser.on("locuschange", function (referenceFrameList: any) {
+                if (!isDragging.current) {
+                    let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
+                    onLocusChanged && onLocusChanged(loc);
+                }
+            });
 
             browser.on("trackclick", _customTrackPopup);
 
@@ -229,7 +241,20 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
                 onTrackRemoved && onTrackRemoved(track.config.id);
             });
 
-            browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new VariantPValueTrack(config, browser));
+            browser.on("trackdrag", () => {
+                if (!isDragging.current) {
+                    isDragging.current = true
+                }
+            })
+
+            browser.on("trackdragend", () => {
+                isDragging.current = false
+            })
+
+            browser.addTrackToFactory(
+                "gwas_service",
+                (config: any, browser: any) => new VariantPValueTrack(config, browser)
+            );
             browser.addTrackToFactory("qtl", (config: any, browser: any) => new VariantPValueTrack(config, browser));
 
             browser.addTrackToFactory(
