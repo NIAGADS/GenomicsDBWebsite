@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import igv from "igv/dist/igv.esm";
 import { noop, merge, get } from "lodash";
-import { GWASServiceTrack as GWASTrack, VariantServiceTrack as VariantTrack } from "@viz/GenomeBrowser";
+import { VariantPValueTrack, VariantServiceTrack as VariantTrack } from "@viz/GenomeBrowser";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 const HASH_PREFIX = "#/locus/";
@@ -229,7 +229,8 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({ webAppUrl, searchUrl, options
                 onTrackRemoved && onTrackRemoved(track.config.id);
             });
 
-            browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new GWASTrack(config, browser));
+            browser.addTrackToFactory("gwas_service", (config: any, browser: any) => new VariantPValueTrack(config, browser));
+            browser.addTrackToFactory("qtl", (config: any, browser: any) => new VariantPValueTrack(config, browser));
 
             browser.addTrackToFactory(
                 "variant_service",
