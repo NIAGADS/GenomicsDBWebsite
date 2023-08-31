@@ -76,14 +76,9 @@ export function decodeBedXY(tokens: any, header: any) {
 
     // parse optional columns
     parseOptionalFields(feature, tokens, X, header.columnNames);
-    //parse out P-values
-    feature = parsePValues(feature, tokens, header.columnNames);
-    //parse out gene info
-    feature = parseGeneIds(feature, tokens, header.columnNames);
-
-    if (feature.name.startsWith("rs")) {
-        feature.setAdditionalAttributes({ variant: feature.name, record_pk: feature.name });
-    }
+    parsePValues(feature, tokens, header.columnNames);
+    parseGeneIds(feature, tokens, header.columnNames);
+    parseVariantIds(feature, tokens, header.columnNames);
 
     return feature;
 }
@@ -145,18 +140,31 @@ function formatInfoKey(key: string) {
     return result;
 }
 
-function parseGeneIds(feature: BedXYFeature, tokens: any, columnNames: string[]) {
+function parseVariantIds(feature: BedXYFeature, tokens: any, columns: string[]) {
+    if (feature.hasOwnProperty("name") && feature.name.startsWith("rs")) {
+        feature.setAdditionalAttributes({ variant: feature.name, record_pk: feature.name });
+    }
+    /* let alleles = [ignoreCaseIndexOf(columns, 'allele2'), ignoreCaseIndexOf(columns, 'allele1') ]
+    if (alleles[0] !== -1 && alleles[1] !== -1) {
+        let variantProps = [feature.chr, feature.start, feature.info.allele1, feature.info.allele2]
+        let variant = variantProps.join(':')
+        variant.replace('chr', '')
+        feature.setAdditionalAttributes({ variant: variant });
+    } */
+}
+
+function parseGeneIds(feature: BedXYFeature, tokens: any, columns: string[]) {
     let geneSymbol = null;
     let geneId = null;
     for (let field of GENE_SYMBOL_FIELDS) {
-        let index = ignoreCaseIndexOf(columnNames, field);
+        let index = ignoreCaseIndexOf(columns, field);
         if (index !== -1) {
             geneSymbol = tokens[index];
             feature.setAdditionalAttributes({ gene_symbol: geneSymbol });
         }
     }
     for (let field of GENE_ID_FIELDS) {
-        let index = ignoreCaseIndexOf(columnNames, field);
+        let index = ignoreCaseIndexOf(columns, field);
         if (index !== -1) {
             geneId = tokens[index];
             geneId = geneId.replace(/\.\d+/, ""); // remove the versioning in Ensembl Gene IDs
@@ -167,32 +175,6 @@ function parseGeneIds(feature: BedXYFeature, tokens: any, columnNames: string[])
     if (geneId === null && geneSymbol !== null) {
         feature.setAdditionalAttributes({ gene_id: geneSymbol });
     }
-
-    return feature;
-}
-
-function parseGeneInfo(feature: BedXYFeature) {
-    let IDStatus = false;
-    let symbolStatus = false;
-    for (let field in feature.info) {
-        if (field === "gene" || field === "gene_name" || field === "target_gene_symbol") {
-            feature.info.gene_symbol = feature.info[field];
-            delete feature.info[field];
-            symbolStatus = true;
-        } else if (field === "gene_id") {
-            IDStatus = true;
-        }
-    }
-    if (!IDStatus && symbolStatus) {
-        //if there is a symbol but no id, change the symbol name to id
-        //make the symbol name field null
-        //gene id becomes gene
-        //@ts-ignore
-        feature.info.gene = feature.info.gene_symbol;
-        feature.info.gene_symbol = null;
-    }
-
-    return feature;
 }
 
 function parseBedToken(field: string, token: string) {
@@ -231,7 +213,6 @@ function parseStandardFields(feature: BedXYFeature, X: number, tokens: any) {
 
         // add to the feature and return
         feature.setAdditionalAttributes(attributes);
-        return;
     } catch (e) {
         console.error(e);
         return;
@@ -254,25 +235,21 @@ function parseOptionalFields(feature: BedXYFeature, tokens: any, X: number, colu
     }
 
     feature.setAdditionalAttributes({ info: optionalFields });
-    return;
 }
 
-function parsePValues(feature: BedXYFeature, tokens: any, columnNames: string[]) {
+function parsePValues(feature: BedXYFeature, tokens: any, columns: string[]) {
     for (let field of P_VALUE_FIELDS) {
-        let pIndex = ignoreCaseIndexOf(columnNames, field);
+        let pIndex = ignoreCaseIndexOf(columns, field);
         if (pIndex !== -1) {
             let pValue = parseFloat(tokens[pIndex]);
             let neg_log10_pvalue = -1 * Math.log10(pValue);
-
             feature.setAdditionalAttributes({
                 pvalue: pValue,
                 neg_log10_pvalue: neg_log10_pvalue,
             });
-
-            return feature;
+            break;
         }
     }
-    return feature;
 }
 
 class BedXYFeature {

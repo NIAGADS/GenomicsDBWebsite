@@ -59,7 +59,7 @@ class VariantPValueTrack extends igv.TrackBase {
             this.dataRange = {
                 min: this.config.min === undefined ? 0 : this.config.min,
                 max: this.maxValue
-            }           
+            }
         }
 
         return this
@@ -72,10 +72,10 @@ class VariantPValueTrack extends igv.TrackBase {
 
     async getFeatures(chr: string, start: number, end: number) {
         const visibilityWindow = this.visibilityWindow
-        return this.featureSource.getFeatures({chr, start, end, visibilityWindow});
+        return this.featureSource.getFeatures({ chr, start, end, visibilityWindow });
     }
 
-    draw(options:any) {
+    draw(options: any) {
         const featureList = options.features
         const ctx = options.context
         const pixelWidth = options.pixelWidth
@@ -83,9 +83,9 @@ class VariantPValueTrack extends igv.TrackBase {
         const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight
 
         if (this.background) {
-            igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': this.background})
+            igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, { 'fillStyle': this.background })
         }
-        igv.IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, {'strokeStyle': this.divider})
+        igv.IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, { 'strokeStyle': this.divider })
 
         if (featureList) {
             const bpPerPixel = options.bpPerPixel
@@ -97,15 +97,15 @@ class VariantPValueTrack extends igv.TrackBase {
                 if (pos > bpEnd) break
 
                 const colorScale = this.getColorScale(variant._f ? variant._f.chr : variant.chr)
-                
+
                 let val = variant.neg_log10_pvalue > this.maxValue ? this.maxValue : variant.neg_log10_pvalue;
                 let color = colorScale.getColor(val)
-            
+
                 const px = Math.round((pos - bpStart) / bpPerPixel)
                 const py = Math.max(this.dotSize, pixelHeight - Math.round((val - this.dataRange.min) / yScale))
 
                 if (color) {
-                    igv.IGVGraphics.setProperties(ctx, {fillStyle: color, strokeStyle: "black"})
+                    igv.IGVGraphics.setProperties(ctx, { fillStyle: color, strokeStyle: "black" })
                 }
                 igv.IGVGraphics.fillCircle(ctx, px, py, this.dotSize)
                 variant.px = px
@@ -129,8 +129,8 @@ class VariantPValueTrack extends igv.TrackBase {
         }
     }
 
-    paintAxis(ctx: number, pixelWidth: number, pixelHeight:number) {
-        igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': "rgb(255, 255, 255)"})
+    paintAxis(ctx: number, pixelWidth: number, pixelHeight: number) {
+        igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, { 'fillStyle': "rgb(255, 255, 255)" })
         var font = {
             'font': 'normal 10px Arial',
             'textAlign': 'right',
@@ -156,16 +156,16 @@ class VariantPValueTrack extends igv.TrackBase {
 
         font['textAlign'] = 'center'
         if (this.posteriorProbability) {
-            igv.IGVGraphics.fillText(ctx, "PPA", pixelWidth / 2, pixelHeight / 2, font, {rotate: {angle: -90}})
+            igv.IGVGraphics.fillText(ctx, "PPA", pixelWidth / 2, pixelHeight / 2, font, { rotate: { angle: -90 } })
         } else {
-            igv.IGVGraphics.fillText(ctx, "-log10(pvalue)", pixelWidth / 2, pixelHeight / 2, font, {rotate: {angle: -90}})
+            igv.IGVGraphics.fillText(ctx, "-log10(pvalue)", pixelWidth / 2, pixelHeight / 2, font, { rotate: { angle: -90 } })
         }
     }
 
     popupData(clickState: any, features: any) {
         const featureList = this.clickedFeatures(clickState, features);
         const recHref = webAppUrl + '/app/record'
-        let data:any = []
+        let data: any = []
         if (featureList) {
             let count = 0
             for (let f of featureList) {
@@ -180,15 +180,41 @@ class VariantPValueTrack extends igv.TrackBase {
                         break
                     }
                     const pos = f.end; // IGV is zero-based, so end of the variant is the position
-                    let href = recHref + '/variant/' + f.record_pk;
-                        data.push({name: 'Location:', value: f.chr + ':' + pos})
-                        data.push({name: 'p-Value:', value: f.pvalue})  
-                        data.push({name: 'Variant:', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "View GenomicsDB record for variant " + f.variant})
-                        if (f.hasOwnProperty('gene_id')) {
-                            let href = recHref + '/gene/' + f.gene_id;
-                            const geneDisplay = f.hasOwnProperty('gene_symbol') ? f.gene_symbol : f.gene_id;
-                            data.push({name: 'Target', html: `<a target="_blank" href="${href}">${geneDisplay}</a>`, title: "View GenomicsDB record for gene " + geneDisplay})
+
+                    data.push({ name: 'Location:', value: f.chr + ':' + pos })
+                    data.push({ name: 'p-Value:', value: f.pvalue })
+
+                    if (f.hasOwnProperty('variant')) {
+                        if (f.hasOwnProperty("record_pk")) {
+                            let href = recHref + "/variant/" + f.record_pk
+                            data.push({
+                                name: "Variant:",
+                                html: `<a target="_blank" href="${href}">${f.variant}</a>`,
+                                title: "View GenomicsDB record for variant " + f.variant,
+                            });
                         }
+                        else {
+                            data.push({
+                                name: "Variant:", value: f.variant
+                            });
+                        }
+                    }
+                    else { // no variant? display alleles -- note these may not be normalized
+                        if (f.hasOwnProperty("info")) {
+                            const a1 = f.info.hasOwnProperty('allele1') ? f.info.allele1 : null;
+                            const a2 = f.info.hasOwnProperty('allele2') ? f.info.allele2 : null;
+                            if (a1 && a2) {
+                                data.push({
+                                    name: "Alleles:", value: a2 + ">" + a1
+                                })
+                            }
+                        }
+                    }
+                    if (f.hasOwnProperty('gene_id')) {
+                        let href = recHref + '/gene/' + f.gene_id;
+                        const geneDisplay = f.hasOwnProperty('gene_symbol') ? f.gene_symbol : f.gene_id;
+                        data.push({ name: 'Target', html: `<a target="_blank" href="${href}">${geneDisplay}</a>`, title: "View GenomicsDB record for gene " + geneDisplay })
+                    }
                     count++
                 }
             }
@@ -205,7 +231,7 @@ class VariantPValueTrack extends igv.TrackBase {
         if (featureList.length > 0) {
             const features =
                 featureList.map(function (feature: any) {
-                    return {value: feature.neg_log10_pvalue}
+                    return { value: feature.neg_log10_pvalue }
                 })
             this.dataRange = igv.doAutoscale(features)
 
