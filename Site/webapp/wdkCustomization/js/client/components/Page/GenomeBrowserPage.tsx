@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { useSessionStorage } from "usehooks-ts";
+
 import { useSelector } from "react-redux";
-import { find } from "lodash";
+import { find, isEqual } from "lodash";
 //import clsx from "clsx";
 
 import { RootState } from "wdk-client/Core/State/Types";
@@ -72,6 +74,19 @@ export const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+interface UserFileTrackConfig {
+    id: string;
+    label: string;
+    url: string;
+    indexURL?: string;
+}
+
+interface Session {
+    locus: string;
+    tracks: string[];
+    files: UserFileTrackConfig[];
+}
+
 const GenomeBrowserPage: React.FC<{}> = () => {
     const projectId = useSelector((state: RootState) => state.globalData?.config?.projectId);
     const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
@@ -79,16 +94,24 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const [browser, setBrowser] = useState<any>();
     const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
+    const [browserIsInitialized, setBrowserIsInitialized] = useState<boolean>(false);
     const [trackSelectorIsLoaded, setTrackSelectorIsLoaded] = useState<boolean>(null);
     const [trackSelector, setTrackSelector] = useState<any>();
 
-    const [loadingTrack, setLoadingTrack] = useState<string>(null);
     const [serviceTrackConfig, setServiceTrackConfig] = useState<ConfigServiceResponse>(null);
     const [browserOptions, setBrowserOptions] = useState<any>(null);
     const [triggerRemoveTrack, setTriggerRemoveTrack] = useState<string>(null);
     const [highlightInitialLocus, setHighlightInitialLocus] = useState<string>(null);
 
     const [aboutThisPageDialogIsOpen, setAboutThisPageDialogIsOpen] = useState(false);
+
+    const [currentLocus, setCurrentLocus] = useState<string>(null);
+    const [currentSession, setCurrentSession] = useState<Session>(null);
+    const [storedSession, setStoredSession] = useSessionStorage<Session>("browser-session", null);
+    const [tracksUpdated, setTracksUpdated] = useState<boolean>(null);
+
+    const sessionInitializedFromStorage = useRef<boolean>(false);
+    const initializingSession = useRef<boolean>(false);
 
     const closeAboutThisPageDialog = () => {
         setAboutThisPageDialogIsOpen(false);
@@ -106,38 +129,104 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         [serviceTrackConfig]
     );
 
-    const loadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
+    const addTracksToSession = async (tracks: string[]) => {
+        if (currentSession && tracks.length > 0) {
+            let cTracks = currentSession.tracks;
+            cTracks = cTracks.concat(tracks);
+            updateSession(cTracks, "tracks");
+        }
+    };
+
+    const removeTracksFromSession = async (tracks: string[]) => {
+        if (currentSession && tracks.length > 0) {
+            let cTracks = currentSession.tracks;
+            for (let id in tracks) {
+                const index = tracks.indexOf(id);
+                cTracks.splice(index, 1);
+            }
+            updateSession(cTracks, "tracks");
+        }
+    };
+
+    const updateSession = (value: any, field: string) => {
+        if (field === "full") {
+            setCurrentSession(value);
+        } else {
+            if (!initializingSession.current) {
+                // otherwise async loadTracks will overwrite w/nulls
+                let updatedSession: Session = currentSession
+                    ? currentSession
+                    : { tracks: [], locus: null, files: [] };
+                updatedSession[field as keyof Session] = value;
+                setCurrentSession(updatedSession); 
+                if (field === 'tracks') {
+                    setTracksUpdated(true)
+                }
+            }
+        }
+        
+    };
+
+    // update stored session after updating session
+    useEffect(() => {
+        if (!sessionInitializedFromStorage.current) {
+            setStoredSession(currentSession);
+            tracksUpdated && setTracksUpdated(false);
+        }
+    }, [tracksUpdated, currentSession]);
+
+
+    // have to use state variable b/c other state variables don't exist in the context
+    // of the call back (e.g., currentSession)
+    const onLocusChange = (locus: string) => {
+        setCurrentLocus(locus);
+    };
+
+    useEffect(() => {
+        if (currentLocus) {
+            updateSession(browser.getLoci(), "locus");
+        }
+    }, [currentLocus]);
+
+    const loadTracks = async (selectedTracks: string[], loadedTracks: string[]) => {
+        let addedTrackIds: string[] = [];
         selectedTracks.forEach((trackKey: string) =>
             browserTrackConfig
                 .filter((track: any) => track.id === trackKey)
                 .map((track: any) => {
                     // avoid duplicate loads due to aysnc issues
-                    !loadedTracks.includes(track.id) && loadTrack(track, browser);
+                    if (!loadedTracks.includes(track.id)) {
+                        loadTrack(track, browser);
+                        addedTrackIds.push(track.id);
+                    }
                 })
         );
+        return addedTrackIds;
     };
 
-    const unloadTracks = (selectedTracks: string[], loadedTracks: string[]) => {
+    const unloadTracks = async (selectedTracks: string[], loadedTracks: string[]) => {
         const removedTracks = loadedTracks.filter((track) => !selectedTracks.includes(track));
-        removedTracks.forEach((trackKey: string) =>
+        const removedTrackIds: string[] = [];
+        removedTracks.forEach((trackKey: string) => {
             browserTrackConfig
                 .filter((track: any) => track.id === trackKey)
                 .map((track: any) => {
                     removeTrackById(track.id, browser);
-                })
-        );
+                    removedTrackIds.push(track.id);
+                });
+        });
+        return removedTrackIds;
     };
 
-    const toggleTracks = useCallback(
-        (selectedTracks: string[]) => {
-            if (browser && browserTrackConfig) {
-                const loadedTracks = getLoadedTracks(browser);
-                loadTracks(selectedTracks, loadedTracks);
-                unloadTracks(selectedTracks, loadedTracks);
-            }
-        },
-        [browser, browserTrackConfig]
-    );
+    const toggleTracks = async (selectedTracks: string[]) => {
+        if (browser && browserTrackConfig) {
+            const loadedTracks = getLoadedTracks(browser);
+            const addedTracks = await loadTracks(selectedTracks, loadedTracks);
+            const removedTracks = await unloadTracks(selectedTracks, loadedTracks);
+            await addTracksToSession(addedTracks);
+            await removeTracksFromSession(removedTracks);
+        }
+    };
 
     useEffect(() => {
         if (triggerRemoveTrack) {
@@ -174,69 +263,112 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const initializeBrowser = useCallback((b: any) => {
         setBrowser(b);
-        setBrowserIsLoaded(true);
     }, []);
+
+    // basically callback after browser is set b/c it can take a few moments
+    // equivalent to the setState.callback()
+    useEffect(() => {
+        browser && setBrowserIsLoaded(true);
+    }, [browser]);
 
     const initializeTrackSelector = useCallback((s: any) => {
         setTrackSelector(s);
-        setTrackSelectorIsLoaded(true);
     }, []);
+
+    // basically callback after track selector is set is set b/c it can take a few moments
+    // equivalent to the setState.callback()
+    useEffect(() => {
+        trackSelector && setTrackSelectorIsLoaded(true);
+    }, [trackSelector]);
 
     // load initTracks, files and ROI from query string
     useEffect(() => {
         if (browserIsLoaded && trackSelectorIsLoaded) {
-            // if locus passed through query string, highlight
-            if (highlightInitialLocus !== null) {
-                const initialFrame: any = browser.referenceFrameList[0];
-                const regionOfInterest = [
-                    {
-                        name: "Initial Locus",
-                        color: "rgba(245,215,95,0.5)",
-                        features: [
-                            {
-                                chr: initialFrame.chr,
-                                start: initialFrame.start + DEFAULT_FLANK,
-                                end: initialFrame.end - DEFAULT_FLANK,
-                                name: highlightInitialLocus,
-                            },
-                        ],
-                    },
-                ];
-
-                browser.loadROI(regionOfInterest);
+            initializingSession.current = true;
+            let initializeSession = null;
+            if (storedSession) {
+                initializeSession = async () => {
+                    await loadStoredSession();
+                    updateSession(storedSession, "full");
+                };
+            } else {
+                initializeSession = async () => {
+                    const newSession = await createNewSession();
+                    updateSession(newSession, "full");
+                };
             }
 
-            // load initial tracks from query string
-            //let loadedTracks = getLoadedTracks(browser); // reference tracks
-            if (browser.config.initTracks) {
-                //loadTracks(browser.config.initTracks, loadedTracks);
-                updateSelectorTrackState(browser.config.initTracks, "add");
-            }
-
-            // load files from query string
-            if (browser.config.hasOwnProperty("files")) {
-                const filesAreIndexed = browser.config.files.indexed;
-                let fileIds: string[] = [];
-                browser.config.files.urls.forEach((url: string) => {
-                    const id = "file_" + url.split("/").pop().replace(/\..+$/, "");
-                    const newTrackConfig = filesAreIndexed
-                        ? { url: url, indexURL: url + ".tbi", label: "USER: " + id, id: id }
-                        : { url: url, label: "USER: " + id, id: id };
-
-                    browser.loadTrack(newTrackConfig).catch(function (error: any) {
-                        alert("Unable to load user track from: " + url + "\n" + error.toString());
-                    });
-                });
-            }
-
-            // regions of interest
+            initializeSession();
+            initializingSession.current = false;
         }
     }, [browserIsLoaded, trackSelectorIsLoaded]);
 
-    const loadTrack = async (config: any, browser: any) => {
-        setLoadingTrack(config.id);
+    const loadStoredSession = async () => {
+        // locus set in browser options for now; need to find better solution later
+        if (storedSession.tracks.length > 0) {
+            updateSelectorTrackState(storedSession.tracks, "add");
+        }
+        storedSession.files.forEach((config: UserFileTrackConfig) => {
+            loadTrack(config, browser, "Unable to load user track from: " + config.url);
+        });
+    };
+
+    // if locus passed through query string, highlight
+    const createNewSession = async () => {
+        const currentLocus = browser.currentLoci();
+        let currentTracks = [];
+        let currentFiles: UserFileTrackConfig[] = [];
+        if (highlightInitialLocus !== null) {
+            const initialFrame: any = browser.referenceFrameList[0];
+            const regionOfInterest = [
+                {
+                    name: "Initial Locus",
+                    color: "rgba(245,215,95,0.5)",
+                    features: [
+                        {
+                            chr: initialFrame.chr,
+                            start: initialFrame.start + DEFAULT_FLANK,
+                            end: initialFrame.end - DEFAULT_FLANK,
+                            name: highlightInitialLocus,
+                        },
+                    ],
+                },
+            ];
+
+            browser.loadROI(regionOfInterest);
+        }
+
+        // load initial tracks from query string
+        //let loadedTracks = getLoadedTracks(browser); // reference tracks
+        if (browser.config.initTracks) {
+            //loadTracks(browser.config.initTracks, loadedTracks);
+            updateSelectorTrackState(browser.config.initTracks, "add");
+            currentTracks = browser.config.initTracks;
+        }
+
+        // load files from query string
+        if (browser.config.hasOwnProperty("files")) {
+            const filesAreIndexed = browser.config.files.indexed;
+            let fileIds: string[] = [];
+            browser.config.files.urls.forEach((url: string) => {
+                const id = "file_" + url.split("/").pop().replace(/\..+$/, "");
+                const newTrackConfig: UserFileTrackConfig = filesAreIndexed
+                    ? { url: url, indexURL: url + ".tbi", label: "USER: " + id, id: id }
+                    : { url: url, label: "USER: " + id, id: id };
+                loadTrack(newTrackConfig, browser, "Unable to load user track from: " + url);
+                currentFiles.push(newTrackConfig);
+            });
+        }
+        return { locus: currentLocus, tracks: currentTracks, files: currentFiles };
+    };
+
+    const loadTrack = async (config: any, browser: any, errorMsg: string = null) => {
+        if (errorMsg) {
+            await browser.loadTrack(config).catch(function (error: any) {
+                alert(errorMsg + "\n" + error.toString());
+            });
+        }
         await browser.loadTrack(config);
-        setLoadingTrack(undefined);
     };
 
     const parseTrackConfigServiceResponse = (response: ConfigServiceResponse) => {
@@ -273,44 +405,51 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 loadDefaultGenomes: false,
                 genomeList: _genomes,
             };
-
-            const queryParams = new URLSearchParams(window.location.search);
-            let locus = queryParams.get("locus");
-            let label = queryParams.get("roiLabel");
-            if (locus) {
-                if (locus.startsWith("chr")) {
-                    let [chr, position] = locus.split(":");
-                    position = position.replace(/,/g, ""); // remove any commas
-                    let start = position.includes("-") ? parseInt(position.split("-")[0]) : parseInt(position);
-                    let end = position.includes("-") ? parseInt(position.split("-")[1]) : parseInt(position);
-                    start = start - DEFAULT_FLANK;
-                    end = end + DEFAULT_FLANK;
-                    locus = chr + ":" + start.toString() + "-" + end.toString();
+            if (storedSession) {
+                sessionInitializedFromStorage.current = true;
+                if (storedSession.locus) {
+                    boptions = Object.assign(boptions, { locus: storedSession.locus });
+                    // current session locus will be set when stored session is loaded
                 }
-                boptions = Object.assign(boptions, { locus: locus });
-                setHighlightInitialLocus(label ? label : locus);
+            } else {
+                // ignore if stored session
+                const queryParams = new URLSearchParams(window.location.search);
+                let locus = queryParams.get("locus");
+                let label = queryParams.get("roiLabel");
+                if (locus) {
+                    if (locus.startsWith("chr")) {
+                        let [chr, position] = locus.split(":");
+                        position = position.replace(/,/g, ""); // remove any commas
+                        let start = position.includes("-") ? parseInt(position.split("-")[0]) : parseInt(position);
+                        let end = position.includes("-") ? parseInt(position.split("-")[1]) : parseInt(position);
+                        start = start - DEFAULT_FLANK;
+                        end = end + DEFAULT_FLANK;
+                        locus = chr + ":" + start.toString() + "-" + end.toString();
+                    }
+                    boptions = Object.assign(boptions, { locus: locus });
+                    setHighlightInitialLocus(label ? label : locus);
+                }
+
+                const initTracks = queryParams.get("track")
+                    ? queryParams.get("track").split(",").concat(DEFAULT_TRACKS)
+                    : DEFAULT_TRACKS;
+                const tSet = new Set(initTracks); // remove duplicates
+                boptions = Object.assign(boptions, { initTracks: Array.from(tSet) });
+
+                if (queryParams.get("file")) {
+                    const files = queryParams.get("file").split(",");
+                    const fSet = new Set(files);
+
+                    // indexed = "" means &indexed was in the url, but not set
+                    // as opposed to &indexed=true or &indexed=false
+                    // indexed is null means, &indexed was not in the url
+                    let indexed = queryParams.get("indexed") === null ? "false" : queryParams.get("indexed");
+
+                    boptions = Object.assign(boptions, {
+                        files: { urls: Array.from(fSet), indexed: indexed === "" || indexed === "true" ? true : false },
+                    });
+                }
             }
-
-            const initTracks = queryParams.get("track")
-                ? queryParams.get("track").split(",").concat(DEFAULT_TRACKS)
-                : DEFAULT_TRACKS;
-            const tSet = new Set(initTracks); // remove duplicates
-            boptions = Object.assign(boptions, { initTracks: Array.from(tSet) });
-
-            if (queryParams.get("file")) {
-                const files = queryParams.get("file").split(",");
-                const fSet = new Set(files);
-
-                // indexed = "" means &indexed was in the url, but not set
-                // as opposed to &indexed=true or &indexed=false
-                // indexed is null means, &indexed was not in the url
-                let indexed = queryParams.get("indexed") === null ? "false" : queryParams.get("indexed");
-
-                boptions = Object.assign(boptions, {
-                    files: { urls: Array.from(fSet), indexed: indexed === "" || indexed === "true" ? true : false },
-                });
-            }
-
             setBrowserOptions(boptions);
         }
     }, [projectId, webAppUrl]);
@@ -349,6 +488,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                         webAppUrl={webAppUrl}
                         onBrowserLoad={initializeBrowser}
                         onTrackRemoved={setTriggerRemoveTrack}
+                        onLocusChanged={onLocusChange}
                         searchUrl={`${serviceUrl}/track/feature?&id=`}
                         options={browserOptions}
                     />
