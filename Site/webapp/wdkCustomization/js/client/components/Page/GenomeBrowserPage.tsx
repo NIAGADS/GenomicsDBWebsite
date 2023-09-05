@@ -106,12 +106,16 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const [aboutThisPageDialogIsOpen, setAboutThisPageDialogIsOpen] = useState(false);
 
     const [currentLocus, setCurrentLocus] = useState<string>(null);
-    const [currentSession, setCurrentSession] = useState<Session>(null);
     const [storedSession, setStoredSession] = useSessionStorage<Session>("browser-session", null);
-    const [tracksUpdated, setTracksUpdated] = useState<boolean>(null);
+    const [currentSession, setCurrentSession] = useState<Session>(null);
+    const [sessionUpdated, setSessionUpdated] = useState<boolean>(null);
 
     const sessionInitializedFromStorage = useRef<boolean>(false);
     const initializingSession = useRef<boolean>(false);
+
+    // save storedSession before rerenders reset the session storage
+    // need to investigate why rerendering
+    const initialSession = useMemo(() => (storedSession), []);
 
     const closeAboutThisPageDialog = () => {
         setAboutThisPageDialogIsOpen(false);
@@ -140,8 +144,8 @@ const GenomeBrowserPage: React.FC<{}> = () => {
     const removeTracksFromSession = async (tracks: string[]) => {
         if (currentSession && tracks.length > 0) {
             let cTracks = currentSession.tracks;
-            for (let id in tracks) {
-                const index = tracks.indexOf(id);
+            for (let id of tracks) {
+                const index = cTracks.indexOf(id);
                 cTracks.splice(index, 1);
             }
             updateSession(cTracks, "tracks");
@@ -159,9 +163,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                     : { tracks: [], locus: null, files: [] };
                 updatedSession[field as keyof Session] = value;
                 setCurrentSession(updatedSession); 
-                if (field === 'tracks') {
-                    setTracksUpdated(true)
-                }
+                setSessionUpdated(true)            
             }
         }
         
@@ -169,11 +171,11 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     // update stored session after updating session
     useEffect(() => {
-        if (!sessionInitializedFromStorage.current) {
-            setStoredSession(currentSession);
-            tracksUpdated && setTracksUpdated(false);
-        }
-    }, [tracksUpdated, currentSession]);
+        //if (!sessionInitializedFromStorage.current) {
+        setStoredSession(currentSession);
+        sessionUpdated && setSessionUpdated(false);
+        //}
+    }, [sessionUpdated, currentSession]);
 
 
     // have to use state variable b/c other state variables don't exist in the context
@@ -184,7 +186,7 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     useEffect(() => {
         if (currentLocus) {
-            updateSession(browser.getLoci(), "locus");
+            updateSession(currentLocus, "locus");
         }
     }, [currentLocus]);
 
@@ -286,10 +288,10 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         if (browserIsLoaded && trackSelectorIsLoaded) {
             initializingSession.current = true;
             let initializeSession = null;
-            if (storedSession) {
+            if (initialSession) {
                 initializeSession = async () => {
                     await loadStoredSession();
-                    updateSession(storedSession, "full");
+                    updateSession(initialSession, "full");
                 };
             } else {
                 initializeSession = async () => {
@@ -305,10 +307,10 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     const loadStoredSession = async () => {
         // locus set in browser options for now; need to find better solution later
-        if (storedSession.tracks.length > 0) {
-            updateSelectorTrackState(storedSession.tracks, "add");
+        if (initialSession.tracks.length > 0) {
+            updateSelectorTrackState(initialSession.tracks, "add");
         }
-        storedSession.files.forEach((config: UserFileTrackConfig) => {
+        initialSession.files.forEach((config: UserFileTrackConfig) => {
             loadTrack(config, browser, "Unable to load user track from: " + config.url);
         });
     };
@@ -405,10 +407,10 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 loadDefaultGenomes: false,
                 genomeList: _genomes,
             };
-            if (storedSession) {
+            if (initialSession) {
                 sessionInitializedFromStorage.current = true;
-                if (storedSession.locus) {
-                    boptions = Object.assign(boptions, { locus: storedSession.locus });
+                if (initialSession.locus) {
+                    boptions = Object.assign(boptions, { locus: initialSession.locus });
                     // current session locus will be set when stored session is loaded
                 }
             } else {

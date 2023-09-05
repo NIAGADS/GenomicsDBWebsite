@@ -57,7 +57,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
     onTrackRemoved,
     onLocusChanged,
 }) => {
-    const isDragging = useRef<boolean>(false);
+    const isDragging = useRef(false);
 
     const classes = useStyles();
     const tableClass = classes.popupTable.toString();
@@ -231,7 +231,7 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
                 if (!isDragging.current) {
                     let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
                     onLocusChanged && onLocusChanged(loc);
-                }
+               }
             });
 
             browser.on("trackclick", _customTrackPopup);
@@ -242,13 +242,13 @@ export const IGVBrowser: React.FC<IGVBrowser> = ({
             });
 
             browser.on("trackdrag", () => {
-                if (!isDragging.current) {
-                    isDragging.current = true
-                }
+                isDragging.current = true
             })
 
             browser.on("trackdragend", () => {
                 isDragging.current = false
+                let loc = browser.referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
+                onLocusChanged && onLocusChanged(loc);
             })
 
             browser.addTrackToFactory(
