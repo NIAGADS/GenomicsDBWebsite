@@ -67,7 +67,7 @@
 				<description>GWAS summary statistics datasets.</description>
 				<columnAttribute name="dataset_accession" displayName="Accession"
 					help="NIAGADS accession number" inReportMaker="true" />
-				<columnAttribute name="track" displayName="Track" internal="true"
+				<columnAttribute name="track" displayName="Track ID" internal="false"
 					inReportMaker="true" />
 				<columnAttribute name="name" displayName="Dataset" internal="true"
 					inReportMaker="true" />
