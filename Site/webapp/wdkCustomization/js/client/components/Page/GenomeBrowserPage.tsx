@@ -85,6 +85,7 @@ interface Session {
     locus: string;
     tracks: string[];
     files: UserFileTrackConfig[];
+    urlParams: string; // reset session if url params change
 }
 
 const GenomeBrowserPage: React.FC<{}> = () => {
@@ -115,7 +116,15 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     // save storedSession before rerenders reset the session storage
     // need to investigate why rerendering
-    const initialSession = useMemo(() => (storedSession), []);
+    const initialSession = useMemo(() => {
+        const queryParams = window.location.search;
+        if (storedSession && storedSession.urlParams === queryParams) {
+            return storedSession
+        }
+        else { // so if the URL string has changed
+            return null;
+        }
+    }, []);
 
     const closeAboutThisPageDialog = () => {
         setAboutThisPageDialogIsOpen(false);
@@ -152,30 +161,42 @@ const GenomeBrowserPage: React.FC<{}> = () => {
         }
     };
 
+
+    const removeFileFromSession = async (trackId: string) => {
+        if (currentSession && trackId !== null) {
+            let cFiles = currentSession.files;
+            // find the index of the file in the files array that matches
+            // the trackId
+            const index = cFiles.map(function(e) { return e.id; }).indexOf(trackId);
+            cFiles.splice(index, 1)
+            updateSession(cFiles, "files")
+        }
+    };
+
     const updateSession = (value: any, field: string) => {
         if (field === "full") {
             setCurrentSession(value);
+            setSessionUpdated(true);
         } else {
             if (!initializingSession.current) {
                 // otherwise async loadTracks will overwrite w/nulls
                 let updatedSession: Session = currentSession
                     ? currentSession
-                    : { tracks: [], locus: null, files: [] };
+                    : { tracks: [], locus: null, files: [], urlParams: window.location.search };
                 updatedSession[field as keyof Session] = value;
                 setCurrentSession(updatedSession); 
                 setSessionUpdated(true)            
             }
         }
-        
     };
 
     // update stored session after updating session
     useEffect(() => {
-        //if (!sessionInitializedFromStorage.current) {
-        setStoredSession(currentSession);
-        sessionUpdated && setSessionUpdated(false);
-        //}
-    }, [sessionUpdated, currentSession]);
+        if (sessionUpdated) {
+            setStoredSession(currentSession);
+            setSessionUpdated(false);
+        }
+    }, [sessionUpdated]);
 
 
     // have to use state variable b/c other state variables don't exist in the context
@@ -232,7 +253,13 @@ const GenomeBrowserPage: React.FC<{}> = () => {
 
     useEffect(() => {
         if (triggerRemoveTrack) {
-            updateSelectorTrackState([triggerRemoveTrack], "remove");
+            // id = file_* is a user loaded track, not in the selector
+            if (triggerRemoveTrack.startsWith('file_')) {
+                removeFileFromSession(triggerRemoveTrack);
+            }
+            else {  
+                updateSelectorTrackState([triggerRemoveTrack], "remove");
+            }
             setTriggerRemoveTrack(null);
         }
     }, [triggerRemoveTrack]);
@@ -357,11 +384,15 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 const newTrackConfig: UserFileTrackConfig = filesAreIndexed
                     ? { url: url, indexURL: url + ".tbi", label: "USER: " + id, id: id }
                     : { url: url, label: "USER: " + id, id: id };
-                loadTrack(newTrackConfig, browser, "Unable to load user track from: " + url);
-                currentFiles.push(newTrackConfig);
+                
+                // make a deep copy and add to current files list; loading will
+                // udpate the config by reference with a FeatureSource object that
+                // can't (and shouldn't) be stored in the session storage
+                currentFiles.push({...newTrackConfig}); 
+                loadTrack(newTrackConfig, browser, "Unable to load user track from: " + url);      
             });
         }
-        return { locus: currentLocus, tracks: currentTracks, files: currentFiles };
+        return { locus: currentLocus, tracks: currentTracks, files: currentFiles, urlParams: window.location.search };
     };
 
     const loadTrack = async (config: any, browser: any, errorMsg: string = null) => {
@@ -370,7 +401,9 @@ const GenomeBrowserPage: React.FC<{}> = () => {
                 alert(errorMsg + "\n" + error.toString());
             });
         }
-        await browser.loadTrack(config);
+        else {
+            await browser.loadTrack(config);
+        }
     };
 
     const parseTrackConfigServiceResponse = (response: ConfigServiceResponse) => {
