@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+  <recordClassSet name="OntologyRecordClasses">
+    <recordClass name="OntologyRecordClass" displayName="Ontology" displayNamePlural="Ontologies" shortDisplayName="Ontology" useBasket="false" urlName="ontology">
+
+      <!-- =================================================================== -->
+      <!-- Primary Key -->
+      <!-- =================================================================== -->
+
+      <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
+        <columnRef>ontology</columnRef>
+      </primaryKey>
+
+      <idAttribute name="primary_key" displayName="Ontology">
+        <text>
+          <![CDATA[$$ontology$$]]>
+        </text>
+      </idAttribute>
+
+      <testParamValues>
+        <paramValue name="ontology"></paramValue>
+      </testParamValues>
+
+      <!-- =================================================================== -->
+      <!-- Reporters -->
+      <!-- =================================================================== -->
+      <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter">
+      </reporter>
+
+
+      <reporter name="json" displayName="JSON: choose from columns
+					 and/or tables" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
+      </reporter>
+
+
+      <!-- =============================================================== -->
+      <!-- Header Summary Information -->
+      <!-- =============================================================== -->
+
+
+
+      <attributeQueryRef ref="OntologyAttributes.BasicAttributes">
+        <columnAttribute name="project_id" internal="true" inReportMaker="false"  />
+        <columnAttribute name="description" displayName="Description"  />
+        <columnAttribute name="name" displayName="Name"  />
+      </attributeQueryRef>
+
+      <!-- =============================================================== -->
+      <!-- One table for each "type" of dataset:  -->
+      <!-- GWAS, Gene-Risk, Single Variant, eQTL, etc. -->
+      <!-- =============================================================== -->
+
+
+      <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+      <!-- GWAS Summary Statistics -->
+      <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+      <table name="terms" displayName="Data Dictionary" queryRef="OntologyTables.terms">
+        <description>Curated terms in the NIAGADS Data Dictionary</description>
+        <columnAttribute name="source_id" displayName="Ontology Source ID"  help="unique ontology term identifier" inReportMaker="true"/>
+        <columnAttribute name="term" displayName="Term"  inReportMaker="true"/>
+        <columnAttribute name="term_link" displayName="Ontology Reference"  inReportMaker="false" help="View mapped term in its source ontology"/>       
+        <columnAttribute name="definition" displayName="Definition"  inReportMaker="true"/>
+        <columnAttribute name="annotation_type" displayName="Annotation Type" inReportMaker="true"/>
+        <columnAttribute name="annotation_subtype" displayName="Annotation Subtype" inReportMaker="true"/>
+        <columnAttribute name="biosample_type" displayName="Biosample Type" help="indicates whether a biosample annotation is a cell, cell line or tissue" inReportMaker="true"/>
+        <columnAttribute name="synonyms" displayName="Synonyms" inReportMaker="true"/>
+ 
+      </table>
+
+    </recordClass>
+  </recordClassSet>
+</wdkModel>

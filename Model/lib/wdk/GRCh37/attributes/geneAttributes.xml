@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+
+  <querySet name="GeneAttributes" queryType="attribute" isCacheable="false">
+
+    <defaultTestParamValues>
+      <paramValue name="source_id">PVRL2</paramValue>
+    </defaultTestParamValues>
+
+    <testRowCountSql>
+      select count(*) from CBIL.GeneAttributes
+    </testRowCountSql>
+
+
+    <!-- =================================================================== -->
+    <!-- Alias -->
+    <!-- for now just for current gene symbol  -->
+    <!-- =================================================================== -->
+    <sqlQuery name="GeneAlias" doNotTest="true">
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="old_source_id" columnType="string"/>
+      <sql>
+        <![CDATA[
+                WITH gs AS (
+                  SELECT ga.source_id,
+                  '@PROJECT_ID@'::text AS project_id,
+                  ga.gene_symbol AS old_source_id
+                  FROM CBIL.GeneAttributes ga,
+                  (##WDK_ID_SQL##) ids
+                  WHERE ga.gene_symbol = ids.old_source_id
+                  ORDER BY annotation LIMIT 1)
+		       SELECT * FROM gs
+		       UNION
+		       SELECT ga.source_id,
+		       '@PROJECT_ID@'::text AS project_id,
+		       ga.source_id AS old_source_id
+		       FROM CBIL.GeneAttributes ga
+	      ]]>
+      </sql>
+    </sqlQuery>
+
+    <!-- =============================================================== -->
+    <!-- Basic Attributes -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="BasicAttributes">
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="gene_symbol" columnType="string"/>
+      <column name="gene_type" columnType="string"/>
+      <column name="chromosome" columnType="string"/>
+      <column name="location_start" columnType="number"/>
+      <column name="location_end" columnType="number"/>
+      <column name="span" columnType="string"/>
+      <column name="cytogenetic_location" columnType="string"/>
+      <column name="gene_name" columnType="string"/>
+      <column name="hgnc_id" columnType="string"/>
+      <column name="omim_id" columnType="string"/>
+      <column name="ucsc_id" columnType="string"/>
+      <column name="vega_id" columnType="string"/>
+      <column name="entrez_id" columnType="string"/>
+      <column name="ensembl_id" columnType="string"/>
+      <column name="uniprot_id" columnType="string"/>
+      <column name="synonyms" columnType="string"/>
+      <column name="strand" columnType="string"/>
+      <column name="is_reversed" columnType="boolean"/>
+
+      <sql>
+        <![CDATA[
+		 SELECT source_id, 
+		 '@PROJECT_ID@'::text AS project_id,
+		 gene_symbol,
+		 gene_symbol AS display_id,
+		 gene_type,
+		 chromosome,
+		 location_start,
+		 location_end,
+		 annotation->>'location' AS cytogenetic_location,
+		 annotation->>'name' AS gene_name,
+		 annotation->>'hgnc_id' AS hgnc_id,
+		 annotation->>'omim_id' AS omim_id,
+		 annotation->>'ucsc_id' AS ucsc_id,
+		 annotation->>'vega_id' AS vega_id,
+		 annotation->>'entrez_id' AS entrez_id,
+		 chromosome || ':' || location_start::text || '-' || location_end::text || ':' 
+		 || CASE WHEN is_reversed THEN '-' ELSE '+' END  AS span,
+		 replace(annotation->>'uniprot_ids', '|', '//') AS uniprot_id,
+		 source_id AS ensembl_id,
+		 array_to_string(string_to_array(annotation->>'prev_symbol', '|') || string_to_array(annotation->>'alias_symbol', '|'), ', ') AS synonyms,
+		 CASE WHEN is_reversed THEN '-' ELSE '+' END AS strand,
+		 is_reversed
+		 FROM CBIL.GeneAttributes
+        ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="InformationLinks">
+      <column name="source_id"/>
+      <column name="third_party_data_links"/>
+      <sql>
+        <![CDATA[
+		          SELECT source_id, 
+                 jsonb_build_array_check_nulls(
+                 build_badge_attribute('PubMed', '@PUBMED_GENE_SEARCH_URL@' ,annotation->>'entrez_id'),
+                 build_badge_attribute('STRINGdb','@STRINGDB_URL@', source_id),
+                 build_badge_attribute('ExAC', '@EXAC_GENE_URL@', source_id),
+                 build_badge_attribute('UCSC', 
+		             CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@UCSC_BROWSER_URL_GRCh37@' 
+                 ELSE '@UCSC_BROWSER_URL_GRCh38@' END, annotation->>'ucsc_id','view against @PROJECT_ID@ assembly'))
+                 AS third_party_data_links
+		          FROM CBIL.GeneAttributes
+	          ]]>
+      </sql>
+    </sqlQuery>
+
+    <sqlQuery name="RecordLinks" doNotTest="true">
+      <column name="source_id"/>
+      <column name="record_link_outs"/>
+      <sql>
+        <![CDATA[
+                  WITH UniProtIds AS (
+                    SELECT source_id, unnest(string_to_array(annotation->>'uniprot_ids', '|')) AS uniprot_id FROM
+                    CBIL.GeneAttributes 
+                  ),
+                  UniProtLinks AS (
+                    SELECT source_id, jsonb_agg(build_link_attribute(uniprot_id, '@UNIPROT_URL@')) as link_attribute
+                    FROM UniProtIds
+                    GROUP BY source_id)
+                  SELECT ga.source_id, jsonb_build_object('type', 'dictionary', 'style', 'description_list', 'data',
+                  jsonb_build_array_check_nulls (
+                  build_dictionary_element('HUGO', build_link_attribute(annotation->>'hgnc_id', '@HGNC_URL@')),
+                  build_dictionary_element('OMIM', build_link_attribute(annotation->>'omim_id', '@OMIM_URL@')),
+                  build_dictionary_element('VEGA', build_link_attribute(annotation->>'vega_id', '@VEGA_URL@', NULL, CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@PROJECT_ID@ Archive' ELSE NULL END)),
+                  build_dictionary_element('NCBI Gene', build_link_attribute(annotation->>'entrez_id', '@NCBI_ENTREZ_GENE_URL@')),
+                  build_dictionary_element('Ensembl', build_link_attribute(ga.source_id, CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@ENSEMBL_GENE_URL_GRCh37@' ELSE '@ENSEMBL_GENE_URL_GRCh38@' END, NULL,
+                  CASE WHEN '@PROJECT_ID@' = 'GRCh37' THEN '@PROJECT_ID@ Archive' ELSE NULL END)),
+                  build_dictionary_element('UniProt', CASE WHEN jsonb_array_length(u.link_attribute) = 1 THEN u.link_attribute->0 ELSE u.link_attribute END) -- don't return array if 1 value
+                  )) AS record_link_outs
+                  FROM CBIL.GeneAttributes ga LEFT OUTER JOIN UniProtLinks u
+                  ON ga.source_id = u.source_id
+          ]]>
+      </sql>
+    </sqlQuery>
+
+    <!-- =============================================================== -->
+    <!-- Genomic Location -->
+    <!-- =============================================================== -->
+
+  
+
+
+    <!-- =============================================================== -->
+    <!-- AD Risk -->
+    <!-- =============================================================== -->
+
+    <sqlQuery name="ADEvidenceFlag">
+      <column name="source_id" columnType="string"/>
+      <column name="project_id" columnType="string"/>
+      <column name="has_genetic_evidence_for_ad_risk" columnType="string"/>
+      <column name="has_genetic_evidence_for_ad_risk_display" columnType="string"/>
+
+
+      <sql>
+        <![CDATA[    
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 evidence AS (
+		 SELECT DISTINCT g.source_id, gac.dataset_id,
+		 ga.p_value <= gac.moderate_significance_threshold AS flag ,
+		 CASE WHEN ga.p_value <= gac.moderate_significance_threshold AND ga.p_value != 0 AND ga.p_value != 'NaN'
+		 THEN build_icon_attribute(NULL, 'fa-check', 'red', NULL, 'true') 
+		 ELSE NULL END AS has_genetic_evidence_for_ad_risk_display,
+		 CASE WHEN ga.p_value <= gac.moderate_significance_threshold AND ga.p_value != 0 AND ga.p_value != 'NaN'
+		 THEN TRUE
+		 ELSE NULL END AS has_genetic_evidence_for_ad_risk
+		 FROM Results.GeneAssociation ga,
+		 NIAGADS.GeneAssociationCorrection gac,
+		 CBIL.GeneAttributes g, id
+		 WHERE ga.protocol_app_node_id = gac.protocol_app_node_id
+		 AND g.gene_id = ga.gene_id
+		 AND id.source_id = g.source_id
+		 ORDER BY flag DESC LIMIT 1) -- order from TRUE to FALSE and take the first hit
+
+		 SELECT id.source_id,
+		 '@PROJECT_ID@'::text AS project_id,
+		 evidence.has_genetic_evidence_for_ad_risk, 
+		 evidence.has_genetic_evidence_for_ad_risk_display
+		 FROM id LEFT OUTER JOIN evidence 
+		 ON id.source_id = evidence.source_id
+        ]]>
+      </sql>
+    </sqlQuery>
+
+
+    <sqlQuery name="GWSVariantsPlot">
+      <column name="source_id" columnType="string"/>
+      <column name="gws_variants_summary_plot" columnType="string"/>
+      <sql>
+        <![CDATA[
+		 WITH id AS (##WDK_ID_SQL##),
+
+		 phenotype AS (
+		 SELECT DISTINCT t.protocol_app_node_id,
+		 c.characteristic_type AS category,
+		 CASE WHEN c.characteristic_type = 'diagnosis' OR c.characteristic_type = 'neuropathology' THEN
+			CASE WHEN c.characteristic ILIKE '%Alz%' THEN 'AD/LOAD'
+				WHEN c.characteristic ILIKE 'Progressive%' THEN 'PSP'
+				WHEN c.characteristic ILIKE 'Frontotemporal%' THEN 'FTD'
+						WHEN c.characteristic ILIKE 'Lewy%' THEN 'Lewy Body Dementia'
+						WHEN c.characteristic = 'dementia' THEN 'Dementia'
+						WHEN c.characteristic = 'cognitive impairment' THEN 'Cognitive Impairment' 
+						ELSE 'Other Neuropathology'
+				END		 
+			ELSE -- biomarkers
+			c.characteristic
+		 END AS phenotype
+		 
+		 FROM  NIAGADS.TrackAttributes t,
+		 NIAGADS.ProtocolAppNodeCharacteristic c
+		 WHERE t.subcategory = 'GWAS summary statistics'
+		 AND t.dataset_accession NOT LIKE '%CATALOG%'
+		 AND c.protocol_app_node_id = t.protocol_app_node_id
+		 AND c.characteristic_type IN ('diagnosis', 'neuropathology', 'biomarker')
+		 AND c.characteristic NOT IN ('autopsy-based diagnosis')
+		 AND c.characteristic NOT IN ('memory performance', 'linguistic error measurement', 'visuospatial impairment')
+		 ),
+		 
+		 hits AS (
+		 SELECT DISTINCT id.source_id, 
+		 variant_record_primary_key,
+		 CASE WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint < ga.location_start THEN 'upstream' 
+		 WHEN split_part(r.variant_record_primary_key, ':', 2)::bigint > ga.location_end THEN 'downstream'
+		 ELSE 'in gene' END AS relative_position,
+		 p.phenotype,
+		 CASE WHEN p.category = 'biomarker' THEN 'biomarker' ELSE 'diagnosis' END AS category
+
+		 FROM NIAGADS.VariantGWASTopHits r, CBIL.GeneAttributes ga, id, phenotype p
+		 WHERE id.source_id = ga.source_id
+		 AND ga.bin_index_100kb_flank @> r.bin_index
+		 AND int4range(ga.location_start - 100000, ga.location_end + 100000, '[]')
+		 @> r.position
+		 AND ga.chromosome = r.chromosome
+		  AND r.neg_log10_pvalue > -1 * log(5e-8)
+		  AND p.protocol_app_node_id = r.protocol_app_node_id
+			ORDER BY category, p.phenotype
+		 ),
+		 
+		 sorted_hits AS (
+		 SELECT *,  ROW_NUMBER() OVER(ORDER BY category, phenotype) AS sort_order
+		 FROM hits ORDER BY sort_order),
+		 
+		 ycategories AS (
+		 SELECT DISTINCT source_id, category, phenotype,
+		 MIN(sort_order) AS sort_order,
+		 ROW_NUMBER() OVER(ORDER BY MIN(sort_order)) - 1 AS y_index
+		 FROM sorted_hits
+		 GROUP BY source_id, category, phenotype
+		 ),
+		 
+		 ycategories_json AS (
+		 SELECT source_id, category,
+		 jsonb_agg(phenotype ORDER BY y_index) AS json
+		 FROM ycategories
+		 GROUP BY source_id, category
+		 ),
+		 
+		 variant_counts AS (
+		 SELECT source_id, category, phenotype,
+		 SUM (CASE WHEN relative_position = 'upstream' THEN 1 ELSE 0 END) AS upstream_count,
+		 SUM (CASE WHEN relative_position = 'downstream' THEN 1 ELSE 0 END) AS downstream_count,
+		 SUM (CASE WHEN relative_position = 'in gene' THEN 1 ELSE 0 END) AS in_gene_count
+		 FROM sorted_hits
+		 GROUP BY source_id, category, phenotype
+		 ),
+		 
+		 series AS (
+		 SELECT gc.source_id, gc.category,
+		 jsonb_build_object('name', 'upstream', 'data', jsonb_agg(gc.upstream_count ORDER BY c.y_index)) AS series_data
+		 FROM variant_counts gc, ycategories c
+		 WHERE gc.source_id = c.source_id
+		 AND gc.phenotype = c.phenotype
+		 AND gc.category = c.category
+		 GROUP BY gc.source_id, gc.category   
+		 
+		 UNION ALL
+		 
+		 SELECT gc.source_id, gc.category,
+		 jsonb_build_object('name', 'in gene', 'data', jsonb_agg(gc.in_gene_count ORDER BY c.y_index)) AS series_data
+		 FROM variant_counts gc, ycategories c
+		 WHERE gc.source_id = c.source_id
+		 AND gc.phenotype = c.phenotype
+		 AND gc.category = c.category
+		 GROUP BY gc.source_id, gc.category		   
+		 
+		 UNION ALL
+		 
+		 SELECT gc.source_id, gc.category,
+		 jsonb_build_object('name', 'downstream', 'data', jsonb_agg(gc.downstream_count ORDER BY c.y_index)) AS series_data
+		 FROM variant_counts gc, ycategories c
+		 WHERE gc.source_id = c.source_id
+		 AND gc.phenotype = c.phenotype
+		 AND gc.category = c.category
+		 GROUP BY gc.source_id, gc.category
+		 ),
+		 
+		 diagnosis AS (
+		 SELECT s.source_id,
+		 jsonb_build_object(
+		 'title', 'Diagnosis',
+		 'categories', yc.json,
+		 'series', jsonb_agg(series_data)) AS chart_data
+		 FROM series s, ycategories_json yc
+		 WHERE s.source_id = yc.source_id
+		 AND s.category = 'diagnosis'
+		 AND s.category = yc.category		   
+		 GROUP BY s.source_id, yc.json
+		 ),
+		 
+		 neuropathology AS (
+		 SELECT s.source_id,
+		 jsonb_build_object(
+		 'title', 'Neuropathology',
+		 'categories', yc.json,
+		 'series', jsonb_agg(series_data)) AS chart_data
+		 FROM series s, ycategories_json yc
+		 WHERE s.source_id = yc.source_id
+		 AND s.category = 'neuropathology'
+		 AND s.category = yc.category
+		 GROUP BY s.source_id, yc.json
+		 ),
+		 
+		 biomarker AS (
+		 SELECT s.source_id,
+		 jsonb_build_object(
+		 'title', 'Biomarker',
+		 'categories', yc.json,
+		 'series', jsonb_agg(series_data)) AS chart_data		   
+		 FROM series s, ycategories_json yc
+		 WHERE s.source_id = yc.source_id
+		 AND s.category = 'biomarker'
+		 AND s.category = yc.category
+		 GROUP BY s.source_id, yc.json
+		 )
+
+		 SELECT id.source_id,
+		 jsonb_build_array_check_nulls((SELECT chart_data FROM diagnosis), 
+		 (SELECT chart_data FROM neuropathology),
+		 (SELECT chart_data FROM biomarker))::text AS gws_variants_summary_plot
+		 FROM id      
+        ]]>
+      </sql>
+    </sqlQuery>
+  </querySet>
+</wdkModel>
