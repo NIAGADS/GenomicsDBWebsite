@@ -1,5 +1,6 @@
 import { merge } from "lodash";
 import { GWASServiceReader, VariantServiceReader } from "@viz/GenomeBrowser";
+import { decodeBedXY } from "../IGV/Decoders/bedDecoder";
 
 export interface BaseTrackConfig {
     name: string;
@@ -53,6 +54,7 @@ export interface IgvTrackProps {
     queryable?: boolean; // query webservice when scrolling
     expandQuery?: boolean; // expand the query to the whole genome & cache?
     sourceType?: string;
+    decode?: any
 }
 
 export const convertRawToIgvTrack = (trackConfigs: RawTrackConfig[]): any => {
@@ -73,6 +75,10 @@ export const convertRawToIgvTrack = (trackConfigs: RawTrackConfig[]): any => {
             options.sourceType = "custom";
             options.visibilityWindow = 1000000;
             options.supportsWholeGenome = false;
+        }
+
+        if (config.track_type.includes('qtl')) {
+            options.decode = decodeBedXY
         }
 
         return merge(config, options);

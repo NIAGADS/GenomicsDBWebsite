@@ -17,12 +17,12 @@ export const _datasetTableProperties: { [name: string]: TableProperties } = {
                 defaultOpen: true,
             },
         ],
-        requiredColumns: ["track", "name"],
-        hiddenColumns: ["description", "covariates", "biomarker", "genotype"],
+        requiredColumns: ["dataset_accession", "name"],
+        hiddenColumns: ["track", "description", "covariates", "biomarker", "genotype"],
         defaultOpen: true,
         canFilter: true,
         canToggleColumns: true,
-        accessors: {"track": "Link"}
+        accessors: {"dataset_record_link": "Link"}
     },
     gene_risk: {
         filters: {
