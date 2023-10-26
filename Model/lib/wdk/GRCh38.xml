@@ -4,8 +4,7 @@
   <exampleStratsAuthor name="NIAGADS" />
   <!-- end legacy -->
   <constant name="releaseDate" includeProjects="GRCh37,GRCh38">10 October 2020 00:00</constant>
-  <constant name="releaseVersion37"
-    includeProjects="GRCh37">3.5</constant>
+  <constant name="releaseVersion37" includeProjects="GRCh37">3.5</constant>
   <constant name="releaseVersion38" includeProjects="GRCh38">1.0</constant>
   <constant name="buildNumber37" includeProjects="GRCh37,GRCh38">GRCh37/hg19</constant>
   <constant name="buildNumber38" includeProjects="GRCh38,GRCh37">GRCh38</constant>
