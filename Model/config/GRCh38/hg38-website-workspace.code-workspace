@@ -1,33 +1,39 @@
 {
 	"folders": [
-		{
-			"path": "../../.."
-		},
-		{
-			"path": "../../../../EbrcModelCommon"
-		},
-		{
-			"path": "../../../../EbrcWebsiteCommon"
-		},
-		{
-			"path": "../../../../EbrcWebSvcCommon"
-		},
-		{
-			"path": "../../../../FgpUtil"
-		},
-		{
-			"path": "../../../../install"
-		},
-		{
-			"path": "../../../../WDK"
-		},
-		{
-			"path": "../../../../WDKClient"
-		},
-		{
-			"path": "../../../../WSF"
-		}
-	],
+        {
+            "path": "../../.."
+        },
+        {
+            "path": "../../../../EbrcModelCommon"
+        },
+        {
+            "path": "../../../../EbrcWebsiteCommon"
+        },
+        {
+            "path": "../../../../EbrcWebSvcCommon"
+        },
+        {
+            "path": "../../../../FgpUtil"
+        },
+        {
+            "path": "../../../../install"
+        },
+        {
+            "path": "../../../../WDK"
+        },
+        {
+            "path": "../../../../WDKClient"
+        },
+        {
+            "path": "../../../../WSF"
+        },
+        {
+            "path": "../../../../niagads-igv-webapp"
+        },
+        {
+            "path": "../../../../igv.js"
+        }
+    ],
 	"settings": {
 		"java.compile.nullAnalysis.mode": "disabled"
 	}
