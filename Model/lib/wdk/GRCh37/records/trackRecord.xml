@@ -1,88 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-      <recordClassSet name="TrackRecordClasses">
+    <recordClassSet name="TrackRecordClasses">
+        <recordClass
+                name="TrackRecordClass"
+                displayName="Track"
+                displayNamePlural="Tracks"
+                shortDisplayName="Track"
+                useBasket="false"
+                urlName="track">
 
-            <recordClass name="TrackRecordClass" displayName="Track"
-                  displayNamePlural="Tracks" shortDisplayName="Track" useBasket="false" urlName="track">
+            <!-- =================================================================== -->
+            <!-- Primary Key -->
+            <!-- =================================================================== -->
 
-                  <!-- =================================================================== -->
-                  <!-- Primary Key -->
-                  <!-- =================================================================== -->
+            <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
+                <columnRef>track</columnRef>
+            </primaryKey>
 
-                  <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
-                        <columnRef>track</columnRef>
-                  </primaryKey>
-
-                  <idAttribute name="primary_key" displayName="Dataset" help="explore this dataset">
-                        <text>
+            <idAttribute
+                    name="primary_key"
+                    displayName="Dataset"
+                    help="explore this dataset">
+                <text>
                               <![CDATA[$$name$$]]>
                         </text>
-                  </idAttribute>
+            </idAttribute>
 
-                  <testParamValues>
-                        <paramValue name="track">NG00027_STAGE1</paramValue>
-                  </testParamValues>
+            <testParamValues>
+                <paramValue name="track">NG00027_STAGE1</paramValue>
+            </testParamValues>
 
 
-                  <!-- =================================================================== -->
-                  <!-- Reporters -->
-                  <!-- =================================================================== -->
-                  <reporter name="fullRecord" displayName="%%fullReporterDisplayName%%" scopes="record" implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
+            <!-- =================================================================== -->
+            <!-- Reporters -->
+            <!-- =================================================================== -->
+            <reporter
+                    name="fullRecord"
+                    displayName="Text"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
-                  <reporter name="attributesTabular" displayName="%%attributesReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-                        <description>%%attributesReporterDescription%%</description>
-                        <property name="page_size">1000000</property>
-                  </reporter>
+            <reporter
+                    name="xml"
+                    displayName="XML"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" />
 
-                  <reporter name="tableTabular" displayName="%%tableReporterDisplayName%%" scopes="results" implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-                        <description>%%tableReporterDescription%%</description>
-                        <property name="page_size">1000000</property>
-                  </reporter>
+            <reporter
+                    name="json"
+                    displayName="JSON"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.JSONReporter" />
+                    
+            <!-- =============================================================== -->
+            <!-- Step Analysis Plugins -->
+            <!-- =============================================================== -->
 
-                  <reporter name="xml" displayName="XML: choose from columns
-					and/or tables" scopes="" implementation="org.gusdb.wdk.model.report.reporter.XMLReporter"></reporter>
+            <!-- <stepAnalysisRef name="pathway-enrichment"/> -->
 
-                  <!--    <reporter name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results" implementation="org.gusdb.wdk.model.report.reporter.JSONReporter"></reporter>
--->
-                  <!-- =============================================================== -->
-                  <!-- Step Analysis Plugins -->
-                  <!-- =============================================================== -->
+            <!-- =============================================================== -->
+            <!-- Annotation and Link Outs -->
+            <!-- =============================================================== -->
 
-                  <!-- <stepAnalysisRef name="pathway-enrichment"/> -->
+            <attributesList summary="description,accession_link,search_link" />
 
-                  <!-- =============================================================== -->
-                  <!-- Annotation and Link Outs -->
-                  <!-- =============================================================== -->
+            <attributeQueryRef ref="GwasDatasetAttributes.BasicAttributes">
+                <columnAttribute
+                        name="project_id"
+                        internal="true"
+                        inReportMaker="false" />
+                <columnAttribute
+                        name="name"
+                        displayName="Name" />
+                <columnAttribute
+                        name="attribution"
+                        displayName="Attribution" />
+                <columnAttribute
+                        name="description"
+                        displayName="Description" />
+                <columnAttribute
+                        name="accession_link"
+                        displayName="Accession"
+                        help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets" />
+                <columnAttribute
+                        name="search_link"
+                        displayName="Mine Dataset"
+                        help="retrieve the top variants in this dataset, modify filter criteria/download result" />
+                <columnAttribute
+                        name="niagads_accession"
+                        displayName="Accession"
+                        internal="true"
+                        help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets" />
+                <columnAttribute
+                        name="category"
+                        displayName="Category"
+                        internal="true"
+                        inReportMaker="false" />
+                <columnAttribute
+                        name="is_adsp"
+                        displayName="ADSP Dataset"
+                        help="data generated by the Alzheimer's Disease Sequencing Project (ADSP)" />
+            </attributeQueryRef>
 
-                  <attributesList summary="description,accession_link,search_link" />
+            <!-- <attributeQueryRef ref="GwasDatasetAttributes.CovariateList"> -->
+            <!-- 	<columnAttribute name="covariate_list" displayName="Covariates"  help="study
+            covariates"/> -->
+            <!-- </attributeQueryRef> -->
 
-                  <attributeQueryRef ref="GwasDatasetAttributes.BasicAttributes">
-                        <columnAttribute name="project_id" internal="true" inReportMaker="false" />
-                        <columnAttribute name="name" displayName="Name" />
-                        <columnAttribute name="attribution" displayName="Attribution" />
-                        <columnAttribute name="description" displayName="Description" />
-                        <columnAttribute name="accession_link" displayName="Accession" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets" />
-                        <columnAttribute name="search_link" displayName="Mine Dataset" help="retrieve the top variants in this dataset, modify filter criteria/download result" />
-                        <columnAttribute name="niagads_accession" displayName="Accession" internal="true" help="NIAGADS accession with which this dataset is associated, view full details, request download, or browse associated datasets" />
-                        <columnAttribute name="category" displayName="Category" internal="true" inReportMaker="false" />
-                        <columnAttribute name="is_adsp" displayName="ADSP Dataset" help="data generated by the Alzheimer's Disease Sequencing Project (ADSP)" />
-                  </attributeQueryRef>
+            <!-- <attributeQueryRef ref="GwasDatasetAttributes.PhenotypeList"> -->
+            <!-- 	<columnAttribute name="phenotype_list" displayName="Phenotypes"  -->
+            <!-- help="phenotypes assessed in the study, may incl.: population, diagnosis,
+            neuropathology, biomarker, APOE allele carrier status"/> -->
+            <!-- </attributeQueryRef> -->
 
-                  <!-- <attributeQueryRef ref="GwasDatasetAttributes.CovariateList"> -->
-                  <!-- 	<columnAttribute name="covariate_list" displayName="Covariates"  help="study covariates"/> -->
-                  <!-- </attributeQueryRef> -->
+            <attributeQueryRef ref="GwasDatasetAttributes.RelatedTracks">
+                <columnAttribute
+                        name="related_tracks"
+                        displayName="Related Tracks" />
+            </attributeQueryRef>
 
-                  <!-- <attributeQueryRef ref="GwasDatasetAttributes.PhenotypeList"> -->
-                  <!-- 	<columnAttribute name="phenotype_list" displayName="Phenotypes"  -->
-                  <!-- help="phenotypes assessed in the study, may incl.: population, diagnosis, neuropathology, biomarker, APOE allele carrier status"/> -->
-                  <!-- </attributeQueryRef> -->
-
-                  <attributeQueryRef ref="GwasDatasetAttributes.RelatedTracks">
-                        <columnAttribute name="related_tracks" displayName="Related Tracks" />
-                  </attributeQueryRef>
-
-                  <!-- <table name="phenotypes" displayName="Phenotypes" queryRef="GwasDatasetTables.Phenotypes">
+            <!-- <table name="phenotypes" displayName="Phenotypes"
+            queryRef="GwasDatasetTables.Phenotypes">
 	   <columnAttribute name="phenotype_category" displayName="Category" />
 	   <columnAttribute name="phenotype" displayName="Phenotype"  />
 	   
@@ -96,42 +134,69 @@
 	   </table> -->
 
 
-                  <!-- =============================================================== -->
-                  <!-- Genetic Variation  -->
-                  <!-- =============================================================== -->
+            <!-- =============================================================== -->
+            <!-- Genetic Variation  -->
+            <!-- =============================================================== -->
 
-                  <attributeQueryRef ref="GwasDatasetAttributes.TopGenes">
-                        <columnAttribute name="top_gene_list" displayName="Top Genes" internal="true" inReportMaker="false" />
-                  </attributeQueryRef>
+            <attributeQueryRef ref="GwasDatasetAttributes.TopGenes">
+                <columnAttribute
+                        name="top_gene_list"
+                        displayName="Top Genes"
+                        internal="true"
+                        inReportMaker="false" />
+            </attributeQueryRef>
 
-                  <table name="top_variants" displayName="Top Variants" queryRef="GwasDatasetTables.TopVariants">
-                        <columnAttribute name="chromosome" displayName="Chromosome" />
-                        <columnAttribute name="position" displayName="Position" />
-                        <columnAttribute name="variant_link" displayName="Variant" />
-                        <columnAttribute name="pvalue" displayName="p-value" />
-                        <columnAttribute name="ref_snp_id" displayName="refSNP" />
-                        <columnAttribute name="adsp_variant_flag" displayName="ADSP Variant?"
-                              help="variant identified by the ADSP and passed the ADSP QC protocol" />
-                        <columnAttribute name="most_severe_consequence" displayName="Consequence"
-                              help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" />
-                        <columnAttribute name="msc_impact" displayName="Impact"
-                              help="relative impact of the predicted consequence" />
-                        <columnAttribute name="msc_impacted_gene_link" displayName="Impacted Gene"
-                              help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" />
-                        <columnAttribute name="msc_is_coding_flag" displayName="Is Coding?"
-                              help="flagged as a coding variant by the ADSP annotation pipeline" />
+            <table
+                    name="top_variants"
+                    displayName="Top Variants"
+                    queryRef="GwasDatasetTables.TopVariants">
+                <columnAttribute
+                        name="chromosome"
+                        displayName="Chromosome" />
+                <columnAttribute
+                        name="position"
+                        displayName="Position" />
+                <columnAttribute
+                        name="variant_link"
+                        displayName="Variant" />
+                <columnAttribute
+                        name="pvalue"
+                        displayName="p-value" />
+                <columnAttribute
+                        name="ref_snp_id"
+                        displayName="refSNP" />
+                <columnAttribute
+                        name="adsp_variant_flag"
+                        displayName="ADSP Variant?"
+                        help="variant identified by the ADSP and passed the ADSP QC protocol" />
+                <columnAttribute
+                        name="most_severe_consequence"
+                        displayName="Consequence"
+                        help="most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" />
+                <columnAttribute
+                        name="msc_impact"
+                        displayName="Impact"
+                        help="relative impact of the predicted consequence" />
+                <columnAttribute
+                        name="msc_impacted_gene_link"
+                        displayName="Impacted Gene"
+                        help="gene impacted by most severe predicted consequence made for this variant; identified by the ADSP annotation pipeline" />
+                <columnAttribute
+                        name="msc_is_coding_flag"
+                        displayName="Is Coding?"
+                        help="flagged as a coding variant by the ADSP annotation pipeline" />
 
 
-                        <description>
+                <description>
                               <![CDATA[
 		   Top variants from this GWAS summary statistics dataset.
 	  ]]>
                         </description>
-                  </table>
+            </table>
 
 
-            </recordClass>
+        </recordClass>
 
 
-      </recordClassSet>
+    </recordClassSet>
 </wdkModel>
