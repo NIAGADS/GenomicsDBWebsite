@@ -163,7 +163,7 @@ TrackRecordClasses.TrackRecordClass.inferno_highchart_list_lncRNA_mapping	http:/
 TrackRecordClasses.TrackRecordClass.inferno_highchart_list_mRNA_mapping	http://edamontology.org/operation_0282	Genetic mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_list_mRNA_mapping					2		record-internal	
 TrackRecordClasses.TrackRecordClass.inferno_highchart_enhancer_overlap_roadmap	http://www.niagadsontology.org/no_03	Functional mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_enhancer_overlap_roadmap					2		record-internal	
 TrackRecordClasses.TrackRecordClass.inferno_highchart_enhancer_overlap_fantom5	http://www.niagadsontology.org/no_03	Functional mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_enhancer_overlap_fantom5					1		record-internal	
-TrackRecordClasses.TrackRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	table	top_variants					2		record	
+TrackRecordClasses.TrackRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	table	top_variants					2		record	download
 TrackRecordClasses.TrackRecordClass.phenotypes	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	table	phenotypes							record	
 													
 													
