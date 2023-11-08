@@ -17,6 +17,7 @@
 
             <idAttribute
                     name="primary_key"
+                    inReportMaker="false"
                     displayName="Variant"
                     help="this variant identifier may be truncated for display purposes.  To view the full ID, add the MetaSeq ID column to the result using the 'Add Columns' button to the right.">
                 <text>
@@ -32,46 +33,21 @@
 
             <reporter
                     name="fullRecord"
-                    displayName="%%fullReporterDisplayName%%"
+                    displayName="Text"
                     scopes="record"
                     implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
+          
             <reporter
-                    name="attributesTabular"
-                    displayName="%%attributesReporterDisplayName%%"
-                    scopes="results"
-                    implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-                <description>
-                    %%attributesReporterDescription%%
-                </description>
-                <property name="page_size">
-                    1000000
-                </property>
-            </reporter>
-
-            <reporter
-                    name="tableTabular"
-                    displayName="%%tableReporterDisplayName%%"
-                    scopes="results"
-                    implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-                <description>
-                    %%tableReporterDescription%%
-                </description>
-                <property name="page_size">
-                    1000000
-                </property>
-            </reporter>
-
-            <!--  <reporter
                     name="xml"
-                    displayName="XML: choose from columns and/or tables"
-                    scopes=""
-                    implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" /> -->
+                    displayName="XML"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" />
 
             <reporter
                     name="json"
-                    displayName="JSON: choose from columns and/or tables"
-                    scopes=""
+                    displayName="JSON"
+                    scopes="record"
                     implementation="org.gusdb.wdk.model.report.reporter.JSONReporter" />
 
             <!-- =============================================================== -->

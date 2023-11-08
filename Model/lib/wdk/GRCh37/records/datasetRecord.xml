@@ -1,98 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wdkModel>
-	<recordClassSet name="DatasetRecordClasses">
-		<recordClass name="DatasetRecordClass"
-			displayName="Dataset"
-			displayNamePlural="Datasets"
-			shortDisplayName="Dataset"
-			useBasket="false"
-			urlName="dataset">
+    <recordClassSet name="DatasetRecordClasses">
+        <recordClass
+                name="DatasetRecordClass"
+                displayName="Dataset"
+                displayNamePlural="Datasets"
+                shortDisplayName="Dataset"
+                useBasket="false"
+                urlName="dataset">
 
-			<!-- =================================================================== -->
-			<!-- Primary Key -->
-			<!-- =================================================================== -->
+            <!-- =================================================================== -->
+            <!-- Primary Key -->
+            <!-- =================================================================== -->
 
-			<primaryKey
-				aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
-				<columnRef>source</columnRef>
-			</primaryKey>
+            <primaryKey aliasPluginClassName="org.gusdb.wdk.model.record.GenericRecordPrimaryKeyAliasPlugin">
+                <columnRef>source</columnRef>
+            </primaryKey>
 
-			<idAttribute name="primary_key" displayName="Source">
-				<text>
+            <idAttribute
+                    name="primary_key"
+                    displayName="Source">
+                <text>
 					<![CDATA[$$source$$]]>
 				</text>
-			</idAttribute>
+            </idAttribute>
 
-			<testParamValues>
-				<paramValue name="source"></paramValue>
-			</testParamValues>
+            <testParamValues>
+                <paramValue name="source"></paramValue>
+            </testParamValues>
 
-			<!-- =================================================================== -->
-			<!-- Reporters -->
-			<!-- =================================================================== -->
-			<reporter name="fullRecord" displayName="%%fullReporterDisplayName%%"
-				scopes="record"
-				implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter">
-			</reporter>
-
-
-			<reporter name="json" displayName="JSON: choose from columns
-					 and/or tables"
-				scopes="record"
-				implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-			</reporter>
+            <!-- =================================================================== -->
+            <!-- Reporters -->
+            <!-- =================================================================== -->
+            <reporter
+                    name="fullRecord"
+                    displayName="Text"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
 
-			<!-- =============================================================== -->
-			<!-- Header Summary Information -->
-			<!-- =============================================================== -->
+            <reporter
+                    name="xml"
+                    displayName="XML"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" />
 
-			<attributeQueryRef ref="DatasetAttributes.BasicAttributes">
-				<columnAttribute name="project_id" internal="true" inReportMaker="false" />
-				<columnAttribute name="description" displayName="Description" />
-				<columnAttribute name="name" displayName="Name" />
-			</attributeQueryRef>
-
-
-			<!-- =============================================================== -->
-			<!-- One table for each "type" of dataset:  -->
-			<!-- GWAS, Gene-Risk, Single Variant, eQTL, etc. -->
-			<!-- =============================================================== -->
+            <reporter
+                    name="json"
+                    displayName="JSON"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.JSONReporter" />
 
 
-			<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<!-- GWAS Summary Statistics -->
-			<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<table name="gwas" displayName="GWAS Summary Statistics" queryRef="DatasetTables.gwas">
-				<description>GWAS summary statistics datasets.</description>
-				<columnAttribute name="dataset_accession" displayName="Accession"
-					help="NIAGADS accession number" inReportMaker="true" />
-				<columnAttribute name="track" displayName="Track ID" internal="false"
-					inReportMaker="true" />
-				<columnAttribute name="name" displayName="Dataset" internal="true"
-					inReportMaker="true" />
-				<columnAttribute name="dataset_record_link" displayName="Dataset"
-					inReportMaker="false" />
-				<columnAttribute name="publication_date" displayName="Year"
-					help="Publication or release date (if data are unpublished)" />
-				<columnAttribute name="attribution" displayName="Attribution" />
-				<columnAttribute name="consortium" displayName="Consortium" />
-				<columnAttribute name="description" displayName="Description" />
-				<columnAttribute name="neuropathology" displayName="Neuropathology" />
-				<columnAttribute name="population" displayName="Population" />
-				<columnAttribute name="biomarker" displayName="Biomarker" />
-				<columnAttribute name="genotype" displayName="APOE Carrier Status" />
-				<columnAttribute name="covariates" displayName="Covariates" />
-			</table>
+            <!-- =============================================================== -->
+            <!-- Header Summary Information -->
+            <!-- =============================================================== -->
+
+            <attributeQueryRef ref="DatasetAttributes.BasicAttributes">
+                <columnAttribute
+                        name="project_id"
+                        internal="true"
+                        inReportMaker="false" />
+                <columnAttribute
+                        name="description"
+                        displayName="Description" />
+                <columnAttribute
+                        name="name"
+                        displayName="Name" />
+            </attributeQueryRef>
 
 
-			<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<!-- Gene-level Association -->
-			<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<table name="gene_risk" displayName="Gene-level Association" excludeProjects="GRCh38"
-				queryRef="DatasetTables.gene_risk">
+            <!-- =============================================================== -->
+            <!-- One table for each "type" of dataset:  -->
+            <!-- GWAS, Gene-Risk, Single Variant, eQTL, etc. -->
+            <!-- =============================================================== -->
 
-				<description>
+
+            <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+            <!-- GWAS Summary Statistics -->
+            <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+            <table
+                    name="gwas"
+                    displayName="GWAS Summary Statistics"
+                    queryRef="DatasetTables.gwas">
+                <description>GWAS summary statistics datasets.</description>
+                <columnAttribute
+                        name="dataset_accession"
+                        displayName="Accession"
+                        help="NIAGADS accession number"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="track"
+                        displayName="Track ID"
+                        internal="false"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="name"
+                        displayName="Dataset"
+                        internal="true"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="dataset_record_link"
+                        displayName="Dataset"
+                        inReportMaker="false" />
+                <columnAttribute
+                        name="publication_date"
+                        displayName="Year"
+                        help="Publication or release date (if data are unpublished)" />
+                <columnAttribute
+                        name="attribution"
+                        displayName="Attribution" />
+                <columnAttribute
+                        name="consortium"
+                        displayName="Consortium" />
+                <columnAttribute
+                        name="description"
+                        displayName="Description" />
+                <columnAttribute
+                        name="neuropathology"
+                        displayName="Neuropathology" />
+                <columnAttribute
+                        name="population"
+                        displayName="Population" />
+                <columnAttribute
+                        name="biomarker"
+                        displayName="Biomarker" />
+                <columnAttribute
+                        name="genotype"
+                        displayName="APOE Carrier Status" />
+                <columnAttribute
+                        name="covariates"
+                        displayName="Covariates" />
+            </table>
+
+
+            <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+            <!-- Gene-level Association -->
+            <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+            <table
+                    name="gene_risk"
+                    displayName="Gene-level Association"
+                    excludeProjects="GRCh38"
+                    queryRef="DatasetTables.gene_risk">
+
+                <description>
 					<![CDATA[
 						<p>Optimized kernel-regression-based test (SKAT-O) for association between gene-colocated sets of rare exonic ADSP variants and late-onset Alzheimer's disease in European or Caribbean Hispanic populations.  Datasets differ in filter criteria for variants (CADD score or predicted impact) and analysis covariates.</p>
 						<p>In the NIAGADS Alzheimer's GenomicsDB, these results are reported in the context of individual genes.</p>
@@ -101,31 +152,59 @@
 					]]>
 				</description>
 
-				<columnAttribute name="dataset_accession" displayName="Accession"
-					help="NIAGADS accession number" internal="true" inReportMaker="true" />
-				<columnAttribute name="dataset_accession_link" displayName="Accession"
-					help="NIAGADS accession number" inReportMaker="false" />
-				<columnAttribute name="track" displayName="Track" internal="true"
-					inReportMaker="true" />
-				<columnAttribute name="name" displayName="Dataset" inReportMaker="true" />
-				<columnAttribute name="attribution" displayName="Attribution" />
-				<columnAttribute name="consortium" displayName="Consortium" />
-				<columnAttribute name="description" displayName="Description" />
-				<columnAttribute name="neuropathology" displayName="Neuropathology" />
-				<columnAttribute name="population" displayName="Population" />
-				<columnAttribute name="covariates" displayName="Covariates" />
+                <columnAttribute
+                        name="dataset_accession"
+                        displayName="Accession"
+                        help="NIAGADS accession number"
+                        internal="true"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="dataset_accession_link"
+                        displayName="Accession"
+                        help="NIAGADS accession number"
+                        inReportMaker="false" />
+                <columnAttribute
+                        name="track"
+                        displayName="Track"
+                        internal="true"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="name"
+                        displayName="Dataset"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="attribution"
+                        displayName="Attribution" />
+                <columnAttribute
+                        name="consortium"
+                        displayName="Consortium" />
+                <columnAttribute
+                        name="description"
+                        displayName="Description" />
+                <columnAttribute
+                        name="neuropathology"
+                        displayName="Neuropathology" />
+                <columnAttribute
+                        name="population"
+                        displayName="Population" />
+                <columnAttribute
+                        name="covariates"
+                        displayName="Covariates" />
 
 
-			</table>
+            </table>
 
 
-			<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<!-- Rare Variant  -->
-			<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<table name="rare_variants" displayName="Rare Variant Association" excludeProjects="GRCh38"
-				queryRef="DatasetTables.rare_variants">
+            <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+            <!-- Rare Variant  -->
+            <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+            <table
+                    name="rare_variants"
+                    displayName="Rare Variant Association"
+                    excludeProjects="GRCh38"
+                    queryRef="DatasetTables.rare_variants">
 
-				<description>
+                <description>
 					<![CDATA[
 						<p>Single (rare) variant tests for association between exonic ADSP variants and the risk of late-onset Alzheimer's disease in European or Caribbean Hispanic populations.  Datasets differ in  analysis covariates.</p>
 						<p>In the NIAGADS Alzheimer's GenomicsDB, these results are reported in the context of specific variants.</p>
@@ -134,23 +213,48 @@
 					]]>
 				</description>
 
-				<columnAttribute name="dataset_accession" displayName="Accession"
-					help="NIAGADS accession number" internal="true" inReportMaker="true" />
-				<columnAttribute name="dataset_accession_link" displayName="Accession"
-					help="NIAGADS accession number" inReportMaker="false" />
-				<columnAttribute name="track" displayName="Track" internal="true"
-					inReportMaker="true" />
-				<columnAttribute name="name" displayName="Dataset" inReportMaker="true" />
-				<columnAttribute name="attribution" displayName="Attribution" />
-				<columnAttribute name="consortium" displayName="Consortium" />
-				<columnAttribute name="description" displayName="Description" />
-				<columnAttribute name="neuropathology" displayName="Neuropathology" />
-				<columnAttribute name="population" displayName="Population" />
-				<columnAttribute name="covariates" displayName="Covariates" />
+                <columnAttribute
+                        name="dataset_accession"
+                        displayName="Accession"
+                        help="NIAGADS accession number"
+                        internal="true"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="dataset_accession_link"
+                        displayName="Accession"
+                        help="NIAGADS accession number"
+                        inReportMaker="false" />
+                <columnAttribute
+                        name="track"
+                        displayName="Track"
+                        internal="true"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="name"
+                        displayName="Dataset"
+                        inReportMaker="true" />
+                <columnAttribute
+                        name="attribution"
+                        displayName="Attribution" />
+                <columnAttribute
+                        name="consortium"
+                        displayName="Consortium" />
+                <columnAttribute
+                        name="description"
+                        displayName="Description" />
+                <columnAttribute
+                        name="neuropathology"
+                        displayName="Neuropathology" />
+                <columnAttribute
+                        name="population"
+                        displayName="Population" />
+                <columnAttribute
+                        name="covariates"
+                        displayName="Covariates" />
 
 
-			</table>
+            </table>
 
-		</recordClass>
-	</recordClassSet>
+        </recordClass>
+    </recordClassSet>
 </wdkModel>

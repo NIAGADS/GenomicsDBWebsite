@@ -32,41 +32,21 @@
             <!-- =================================================================== -->
             <reporter
                     name="fullRecord"
-                    displayName="%%fullReporterDisplayName%%"
+                    displayName="Text"
                     scopes="record"
                     implementation="org.gusdb.wdk.model.report.reporter.FullRecordReporter" />
 
             <reporter
-                    name="attributesTabular"
-                    displayName="%%attributesReporterDisplayName%%"
-                    scopes="results"
-                    implementation="org.gusdb.wdk.model.report.reporter.AttributesTabularReporter">
-                <description> %%attributesReporterDescription%%</description>
-                <property name="page_size">1000000</property>
-            </reporter>
-
-            <reporter
-                    name="tableTabular"
-                    displayName="%%tableReporterDisplayName%%"
-                    scopes="results"
-                    implementation="org.gusdb.wdk.model.report.reporter.TableTabularReporter">
-                <description>%%tableReporterDescription%%</description>
-                <property name="page_size">1000000</property>
-            </reporter>
-
-            <reporter
                     name="xml"
-                    displayName="XML: choose from columns
-					and/or tables"
-                    scopes=""
-                    implementation="org.gusdb.wdk.model.report.reporter.XMLReporter"></reporter>
+                    displayName="XML"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.XMLReporter" />
 
-            <!--<reporter
-            name="json" displayName="JSON: choose from columns
-					 and/or tables" scopes="record,results"
-            implementation="org.gusdb.wdk.model.report.reporter.JSONReporter">
-      		</reporter> -->
-
+            <reporter
+                    name="json"
+                    displayName="JSON"
+                    scopes="record"
+                    implementation="org.gusdb.wdk.model.report.reporter.JSONReporter" />
 
             <!-- =============================================================== -->
             <!-- Step Analysis Plugins -->
