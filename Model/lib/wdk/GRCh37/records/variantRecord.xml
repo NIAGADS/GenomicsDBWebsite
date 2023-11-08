@@ -114,10 +114,10 @@
 
                 <columnAttribute
                         name="variant_class_abbrev"
-                        displayName="Variant Class" />
+                        displayName="Variant Class (Abbrev)" />
                 <columnAttribute
                         name="variant_class"
-                        displayName="variant_class" />
+                        displayName="Variant Class" />
 
                 <columnAttribute
                         name="adsp_display_flag"
