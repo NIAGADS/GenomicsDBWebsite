@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -6,7 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import { CustomLink as Link} from "@components/MaterialUI"
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
@@ -19,7 +18,7 @@ import useHomePageStyles from "../styles";
 
 import { useGoto } from "genomics-client/hooks";
 
-const useTypographyStyles = makeStyles((theme:Theme) => 
+const useTypographyStyles = makeStyles((theme: Theme) =>
     createStyles({
         heading: {
             fontSize: "3rem",
@@ -34,12 +33,19 @@ const useTypographyStyles = makeStyles((theme:Theme) =>
     })
 );
 
-export const SearchPanel: React.FC<PanelProps> = ({}) => {
+export const SearchPanel: React.FC<PanelProps> = ({ }) => {
     const goto = useGoto();
     const classes = useHomePageStyles();
     const tClasses = useTypographyStyles();
     const buildNumber = useSelector((state: RootState) => state.globalData?.config?.buildNumber);
     const [buildInfo, setBuildInfo] = useState(null);
+    const [exampleVariant, setExampleVariant] = useState(null);
+
+    useEffect(() => {
+        buildInfo && buildInfo.build == 'GRCh38'
+            ? setExampleVariant('19:44908684:T:C:rs429358')
+            : setExampleVariant('19:45411941:T:C:rs429358');
+    }, [buildInfo]);
 
     useEffect(() => {
         if (buildNumber) {
@@ -59,8 +65,8 @@ export const SearchPanel: React.FC<PanelProps> = ({}) => {
                     <Typography variant="h2" className={`${classes.secondaryText} ${classes.bold} ${tClasses.subheading}`}>
                         Alzheimer's Genomics Database
                     </Typography>
-                    <Typography variant="h5" className ={`${classes.secondaryText} ${classes.bold}`}>
-                        {buildInfo ? `(v. ${buildInfo.build})` : <CircularProgress color="secondary"/>}
+                    <Typography variant="h5" className={`${classes.secondaryText} ${classes.bold}`}>
+                        {buildInfo ? `(v. ${buildInfo.build})` : <CircularProgress color="secondary" />}
                     </Typography>
                     <Box pt={4}>
                         <Typography className={`${classes.darkContrastText} ${tClasses.body}`} variant="body2">
@@ -93,8 +99,8 @@ export const SearchPanel: React.FC<PanelProps> = ({}) => {
                                 rs6656401
                             </RouterLink>{" "}
                             - Variant:{" "}
-                            <RouterLink className={classes.secondaryLink} to="record/variant/19:44908684:T:C:rs429358">
-                                19:44908684:T:C
+                            <RouterLink className={classes.secondaryLink} to={`record/variant/${exampleVariant}`}>
+                                {exampleVariant}
                             </RouterLink>
                         </Typography>
                     </Box>
