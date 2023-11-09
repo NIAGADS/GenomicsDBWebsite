@@ -8,13 +8,13 @@ import { theme} from "@components/MaterialUI";
 
 import AboutPage from "@components/Page/AboutPage";
 import ErrorBoundary from "wdk-client/Core/Controllers/ErrorBoundary";
-
-
+import { projectId } from "ebrc-client/config";
 
 const DocumentationPageController: React.FC<never> = () => {
+    //@ts-ignore
     const { type } = useParams();
 
-    document.title = "GDB | ";
+    document.title = `GDB: ${projectId} | `;
 
     let Component;
 
