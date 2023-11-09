@@ -5,10 +5,13 @@ import NotFound from "wdk-client/Views/NotFound/NotFound";
 import GenomeBrowserPage from "@components/Page/GenomeBrowserPage";
 import ErrorBoundary from "wdk-client/Core/Controllers/ErrorBoundary";
 
-const VisualizationsPageController: React.FC<never> = () => {
-    const { type } = useParams();
+import { projectId } from "ebrc-client/config";
 
-    document.title = "GDB | ";
+const VisualizationsPageController: React.FC<never> = () => {
+    //@ts-ignore
+    const { type  } = useParams();
+
+    document.title = `GDB: ${projectId} | `;
 
     let Component;
 

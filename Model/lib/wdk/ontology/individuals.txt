@@ -15,13 +15,13 @@ GeneRecordClasses.GeneRecordClass.GeneRisk	http://edamontology.org/topic_0199	Ge
 													
 ## Gene Attributes ##													
 													
-GeneRecordClasses.GeneRecordClass.source_id	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	source_id				gene			record-internal	download
+GeneRecordClasses.GeneRecordClass.source_id	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	source_id				gene			record-internal	
 GeneRecordClasses.GeneRecordClass.chromosome	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	chromosome				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.gene_name	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	gene_name				gene		results	record-internal	download
-GeneRecordClasses.GeneRecordClass.gene_type	http://edamontology.org/topic_0114	Gene Structure	GeneRecordClasses.GeneRecordClass	attribute	gene_type				gene		results	record-internal	download
+GeneRecordClasses.GeneRecordClass.gene_type	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	gene_type				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.strand	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	strand				gene			record-internal	download
 GeneRecordClasses.GeneRecordClass.location_start	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	location_start				gene		results	record-internal	download
-GeneRecordClasses.GeneRecordClass.location_end	http://edamontology.org/topic_0114	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	location_end				gene		results	record-internal	download
+GeneRecordClasses.GeneRecordClass.location_end	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	GeneRecordClasses.GeneRecordClass	attribute	location_end				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.gene_symbol	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	gene_symbol				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.synonyms	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	synonyms				gene		results	record-internal	download
 GeneRecordClasses.GeneRecordClass.has_genetic_evidence_for_ad_risk	http://edamontology.org/topic_0219	Curation and Annotation	GeneRecordClasses.GeneRecordClass	attribute	has_genetic_evidence_for_ad_risk				gene			record-internal	download
@@ -71,7 +71,7 @@ VariantRecordClasses.VariantRecordClass.metaseq_id	http://edamontology.org/topic
 VariantRecordClasses.VariantRecordClass.chromosome	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	chromosome						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.position	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	position						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.location	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	location						results	record-internal	download
-VariantRecordClasses.VariantRecordClass.span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	span				gene		record-internal
+VariantRecordClasses.VariantRecordClass.span	GenomicSequenceLocationCategory	GenomicSequenceLocationCategory	VariantRecordClasses.VariantRecordClass	attribute	span				gene		record-internal		
 VariantRecordClasses.VariantRecordClass.ref_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	ref_allele						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.alt_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	alt_allele						results	record-internal	download
 VariantRecordClasses.VariantRecordClass.display_allele	http://edamontology.org/topic_0199	Genetic variation	VariantRecordClasses.VariantRecordClass	attribute	display_allele						results	record-internal	download
@@ -163,7 +163,7 @@ TrackRecordClasses.TrackRecordClass.inferno_highchart_list_lncRNA_mapping	http:/
 TrackRecordClasses.TrackRecordClass.inferno_highchart_list_mRNA_mapping	http://edamontology.org/operation_0282	Genetic mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_list_mRNA_mapping					2		record-internal	
 TrackRecordClasses.TrackRecordClass.inferno_highchart_enhancer_overlap_roadmap	http://www.niagadsontology.org/no_03	Functional mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_enhancer_overlap_roadmap					2		record-internal	
 TrackRecordClasses.TrackRecordClass.inferno_highchart_enhancer_overlap_fantom5	http://www.niagadsontology.org/no_03	Functional mapping	TrackRecordClasses.TrackRecordClass	table	inferno_highchart_enhancer_overlap_fantom5					1		record-internal	
-TrackRecordClasses.TrackRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	table	top_variants					2		record	
+TrackRecordClasses.TrackRecordClass.top_variants	http://edamontology.org/topic_0199	Genetic variation	TrackRecordClasses.TrackRecordClass	table	top_variants					2		record	download
 TrackRecordClasses.TrackRecordClass.phenotypes	http://edamontology.org/topic_0219	Curation and Annotation	TrackRecordClasses.TrackRecordClass	table	phenotypes							record	
 													
 													

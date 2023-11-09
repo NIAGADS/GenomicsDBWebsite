@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
+import { webAppUrl, projectId } from "ebrc-client/config";
+
 import clsx from "clsx";
 
 import { makeStyles, Theme, createStyles, styled } from "@material-ui/core/styles";
@@ -10,13 +12,11 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
+
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 import CodeIcon from "@material-ui/icons/Code";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import MoreIcon from "@material-ui/icons/MoreVert";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
 
 import { SiteSearch, SearchResult } from "@components/Tools";
@@ -102,7 +102,8 @@ function PrimarySearchAppBar() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
-    const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
+    //const webAppUrl = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
+    //const projectId = useSelector((state: RootState) => state.globalData?.siteConfig?.webAppUrl);
     const isGuest = useSelector((state: RootState) => state.globalData?.user?.isGuest);
 
     const isMenuOpen = Boolean(anchorEl);
@@ -165,7 +166,6 @@ function PrimarySearchAppBar() {
                 </IconButton>
                 <p>Home</p>
             </MenuItem>
-
             <MenuItem>
                 <IconButton
                     aria-label="browse datasets"
@@ -176,32 +176,45 @@ function PrimarySearchAppBar() {
                 </IconButton>
                 <p>Datasets</p>
             </MenuItem>
-
-            <MenuItem>
-                <IconButton
-                    aria-label="genome browser"
-                    color="inherit"
-                    href={`${webAppUrl}/app/visualizations/browser`}
-                >
-                    <LineStyleIcon />
-                </IconButton>
-                <p>Genome Browser</p>
-            </MenuItem>
-
+            {projectId === "GRCh39" ? (
+                <MenuItem>
+                    <IconButton
+                        aria-label="genome browser"
+                        color="inherit"
+                        href={`${webAppUrl}/app/visualizations/browser`}
+                    >
+                        <LineStyleIcon />
+                    </IconButton>
+                    <p>Genome Browser</p>
+                </MenuItem>
+            ) : (
+                <MenuItem>
+                    <Tooltip title={`The ${projectId} genome browser is being updated.  Please check back soon.`}>
+                        <>
+                            <IconButton
+                                aria-label="genome browser"
+                                color="inherit"
+                                href="#"
+                            >
+                                <LineStyleIcon />
+                            </IconButton>
+                            <p>Genome Browser</p>
+                        </>
+                    </Tooltip>
+                </MenuItem>
+            )}
             <MenuItem>
                 <IconButton aria-label="API" color="inherit" href={`${webAppUrl}/app/api`} disabled>
                     <CodeIcon />
                 </IconButton>
                 <p>API</p>
             </MenuItem>
-
             {/*<MenuItem>
                 <IconButton aria-label="Info" color="inherit" href={`${webAppUrl}`}>
                     <InfoOutlinedIcon />
                 </IconButton>
                 <p>About</p>
     </MenuItem>*/}
-
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
                     aria-label="account of current user"
@@ -226,9 +239,25 @@ function PrimarySearchAppBar() {
             >
                 Browse Datasets
             </TextButton>
-            <TextButton aria-label="genome browser" color="inherit" href={`${webAppUrl}/app/visualizations/browser`}>
-                Genome Browser
-            </TextButton>
+            {projectId === "GRCh38" ? (
+                <TextButton
+                    aria-label="genome browser"
+                    color="inherit"
+                    href={`${webAppUrl}/app/visualizations/browser`}
+                >
+                    Genome Browser
+                </TextButton>
+            ) : (
+                <Tooltip title={`The ${projectId} genome browser is being updated.  Please check back soon.`}>
+                    <TextButton
+                        aria-label="genome browser"
+                        color="inherit"
+                        href="#"
+                    >
+                        Genome Browser
+                    </TextButton>
+                </Tooltip>
+            )}
 
             {/*<TextButton aria-label="api" color="inherit" href={`${webAppUrl}/app/api`}>
                 API

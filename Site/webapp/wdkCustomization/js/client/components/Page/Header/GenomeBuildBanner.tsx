@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { CustomLink as Link, StyledTooltip as Tooltip } from "@components/MaterialUI";
 
-const DISABLE_ALT_VERSION_LINK = true;
+const DISABLE_ALT_VERSION_LINK = false;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -79,6 +79,7 @@ const GenomeBuildBanner: React.FC<any> = ({}) => {
                         <Link style="secondary" target="_blank" href={buildInfo.alt_build_target}>
                             {buildInfo.alt_build}
                         </Link>
+                        ?
                     </Box>
                 )}
             </Typography>

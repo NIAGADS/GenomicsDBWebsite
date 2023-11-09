@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdkModel>
+    <!-- legacy Strategies placeholders -->
+    <exampleStratsAuthor name="NIAGADS" />
+    <!-- end legacy -->
+    <constant name="releaseDate" includeProjects="GRCh37,GRCh38">10 October 2020 00:00</constant>
+    <constant name="releaseVersion37" includeProjects="GRCh37">3.5</constant>
+    <constant name="releaseVersion38" includeProjects="GRCh38">1.0</constant>
+    <constant name="buildNumber37" includeProjects="GRCh37,GRCh38">GRCh37/hg19</constant>
+    <constant name="buildNumber38" includeProjects="GRCh38,GRCh37">GRCh38</constant>
+
+    <constant name="fullReporterDisplayName">Text: choose from columns and/or tables</constant>
+    <constant name="attributesReporterDisplayName">Search Result Table</constant>
+    <constant name="tableReporterDisplayName">Additional Tabular Data</constant>
+    <constant name="attributesReporterDescription">Choose columns from search result to download as
+        a tab-delimited text or EXCEL file.</constant>
+
+    <constant name="defaultGene">ABCA7</constant>
+
+    <modelName includeProjects="GRCh37" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh37"
+        version="%%releaseVersion37%%"
+        releaseDate="%%releaseDate%%"
+        buildNumber='{"build":"%%buildNumber37%%", "alt_build": "%%buildNumber38%%", "alt_build_target": "@ALT_BUILD_LINK@"}'
+    />
+
+    <modelName includeProjects="GRCh38" displayName="NIAGADS Alzheimer's GenomicsDB: GRCh38"
+        version="%%releaseVersion38%%"
+        releaseDate="%%releaseDate%%"
+        buildNumber='{"build":"%%buildNumber38%%", "alt_build": "%%buildNumber37%%", "alt_build_target": "@ALT_BUILD_LINK@"}'
+    />
+
+    <import file="model/categories.xml" />
+
+    <!-- VARIANTS -->
+    <import file="model/records/variantRecord.xml" />
+    <import file="model/attributes/variantAttributes.xml" />
+    <import file="model/tables/variantTables.xml" />
+
+    <!-- GENES  -->
+    <import file="model/records/geneRecord.xml" />
+    <import file="model/attributes/geneAttributes.xml" />
+    <import file="model/tables/geneTables.xml" />
+
+    <!-- SPANS -->
+    <!-- <import file="model/records/spanRecord.xml" /> -->
+    <!-- <import file="model/attributes/spanAttributes.xml" /> -->
+    <!-- <import file="model/tables/spanTables.xml" /> -->
+
+    <!-- RESOURCE/DATASETS -->
+    <import file="model/records/datasetRecord.xml" />
+    <import file="model/attributes/datasetAttributes.xml" />
+    <import file="model/tables/datasetTables.xml" />
+
+    <import file="model/records/trackRecord.xml" />
+    <import file="model/attributes/trackAttributes.xml" />
+    <import file="model/tables/trackTables.xml" />
+
+    <!-- ONTOLOGIES -->
+    <import file="model/ontology/ontologyRecord.xml" />
+    <import file="model/ontology/ontologyAttributes.xml" />
+    <import file="model/ontology/ontologyTables.xml" />
+
+</wdkModel>

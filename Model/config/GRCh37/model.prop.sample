@@ -9,9 +9,9 @@
 # run `python $PROJECT_HOME/GenomicsDBWebsite/Model/bin/generateExternalUrlConstantsJson` to regenerate 
 # the external url constant file for the front end, setting the --modelPropFile option to this file and the 
 # --outputFile option to $PROJECT_HOME/GenomicsDBWebsite/Site/webapp/wdkCustomization/js/client/data/_externalUrls.ts.
-# The updated model.prop.sample & externalUrls.ts can then be committed to the repository
+# The updated model.prop.sample & _externalUrls.ts can then be committed to the repository
 
-SITE_ADMIN_EMAIL=
+SITE_ADMIN_EMAIL=@SITE_ADMIN_EMAIL@
 STEP_ANALYSIS_JOB_DIR=/www/common/temp
 
 #----------------------------------------------------------
@@ -21,34 +21,24 @@ STEP_ANALYSIS_JOB_DIR=/www/common/temp
 DONT_EMAIL_NEW_USER=true
 WDK_VERSION=API_BUILD_50
 
-
 #----------------------------------------------------------
 # Production v Dev / Beta
 #----------------------------------------------------------
 
-# Base URL: uncomment https://dev.niagads.org for development
-# only one should be uncommented
-NIAGADS_BASE_URL=https://www.niagads.org 
-# NIAGADS_BASE_URL=https://beta.niagads.org
-WEBAPP=genomics
-
-FEEDBACK_FORM_LINK=https://upenn.co1.qualtrics.com/jfe/form/SV_869ZYgJgalnKUCi
+NIAGADS_BASE_URL=https://www.niagads.org
+WEBAPP=@WEBAPP@
+ALT_BUILD_LINK=@ALT_BUILD_LINK@
+GENOME_BROWSER_SERVICE_BASE_URL=@GENOME_BROWSER_SERVICE_BASE_URL@
+LOCUS_ZOOM_SERVICE_BASE_URL=@LOCUS_ZOOM_SERVICE_BASE_URL@
 
 #----------------------------------------------------------
 # Project Identifiers & Configuration
 #----------------------------------------------------------
 
-PROJECT_ID=GRCh37
-GENOME_BUILD=GRCh37.p13
-GENCODE_VERSION=v19
-dbSNP_VERSION=151
-ALT_BUILD_LINK=
-
-#PROJECT_ID=GRCh38
-#GENOME_BUILD=GRCh38.p8
-#GENCODE_VERSION=v36
-#dbSNP_VERSION=155
-#ALT_BUILD_LINK=
+PROJECT_ID=@PROJECT_ID@
+GENOME_BUILD=@GENOME_BUILD@
+GENCODE_VERSION=@GENCODE_VERSION@
+dbSNP_VERSION=@DBSNP_VERSION@
 
 #----------------------------------------------------------
 # Constants
@@ -59,7 +49,7 @@ FLANK_100KB=100000
 FLANK_200KB=200000
 FLANK_LOCUSZOOM=20000
 
-LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
+LZRECOMBINATION_RATE_DATASOURCE=LZ_RECOMB_HG38
 
 #----------------------------------------------------------
 # External Database Release Ids (as referenced in appDb)
@@ -72,7 +62,6 @@ LZRECOMBINATION_RATE_DATASOURCE=HAPMAP_RECOMB
 
 ADSP_CC_ACCESSION=NG00065
 GWAS_CATALOG_ACCESSIONS=NHGRI_GWAS_CATALOG,ADVP
-INFERNO_PUBMED_ID=30113658
 GWAS_ORDERED_FILTER_CATEGORY_PARENTS=Project,Diagnosis,Population,Study Design,Genotype,Biomarker
 
 #----------------------------------------------------------
@@ -86,6 +75,8 @@ DOCUMENTATION_URL=TBA
 #----------------------------------------------------------
 
 IDEOGRAM_CYTOBAND_URL=https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/
+
+ADVP_VARIANT_URL=https://advp.niagads.org/variant?
 
 ADSP_URL=https://www.niagads.org/adsp/content/about
 INFERNO_URL=http://inferno.lisanwanglab.org/
@@ -115,12 +106,12 @@ ENSEMBL_REGULATORY_FEATURE_URL_GRCh37=https://grch37.ensembl.org/Homo_sapiens/Re
 ENSEMBL_MOTIF_FEATURE_URL_GRCh37=https://grch37.ensembl.org/motifWidget.htm?id=
 ENSEMBL_PROTEIN_URL_GRCh37=https://grch37.ensembl.org/Human/Search/Results?site=ensembl;facet_species=Human;q=
 
-ENSEMBL_GENE_URL_GRCh38=http://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
-ENSEMBL_TRANSCRIPT_URL_GRCh38=http://www.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
-ENSEMBL_VARIANT_URL_GRCh38=http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=
-ENSEMBL_REGULATORY_FEATURE_URL_GRCh38=https://www.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
-ENSEMBL_MOTIF_FEATURE_URL_GRCh38=https://www.ensembl.org/motifWidget.htm?id=
-ENSEMBL_PROTEIN_URL_GRCh38=https://www.ensembl.org/Human/Search/Results?site=ensembl;facet_species=Human;q=
+ENSEMBL_GENE_URL=http://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=
+ENSEMBL_TRANSCRIPT_URL=http://www.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=
+ENSEMBL_VARIANT_URL=http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=
+ENSEMBL_REGULATORY_FEATURE_URL=https://www.ensembl.org/Homo_sapiens/Regulation/Summary?db=core;fdb=funcgen;rf=
+ENSEMBL_MOTIF_FEATURE_URL=https://www.ensembl.org/motifWidget.htm?id=
+ENSEMBL_PROTEIN_URL=https://www.ensembl.org/Human/Search/Results?site=ensembl;facet_species=Human;q=
 
 VEGA_URL=http://vega.sanger.ac.uk/Homo_sapiens/Gene/Summary?db=core;g=
 OMIM_URL=http://omim.org/entry/
@@ -158,8 +149,3 @@ HGNC_URL=https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/
 EFO_TRAIT_URL=http://www.ebi.ac.uk/efo/
 
 ALPHAFOLDDB_PROTEIN_URL=https://alphafold.ebi.ac.uk/entry/
-
-GNOMAD_VARIANT_URL=https://gnomad.broadinstitute.org/variant/
-GNOMAD_DATASET_VERISION=gnomad_r2_1
-
-

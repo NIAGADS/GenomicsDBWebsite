@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link as RouterLink, withRouter, RouteComponentProps } from "react-router-dom";
 import { webAppUrl, projectId } from "ebrc-client/config";
 
-import { useWdkEffect } from "wdk-client/Service/WdkService";
 
 import { safeHtml } from "wdk-client/Utils/ComponentUtils";
 
@@ -104,13 +103,13 @@ const AboutPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
                 <Grid item>
                     <Typography variant="body1" align="left">
                         We encourage you to use the data and insights offered in the NIAGADS Alzheimers's Genomics
-                        database along with the following acknowledgement statement:
+                        database in your own work, along with the following acknowledgement statement:
                     </Typography>
                     <Box mt={2} ml="auto" mr="auto" className={classes.inset}>
                         <Typography variant="body1">
                             <em>
                                 The results published here are in whole or part based on data obtained from the NIAGADS
-                                Alzheimer's GenomicsDB, available at https://www.niagads.org{webAppUrl}.
+                                Alzheimer's Genomics Database (v. {projectId}), available at https://www.niagads.org{webAppUrl}.
                             </em>
                         </Typography>
                     </Box>
@@ -121,11 +120,12 @@ const AboutPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
                     </Box>
                     <Box mt={2}>
                         <Typography variant="body1" className={classes.inset}>
-                            Greenfest-Allen et al. (28 April 2023). "NIAGADS Alzheimer’s GenomicsDB: A resource for
-                            exploring Alzheimer’s Disease genetic and genomic knowledge":{" "}
-                            <a href="https://doi.org/10.1101/2020.09.23.310276">
-                                https://doi.org/10.1101/2020.09.23.310276
-                            </a>
+                            Greenfest-Allen, E, Valladares, O, Kuksa, PP, et al. NIAGADS Alzheimer's GenomicsDB: A
+                            resource for exploring Alzheimer's disease genetic and genomic knowledge. Alzheimer's
+                            Dement. 2023; 1-14.
+                        </Typography>
+                        <Typography variant="body1" className={classes.inset}>
+                            <a href="https://doi.org/10.1002/alz.13509">https://doi.org/10.1002/alz.13509</a>
                         </Typography>
                     </Box>
                     <Box mt={2}>
@@ -135,7 +135,7 @@ const AboutPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
                             <a href="dataset/accessions" target="_blank">
                                 dataset browser
                             </a>{" "}
-                            to obtain original publication information for the dataset to directly acknowledge.
+                            to obtain original publication information for the dataset to directly acknowledge the original authors.
                         </Typography>
                     </Box>
                 </Grid>

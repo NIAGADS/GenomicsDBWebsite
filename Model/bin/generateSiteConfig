@@ -69,7 +69,7 @@ sed -i "s|@LOCUS_ZOOM_SERVICE_BASE_URL@|$LOCUS_ZOOM_SERVICE_BASE_URL|g" $GUS_HOM
 # model-config
 echo "Setting model configuration (model-config.xml file)"
 cp $PROJECT_HOME/GenomicsDBWebsite/Model/config/model-config.xml.sample $GUS_HOME/config/$PROJECT_ID/model-config.xml
-sed -i "s|@MODEL@|$PROJECT_ID|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
+# sed -i "s|@MODEL@|$PROJECT_ID|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
 sed -i "s|@SITE_ADMIN_EMAIL@|$(prop 'SITE_ADMIN_EMAIL')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
 sed -i "s|@DB_USER@|$(prop 'WEB_DB_USER')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
 sed -i "s|@DB_PASSWORD@|$(prop 'WEB_DB_PASSWORD')|g" $GUS_HOME/config/$PROJECT_ID/model-config.xml
