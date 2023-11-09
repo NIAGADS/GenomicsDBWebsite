@@ -79,6 +79,7 @@ const GenomeBuildBanner: React.FC<any> = ({}) => {
                         <Link style="secondary" target="_blank" href={buildInfo.alt_build_target}>
                             {buildInfo.alt_build}
                         </Link>
+                        ?
                     </Box>
                 )}
             </Typography>
