@@ -1,4 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+
+import { CSVLink } from "react-csv";
 
 import { useTableStyles } from "@viz/Table";
 import { FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
@@ -15,6 +17,7 @@ import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FilterIcon from "@material-ui/icons/FilterList";
 import InfoIcon from "@material-ui/icons/Info";
 import DownloadIcon from "@material-ui/icons/GetApp";
+import { useEffectOnce } from "usehooks-ts";
 
 interface PanelOptions {
     toggle: any;
@@ -41,10 +44,12 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     filter,
 }) => {
     //@ts-ignore
-    const { preGlobalFilteredRows, globalFilter, setGlobalFilter } = instance;
+    const { preGlobalFilteredRows, globalFilter, setGlobalFilter, sortedRows, prepareRow } = instance;
     const [columnsDialogIsOpen, setColumnsDialogIsOpen] = useState<boolean>(false);
     const [filterDialogIsOpen, setFilterDialogIsOpen] = useState<boolean>(false);
     const [helpDialogIsOpen, setHelpDialogIsOpen] = useState<boolean>(false);
+    const [tableExportData, setTableExportData] = useState(null);
+
     const tClasses = useTableStyles();
 
     const hasGlobalFilter = filter.hasGlobalFilter === null ? false : filter.hasGlobalFilter;
@@ -60,6 +65,22 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     const closeHelpDialog = () => {
         setHelpDialogIsOpen(false);
     };
+
+    const generateTableExportData = () => {
+        let rowData = sortedRows.map((row:any) => {
+            prepareRow(row);
+            return row.values;
+        });
+        let exportData: any = rowData;
+    
+        setTableExportData(exportData);
+    }
+
+    useEffect(() => {
+        if (instance) {
+            generateTableExportData()
+        }
+    }, [])
 
     return (
         <>
@@ -90,19 +111,21 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
 
                 {/* span is b/c button is disabled, allows tooltip to fire */}
                 {canExport && (
-                    <Tooltip title="Table downloads coming soon" aria-label="table downloads coming soon/disabled">
-                        <span>
-                            <Button
-                                startIcon={<DownloadIcon />}
-                                variant="text"
-                                color="primary"
-                                aria-label="download table data"
-                                disabled={true}
-                            >
-                                Export
-                            </Button>
-                        </span>
-                    </Tooltip>
+                    <Button
+                        startIcon={<DownloadIcon />}
+                        variant="text"
+                        color="primary"
+                        aria-label="download table data"
+                    >
+
+                        <CSVLink
+                            // className="hidden" 
+                            target="_blank"
+                            data={tableExportData}
+                            onClick={generateTableExportData}>
+                            Export
+                        </CSVLink>
+                    </Button>
                 )}
 
                 {columnsDialog !== null && (

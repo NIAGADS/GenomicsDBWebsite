@@ -4,6 +4,7 @@ model-config.xml
 model.prop
 webapp.prop
 
+package.json.backup
 yarn-error.log
 
 # Created by https://www.gitignore.io/api/emacs
