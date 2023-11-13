@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { CSVLink } from "react-csv";
 
-import { useTableStyles } from "@viz/Table";
+import { parseFieldValue, useTableStyles } from "@viz/Table";
 import { FilterPageProps, GlobalFilterFlat } from "@viz/Table/TableFilters";
 import { SelectColumnsDialog, FilterDialog, MemoTableHelpDialog as TableHelpDialog } from "@viz/Table/TableSections";
 
@@ -48,7 +48,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     const [columnsDialogIsOpen, setColumnsDialogIsOpen] = useState<boolean>(false);
     const [filterDialogIsOpen, setFilterDialogIsOpen] = useState<boolean>(false);
     const [helpDialogIsOpen, setHelpDialogIsOpen] = useState<boolean>(false);
-    const [tableExportData, setTableExportData] = useState(null);
+    const [tableExportData, setTableExportData] = useState<any>("");
 
     const tClasses = useTableStyles();
 
@@ -67,20 +67,23 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     };
 
     const generateTableExportData = () => {
-        let rowData = sortedRows.map((row:any) => {
+        // get columns in order, to set as header; save in tableExportHeader state variable
+        let rowData = sortedRows.map((row: any) => {
             prepareRow(row);
-            return row.values;
+            // row.values is an object keyed on column id
+            // for each column replace value with parseFieldValue
+            return row.values.map((v:any) => {parseFieldValue(v, true)}); // true is return N/A for nulls
         });
         let exportData: any = rowData;
-    
-        setTableExportData(exportData);
-    }
 
-    useEffect(() => {
+        setTableExportData(exportData);
+    };
+
+    /* useEffect(() => {
         if (instance) {
-            generateTableExportData()
+            generateTableExportData();
         }
-    }, [])
+    }, []); */
 
     return (
         <>
@@ -117,14 +120,15 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
                         color="primary"
                         aria-label="download table data"
                     >
-
-                        <CSVLink
-                            // className="hidden" 
-                            target="_blank"
-                            data={tableExportData}
-                            onClick={generateTableExportData}>
-                            Export
-                        </CSVLink>
+  
+                            <CSVLink
+                                // className="hidden"
+                                target="_blank"
+                                data={tableExportData}
+                                onClick={generateTableExportData}
+                            >
+                                Export
+                            </CSVLink>
                     </Button>
                 )}
 
