@@ -119,6 +119,7 @@ export const Table: React.FC<TableProps> = ({ className, columns, title, data, o
 
     const tableProps = useMemo(() => {
         let initialState = {
+            name: title.toLowerCase().replace(' ', '_').replace("'",''),
             pageIndex: 0,
             pageSize: 10,
             filters: [options.initialFilters ? options.initialFilters : {}],

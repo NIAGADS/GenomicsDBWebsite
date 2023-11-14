@@ -66,6 +66,7 @@ export const useGlobalFilterStyles = makeStyles((theme: Theme) =>
                 backgroundColor: alpha(theme.palette.common.white, 0.25),
             },
             marginLeft: 0,
+            marginRight: theme.spacing(4),
             width: "100%",
             [theme.breakpoints.up("sm")]: {
                 marginLeft: theme.spacing(1),

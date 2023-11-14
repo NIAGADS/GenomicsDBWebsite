@@ -44,11 +44,11 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
     filter,
 }) => {
     //@ts-ignore
-    const { preGlobalFilteredRows, globalFilter, setGlobalFilter, sortedRows, prepareRow } = instance;
+    const { preGlobalFilteredRows, globalFilter, setGlobalFilter, sortedRows, prepareRow, visibleColumns } = instance;
     const [columnsDialogIsOpen, setColumnsDialogIsOpen] = useState<boolean>(false);
     const [filterDialogIsOpen, setFilterDialogIsOpen] = useState<boolean>(false);
     const [helpDialogIsOpen, setHelpDialogIsOpen] = useState<boolean>(false);
-    const [tableExportData, setTableExportData] = useState<any>("");
+    const [tableExportData, setTableExportData] = useState<any>({ data: "", headers: [] });
 
     const tClasses = useTableStyles();
 
@@ -68,22 +68,22 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
 
     const generateTableExportData = () => {
         // get columns in order, to set as header; save in tableExportHeader state variable
-        let rowData = sortedRows.map((row: any) => {
-            prepareRow(row);
-            // row.values is an object keyed on column id
-            // for each column replace value with parseFieldValue
-            return row.values.map((v:any) => {parseFieldValue(v, true)}); // true is return N/A for nulls
+        const header = visibleColumns.map(col => {
+            return { label: col.Header.toString(), key: col.id }
         });
-        let exportData: any = rowData;
 
-        setTableExportData(exportData);
+        const exportData = sortedRows.map((row: any) => {
+            prepareRow(row);
+            // key on header display values; parse values
+            const newRow = Object.entries(row.values).reduce(function (obj: any, [key, value]) {
+                obj[key] = parseFieldValue(value, true).replace('N/A', 'NA');
+                return obj;
+            }, {});
+            return newRow;
+        });
+
+        setTableExportData({ data: exportData, headers: header });
     };
-
-    /* useEffect(() => {
-        if (instance) {
-            generateTableExportData();
-        }
-    }, []); */
 
     return (
         <>
@@ -114,22 +114,22 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
 
                 {/* span is b/c button is disabled, allows tooltip to fire */}
                 {canExport && (
-                    <Button
-                        startIcon={<DownloadIcon />}
-                        variant="text"
-                        color="primary"
-                        aria-label="download table data"
+                    <CSVLink
+                        headers={tableExportData.headers}
+                        data={tableExportData.data}
+                        onClick={generateTableExportData}
+                        //@ts-ignore
+                        filename={instance.state.name}
                     >
-  
-                            <CSVLink
-                                // className="hidden"
-                                target="_blank"
-                                data={tableExportData}
-                                onClick={generateTableExportData}
-                            >
-                                Export
-                            </CSVLink>
-                    </Button>
+                        <Button
+                            startIcon={<DownloadIcon />}
+                            variant="text"
+                            color="primary"
+                            aria-label="download table data"
+                        >
+                            Export
+                        </Button>
+                    </CSVLink>
                 )}
 
                 {columnsDialog !== null && (
