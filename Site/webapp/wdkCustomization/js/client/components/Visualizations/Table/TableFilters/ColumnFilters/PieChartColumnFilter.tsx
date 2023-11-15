@@ -35,6 +35,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
     const { id, filterValue, setFilter, render, preFilteredRows } = column;
     const [numFilterChoices, setNumFilterChoices] = useState<number>(null);
     const [selectedSlice, setSelectedSlice] = useState<string>(filterValue);
+    const [initialSlice, setInitialSlice] = useState<boolean>(filterValue || false);
 
     const classes = useFilterStyles();
 
@@ -65,6 +66,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
                 else {
                     setSelectedSlice(selectedSlice === e.point.name ? undefined : e.point.name);
                 }
+                initialSlice && setInitialSlice(false);
             },
         },
     };
@@ -153,11 +155,17 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         }
         for (const sliceId of Object.keys(counts)) {
             if (sliceId != "N/A") {
-                seriesData.push({ name: sliceId, y: counts[sliceId] });
+                if (initialSlice && sliceId == selectedSlice) {
+                    seriesData.push({ name: sliceId, y: counts[sliceId],
+                                    sliced: true, selected: true });
+                }
+                else {
+                    seriesData.push({ name: sliceId, y: counts[sliceId] });
+                }
             }
         }
         return merge({ name: id, data: seriesData }, seriesOptions);
-    }, [preFilteredRows, id]);
+    }, [id, preFilteredRows]);
 
     useEffect(() => {
         if (series && series.hasOwnProperty("data")) {
