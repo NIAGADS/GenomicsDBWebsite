@@ -59,7 +59,12 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
         },
         events: {
             click: function (e: any) {
-                setSelectedSlice(selectedSlice === e.point.name ? undefined : e.point.name);
+                if (e.point.sliced) {
+                    setSelectedSlice(undefined);
+                }
+                else {
+                    setSelectedSlice(selectedSlice === e.point.name ? undefined : e.point.name);
+                }
             },
         },
     };
