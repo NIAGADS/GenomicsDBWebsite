@@ -29,7 +29,7 @@ export const DefaultTextAccessor: React.SFC<ColumnAccessor> = ({ value, maxLengt
         return <ClobTextAccessor value={value} maxLength={maxLength} />;
     }
     // catch numerics
-    return parseFieldValue(value);
+    return parseFieldValue(value, "N/A");
 };
 
 // large text, show more or tooltip

@@ -12,7 +12,7 @@ export function includesFilter<T extends Record<string, unknown>>(
         // don't know off hand if the Filter allows N/A's so depend on filterValue to give hint
         const rowValue =
             filterValue === "N/A"
-                ? parseFieldValue(row.values[id[0]], true).toString().toLowerCase()
+                ? parseFieldValue(row.values[id[0]], "N/A").toString().toLowerCase()
                 : parseFieldValue(row.values[id[0]]).toString().toLowerCase();
 
         return rowValue && rowValue.includes(filterValue.toString().toLowerCase());

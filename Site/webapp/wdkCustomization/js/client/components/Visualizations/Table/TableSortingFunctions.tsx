@@ -6,20 +6,21 @@ import { Row } from "react-table";
 import { parseFieldValue } from "@viz/Table";
 
 const reSplitAlphaNumeric = /([0-9]+)/gm;
+const nullStr = "N/A";
 
 interface SortingFunction {
     (rowA: Row, rowB: Row, columnId: string, desc?: boolean): number;
 }
 
 const getValue: any = (row: Row, columnId: string, retString: boolean = true) => {
-    const value = parseFieldValue(row.values[columnId], true);
+    const value = parseFieldValue(row.values[columnId], nullStr);
     return retString ? toString(value) : value;
 };
 
 const getBooleanValue: any = (row: Row, columnId: string) => {
     const rv = row.values[columnId];
-    const debug = parseFieldValue(row.values[columnId], false);
-    return parseFieldValue(row.values[columnId], false) === "Yes" ? 1 : 0;
+    const debug = parseFieldValue(row.values[columnId], nullStr);
+    return parseFieldValue(row.values[columnId], nullStr) === "Yes" ? 1 : 0;
 };
 
 export const barChartSort: SortingFunction = (rowA, rowB, columnId, desc) => {

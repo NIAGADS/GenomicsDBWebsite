@@ -15,8 +15,8 @@ export const resolveJSONFieldValue = (value: string) => {
     }
 };
 
-export const resolveNullFieldValue = (value: string, returnNA: boolean) => {
-    return value === null || value === "N/A" ? (returnNA ? "N/A" : "") : resolveJSONFieldValue(value);
+export const resolveNullFieldValue = (value: string, nullStr:string = "") => {
+    return value === null || value === "N/A" ? nullStr : resolveJSONFieldValue(value);
 };
 
 
@@ -29,23 +29,23 @@ const getAccessorType = (value: any) => {
     return accessorType.includes("Boolean") ? "BooleanCheckAccessor" : accessorType;
 }
 
-export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
+export const parseFieldValue = (value: any, nullStr: string = ""): any => {
     if (!value) {
-        return resolveNullFieldValue(null, returnNA);
+        return resolveNullFieldValue(null, nullStr);
     }
 
     const accessorType = getAccessorType(value);
 
     switch (accessorType) {
         case "String":
-            return resolveNullFieldValue(value, returnNA);
+            return resolveNullFieldValue(value, nullStr);
         case "NASpan":
-            return resolveNullFieldValue("N/A", returnNA);
+            return resolveNullFieldValue("N/A", nullStr);
         case "BooleanCheckAccessor":
             return value.props.value === "true" ? "Yes" : "No";
         default:
             if (value.props && value.props.value) {
-                return resolveNullFieldValue(value.props.value, returnNA);
+                return resolveNullFieldValue(value.props.value, nullStr);
             }
             throw new Error(`ERROR: Unable to parse field value - unhandled ColumnAccessor type: ${value.type.name}`);
     }

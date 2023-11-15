@@ -76,7 +76,7 @@ export const TableToolbar: React.FC<TableToolbar & FilterPageProps> = ({
             prepareRow(row);
             // key on header display values; parse values
             const newRow = Object.entries(row.values).reduce(function (obj: any, [key, value]) {
-                obj[key] = parseFieldValue(value, true).replace('N/A', 'NA');
+                obj[key] = parseFieldValue(value, "NA"); 
                 return obj;
             }, {});
             return newRow;

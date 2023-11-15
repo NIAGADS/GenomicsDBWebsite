@@ -12,7 +12,7 @@ import {
     BooleanCheckAccessor,
     RowSelectButtonAccessor
 } from "@viz/Table/ColumnAccessors";
-import { parseFieldValue as defaultParseFieldValue, resolveNullFieldValue } from "@viz/Table";
+import { parseFieldValue as defaultParseFieldValue } from "@viz/Table";
 
 import { RecordTableColumnAccessorType as ColumnAccessorType } from "@components/Record/RecordTable";
 import { getLastPath } from "genomics-client/util/util";
@@ -72,7 +72,7 @@ export const resolveColumnAccessor = (key: string, accessorType: ColumnAccessorT
     }
 };
 
-export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
+export const parseFieldValue = (value: any, nullStr: string = ""): any => {
     const accessorType = value.type
         ? value.type.name.includes("Boolean")
             ? "BooleanCheckAccessor"
@@ -83,6 +83,6 @@ export const parseFieldValue = (value: any, returnNA: boolean = false): any => {
         case "LinkAttribute":
             throw new Error(`ERROR: Unable to parse field value - unhandled ColumnAccessor type: ${value.type.name}`);
         default:
-            return defaultParseFieldValue(value, returnNA);
+            return defaultParseFieldValue(value, nullStr);
     }
 };
