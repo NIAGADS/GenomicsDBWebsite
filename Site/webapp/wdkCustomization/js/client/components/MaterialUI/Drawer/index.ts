@@ -24,6 +24,15 @@ export interface DrawerContentsProps {
     children?: React.ReactNode; // what goes in the div (e.g., a table)
 }
 
+
+export const DRAWER_WIDTH = 300;
+export const SHIFT_X = 250;
+export interface DrawerState {
+    isOpen: boolean;
+    handleClose?: any;
+    handleOpen?: any;
+}
+
+
 export * from "./NavigationDrawer"
-export * from "./PersistentDrawerLeft";
 export * from "./EncapsulatedDrawer";

@@ -22,7 +22,8 @@ import LineStyleIcon from "@material-ui/icons/LineStyle";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-import { PersistentDrawerLeft, DrawerState, StyledTooltip as Tooltip, DrawerProps } from "@components/MaterialUI";
+import { DrawerState, StyledTooltip as Tooltip, DrawerProps } from "@components/MaterialUI";
+import { PersistentDrawerRight as PersistentDrawer} from "@components/MaterialUI/Drawer/PersistentDrawerRight";
 
 import { RootState } from "wdk-client/Core/State/Types";
 import { RecordClass } from "wdk-client/Utils/WdkModel";
@@ -83,14 +84,14 @@ export const RecordNavigationButton: React.FC<DrawerState> = ({ isOpen, handleOp
                     </Typography>
                 }
             >
-                <IconButton
+                <Button
                     aria-label="open record navigation / table of contents panel on the left"
                     onClick={handleOpen}
-                    edge="start"
                     className={clsx(classes.menuButton, isOpen && classes.hide)}
+                    endIcon={ <MenuIcon className={classes.menuIcon} />}
                 >
-                    <MenuIcon className={classes.menuIcon} />
-                </IconButton>
+                    Contents
+                </Button>
             </Tooltip>
         </Toolbar>
     );
@@ -229,8 +230,8 @@ export const RecordActionButtons: React.FC<RecordActions> = ({ primaryKey, recor
 export const RecordNavigationSection: React.FC<DrawerProps & DrawerState> = ({ children, isOpen, handleClose }) => {
     const classes = useStyles();
     return (
-        <PersistentDrawerLeft isOpen={isOpen} handleClose={handleClose} title="Hide Navigation">
+        <PersistentDrawer isOpen={isOpen} handleClose={handleClose} title="Hide Navigation">
             <Box className={classes.drawerContents}>{children}</Box>
-        </PersistentDrawerLeft>
+        </PersistentDrawer>
     );
 };

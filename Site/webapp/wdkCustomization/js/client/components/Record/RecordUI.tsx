@@ -21,7 +21,9 @@ import {
     RecordNavigationSection as RecordNavigationPanel,
     RecordActionButtons
 } from "./Sections/RecordNavigationSection";
-import { contentStyles as drawerPanelStyles } from "genomics-client/components/MaterialUI/Drawer/PersistentDrawerLeft";
+
+import { contentStyles as drawerPanelStyles }
+    from "@components/MaterialUI/Drawer/PersistentDrawerRight";
 
 import { formatSpan } from "genomics-client/util/util";
 /**
@@ -133,10 +135,7 @@ class RecordUI extends Component {
 
         return (
             <div className={classNames}>
-                <RecordNavigationButton
-                    isOpen={this.state.navigationIsOpen}
-                    handleOpen={this._handleNavigationOpen.bind(this)}
-                />
+
                 <Grid item container direction="column">
                     <Grid item>
                         <RecordHeading
@@ -146,7 +145,14 @@ class RecordUI extends Component {
                             headerActions={this.props.headerActions}
                         />
                     </Grid>
+                    <Grid item>
+                        <RecordNavigationButton
+                            isOpen={this.state.navigationIsOpen}
+                            handleOpen={this._handleNavigationOpen.bind(this)}
+                        />
+                    </Grid>
                 </Grid>
+
                 {this.props.recordClass.shortDisplayName !== "Ontology" && <RecordNavigationPanel
                     isOpen={this.state.navigationIsOpen}
                     handleClose={this._handleNavigationClose.bind(this)}
@@ -156,8 +162,8 @@ class RecordUI extends Component {
                         heading={this.props.recordClass.shortDisplayName === "Track"
                             ? this.props.record.displayName
                             : this.props.recordClass.shortDisplayName === "Dataset"
-                            ? "NIAGADS accessions and datasets in the Alzheimer's GenomicsDB"
-                            : "Available annotations for " + formatSpan(this.props.record.attributes.span.toString())}
+                                ? "NIAGADS accessions and datasets in the Alzheimer's GenomicsDB"
+                                : "Available annotations for " + formatSpan(this.props.record.attributes.span.toString())}
                         record={this.props.record}
                         recordClass={this.props.recordClass}
                         categoryTree={this.props.categoryTree}

@@ -18,14 +18,14 @@ export const contentStyles = (theme: Theme) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        marginLeft: 0,
+        marginRight: 0,
     },
     contentShift: {
         transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: SHIFT_X,
+        marginRight: SHIFT_X,
     },
 });
 
@@ -33,7 +33,7 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
     createStyles({
         actionButton: {
             marginTop: theme.spacing(1),
-            justifyContent: "right",
+            justifyContent: "left",
         },
         divider: {
             marginTop: theme.spacing(1)
@@ -64,19 +64,19 @@ const useDrawerStyles = makeStyles((theme: Theme) =>
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
             }),
-            marginLeft: -DRAWER_WIDTH,
+            marginRight: -DRAWER_WIDTH,
         },
         contentShift: {
             transition: theme.transitions.create("margin", {
                 easing: theme.transitions.easing.easeOut,
                 duration: theme.transitions.duration.enteringScreen,
             }),
-            marginLeft: 0,
+            marginRight: 0,
         },
     })
 );
 
-export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ title, children, isOpen, handleClose }) => {
+export const PersistentDrawerRight: React.FC<DrawerProps & DrawerState> = ({ title, children, isOpen, handleClose }) => {
     const classes = useDrawerStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(isOpen);
@@ -94,7 +94,7 @@ export const PersistentDrawerLeft: React.FC<DrawerProps & DrawerState> = ({ titl
         <Drawer
             className={classes.drawer}
             variant="persistent"
-            anchor="left"
+            anchor="right"
             open={isOpen}
             classes={{
                 paper: classes.drawerPaper,
