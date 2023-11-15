@@ -120,7 +120,7 @@ export function PieChartColumnFilter<T extends Record<string, unknown>>({
 
         preFilteredRows.forEach((row: any) => {
             //@ts-ignore
-            let value = parseFieldValue(row.values[id], true);
+            let value = parseFieldValue(row.values[id], "N/A");
             if (value) {
                 if (value.includes("//")) {
                     let vals = value.split(" // ");
