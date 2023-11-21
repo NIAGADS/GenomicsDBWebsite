@@ -132,9 +132,9 @@ const AboutPage: React.FC<RouteComponentProps<any>> = ({ location }) => {
                         <Typography align="left">
                             If referencing a specific GWAS summary statistics dataset from the NIAGADS repository,
                             please follow the accession link provided in the{" "}
-                            <a href="dataset/accessions" target="_blank">
+                            <RouterLink to="/record/dataset/accessions" target="_blank">
                                 dataset browser
-                            </a>{" "}
+                            </RouterLink>{" "}
                             to obtain original publication information for the dataset to directly acknowledge the original authors.
                         </Typography>
                     </Box>
