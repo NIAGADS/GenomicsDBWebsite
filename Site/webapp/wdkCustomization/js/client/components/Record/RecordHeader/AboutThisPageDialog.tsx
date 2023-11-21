@@ -13,6 +13,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import DownloadIcon from "@material-ui/icons/GetApp";
+import Icon from "@material-ui/core/Icon";
 
 import { blue } from "@material-ui/core/colors";
 
@@ -152,37 +154,61 @@ export const AboutThisPageDialog: React.FC<AboutThisPageDialogOptions> = ({
         return <Box className={classes.my}>{renderSectionDocumentation(doc["overview"])}</Box>;
     };
 
+    const renderExport = () => {
+        return <Box className={classes.my}>
+            <Typography variant="body1">
+                Most tables can be exported in tab-delimited format using the{"  "}
+                <span className={classes.iconWrapper}>
+                    <DownloadIcon fontSize="inherit" />
+                    {"  "}
+                    EXPORT
+                </span>
+                {"  "} button in the table toolbar. Exports will match the current view of the table data (columns and
+                rows after applying search criteria or filters). The (unfiltered) table contents and summary attributes can be selectively
+                exported in JSON, XML, or tab-delimited text format using the 
+                <span className={classes.iconWrapper}>
+                    <Icon fontSize="inherit" className="fa fa-download"></Icon>
+                    {"  "}EXPORT RECORD
+                </span>
+                {"  "}
+                button in the report navigation panel.
+                <ComingSoonAlert message="More information about exporting records will be coming soon." />
+                
+            </Typography>
+        </Box>
+    }
+
     return recordClass.shortDisplayName == "Ontology" ? (
         <ComingSoonAlert message="More information about navigating the data dictionary is coming soon."></ComingSoonAlert>
     ) : (
-        <Dialog maxWidth="md" aria-labelledby="dialog-title" open={isOpen} onClose={handleClose}>
-            <DialogTitle id="dialog-title">
-                About this Page
+            <Dialog maxWidth="md" aria-labelledby="dialog-title" open={isOpen} onClose={handleClose}>
+                <DialogTitle id="dialog-title">
+                    About this Page
                 {renderNav()}
-            </DialogTitle>
-            <DialogContent dividers>
-                <a id="overview">
-                    <Typography variant="subtitle1" className={classes.title}>
-                        {recordClass.shortDisplayName} Report Overview
+                </DialogTitle>
+                <DialogContent dividers>
+                    <a id="overview">
+                        <Typography variant="subtitle1" className={classes.title}>
+                            {recordClass.shortDisplayName} Report Overview
                     </Typography>
-                </a>
+                    </a>
 
-                {renderOverview()}
+                    {renderOverview()}
 
-                <a id="export">
-                    <Typography variant="subtitle1" className={classes.title}>
-                        Export
+                    <a id="export">
+                        <Typography variant="subtitle1" className={classes.title}>
+                            Export
                     </Typography>
-                </a>
-                <ComingSoonAlert message="More about Exporting this record coming soon" />
+                    </a>
+                    {renderExport()}
 
-                {categoryTree && renderSections()}
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Close
+                    {categoryTree && renderSections()}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Close
                 </Button>
-            </DialogActions>
-        </Dialog>
-    );
+                </DialogActions>
+            </Dialog>
+        );
 };
