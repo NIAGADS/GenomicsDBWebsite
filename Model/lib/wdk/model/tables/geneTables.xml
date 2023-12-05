@@ -12,6 +12,7 @@
       <column name="external_id"/>
       <sql>
 	<![CDATA[
+         
 		 SELECT ga.source_id,
 		 '@PROJECT_ID@'::text AS project_id,
 		 a.external_id,
@@ -19,7 +20,9 @@
 		 FROM
 		 CBIL.DbRefLink drl,
 		 CBIL.GeneAttributes ga,
-		 LATERAL jsonb_each(annotation),
+		 LATERAL jsonb_each(annotation 
+           || jsonb_build_object('ucsc_id_grch37', split_part(annotation->>'ucsc_id', '.', 1)
+           || '.' || split_part(annotation->>'ucsc_id', '.', 2)::int - 1)),
 		 LATERAL UNNEST(string_to_array(replace(value::text, '"',''), '|')) a(external_id)
 		 WHERE drl.dbref_id = key
 		 AND drl.resource_type = 'gene'

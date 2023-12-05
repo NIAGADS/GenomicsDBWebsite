@@ -20,10 +20,14 @@ import {
 } from "@components/MaterialUI";
 
 import { _externalUrls } from "genomics-client/data/_externalUrls";
+import { projectId } from "ebrc-client/config"
 
 export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> = ({ record }) => {
     const attributes = record.attributes;
     const tClasses = useTypographyStyles();
+    const ensemblTranscriptUrl = (projectId === 'GRCh37') 
+        ? _externalUrls.ENSEMBL_TRANSCRIPT_URL_GRCh37 
+        : _externalUrls.ENSEMBL_TRANSCRIPT_URL;
 
     return (
         <Box paddingTop={1} paddingBottom={1}>
@@ -65,7 +69,7 @@ export const MostSevereConsequenceSection: React.FC<{ record: RecordInstance }> 
                                     aria-label="Explore Ensembl record for this transcript"
                                 >
                                     <Link
-                                        href={`${_externalUrls.ENSEMBL_TRANSCRIPT_URL}${attributes.msc_impacted_transcript}`}
+                                        href={`${ensemblTranscriptUrl}${attributes.msc_impacted_transcript}`}
                                     >
                                         <i className={`${tClasses.small} fa fa-external-link`}></i>
                                     </Link>
