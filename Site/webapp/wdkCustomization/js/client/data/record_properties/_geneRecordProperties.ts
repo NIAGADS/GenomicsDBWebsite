@@ -238,4 +238,9 @@ export const _geneTableProperties: { [name: string]: TableProperties } = {
         canToggleColumns: false,
         accessors: { accession: "Link" },
     },
+    record_link_outs: {
+        defaultOpen: true,
+        canFilter: false,
+        canToggleColumns: false
+    }
 };
